@@ -600,6 +600,9 @@ break|break;
 case|case
 literal|'6'
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
 name|family
 operator|=
 name|PF_INET6
@@ -607,6 +610,17 @@ expr_stmt|;
 name|inet6_flag
 operator|++
 expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"lpd compiled sans INET6 (IPv6 support)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|errs
@@ -3390,27 +3404,6 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: lpd [-dlp] [port#]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* setup server socket for specified address family */
 end_comment
@@ -3880,6 +3873,41 @@ operator|(
 name|socks
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: lpd [-dlp46] [port#]\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: lpd [-dlp] [port#]\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
