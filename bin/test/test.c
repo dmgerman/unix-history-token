@@ -105,7 +105,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: gtest.c,v 1.10 88/07/02 13:34:45 afb Exp Locker: afb $"
+literal|"$Id: test.c,v 1.1.1.1 93/06/12 14:56:50 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
