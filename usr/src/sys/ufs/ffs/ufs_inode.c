@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	6.8	84/07/15	*/
+comment|/*	ufs_inode.c	6.9	84/07/20	*/
 end_comment
 
 begin_include
@@ -512,11 +512,6 @@ name|inode
 modifier|*
 name|iq
 decl_stmt|;
-name|struct
-name|inode
-modifier|*
-name|xp
-decl_stmt|;
 name|loop
 label|:
 name|ih
@@ -851,43 +846,10 @@ name|i_number
 operator|=
 name|ino
 expr_stmt|;
+name|cacheinval
+argument_list|(
 name|ip
-operator|->
-name|i_id
-operator|=
-operator|++
-name|nextinodeid
-expr_stmt|;
-comment|/* also used in rename */
-comment|/* 	 * At an absurd rate of 100 calls/second, 	 * this should occur once every 8 months. 	 */
-if|if
-condition|(
-name|nextinodeid
-operator|<
-literal|0
-condition|)
-for|for
-control|(
-name|nextinodeid
-operator|=
-literal|0
-operator|,
-name|xp
-operator|=
-name|inode
-init|;
-name|xp
-operator|<
-name|inodeNINODE
-condition|;
-name|xp
-operator|++
-control|)
-name|xp
-operator|->
-name|i_id
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

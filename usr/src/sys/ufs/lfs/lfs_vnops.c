@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	6.11	84/07/08	*/
+comment|/*	lfs_vnops.c	6.12	84/07/20	*/
 end_comment
 
 begin_include
@@ -4653,12 +4653,10 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
+name|cacheinval
+argument_list|(
 name|dp
-operator|->
-name|i_id
-operator|=
-operator|++
-name|nextinodeid
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -5772,6 +5770,11 @@ operator|(
 name|u_long
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+name|cacheinval
+argument_list|(
+name|ip
 argument_list|)
 expr_stmt|;
 name|out
