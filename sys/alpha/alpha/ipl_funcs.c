@@ -839,7 +839,7 @@ parameter_list|,
 name|pri
 parameter_list|)
 define|\
-value|void							\ name##assert(const char *msg)				\ {							\ 	u_int cpl;					\ 							\ 	cpl = getcpl();					\ 	if (cpl< ALPHA_PSL_IPL_##pri);			\ 		splassertfail("%s: not %s, cpl == %#x",	\ 		    msg, __XSTRING(name) + 3, cpl);	\ }
+value|void							\ name##assert(const char *msg)				\ {							\ 	u_int cpl;					\ 							\ 	cpl = getcpl();					\ 	if (cpl< ALPHA_PSL_IPL_##pri)			\ 		splassertfail("%s: not %s, cpl == %#x",	\ 		    msg, __XSTRING(name) + 3, cpl);	\ }
 end_define
 
 begin_else
