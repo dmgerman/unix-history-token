@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.15 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,6 +897,16 @@ operator|>=
 literal|43
 if|if
 condition|(
+name|_res
+operator|.
+name|nscount
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 				 * Connect/Send is detrimental if you 				 * are going to poll more than one server 				 */
+if|if
+condition|(
 name|connect
 argument_list|(
 name|s
@@ -953,9 +963,11 @@ directive|endif
 endif|DEBUG
 continue|continue;
 block|}
-else|#
-directive|else
-else|BSD
+block|}
+elseif|else
+endif|#
+directive|endif
+endif|BSD
 if|if
 condition|(
 name|sendto
@@ -1007,9 +1019,6 @@ directive|endif
 endif|DEBUG
 continue|continue;
 block|}
-endif|#
-directive|endif
-endif|BSD
 comment|/* 			 * Wait for reply 			 */
 name|timeout
 operator|.
