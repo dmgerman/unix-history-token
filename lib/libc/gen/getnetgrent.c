@@ -304,6 +304,19 @@ modifier|*
 name|group
 decl_stmt|;
 block|{
+comment|/* Sanity check: no null group names allowed! */
+if|if
+condition|(
+name|group
+operator|==
+name|NULL
+operator|||
+operator|*
+name|group
+operator|==
+literal|'\0'
+condition|)
+return|return;
 if|if
 condition|(
 name|grouphead
