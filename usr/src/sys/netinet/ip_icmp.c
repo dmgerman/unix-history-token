@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2574,6 +2574,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+expr_stmt|;
 name|icmp_send
 argument_list|(
 name|m
