@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -138,15 +138,15 @@ comment|/* never delete this chain of pages */
 name|u_long
 name|flags
 decl_stmt|;
-name|index_t
+name|indx_t
 name|lower
 decl_stmt|;
 comment|/* lower bound of free space on page */
-name|index_t
+name|indx_t
 name|upper
 decl_stmt|;
 comment|/* upper bound of free space on page */
-name|index_t
+name|indx_t
 name|linp
 index|[
 literal|1
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|BTDATAOFF
-value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_long) + sizeof(index_t) + sizeof(index_t))
+value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_long) + sizeof(indx_t) + sizeof(indx_t))
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ name|NEXTINDEX
 parameter_list|(
 name|p
 parameter_list|)
-value|(((p)->lower - BTDATAOFF) / sizeof(index_t))
+value|(((p)->lower - BTDATAOFF) / sizeof(indx_t))
 end_define
 
 begin_comment
@@ -569,7 +569,7 @@ name|pgno_t
 name|pgno
 decl_stmt|;
 comment|/* the page number */
-name|index_t
+name|indx_t
 name|index
 decl_stmt|;
 comment|/* the index on the page */
@@ -588,7 +588,7 @@ modifier|*
 name|page
 decl_stmt|;
 comment|/* the (pinned) page */
-name|index_t
+name|indx_t
 name|index
 decl_stmt|;
 comment|/* the index on the page */
@@ -732,11 +732,11 @@ name|pgno_t
 name|bt_free
 decl_stmt|;
 comment|/* next free page */
-name|index_t
+name|indx_t
 name|bt_psize
 decl_stmt|;
 comment|/* page size */
-name|index_t
+name|indx_t
 name|bt_ovflsize
 decl_stmt|;
 comment|/* cut-off for key/data overflow */

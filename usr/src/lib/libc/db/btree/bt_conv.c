@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_conv.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_conv.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,7 +270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * KDSWAP -- Actually swap the bytes on the page.  *  * Parameters:  *	h:	page to convert  *  * Warnings:  *	Everywhere else in the code, the pgno_t and index_t types are  *	opaque.  These routines know what they really are.  */
+comment|/*  * KDSWAP -- Actually swap the bytes on the page.  *  * Parameters:  *	h:	page to convert  *  * Warnings:  *	Everywhere else in the code, the pgno_t and indx_t types are  *	opaque.  These routines know what they really are.  */
 end_comment
 
 begin_function

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,7 @@ name|exactp
 decl_stmt|;
 block|{
 specifier|register
-name|index_t
+name|indx_t
 name|index
 decl_stmt|;
 specifier|register

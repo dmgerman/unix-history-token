@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.24 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,7 +233,7 @@ condition|)
 goto|goto
 name|einval
 goto|;
-comment|/* 		 * Page size must be index_t aligned and>= MINPSIZE.  Default 		 * page size is set farther on, based on the underlying file 		 * transfer size. 		 */
+comment|/* 		 * Page size must be indx_t aligned and>= MINPSIZE.  Default 		 * page size is set farther on, based on the underlying file 		 * transfer size. 		 */
 if|if
 condition|(
 name|b
@@ -259,7 +259,7 @@ name|psize
 operator|&
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 operator|-
 literal|1
@@ -881,7 +881,7 @@ name|m_psize
 operator|&
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 operator|-
 literal|1
@@ -1142,7 +1142,7 @@ operator|-
 operator|(
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 operator|+
 name|NBLEAFDBT
@@ -1168,7 +1168,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 condition|)
 name|t
@@ -1184,7 +1184,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the buffer pool. */

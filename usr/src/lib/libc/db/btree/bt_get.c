@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_get.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_get.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,7 +350,7 @@ name|cpgno
 decl_stmt|,
 name|pg
 decl_stmt|;
-name|index_t
+name|indx_t
 name|cindex
 decl_stmt|;
 name|int

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.11 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ decl_stmt|,
 modifier|*
 name|rchild
 decl_stmt|;
-name|index_t
+name|indx_t
 name|nxtindex
 decl_stmt|;
 name|size_t
@@ -818,7 +818,7 @@ name|nbytes
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 condition|)
 block|{
@@ -919,7 +919,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -929,7 +929,7 @@ name|lower
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 name|nosplit
@@ -1688,7 +1688,7 @@ name|BTDATAOFF
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2302,7 +2302,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 comment|/* Unpin the root page, set to recno internal page. */
@@ -2638,7 +2638,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 comment|/* Unpin the root page, set to btree internal page. */
@@ -2747,7 +2747,7 @@ name|PAGE
 modifier|*
 name|rval
 decl_stmt|;
-name|index_t
+name|indx_t
 name|full
 decl_stmt|,
 name|half
@@ -3067,7 +3067,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 * 	 * Don't bother checking for the BTF_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
@@ -3337,7 +3337,7 @@ name|off
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 comment|/* If the key is being appended to the page, adjust the index. */
@@ -3353,7 +3353,7 @@ name|lower
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 return|return
@@ -3457,7 +3457,7 @@ block|{
 name|recno_t
 name|recs
 decl_stmt|;
-name|index_t
+name|indx_t
 name|nxt
 decl_stmt|,
 name|top

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_seq.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -969,7 +969,7 @@ name|PAGE
 modifier|*
 name|h
 decl_stmt|;
-name|index_t
+name|indx_t
 name|index
 decl_stmt|;
 name|pgno_t

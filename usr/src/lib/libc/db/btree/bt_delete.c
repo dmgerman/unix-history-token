@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,7 +281,7 @@ name|cpgno
 decl_stmt|,
 name|pg
 decl_stmt|;
-name|index_t
+name|indx_t
 name|cindex
 decl_stmt|;
 name|int
@@ -982,7 +982,7 @@ modifier|*
 name|bl
 decl_stmt|;
 specifier|register
-name|index_t
+name|indx_t
 modifier|*
 name|ip
 decl_stmt|,
@@ -1205,7 +1205,7 @@ name|lower
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 return|return

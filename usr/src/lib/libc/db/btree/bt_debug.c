@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_debug.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_debug.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,7 +596,7 @@ name|RLEAF
 modifier|*
 name|rl
 decl_stmt|;
-name|index_t
+name|indx_t
 name|cur
 decl_stmt|,
 name|top

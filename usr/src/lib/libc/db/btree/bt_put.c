@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	5.12 (Berkeley) %G%"
+literal|"@(#)bt_put.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ name|PAGE
 modifier|*
 name|h
 decl_stmt|;
-name|index_t
+name|indx_t
 name|index
 decl_stmt|,
 name|nxtindex
@@ -741,7 +741,7 @@ name|nbytes
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 condition|)
 block|{
@@ -816,7 +816,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -826,7 +826,7 @@ name|lower
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 name|h
@@ -1174,7 +1174,7 @@ name|nbytes
 operator|+
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 condition|)
 goto|goto
