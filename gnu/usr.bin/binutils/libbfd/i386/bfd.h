@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -35,10 +39,7 @@ include|#
 directive|include
 file|"ansidecl.h"
 comment|/* These two lines get substitutions done by commands in Makefile.in.  */
-define|#
-directive|define
-name|BFD_VERSION
-value|"2.9.1"
+comment|/* #define BFD_VERSION  "2.9.5" */
 define|#
 directive|define
 name|BFD_ARCH_SIZE
@@ -110,9 +111,19 @@ name|__GNUG__
 argument_list|)
 operator|&&
 operator|(
-name|__GNUC_MINOR__
+name|__GNUC__
 operator|>
-literal|5
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|6
+operator|)
 operator|)
 define|#
 directive|define
@@ -172,9 +183,6 @@ name|int
 name|file_ptr
 typedef|;
 comment|/* Support for different sizes of target format ints and addresses.    If the type `long' is at least 64 bits, BFD_HOST_64BIT_LONG will be    set to 1 above.  Otherwise, if gcc is being used, this code will    use gcc's "long long" type.  Otherwise, BFD_HOST_64_BIT must be    defined above.  */
-ifdef|#
-directive|ifdef
-name|BFD64
 ifndef|#
 directive|ifndef
 name|BFD_HOST_64_BIT
@@ -194,6 +202,11 @@ directive|else
 ifdef|#
 directive|ifdef
 name|__GNUC__
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|2
 define|#
 directive|define
 name|BFD_HOST_64_BIT
@@ -202,18 +215,27 @@ define|#
 directive|define
 name|BFD_HOST_U_64_BIT
 value|unsigned long long
-else|#
-directive|else
-comment|/* ! defined (__GNUC__) */
-error|#
-directive|error
-error|No 64 bit integer type available
+endif|#
+directive|endif
+comment|/* __GNUC__>= 2 */
 endif|#
 directive|endif
 comment|/* ! defined (__GNUC__) */
 endif|#
 directive|endif
 comment|/* ! BFD_HOST_64BIT_LONG */
+endif|#
+directive|endif
+comment|/* ! defined (BFD_HOST_64_BIT) */
+ifdef|#
+directive|ifdef
+name|BFD64
+ifndef|#
+directive|ifndef
+name|BFD_HOST_64_BIT
+error|#
+directive|error
+error|No 64 bit integer type available
 endif|#
 directive|endif
 comment|/* ! defined (BFD_HOST_64_BIT) */
@@ -2382,6 +2404,48 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Return an upper bound on the number of bytes required to store a    copy of ABFD's program header table entries.  Return -1 if an error    occurs; bfd_get_error will return an appropriate code.  */
+specifier|extern
+name|long
+name|bfd_get_elf_phdr_upper_bound
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Copy ABFD's program header table entries to *PHDRS.  The entries    will be stored as an array of Elf_Internal_Phdr structures, as    defined in include/elf/internal.h.  To find out how large the    buffer needs to be, call bfd_get_elf_phdr_upper_bound.     Return the number of program header table entries read, or -1 if an    error occurs; bfd_get_error will return an appropriate code.  */
+specifier|extern
+name|int
+name|bfd_get_elf_phdrs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|void
+operator|*
+name|phdrs
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Return the arch_size field of an elf bfd, or -1 if not elf.  */
+specifier|extern
+name|int
+name|bfd_elf_get_arch_size
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* SunOS shared library support routines for the linker.  */
 specifier|extern
 name|struct
@@ -2785,6 +2849,186 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_coff_set_symbol_class
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|symbol_cache_entry
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* ARM Interworking support.  Called from linker.  */
+specifier|extern
+name|boolean
+name|bfd_arm_allocate_interworking_sections
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_arm_process_before_allocation
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_arm_get_bfd_for_interworking
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* PE ARM Interworking support.  Called from linker.  */
+specifier|extern
+name|boolean
+name|bfd_arm_pe_allocate_interworking_sections
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_arm_pe_process_before_allocation
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_arm_pe_get_bfd_for_interworking
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* ELF ARM Interworking support.  Called from linker.  */
+specifier|extern
+name|boolean
+name|bfd_elf32_arm_allocate_interworking_sections
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_elf32_arm_process_before_allocation
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_elf32_arm_get_bfd_for_interworking
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* TI COFF load page support. */
+specifier|extern
+name|void
+name|bfd_ticoff_set_section_load_page
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|sec
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|bfd_ticoff_get_section_load_page
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|sec
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* And more from the source.  */
 name|void
 name|bfd_init
@@ -2908,6 +3152,28 @@ name|templ
 operator|)
 argument_list|)
 decl_stmt|;
+name|boolean
+name|bfd_make_writable
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+name|boolean
+name|bfd_make_readable
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Byte swapping macros for user section data.  */
 define|#
 directive|define
@@ -2920,7 +3186,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|(*((unsigned char *)(ptr)) = (unsigned char)(val))
+value|((void) (*((unsigned char *)(ptr)) = (unsigned char)(val)))
 define|#
 directive|define
 name|bfd_put_signed_8
@@ -3057,6 +3323,32 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx_signed_64, (ptr))
+define|#
+directive|define
+name|bfd_get
+parameter_list|(
+name|bits
+parameter_list|,
+name|abfd
+parameter_list|,
+name|ptr
+parameter_list|)
+define|\
+value|((bits) == 8 ? bfd_get_8 (abfd, ptr)           \                 : (bits) == 16 ? bfd_get_16 (abfd, ptr)        \                 : (bits) == 32 ? bfd_get_32 (abfd, ptr)        \                 : (bits) == 64 ? bfd_get_64 (abfd, ptr)        \                 : (abort (), (bfd_vma) - 1))
+define|#
+directive|define
+name|bfd_put
+parameter_list|(
+name|bits
+parameter_list|,
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|ptr
+parameter_list|)
+define|\
+value|((bits) == 8 ? bfd_put_8 (abfd, val, ptr)      \                 : (bits) == 16 ? bfd_put_16 (abfd, val, ptr)   \                 : (bits) == 32 ? bfd_put_32 (abfd, val, ptr)   \                 : (bits) == 64 ? bfd_put_64 (abfd, val, ptr)   \                 : (abort (), (void) 0))
 comment|/* Byte swapping macros for file header data.  */
 define|#
 directive|define
@@ -3213,6 +3505,28 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx_signed_64, (ptr))
+comment|/* This structure is used for a comdat section, as in PE.  A comdat     section is associated with a particular symbol.  When the linker     sees a comdat section, it keeps only one of the sections with a     given name and associated with a given symbol. */
+struct|struct
+name|bfd_comdat_info
+block|{
+comment|/* The name of the symbol associated with a comdat section.  */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* The local symbol table index of the symbol associated with a      comdat section.  This is only meaningful to the object file format      specific code; it is not an index into the list returned by      bfd_canonicalize_symtab.  */
+name|long
+name|symbol
+decl_stmt|;
+comment|/* If this section is being discarded, the linker uses this field      to point to the input section which is being kept.  */
+name|struct
+name|sec
+modifier|*
+name|sec
+decl_stmt|;
+block|}
+struct|;
 typedef|typedef
 struct|struct
 name|sec
@@ -3291,7 +3605,7 @@ define|#
 directive|define
 name|SEC_CONSTRUCTOR
 value|0x100
-comment|/* The section is a constuctor, and should be placed at the           end of the text, data, or bss section(?). */
+comment|/* The section is a constructor, and should be placed at the           end of the text, data, or bss section(?). */
 define|#
 directive|define
 name|SEC_CONSTRUCTOR_TEXT
@@ -3379,6 +3693,31 @@ define|#
 directive|define
 name|SEC_LINKER_CREATED
 value|0x800000
+comment|/* This section should not be subject to garbage collection.  */
+define|#
+directive|define
+name|SEC_KEEP
+value|0x1000000
+comment|/* This section contains "short" data, and should be placed           "near" the GP.  */
+define|#
+directive|define
+name|SEC_SMALL_DATA
+value|0x2000000
+comment|/* This section contains data which may be shared with other           executables or shared objects.  */
+define|#
+directive|define
+name|SEC_SHARED
+value|0x4000000
+comment|/* When a section with this flag is being linked, then if the size of           the input section is less than a page, it should not cross a page           boundary.  If the size of the input section is one page or more, it           should be aligned on a page boundary.  */
+define|#
+directive|define
+name|SEC_BLOCK
+value|0x8000000
+comment|/* Conditionally link this section; do not link if there are no           references found to any symbol in the section.  */
+define|#
+directive|define
+name|SEC_CLINK
+value|0x10000000
 comment|/*  End of section flags.  */
 comment|/* Some internal packed boolean fields.  */
 comment|/* See the vma field.  */
@@ -3402,6 +3741,13 @@ name|linker_mark
 range|:
 literal|1
 decl_stmt|;
+comment|/* A mark flag used by some linker backends for garbage collection.  */
+name|unsigned
+name|int
+name|gc_mark
+range|:
+literal|1
+decl_stmt|;
 comment|/* End of internal packed boolean fields.  */
 comment|/*  The virtual memory address of the section - where it will be            at run time.  The symbols are relocated against this.  The            user_set_vma flag is maintained by bfd; if it's not set, the            backend can assign addresses (for example, in<<a.out>>, where            the default address for<<.data>> is dependent on the specific            target and various flags).  */
 name|bfd_vma
@@ -3411,15 +3757,15 @@ comment|/*  The load address of the section - where it would be in a            
 name|bfd_vma
 name|lma
 decl_stmt|;
-comment|/* The size of the section in bytes, as it will be output.            contains a value even if the section has no contents (e.g., the            size of<<.bss>>). This will be filled in after relocation */
+comment|/* The size of the section in octets, as it will be output.            Contains a value even if the section has no contents (e.g., the            size of<<.bss>>).  This will be filled in after relocation.  */
 name|bfd_size_type
 name|_cooked_size
 decl_stmt|;
-comment|/* The original size on disk of the section, in bytes.  Normally this            value is the same as the size, but if some relaxing has            been done, then this value will be bigger.  */
+comment|/* The original size on disk of the section, in octets.  Normally this            value is the same as the size, but if some relaxing has            been done, then this value will be bigger.  */
 name|bfd_size_type
 name|_raw_size
 decl_stmt|;
-comment|/* If this section is going to be output, then this value is the            offset into the output section of the first byte in the input            section. E.g., if this was going to start at the 100th byte in            the output section, this value would be 100. */
+comment|/* If this section is going to be output, then this value is the            offset in *bytes* into the output section of the first byte in the            input section (byte ==> smallest addressable unit on the            target).  In most cases, if this was going to start at the            100th octet (8-bit quantity) in the output section, this value            would be 100.  However, if the target byte size is 16 bits            (bfd_octets_per_byte is "2"), this value would be 50. */
 name|bfd_vma
 name|output_offset
 decl_stmt|;
@@ -3483,6 +3829,12 @@ comment|/* Number of line number records   */
 name|unsigned
 name|int
 name|lineno_count
+decl_stmt|;
+comment|/* Optional information about a COMDAT entry; NULL if not COMDAT */
+name|struct
+name|bfd_comdat_info
+modifier|*
+name|comdat
 decl_stmt|;
 comment|/* When a section is being output, this value changes as more            linenumbers are written out */
 name|file_ptr
@@ -3648,7 +4000,7 @@ parameter_list|(
 name|section
 parameter_list|)
 define|\
-value|(section->reloc_done ? (abort(),1): (section)->_raw_size)
+value|((section)->reloc_done ? (abort (), (bfd_size_type) 1) \                             : (section)->_raw_size)
 define|#
 directive|define
 name|bfd_get_section_size_after_reloc
@@ -3656,7 +4008,7 @@ parameter_list|(
 name|section
 parameter_list|)
 define|\
-value|((section->reloc_done) ? (section)->_cooked_size: (abort(),1))
+value|((section)->reloc_done ? (section)->_cooked_size \                             : (abort (), (bfd_size_type) 1))
 name|asection
 modifier|*
 name|bfd_get_section_by_name
@@ -3876,6 +4228,22 @@ name|osection
 parameter_list|)
 define|\
 value|BFD_SEND (obfd, _bfd_copy_private_section_data, \                (ibfd, isection, obfd, osection))
+name|void
+name|_bfd_strip_section_from_output
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+name|info
+operator|,
+name|asection
+operator|*
+name|section
+operator|)
+argument_list|)
+decl_stmt|;
 enum|enum
 name|bfd_architecture
 block|{
@@ -3916,6 +4284,10 @@ define|#
 directive|define
 name|bfd_mach_m68060
 value|7
+define|#
+directive|define
+name|bfd_mach_cpu32
+value|8
 name|bfd_arch_vax
 block|,
 comment|/* DEC Vax */
@@ -3985,12 +4357,16 @@ value|5
 comment|/* with ultrasparc add'ns */
 define|#
 directive|define
-name|bfd_mach_sparc_v9
+name|bfd_mach_sparc_sparclite_le
 value|6
 define|#
 directive|define
-name|bfd_mach_sparc_v9a
+name|bfd_mach_sparc_v9
 value|7
+define|#
+directive|define
+name|bfd_mach_sparc_v9a
+value|8
 comment|/* with ultrasparc add'ns */
 comment|/* Nonzero if MACH has the v9 instruction set.  */
 define|#
@@ -4024,6 +4400,10 @@ define|#
 directive|define
 name|bfd_mach_mips4100
 value|4100
+define|#
+directive|define
+name|bfd_mach_mips4111
+value|4111
 define|#
 directive|define
 name|bfd_mach_mips4300
@@ -4071,6 +4451,10 @@ define|#
 directive|define
 name|bfd_mach_i386_i8086
 value|1
+define|#
+directive|define
+name|bfd_mach_i386_i386_intel_syntax
+value|2
 name|bfd_arch_we32k
 block|,
 comment|/* AT&T WE32xxx */
@@ -4080,6 +4464,9 @@ comment|/* CCI/Harris Tahoe */
 name|bfd_arch_i860
 block|,
 comment|/* Intel 860 */
+name|bfd_arch_i370
+block|,
+comment|/* IBM 360/370 Mainframes */
 name|bfd_arch_romp
 block|,
 comment|/* IBM ROMP PC/RT */
@@ -4122,6 +4509,21 @@ comment|/* HP PA RISC */
 name|bfd_arch_d10v
 block|,
 comment|/* Mitsubishi D10V */
+define|#
+directive|define
+name|bfd_mach_d10v
+value|0
+define|#
+directive|define
+name|bfd_mach_d10v_ts2
+value|2
+define|#
+directive|define
+name|bfd_mach_d10v_ts3
+value|3
+name|bfd_arch_d30v
+block|,
+comment|/* Mitsubishi D30V */
 name|bfd_arch_z8k
 block|,
 comment|/* Zilog Z8000 */
@@ -4145,8 +4547,20 @@ name|bfd_mach_sh
 value|0
 define|#
 directive|define
+name|bfd_mach_sh2
+value|0x20
+define|#
+directive|define
+name|bfd_mach_sh_dsp
+value|0x2d
+define|#
+directive|define
 name|bfd_mach_sh3
 value|0x30
+define|#
+directive|define
+name|bfd_mach_sh3_dsp
+value|0x3d
 define|#
 directive|define
 name|bfd_mach_sh3e
@@ -4158,6 +4572,18 @@ value|0x40
 name|bfd_arch_alpha
 block|,
 comment|/* Dec Alpha */
+define|#
+directive|define
+name|bfd_mach_alpha_ev4
+value|0x10
+define|#
+directive|define
+name|bfd_mach_alpha_ev5
+value|0x20
+define|#
+directive|define
+name|bfd_mach_alpha_ev6
+value|0x30
 name|bfd_arch_arm
 block|,
 comment|/* Advanced Risc Machines ARM */
@@ -4185,6 +4611,14 @@ define|#
 directive|define
 name|bfd_mach_arm_4T
 value|6
+define|#
+directive|define
+name|bfd_mach_arm_5
+value|7
+define|#
+directive|define
+name|bfd_mach_arm_5T
+value|8
 name|bfd_arch_ns32k
 block|,
 comment|/* National Semiconductors ns32000 */
@@ -4194,6 +4628,12 @@ comment|/* WDC 65816 */
 name|bfd_arch_tic30
 block|,
 comment|/* Texas Instruments TMS320C30 */
+name|bfd_arch_tic54x
+block|,
+comment|/* Texas Instruments TMS320C54X */
+name|bfd_arch_tic80
+block|,
+comment|/* TI TMS320c80 (MVP) */
 name|bfd_arch_v850
 block|,
 comment|/* NEC V850 */
@@ -4201,6 +4641,14 @@ define|#
 directive|define
 name|bfd_mach_v850
 value|0
+define|#
+directive|define
+name|bfd_mach_v850e
+value|'E'
+define|#
+directive|define
+name|bfd_mach_v850ea
+value|'A'
 name|bfd_arch_arc
 block|,
 comment|/* Argonaut RISC Core */
@@ -4216,12 +4664,56 @@ directive|define
 name|bfd_mach_m32r
 value|0
 comment|/* backwards compatibility */
+define|#
+directive|define
+name|bfd_mach_m32rx
+value|'x'
 name|bfd_arch_mn10200
 block|,
 comment|/* Matsushita MN10200 */
 name|bfd_arch_mn10300
 block|,
 comment|/* Matsushita MN10300 */
+define|#
+directive|define
+name|bfd_mach_mn10300
+value|300
+define|#
+directive|define
+name|bfd_mach_am33
+value|330
+name|bfd_arch_fr30
+block|,
+define|#
+directive|define
+name|bfd_mach_fr30
+value|0x46523330
+name|bfd_arch_mcore
+block|,
+name|bfd_arch_ia64
+block|,
+comment|/* HP/Intel ia64 */
+name|bfd_arch_pj
+block|,
+name|bfd_arch_avr
+block|,
+comment|/* Atmel AVR microcontrollers */
+define|#
+directive|define
+name|bfd_mach_avr1
+value|1
+define|#
+directive|define
+name|bfd_mach_avr2
+value|2
+define|#
+directive|define
+name|bfd_mach_avr3
+value|3
+define|#
+directive|define
+name|bfd_mach_avr4
+value|4
 name|bfd_arch_last
 block|}
 enum|;
@@ -4485,6 +4977,34 @@ name|machine
 operator|)
 argument_list|)
 decl_stmt|;
+name|unsigned
+name|int
+name|bfd_octets_per_byte
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|int
+name|bfd_arch_mach_octets_per_byte
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|bfd_architecture
+name|arch
+operator|,
+name|unsigned
+name|long
+name|machine
+operator|)
+argument_list|)
+decl_stmt|;
 typedef|typedef
 enum|enum
 name|bfd_reloc_status
@@ -4638,11 +5158,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* When performing a partial link, some formats must modify the           relocations rather than the data - this flag signals this.*/
+comment|/* Some formats record a relocation addend in the section contents           rather than with the relocation.  For ELF formats this is the           distinction between USE_REL and USE_RELA (though the code checks           for USE_REL == 1/0).  The value of this field is TRUE if the           addend is recorded with the section contents; when performing a           partial link (ld -r) the section contents (the data) will be           modified.  The value of this field is FALSE if addends are           recorded with the relocation (in arelent.addend); when performing           a partial link the relocation will be modified.           All relocations for all ELF USE_RELA targets should set this field           to FALSE (values of TRUE should be looked on with suspicion).           However, the converse is not true: not all relocations of all ELF           USE_REL targets set this field to TRUE.  Why this is so is peculiar           to each particular target.  For relocs that aren't used in partial           links (e.g. GOT stuff) it doesn't matter what this is set to.  */
 name|boolean
 name|partial_inplace
 decl_stmt|;
-comment|/* The src_mask selects which parts of the read in data           are to be used in the relocation sum.  E.g., if this was an 8 bit           bit of data which we read and relocated, this would be           0x000000ff. When we have relocs which have an addend, such as           sun4 extended relocs, the value in the offset part of a           relocating field is garbage so we never use it. In this case           the mask would be 0x00000000. */
+comment|/* The src_mask selects which parts of the read in data           are to be used in the relocation sum.  E.g., if this was an 8 bit           byte of data which we read and relocated, this would be           0x000000ff. When we have relocs which have an addend, such as           sun4 extended relocs, the value in the offset part of a           relocating field is garbage so we never use it. In this case           the mask would be 0x00000000. */
 name|bfd_vma
 name|src_mask
 decl_stmt|;
@@ -4705,6 +5225,14 @@ parameter_list|)
 value|HOWTO(0,0,SIZE,0,REL,0,complain_overflow_dont,FUNCTION, NAME,false,0,0,IN)
 define|#
 directive|define
+name|EMPTY_HOWTO
+parameter_list|(
+name|C
+parameter_list|)
+define|\
+value|HOWTO((C),0,0,0,false,0,complain_overflow_dont,NULL,NULL,false,0,0,false)
+define|#
+directive|define
 name|HOWTO_PREPARE
 parameter_list|(
 name|relocation
@@ -4755,6 +5283,10 @@ operator|,
 name|unsigned
 name|int
 name|rightshift
+operator|,
+name|unsigned
+name|int
+name|addrsize
 operator|,
 name|bfd_vma
 name|relocation
@@ -5026,6 +5558,9 @@ name|BFD_RELOC_SPARC_L44
 block|,
 name|BFD_RELOC_SPARC_REGISTER
 block|,
+comment|/* SPARC little endian relocation */
+name|BFD_RELOC_SPARC_REV32
+block|,
 comment|/* Alpha ECOFF and ELF relocations.  Some of these treat the symbol or "addend" in some special way. For GPDISP_HI16 ("gpdisp") relocations, the symbol is ignored when writing; when reading, it will be the absolute section symbol.  The addend is the displacement in bytes of the "lda" instruction from the "ldah" instruction (which is at the address of this reloc). */
 name|BFD_RELOC_ALPHA_GPDISP_HI16
 block|,
@@ -5041,6 +5576,21 @@ block|,
 name|BFD_RELOC_ALPHA_ELF_LITERAL
 block|,
 name|BFD_RELOC_ALPHA_LITUSE
+block|,
+comment|/* The BFD_RELOC_ALPHA_USER_* relocations are used by the assembler to process the explicit !<reloc>!sequence relocations, and are mapped into the normal relocations at the end of processing. */
+name|BFD_RELOC_ALPHA_USER_LITERAL
+block|,
+name|BFD_RELOC_ALPHA_USER_LITUSE_BASE
+block|,
+name|BFD_RELOC_ALPHA_USER_LITUSE_BYTOFF
+block|,
+name|BFD_RELOC_ALPHA_USER_LITUSE_JSR
+block|,
+name|BFD_RELOC_ALPHA_USER_GPDISP
+block|,
+name|BFD_RELOC_ALPHA_USER_GPRELHIGH
+block|,
+name|BFD_RELOC_ALPHA_USER_GPRELLOW
 block|,
 comment|/* The HINT relocation indicates a value that should be filled into the "hint" field of a jmp/jsr/ret instruction, for possible branch- prediction logic which may be provided on some processors. */
 name|BFD_RELOC_ALPHA_HINT
@@ -5100,6 +5650,14 @@ name|BFD_RELOC_MIPS_CALL_HI16
 block|,
 name|BFD_RELOC_MIPS_CALL_LO16
 block|,
+name|BFD_RELOC_MIPS_SUB
+block|,
+name|BFD_RELOC_MIPS_GOT_PAGE
+block|,
+name|BFD_RELOC_MIPS_GOT_OFST
+block|,
+name|BFD_RELOC_MIPS_GOT_DISP
+block|,
 comment|/* i386/elf relocations */
 name|BFD_RELOC_386_GOT32
 block|,
@@ -5141,6 +5699,19 @@ block|,
 name|BFD_RELOC_NS32K_DISP_16_PCREL
 block|,
 name|BFD_RELOC_NS32K_DISP_32_PCREL
+block|,
+comment|/* Picojava relocs.  Not all of these appear in object files. */
+name|BFD_RELOC_PJ_CODE_HI16
+block|,
+name|BFD_RELOC_PJ_CODE_LO16
+block|,
+name|BFD_RELOC_PJ_CODE_DIR16
+block|,
+name|BFD_RELOC_PJ_CODE_DIR32
+block|,
+name|BFD_RELOC_PJ_CODE_REL16
+block|,
+name|BFD_RELOC_PJ_CODE_REL32
 block|,
 comment|/* Power(rs6000) and PowerPC relocations. */
 name|BFD_RELOC_PPC_B26
@@ -5203,14 +5774,25 @@ name|BFD_RELOC_PPC_EMB_BIT_FLD
 block|,
 name|BFD_RELOC_PPC_EMB_RELSDA
 block|,
+comment|/* IBM 370/390 relocations */
+name|BFD_RELOC_I370_D12
+block|,
 comment|/* The type of reloc used to build a contructor table - at the moment probably a 32 bit wide absolute relocation, but the target can choose. It generally does map to one of the other relocation types. */
 name|BFD_RELOC_CTOR
 block|,
 comment|/* ARM 26 bit pc-relative branch.  The lowest two bits must be zero and are not stored in the instruction. */
 name|BFD_RELOC_ARM_PCREL_BRANCH
 block|,
+comment|/* ARM 26 bit pc-relative branch.  The lowest bit must be zero and is not stored in the instruction.  The 2nd lowest bit comes from a 1 bit field in the instruction. */
+name|BFD_RELOC_ARM_PCREL_BLX
+block|,
+comment|/* Thumb 22 bit pc-relative branch.  The lowest bit must be zero and is not stored in the instruction.  The 2nd lowest bit comes from a 1 bit field in the instruction. */
+name|BFD_RELOC_THUMB_PCREL_BLX
+block|,
 comment|/* These relocs are only used within the ARM assembler.  They are not (at present) written to any object files. */
 name|BFD_RELOC_ARM_IMMEDIATE
+block|,
+name|BFD_RELOC_ARM_ADRL_IMMEDIATE
 block|,
 name|BFD_RELOC_ARM_OFFSET_IMM
 block|,
@@ -5241,6 +5823,24 @@ block|,
 name|BFD_RELOC_ARM_THUMB_SHIFT
 block|,
 name|BFD_RELOC_ARM_THUMB_OFFSET
+block|,
+name|BFD_RELOC_ARM_GOT12
+block|,
+name|BFD_RELOC_ARM_GOT32
+block|,
+name|BFD_RELOC_ARM_JUMP_SLOT
+block|,
+name|BFD_RELOC_ARM_COPY
+block|,
+name|BFD_RELOC_ARM_GLOB_DAT
+block|,
+name|BFD_RELOC_ARM_PLT32
+block|,
+name|BFD_RELOC_ARM_RELATIVE
+block|,
+name|BFD_RELOC_ARM_GOTOFF
+block|,
+name|BFD_RELOC_ARM_GOTPC
 block|,
 comment|/* Hitachi SH relocs.  Not all of these appear in object files. */
 name|BFD_RELOC_SH_PCDISP8BY2
@@ -5279,6 +5879,10 @@ name|BFD_RELOC_SH_DATA
 block|,
 name|BFD_RELOC_SH_LABEL
 block|,
+name|BFD_RELOC_SH_LOOP_START
+block|,
+name|BFD_RELOC_SH_LOOP_END
+block|,
 comment|/* Thumb 23-, 12- and 9-bit pc-relative branches.  The lowest bit must be zero and is not stored in the instruction. */
 name|BFD_RELOC_THUMB_PCREL_BRANCH9
 block|,
@@ -5303,6 +5907,39 @@ name|BFD_RELOC_D10V_18
 block|,
 comment|/* This is an 18-bit reloc with the right 2 bits assumed to be 0. */
 name|BFD_RELOC_D10V_18_PCREL
+block|,
+comment|/* Mitsubishi D30V relocs. This is a 6-bit absolute reloc. */
+name|BFD_RELOC_D30V_6
+block|,
+comment|/* This is a 6-bit pc-relative reloc with the right 3 bits assumed to be 0. */
+name|BFD_RELOC_D30V_9_PCREL
+block|,
+comment|/* This is a 6-bit pc-relative reloc with the right 3 bits assumed to be 0. Same as the previous reloc but on the right side of the container. */
+name|BFD_RELOC_D30V_9_PCREL_R
+block|,
+comment|/* This is a 12-bit absolute reloc with the right 3 bitsassumed to be 0. */
+name|BFD_RELOC_D30V_15
+block|,
+comment|/* This is a 12-bit pc-relative reloc with the right 3 bits assumed to be 0. */
+name|BFD_RELOC_D30V_15_PCREL
+block|,
+comment|/* This is a 12-bit pc-relative reloc with the right 3 bits assumed to be 0. Same as the previous reloc but on the right side of the container. */
+name|BFD_RELOC_D30V_15_PCREL_R
+block|,
+comment|/* This is an 18-bit absolute reloc with the right 3 bits assumed to be 0. */
+name|BFD_RELOC_D30V_21
+block|,
+comment|/* This is an 18-bit pc-relative reloc with the right 3 bits assumed to be 0. */
+name|BFD_RELOC_D30V_21_PCREL
+block|,
+comment|/* This is an 18-bit pc-relative reloc with the right 3 bits assumed to be 0. Same as the previous reloc but on the right side of the container. */
+name|BFD_RELOC_D30V_21_PCREL_R
+block|,
+comment|/* This is a 32-bit absolute reloc. */
+name|BFD_RELOC_D30V_32
+block|,
+comment|/* This is a 32-bit pc-relative reloc. */
+name|BFD_RELOC_D30V_32_PCREL
 block|,
 comment|/* Mitsubishi M32R relocs. This is a 24 bit absolute address. */
 name|BFD_RELOC_M32R_24
@@ -5358,6 +5995,24 @@ block|,
 comment|/* This is a 16 bit offset from the tiny data area pointer. */
 name|BFD_RELOC_V850_TDA_16_16_OFFSET
 block|,
+comment|/* This is a 5 bit offset (of which only 4 bits are used) from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_4_5_OFFSET
+block|,
+comment|/* This is a 4 bit offset from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_4_4_OFFSET
+block|,
+comment|/* This is a 16 bit offset from the short data area pointer, with the bits placed non-contigously in the instruction. */
+name|BFD_RELOC_V850_SDA_16_16_SPLIT_OFFSET
+block|,
+comment|/* This is a 16 bit offset from the zero data area pointer, with the bits placed non-contigously in the instruction. */
+name|BFD_RELOC_V850_ZDA_16_16_SPLIT_OFFSET
+block|,
+comment|/* This is a 6 bit offset from the call table base pointer. */
+name|BFD_RELOC_V850_CALLT_6_7_OFFSET
+block|,
+comment|/* This is a 16 bit offset from the call table base pointer. */
+name|BFD_RELOC_V850_CALLT_16_16_OFFSET
+block|,
 comment|/* This is a 32bit pcrel reloc for the mn10300, offset by two bytes in the instruction. */
 name|BFD_RELOC_MN10300_32_PCREL
 block|,
@@ -5366,6 +6021,238 @@ name|BFD_RELOC_MN10300_16_PCREL
 block|,
 comment|/* This is a 8bit DP reloc for the tms320c30, where the most significant 8 bits of a 24 bit word are placed into the least significant 8 bits of the opcode. */
 name|BFD_RELOC_TIC30_LDP
+block|,
+comment|/* This is a 7bit reloc for the tms320c54x, where the least significant 7 bits of a 16 bit word are placed into the least significant 7 bits of the opcode. */
+name|BFD_RELOC_TIC54X_PARTLS7
+block|,
+comment|/* This is a 9bit DP reloc for the tms320c54x, where the most significant 9 bits of a 16 bit word are placed into the least significant 9 bits of the opcode. */
+name|BFD_RELOC_TIC54X_PARTMS9
+block|,
+comment|/* This is an extended address 23-bit reloc for the tms320c54x. */
+name|BFD_RELOC_TIC54X_23
+block|,
+comment|/* This is a 16-bit reloc for the tms320c54x, where the least  significant 16 bits of a 23-bit extended address are placed into  the opcode. */
+name|BFD_RELOC_TIC54X_16_OF_23
+block|,
+comment|/* This is a reloc for the tms320c54x, where the most significant 7 bits of a 23-bit extended address are placed into  the opcode. */
+name|BFD_RELOC_TIC54X_MS7_OF_23
+block|,
+comment|/* This is a 48 bit reloc for the FR30 that stores 32 bits. */
+name|BFD_RELOC_FR30_48
+block|,
+comment|/* This is a 32 bit reloc for the FR30 that stores 20 bits split up into two sections. */
+name|BFD_RELOC_FR30_20
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores a 6 bit word offset in 4 bits. */
+name|BFD_RELOC_FR30_6_IN_4
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores an 8 bit byte offset into 8 bits. */
+name|BFD_RELOC_FR30_8_IN_8
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores a 9 bit short offset into 8 bits. */
+name|BFD_RELOC_FR30_9_IN_8
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores a 10 bit word offset into 8 bits. */
+name|BFD_RELOC_FR30_10_IN_8
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores a 9 bit pc relative short offset into 8 bits. */
+name|BFD_RELOC_FR30_9_PCREL
+block|,
+comment|/* This is a 16 bit reloc for the FR30 that stores a 12 bit pc relative short offset into 11 bits. */
+name|BFD_RELOC_FR30_12_PCREL
+block|,
+comment|/* Motorola Mcore relocations. */
+name|BFD_RELOC_MCORE_PCREL_IMM8BY4
+block|,
+name|BFD_RELOC_MCORE_PCREL_IMM11BY2
+block|,
+name|BFD_RELOC_MCORE_PCREL_IMM4BY2
+block|,
+name|BFD_RELOC_MCORE_PCREL_32
+block|,
+name|BFD_RELOC_MCORE_PCREL_JSR_IMM11BY2
+block|,
+name|BFD_RELOC_MCORE_RVA
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit pc relative short offset into 7 bits. */
+name|BFD_RELOC_AVR_7_PCREL
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 13 bit pc relative short offset into 12 bits. */
+name|BFD_RELOC_AVR_13_PCREL
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 17 bit value (usually program memory address) into 16 bits. */
+name|BFD_RELOC_AVR_16_PM
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (usually data memory address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_LO8_LDI
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (high 8 bit of data memory address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_HI8_LDI
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (most high 8 bit of program memory address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_HH8_LDI
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (usually data memory address) into 8 bit immediate value of SUBI insn. */
+name|BFD_RELOC_AVR_LO8_LDI_NEG
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (high 8 bit of data memory address) into 8 bit immediate value of SUBI insn. */
+name|BFD_RELOC_AVR_HI8_LDI_NEG
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (most high 8 bit of program memory address) into 8 bit immediate value of LDI or SUBI insn. */
+name|BFD_RELOC_AVR_HH8_LDI_NEG
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (usually command address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_LO8_LDI_PM
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (high 8 bit of command address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_HI8_LDI_PM
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores 8 bit value (most high 8 bit of command address) into 8 bit immediate value of LDI insn. */
+name|BFD_RELOC_AVR_HH8_LDI_PM
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (usually command address) into 8 bit immediate value of SUBI insn. */
+name|BFD_RELOC_AVR_LO8_LDI_PM_NEG
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (high 8 bit of 16 bit command address) into 8 bit immediate value of SUBI insn. */
+name|BFD_RELOC_AVR_HI8_LDI_PM_NEG
+block|,
+comment|/* This is a 16 bit reloc for the AVR that stores negated 8 bit value (high 6 bit of 22 bit command address) into 8 bit immediate value of SUBI insn. */
+name|BFD_RELOC_AVR_HH8_LDI_PM_NEG
+block|,
+comment|/* This is a 32 bit reloc for the AVR that stores 23 bit value into 22 bits. */
+name|BFD_RELOC_AVR_CALL
+block|,
+comment|/* These two relocations are used by the linker to determine which of the entries in a C++ virtual function table are actually used.  When the --gc-sections option is given, the linker will zero out the entries that are not used, so that the code for those functions need not be included in the output.  VTABLE_INHERIT is a zero-space relocation used to describe to the linker the inheritence tree of a C++ virtual function table.  The relocation's symbol should be the parent class' vtable, and the relocation should be located at the child vtable.  VTABLE_ENTRY is a zero-space relocation that describes the use of a virtual function table entry.  The reloc's symbol should refer to the table of the class mentioned in the code.  Off of that base, an offset describes the entry that is being used.  For Rela hosts, this offset is stored in the reloc's addend.  For Rel hosts, we are forced to put this offset in the reloc's section offset. */
+name|BFD_RELOC_VTABLE_INHERIT
+block|,
+name|BFD_RELOC_VTABLE_ENTRY
+block|,
+comment|/* Intel IA64 Relocations. */
+name|BFD_RELOC_IA64_IMM14
+block|,
+name|BFD_RELOC_IA64_IMM22
+block|,
+name|BFD_RELOC_IA64_IMM64
+block|,
+name|BFD_RELOC_IA64_DIR32MSB
+block|,
+name|BFD_RELOC_IA64_DIR32LSB
+block|,
+name|BFD_RELOC_IA64_DIR64MSB
+block|,
+name|BFD_RELOC_IA64_DIR64LSB
+block|,
+name|BFD_RELOC_IA64_GPREL22
+block|,
+name|BFD_RELOC_IA64_GPREL64I
+block|,
+name|BFD_RELOC_IA64_GPREL32MSB
+block|,
+name|BFD_RELOC_IA64_GPREL32LSB
+block|,
+name|BFD_RELOC_IA64_GPREL64MSB
+block|,
+name|BFD_RELOC_IA64_GPREL64LSB
+block|,
+name|BFD_RELOC_IA64_LTOFF22
+block|,
+name|BFD_RELOC_IA64_LTOFF64I
+block|,
+name|BFD_RELOC_IA64_PLTOFF22
+block|,
+name|BFD_RELOC_IA64_PLTOFF64I
+block|,
+name|BFD_RELOC_IA64_PLTOFF64MSB
+block|,
+name|BFD_RELOC_IA64_PLTOFF64LSB
+block|,
+name|BFD_RELOC_IA64_FPTR64I
+block|,
+name|BFD_RELOC_IA64_FPTR32MSB
+block|,
+name|BFD_RELOC_IA64_FPTR32LSB
+block|,
+name|BFD_RELOC_IA64_FPTR64MSB
+block|,
+name|BFD_RELOC_IA64_FPTR64LSB
+block|,
+name|BFD_RELOC_IA64_PCREL21B
+block|,
+name|BFD_RELOC_IA64_PCREL21M
+block|,
+name|BFD_RELOC_IA64_PCREL21F
+block|,
+name|BFD_RELOC_IA64_PCREL32MSB
+block|,
+name|BFD_RELOC_IA64_PCREL32LSB
+block|,
+name|BFD_RELOC_IA64_PCREL64MSB
+block|,
+name|BFD_RELOC_IA64_PCREL64LSB
+block|,
+name|BFD_RELOC_IA64_LTOFF_FPTR22
+block|,
+name|BFD_RELOC_IA64_LTOFF_FPTR64I
+block|,
+name|BFD_RELOC_IA64_LTOFF_FPTR64MSB
+block|,
+name|BFD_RELOC_IA64_LTOFF_FPTR64LSB
+block|,
+name|BFD_RELOC_IA64_SEGBASE
+block|,
+name|BFD_RELOC_IA64_SEGREL32MSB
+block|,
+name|BFD_RELOC_IA64_SEGREL32LSB
+block|,
+name|BFD_RELOC_IA64_SEGREL64MSB
+block|,
+name|BFD_RELOC_IA64_SEGREL64LSB
+block|,
+name|BFD_RELOC_IA64_SECREL32MSB
+block|,
+name|BFD_RELOC_IA64_SECREL32LSB
+block|,
+name|BFD_RELOC_IA64_SECREL64MSB
+block|,
+name|BFD_RELOC_IA64_SECREL64LSB
+block|,
+name|BFD_RELOC_IA64_REL32MSB
+block|,
+name|BFD_RELOC_IA64_REL32LSB
+block|,
+name|BFD_RELOC_IA64_REL64MSB
+block|,
+name|BFD_RELOC_IA64_REL64LSB
+block|,
+name|BFD_RELOC_IA64_LTV32MSB
+block|,
+name|BFD_RELOC_IA64_LTV32LSB
+block|,
+name|BFD_RELOC_IA64_LTV64MSB
+block|,
+name|BFD_RELOC_IA64_LTV64LSB
+block|,
+name|BFD_RELOC_IA64_IPLTMSB
+block|,
+name|BFD_RELOC_IA64_IPLTLSB
+block|,
+name|BFD_RELOC_IA64_EPLTMSB
+block|,
+name|BFD_RELOC_IA64_EPLTLSB
+block|,
+name|BFD_RELOC_IA64_COPY
+block|,
+name|BFD_RELOC_IA64_TPREL22
+block|,
+name|BFD_RELOC_IA64_TPREL64MSB
+block|,
+name|BFD_RELOC_IA64_TPREL64LSB
+block|,
+name|BFD_RELOC_IA64_LTOFF_TP22
+block|,
+name|BFD_RELOC_IA64_LTOFF22X
+block|,
+name|BFD_RELOC_IA64_LDXMOV
 block|,
 name|BFD_RELOC_UNUSED
 block|}
@@ -5445,7 +6332,7 @@ name|BSF_EXPORT
 value|BSF_GLOBAL
 comment|/* no real difference */
 comment|/* A normal C symbol would be one of:<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or<<BSF_GLOBAL>> */
-comment|/* The symbol is a debugging record. The value has an arbitary           meaning. */
+comment|/* The symbol is a debugging record. The value has an arbitary           meaning, unless BSF_DEBUGGING_RELOC is also set.  */
 define|#
 directive|define
 name|BSF_DEBUGGING
@@ -5519,6 +6406,11 @@ define|#
 directive|define
 name|BSF_OBJECT
 value|0x10000
+comment|/* This symbol is a debugging symbol.  The value is the offset           into the section of the data.  BSF_DEBUGGING should be set           as well.  */
+define|#
+directive|define
+name|BSF_DEBUGGING_RELOC
+value|0x20000
 name|flagword
 name|flags
 decl_stmt|;
@@ -5664,6 +6556,16 @@ operator|(
 name|asymbol
 operator|*
 name|symbol
+operator|)
+argument_list|)
+decl_stmt|;
+name|boolean
+name|bfd_is_undefined_symclass
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|symclass
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5970,6 +6872,11 @@ name|struct
 name|sun_core_struct
 modifier|*
 name|sun_core_data
+decl_stmt|;
+name|struct
+name|sco5_core_struct
+modifier|*
+name|sco5_core_data
 decl_stmt|;
 name|struct
 name|trad_core_struct
@@ -6508,6 +7415,16 @@ define|\
 value|BFD_SEND (abfd, _bfd_relax_section, (abfd, section, link_info, again))
 define|#
 directive|define
+name|bfd_gc_sections
+parameter_list|(
+name|abfd
+parameter_list|,
+name|link_info
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_gc_sections, (abfd, link_info))
+define|#
+directive|define
 name|bfd_link_hash_table_create
 parameter_list|(
 name|abfd
@@ -6804,6 +7721,8 @@ block|,
 name|bfd_target_versados_flavour
 block|,
 name|bfd_target_msdos_flavour
+block|,
+name|bfd_target_ovax_flavour
 block|,
 name|bfd_target_evax_flavour
 block|}
@@ -7997,7 +8916,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_sizeof_headers),\ CAT(NAME,_bfd_get_relocated_section_contents),\ CAT(NAME,_bfd_relax_section),\ CAT(NAME,_bfd_link_hash_table_create),\ CAT(NAME,_bfd_link_add_symbols),\ CAT(NAME,_bfd_final_link),\ CAT(NAME,_bfd_link_split_section)
+value|CAT(NAME,_sizeof_headers),\ CAT(NAME,_bfd_get_relocated_section_contents),\ CAT(NAME,_bfd_relax_section),\ CAT(NAME,_bfd_link_hash_table_create),\ CAT(NAME,_bfd_link_add_symbols),\ CAT(NAME,_bfd_final_link),\ CAT(NAME,_bfd_link_split_section),\ CAT(NAME,_bfd_gc_sections)
 name|int
 argument_list|(
 argument|*_bfd_sizeof_headers
@@ -8137,6 +9056,23 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Remove sections that are not referenced from the output.  */
+name|boolean
+argument_list|(
+argument|*_bfd_gc_sections
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Routines to handle dynamic symbols and relocs.  */
 define|#
 directive|define
@@ -8212,6 +9148,13 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Opposite endian version of this target.  */
+specifier|const
+name|struct
+name|bfd_target
+modifier|*
+name|alternative_target
+decl_stmt|;
 name|PTR
 name|backend_data
 decl_stmt|;
@@ -8257,6 +9200,32 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|const
+name|bfd_target
+modifier|*
+name|bfd_search_for_target
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+argument_list|(
+operator|*
+name|search_func
+argument_list|)
+argument_list|(
+specifier|const
+name|bfd_target
+operator|*
+argument_list|,
+name|void
+operator|*
+argument_list|)
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
