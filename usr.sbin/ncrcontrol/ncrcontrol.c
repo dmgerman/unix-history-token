@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.13.2.1 1996/12/21 12:13:40 se Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.13.2.2 1997/09/08 22:04:42 se Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -35,7 +35,37 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -53,25 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kvm.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -164,39 +182,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|void
-name|exit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strerror
-parameter_list|(
-name|int
-name|num
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
 begin_comment
 comment|/*=========================================================== ** **	Global variables. ** **=========================================================== */
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|prog
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|u_long
@@ -386,6 +377,19 @@ name|interval
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -393,14 +397,13 @@ begin_comment
 comment|/*=========================================================== ** **	Accessing kernel memory via kvm library. ** **=========================================================== */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|read_ccb
-argument_list|(
-argument|u_long base
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_long
+name|base
+parameter_list|)
 block|{
 name|ccb_base
 operator|=
@@ -423,36 +426,25 @@ name|ccb
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad kvm read at %x.\n"
-argument_list|,
-name|prog
+literal|"bad kvm read at %x"
 argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|read_lcb
-argument_list|(
-argument|u_long base
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_long
+name|base
+parameter_list|)
 block|{
 name|lcb_base
 operator|=
@@ -475,34 +467,22 @@ name|lcb
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad kvm read at %x.\n"
-argument_list|,
-name|prog
+literal|"bad kvm read at %x"
 argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|read_ncr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -520,27 +500,17 @@ name|ncr
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad kvm read at %x.\n"
-argument_list|,
-name|prog
+literal|"bad kvm read at %x"
 argument_list|,
 name|ncr_base
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -657,24 +627,15 @@ name|kvm
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: kvm_openfiles: %s\n"
-argument_list|,
-name|prog
+literal|"kvm_openfiles: %s"
 argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -719,25 +680,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: kvm_openfiles: %s\n"
-argument_list|,
-name|prog
+literal|"kvm_openfiles: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -748,25 +700,15 @@ argument_list|(
 name|nl
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"%s: no symbols in \"%s\".\n"
-argument_list|,
-name|prog
+literal|"no symbols in \"%s\""
 argument_list|,
 name|vmunix
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -794,14 +736,11 @@ name|n_type
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: no symbol \"%s\" in \"%s\".\n"
-argument_list|,
-name|prog
+literal|"no symbol \"%s\" in \"%s\""
 argument_list|,
 name|nl
 index|[
@@ -813,12 +752,6 @@ argument_list|,
 name|vmunix
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -840,46 +773,26 @@ name|kernel_version
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|kernel_version
 operator|!=
 name|ncr_version
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: incompatible with kernel. Rebuild!\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"incompatible with kernel. Rebuild!"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 ifdef|#
 directive|ifdef
 name|__NetBSD__
@@ -904,23 +817,13 @@ name|ncrcd
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|ncr_unit
@@ -929,14 +832,11 @@ name|ncrcd
 operator|.
 name|cd_ndevs
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad unit number (valid range: 0-%d).\n"
-argument_list|,
-name|prog
+literal|"bad unit number (valid range: 0-%d)"
 argument_list|,
 name|ncrcd
 operator|.
@@ -945,13 +845,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -974,45 +867,25 @@ name|ncr_base
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
 name|ncr_base
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: control structure not allocated (not found in autoconfig?)\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"control structure not allocated (not found in autoconfig?)"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 else|#
 directive|else
 comment|/* !__NetBSD__ */
@@ -1037,50 +910,30 @@ name|ncr_units
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|ncr_unit
 operator|>=
 name|ncr_units
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad unit number (valid range: 0-%d).\n"
-argument_list|,
-name|prog
+literal|"bad unit number (valid range: 0-%d)"
 argument_list|,
 name|ncr_units
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -1107,18 +960,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1128,23 +974,13 @@ condition|(
 operator|!
 name|ncr_base
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: control structure not allocated (not found in autoconfig?)\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"control structure not allocated (not found in autoconfig?)"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 endif|#
 directive|endif
 comment|/* !__NetBSD__ */
@@ -1158,23 +994,13 @@ name|ncr
 operator|.
 name|vaddr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: 53c810 not mapped (not found in autoconfig?)\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"53c810 not mapped (not found in autoconfig?)"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|kvm_isopen
 operator|=
 literal|1
@@ -2186,11 +2012,15 @@ begin_comment
 comment|/*================================================================ ** ** **	profiling ** ** **================================================================ */
 end_comment
 
-begin_expr_stmt
-unit|do_profile
-operator|(
-name|void
-operator|)
+begin_macro
+unit|void
+name|do_profile
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 define|#
 directive|define
@@ -2200,28 +2030,29 @@ define|#
 directive|define
 name|new
 value|ncr.profile
-block|struct
+name|struct
 name|ncb
 name|backup
-block|; 	struct
+decl_stmt|;
+name|struct
 name|profile
 name|diff
-block|;
+decl_stmt|;
 name|int
 name|tra
-block|,
+decl_stmt|,
 name|line
-block|,
+decl_stmt|,
 name|t
-block|;
+decl_stmt|;
 name|open_kvm
 argument_list|(
 name|O_RDONLY
 argument_list|)
-block|;
+expr_stmt|;
 name|set_target_mask
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|interval
@@ -2232,9 +2063,6 @@ name|interval
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -2824,14 +2652,11 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-end_for
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
@@ -2839,7 +2664,7 @@ comment|/*================================================================ ** **
 end_comment
 
 begin_decl_stmt
-unit|static
+specifier|static
 name|int
 name|kernelwritefile
 decl_stmt|;
@@ -2882,30 +2707,15 @@ name|kernelwritefile
 operator|<
 literal|3
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|kernelwritefilename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kernelwritefilename
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -2945,29 +2755,15 @@ argument_list|)
 operator|!=
 name|addr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|kernelwritefilename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kernelwritefilename
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|write
@@ -2982,30 +2778,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|kernelwritefilename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kernelwritefilename
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -3039,22 +2820,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|res
@@ -3167,22 +2939,13 @@ name|user
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -3203,23 +2966,13 @@ name|user
 operator|.
 name|cmd
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ncb.user busy.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"ncb.user busy"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|set_target_mask
 argument_list|()
 expr_stmt|;
@@ -3655,29 +3408,15 @@ argument_list|)
 operator|!=
 name|addr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|kernelwritefilename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kernelwritefilename
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|write
@@ -3695,39 +3434,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: %s\n"
-argument_list|,
-name|prog
-argument_list|,
-name|kernelwritefilename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kernelwritefilename
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 empty_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: do_set \"%s\" not (yet) implemented.\n"
-argument_list|,
-name|prog
+literal|"do_set \"%s\" not (yet) implemented"
 argument_list|,
 name|arg
 argument_list|)
@@ -3742,14 +3463,14 @@ begin_comment
 comment|/*================================================================ ** ** **	D O _ K I L L ** ** **================================================================ */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|do_kill
-argument_list|(
-argument|char * arg
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|open_kvm
 argument_list|(
@@ -3787,23 +3508,13 @@ condition|(
 operator|!
 name|wizard
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: You are NOT a wizard!\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"you are NOT a wizard!"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -3976,19 +3687,15 @@ expr_stmt|;
 return|return;
 block|}
 empty_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: do_kill \"%s\" not (yet) implemented.\n"
-argument_list|,
-name|prog
+literal|"do_kill \"%s\" not (yet) implemented"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -6764,14 +6471,15 @@ name|debug_opt
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_function
+name|void
 name|dump_head
-argument_list|(
-argument|struct head * hp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|head
+modifier|*
+name|hp
+parameter_list|)
 block|{
 name|dump_link
 argument_list|(
@@ -6915,7 +6623,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -7326,23 +7034,13 @@ name|lcb
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"     reqccbs: %d\n"
@@ -7468,23 +7166,13 @@ name|ccb
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|dump_ccb
 argument_list|(
 operator|&
@@ -7747,9 +7435,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
-name|tp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -7827,23 +7512,13 @@ name|reg
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
@@ -7997,23 +7672,13 @@ name|startpos
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"    startpos: %x\n"
@@ -8401,14 +8066,14 @@ begin_comment
 comment|/*================================================================ ** ** **	D O _ D E B U G ** ** **================================================================ */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|do_debug
-argument_list|(
-argument|char * arg
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|open_kvm
 argument_list|(
@@ -8465,23 +8130,13 @@ condition|(
 operator|!
 name|wizard
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: You are NOT a wizard!\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"you are NOT a wizard!"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|strchr
@@ -8514,23 +8169,13 @@ name|reg
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad kvm read.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad kvm read"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|dump_reg
 argument_list|(
 operator|&
@@ -8540,7 +8185,7 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -8550,7 +8195,7 @@ comment|/*================================================================ ** **
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -8566,17 +8211,8 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
 name|int
-name|optind
-decl_stmt|;
-name|int
-name|usage
+name|usageflg
 init|=
 literal|0
 decl_stmt|;
@@ -8586,23 +8222,10 @@ name|charp
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
-name|getopt
-argument_list|()
-decl_stmt|,
-name|atoi
-argument_list|()
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|step
 decl_stmt|;
-name|prog
-operator|=
-operator|*
-name|argv
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -8636,23 +8259,13 @@ if|if
 condition|(
 name|kvm_isopen
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: -M: kernel file already open.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-M: kernel file already open"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|kmemf
 operator|=
 name|optarg
@@ -8665,23 +8278,13 @@ if|if
 condition|(
 name|kvm_isopen
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: -N: symbol table already open.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-N: symbol table already open"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|vmunix
 operator|=
 name|optarg
@@ -8693,18 +8296,11 @@ name|OPT_F
 case|case
 literal|'f'
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: -f: option not yet implemented.\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-f: option not yet implemented"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8739,24 +8335,15 @@ operator|<
 literal|0
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad unit number \"%s\".\n"
-argument_list|,
-name|prog
+literal|"bad unit number \"%s\""
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|ncr_unit
 operator|=
 name|i
@@ -8798,14 +8385,11 @@ operator|>=
 name|MAX_TARGET
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad target number \"%s\" (valid range: 0-%d).\n"
-argument_list|,
-name|prog
+literal|"bad target number \"%s\" (valid range: 0-%d)"
 argument_list|,
 name|optarg
 argument_list|,
@@ -8814,12 +8398,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|target_mask
 operator||=
 literal|1ul
@@ -8898,26 +8476,17 @@ operator|>=
 name|MAX_LUN
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad logic unit number \"%s\" (valid range: 0-%d).\n"
-argument_list|,
-name|prog
+literal|"bad logic unit number \"%s\" (valid range: 0-%d)"
 argument_list|,
 name|optarg
 argument_list|,
 name|MAX_LUN
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|global_lun_mask
 operator||=
 literal|1ul
@@ -8961,24 +8530,15 @@ operator|>
 literal|60
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad interval \"%s\".\n"
-argument_list|,
-name|prog
+literal|"bad interval \"%s\""
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|interval
 operator|=
 name|i
@@ -9049,26 +8609,19 @@ case|:
 case|case
 literal|'?'
 case|:
-name|usage
+name|usageflg
 operator|++
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: illegal option \"%c\".\n"
-argument_list|,
-name|prog
+literal|"illegal option \"%c\""
 argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
-name|usage
+name|usageflg
 operator|++
 expr_stmt|;
 block|}
@@ -9084,11 +8637,9 @@ if|if
 condition|(
 name|argc
 condition|)
-name|printf
+name|warnx
 argument_list|(
-literal|"%s: rest of line starting with \"%s\" ignored.\n"
-argument_list|,
-name|prog
+literal|"rest of line starting with \"%s\" ignored"
 argument_list|,
 operator|*
 name|argv
@@ -9101,60 +8652,16 @@ operator|&&
 operator|!
 name|kvm_isopen
 condition|)
-name|usage
+name|usageflg
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|usage
+name|usageflg
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage:\n"
-literal|"\n"
-literal|"%s [-M$] [-N$] [-u] {-t#} {-l#} [-hivw?] [-d$] [-s$] [-k] [[-p]<time>]\n"
-literal|"\n"
-literal|"-u<#>             select controller number\n"
-literal|"-t<#>             select target number\n"
-literal|"-l<#>             select lun number\n"
-literal|"-i                 get info\n"
-literal|"-v                 verbose\n"
-literal|"-p<seconds>       performance data\n"
-literal|"\n"
-literal|"Wizards only (proceed on your own risk):\n"
-literal|"-n<#>             get the name for address #\n"
-literal|"-w                 wizard mode\n"
-literal|"-d<options>       debug info\n"
-literal|"-d?                list debug options\n"
-literal|"-s<param=value>   set parameter\n"
-literal|"-s?                list parameters\n"
-literal|"-k<torture>       torture driver by simulating errors\n"
-literal|"-k?                list tortures\n"
-literal|"-M<kernelimage>   (default: %s)\n"
-literal|"-N<symboltable>   (default: %s)\n"
-argument_list|,
-name|prog
-argument_list|,
-name|_PATH_KMEM
-argument_list|,
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|>=
-literal|2
-operator|)
-name|getbootfile
+name|usage
 argument_list|()
-else|#
-directive|else
-name|_PATH_UNIX
-endif|#
-directive|endif
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9190,6 +8697,34 @@ empty_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: ncrcontrol [-M core] [-N system] [-u unit] [-v] [-v] -i"
+argument_list|,
+literal|"       ncrcontrol [-N system] [-u unit] [-p wait]"
+argument_list|,
+literal|"       ncrcontrol [-N system] [-u unit] [-t target] -s name=value"
+argument_list|,
+literal|"       ncrcontrol [-M core] [-N system] [-u unit] [-t target] -d debug"
+argument_list|,
+literal|"       ncrcontrol [-N system] [-u unit] -w -k torture"
 argument_list|)
 expr_stmt|;
 block|}
