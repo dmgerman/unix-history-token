@@ -2913,7 +2913,7 @@ condition|(
 name|uaa
 operator|->
 name|iface
-operator|!=
+operator|==
 name|NULL
 condition|)
 return|return
