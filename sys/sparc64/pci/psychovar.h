@@ -129,6 +129,12 @@ name|struct
 name|rman
 name|sc_io_rman
 decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|psycho_softc
+argument_list|)
+name|sc_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
