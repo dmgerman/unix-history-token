@@ -301,6 +301,14 @@ name|d_drive
 decl_stmt|;
 comment|/* drive number */
 name|int
+name|d_target
+decl_stmt|;
+comment|/* target number */
+name|int
+name|d_lun
+decl_stmt|;
+comment|/* unit number */
+name|int
 name|d_slave
 decl_stmt|;
 comment|/* slave number */
@@ -632,6 +640,12 @@ end_if
 begin_decl_stmt
 name|int
 name|seen_isa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|seen_scbus
 decl_stmt|;
 end_decl_stmt
 
