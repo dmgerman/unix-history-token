@@ -1983,6 +1983,8 @@ name|labeloffset
 argument_list|,
 operator|&
 name|lab
+argument_list|,
+name|MAXPARTITIONS
 argument_list|)
 expr_stmt|;
 return|return
