@@ -10573,21 +10573,17 @@ argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq-
 literal|"fw_rcv: unknow tcode\n"
 argument|); 		break; 	} err: 	free(buf, M_DEVBUF); }
 comment|/*  * Post process for Bus Manager election process.  */
-argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *sfp
-argument_list|,
-argument|*rfp; 	struct firewire_comm *fc;  	if(xfer == NULL) return; 	fc = xfer->fc; 	if(xfer->resp !=
+argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *rfp; 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
 literal|0
-argument|){ 		goto error; 	}  	if(xfer->send.buf == NULL){ 		goto error; 	} 	sfp = (struct fw_pkt *)xfer->send.buf;  	if(xfer->recv.buf == NULL){ 		goto error; 	} 	rfp = (struct fw_pkt *)xfer->recv.buf; 	CSRARC(fc, BUS_MGR_ID) 		= fc->set_bmr(fc, ntohl(rfp->mode.lres.payload[
+argument|) 		goto error; 	if (xfer->send.buf == NULL) 		goto error; 	if (xfer->recv.buf == NULL) 		goto error; 	rfp = (struct fw_pkt *)xfer->recv.buf; 	if (rfp->mode.lres.rtcode != FWRCODE_COMPLETE) 		goto error;  	bmr = ntohl(rfp->mode.lres.payload[
 literal|0
-argument|])&
+argument|]); 	if (bmr ==
+literal|0x3f
+argument|) 		bmr = fc->nodeid;  	CSRARC(fc, BUS_MGR_ID) = fc->set_bmr(fc, bmr&
 literal|0x3f
 argument|); 	device_printf(fc->bdev,
 literal|"new bus manager %d "
-argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if((htonl(rfp->mode.lres.payload[
-literal|0
-argument|])&
-literal|0x3f
-argument|) == fc->nodeid){ 		printf(
+argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if(bmr == fc->nodeid){ 		printf(
 literal|"(me)\n"
 argument|);
 comment|/* If I am bus manager, optimize gapcount */
@@ -10621,11 +10617,11 @@ argument|); 	fp->mode.lreq.extcode = htons(FW_LREQ_CMPSWAP); 	xfer->dst = FWLOCA
 literal|0xf0000000
 argument|| BUS_MGR_ID); 	fp->mode.lreq.payload[
 literal|0
-argument|] =
+argument|] = htonl(
 literal|0x3f
-argument|; 	fp->mode.lreq.payload[
+argument|); 	fp->mode.lreq.payload[
 literal|1
-argument|] = fc->nodeid; 	xfer->act_type = FWACT_XFER; 	xfer->act.hand = fw_try_bmr_callback;  	err = fw_asyreq(fc, -
+argument|] = htonl(fc->nodeid); 	xfer->act_type = FWACT_XFER; 	xfer->act.hand = fw_try_bmr_callback;  	err = fw_asyreq(fc, -
 literal|1
 argument|, xfer); 	if(err){ 		fw_xfer_free( xfer); 		return; 	} 	return; }
 ifdef|#
