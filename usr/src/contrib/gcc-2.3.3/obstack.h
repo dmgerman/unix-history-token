@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|PTR_INT_TYPE
-value|ptrdiff_t
+value|int
 end_define
 
 begin_else
@@ -244,7 +244,7 @@ modifier|*
 name|chunk_limit
 decl_stmt|;
 comment|/* address of char after current chunk */
-name|PTR_INT_TYPE
+name|int
 name|temp
 decl_stmt|;
 comment|/* Temporary for some macros.  */
