@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.4 %G%"
+literal|"@(#)c21.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,7 +765,7 @@ comment|/* address comp. */
 name|char
 name|buf
 index|[
-literal|50
+name|C2_ASIZE
 index|]
 decl_stmt|;
 name|cp2
@@ -1002,7 +1002,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|50
+name|C2_ASIZE
 index|]
 decl_stmt|;
 if|if
@@ -7032,7 +7032,7 @@ decl_stmt|;
 name|char
 name|src
 index|[
-literal|50
+name|C2_ASIZE
 index|]
 decl_stmt|;
 if|if
@@ -7824,7 +7824,7 @@ operator|->
 name|seq
 argument_list|)
 operator|>
-literal|12
+literal|8
 condition|)
 continue|continue;
 if|if
@@ -8175,7 +8175,7 @@ operator|->
 name|seq
 argument_list|)
 operator|>
-literal|12
+literal|8
 condition|)
 block|{
 comment|/* outside byte displ range */

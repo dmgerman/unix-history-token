@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c 4.4 %G%"
+literal|"@(#)c20.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2688,7 +2688,7 @@ decl_stmt|;
 name|char
 name|tempop
 index|[
-name|C2_ASIZE
+literal|20
 index|]
 decl_stmt|;
 specifier|static
