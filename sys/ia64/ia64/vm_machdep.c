@@ -794,6 +794,25 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
+name|p
+operator|->
+name|p_stat
+operator|=
+name|SZOMB
+expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"assumption: p_pptr won't change at this time"
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|.
 name|v_swtch

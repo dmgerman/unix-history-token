@@ -1890,6 +1890,11 @@ name|pptr
 operator|=
 name|p1
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_pptr
@@ -1906,6 +1911,11 @@ argument_list|,
 name|p2
 argument_list|,
 name|p_sibling
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 name|LIST_INIT

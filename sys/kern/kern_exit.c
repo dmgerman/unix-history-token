@@ -923,12 +923,10 @@ argument_list|(
 name|AP_RELEASE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after releasing this lock before 	 * changing p_stat.  If we block on a mutex while waiting to 	 * release the allproc_lock, then we will be back at SRUN when 	 * we resume here and our parent will never harvest us. 	 */
-name|p
-operator|->
-name|p_stat
-operator|=
-name|SZOMB
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
 expr_stmt|;
 name|q
 operator|=
@@ -1193,14 +1191,9 @@ name|SIGCHLD
 argument_list|)
 expr_stmt|;
 block|}
-name|wakeup
+name|PROCTREE_LOCK
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|p
-operator|->
-name|p_pptr
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down the rest 	 * of the process state that might be used from clock, etc. 	 * Also, can't clear curproc while we're still runnable, 	 * as we're not on a run queue (we are current, just not 	 * a proper proc any longer!). 	 * 	 * Other substructures are freed from wait(). 	 */
@@ -1444,6 +1437,11 @@ name|nfound
 operator|=
 literal|0
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|p
@@ -1529,6 +1527,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* charge childs scheduling cpu usage to parent */
@@ -1680,7 +1683,15 @@ condition|(
 name|p
 operator|->
 name|p_oppid
-operator|&&
+condition|)
+block|{
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|t
 operator|=
@@ -1691,6 +1702,8 @@ operator|->
 name|p_oppid
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|p
@@ -1721,11 +1734,22 @@ operator|)
 name|t
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 block|}
 name|p
 operator|->
@@ -1935,11 +1959,21 @@ argument_list|(
 name|AP_RELEASE
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|p
 argument_list|,
 name|p_sibling
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2063,6 +2097,11 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -2170,6 +2209,11 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nfound
@@ -2239,7 +2283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * make process 'parent' the new parent of process 'child'.  */
+comment|/*  * Make process 'parent' the new parent of process 'child'.  * Must be called with an exclusive hold of proctree lock.  */
 end_comment
 
 begin_function
@@ -2263,6 +2307,11 @@ modifier|*
 name|parent
 decl_stmt|;
 block|{
+name|PROCTREE_ASSERT
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|child

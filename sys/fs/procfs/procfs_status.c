@@ -189,6 +189,11 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|ppid
 operator|=
 name|p
@@ -202,6 +207,11 @@ operator|->
 name|p_pid
 else|:
 literal|0
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
 expr_stmt|;
 name|pgid
 operator|=

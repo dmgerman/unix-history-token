@@ -5652,6 +5652,11 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5680,6 +5685,11 @@ expr_stmt|;
 name|stop
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6063,6 +6073,11 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -6077,6 +6092,11 @@ block|{
 name|stop
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 name|mtx_enter
@@ -6103,6 +6123,11 @@ argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
 expr_stmt|;
 block|}
 do|while
@@ -6280,6 +6305,11 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|stop
 argument_list|(
 name|p
@@ -6308,6 +6338,11 @@ operator|->
 name|p_pptr
 argument_list|,
 name|SIGCHLD
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 name|mtx_enter
@@ -6414,7 +6449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  */
+comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with at least a shared hold of the  * proctree lock.  */
 end_comment
 
 begin_function
@@ -6430,6 +6465,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|PROCTREE_ASSERT
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&

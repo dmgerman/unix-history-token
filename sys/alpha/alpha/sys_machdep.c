@@ -669,6 +669,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -723,6 +728,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -756,6 +766,11 @@ decl_stmt|;
 name|error
 operator|=
 name|ESRCH
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -810,6 +825,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;

@@ -1075,6 +1075,11 @@ name|p_flag
 operator||=
 name|P_EXEC
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1108,6 +1113,11 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
 if|if
 condition|(

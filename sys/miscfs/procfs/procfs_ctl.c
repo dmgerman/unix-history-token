@@ -513,6 +513,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX ? */
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -540,6 +545,11 @@ name|curp
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -567,6 +577,11 @@ name|PROCFS_CTL_WAIT
 case|:
 break|break;
 default|default:
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -594,6 +609,11 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
@@ -606,6 +626,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 block|}
@@ -673,6 +698,11 @@ name|SIGTRAP
 argument_list|)
 expr_stmt|;
 comment|/* give process back to original parent */
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -712,6 +742,11 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_oppid
@@ -789,6 +824,11 @@ operator|&
 name|P_TRACED
 condition|)
 block|{
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -836,6 +876,11 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|tsleep
@@ -852,6 +897,11 @@ argument_list|,
 literal|"procfsx"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
 argument_list|)
 expr_stmt|;
 name|mtx_enter
@@ -887,6 +937,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1148,6 +1203,11 @@ condition|(
 name|nm
 condition|)
 block|{
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -1197,6 +1257,11 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1206,6 +1271,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 name|psignal

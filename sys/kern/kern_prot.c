@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -109,7 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * NOT MP SAFE due to p_pptr access  */
+comment|/*  * getpid - MP SAFE  */
 end_comment
 
 begin_comment
@@ -157,6 +163,11 @@ name|defined
 argument_list|(
 name|COMPAT_SUNOS
 argument_list|)
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -170,6 +181,11 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -179,6 +195,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * getppid - MP SAFE  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -225,6 +245,11 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -237,6 +262,11 @@ operator|->
 name|p_pptr
 operator|->
 name|p_pid
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

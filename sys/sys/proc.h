@@ -1628,6 +1628,53 @@ value|LK_RELEASE
 end_define
 
 begin_comment
+comment|/* Lock and unlock the proc child and sibling lists. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROCTREE_LOCK
+parameter_list|(
+name|how
+parameter_list|)
+define|\
+value|lockmgr(&proctree_lock, (how), NULL, CURPROC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCTREE_ASSERT
+parameter_list|(
+name|what
+parameter_list|)
+define|\
+value|LOCKMGR_ASSERT(&proctree_lock, (what), CURPROC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SHARED
+value|LK_SHARED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_EXCLUSIVE
+value|LK_EXCLUSIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_RELEASE
+value|LK_RELEASE
+end_define
+
+begin_comment
 comment|/* Hold process U-area in memory, normally for ptrace/procfs work. */
 end_comment
 
@@ -1716,6 +1763,14 @@ specifier|extern
 name|struct
 name|lock
 name|allproc_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock
+name|proctree_lock
 decl_stmt|;
 end_decl_stmt
 

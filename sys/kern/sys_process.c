@@ -470,6 +470,11 @@ return|return
 name|EPERM
 return|;
 comment|/* not being traced by YOU */
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -478,9 +483,21 @@ name|p_pptr
 operator|!=
 name|curp
 condition|)
+block|{
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
+block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 comment|/* not currently stopped */
 name|mtx_enter
 argument_list|(
@@ -574,6 +591,11 @@ name|p_flag
 operator||=
 name|P_TRACED
 expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_SHARED
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_oppid
@@ -583,6 +605,11 @@ operator|->
 name|p_pptr
 operator|->
 name|p_pid
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -596,6 +623,11 @@ operator|->
 name|p_flag
 operator||=
 name|P_TRACED
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -620,6 +652,11 @@ argument_list|(
 name|p
 argument_list|,
 name|curp
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 name|uap
@@ -772,6 +809,11 @@ name|PT_DETACH
 condition|)
 block|{
 comment|/* reset process parent */
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -811,6 +853,11 @@ name|initproc
 argument_list|)
 expr_stmt|;
 block|}
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
