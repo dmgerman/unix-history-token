@@ -682,10 +682,14 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Mounting non-root filesystem or updating a filesystem 	 */
+comment|/* 	 * Get mount options, if any. 	 */
 if|if
 condition|(
-operator|(
+name|data
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|copyin
@@ -699,20 +703,33 @@ operator|&
 name|args
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|ufs_args
+name|args
 argument_list|)
-argument_list|)
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+else|else
+block|{
+name|memset
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|args
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * If updating, check whether changing from read-only to 	 * read/write; if there is no device name, that's all we do. 	 */
 if|if
 condition|(
