@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.2	83/12/21	*/
+comment|/*	gethostnamadr.c	4.3	83/12/21	*/
 end_comment
 
 begin_include
@@ -45,10 +45,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|DBM
 modifier|*
-name|db
+name|_host_db
 init|=
 operator|(
 name|DBM
@@ -85,9 +84,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|_stayopen
+name|_host_stayopen
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +145,7 @@ name|key
 operator|=
 name|dbmfetch
 argument_list|(
-name|db
+name|_host_db
 argument_list|,
 name|curkey
 argument_list|)
@@ -323,16 +321,19 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
-name|db
+operator|(
+name|_host_db
 operator|==
 operator|(
 name|DBM
 operator|*
 operator|)
-literal|0
+name|NULL
+operator|)
 operator|&&
 operator|(
-name|db
+operator|(
+name|_host_db
 operator|=
 name|ndbmopen
 argument_list|(
@@ -346,7 +347,8 @@ operator|(
 name|DBM
 operator|*
 operator|)
-literal|0
+name|NULL
+operator|)
 condition|)
 return|return
 operator|(
@@ -383,15 +385,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|_stayopen
+name|_host_stayopen
 condition|)
 block|{
 name|ndbmclose
 argument_list|(
-name|db
+name|_host_db
 argument_list|)
 expr_stmt|;
-name|db
+name|_host_db
 operator|=
 operator|(
 name|DBM
@@ -437,16 +439,19 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
-name|db
+operator|(
+name|_host_db
 operator|==
 operator|(
 name|DBM
 operator|*
 operator|)
-literal|0
+name|NULL
+operator|)
 operator|&&
 operator|(
-name|db
+operator|(
+name|_host_db
 operator|=
 name|ndbmopen
 argument_list|(
@@ -460,7 +465,8 @@ operator|(
 name|DBM
 operator|*
 operator|)
-literal|0
+name|NULL
+operator|)
 condition|)
 return|return
 operator|(
@@ -494,15 +500,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|_stayopen
+name|_host_stayopen
 condition|)
 block|{
 name|ndbmclose
 argument_list|(
-name|db
+name|_host_db
 argument_list|)
 expr_stmt|;
-name|db
+name|_host_db
 operator|=
 operator|(
 name|DBM

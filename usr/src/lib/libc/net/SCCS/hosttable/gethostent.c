@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.6	83/12/21	*/
+comment|/*	gethostent.c	4.7	83/12/21	*/
 end_comment
 
 begin_include
@@ -120,17 +120,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_stayopen
-init|=
-literal|0
+name|_host_stayopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|DBM
 modifier|*
-name|db
+name|_host_db
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +170,7 @@ argument_list|(
 name|hostf
 argument_list|)
 expr_stmt|;
-name|_stayopen
+name|_host_stayopen
 operator||=
 name|f
 expr_stmt|;
@@ -204,15 +201,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|db
+name|_host_db
 condition|)
 block|{
 name|ndbmclose
 argument_list|(
-name|db
+name|_host_db
 argument_list|)
 expr_stmt|;
-name|db
+name|_host_db
 operator|=
 operator|(
 name|DBM
@@ -221,7 +218,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-name|_stayopen
+name|_host_stayopen
 operator|=
 literal|0
 expr_stmt|;
