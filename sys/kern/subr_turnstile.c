@@ -3242,7 +3242,7 @@ end_ifdef
 
 begin_function
 name|void
-name|mtx_assert
+name|_mtx_assert
 parameter_list|(
 name|struct
 name|mtx
@@ -3251,6 +3251,14 @@ name|m
 parameter_list|,
 name|int
 name|what
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 switch|switch
@@ -3293,9 +3301,9 @@ operator|)
 operator|->
 name|mtx_description
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -3330,9 +3338,9 @@ operator|)
 operator|->
 name|mtx_description
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -3360,9 +3368,9 @@ operator|)
 operator|->
 name|mtx_description
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -3389,9 +3397,9 @@ operator|)
 operator|->
 name|mtx_description
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3400,9 +3408,9 @@ name|panic
 argument_list|(
 literal|"unknown mtx_assert at %s:%d"
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 block|}

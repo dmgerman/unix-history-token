@@ -632,7 +632,7 @@ end_define
 
 begin_function_decl
 name|void
-name|mtx_assert
+name|_mtx_assert
 parameter_list|(
 name|struct
 name|mtx
@@ -641,9 +641,29 @@ name|m
 parameter_list|,
 name|int
 name|what
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|mtx_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|what
+parameter_list|)
+value|_mtx_assert((m), (what), __FILE__, __LINE__)
+end_define
 
 begin_else
 else|#
@@ -1331,10 +1351,6 @@ end_endif
 
 begin_comment
 comment|/* WITNESS */
-end_comment
-
-begin_comment
-comment|/* XXX jasone Move. */
 end_comment
 
 begin_endif
