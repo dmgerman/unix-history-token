@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)run.c	4.4 %G%"
+literal|"@(#)run.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,9 @@ block|{
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|char
 modifier|*
@@ -206,9 +209,55 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|execute
 argument_list|(
 name|winner
+argument_list|)
+expr_stmt|;
+comment|/* Wait for children to complete if output to a pipe. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FILENUM
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|files
+index|[
+name|i
+index|]
+operator|.
+name|fp
+operator|&&
+name|files
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|==
+literal|'|'
+condition|)
+name|pclose
+argument_list|(
+name|files
+index|[
+name|i
+index|]
+operator|.
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5415,6 +5464,15 @@ name|optr
 operator|->
 name|sval
 argument_list|)
+expr_stmt|;
+name|files
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|=
+name|a
 expr_stmt|;
 name|doit
 label|:
