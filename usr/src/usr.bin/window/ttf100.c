@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttf100.c	3.2 3.2"
+literal|"@(#)ttf100.c	3.3 3.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ literal|"\033$"
 expr_stmt|;
 name|gen_GE
 operator|=
-literal|"\033'"
+literal|"\033%"
 expr_stmt|;
 return|return
 name|ret
