@@ -1,38 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cp.h	1.1	86/01/05	*/
+comment|/*	cp.h	1.2	86/12/06	*/
 end_comment
 
 begin_comment
-comment|/*	Console Processor Interface 	*/
+comment|/*  * Tahoe console processor interface  */
 end_comment
 
 begin_comment
-comment|/*	Tahoe version, Nov. 1982	*/
-end_comment
-
-begin_comment
-comment|/****************************************/
-end_comment
-
-begin_comment
-comment|/*					*/
-end_comment
-
-begin_comment
-comment|/*	Reduced DCB layout for byte	*/
-end_comment
-
-begin_comment
-comment|/*	communication.			*/
-end_comment
-
-begin_comment
-comment|/*					*/
-end_comment
-
-begin_comment
-comment|/****************************************/
+comment|/*  * Reduced DCB layout for byte communication.  */
 end_comment
 
 begin_define
@@ -75,8 +51,8 @@ end_struct
 begin_struct
 struct|struct
 name|cpdcb_o
-comment|/* Output structure */
 block|{
+comment|/* Output structure */
 name|struct
 name|cphdr
 name|cp_hdr
@@ -95,8 +71,8 @@ end_struct
 begin_struct
 struct|struct
 name|cpdcb_i
-comment|/* Structure for input */
 block|{
+comment|/* Structure for input */
 name|struct
 name|cphdr
 name|cp_hdr
@@ -140,7 +116,7 @@ comment|/* CP 'ack' to this cpdcb */
 end_comment
 
 begin_comment
-comment|/* Values for 'unit' */
+comment|/* unit values */
 end_comment
 
 begin_define
@@ -151,7 +127,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* The CP itself */
+comment|/* the CP itself */
 end_comment
 
 begin_define
@@ -162,7 +138,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Console line */
+comment|/* console line */
 end_comment
 
 begin_define
@@ -173,11 +149,22 @@ value|2
 end_define
 
 begin_comment
-comment|/* Remote line */
+comment|/* remote line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPCLOCK
+value|4
+end_define
+
+begin_comment
+comment|/* realtime clock */
 end_comment
 
 begin_comment
-comment|/* Values for 'command' */
+comment|/* commands */
 end_comment
 
 begin_define
@@ -194,12 +181,20 @@ name|CPWRITE
 value|1
 end_define
 
+begin_comment
+comment|/* write device or register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CPREAD
 value|2
 end_define
+
+begin_comment
+comment|/* read device or register */
+end_comment
 
 begin_define
 define|#
@@ -208,12 +203,52 @@ name|CPSTTY
 value|3
 end_define
 
+begin_comment
+comment|/* set terminal configuration */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CPBOOT
 value|4
 end_define
+
+begin_comment
+comment|/* reboot system */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|struct
+name|cphdr
+modifier|*
+name|cnlast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last command sent to cp */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

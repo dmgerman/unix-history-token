@@ -1,24 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.c	1.2	86/01/05	*/
+comment|/*	clock.c	1.3	86/12/06	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
@@ -27,8 +39,161 @@ directive|include
 file|"../tahoe/clock.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../tahoe/cp.h"
+end_include
+
 begin_comment
-comment|/*  * Initialze the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
+comment|/*  * Machine-dependent clock routines.  *  * Startrtclock restarts the real-time clock, which provides  * hardclock interrupts to kern_clock.c.  *  * Inittodr initializes any time of day hardware which provides  * date functions.  Its primary function is to use some file  * system information in case the hardare clock lost state.  */
+end_comment
+
+begin_comment
+comment|/*  * Start the real-time clock by initializing the  * interval timer on the console processor card  * according to hz.  */
+end_comment
+
+begin_macro
+name|startrtclock
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|t
+decl_stmt|;
+name|struct
+name|cphdr
+name|cpclock
+decl_stmt|;
+name|cpclock
+operator|.
+name|cp_unit
+operator|=
+name|CPCLOCK
+expr_stmt|;
+name|cpclock
+operator|.
+name|cp_comm
+operator|=
+name|CPWRITE
+expr_stmt|;
+if|if
+condition|(
+name|hz
+operator|==
+literal|0
+condition|)
+block|{
+name|hz
+operator|=
+literal|60
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"clock set to %dhz\n"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+name|cpclock
+operator|.
+name|cp_count
+operator|=
+name|hztocount
+argument_list|(
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* try to insure last cmd completed */
+if|if
+condition|(
+name|cnlast
+condition|)
+block|{
+for|for
+control|(
+name|t
+operator|=
+literal|30000
+init|;
+operator|(
+name|cnlast
+operator|->
+name|cp_unit
+operator|&
+name|CPTAKE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|t
+operator|>
+literal|0
+condition|;
+name|t
+operator|--
+control|)
+name|uncache
+argument_list|(
+operator|&
+name|cnlast
+operator|->
+name|cp_unit
+argument_list|)
+expr_stmt|;
+name|cnlast
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|mtpr
+argument_list|(
+name|CPMDCB
+argument_list|,
+operator|&
+name|cpclock
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|t
+operator|=
+literal|30000
+init|;
+operator|(
+name|cpclock
+operator|.
+name|cp_unit
+operator|&
+name|CPDONE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|t
+operator|>
+literal|0
+condition|;
+name|t
+operator|--
+control|)
+name|uncache
+argument_list|(
+operator|&
+name|cpclock
+operator|.
+name|cp_unit
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Initialze the time of day register, based on  * the time base which is, e.g. from a filesystem.  */
 end_comment
 
 begin_macro
@@ -57,7 +222,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: preposterous time in file system"
+literal|"WARNING: preposterous time in file system "
 argument_list|)
 expr_stmt|;
 name|time
@@ -86,7 +251,7 @@ name|base
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" CHECK AND RESET THE DATE!\n"
+literal|"CHECK AND RESET THE DATE!\n"
 argument_list|)
 expr_stmt|;
 block|}
