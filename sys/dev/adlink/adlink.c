@@ -993,6 +993,12 @@ name|idx
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1105,6 +1111,12 @@ operator|%=
 name|NRING
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0
