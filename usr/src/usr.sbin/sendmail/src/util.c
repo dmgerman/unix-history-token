@@ -57,7 +57,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -1004,6 +1004,11 @@ operator|*
 name|p
 operator|!=
 literal|';'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'%'
 condition|)
 block|{
 if|if
