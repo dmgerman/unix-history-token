@@ -47,6 +47,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ctype.h>
 end_include
 
@@ -1635,8 +1641,10 @@ name|export
 condition|)
 block|{
 comment|/* 		 * Data arrived on export hook. 		 * This must not happen. 		 */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"ng_netflow: incoming data on export hook!\n"
 argument_list|)
 expr_stmt|;
