@@ -399,20 +399,17 @@ begin_comment
 comment|/*  * XXX: declare here to avoid to include many inet6 related files..  * should be more generalized?  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|nd6_setmtu
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -77,22 +77,19 @@ name|nsintrq_present
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|family_enqueue
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|sa_family_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -61,29 +61,26 @@ begin_comment
 comment|/*  * Compile-time options:  * IFMEDIA_DEBUG:  *	turn on implementation-level debug printfs.  * 	Useful for debugging newly-ported  drivers.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|ifmedia_entry
 modifier|*
 name|ifmedia_match
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|,
+parameter_list|,
 name|int
 name|flags
-operator|,
+parameter_list|,
 name|int
 name|mask
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -99,18 +96,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ifmedia_printword
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

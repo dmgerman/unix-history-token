@@ -207,26 +207,23 @@ directive|define
 name|ARCNET_ALLOW_BROKEN_ARP
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|mbuf
 modifier|*
 name|arc_defrag
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|u_int8_t

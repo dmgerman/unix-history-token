@@ -167,17 +167,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|legacy_setsoftnet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -192,20 +189,21 @@ begin_comment
 comment|/* scheduling bits for network */
 end_comment
 
-begin_extern
-extern|extern	void	(*netisrs[32]
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
+begin_function_decl
+specifier|extern
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+function_decl|(
+modifier|*
+name|netisrs
+index|[
+literal|32
+index|]
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -221,38 +219,32 @@ begin_typedef
 typedef|typedef
 name|void
 name|netisr_t
-name|__P
-typedef|((
+parameter_list|(
 name|void
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|register_netisr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|netisr_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|unregister_netisr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
