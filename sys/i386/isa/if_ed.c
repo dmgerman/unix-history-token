@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.53 1994/10/22 17:52:22 phk Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.54 1994/10/23 21:27:16 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1649,7 +1649,7 @@ name|isa16bit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 * XXX - we could also check the IO address register. But why 	 * bother...if we get past this, it *has* to be correct. 	 */
+comment|/* 	 * If possible, get the assigned interrupt number from the card and 	 * use it. 	 */
 if|if
 condition|(
 operator|(
@@ -1705,53 +1705,16 @@ operator|>>
 literal|5
 operator|)
 expr_stmt|;
-comment|/* 		 * Translate it using translation table, and check for 		 * correctness. 		 */
-if|if
-condition|(
+comment|/* 		 * Use what the board tells us. 		 */
+name|isa_dev
+operator|->
+name|id_irq
+operator|=
 name|ed_intr_mask
 index|[
 name|iptr
 index|]
-operator|!=
-name|isa_dev
-operator|->
-name|id_irq
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ed%d: kernel configured irq %d doesn't match board configured irq %d\n"
-argument_list|,
-name|isa_dev
-operator|->
-name|id_unit
-argument_list|,
-name|ffs
-argument_list|(
-name|isa_dev
-operator|->
-name|id_irq
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|ffs
-argument_list|(
-name|ed_intr_mask
-index|[
-name|iptr
-index|]
-argument_list|)
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 		 * Enable the interrupt. 		 */
 name|outb
 argument_list|(
@@ -1862,52 +1825,16 @@ operator|~
 name|ED_WD790_HWR_SWH
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* 		 * Use what the board tells us. 		 */
+name|isa_dev
+operator|->
+name|id_irq
+operator|=
 name|ed_790_intr_mask
 index|[
 name|iptr
 index|]
-operator|!=
-name|isa_dev
-operator|->
-name|id_irq
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ed%d: kernel configured irq %d doesn't match board configured irq %d %d\n"
-argument_list|,
-name|isa_dev
-operator|->
-name|id_unit
-argument_list|,
-name|ffs
-argument_list|(
-name|isa_dev
-operator|->
-name|id_irq
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|ffs
-argument_list|(
-name|ed_790_intr_mask
-index|[
-name|iptr
-index|]
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|iptr
-argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 comment|/* 		 * Enable interrupts. 		 */
 name|outb
 argument_list|(
@@ -1929,6 +1856,34 @@ operator||
 name|ED_WD790_ICR_EIL
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|isa_dev
+operator|->
+name|id_irq
+operator|<=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ed%d: %s cards don't support auto-detected/assigned interrupts.\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|sc
+operator|->
+name|type_str
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -2493,6 +2448,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|printf("starting memory performance test at 0x%x, size %d...\n", 		sc->mem_start, memsize*16384); 	for (i = 0; i< 16384; i++) 		bzero(sc->mem_start, memsize); 	printf("***DONE***\n");
+endif|#
+directive|endif
 comment|/* 	 * Now zero memory and verify that it is clear 	 */
 name|bzero
 argument_list|(
