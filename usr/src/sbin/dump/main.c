@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* recalculated below */
+end_comment
+
+begin_decl_stmt
+name|long
+name|blocksperfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output blocks per file */
 end_comment
 
 begin_ifdef
@@ -467,6 +477,56 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ntrec
+operator|<=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bad number of blocks per write \"%s\"\n"
+argument_list|,
+operator|*
+name|arg
+argument_list|)
+expr_stmt|;
+name|Exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
+literal|'B'
+case|:
+comment|/* blocks per output file */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|blocksperfile
+operator|=
+name|atol
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -538,7 +598,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad key '%c%'\n"
+literal|"bad key '%c'\n"
 argument_list|,
 name|arg
 index|[
@@ -592,7 +652,22 @@ operator|=
 literal|"standard output"
 expr_stmt|;
 block|}
-comment|/* 	 * Determine how to default tape size and density 	 * 	 *         	density				tape size 	 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 	 * 9-track	6250 bpi (625 bytes/.1")	2300 ft.  	 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. (450*4 - slop) 	 */
+if|if
+condition|(
+name|blocksperfile
+condition|)
+name|blocksperfile
+operator|=
+name|blocksperfile
+operator|/
+name|ntrec
+operator|*
+name|ntrec
+expr_stmt|;
+comment|/* round down */
+else|else
+block|{
+comment|/* 		 * Determine how to default tape size and density 		 * 		 *         	density				tape size 		 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 		 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 		 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. 		 *						(450*4 - slop) 		 */
 if|if
 condition|(
 name|density
@@ -625,6 +700,7 @@ literal|2300L
 operator|*
 literal|120L
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|RDUMP
@@ -701,89 +777,89 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|sighup
+name|SIG_IGN
 argument_list|)
-operator|==
+operator|!=
 name|SIG_IGN
 condition|)
 name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|SIG_IGN
+name|sighup
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|signal
+argument_list|(
+name|SIGTRAP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGTRAP
 argument_list|,
 name|sigtrap
 argument_list|)
-operator|==
-name|SIG_IGN
-condition|)
-name|signal
-argument_list|(
-name|SIGTRAP
-argument_list|,
-name|SIG_IGN
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|signal
+argument_list|(
+name|SIGFPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGFPE
 argument_list|,
 name|sigfpe
 argument_list|)
-operator|==
-name|SIG_IGN
-condition|)
-name|signal
-argument_list|(
-name|SIGFPE
-argument_list|,
-name|SIG_IGN
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|signal
+argument_list|(
+name|SIGBUS
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGBUS
 argument_list|,
 name|sigbus
 argument_list|)
-operator|==
-name|SIG_IGN
-condition|)
-name|signal
-argument_list|(
-name|SIGBUS
-argument_list|,
-name|SIG_IGN
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
 name|sigsegv
 argument_list|)
-operator|==
-name|SIG_IGN
-condition|)
-name|signal
-argument_list|(
-name|SIGSEGV
-argument_list|,
-name|SIG_IGN
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -791,16 +867,16 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|sigterm
+name|SIG_IGN
 argument_list|)
-operator|==
+operator|!=
 name|SIG_IGN
 condition|)
 name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|SIG_IGN
+name|sigterm
 argument_list|)
 expr_stmt|;
 if|if
@@ -1284,10 +1360,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pipeout
+condition|)
+name|esize
+operator|+=
+literal|10
+expr_stmt|;
+comment|/* 10 trailer blocks */
+else|else
+block|{
+if|if
+condition|(
+name|blocksperfile
+condition|)
+name|fetapes
+operator|=
+name|esize
+operator|/
+name|blocksperfile
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|cartridge
 condition|)
 block|{
-comment|/* Estimate number of tapes, assuming streaming stops at 		   the end of each block written, and not in mid-block. 		   Assume no erroneous blocks; this can be compensated for 		   with an artificially low tape size. */
+comment|/* Estimate number of tapes, assuming streaming stops at 			   the end of each block written, and not in mid-block. 			   Assume no erroneous blocks; this can be compensated 			   for with an artificially low tape size. */
 name|fetapes
 operator|=
 operator|(
@@ -1328,7 +1426,7 @@ comment|/* tape / 0.1" */
 block|}
 else|else
 block|{
-comment|/* Estimate number of tapes, for old fashioned 9-track tape */
+comment|/* Estimate number of tapes, for old fashioned 9-track 			   tape */
 name|int
 name|tenthsperirg
 init|=
@@ -1414,6 +1512,19 @@ operator|+
 literal|10
 expr_stmt|;
 comment|/* headers + 10 trailer blocks */
+block|}
+if|if
+condition|(
+name|pipeout
+condition|)
+name|msg
+argument_list|(
+literal|"estimated %ld tape blocks.\n"
+argument_list|,
+name|esize
+argument_list|)
+expr_stmt|;
+else|else
 name|msg
 argument_list|(
 literal|"estimated %ld tape blocks on %3.2f tape(s).\n"
@@ -1497,9 +1608,23 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|pipeout
+condition|)
 name|msg
 argument_list|(
-literal|"DUMP: %ld tape blocks on %d tape(s)\n"
+literal|"DUMP: %ld tape blocks\n"
+argument_list|,
+name|spcl
+operator|.
+name|c_tapea
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+argument_list|(
+literal|"DUMP: %ld tape blocks on %d volumes(s)\n"
 argument_list|,
 name|spcl
 operator|.

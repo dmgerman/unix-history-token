@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.12 (Berkeley) %G%"
+literal|"@(#)tape.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* next record to write in current block */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|blocksperfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of blocks per output file */
 end_comment
 
 begin_decl_stmt
@@ -633,7 +644,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"Tape write error on %s\n"
+literal|"write error on %s\n"
 argument_list|,
 name|tape
 argument_list|)
@@ -647,18 +658,16 @@ comment|/* NOTREACHED */
 block|}
 name|msg
 argument_list|(
-literal|"Tape write error %d feet into tape %d\n"
+literal|"write error %d blocks into volume %d\n"
 argument_list|,
-name|asize
-operator|/
-literal|120L
+name|blockswritten
 argument_list|,
 name|tapeno
 argument_list|)
 expr_stmt|;
 name|broadcast
 argument_list|(
-literal|"TAPE ERROR!\n"
+literal|"DUMP WRITE ERROR!\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -674,12 +683,7 @@ argument_list|()
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"This tape will rewind.  After it is rewound,\n"
-argument_list|)
-expr_stmt|;
-name|msg
-argument_list|(
-literal|"replace the faulty tape with a new one;\n"
+literal|"Closing this volume.  Prepare to restart with new media;\n"
 argument_list|)
 expr_stmt|;
 name|msg
@@ -856,9 +860,21 @@ condition|(
 operator|!
 name|pipeout
 operator|&&
+operator|(
+name|blocksperfile
+condition|?
+operator|(
+name|blockswritten
+operator|>=
+name|blocksperfile
+operator|)
+else|:
+operator|(
 name|asize
 operator|>
 name|tsize
+operator|)
+operator|)
 condition|)
 block|{
 name|close_rewind
@@ -1013,7 +1029,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"Change Tapes: Mount tape #%d\n"
+literal|"Change Volumes: Mount volume #%d\n"
 argument_list|,
 name|tapeno
 operator|+
@@ -1022,7 +1038,7 @@ argument_list|)
 expr_stmt|;
 name|broadcast
 argument_list|(
-literal|"CHANGE TAPES!\7\7\n"
+literal|"CHANGE DUMP VOLUMES!\7\7\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1031,7 +1047,7 @@ condition|(
 operator|!
 name|query
 argument_list|(
-literal|"Is the new tape mounted and ready to go?"
+literal|"Is the new volume mounted and ready to go?"
 argument_list|)
 condition|)
 if|if
@@ -1408,7 +1424,7 @@ endif|RDUMP
 block|{
 name|msg
 argument_list|(
-literal|"Cannot open tape \"%s\".\n"
+literal|"Cannot open output \"%s\".\n"
 argument_list|,
 name|tape
 argument_list|)
