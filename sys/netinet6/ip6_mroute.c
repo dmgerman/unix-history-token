@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_mroute.c,v 1.24 2000/05/19 07:37:05 jinmei Exp $	*/
+comment|/*	$KAME: ip6_mroute.c,v 1.33 2000/10/19 02:23:43 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -161,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/pim6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/net_osdep.h>
 end_include
 
 begin_expr_stmt
@@ -3119,6 +3125,14 @@ name|mfccp
 operator|->
 name|mf6cc_parent
 expr_stmt|;
+name|rt
+operator|->
+name|mf6c_ifset
+operator|=
+name|mfccp
+operator|->
+name|mf6cc_ifset
+expr_stmt|;
 comment|/* initialize pkt counters per src-grp */
 name|rt
 operator|->
@@ -3226,6 +3240,14 @@ operator|=
 name|mfccp
 operator|->
 name|mf6cc_parent
+expr_stmt|;
+name|rt
+operator|->
+name|mf6c_ifset
+operator|=
+name|mfccp
+operator|->
+name|mf6cc_ifset
 expr_stmt|;
 comment|/* initialize pkt counters per src-grp */
 name|rt
@@ -3809,6 +3831,78 @@ operator|->
 name|ip6_hlim
 operator|--
 expr_stmt|;
+comment|/* 	 * Source address check: do not forward packets with unspecified 	 * source. It was discussed in July 2000, on ipngwg mailing list. 	 * This is rather more serious than unicast cases, because some 	 * MLD packets can be sent with the unspecified source address 	 * (although such packets must normally set 1 to the hop limit field). 	 */
+if|if
+condition|(
+name|IN6_IS_ADDR_UNSPECIFIED
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+condition|)
+block|{
+name|ip6stat
+operator|.
+name|ip6s_cantforward
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ip6_log_time
+operator|+
+name|ip6_log_interval
+operator|<
+name|time_second
+condition|)
+block|{
+name|ip6_log_time
+operator|=
+name|time_second
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"cannot forward "
+literal|"from %s to %s nxt %d received on %s\n"
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|)
+argument_list|,
+name|ip6
+operator|->
+name|ip6_nxt
+argument_list|,
+name|if_name
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
 comment|/* 	 * Determine forwarding mifs from the forwarding cache table 	 */
 name|s
 operator|=
