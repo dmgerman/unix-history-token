@@ -16,14 +16,14 @@ name|_SCSI_TARGET_H
 end_define
 
 begin_comment
-comment|/*  * Maximum number of parallel commands to accept  * Set to 256 for Fibre Channel (SPI is 16)  */
+comment|/*  * Maximum number of parallel commands to accept,  * 256 for Fibre Channel (SPI is 16).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAX_INITIATORS
-value|16
+value|256
 end_define
 
 begin_define
