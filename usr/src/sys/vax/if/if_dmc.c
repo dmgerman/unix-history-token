@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dmc.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dmc.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -610,7 +610,7 @@ begin_define
 define|#
 directive|define
 name|DMC_ALLOC
-value|01
+value|0x01
 end_define
 
 begin_comment
@@ -621,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|DMC_BMAPPED
-value|02
+value|0x02
 end_define
 
 begin_comment
@@ -632,7 +632,7 @@ begin_define
 define|#
 directive|define
 name|DMC_RESTART
-value|04
+value|0x04
 end_define
 
 begin_comment
@@ -643,11 +643,22 @@ begin_define
 define|#
 directive|define
 name|DMC_ACTIVE
-value|08
+value|0x08
 end_define
 
 begin_comment
 comment|/* device active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMC_RUNNING
+value|0x20
+end_define
+
+begin_comment
+comment|/* device initialized */
 end_comment
 
 begin_struct
@@ -1449,6 +1460,12 @@ operator||=
 name|IFF_RUNNING
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|sc_flag
+operator||=
+name|DMC_RUNNING
+expr_stmt|;
 comment|/* initialize buffer pool */
 comment|/* receives */
 name|ifrw
@@ -1691,7 +1708,7 @@ name|ui_flags
 operator|==
 literal|0
 condition|)
-comment|/* use DDMCP mode in full duplex */
+comment|/* use DDCMP mode in full duplex */
 name|dmcload
 argument_list|(
 name|sc
@@ -2610,6 +2627,8 @@ decl_stmt|,
 name|cmd
 decl_stmt|,
 name|len
+decl_stmt|,
+name|s
 decl_stmt|;
 specifier|register
 name|struct
@@ -3135,6 +3154,11 @@ goto|goto
 name|setup
 goto|;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IF_QFULL
@@ -3160,6 +3184,11 @@ argument_list|(
 name|inq
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|setup
@@ -4136,6 +4165,20 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|struct
+name|dmc_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|dmc_softc
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -4186,6 +4229,85 @@ operator|==
 literal|0
 condition|)
 name|dmcinit
+argument_list|(
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIOCSIFFLAGS
+case|:
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|sc_flag
+operator|&
+name|DMC_RUNNING
+condition|)
+block|{
+operator|(
+operator|(
+expr|struct
+name|dmcdevice
+operator|*
+operator|)
+operator|(
+name|dmcinfo
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+operator|->
+name|ui_addr
+operator|)
+operator|)
+operator|->
+name|bsel1
+operator|=
+name|DMC_MCLR
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flag
+operator|&=
+operator|~
+name|DMC_RUNNING
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flag
+operator|&
+name|DMC_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+name|dmcrestart
 argument_list|(
 name|ifp
 operator|->
