@@ -448,7 +448,7 @@ name|struct
 name|statfs
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -481,7 +481,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
+name|size_t
 name|regetmntinfo
 parameter_list|(
 name|struct
@@ -633,13 +633,13 @@ modifier|*
 modifier|*
 name|vfslist
 decl_stmt|;
-name|long
+name|size_t
+name|i
+decl_stmt|,
 name|mntsize
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
-name|i
 decl_stmt|,
 name|rv
 decl_stmt|;
@@ -1374,7 +1374,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|long
+name|size_t
 name|mntsize
 decl_stmt|,
 name|i
@@ -1448,7 +1448,7 @@ end_comment
 
 begin_function
 specifier|static
-name|long
+name|size_t
 name|regetmntinfo
 parameter_list|(
 name|struct
@@ -1687,7 +1687,7 @@ name|statfs
 modifier|*
 name|sfsp
 parameter_list|,
-name|long
+name|size_t
 name|used
 parameter_list|)
 block|{
@@ -1875,7 +1875,7 @@ name|char
 modifier|*
 name|header
 decl_stmt|;
-name|long
+name|size_t
 name|used
 decl_stmt|,
 name|availblks
@@ -2283,7 +2283,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*ld %*ld %4.0f%% "
+literal|" %*lu %*lu %4.0f%% "
 argument_list|,
 operator|(
 name|u_int
@@ -2292,6 +2292,9 @@ name|mwp
 operator|->
 name|iused
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|used
 argument_list|,
 operator|(
