@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.24 2000/03/01 02:34:57 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.27 2001/05/22 04:07:22 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -246,33 +246,11 @@ name|x
 parameter_list|)
 value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
 comment|/*      * This mess is used to catch people who compile      * a debug vinum(8) and non-debug kernel module,      * or the other way round.      */
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
 define|#
 directive|define
 name|VINUM_SUPERDEV
 value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
-define|#
-directive|define
-name|VINUM_WRONGSUPERDEV
-value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
-comment|/* non-debug superdevice number */
-else|#
-directive|else
-define|#
-directive|define
-name|VINUM_SUPERDEV
-value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
-comment|/* superdevice number */
-define|#
-directive|define
-name|VINUM_WRONGSUPERDEV
-value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
-comment|/* debug superdevice number */
-endif|#
-directive|endif
 define|#
 directive|define
 name|VINUM_DAEMON_DEV
@@ -414,50 +392,6 @@ begin_comment
 comment|/*  * These definitions help catch  * userland/kernel mismatches.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|VINUMDEBUG
-end_if
-
-begin_define
-define|#
-directive|define
-name|VINUM_WRONGSUPERDEV_NAME
-value|VINUM_DIR"/control"
-end_define
-
-begin_comment
-comment|/* normal super device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VINUM_SUPERDEV_NAME
-value|VINUM_DIR"/Control"
-end_define
-
-begin_comment
-comment|/* debug super device */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|VINUM_WRONGSUPERDEV_NAME
-value|VINUM_DIR"/Control"
-end_define
-
-begin_comment
-comment|/* debug super device */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -468,11 +402,6 @@ end_define
 begin_comment
 comment|/* normal super device */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -484,133 +413,6 @@ end_define
 begin_comment
 comment|/* super device for daemon only */
 end_comment
-
-begin_comment
-comment|/*  * Flags for all objects.  Most of them only apply  * to specific objects, but we currently have  * space for all in any 32 bit flags word.  */
-end_comment
-
-begin_enum
-enum|enum
-name|objflags
-block|{
-name|VF_LOCKED
-init|=
-literal|1
-block|,
-comment|/* somebody has locked access to this object */
-name|VF_LOCKING
-init|=
-literal|2
-block|,
-comment|/* we want access to this object */
-name|VF_OPEN
-init|=
-literal|4
-block|,
-comment|/* object has openers */
-name|VF_WRITETHROUGH
-init|=
-literal|8
-block|,
-comment|/* volume: write through */
-name|VF_INITED
-init|=
-literal|0x10
-block|,
-comment|/* unit has been initialized */
-name|VF_WLABEL
-init|=
-literal|0x20
-block|,
-comment|/* label area is writable */
-name|VF_LABELLING
-init|=
-literal|0x40
-block|,
-comment|/* unit is currently being labelled */
-name|VF_WANTED
-init|=
-literal|0x80
-block|,
-comment|/* someone is waiting to obtain a lock */
-name|VF_RAW
-init|=
-literal|0x100
-block|,
-comment|/* raw volume (no file system) */
-name|VF_LOADED
-init|=
-literal|0x200
-block|,
-comment|/* module is loaded */
-name|VF_CONFIGURING
-init|=
-literal|0x400
-block|,
-comment|/* somebody is changing the config */
-name|VF_WILL_CONFIGURE
-init|=
-literal|0x800
-block|,
-comment|/* somebody wants to change the config */
-name|VF_CONFIG_INCOMPLETE
-init|=
-literal|0x1000
-block|,
-comment|/* haven't finished changing the config */
-name|VF_CONFIG_SETUPSTATE
-init|=
-literal|0x2000
-block|,
-comment|/* set a volume up if all plexes are empty */
-name|VF_READING_CONFIG
-init|=
-literal|0x4000
-block|,
-comment|/* we're reading config database from disk */
-name|VF_FORCECONFIG
-init|=
-literal|0x8000
-block|,
-comment|/* configure drives even with different names */
-name|VF_NEWBORN
-init|=
-literal|0x10000
-block|,
-comment|/* for objects: we've just created it */
-name|VF_CONFIGURED
-init|=
-literal|0x20000
-block|,
-comment|/* for drives: we read the config */
-name|VF_STOPPING
-init|=
-literal|0x40000
-block|,
-comment|/* for vinum_conf: stop on last close */
-name|VF_DAEMONOPEN
-init|=
-literal|0x80000
-block|,
-comment|/* the daemon has us open (only superdev) */
-name|VF_CREATED
-init|=
-literal|0x100000
-block|,
-comment|/* for volumes: freshly created, more then new */
-name|VF_HOTSPARE
-init|=
-literal|0x200000
-block|,
-comment|/* for drives: use as hot spare */
-name|VF_RETRYERRORS
-init|=
-literal|0x400000
-block|,
-comment|/* don't down subdisks on I/O errors */
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      8  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      9  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      9 + size of config  * |                                      |  * |--------------------------------------|  */
