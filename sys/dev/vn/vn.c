@@ -2989,6 +2989,9 @@ name|sc_size
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TEST_LABELLING
 name|vn
 operator|->
 name|sc_slices
@@ -2996,6 +2999,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX temportary; leaks memory, maybe worse */
+endif|#
+directive|endif
 block|}
 end_function
 
