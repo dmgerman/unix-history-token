@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.14	(Berkeley) %G%"
+literal|"@(#)conn.c	5.15	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,10 +443,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *	place a telephone call to system and login, etc.  *  *	return codes:  *		CF_SYSTEM: don't know system  *		CF_TIME: wrong time to call  *		CF_DIAL: call failed  *		CF_NODEV: no devices available to place call  *		CF_LOGIN: login/password dialog failed  *  *>0  - file no.  -  connect ok  */
-end_comment
-
 begin_decl_stmt
 name|int
 name|Dcf
@@ -483,6 +479,10 @@ name|int
 name|LocalOnly
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  *	place a telephone call to system and login, etc.  *  *	return codes:  *		CF_SYSTEM: don't know system  *		CF_TIME: wrong time to call  *		CF_DIAL: call failed  *		CF_NODEV: no devices available to place call  *		CF_LOGIN: login/password dialog failed  *  *>0  - file no.  -  connect ok  */
+end_comment
 
 begin_macro
 name|conn
@@ -1013,6 +1013,11 @@ argument_list|,
 literal|"called"
 argument_list|)
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"login"
+argument_list|)
+expr_stmt|;
 name|fcode
 operator|=
 name|login
@@ -1078,16 +1083,28 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *	connect to remote machine  *  *	return codes:  *>0  -  file number - ok  *		FAIL  -  failed  */
-end_comment
-
 begin_function_decl
 name|int
 name|nulldev
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|CU_end
+function_decl|)
+parameter_list|()
+init|=
+name|nulldev
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	connect to remote machine  *  *	return codes:  *>0  -  file number - ok  *		FAIL  -  failed  */
+end_comment
 
 begin_expr_stmt
 name|getto
@@ -1340,18 +1357,6 @@ end_block
 begin_comment
 comment|/*  *	close call unit  *  *	return codes:  none  */
 end_comment
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|CU_end
-function_decl|)
-parameter_list|()
-init|=
-name|nulldev
-function_decl|;
-end_function_decl
 
 begin_macro
 name|clsacu
@@ -2983,10 +2988,28 @@ argument_list|,
 name|CNULL
 argument_list|)
 expr_stmt|;
+name|strptr
+operator|--
+expr_stmt|;
 operator|*
 name|strptr
 operator|=
 literal|' '
+expr_stmt|;
+name|strcpy
+argument_list|(
+operator|&
+name|strptr
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|strptr
+index|[
+literal|4
+index|]
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
