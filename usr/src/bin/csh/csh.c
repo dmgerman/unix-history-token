@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.7 %G%"
+literal|"@(#)csh.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,6 +916,10 @@ name|isatty
 argument_list|(
 name|SHOUT
 argument_list|)
+operator|||
+name|parintr
+operator|==
+name|SIG_DFL
 condition|)
 name|setintr
 operator|=
