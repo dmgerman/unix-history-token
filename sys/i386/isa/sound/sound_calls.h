@@ -1,11 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: sound_calls.h,v 1.5 1994/08/02 07:40:51 davidg Exp $  */
 end_comment
 
 begin_comment
 comment|/*  *	DMA buffer calls  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_ISA_SOUND_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_ISA_SOUND_H_
+end_define
 
 begin_function_decl
 name|int
@@ -868,16 +880,6 @@ end_function_decl
 begin_comment
 comment|/*	From soundcard.c	*/
 end_comment
-
-begin_function_decl
-name|long
-name|soundcard_init
-parameter_list|(
-name|long
-name|mem_start
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1886,6 +1888,11 @@ name|mem_start
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

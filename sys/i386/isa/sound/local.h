@@ -4,13 +4,37 @@ comment|/* for FreeBSD */
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: local.h,v 1.8 1994/08/02 07:40:06 davidg Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"snd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_if
