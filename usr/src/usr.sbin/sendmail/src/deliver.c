@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.47 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5249,6 +5249,8 @@ break|break;
 case|case
 name|SM_QUEUE
 case|:
+name|queueonly
+label|:
 name|e
 operator|->
 name|e_flags
@@ -5256,6 +5258,20 @@ operator||=
 name|EF_INQUEUE
 operator||
 name|EF_KEEPQUEUE
+expr_stmt|;
+if|if
+condition|(
+name|lockfp
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|lockfp
+argument_list|)
 expr_stmt|;
 return|return;
 case|case
@@ -5279,6 +5295,33 @@ operator|->
 name|e_xfp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF
+comment|/* 		**  Since lockf has the interesting semantic that the 		**  lock is lost when we close the file in the parent, 		**  we'll risk losing the lock here by closing before 		**  the fork, and then trying to get it back in the 		**  child. 		*/
+if|if
+condition|(
+name|lockfp
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|lockfp
+argument_list|)
+expr_stmt|;
+name|lockfp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* LOCKF */
 name|pid
 operator|=
 name|fork
@@ -5291,11 +5334,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|mode
-operator|=
-name|SM_DELIVER
-expr_stmt|;
-break|break;
+goto|goto
+name|queueonly
+goto|;
 block|}
 elseif|else
 if|if
@@ -5316,6 +5357,9 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|LOCKF
 if|if
 condition|(
 name|lockfp
@@ -5330,6 +5374,8 @@ argument_list|(
 name|lockfp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* double fork to avoid zombies */
@@ -5354,26 +5400,26 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOCKF
-comment|/* 		**  When our parent closed lockfp, we lost the lock. 		**  Try to get it back now. 		*/
-if|if
-condition|(
+comment|/* 		**  Now try to get our lock back. 		*/
 name|lockfp
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|fseek
+operator|=
+name|fopen
 argument_list|(
-name|lockfp
+name|queuename
+argument_list|(
+name|e
 argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
+literal|'q'
 argument_list|)
-operator|!=
-literal|0
+argument_list|,
+literal|"r+"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lockfp
+operator|==
+name|NULL
 operator|||
 name|lockf
 argument_list|(
@@ -5404,7 +5450,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%s: lost lock"
+literal|"%s: lost lock: %m"
 argument_list|,
 name|CurEnv
 operator|->
@@ -5414,17 +5460,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
-name|fclose
-argument_list|(
-name|lockfp
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
