@@ -171,6 +171,11 @@ operator|.
 name|d_maj
 operator|=
 name|CDEV_MAJOR
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -216,6 +221,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_MMAP_ANON
+operator||
+name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
