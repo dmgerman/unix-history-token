@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.36 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,9 @@ name|temp
 decl_stmt|,
 modifier|*
 name|tend
+decl_stmt|,
+modifier|*
+name|uname
 decl_stmt|;
 name|char
 name|from
@@ -190,11 +193,20 @@ decl_stmt|;
 name|char
 modifier|*
 name|getnewpasswd
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getlogin
+argument_list|()
+decl_stmt|;
 name|uid
 operator|=
 name|getuid
+argument_list|()
+expr_stmt|;
+name|uname
+operator|=
+name|getlogin
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -206,26 +218,24 @@ block|{
 case|case
 literal|0
 case|:
-if|if
-condition|(
-operator|!
-operator|(
-name|pw
+break|break;
+case|case
+literal|1
+case|:
+name|uname
 operator|=
-name|getpwuid
-argument_list|(
-name|uid
-argument_list|)
-operator|)
-condition|)
-block|{
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+break|break;
+default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"passwd: unknown user: uid %u\n"
-argument_list|,
-name|uid
+literal|"usage: passwd [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -234,10 +244,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|1
-case|:
 if|if
 condition|(
 operator|!
@@ -246,10 +252,7 @@ name|pw
 operator|=
 name|getpwnam
 argument_list|(
-name|argv
-index|[
-literal|1
-index|]
+name|uname
 argument_list|)
 operator|)
 condition|)
@@ -260,10 +263,7 @@ name|stderr
 argument_list|,
 literal|"passwd: unknown user %s.\n"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|uname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -293,21 +293,6 @@ name|strerror
 argument_list|(
 name|EACCES
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: passwd [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1114,6 +1099,11 @@ modifier|*
 name|getpass
 argument_list|()
 decl_stmt|;
+name|int
+name|tries
+init|=
+literal|0
+decl_stmt|;
 name|time_t
 name|time
 parameter_list|()
@@ -1229,6 +1219,17 @@ name|p
 argument_list|)
 operator|<=
 literal|5
+operator|&&
+operator|(
+name|uid
+operator|!=
+literal|0
+operator|||
+name|tries
+operator|++
+operator|<
+literal|2
+operator|)
 condition|)
 block|{
 name|printf
@@ -1262,6 +1263,17 @@ condition|(
 operator|!
 operator|*
 name|t
+operator|&&
+operator|(
+name|uid
+operator|!=
+literal|0
+operator|||
+name|tries
+operator|++
+operator|<
+literal|2
+operator|)
 condition|)
 block|{
 name|printf
