@@ -4491,15 +4491,6 @@ argument_list|(
 literal|"out of memory.\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
-condition|)
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 return|return
 operator|(
 name|r
@@ -4709,15 +4700,6 @@ name|wrterror
 argument_list|(
 literal|"out of memory.\n"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
-condition|)
-name|errno
-operator|=
-name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
