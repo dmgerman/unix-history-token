@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.15	82/01/17	*/
+comment|/*	tty_pty.c	4.16	82/01/19	*/
 end_comment
 
 begin_comment
@@ -177,12 +177,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PF_FLOWCTL
+name|PF_STOPPED
 value|0x10
 end_define
 
 begin_comment
-comment|/* peers flow control mode */
+comment|/* user told stopped */
 end_comment
 
 begin_comment
@@ -623,6 +623,23 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|pt_ioctl
+modifier|*
+name|pti
+init|=
+operator|&
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|tp
@@ -632,6 +649,29 @@ operator|&
 name|TS_TTSTOP
 condition|)
 return|return;
+if|if
+condition|(
+name|pti
+operator|->
+name|pt_flags
+operator|&
+name|PF_STOPPED
+condition|)
+block|{
+name|pti
+operator|->
+name|pt_flags
+operator|&=
+operator|~
+name|PF_STOPPED
+expr_stmt|;
+name|pti
+operator|->
+name|pt_send
+operator|=
+name|TIOCPKT_START
+expr_stmt|;
+block|}
 name|ptcwakeup
 argument_list|(
 name|tp
@@ -1233,17 +1273,39 @@ name|t_dev
 argument_list|)
 index|]
 decl_stmt|;
+comment|/* note: FLUSHREAD and FLUSHWRITE already ok */
 if|if
 condition|(
 name|flush
 operator|==
 literal|0
 condition|)
-return|return;
+block|{
+name|flush
+operator|=
+name|TIOCPKT_STOP
+expr_stmt|;
+name|pti
+operator|->
+name|pt_flags
+operator||=
+name|PF_STOPPED
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pti
+operator|->
+name|pt_flags
+operator|&=
+operator|~
+name|PF_STOPPED
+expr_stmt|;
+block|}
 name|pti
 operator|->
 name|pt_send
-operator||=
+operator|=
 name|flush
 expr_stmt|;
 name|ptcwakeup
