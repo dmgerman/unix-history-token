@@ -56,7 +56,7 @@ comment|/* Define configuration date */
 end_comment
 
 begin_comment
-comment|/* #define CONFIG_DATE "Tue Sep  2 16:41:46 CEST 2003" */
+comment|/* #define CONFIG_DATE "Sat Jun 26 15:53:09 CEST 2004" */
 end_comment
 
 begin_comment
@@ -1080,6 +1080,14 @@ comment|/* #undef HAVE_FS_XFS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<gdbm/ndbm.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GDBM_NDBM_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `getccent' function. */
 end_comment
 
@@ -1363,14 +1371,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LDAP_OPEN */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `gdbm' library (-lgdbm). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBGDBM */
 end_comment
 
 begin_comment
@@ -3032,9 +3032,12 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/mbuf.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #define HAVE_SYS_MBUF_H 1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MBUF_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/mman.h> header file. */
@@ -4120,7 +4123,7 @@ comment|/* Define the header version of (linux) hosts (eg. 2.2.10) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_HEADER_VERSION "5.1" */
+comment|/* #define HOST_HEADER_VERSION "5.2" */
 end_comment
 
 begin_comment
@@ -4128,7 +4131,7 @@ comment|/* Define name and version of host machine (eg. solaris2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS "freebsd5.1" */
+comment|/* #define HOST_OS "freebsd5.2" */
 end_comment
 
 begin_comment
@@ -4144,7 +4147,7 @@ comment|/* Define only version of host machine (eg. 2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS_VERSION "5.1" */
+comment|/* #define HOST_OS_VERSION "5.2" */
 end_comment
 
 begin_comment
@@ -5786,6 +5789,17 @@ value|char *
 end_define
 
 begin_comment
+comment|/* Defined to the header file containing ndbm-compatible definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEW_DBM_H
+value|<ndbm.h>
+end_define
+
+begin_comment
 comment|/* Define the field name for the filehandle within nfs_args_t */
 end_comment
 
@@ -5823,7 +5837,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"amd-dev@am-utils.org"
+value|"am-utils@am-utils.org"
 end_define
 
 begin_comment
@@ -5845,7 +5859,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"am-utils 6.0-20030828"
+value|"am-utils 6.0.10-20040513"
 end_define
 
 begin_comment
@@ -5867,7 +5881,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"6.0-20030828"
+value|"6.0.10-20040513"
 end_define
 
 begin_comment
@@ -5992,7 +6006,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0-20030828"
+value|"6.0.10-20040513"
 end_define
 
 begin_comment
