@@ -338,18 +338,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The following is for compatibility with NetBSD, but should really be  * brought in from NetBSD en toto.  */
+comment|/*  * The following is for compatibility with NetBSD.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|le16toh
-parameter_list|(
-name|a
-parameter_list|)
-value|(a)
-end_define
 
 begin_define
 define|#
@@ -358,6 +348,7 @@ name|LE16TOH
 parameter_list|(
 name|a
 parameter_list|)
+value|((a) = le16toh((a)))
 end_define
 
 begin_decl_stmt

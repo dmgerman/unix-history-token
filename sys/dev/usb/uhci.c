@@ -376,11 +376,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if

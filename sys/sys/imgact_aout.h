@@ -73,7 +73,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|(__ntohl((ex).a_midmag)& 0xffff)
+value|(ntohl((ex).a_midmag)& 0xffff)
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|((__ntohl((ex).a_midmag)>> 16)& 0x03ff)
+value|((ntohl((ex).a_midmag)>> 16)& 0x03ff)
 end_define
 
 begin_define
@@ -95,7 +95,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|((__ntohl((ex).a_midmag)>> 26)& 0x3f)
+value|((ntohl((ex).a_midmag)>> 26)& 0x3f)
 end_define
 
 begin_define
@@ -112,7 +112,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|( (ex).a_midmag = __htonl( (((flag)&0x3f)<<26) | (((mid)&0x03ff)<<16) \ 	| (((mag)&0xffff)) ) )
+value|( (ex).a_midmag = htonl( (((flag)&0x3f)<<26) | (((mid)&0x03ff)<<16) \ 	| (((mag)&0xffff)) ) )
 end_define
 
 begin_define

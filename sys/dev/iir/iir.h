@@ -2716,31 +2716,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|htole32
-parameter_list|(
-name|v
-parameter_list|)
-value|(v)
-end_define
-
-begin_define
-define|#
-directive|define
-name|htole16
-parameter_list|(
-name|v
-parameter_list|)
-value|(v)
-end_define
-
-begin_define
-define|#
-directive|define
 name|letoh32
 parameter_list|(
 name|v
 parameter_list|)
-value|(v)
+value|le32toh(v)
 end_define
 
 begin_define
@@ -2750,7 +2730,7 @@ name|letoh16
 parameter_list|(
 name|v
 parameter_list|)
-value|(v)
+value|le16toh(v)
 end_define
 
 begin_comment

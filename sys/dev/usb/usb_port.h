@@ -1059,16 +1059,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|bswap32
-parameter_list|(
-name|x
-parameter_list|)
-value|swap32(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|kthread_create1
 parameter_list|(
 name|f

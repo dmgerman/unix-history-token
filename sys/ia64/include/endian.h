@@ -107,15 +107,26 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_BSWAP64_DEFINED
+end_define
+
 begin_function
-name|__BEGIN_DECLS
 specifier|static
 name|__inline
 name|__uint64_t
-name|__uint8_swap_uint64
+name|__bswap64
 parameter_list|(
 name|__uint64_t
 name|__x
@@ -145,11 +156,18 @@ name|__r
 return|;
 end_return
 
+begin_define
+unit|}
+define|#
+directive|define
+name|_BSWAP32_DEFINED
+end_define
+
 begin_function
-unit|}  static
+unit|static
 name|__inline
 name|__uint32_t
-name|__htonl
+name|__bswap32
 parameter_list|(
 name|__uint32_t
 name|__x
@@ -157,7 +175,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__uint8_swap_uint64
+name|__bswap64
 argument_list|(
 name|__x
 argument_list|)
@@ -168,11 +186,17 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|_BSWAP16_DEFINED
+end_define
+
 begin_function
 specifier|static
 name|__inline
 name|__uint16_t
-name|__htons
+name|__bswap16
 parameter_list|(
 name|__uint16_t
 name|__x
@@ -180,7 +204,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__uint8_swap_uint64
+name|__bswap64
 argument_list|(
 name|__x
 argument_list|)
@@ -191,55 +215,48 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|__uint32_t
-name|__ntohl
-parameter_list|(
-name|__uint32_t
-name|__x
-parameter_list|)
-block|{
-return|return
-operator|(
-name|__uint8_swap_uint64
-argument_list|(
-name|__x
-argument_list|)
-operator|>>
-literal|32
-operator|)
-return|;
-block|}
-end_function
+begin_else
+else|#
+directive|else
+end_else
 
-begin_function
-specifier|static
-name|__inline
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_comment
+comment|/* XXX: use the libkern versions for now; these might go away soon. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSWAP16_DEFINED
+end_define
+
+begin_function_decl
 name|__uint16_t
-name|__ntohs
+name|__bswap16
 parameter_list|(
 name|__uint16_t
-name|__x
 parameter_list|)
-block|{
-return|return
-operator|(
-name|__uint8_swap_uint64
-argument_list|(
-name|__x
-argument_list|)
-operator|>>
-literal|48
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_define
+define|#
+directive|define
+name|_BSWAP32_DEFINED
+end_define
+
+begin_function_decl
+name|__uint32_t
+name|__bswap32
+parameter_list|(
+name|__uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -248,6 +265,15 @@ end_endif
 
 begin_comment
 comment|/* __GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
