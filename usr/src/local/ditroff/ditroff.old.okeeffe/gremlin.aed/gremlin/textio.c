@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* textio.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains functions that manipulate the text interface  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)textio.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains functions that manipulate the text interface  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -191,9 +188,6 @@ begin_comment
 comment|/* TRUE means TxPutMsg has been called 				 * since last character input. 				 */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* The following structures define the various fields that are available  * on the terminal screen.  */
 end_comment
@@ -314,9 +308,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|TxInit
@@ -599,9 +590,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|TxRedisplay
@@ -895,9 +883,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|TxClose
 argument_list|()
@@ -912,6 +897,11 @@ block|{
 name|char
 modifier|*
 name|dummy
+decl_stmt|,
+name|buf
+index|[
+literal|100
+index|]
 decl_stmt|;
 name|sttybuf
 operator|.
@@ -1025,9 +1015,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|TxPutString
 argument_list|(
@@ -1123,9 +1110,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_function
 name|char
 name|TxGetChar
@@ -1142,9 +1126,6 @@ argument_list|()
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_macro
 name|TxMsgOK
@@ -1185,9 +1166,6 @@ name|FALSE
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|TxGetLine
@@ -1415,9 +1393,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|TxPutMsg
