@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.1 %G%"
+literal|"@(#)fio.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -737,6 +737,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|message
+operator|!=
+operator|(
+expr|struct
+name|message
+operator|*
+operator|)
+literal|0
+condition|)
+name|cfree
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|message
+argument_list|)
+expr_stmt|;
 name|message
 operator|=
 operator|(
@@ -1009,6 +1029,11 @@ name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
+if|if
+condition|(
+name|readonly
+condition|)
+return|return;
 for|for
 control|(
 name|mp
