@@ -391,11 +391,13 @@ block|{
 name|int
 name|found
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|long
 name|recstart
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*

@@ -189,10 +189,12 @@ name|char
 operator|*
 name|result
 operator|,
+specifier|const
 name|char
 operator|*
 name|seed
 operator|,
+specifier|const
 name|char
 operator|*
 name|passwd
