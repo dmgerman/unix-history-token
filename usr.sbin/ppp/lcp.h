@@ -297,9 +297,9 @@ range|:
 literal|2
 decl_stmt|;
 comment|/* Challenge Handshake Authentication proto */
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|unsigned
 name|chap80nt
 range|:

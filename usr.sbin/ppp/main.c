@@ -3103,7 +3103,6 @@ argument_list|)
 condition|)
 if|if
 condition|(
-operator|!
 name|descriptor_Write
 argument_list|(
 operator|&
@@ -3115,11 +3114,13 @@ name|bundle
 argument_list|,
 name|wfds
 argument_list|)
+operator|<=
+literal|0
 operator|&&
 name|nothing_done
 condition|)
 block|{
-comment|/*          * This is disasterous.  The OS has told us that something is          * writable, and all our write()s have failed.  Rather than          * going back immediately to do our UpdateSet()s and select(),          * we sleep for a bit to avoid gobbling up all cpu time.          */
+comment|/*          * This is disastrous.  The OS has told us that something is          * writable, and all our write()s have failed.  Rather than          * going back immediately to do our UpdateSet()s and select(),          * we sleep for a bit to avoid gobbling up all cpu time.          */
 name|struct
 name|timeval
 name|t

@@ -2982,6 +2982,8 @@ expr_stmt|;
 name|result
 operator|=
 name|wrote
+operator|>
+literal|0
 condition|?
 literal|1
 else|:
@@ -3001,9 +3003,10 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
+block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"chat_Write: %s\n"
 argument_list|,
@@ -3013,6 +3016,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|physical_IsSync

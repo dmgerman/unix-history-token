@@ -108,9 +108,9 @@ comment|/* Peer gave us this one */
 block|}
 name|challenge
 struct|;
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|unsigned
 name|NTRespSent
 range|:

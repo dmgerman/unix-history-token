@@ -246,11 +246,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DES
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NODES
+end_ifndef
 
 begin_include
 include|#
@@ -650,9 +650,9 @@ name|Pred1Algorithm
 block|,
 operator|&
 name|PppdDeflateAlgorithm
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 block|,
 operator|&
 name|MPPEAlgorithm
@@ -1061,9 +1061,9 @@ operator|.
 name|winsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|prompt_Printf
 argument_list|(
 name|arg
@@ -1247,9 +1247,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|prompt_Printf
 argument_list|(
 name|arg
@@ -1487,9 +1487,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|ccp
 operator|->
 name|cfg

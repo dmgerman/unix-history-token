@@ -632,6 +632,24 @@ name|PARSE_NOHASH
 value|2
 end_define
 
+begin_comment
+comment|/* flags passed to loadmodules */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOAD_QUIETLY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOAD_VERBOSLY
+value|2
+end_define
+
 begin_define
 define|#
 directive|define
@@ -891,6 +909,22 @@ name|char
 modifier|*
 specifier|const
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|loadmodules
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -174,11 +174,11 @@ name|CCP_NEG_DEFLATE24
 value|2
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DES
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NODES
+end_ifndef
 
 begin_define
 define|#
@@ -211,11 +211,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DES
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NODES
+end_ifndef
 
 begin_enum
 enum|enum
@@ -266,9 +266,9 @@ struct|;
 block|}
 name|deflate
 struct|;
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 struct|struct
 block|{
 name|int
