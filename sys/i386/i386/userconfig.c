@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.63.2.23 1998/02/10 00:11:20 msmith Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.63.2.24 1998/03/06 23:44:40 julian Exp $  **/
 end_comment
 
 begin_comment
@@ -1113,6 +1113,26 @@ block|,
 name|FLG_FIXED
 block|,
 name|CLS_INPUT
+block|}
+block|,
+block|{
+literal|"bktr"
+block|,
+literal|"Brooktree BT848 based frame grabber/tuner card"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+block|{
+literal|"pcm"
+block|,
+literal|"New Luigi audio driver for all supported sound cards"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
 block|}
 block|,
 block|{
@@ -7166,13 +7186,13 @@ literal|"an item (the selected item will be highlighted).  If the item is a"
 block|,
 literal|"category name, you may alternatively expand or collapse the list of"
 block|,
-literal|"drivers for that category by pressing [!bRETURN!n].  Once the category is"
+literal|"drivers for that category by pressing [!bENTER!n].  Once the category is"
 block|,
 literal|"expanded, you can select each driver in the same manner and either:"
 block|,
 literal|""
 block|,
-literal|"  - change its parameters using [!bRETURN!n]"
+literal|"  - change its parameters using [!bENTER!n]"
 block|,
 literal|"  - move it to the Inactive list using [!bDEL!n]"
 block|,
@@ -7184,7 +7204,7 @@ literal|"you need to move a driver from the Inactive list back to the Active"
 block|,
 literal|"one, select it in the Inactive list, using [!bTAB!n] to change lists if"
 block|,
-literal|"necessary, and press [!bRETURN!n] -- the device will be moved back to"
+literal|"necessary, and press [!bENTER!n] -- the device will be moved back to"
 block|,
 literal|"its place in the Active list."
 block|,
@@ -7208,7 +7228,7 @@ literal|"present in your system, you can set their parameters (Interrupt, DMA"
 block|,
 literal|"channel, I/O addresses).  To do this, select the driver and press"
 block|,
-literal|"[!bRETURN!n]: it is now possible to edit the settings the settings at the"
+literal|"[!bENTER!n]: it is now possible to edit the settings the settings at the"
 block|,
 literal|"bottom of the screen.  Use [!bTAB!n] to change fields, and when you are"
 block|,
@@ -8717,7 +8737,7 @@ comment|/* VISUAL_USERCONFIG */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.63.2.23 1998/02/10 00:11:20 msmith Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.63.2.24 1998/03/06 23:44:40 julian Exp $  */
 end_comment
 
 begin_include
