@@ -18,7 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -1028,6 +1034,38 @@ condition|)
 block|{
 name|line_no
 operator|++
+expr_stmt|;
+comment|/* 	 * Remove all trailing white space. 	 */
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|>
+literal|0
+operator|&&
+name|isspace
+argument_list|(
+name|line
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|line
+index|[
+operator|--
+name|i
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * Look for the beginning of an encoded piece. 	 */
 if|if
