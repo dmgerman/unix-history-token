@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enscript.c	1.6 (Berkeley) %G%"
+literal|"@(#)enscript.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,10 +376,6 @@ begin_comment
 comment|/* the layout of a font information block */
 end_comment
 
-begin_macro
-name|private
-end_macro
-
 begin_struct
 struct|struct
 name|font
@@ -663,17 +659,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* ? */
-end_comment
-
-begin_decl_stmt
-name|private
-name|int
-name|col
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* column number on current line */
 end_comment
 
 begin_decl_stmt
@@ -1867,6 +1852,29 @@ name|FontData
 argument_list|)
 decl_stmt|;
 block|}
+comment|/* 	 * Tab width is problematical for proportionally-spaced fonts. 	 * Attempt to make tabs wide enough that things hand-tabulated 	 * for monospaced fonts still fit in columns. 	 */
+if|if
+condition|(
+name|fonts
+index|[
+name|Roman
+index|]
+operator|.
+name|Xwid
+index|[
+literal|'0'
+index|]
+operator|==
+name|fonts
+index|[
+name|Roman
+index|]
+operator|.
+name|Xwid
+index|[
+literal|'M'
+index|]
+condition|)
 name|TabWidth
 operator|=
 name|fonts
@@ -1882,6 +1890,22 @@ operator|*
 literal|8
 expr_stmt|;
 comment|/* 8 * figure width */
+else|else
+name|TabWidth
+operator|=
+name|fonts
+index|[
+name|Roman
+index|]
+operator|.
+name|Xwid
+index|[
+literal|'0'
+index|]
+operator|*
+literal|10
+expr_stmt|;
+comment|/* 10 * figure width */
 name|BSWidth
 operator|=
 name|fonts
@@ -2486,10 +2510,6 @@ operator|+
 literal|'0'
 argument_list|)
 expr_stmt|;
-name|col
-operator|+=
-literal|3
-expr_stmt|;
 block|}
 name|level
 operator|--
@@ -2592,17 +2612,10 @@ name|InitPage
 argument_list|()
 expr_stmt|;
 block|}
-name|col
-operator|=
-literal|1
-expr_stmt|;
 name|ShowChar
 argument_list|(
 name|c
 argument_list|)
-expr_stmt|;
-name|col
-operator|++
 expr_stmt|;
 name|level
 operator|--
@@ -3574,10 +3587,6 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|col
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|OutFile
@@ -3935,9 +3944,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|col
-operator|++
-expr_stmt|;
 block|}
 else|else
 switch|switch
@@ -4037,10 +4043,6 @@ operator|)
 condition|)
 name|PageEject
 argument_list|()
-expr_stmt|;
-name|col
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -4324,10 +4326,6 @@ comment|/* form feed ^L */
 name|PageEject
 argument_list|()
 expr_stmt|;
-name|col
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|011
@@ -4340,33 +4338,15 @@ condition|)
 name|InitPage
 argument_list|()
 expr_stmt|;
-name|col
-operator|=
-operator|(
-name|col
-operator|-
-literal|1
-operator|)
-operator|/
-literal|8
-operator|*
-literal|8
-operator|+
-literal|9
-expr_stmt|;
 name|dX
-operator|=
-name|lX
-operator|+
-operator|(
-name|col
-operator|-
-literal|1
-operator|)
-operator|/
-literal|8
-operator|*
+operator|+=
 name|TabWidth
+operator|-
+operator|(
+name|dX
+operator|%
+name|TabWidth
+operator|)
 expr_stmt|;
 break|break;
 default|default:
@@ -4382,9 +4362,6 @@ name|ShowChar
 argument_list|(
 name|c
 argument_list|)
-expr_stmt|;
-name|col
-operator|++
 expr_stmt|;
 block|}
 name|ClosePage
