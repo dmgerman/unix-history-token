@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.10 1996/11/19 23:57:06 wpaul Exp $ (LBL)"
+literal|"$Id: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.12 1996/11/27 20:45:10 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,13 +95,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199100
-end_if
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
 
 begin_include
 include|#
@@ -115,29 +113,11 @@ directive|include
 file|<net/if_dl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199200
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -187,14 +167,6 @@ directive|include
 file|<syslog.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199200
-end_if
-
 begin_include
 include|#
 directive|include
@@ -206,40 +178,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

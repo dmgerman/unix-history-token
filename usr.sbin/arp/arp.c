@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.5 1996/12/10 17:00:34 wollman Exp $"
+literal|"$Id: arp.c,v 1.6 1996/12/19 19:33:10 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include

@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.3 1995/05/30 05:46:28 rgrimes Exp $"
+literal|"$Id: rstat_proc.c,v 1.4 1996/12/11 19:11:52 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1506,10 +1506,6 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|ifnet
-name|ifnet
-decl_stmt|;
 name|int
 name|off
 decl_stmt|;

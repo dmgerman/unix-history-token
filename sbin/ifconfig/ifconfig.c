@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.20 1996/11/21 19:36:09 wollman Exp $"
+literal|"$Id: ifconfig.c,v 1.21 1996/12/10 17:07:17 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include

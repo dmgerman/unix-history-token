@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 3.8.1.2 1996/09/05 19:00:20 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 1.7 1996/11/11 03:49:57 fenner Exp $  */
 end_comment
 
 begin_include
@@ -103,6 +103,29 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|rtentry
+value|kern_rtentry
+end_define
+
+begin_comment
+comment|/* XXX !!! UGH */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|rtentry
+end_undef
 
 begin_include
 include|#

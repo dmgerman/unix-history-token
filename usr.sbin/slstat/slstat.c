@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.7 1996/11/04 17:14:43 bde Exp $"
+literal|"$Id: slstat.c,v 1.8 1996/12/10 17:00:45 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include

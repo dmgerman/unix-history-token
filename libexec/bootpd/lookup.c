@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lookup.c - Lookup IP address, HW address, netmask  *  *	$Id: lookup.c,v 1.2 1996/09/22 21:52:21 wosch Exp $  */
+comment|/*  * lookup.c - Lookup IP address, HW address, netmask  *  *	$Id: lookup.c,v 1.3 1996/12/10 17:05:33 wollman Exp $  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<net/ethernet.h>
 end_include
 
 begin_function_decl
