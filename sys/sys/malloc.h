@@ -22,12 +22,6 @@ name|splmem
 value|splhigh
 end_define
 
-begin_define
-define|#
-directive|define
-name|KMEMSTATS
-end_define
-
 begin_comment
 comment|/*  * flags to malloc.  */
 end_comment
@@ -340,28 +334,8 @@ value|((size)<= (MINALLOCSIZE * 128) \ 		? (size)<= (MINALLOCSIZE * 8) \ 			? (s
 end_define
 
 begin_comment
-comment|/*  * Turn virtual addresses into kmem map indices  */
+comment|/*  * Turn virtual addresses into kmemusage pointers.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|kmemxtob
-parameter_list|(
-name|alloc
-parameter_list|)
-value|(kmembase + (alloc) * PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|btokmemx
-parameter_list|(
-name|addr
-parameter_list|)
-value|(((caddr_t)(addr) - kmembase) / PAGE_SIZE)
-end_define
 
 begin_define
 define|#
@@ -374,22 +348,8 @@ value|(&kmemusage[((caddr_t)(addr) - kmembase)>> PAGE_SHIFT])
 end_define
 
 begin_comment
-comment|/*  * Macro versions for the usual cases of malloc/free  */
+comment|/*  * Deprecated macro versions of not-quite-malloc() and free().  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KMEMSTATS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -407,7 +367,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|(space) = (cast)malloc((u_long)(size), type, flags)
+value|(space) = (cast)malloc((u_long)(size), (type), (flags))
 end_define
 
 begin_define
@@ -419,82 +379,8 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|free((addr), type)
+value|free((addr), (type))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* do not collect statistics */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MALLOC
-parameter_list|(
-name|space
-parameter_list|,
-name|cast
-parameter_list|,
-name|size
-parameter_list|,
-name|type
-parameter_list|,
-name|flags
-parameter_list|)
-value|do { \ 	register struct kmembuckets *kbp =&bucket[BUCKETINDX(size)]; \ 	long s = splmem(); \ 	if (kbp->kb_next == NULL) { \ 		(space) = (cast)malloc((u_long)(size), type, flags); \ 	} else { \ 		(space) = (cast)kbp->kb_next; \ 		kbp->kb_next = *(caddr_t *)(space); \ 	} \ 	splx(s); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREE
-parameter_list|(
-name|addr
-parameter_list|,
-name|type
-parameter_list|)
-value|do { \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splmem(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		if (kbp->kb_next == NULL) \ 			kbp->kb_next = (caddr_t)(addr); \ 		else \ 			*(caddr_t *)(kbp->kb_last) = (caddr_t)(addr); \ 		*(caddr_t *)(addr) = NULL; \ 		kbp->kb_last = (caddr_t)(addr); \ 	} \ 	splx(s); \ } while (0)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kmemusage
-modifier|*
-name|kmemusage
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|kmembase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kmembuckets
-name|bucket
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* do not collect statistics */
-end_comment
 
 begin_comment
 comment|/*  * XXX this should be declared in<sys/uio.h>, but that tends to fail  * because<sys/uio.h> is included in a header before the source file  * has a chance to include<sys/malloc.h> to get MALLOC_DECLARE() defined.  */
