@@ -5633,11 +5633,6 @@ name|slptimeo
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|rep
-condition|)
-block|{
 name|td
 operator|=
 name|rep
@@ -5657,12 +5652,6 @@ condition|)
 name|slpflag
 operator|=
 name|PCATCH
-expr_stmt|;
-block|}
-else|else
-name|td
-operator|=
-name|NULL
 expr_stmt|;
 while|while
 condition|(
