@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)catman.c	5.7 (Berkeley) %G%"
+literal|"@(#)catman.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,6 +953,8 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"catman: %s"
+argument_list|,
+name|man
 argument_list|)
 expr_stmt|;
 name|perror
