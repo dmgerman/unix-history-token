@@ -328,9 +328,43 @@ if|#
 directive|if
 literal|0
 comment|/* Create arc-specific variables */
-block|bootfile = GetEnvironmentVariable(ARCENV_BOOTFILE); 	if (bootfile) 		setenv("bootfile", bootfile, 1);  	env_setenv("currdev", EV_VOLATILE, arc_fmtdev(&currdev), 	    arc_setcurrdev, env_nounset); 	env_setenv("loaddev", EV_VOLATILE, arc_fmtdev(&currdev), env_noset, 	    env_nounset);
+block|bootfile = GetEnvironmentVariable(ARCENV_BOOTFILE); 	if (bootfile) 		setenv("bootfile", bootfile, 1);
 endif|#
 directive|endif
+name|env_setenv
+argument_list|(
+literal|"currdev"
+argument_list|,
+name|EV_VOLATILE
+argument_list|,
+name|efi_fmtdev
+argument_list|(
+operator|&
+name|currdev
+argument_list|)
+argument_list|,
+name|efi_setcurrdev
+argument_list|,
+name|env_nounset
+argument_list|)
+expr_stmt|;
+name|env_setenv
+argument_list|(
+literal|"loaddev"
+argument_list|,
+name|EV_VOLATILE
+argument_list|,
+name|efi_fmtdev
+argument_list|(
+operator|&
+name|currdev
+argument_list|)
+argument_list|,
+name|env_noset
+argument_list|,
+name|env_nounset
+argument_list|)
+expr_stmt|;
 name|setenv
 argument_list|(
 literal|"LINES"
