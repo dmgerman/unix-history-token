@@ -244,6 +244,20 @@ parameter_list|)
 value|untimeout((f), (d))
 end_define
 
+begin_define
+define|#
+directive|define
+name|usb_kthread_create1
+value|kthread_create1
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_kthread_create
+value|kthread_create
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -552,14 +566,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|kthread_create1
+name|usb_kthread_create1
 value|kthread_create
 end_define
 
 begin_define
 define|#
 directive|define
-name|kthread_create
+name|usb_kthread_create
 value|kthread_create_deferred
 end_define
 
@@ -623,6 +637,7 @@ begin_typedef
 typedef|typedef
 name|struct
 name|device
+modifier|*
 name|device_ptr_t
 typedef|;
 end_typedef
@@ -1107,7 +1122,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|kthread_create1
+name|usb_kthread_create1
 parameter_list|(
 name|f
 parameter_list|,
@@ -1121,6 +1136,13 @@ name|a1
 parameter_list|)
 define|\
 value|kthread_create((f), (s), (p), RFHIGHPID, (a0), (a1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_kthread_create
+value|kthread_create
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.41 2000/03/16 00:46:38 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.43 2000/03/29 18:24:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1217,7 +1217,7 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-name|kthread_create
+name|usb_kthread_create
 argument_list|(
 name|usb_create_event_thread
 argument_list|,
@@ -1316,7 +1316,7 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
-name|kthread_create1
+name|usb_kthread_create1
 argument_list|(
 name|usb_event_thread
 argument_list|,
