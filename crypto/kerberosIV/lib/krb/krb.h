@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: krb.h,v 1.97 1999/06/29 21:18:06 bg Exp $  * $FreeBSD$  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos library.   */
+comment|/*  * $Id: krb.h,v 1.99 1999/11/16 14:02:47 bg Exp $  * $FreeBSD$  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos library.   */
 end_comment
 
 begin_if
@@ -738,7 +738,7 @@ begin_define
 define|#
 directive|define
 name|KEYFILE
-value|"/etc/kerberosIV/srvtab"
+value|(krb_get_default_keyfile())
 end_define
 
 begin_endif
@@ -982,12 +982,23 @@ name|TKT_FILE
 value|tkt_string()
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TKT_ROOT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|TKT_ROOT
-value|"/tmp/tkt"
+value|(krb_get_default_tkt_root())
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Error codes returned from the KDC */
