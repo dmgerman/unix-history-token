@@ -406,6 +406,9 @@ operator|=
 name|cp2
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
 name|cp
 operator|=
 name|LIST_FIRST
@@ -438,6 +441,8 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
