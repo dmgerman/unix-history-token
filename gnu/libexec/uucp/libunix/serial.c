@@ -21,7 +21,7 @@ name|char
 name|serial_rcsid
 index|[]
 init|=
-literal|"$Id: serial.c,v 1.1 1993/08/04 19:32:52 jtc Exp $"
+literal|"$Id: serial.c,v 1.26 1993/01/07 02:31:53 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -908,11 +908,41 @@ directive|if
 name|HAVE_POSIX_TERMIOS
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IMAXBEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CI_ADD1
+value|IMAXBEL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CI_ADD1
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ICLEAR_IFLAG
-value|(BRKINT | ICRNL | IGNBRK | IGNCR | IGNPAR \ 		      | INLCR | INPCK | ISTRIP | IXOFF | IXON \ 		      | PARMRK)
+value|(BRKINT | ICRNL | IGNBRK | IGNCR | IGNPAR \ 		      | INLCR | INPCK | ISTRIP | IXOFF | IXON \ 		      | PARMRK | CI_ADD1)
 end_define
 
 begin_define
@@ -936,11 +966,41 @@ name|ISET_CFLAG
 value|(CS8 | CREAD | HUPCL)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PENDIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CL_ADD1
+value|PENDIN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CL_ADD1
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ICLEAR_LFLAG
-value|(ECHO | ECHOE | ECHOK | ECHONL | ICANON | IEXTEN \ 		      | ISIG | NOFLSH | TOSTOP)
+value|(ECHO | ECHOE | ECHOK | ECHONL | ICANON | IEXTEN \ 		      | ISIG | NOFLSH | TOSTOP | CL_ADD1)
 end_define
 
 begin_endif
@@ -2913,6 +2973,10 @@ argument_list|(
 name|LOG_NORMAL
 argument_list|,
 literal|"%s: port already locked"
+argument_list|,
+name|z
+operator|+
+literal|5
 argument_list|)
 expr_stmt|;
 name|fret
@@ -2923,6 +2987,8 @@ block|}
 else|else
 name|fret
 operator|=
+operator|!
+operator|(
 name|fscoherent_disable_tty
 argument_list|(
 name|z
@@ -2932,6 +2998,7 @@ name|qsysdep
 operator|->
 name|zenable
 argument_list|)
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -4299,26 +4366,6 @@ return|return
 name|FALSE
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|TIOCSCTTY
-comment|/* On BSD 4.4, make it our controlling terminal.  */
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|q
-operator|->
-name|o
-argument_list|,
-name|TIOCSCTTY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Get the port flags, and make sure the ports are blocking.  */
 name|q
@@ -4736,6 +4783,19 @@ operator|&=
 operator|~
 name|ICLEAR_CFLAG
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fwait
+condition|)
+name|q
+operator|->
+name|snew
+operator|.
+name|c_cflag
+operator||=
+name|CLOCAL
+expr_stmt|;
 name|q
 operator|->
 name|snew
@@ -4781,7 +4841,7 @@ index|[
 name|VTIME
 index|]
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4852,6 +4912,19 @@ operator|&=
 operator|~
 name|ICLEAR_CFLAG
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fwait
+condition|)
+name|q
+operator|->
+name|snew
+operator|.
+name|c_cflag
+operator||=
+name|CLOCAL
+expr_stmt|;
 name|q
 operator|->
 name|snew
@@ -4893,7 +4966,7 @@ index|[
 name|VTIME
 index|]
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -4969,6 +5042,26 @@ return|return
 name|FALSE
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|TIOCSCTTY
+comment|/* On BSD 4.4, make it our controlling terminal.  */
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|q
+operator|->
+name|o
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ibaud
