@@ -1875,7 +1875,7 @@ if|if
 condition|(
 name|cb
 operator|==
-literal|0
+name|NULL
 operator|||
 name|cb
 operator|->
@@ -8232,7 +8232,7 @@ name|ipxp
 operator|->
 name|ipxp_pcb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
