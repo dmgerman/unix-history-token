@@ -59,7 +59,7 @@ name|KERBEROS
 end_ifdef
 
 begin_comment
-comment|/* From:  *	$Source: /mit/kerberos/ucb/mit/rlogind/RCS/rlogind.c,v $  *	$Header: rlogind.c,v 5.0 89/06/26 18:31:01 kfall Locked $  */
+comment|/* From:  *	$Source: /home/cvs/386BSD/src/libexec/rlogind/rlogind.c,v $  *	$Header: /home/cvs/386BSD/src/libexec/rlogind/rlogind.c,v 1.1.1.1 1993/06/12 14:54:58 rgrimes Exp $  */
 end_comment
 
 begin_endif
@@ -1528,6 +1528,35 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|lusername
+argument_list|,
+literal|'-'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tried to pass user \"%s\" to login"
+argument_list|,
+name|lusername
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|"invalid user"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|authenticated
