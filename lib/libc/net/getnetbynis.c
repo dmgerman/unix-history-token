@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetbynis.c,v 1.6 1996/08/29 20:08:01 peter Exp $"
+literal|"@(#)$Id: getnetbynis.c,v 1.7 1996/12/06 00:12:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbynis.c,v 1.6 1996/08/29 20:08:01 peter Exp $"
+literal|"$Id: getnetbynis.c,v 1.7 1996/12/06 00:12:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +249,8 @@ name|char
 name|ypbuf
 index|[
 name|YPMAXRECORD
+operator|+
+literal|2
 index|]
 decl_stmt|;
 switch|switch
@@ -339,6 +341,13 @@ name|ypbuf
 argument_list|,
 name|resultlen
 argument_list|)
+expr_stmt|;
+name|ypbuf
+index|[
+name|resultlen
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|free
 argument_list|(

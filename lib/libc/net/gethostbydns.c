@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.13 1996/12/22 22:05:43 wpaul Exp $"
+literal|"$Id: gethostbydns.c,v 1.14 1996/12/24 02:10:24 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1864,11 +1864,6 @@ operator|=
 name|INADDRSZ
 expr_stmt|;
 break|break;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 return|return
 operator|(

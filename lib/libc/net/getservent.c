@@ -106,11 +106,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -125,6 +120,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -245,6 +245,8 @@ name|char
 name|buf
 index|[
 name|YPMAXRECORD
+operator|+
+literal|2
 index|]
 decl_stmt|;
 name|int
@@ -417,6 +419,8 @@ name|char
 name|buf
 index|[
 name|YPMAXRECORD
+operator|+
+literal|2
 index|]
 decl_stmt|;
 if|if

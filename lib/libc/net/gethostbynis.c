@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostbynis.c,v 1.4 1996/08/29 20:07:54 peter Exp $"
+literal|"@(#)$Id: gethostbynis.c,v 1.5 1996/12/24 17:01:49 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbynis.c,v 1.4 1996/08/29 20:07:54 peter Exp $"
+literal|"$Id: gethostbynis.c,v 1.5 1996/12/24 17:01:49 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,8 @@ name|char
 name|ypbuf
 index|[
 name|YPMAXRECORD
+operator|+
+literal|2
 index|]
 decl_stmt|;
 switch|switch
