@@ -356,6 +356,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|void
 name|pfsync_clone_destroy
 parameter_list|(
@@ -367,6 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pfsync_clone_create
 parameter_list|(
@@ -571,6 +573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|pfsync_clone_destroy
 parameter_list|(
@@ -643,6 +646,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pfsync_clone_create
 parameter_list|(

@@ -364,6 +364,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|faith_clone_create
 parameter_list|(
@@ -377,6 +378,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|faith_clone_destroy
 parameter_list|(
@@ -619,6 +621,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|int
 name|faith_clone_create
 parameter_list|(
@@ -849,6 +852,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|faith_clone_destroy
 parameter_list|(
