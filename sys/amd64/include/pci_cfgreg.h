@@ -111,7 +111,6 @@ value|0x0e
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|pci_cfgregopen
 parameter_list|(
@@ -121,7 +120,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|u_int32_t
 name|pci_cfgregread
 parameter_list|(
@@ -144,7 +142,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pci_cfgregwrite
 parameter_list|(
@@ -170,7 +167,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|pci_cfgintr
 parameter_list|(
@@ -187,7 +183,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|pci_kill_pcibios
 parameter_list|(
@@ -197,7 +192,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|pci_pcibios_active
 parameter_list|(
