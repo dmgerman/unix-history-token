@@ -3002,11 +3002,7 @@ name|taste
 operator|=
 name|gv_taste
 block|,
-operator|.
-name|destroy_geom
-operator|=
-name|gv_destroy_geom
-block|,
+comment|/*.destroy_geom = gv_destroy_geom,*/
 operator|.
 name|ctlreq
 operator|=
