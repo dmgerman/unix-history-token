@@ -120,13 +120,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<arm/xscale/i80200reg.h>
+file|<arm/xscale/i80200/i80200reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/xscale/i80200var.h>
+file|<arm/xscale/i80200/i80200var.h>
 end_include
 
 begin_endif
@@ -143,13 +143,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<arm/xscale/i80321reg.h>
+file|<arm/xscale/i80321/i80321reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/xscale/i80321var.h>
+file|<arm/xscale/i80321/i80321var.h>
 end_include
 
 begin_endif
@@ -166,13 +166,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<arm/xscale/ixp425reg.h>
+file|<arm/xscale/ixp425/ixp425reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/xscale/ixp425var.h>
+file|<arm/xscale/ixp425/ixp425var.h>
 end_include
 
 begin_endif
@@ -3588,9 +3588,6 @@ operator|==
 name|CPU_ID_80321_600_B0
 operator|)
 block|{
-name|i80321_icu_init
-argument_list|()
-block|;
 comment|/* 		 * Reset the Performance Monitoring Unit to a 		 * pristine state: 		 *	- CCNT, PMN0, PMN1 reset to 0 		 *	- overflow indications cleared 		 *	- all counters disabled 		 */
 asm|__asm __volatile("mcr p14, 0, %0, c0, c0, 0"
 operator|:
