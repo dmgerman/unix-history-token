@@ -6147,6 +6147,7 @@ name|if_capabilities
 operator||=
 name|IFCAP_VLAN_MTU
 expr_stmt|;
+comment|/* Hook interrupt last to avoid having to lock softc */
 name|error
 operator|=
 name|bus_setup_intr
@@ -6181,6 +6182,11 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -6203,6 +6209,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Shutdown hardware and free up resources. This can be called any  * time after the mutex has been initialized. It is called in both  * the error case in attach and the normal detach case so it needs  * to be careful about only freeing resources that have actually been  * allocated.  */
+end_comment
 
 begin_function
 specifier|static
@@ -6261,17 +6271,10 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+comment|/* These should only be active if attach succeeded */
 if|if
 condition|(
 name|device_is_alive
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|bus_child_present
 argument_list|(
 name|dev
 argument_list|)
@@ -6287,12 +6290,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sis_miibus
+condition|)
 name|device_delete_child
 argument_list|(
 name|dev
@@ -6307,7 +6316,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc

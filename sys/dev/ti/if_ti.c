@@ -9318,6 +9318,20 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+name|ifmedia_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ifmedia
+argument_list|,
+name|IFM_IMASK
+argument_list|,
+name|ti_ifmedia_upd
+argument_list|,
+name|ti_ifmedia_sts
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|arpcom
@@ -9937,20 +9951,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Set up ifmedia support. */
-name|ifmedia_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|ifmedia
-argument_list|,
-name|IFM_IMASK
-argument_list|,
-name|ti_ifmedia_upd
-argument_list|,
-name|ti_ifmedia_sts
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -10191,6 +10191,7 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
+comment|/* Hook interrupt last to avoid having to lock softc */
 name|error
 operator|=
 name|bus_setup_intr
@@ -10223,6 +10224,11 @@ argument_list|(
 literal|"ti%d: couldn't set up irq\n"
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10343,6 +10349,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Shutdown hardware and free up resources. This can be called any  * time after the mutex has been initialized. It is called in both  * the error case in attach and the normal detach case so it needs  * to be careful about only freeing resources that have actually been  * allocated.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -10410,6 +10420,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+comment|/* These should only be active if attach succeeded */
 if|if
 condition|(
 name|device_is_alive
@@ -10418,13 +10429,6 @@ name|dev
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|bus_child_present
-argument_list|(
-name|dev
-argument_list|)
-condition|)
 name|ti_stop
 argument_list|(
 name|sc
@@ -10440,6 +10444,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -10448,7 +10453,6 @@ operator|->
 name|ifmedia
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
