@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.24 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -598,6 +598,10 @@ name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
+name|int
+name|psize
+decl_stmt|;
+comment|/* page size */
 name|int
 name|lorder
 decl_stmt|;
