@@ -5,9 +5,15 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.12 (Berkeley) %G%"
+literal|"@(#)sort.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -25,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -145,7 +145,7 @@ begin_decl_stmt
 name|char
 name|file1
 index|[
-literal|30
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
