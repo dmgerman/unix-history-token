@@ -149,6 +149,13 @@ name|sys_errlist
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|die
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -222,6 +229,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|die
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setrlimit
@@ -1159,9 +1173,39 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"the %s program to change your Kerberos password\n\n"
+literal|"the %s program from now on to change your Kerberos password.\n\n"
 argument_list|,
 name|KPASSWD
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|die
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nServer no longer listeninga\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
