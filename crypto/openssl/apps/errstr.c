@@ -205,7 +205,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -354,7 +354,10 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

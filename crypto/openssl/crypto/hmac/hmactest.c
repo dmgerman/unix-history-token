@@ -25,10 +25,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_HMAC
+name|OPENSSL_NO_HMAC
 end_ifdef
 
 begin_function
@@ -68,6 +74,23 @@ directive|include
 file|<openssl/hmac.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_MD5
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -84,6 +107,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_MD5
+end_ifndef
 
 begin_struct
 specifier|static
@@ -357,6 +386,11 @@ block|, 	}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|char
@@ -384,17 +418,33 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_MD5
 name|int
 name|i
-decl_stmt|,
-name|err
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_MD5
+name|printf
+argument_list|(
+literal|"test skipped: MD5 disabled\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|CHARSET_EBCDIC
@@ -608,7 +658,10 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_MD5 */
+name|EXIT
 argument_list|(
 name|err
 argument_list|)
@@ -620,6 +673,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_MD5
+end_ifndef
 
 begin_function
 specifier|static
@@ -683,6 +742,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

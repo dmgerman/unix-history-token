@@ -16,7 +16,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 end_ifndef
 
 begin_include
@@ -97,6 +97,16 @@ condition|(
 name|init
 condition|)
 block|{
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|(
@@ -142,6 +152,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|&
@@ -157,7 +173,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NO_SSL2 */
+comment|/* !OPENSSL_NO_SSL2 */
 end_comment
 
 begin_if

@@ -129,7 +129,7 @@ name|X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE
 case|:
 return|return
 operator|(
-literal|"unable to decrypt CRL's's signature"
+literal|"unable to decrypt CRL's signature"
 operator|)
 return|;
 case|case
@@ -354,6 +354,22 @@ case|:
 return|return
 operator|(
 literal|"key usage does not include certificate signing"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNABLE_TO_GET_CRL_ISSUER
+case|:
+return|return
+operator|(
+literal|"unable to get CRL issuer certificate"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION
+case|:
+return|return
+operator|(
+literal|"unhandled critical extension"
 operator|)
 return|;
 default|default:

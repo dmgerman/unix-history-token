@@ -25,6 +25,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_comment
 comment|/* some FIPS 140-1 random number test */
 end_comment
@@ -87,6 +93,8 @@ comment|/*double d; */
 name|long
 name|d
 decl_stmt|;
+name|i
+operator|=
 name|RAND_pseudo_bytes
 argument_list|(
 name|buf
@@ -94,6 +102,25 @@ argument_list|,
 literal|2500
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"init failed, the rand method is not properly installed\n"
+argument_list|)
+expr_stmt|;
+name|err
+operator|++
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|n1
 operator|=
 literal|0
@@ -917,6 +944,8 @@ literal|"test 4 done\n"
 argument_list|)
 expr_stmt|;
 name|err
+label|:
+name|err
 operator|=
 operator|(
 operator|(
@@ -928,7 +957,7 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

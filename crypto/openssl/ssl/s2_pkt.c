@@ -20,7 +20,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 end_ifndef
 
 begin_include
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
 end_include
 
 begin_define
@@ -790,6 +796,13 @@ argument_list|(
 name|s
 operator|->
 name|read_hash
+argument_list|)
+expr_stmt|;
+name|OPENSSL_assert
+argument_list|(
+name|mac_size
+operator|<=
+name|MAX_MAC_SIZE
 argument_list|)
 expr_stmt|;
 name|s
@@ -2925,6 +2938,50 @@ operator|->
 name|init_num
 condition|)
 block|{
+if|if
+condition|(
+name|s
+operator|->
+name|msg_callback
+condition|)
+name|s
+operator|->
+name|msg_callback
+argument_list|(
+literal|1
+argument_list|,
+name|s
+operator|->
+name|version
+argument_list|,
+literal|0
+argument_list|,
+name|s
+operator|->
+name|init_buf
+operator|->
+name|data
+argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
+name|s
+operator|->
+name|init_off
+operator|+
+name|s
+operator|->
+name|init_num
+argument_list|)
+argument_list|,
+name|s
+argument_list|,
+name|s
+operator|->
+name|msg_callback_arg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -3033,7 +3090,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NO_SSL2 */
+comment|/* !OPENSSL_NO_SSL2 */
 end_comment
 
 begin_if

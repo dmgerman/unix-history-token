@@ -62,11 +62,13 @@ modifier|*
 name|type
 parameter_list|)
 block|{
-name|EVP_DigestInit
+name|EVP_DigestInit_ex
 argument_list|(
 name|ctx
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

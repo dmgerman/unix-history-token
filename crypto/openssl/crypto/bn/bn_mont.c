@@ -47,10 +47,12 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|b
@@ -67,9 +69,6 @@ block|{
 name|BIGNUM
 modifier|*
 name|tmp
-decl_stmt|,
-modifier|*
-name|tmp2
 decl_stmt|;
 name|int
 name|ret
@@ -88,20 +87,9 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|tmp2
-operator|=
-name|BN_CTX_get
-argument_list|(
-name|ctx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tmp
-operator|==
-name|NULL
-operator|||
-name|tmp2
 operator|==
 name|NULL
 condition|)
@@ -111,11 +99,6 @@ goto|;
 name|bn_check_top
 argument_list|(
 name|tmp
-argument_list|)
-expr_stmt|;
-name|bn_check_top
-argument_list|(
-name|tmp2
 argument_list|)
 expr_stmt|;
 if|if
@@ -206,6 +189,7 @@ name|BIGNUM
 modifier|*
 name|ret
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -510,8 +494,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BN_COUNT
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"word BN_from_montgomery %d * %d\n"
 argument_list|,
 name|nl
@@ -1092,6 +1078,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|BN_usub
 argument_list|(
 name|ret
@@ -1105,7 +1094,10 @@ operator|->
 name|N
 operator|)
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 name|retn
 operator|=
@@ -1351,6 +1343,14 @@ name|mod
 argument_list|)
 expr_stmt|;
 comment|/* Set N */
+name|mont
+operator|->
+name|N
+operator|.
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MONT_WORD
@@ -1456,9 +1456,7 @@ name|tmod
 operator|.
 name|neg
 operator|=
-name|mod
-operator|->
-name|neg
+literal|0
 expr_stmt|;
 comment|/* Ri = R^-1 mod N*/
 if|if
@@ -1483,11 +1481,9 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* R*Ri */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_lshift
 argument_list|(
 operator|&
@@ -1498,11 +1494,11 @@ name|Ri
 argument_list|,
 name|BN_BITS2
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
 goto|;
+comment|/* R*Ri */
 if|if
 condition|(
 operator|!
@@ -1530,7 +1526,6 @@ goto|;
 block|}
 else|else
 comment|/* if N mod word size == 1 */
-comment|/* Ri-- (mod word size) */
 block|{
 if|if
 condition|(
@@ -1546,12 +1541,11 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* Ri-- (mod word size) */
 block|}
-comment|/* Ni = (R*Ri-1)/N, keep only least significant word: */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_div
 argument_list|(
 operator|&
@@ -1567,21 +1561,31 @@ name|tmod
 argument_list|,
 name|ctx
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
 goto|;
+comment|/* Ni = (R*Ri-1)/N, 		 * keep only least significant word: */
 name|mont
 operator|->
 name|n0
 operator|=
+operator|(
+name|Ri
+operator|.
+name|top
+operator|>
+literal|0
+operator|)
+condition|?
 name|Ri
 operator|.
 name|d
 index|[
 literal|0
 index|]
+else|:
+literal|0
 expr_stmt|;
 name|BN_free
 argument_list|(
@@ -1601,27 +1605,26 @@ name|ri
 operator|=
 name|BN_num_bits
 argument_list|(
-name|mod
+operator|&
+name|mont
+operator|->
+name|N
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_zero
 argument_list|(
 name|R
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
 goto|;
-comment|/* R = 2^ri */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_set_bit
 argument_list|(
 name|R
@@ -1630,11 +1633,11 @@ name|mont
 operator|->
 name|ri
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
 goto|;
+comment|/* R = 2^ri */
 comment|/* Ri = R^-1 mod N*/
 if|if
 condition|(
@@ -1646,7 +1649,10 @@ name|Ri
 argument_list|,
 name|R
 argument_list|,
-name|mod
+operator|&
+name|mont
+operator|->
+name|N
 argument_list|,
 name|ctx
 argument_list|)
@@ -1657,11 +1663,9 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* R*Ri */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_lshift
 argument_list|(
 operator|&
@@ -1674,15 +1678,14 @@ name|mont
 operator|->
 name|ri
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
 goto|;
+comment|/* R*Ri */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_sub_word
 argument_list|(
 operator|&
@@ -1690,7 +1693,6 @@ name|Ri
 argument_list|,
 literal|1
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1699,7 +1701,6 @@ comment|/* Ni = (R*Ri-1) / N */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_div
 argument_list|(
 operator|&
@@ -1714,11 +1715,13 @@ argument_list|,
 operator|&
 name|Ri
 argument_list|,
-name|mod
+operator|&
+name|mont
+operator|->
+name|N
 argument_list|,
 name|ctx
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1736,7 +1739,6 @@ comment|/* setup RR for conversions */
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_zero
 argument_list|(
 operator|&
@@ -1746,7 +1748,6 @@ operator|->
 name|RR
 operator|)
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1754,7 +1755,6 @@ goto|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_set_bit
 argument_list|(
 operator|&
@@ -1770,7 +1770,6 @@ name|ri
 operator|*
 literal|2
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1778,7 +1777,6 @@ goto|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_mod
 argument_list|(
 operator|&
@@ -1804,7 +1802,6 @@ operator|)
 argument_list|,
 name|ctx
 argument_list|)
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1852,7 +1849,6 @@ return|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1869,7 +1865,6 @@ operator|->
 name|RR
 operator|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|NULL
@@ -1877,7 +1872,6 @@ return|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1894,7 +1888,6 @@ operator|->
 name|N
 operator|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|NULL
@@ -1902,7 +1895,6 @@ return|;
 if|if
 condition|(
 operator|!
-operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1919,7 +1911,6 @@ operator|->
 name|Ni
 operator|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|NULL

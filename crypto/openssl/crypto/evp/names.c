@@ -41,6 +41,7 @@ begin_function
 name|int
 name|EVP_add_cipher
 parameter_list|(
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|c
@@ -112,6 +113,7 @@ begin_function
 name|int
 name|EVP_add_digest
 parameter_list|(
+specifier|const
 name|EVP_MD
 modifier|*
 name|md

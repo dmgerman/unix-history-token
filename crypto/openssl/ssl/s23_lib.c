@@ -267,7 +267,7 @@ name|ssl3_num_ciphers
 argument_list|()
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 operator|+
 name|ssl2_num_ciphers
 argument_list|()
@@ -313,7 +313,7 @@ return|;
 else|else
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 return|return
 operator|(
 name|ssl2_get_cipher
@@ -425,7 +425,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 if|if
 condition|(
 name|cp

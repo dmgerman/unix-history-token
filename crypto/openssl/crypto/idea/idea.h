@@ -22,7 +22,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_IDEA
+name|OPENSSL_NO_IDEA
 end_ifdef
 
 begin_error

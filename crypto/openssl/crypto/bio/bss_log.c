@@ -23,14 +23,29 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WINCE
 argument_list|)
 end_if
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WIN32
+argument_list|)
+end_elif
 
 begin_include
 include|#
@@ -43,12 +58,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 end_elif
 
@@ -94,22 +104,31 @@ end_include
 begin_elif
 elif|#
 directive|elif
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|MSDOS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WATT32
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|VXWORKS
+name|OPENSSL_SYS_VXWORKS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_SYSLOG
 argument_list|)
 end_elif
-
-begin_comment
-comment|/* Unix */
-end_comment
 
 begin_include
 include|#
@@ -121,12 +140,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
 
 begin_include
 include|#
@@ -151,7 +164,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 end_if
 
@@ -223,7 +236,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 end_elif
 
@@ -441,7 +454,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 end_ifdef
 
 begin_function_decl
@@ -1120,7 +1133,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 end_if
 
@@ -1297,7 +1310,12 @@ decl_stmt|;
 name|char
 name|pidbuf
 index|[
-literal|20
+name|DECIMAL_SIZE
+argument_list|(
+name|pid
+argument_list|)
+operator|+
+literal|4
 index|]
 decl_stmt|;
 switch|switch
@@ -1453,7 +1471,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 end_elif
 
@@ -1771,7 +1789,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Unix */
+comment|/* Unix/Watt32 */
 end_comment
 
 begin_function
@@ -1791,6 +1809,25 @@ name|int
 name|level
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WATT32
+comment|/* djgpp/DOS */
+name|openlog
+argument_list|(
+name|name
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_CONS
+operator||
+name|LOG_NDELAY
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|openlog
 argument_list|(
 name|name
@@ -1802,6 +1839,8 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

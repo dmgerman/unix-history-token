@@ -22,7 +22,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_RC4
+name|OPENSSL_NO_RC4
 end_ifdef
 
 begin_error

@@ -1269,13 +1269,13 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -1571,6 +1571,7 @@ name|char
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|b

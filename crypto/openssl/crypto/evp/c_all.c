@@ -25,9 +25,27 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|OpenSSL_add_all_algorithms
+end_undef
+
+begin_endif
+unit|void OpenSSL_add_all_algorithms(void) 	{ 	OPENSSL_add_all_algorithms_noconf(); 	}
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
-name|OpenSSL_add_all_algorithms
+name|OPENSSL_add_all_algorithms_noconf
 parameter_list|(
 name|void
 parameter_list|)
@@ -38,6 +56,14 @@ expr_stmt|;
 name|OpenSSL_add_all_digests
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
+name|ENGINE_setup_openbsd
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

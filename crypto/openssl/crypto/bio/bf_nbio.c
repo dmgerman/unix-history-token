@@ -37,12 +37,6 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/evp.h>
-end_include
-
 begin_comment
 comment|/* BIO_put and BIO_get both add to the digest,  * BIO_gets returns the digest */
 end_comment

@@ -15,7 +15,7 @@ end_include
 
 begin_function
 name|void
-name|des_pcbc_encrypt
+name|DES_pcbc_encrypt
 parameter_list|(
 specifier|const
 name|unsigned
@@ -31,10 +31,11 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec
 parameter_list|,
@@ -178,7 +179,7 @@ name|sin1
 operator|^
 name|xor1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -289,7 +290,7 @@ index|]
 operator|=
 name|sin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG

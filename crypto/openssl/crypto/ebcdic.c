@@ -2422,6 +2422,12 @@ begin_comment
 comment|/*CHARSET_EBCDIC*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2432,17 +2438,12 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|VMS
+name|__DECC
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__VMS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_DARWIN
+name|OPENSSL_SYS_MACOSX
 argument_list|)
 end_if
 

@@ -49,6 +49,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -131,6 +132,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

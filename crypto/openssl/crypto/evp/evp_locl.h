@@ -25,7 +25,7 @@ directive|define
 name|BLOCK_CIPHER_ecb_loop
 parameter_list|()
 define|\
-value|unsigned int i; \ 	if(inl< 8) return 1;\ 	inl -= 8; \ 	for(i=0; i<= inl; i+=8) \  #define BLOCK_CIPHER_func_ecb(cname, cprefix, kname) \ static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	BLOCK_CIPHER_ecb_loop() \ 		cprefix##_ecb_encrypt(in + i, out + i,&ctx->c.kname, ctx->encrypt);\ 	return 1;\ }
+value|unsigned int i, bl; \ 	bl = ctx->cipher->block_size;\ 	if(inl< bl) return 1;\ 	inl -= bl; \ 	for(i=0; i<= inl; i+=bl) \  #define BLOCK_CIPHER_func_ecb(cname, cprefix, kstruct, ksched) \ static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	BLOCK_CIPHER_ecb_loop() \ 		cprefix##_ecb_encrypt(in + i, out + i,&((kstruct *)ctx->cipher_data)->ksched, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -37,10 +37,14 @@ name|cname
 parameter_list|,
 name|cprefix
 parameter_list|,
-name|kname
+name|cbits
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|ksched
 parameter_list|)
 define|\
-value|static int cname##_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_ofb64_encrypt(in, out, (long)inl,&ctx->c.kname, ctx->iv,&ctx->num);\ 	return 1;\ }
+value|static int cname##_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_ofb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -52,10 +56,12 @@ name|cname
 parameter_list|,
 name|cprefix
 parameter_list|,
-name|kname
+name|kstruct
+parameter_list|,
+name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cbc_encrypt(in, out, (long)inl,&ctx->c.kname, ctx->iv, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cbc_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -67,10 +73,14 @@ name|cname
 parameter_list|,
 name|cprefix
 parameter_list|,
-name|kname
+name|cbits
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cfb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb64_encrypt(in, out, (long)inl,&ctx->c.kname, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cfb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -82,10 +92,185 @@ name|cname
 parameter_list|,
 name|cprefix
 parameter_list|,
-name|kname
+name|cbits
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|ksched
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_func_cbc(cname, cprefix, kname) \ 	BLOCK_CIPHER_func_cfb(cname, cprefix, kname) \ 	BLOCK_CIPHER_func_ecb(cname, cprefix, kname) \ 	BLOCK_CIPHER_func_ofb(cname, cprefix, kname)
+value|BLOCK_CIPHER_func_cbc(cname, cprefix, kstruct, ksched) \ 	BLOCK_CIPHER_func_cfb(cname, cprefix, cbits, kstruct, ksched) \ 	BLOCK_CIPHER_func_ecb(cname, cprefix, kstruct, ksched) \ 	BLOCK_CIPHER_func_ofb(cname, cprefix, cbits, kstruct, ksched)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_def1
+parameter_list|(
+name|cname
+parameter_list|,
+name|nmode
+parameter_list|,
+name|mode
+parameter_list|,
+name|MODE
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|nid
+parameter_list|,
+name|block_size
+parameter_list|, \
+name|key_len
+parameter_list|,
+name|iv_len
+parameter_list|,
+name|flags
+parameter_list|,
+name|init_key
+parameter_list|,
+name|cleanup
+parameter_list|, \
+name|set_asn1
+parameter_list|,
+name|get_asn1
+parameter_list|,
+name|ctrl
+parameter_list|)
+define|\
+value|static const EVP_CIPHER cname##_##mode = { \ 	nid##_##nmode, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_##MODE##_MODE, \ 	init_key, \ 	cname##_##mode##_cipher, \ 	cleanup, \ 	sizeof(kstruct), \ 	set_asn1, get_asn1,\ 	ctrl, \ 	NULL \ }; \ const EVP_CIPHER *EVP_##cname##_##mode(void) { return&cname##_##mode; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_def_cbc
+parameter_list|(
+name|cname
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|nid
+parameter_list|,
+name|block_size
+parameter_list|,
+name|key_len
+parameter_list|, \
+name|iv_len
+parameter_list|,
+name|flags
+parameter_list|,
+name|init_key
+parameter_list|,
+name|cleanup
+parameter_list|,
+name|set_asn1
+parameter_list|, \
+name|get_asn1
+parameter_list|,
+name|ctrl
+parameter_list|)
+define|\
+value|BLOCK_CIPHER_def1(cname, cbc, cbc, CBC, kstruct, nid, block_size, key_len, \ 		  iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_def_cfb
+parameter_list|(
+name|cname
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|nid
+parameter_list|,
+name|key_len
+parameter_list|, \
+name|iv_len
+parameter_list|,
+name|cbits
+parameter_list|,
+name|flags
+parameter_list|,
+name|init_key
+parameter_list|,
+name|cleanup
+parameter_list|, \
+name|set_asn1
+parameter_list|,
+name|get_asn1
+parameter_list|,
+name|ctrl
+parameter_list|)
+define|\
+value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_def_ofb
+parameter_list|(
+name|cname
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|nid
+parameter_list|,
+name|key_len
+parameter_list|, \
+name|iv_len
+parameter_list|,
+name|cbits
+parameter_list|,
+name|flags
+parameter_list|,
+name|init_key
+parameter_list|,
+name|cleanup
+parameter_list|, \
+name|set_asn1
+parameter_list|,
+name|get_asn1
+parameter_list|,
+name|ctrl
+parameter_list|)
+define|\
+value|BLOCK_CIPHER_def1(cname, ofb##cbits, ofb, OFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_def_ecb
+parameter_list|(
+name|cname
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|nid
+parameter_list|,
+name|block_size
+parameter_list|,
+name|key_len
+parameter_list|, \
+name|iv_len
+parameter_list|,
+name|flags
+parameter_list|,
+name|init_key
+parameter_list|,
+name|cleanup
+parameter_list|,
+name|set_asn1
+parameter_list|, \
+name|get_asn1
+parameter_list|,
+name|ctrl
+parameter_list|)
+define|\
+value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -105,8 +290,10 @@ name|key_len
 parameter_list|,
 name|iv_len
 parameter_list|,
+name|cbits
+parameter_list|,
 name|flags
-parameter_list|,\
+parameter_list|, \
 name|init_key
 parameter_list|,
 name|cleanup
@@ -118,8 +305,12 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|static EVP_CIPHER cname##_cbc = {\ 	nid##_cbc, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_CBC_MODE,\ 	init_key,\ 	cname##_cbc_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl, \ 	NULL \ };\ EVP_CIPHER *EVP_##cname##_cbc(void) { return&cname##_cbc; }\ static EVP_CIPHER cname##_cfb = {\ 	nid##_cfb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_CFB_MODE,\ 	init_key,\ 	cname##_cfb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ EVP_CIPHER *EVP_##cname##_cfb(void) { return&cname##_cfb; }\ static EVP_CIPHER cname##_ofb = {\ 	nid##_ofb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_OFB_MODE,\ 	init_key,\ 	cname##_ofb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ EVP_CIPHER *EVP_##cname##_ofb(void) { return&cname##_ofb; }\ static EVP_CIPHER cname##_ecb = {\ 	nid##_ecb, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_ECB_MODE,\ 	init_key,\ 	cname##_ecb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ EVP_CIPHER *EVP_##cname##_ecb(void) { return&cname##_ecb; }
+value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
+
+begin_comment
+comment|/* #define BLOCK_CIPHER_defs(cname, kstruct, \ 				nid, block_size, key_len, iv_len, flags,\ 				 init_key, cleanup, set_asn1, get_asn1, ctrl)\ static const EVP_CIPHER cname##_cbc = {\ 	nid##_cbc, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_CBC_MODE,\ 	init_key,\ 	cname##_cbc_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl, \ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_cbc(void) { return&cname##_cbc; }\ static const EVP_CIPHER cname##_cfb = {\ 	nid##_cfb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_CFB_MODE,\ 	init_key,\ 	cname##_cfb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_cfb(void) { return&cname##_cfb; }\ static const EVP_CIPHER cname##_ofb = {\ 	nid##_ofb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_OFB_MODE,\ 	init_key,\ 	cname##_ofb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_ofb(void) { return&cname##_ofb; }\ static const EVP_CIPHER cname##_ecb = {\ 	nid##_ecb, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_ECB_MODE,\ 	init_key,\ 	cname##_ecb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_ecb(void) { return&cname##_ecb; } */
+end_comment
 
 begin_define
 define|#
@@ -128,24 +319,26 @@ name|IMPLEMENT_BLOCK_CIPHER
 parameter_list|(
 name|cname
 parameter_list|,
-name|kname
+name|ksched
 parameter_list|,
 name|cprefix
 parameter_list|,
 name|kstruct
-parameter_list|, \
-name|nid
 parameter_list|,
+name|nid
+parameter_list|, \
 name|block_size
 parameter_list|,
 name|key_len
 parameter_list|,
 name|iv_len
 parameter_list|,
-name|flags
+name|cbits
 parameter_list|, \
-name|init_key
+name|flags
 parameter_list|,
+name|init_key
+parameter_list|, \
 name|cleanup
 parameter_list|,
 name|set_asn1
@@ -155,7 +348,19 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_all_funcs(cname, cprefix, kname) \ 	BLOCK_CIPHER_defs(cname, kstruct, nid, block_size, key_len, iv_len, flags,\ 		 init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_all_funcs(cname, cprefix, cbits, kstruct, ksched) \ 	BLOCK_CIPHER_defs(cname, kstruct, nid, block_size, key_len, iv_len, \ 			  cbits, flags, init_key, cleanup, set_asn1, \ 			  get_asn1, ctrl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVP_C_DATA
+parameter_list|(
+name|kstruct
+parameter_list|,
+name|ctx
+parameter_list|)
+value|((kstruct *)(ctx)->cipher_data)
 end_define
 
 end_unit

@@ -80,6 +80,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -299,6 +300,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -515,6 +517,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -726,6 +729,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -921,6 +925,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -1116,6 +1121,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -1711,10 +1717,12 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|b
@@ -1952,10 +1960,12 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|b
@@ -2287,10 +2297,12 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|b
@@ -4765,6 +4777,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -5514,6 +5527,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a

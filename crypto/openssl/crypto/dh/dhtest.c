@@ -25,10 +25,16 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_include
@@ -75,7 +81,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifdef
 
 begin_function
@@ -118,7 +124,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_define
@@ -166,7 +172,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifdef
 
 begin_define
@@ -257,9 +263,22 @@ name|BIO
 modifier|*
 name|out
 decl_stmt|;
+name|CRYPTO_malloc_debug_init
+argument_list|()
+expr_stmt|;
+name|CRYPTO_dbg_set_options
+argument_list|(
+name|V_CRYPTO_MDEBUG_ALL
+argument_list|)
+expr_stmt|;
+name|CRYPTO_mem_ctrl
+argument_list|(
+name|CRYPTO_MEM_CHECK_ON
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 name|CRYPTO_malloc_init
 argument_list|()
 expr_stmt|;
@@ -287,7 +306,7 @@ name|out
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -846,7 +865,20 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|CRYPTO_cleanup_all_ex_data
+argument_list|()
+expr_stmt|;
+name|ERR_remove_state
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|CRYPTO_mem_leaks_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|EXIT
 argument_list|(
 name|ret
 argument_list|)

@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -46,6 +46,19 @@ name|RAND_str_functs
 index|[]
 init|=
 block|{
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|RAND_F_RAND_GET_RAND_METHOD
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"RAND_get_rand_method"
+block|}
+block|,
 block|{
 name|ERR_PACK
 argument_list|(
@@ -119,7 +132,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_RAND

@@ -41,6 +41,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -70,8 +71,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BN_COUNT
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"BN_sqr %d * %d\n"
 argument_list|,
 name|a
@@ -175,12 +178,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|r
-operator|->
-name|neg
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|al
@@ -359,22 +356,6 @@ if|if
 condition|(
 name|bn_wexpand
 argument_list|(
-name|a
-argument_list|,
-name|k
-operator|*
-literal|2
-argument_list|)
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
-name|bn_wexpand
-argument_list|(
 name|tmp
 argument_list|,
 name|k
@@ -482,6 +463,12 @@ name|top
 operator|=
 name|max
 expr_stmt|;
+name|rr
+operator|->
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -552,6 +539,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -571,10 +559,12 @@ name|j
 decl_stmt|,
 name|max
 decl_stmt|;
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
-decl_stmt|,
+decl_stmt|;
+name|BN_ULONG
 modifier|*
 name|rp
 decl_stmt|;
@@ -749,6 +739,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -784,8 +775,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BN_COUNT
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" bn_sqr_recursive %d * %d\n"
 argument_list|,
 name|n2

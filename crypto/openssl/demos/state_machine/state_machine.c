@@ -542,6 +542,18 @@ return|return
 literal|0
 return|;
 block|}
+name|SSLStateMachine_print_error
+argument_list|(
+name|pMachine
+argument_list|,
+literal|"SSL_read error"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
@@ -973,6 +985,17 @@ name|char
 modifier|*
 name|szKeyFile
 decl_stmt|;
+name|char
+name|rbuf
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|int
+name|nrbuf
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -1092,6 +1115,36 @@ operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
+comment|/* check whether there's decrypted data */
+if|if
+condition|(
+operator|!
+name|nrbuf
+condition|)
+name|nrbuf
+operator|=
+name|SSLStateMachine_read_extract
+argument_list|(
+name|pMachine
+argument_list|,
+name|rbuf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* if there's decrypted data, check whether we can write it */
+if|if
+condition|(
+name|nrbuf
+condition|)
+name|FD_SET
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|wfds
+argument_list|)
+expr_stmt|;
 comment|/* Select socket for output */
 if|if
 condition|(
@@ -1205,7 +1258,39 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* FIXME: we should only extract if stdout is ready */
+comment|/* stdout is ready for output (and hence we have some to send it) */
+if|if
+condition|(
+name|FD_ISSET
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|wfds
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|nrbuf
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+name|rbuf
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|nrbuf
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|SSLStateMachine_read_extract
@@ -1213,8 +1298,13 @@ argument_list|(
 name|pMachine
 argument_list|,
 name|buf
+operator|+
+literal|1
 argument_list|,
-name|n
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1240,12 +1330,16 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+operator|++
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|n
 operator|>
 literal|0
 condition|)
+comment|/* FIXME: has to be true now */
 block|{
 name|int
 name|w
@@ -1269,6 +1363,7 @@ operator|==
 name|n
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Socket is ready for output (and therefore we have output to send) */
 if|if

@@ -78,7 +78,7 @@ name|n
 parameter_list|,
 name|m
 parameter_list|)
-value|((t)=((((a)<<(16-(n)))^(a))&(m)),\ 	(a)=(a)^(t)^(t>>(16-(n))))\  void fcrypt_body(DES_LONG *out, des_key_schedule ks, DES_LONG Eswap0,
+value|((t)=((((a)<<(16-(n)))^(a))&(m)),\ 	(a)=(a)^(t)^(t>>(16-(n))))\  void fcrypt_body(DES_LONG *out, DES_key_schedule *ks, DES_LONG Eswap0,
 end_define
 
 begin_expr_stmt
@@ -115,7 +115,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|des_SPtrans
+name|DES_SPtrans
 decl_stmt|;
 endif|#
 directive|endif

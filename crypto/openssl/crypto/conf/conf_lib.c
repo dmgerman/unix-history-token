@@ -69,6 +69,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Init a 'CONF' structure from an old LHASH */
+end_comment
+
+begin_function
+name|void
+name|CONF_set_nconf
+parameter_list|(
+name|CONF
+modifier|*
+name|conf
+parameter_list|,
+name|LHASH
+modifier|*
+name|hash
+parameter_list|)
+block|{
+if|if
+condition|(
+name|default_CONF_method
+operator|==
+name|NULL
+condition|)
+name|default_CONF_method
+operator|=
+name|NCONF_default
+argument_list|()
+expr_stmt|;
+name|default_CONF_method
+operator|->
+name|init
+argument_list|(
+name|conf
+argument_list|)
+expr_stmt|;
+name|conf
+operator|->
+name|data
+operator|=
+name|hash
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* The following section contains the "CONF classic" functions,    rewritten in terms of the new CONF interface. */
 end_comment
 
@@ -122,7 +166,7 @@ name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 name|in
 operator|=
 name|BIO_new_file
@@ -188,7 +232,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -294,30 +338,13 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
-argument_list|)
-expr_stmt|;
-name|ctmp
-operator|.
-name|data
-operator|=
+argument_list|,
 name|conf
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -356,7 +383,7 @@ name|CONF_get_section
 argument_list|(
 argument|LHASH *conf
 argument_list|,
-argument|char *section
+argument|const char *section
 argument_list|)
 block|{
 if|if
@@ -378,30 +405,13 @@ block|{
 name|CONF
 name|ctmp
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
-argument_list|)
-expr_stmt|;
-name|ctmp
-operator|.
-name|data
-operator|=
+argument_list|,
 name|conf
+argument_list|)
 expr_stmt|;
 return|return
 name|NCONF_get_section
@@ -422,9 +432,9 @@ name|CONF_get_string
 argument_list|(
 argument|LHASH *conf
 argument_list|,
-argument|char *group
+argument|const char *group
 argument_list|,
-argument|char *name
+argument|const char *name
 argument_list|)
 block|{
 if|if
@@ -453,30 +463,13 @@ block|{
 name|CONF
 name|ctmp
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
-argument_list|)
-expr_stmt|;
-name|ctmp
-operator|.
-name|data
-operator|=
+argument_list|,
 name|conf
+argument_list|)
 expr_stmt|;
 return|return
 name|NCONF_get_string
@@ -498,14 +491,22 @@ name|CONF_get_number
 argument_list|(
 argument|LHASH *conf
 argument_list|,
-argument|char *group
+argument|const char *group
 argument_list|,
-argument|char *name
+argument|const char *name
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|int
+name|status
+decl_stmt|;
+name|long
+name|result
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|conf
@@ -513,49 +514,37 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-name|NCONF_get_number
+name|status
+operator|=
+name|NCONF_get_number_e
 argument_list|(
 name|NULL
 argument_list|,
 name|group
 argument_list|,
 name|name
+argument_list|,
+operator|&
+name|result
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
 name|CONF
 name|ctmp
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
+argument_list|,
+name|conf
 argument_list|)
 expr_stmt|;
-name|ctmp
-operator|.
-name|data
+name|status
 operator|=
-name|conf
-expr_stmt|;
-return|return
-name|NCONF_get_number
+name|NCONF_get_number_e
 argument_list|(
 operator|&
 name|ctmp
@@ -563,9 +552,27 @@ argument_list|,
 name|group
 argument_list|,
 name|name
+argument_list|,
+operator|&
+name|result
 argument_list|)
-return|;
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|status
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* This function does not believe in errors... */
+name|ERR_get_error
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|result
+return|;
 block|}
 end_block
 
@@ -581,30 +588,13 @@ block|{
 name|CONF
 name|ctmp
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
-argument_list|)
-expr_stmt|;
-name|ctmp
-operator|.
-name|data
-operator|=
+argument_list|,
 name|conf
+argument_list|)
 expr_stmt|;
 name|NCONF_free_data
 argument_list|(
@@ -618,7 +608,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -708,30 +698,13 @@ block|{
 name|CONF
 name|ctmp
 decl_stmt|;
-if|if
-condition|(
-name|default_CONF_method
-operator|==
-name|NULL
-condition|)
-name|default_CONF_method
-operator|=
-name|NCONF_default
-argument_list|()
-expr_stmt|;
-name|default_CONF_method
-operator|->
-name|init
+name|CONF_set_nconf
 argument_list|(
 operator|&
 name|ctmp
-argument_list|)
-expr_stmt|;
-name|ctmp
-operator|.
-name|data
-operator|=
+argument_list|,
 name|conf
+argument_list|)
 expr_stmt|;
 return|return
 name|NCONF_dump_bio
@@ -883,76 +856,37 @@ modifier|*
 name|eline
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|BIO
-modifier|*
-name|in
-init|=
-name|NULL
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VMS
-name|in
-operator|=
-name|BIO_new_file
-argument_list|(
-name|file
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|in
-operator|=
-name|BIO_new_file
-argument_list|(
-name|file
-argument_list|,
-literal|"rb"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
-name|in
+name|conf
 operator|==
 name|NULL
 condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD
+name|CONF_F_NCONF_LOAD
 argument_list|,
-name|ERR_R_SYS_LIB
+name|CONF_R_NO_CONF
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|ret
-operator|=
-name|NCONF_load_bio
+return|return
+name|conf
+operator|->
+name|meth
+operator|->
+name|load
 argument_list|(
 name|conf
 argument_list|,
-name|in
+name|file
 argument_list|,
 name|eline
 argument_list|)
-expr_stmt|;
-name|BIO_free
-argument_list|(
-name|in
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_function
@@ -960,7 +894,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -1004,7 +938,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_FP
+name|CONF_F_NCONF_LOAD_FP
 argument_list|,
 name|ERR_R_BUF_LIB
 argument_list|)
@@ -1080,7 +1014,7 @@ name|conf
 operator|->
 name|meth
 operator|->
-name|load
+name|load_bio
 argument_list|(
 name|conf
 argument_list|,
@@ -1100,9 +1034,9 @@ argument_list|)
 operator|*
 name|NCONF_get_section
 argument_list|(
-argument|CONF *conf
+argument|const CONF *conf
 argument_list|,
-argument|char *section
+argument|const char *section
 argument_list|)
 block|{
 if|if
@@ -1162,11 +1096,11 @@ unit|}  char
 operator|*
 name|NCONF_get_string
 argument_list|(
-argument|CONF *conf
+argument|const CONF *conf
 argument_list|,
-argument|char *group
+argument|const char *group
 argument_list|,
-argument|char *name
+argument|const char *name
 argument_list|)
 block|{
 name|char
@@ -1213,6 +1147,32 @@ return|;
 block|}
 end_if
 
+begin_expr_stmt
+name|CONFerr
+argument_list|(
+name|CONF_F_NCONF_GET_STRING
+argument_list|,
+name|CONF_R_NO_VALUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ERR_add_error_data
+argument_list|(
+literal|4
+argument_list|,
+literal|"group="
+argument_list|,
+name|group
+argument_list|,
+literal|" name="
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 name|NULL
@@ -1220,28 +1180,46 @@ return|;
 end_return
 
 begin_macro
-unit|}  long
-name|NCONF_get_number
+unit|}  int
+name|NCONF_get_number_e
 argument_list|(
-argument|CONF *conf
+argument|const CONF *conf
 argument_list|,
-argument|char *group
+argument|const char *group
 argument_list|,
-argument|char *name
+argument|const char *name
+argument_list|,
+argument|long *result
 argument_list|)
 end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-literal|0
-comment|/* As with _CONF_get_string(), we rely on the possibility of finding          an environment variable with a suitable name.  Unfortunately, there's          no way with the current API to see if we found one or not...          The meaning of this is that if a number is not found anywhere, it          will always default to 0. */
-block|if (conf == NULL) 		{ 		CONFerr(CONF_F_NCONF_GET_NUMBER,                         CONF_R_NO_CONF_OR_ENVIRONMENT_VARIABLE); 		return 0; 		}
-endif|#
-directive|endif
+name|char
+modifier|*
+name|str
+decl_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+block|{
+name|CONFerr
+argument_list|(
+name|CONF_F_NCONF_GET_NUMBER_E
+argument_list|,
+name|ERR_R_PASSED_NULL_PARAMETER
+argument_list|)
+expr_stmt|;
 return|return
-name|_CONF_get_number
+literal|0
+return|;
+block|}
+name|str
+operator|=
+name|NCONF_get_string
 argument_list|(
 name|conf
 argument_list|,
@@ -1249,6 +1227,65 @@ name|group
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|str
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+for|for
+control|(
+operator|*
+name|result
+operator|=
+literal|0
+init|;
+name|conf
+operator|->
+name|meth
+operator|->
+name|is_number
+argument_list|(
+name|conf
+argument_list|,
+operator|*
+name|str
+argument_list|)
+condition|;
+control|)
+block|{
+operator|*
+name|result
+operator|=
+operator|(
+operator|*
+name|result
+operator|)
+operator|*
+literal|10
+operator|+
+name|conf
+operator|->
+name|meth
+operator|->
+name|to_int
+argument_list|(
+name|conf
+argument_list|,
+operator|*
+name|str
+argument_list|)
+expr_stmt|;
+name|str
+operator|++
+expr_stmt|;
+block|}
+return|return
+literal|1
 return|;
 block|}
 end_block
@@ -1256,13 +1293,14 @@ end_block
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
 name|int
 name|NCONF_dump_fp
 parameter_list|(
+specifier|const
 name|CONF
 modifier|*
 name|conf
@@ -1334,6 +1372,7 @@ begin_function
 name|int
 name|NCONF_dump_bio
 parameter_list|(
+specifier|const
 name|CONF
 modifier|*
 name|conf
@@ -1375,6 +1414,27 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* This function should be avoided */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|long NCONF_get_number(CONF *conf,char *group,char *name) 	{ 	int status; 	long ret=0;  	status = NCONF_get_number_e(conf, group, name,&ret); 	if (status == 0) 		{
+comment|/* This function does not believe in errors... */
+end_comment
+
+begin_endif
+unit|ERR_get_error(); 		} 	return ret; 	}
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

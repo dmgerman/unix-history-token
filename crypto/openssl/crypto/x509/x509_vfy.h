@@ -43,7 +43,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_LHASH
+name|OPENSSL_NO_LHASH
 end_ifndef
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/symhacks.h>
 end_include
 
 begin_ifdef
@@ -378,13 +384,7 @@ function_decl|;
 block|}
 name|X509_LOOKUP_METHOD
 typedef|;
-typedef|typedef
-name|struct
-name|x509_store_ctx_st
-name|X509_STORE_CTX
-typedef|;
 comment|/* This is used to hold everything.  It is used for all certificate  * validation.  Once we have a certificate chain, the 'verify'  * function is then called to actually check the cert chain. */
-typedef|typedef
 struct|struct
 name|x509_store_st
 block|{
@@ -409,6 +409,19 @@ argument_list|)
 operator|*
 name|get_cert_methods
 expr_stmt|;
+comment|/* The following fields are not used by X509_STORE but are          * inherited by X509_STORE_CTX when it is initialised. 	 */
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+comment|/* Various verify flags */
+name|int
+name|purpose
+decl_stmt|;
+name|int
+name|trust
+decl_stmt|;
+comment|/* Callbacks for various operations */
 name|int
 function_decl|(
 modifier|*
@@ -436,6 +449,127 @@ name|ctx
 parameter_list|)
 function_decl|;
 comment|/* error callback */
+name|int
+function_decl|(
+modifier|*
+name|get_issuer
+function_decl|)
+parameter_list|(
+name|X509
+modifier|*
+modifier|*
+name|issuer
+parameter_list|,
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* get issuers cert from ctx */
+name|int
+function_decl|(
+modifier|*
+name|check_issued
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|,
+name|X509
+modifier|*
+name|issuer
+parameter_list|)
+function_decl|;
+comment|/* check issued */
+name|int
+function_decl|(
+modifier|*
+name|check_revocation
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* Check revocation status of chain */
+name|int
+function_decl|(
+modifier|*
+name|get_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+modifier|*
+name|crl
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* retrieve CRL */
+name|int
+function_decl|(
+modifier|*
+name|check_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+name|crl
+parameter_list|)
+function_decl|;
+comment|/* Check CRL validity */
+name|int
+function_decl|(
+modifier|*
+name|cert_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+name|crl
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* Check certificate against CRL */
+name|int
+function_decl|(
+modifier|*
+name|cleanup
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
@@ -447,8 +581,8 @@ name|depth
 decl_stmt|;
 comment|/* how deep to look (still unused -- X509_STORE_CTX's depth is used) */
 block|}
-name|X509_STORE
-typedef|;
+comment|/* X509_STORE */
+struct|;
 define|#
 directive|define
 name|X509_STORE_set_depth
@@ -504,6 +638,7 @@ name|store_ctx
 decl_stmt|;
 comment|/* who owns us */
 block|}
+comment|/* X509_LOOKUP */
 struct|;
 comment|/* This is a used when verifying cert chains.  Since the  * gathering of the cert chain can take some time (and have to be  * 'retried', this needs to be kept and passed around. */
 struct|struct
@@ -626,6 +761,75 @@ comment|/* check issued */
 name|int
 function_decl|(
 modifier|*
+name|check_revocation
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* Check revocation status of chain */
+name|int
+function_decl|(
+modifier|*
+name|get_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+modifier|*
+name|crl
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* retrieve CRL */
+name|int
+function_decl|(
+modifier|*
+name|check_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+name|crl
+parameter_list|)
+function_decl|;
+comment|/* Check CRL validity */
+name|int
+function_decl|(
+modifier|*
+name|cert_crl
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509_CRL
+modifier|*
+name|crl
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* Check certificate against CRL */
+name|int
+function_decl|(
+modifier|*
 name|cleanup
 function_decl|)
 parameter_list|(
@@ -671,10 +875,16 @@ modifier|*
 name|current_issuer
 decl_stmt|;
 comment|/* cert currently being tested as valid issuer */
+name|X509_CRL
+modifier|*
+name|current_crl
+decl_stmt|;
+comment|/* current CRL */
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
 block|}
+comment|/* X509_STORE_CTX */
 struct|;
 define|#
 directive|define
@@ -865,6 +1075,14 @@ define|#
 directive|define
 name|X509_V_ERR_KEYUSAGE_NO_CERTSIGN
 value|32
+define|#
+directive|define
+name|X509_V_ERR_UNABLE_TO_GET_CRL_ISSUER
+value|33
+define|#
+directive|define
+name|X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION
+value|34
 comment|/* The application is not happy */
 define|#
 directive|define
@@ -881,40 +1099,21 @@ directive|define
 name|X509_V_FLAG_USE_CHECK_TIME
 value|0x2
 comment|/* Use check time instead of current time */
-comment|/* These functions are being redefined in another directory, 		     and clash when the linker is case-insensitive, so let's 		     hide them a little, by giving them an extra 'o' at the 		     beginning of the name... */
-ifdef|#
-directive|ifdef
-name|VMS
-undef|#
-directive|undef
-name|X509v3_cleanup_extensions
 define|#
 directive|define
-name|X509v3_cleanup_extensions
-value|oX509v3_cleanup_extensions
-undef|#
-directive|undef
-name|X509v3_add_extension
+name|X509_V_FLAG_CRL_CHECK
+value|0x4
+comment|/* Lookup CRLs */
 define|#
 directive|define
-name|X509v3_add_extension
-value|oX509v3_add_extension
-undef|#
-directive|undef
-name|X509v3_add_netscape_extensions
+name|X509_V_FLAG_CRL_CHECK_ALL
+value|0x8
+comment|/* Lookup CRLs for whole chain */
 define|#
 directive|define
-name|X509v3_add_netscape_extensions
-value|oX509v3_add_netscape_extensions
-undef|#
-directive|undef
-name|X509v3_add_standard_extensions
-define|#
-directive|define
-name|X509v3_add_standard_extensions
-value|oX509v3_add_standard_extensions
-endif|#
-directive|endif
+name|X509_V_FLAG_IGNORE_CRITICAL
+value|0x10
+comment|/* Ignore unhandled critical extensions */
 name|int
 name|X509_OBJECT_idx_by_subject
 argument_list|(
@@ -999,6 +1198,39 @@ modifier|*
 name|v
 parameter_list|)
 function_decl|;
+name|void
+name|X509_STORE_set_flags
+parameter_list|(
+name|X509_STORE
+modifier|*
+name|ctx
+parameter_list|,
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+name|int
+name|X509_STORE_set_purpose
+parameter_list|(
+name|X509_STORE
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|purpose
+parameter_list|)
+function_decl|;
+name|int
+name|X509_STORE_set_trust
+parameter_list|(
+name|X509_STORE
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|trust
+parameter_list|)
+function_decl|;
 name|X509_STORE_CTX
 modifier|*
 name|X509_STORE_CTX_new
@@ -1031,7 +1263,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|X509_STORE_CTX_init
 argument_list|(
 name|X509_STORE_CTX
@@ -1173,7 +1405,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 name|int
 name|X509_load_cert_file
 parameter_list|(
@@ -1346,7 +1578,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 name|int
 name|X509_STORE_load_locations
 parameter_list|(

@@ -13,13 +13,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_SHA0
+name|OPENSSL_NO_SHA0
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SHA
+name|OPENSSL_NO_SHA
 argument_list|)
 end_if
 

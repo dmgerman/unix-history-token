@@ -28,7 +28,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_include
@@ -90,7 +90,7 @@ literal|1
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 if|if
 condition|(
 name|priv
@@ -111,7 +111,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 goto|goto
 name|err
 goto|;

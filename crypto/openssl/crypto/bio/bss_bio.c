@@ -110,23 +110,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/crypto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"openssl/e_os.h"
+file|"e_os.h"
 end_include
 
 begin_comment
-comment|/* VxWorks defines SSiZE_MAX with an empty value causing compile errors */
+comment|/* VxWorks defines SSIZE_MAX with an empty value causing compile errors */
 end_comment
 
 begin_if
@@ -134,7 +128,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VXWORKS
+name|OPENSSL_SYS_VXWORKS
 argument_list|)
 end_if
 
@@ -144,22 +138,16 @@ directive|undef
 name|SSIZE_MAX
 end_undef
 
-begin_define
-define|#
-directive|define
-name|SSIZE_MAX
-value|INT_MAX
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SSIZE_MAX
-argument_list|)
-end_elif
+end_ifndef
 
 begin_define
 define|#

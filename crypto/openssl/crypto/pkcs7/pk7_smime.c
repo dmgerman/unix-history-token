@@ -322,7 +322,7 @@ return|;
 block|}
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 name|PKCS7_simple_smimecap
 argument_list|(
 name|smcap
@@ -337,7 +337,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_RC2
+name|OPENSSL_NO_RC2
 name|PKCS7_simple_smimecap
 argument_list|(
 name|smcap
@@ -360,7 +360,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 name|PKCS7_simple_smimecap
 argument_list|(
 name|smcap
@@ -375,7 +375,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_RC2
+name|OPENSSL_NO_RC2
 name|PKCS7_simple_smimecap
 argument_list|(
 name|smcap
@@ -695,6 +695,9 @@ name|PKCS7_NOCHAIN
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|X509_STORE_CTX_init
 argument_list|(
 operator|&
@@ -712,7 +715,24 @@ name|sign
 operator|->
 name|cert
 argument_list|)
+condition|)
+block|{
+name|PKCS7err
+argument_list|(
+name|PKCS7_F_PKCS7_VERIFY
+argument_list|,
+name|ERR_R_X509_LIB
+argument_list|)
 expr_stmt|;
+name|sk_X509_free
+argument_list|(
+name|signers
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|X509_STORE_CTX_set_purpose
 argument_list|(
 operator|&
@@ -722,7 +742,10 @@ name|X509_PURPOSE_SMIME_SIGN
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
 name|X509_STORE_CTX_init
 argument_list|(
 operator|&
@@ -734,7 +757,24 @@ name|signer
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+block|{
+name|PKCS7err
+argument_list|(
+name|PKCS7_F_PKCS7_VERIFY
+argument_list|,
+name|ERR_R_X509_LIB
+argument_list|)
 expr_stmt|;
+name|sk_X509_free
+argument_list|(
+name|signers
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|i
 operator|=
 name|X509_verify_cert
@@ -1336,7 +1376,7 @@ argument|STACK_OF(X509) *certs
 argument_list|,
 argument|BIO *in
 argument_list|,
-argument|EVP_CIPHER *cipher
+argument|const EVP_CIPHER *cipher
 argument_list|,
 argument|int flags
 argument_list|)

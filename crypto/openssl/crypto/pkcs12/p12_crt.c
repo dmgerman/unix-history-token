@@ -220,7 +220,7 @@ operator|!
 operator|(
 name|bag
 operator|=
-name|M_PKCS12_x5092certbag
+name|PKCS12_x5092certbag
 argument_list|(
 name|cert
 argument_list|)
@@ -335,7 +335,7 @@ operator|!
 operator|(
 name|bag
 operator|=
-name|M_PKCS12_x5092certbag
+name|PKCS12_x5092certbag
 argument_list|(
 name|tcert
 argument_list|)
@@ -624,7 +624,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|M_PKCS12_pack_authsafes
+name|PKCS12_pack_authsafes
 argument_list|(
 name|p12
 argument_list|,

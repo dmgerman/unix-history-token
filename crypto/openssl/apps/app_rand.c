@@ -93,7 +93,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 name|BIO_printf
 argument_list|(
 name|bio_e
@@ -176,7 +176,10 @@ name|RAND_status
 argument_list|()
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|dont_warn
 condition|)
@@ -227,6 +230,7 @@ block|}
 return|return
 literal|0
 return|;
+block|}
 block|}
 name|seeded
 operator|=

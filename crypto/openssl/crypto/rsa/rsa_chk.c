@@ -29,6 +29,7 @@ begin_function
 name|int
 name|RSA_check_key
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|key

@@ -37,6 +37,12 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -638,7 +644,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MD2_Init
 parameter_list|(
 name|MD2_CTX
@@ -660,12 +666,10 @@ name|state
 argument_list|,
 literal|0
 argument_list|,
-name|MD2_BLOCK
-operator|*
 sizeof|sizeof
-argument_list|(
-name|MD2_INT
-argument_list|)
+name|c
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 name|memset
@@ -676,12 +680,10 @@ name|cksm
 argument_list|,
 literal|0
 argument_list|,
-name|MD2_BLOCK
-operator|*
 sizeof|sizeof
-argument_list|(
-name|MD2_INT
-argument_list|)
+name|c
+operator|->
+name|cksm
 argument_list|)
 expr_stmt|;
 name|memset
@@ -692,14 +694,20 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|MD2_BLOCK
+sizeof|sizeof
+name|c
+operator|->
+name|data
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MD2_Update
 parameter_list|(
 name|MD2_CTX
@@ -728,7 +736,9 @@ name|len
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|p
 operator|=
 name|c
@@ -847,7 +857,9 @@ name|int
 operator|)
 name|len
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 block|}
 comment|/* we now can process the input data in blocks of MD2_BLOCK 	 * chars and save the leftovers to c->data. */
@@ -895,6 +907,9 @@ name|int
 operator|)
 name|len
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1197,11 +1212,9 @@ name|MD2_INT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|state
-argument_list|,
-literal|0
 argument_list|,
 literal|48
 operator|*
@@ -1215,7 +1228,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MD2_Final
 parameter_list|(
 name|unsigned
@@ -1384,6 +1397,9 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

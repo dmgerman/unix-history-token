@@ -14,7 +14,7 @@ end_include
 begin_function
 specifier|static
 name|int
-name|rand
+name|Rand
 parameter_list|(
 name|n
 parameter_list|)
@@ -173,7 +173,7 @@ name|BN_pseudo_rand
 argument_list|(
 name|a
 argument_list|,
-name|rand
+name|Rand
 argument_list|()
 argument_list|,
 literal|0
@@ -185,7 +185,7 @@ name|BN_pseudo_rand
 argument_list|(
 name|b
 argument_list|,
-name|rand
+name|Rand
 argument_list|()
 argument_list|,
 literal|0

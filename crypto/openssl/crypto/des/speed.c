@@ -21,14 +21,14 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 operator|&&
 operator|(
 operator|!
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -36,6 +36,12 @@ argument_list|(
 name|__DECC
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MACOSX
+argument_list|)
 end_if
 
 begin_define
@@ -96,12 +102,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__DECC
+name|OPENSSL_SYS_VMS_DECC
 argument_list|)
 operator|&&
 operator|!
@@ -519,7 +520,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key
 init|=
 block|{
@@ -541,7 +542,7 @@ literal|0xf0
 block|}
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key2
 init|=
 block|{
@@ -563,7 +564,7 @@ literal|0x12
 block|}
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key3
 init|=
 block|{
@@ -584,7 +585,7 @@ block|,
 literal|0x34
 block|}
 decl_stmt|;
-name|des_key_schedule
+name|DES_key_schedule
 name|sch
 decl_stmt|,
 name|sch2
@@ -633,19 +634,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key2
 argument_list|,
+operator|&
 name|sch2
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key3
 argument_list|,
+operator|&
 name|sch3
 argument_list|)
 expr_stmt|;
@@ -657,11 +660,12 @@ argument_list|(
 literal|"First we calculate the approximate speed ...\n"
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key
 argument_list|,
+operator|&
 name|sch
 argument_list|)
 expr_stmt|;
@@ -700,17 +704,12 @@ condition|;
 name|i
 operator|--
 control|)
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|data
 argument_list|,
 operator|&
-operator|(
 name|sch
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -849,11 +848,12 @@ condition|;
 name|count
 operator|++
 control|)
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key
 argument_list|,
+operator|&
 name|sch
 argument_list|)
 expr_stmt|;
@@ -892,7 +892,7 @@ directive|ifdef
 name|SIGALRM
 name|printf
 argument_list|(
-literal|"Doing des_encrypt's for 10 seconds\n"
+literal|"Doing DES_encrypt's for 10 seconds\n"
 argument_list|)
 expr_stmt|;
 name|alarm
@@ -904,7 +904,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"Doing des_encrypt %ld times\n"
+literal|"Doing DES_encrypt %ld times\n"
 argument_list|,
 name|cb
 argument_list|)
@@ -941,17 +941,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|data
 argument_list|,
 operator|&
-operator|(
 name|sch
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -966,7 +961,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld des_encrypt's in %.2f second\n"
+literal|"%ld DES_encrypt's in %.2f second\n"
 argument_list|,
 name|count
 argument_list|,
@@ -994,7 +989,7 @@ directive|ifdef
 name|SIGALRM
 name|printf
 argument_list|(
-literal|"Doing des_cbc_encrypt on %ld byte blocks for 10 seconds\n"
+literal|"Doing DES_cbc_encrypt on %ld byte blocks for 10 seconds\n"
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -1008,7 +1003,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"Doing des_cbc_encrypt %ld times on %ld byte blocks\n"
+literal|"Doing DES_cbc_encrypt %ld times on %ld byte blocks\n"
 argument_list|,
 name|cc
 argument_list|,
@@ -1040,7 +1035,7 @@ condition|;
 name|count
 operator|++
 control|)
-name|des_ncbc_encrypt
+name|DES_ncbc_encrypt
 argument_list|(
 name|buf
 argument_list|,
@@ -1049,12 +1044,7 @@ argument_list|,
 name|BUFSIZE
 argument_list|,
 operator|&
-operator|(
 name|sch
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 operator|&
 name|key
@@ -1071,7 +1061,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld des_cbc_encrypt's of %ld byte blocks in %.2f second\n"
+literal|"%ld DES_cbc_encrypt's of %ld byte blocks in %.2f second\n"
 argument_list|,
 name|count
 argument_list|,
@@ -1101,7 +1091,7 @@ directive|ifdef
 name|SIGALRM
 name|printf
 argument_list|(
-literal|"Doing des_ede_cbc_encrypt on %ld byte blocks for 10 seconds\n"
+literal|"Doing DES_ede_cbc_encrypt on %ld byte blocks for 10 seconds\n"
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -1115,7 +1105,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"Doing des_ede_cbc_encrypt %ld times on %ld byte blocks\n"
+literal|"Doing DES_ede_cbc_encrypt %ld times on %ld byte blocks\n"
 argument_list|,
 name|cd
 argument_list|,
@@ -1147,7 +1137,7 @@ condition|;
 name|count
 operator|++
 control|)
-name|des_ede3_cbc_encrypt
+name|DES_ede3_cbc_encrypt
 argument_list|(
 name|buf
 argument_list|,
@@ -1156,28 +1146,13 @@ argument_list|,
 name|BUFSIZE
 argument_list|,
 operator|&
-operator|(
 name|sch
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|sch2
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|sch3
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 operator|&
 name|key
@@ -1194,7 +1169,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld des_ede_cbc_encrypt's of %ld byte blocks in %.2f second\n"
+literal|"%ld DES_ede_cbc_encrypt's of %ld byte blocks in %.2f second\n"
 argument_list|,
 name|count
 argument_list|,
@@ -1372,7 +1347,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 return|return
 operator|(

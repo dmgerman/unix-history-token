@@ -544,17 +544,17 @@ end_decl_stmt
 
 begin_function
 name|void
-name|des_xwhite_in2out
+name|DES_xwhite_in2out
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|des_key
 parameter_list|,
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|in_white
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|out_white
 parameter_list|)
@@ -774,7 +774,7 @@ end_function
 
 begin_function
 name|void
-name|des_xcbc_encrypt
+name|DES_xcbc_encrypt
 parameter_list|(
 specifier|const
 name|unsigned
@@ -790,18 +790,19 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec
 parameter_list|,
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|inw
 parameter_list|,
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|outw
 parameter_list|,
@@ -994,7 +995,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -1083,7 +1084,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -1214,7 +1215,7 @@ name|tin1
 operator|^
 name|outW1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -1308,7 +1309,7 @@ name|tin1
 operator|^
 name|outW1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,

@@ -37,6 +37,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -51,6 +57,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -79,6 +86,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -107,6 +115,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -135,6 +144,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -164,6 +174,7 @@ name|BIGNUM
 modifier|*
 name|r0
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|i
@@ -221,18 +232,27 @@ name|RSA_eay_mod_exp
 block|,
 name|BN_mod_exp_mont
 block|,
+comment|/* XXX probably we should not use Montgomery if  e == 3 */
 name|RSA_eay_init
 block|,
 name|RSA_eay_finish
 block|,
 literal|0
 block|,
+comment|/* flags */
 name|NULL
-block|, 	}
+block|,
+literal|0
+block|,
+comment|/* rsa_sign */
+literal|0
+comment|/* rsa_verify */
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_PKCS1_SSLeay
@@ -257,6 +277,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -398,7 +419,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NO_SHA
+name|OPENSSL_NO_SHA
 case|case
 name|RSA_PKCS1_OAEP_PADDING
 case|:
@@ -753,11 +774,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|num
 argument_list|)
@@ -788,6 +807,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1285,11 +1305,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|num
 argument_list|)
@@ -1316,6 +1334,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1728,7 +1747,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NO_SHA
+name|OPENSSL_NO_SHA
 case|case
 name|RSA_PKCS1_OAEP_PADDING
 case|:
@@ -1849,11 +1868,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|num
 argument_list|)
@@ -1884,6 +1901,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2324,11 +2342,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|num
 argument_list|)
@@ -2356,6 +2372,7 @@ name|BIGNUM
 modifier|*
 name|r0
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|I
@@ -2914,19 +2931,80 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* If 'I' was greater than (or equal to) rsa->n, the operation 		 * will be equivalent to using 'I mod n'. However, the result of 		 * the verify will *always* be less than 'n' so we don't check 		 * for absolute equality, just congruency. */
 if|if
 condition|(
-name|BN_cmp
+operator|!
+name|BN_sub
 argument_list|(
-name|I
+operator|&
+name|vrfy
 argument_list|,
 operator|&
 name|vrfy
+argument_list|,
+name|I
 argument_list|)
-operator|!=
-literal|0
 condition|)
-block|{
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+name|BN_mod
+argument_list|(
+operator|&
+name|vrfy
+argument_list|,
+operator|&
+name|vrfy
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+name|vrfy
+operator|.
+name|neg
+condition|)
+if|if
+condition|(
+operator|!
+name|BN_add
+argument_list|(
+operator|&
+name|vrfy
+argument_list|,
+operator|&
+name|vrfy
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+name|BN_is_zero
+argument_list|(
+operator|&
+name|vrfy
+argument_list|)
+condition|)
+comment|/* 'I' and 'vrfy' aren't congruent mod n. Don't leak 			 * miscalculated CRT output, just do a raw (slower) 			 * mod_exp and return that instead. */
 if|if
 condition|(
 operator|!
@@ -2956,7 +3034,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-block|}
 block|}
 name|ret
 operator|=

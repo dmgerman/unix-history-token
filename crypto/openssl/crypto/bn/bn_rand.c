@@ -431,11 +431,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|bytes
 argument_list|)

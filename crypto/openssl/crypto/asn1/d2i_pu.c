@@ -43,6 +43,40 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DSA
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|EVP_PKEY
 modifier|*
@@ -142,7 +176,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 case|case
 name|EVP_PKEY_RSA
 case|:
@@ -159,6 +193,13 @@ name|d2i_RSAPublicKey
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|length
@@ -167,6 +208,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+comment|/* TMP UGLY CAST */
 block|{
 name|ASN1err
 argument_list|(
@@ -184,7 +226,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 case|case
 name|EVP_PKEY_DSA
 case|:
@@ -201,6 +243,13 @@ name|d2i_DSAPublicKey
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|length
@@ -209,6 +258,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+comment|/* TMP UGLY CAST */
 block|{
 name|ASN1err
 argument_list|(

@@ -4,7 +4,7 @@ comment|/* crypto/des/ncbc_enc.c */
 end_comment
 
 begin_comment
-comment|/*  * #included by:  *    cbc_enc.c  (des_cbc_encrypt)  *    des_enc.c  (des_ncbc_encrypt)  */
+comment|/*  * #included by:  *    cbc_enc.c  (DES_cbc_encrypt)  *    des_enc.c  (DES_ncbc_encrypt)  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ end_ifdef
 
 begin_decl_stmt
 name|void
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 specifier|const
 name|unsigned
@@ -41,10 +41,11 @@ argument_list|,
 name|long
 name|length
 argument_list|,
-name|des_key_schedule
-name|schedule
+name|DES_key_schedule
+operator|*
+name|_schedule
 argument_list|,
-name|des_cblock
+name|DES_cblock
 operator|*
 name|ivec
 argument_list|,
@@ -54,7 +55,7 @@ argument_list|)
 else|#
 directive|else
 name|void
-name|des_ncbc_encrypt
+name|DES_ncbc_encrypt
 argument_list|(
 specifier|const
 name|unsigned
@@ -70,10 +71,11 @@ argument_list|,
 name|long
 name|length
 argument_list|,
-name|des_key_schedule
-name|schedule
+name|DES_key_schedule
+operator|*
+name|_schedule
 argument_list|,
-name|des_cblock
+name|DES_cblock
 operator|*
 name|ivec
 argument_list|,
@@ -197,7 +199,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -205,7 +207,7 @@ operator|*
 operator|)
 name|tin
 argument_list|,
-name|schedule
+name|_schedule
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -282,7 +284,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -290,7 +292,7 @@ operator|*
 operator|)
 name|tin
 argument_list|,
-name|schedule
+name|_schedule
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -414,7 +416,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -422,7 +424,7 @@ operator|*
 operator|)
 name|tin
 argument_list|,
-name|schedule
+name|_schedule
 argument_list|,
 name|DES_DECRYPT
 argument_list|)
@@ -504,7 +506,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -512,7 +514,7 @@ operator|*
 operator|)
 name|tin
 argument_list|,
-name|schedule
+name|_schedule
 argument_list|,
 name|DES_DECRYPT
 argument_list|)

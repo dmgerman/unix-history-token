@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -616,6 +616,19 @@ literal|0
 argument_list|)
 block|,
 literal|"SSL3_ENC"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|SSL_F_SSL3_GENERATE_KEY_BLOCK
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"SSL3_GENERATE_KEY_BLOCK"
 block|}
 block|,
 block|{
@@ -2281,12 +2294,6 @@ literal|"illegal padding"
 block|}
 block|,
 block|{
-name|SSL_R_INTERNAL_ERROR
-block|,
-literal|"internal error"
-block|}
-block|,
-block|{
 name|SSL_R_INVALID_CHALLENGE_LENGTH
 block|,
 literal|"invalid challenge length"
@@ -2317,6 +2324,72 @@ literal|"key arg too long"
 block|}
 block|,
 block|{
+name|SSL_R_KRB5
+block|,
+literal|"krb5"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_C_CC_PRINC
+block|,
+literal|"krb5 client cc principal (no tkt?)"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_C_GET_CRED
+block|,
+literal|"krb5 client get cred"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_C_INIT
+block|,
+literal|"krb5 client init"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_C_MK_REQ
+block|,
+literal|"krb5 client mk_req (expired tkt?)"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_BAD_TICKET
+block|,
+literal|"krb5 server bad ticket"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_INIT
+block|,
+literal|"krb5 server init"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_RD_REQ
+block|,
+literal|"krb5 server rd_req (keytab perms?)"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_TKT_EXPIRED
+block|,
+literal|"krb5 server tkt expired"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_TKT_NYV
+block|,
+literal|"krb5 server tkt not yet valid"
+block|}
+block|,
+block|{
+name|SSL_R_KRB5_S_TKT_SKEW
+block|,
+literal|"krb5 server tkt skew"
+block|}
+block|,
+block|{
 name|SSL_R_LENGTH_MISMATCH
 block|,
 literal|"length mismatch"
@@ -2338,6 +2411,12 @@ block|{
 name|SSL_R_LIBRARY_HAS_NO_CIPHERS
 block|,
 literal|"library has no ciphers"
+block|}
+block|,
+block|{
+name|SSL_R_MASTER_KEY_TOO_LONG
+block|,
+literal|"master key too long"
 block|}
 block|,
 block|{
@@ -2857,9 +2936,27 @@ literal|"ssl library has no ciphers"
 block|}
 block|,
 block|{
+name|SSL_R_SSL_SESSION_ID_CALLBACK_FAILED
+block|,
+literal|"ssl session id callback failed"
+block|}
+block|,
+block|{
+name|SSL_R_SSL_SESSION_ID_CONFLICT
+block|,
+literal|"ssl session id conflict"
+block|}
+block|,
+block|{
 name|SSL_R_SSL_SESSION_ID_CONTEXT_TOO_LONG
 block|,
 literal|"ssl session id context too long"
+block|}
+block|,
+block|{
+name|SSL_R_SSL_SESSION_ID_HAS_BAD_LENGTH
+block|,
+literal|"ssl session id has bad length"
 block|}
 block|,
 block|{
@@ -3218,7 +3315,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_SSL

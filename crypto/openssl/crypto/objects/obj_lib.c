@@ -42,6 +42,7 @@ name|ASN1_OBJECT
 modifier|*
 name|OBJ_dup
 parameter_list|(
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|o
@@ -84,9 +85,14 @@ operator|)
 condition|)
 return|return
 operator|(
+operator|(
+name|ASN1_OBJECT
+operator|*
+operator|)
 name|o
 operator|)
 return|;
+comment|/* XXX: ugh! Why? What kind of 					     duplication is this??? */
 name|r
 operator|=
 name|ASN1_OBJECT_new
@@ -368,10 +374,12 @@ begin_function
 name|int
 name|OBJ_cmp
 parameter_list|(
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|b

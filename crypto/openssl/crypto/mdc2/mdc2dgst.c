@@ -96,7 +96,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
+name|int
 name|MDC2_Init
 parameter_list|(
 name|MDC2_CTX
@@ -150,11 +150,14 @@ argument_list|,
 name|MDC2_BLOCK
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MDC2_Update
 parameter_list|(
 name|MDC2_CTX
@@ -229,7 +232,9 @@ name|int
 operator|)
 name|len
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 else|else
 block|{
@@ -371,6 +376,9 @@ operator|=
 name|j
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -417,7 +425,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|des_key_schedule
+name|DES_key_schedule
 name|k
 decl_stmt|;
 name|unsigned
@@ -522,7 +530,7 @@ operator|)
 operator||
 literal|0x20
 expr_stmt|;
-name|des_set_odd_parity
+name|DES_set_odd_parity
 argument_list|(
 operator|&
 name|c
@@ -530,26 +538,28 @@ operator|->
 name|h
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|c
 operator|->
 name|h
 argument_list|,
+operator|&
 name|k
 argument_list|)
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|d
 argument_list|,
+operator|&
 name|k
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|des_set_odd_parity
+name|DES_set_odd_parity
 argument_list|(
 operator|&
 name|c
@@ -557,20 +567,22 @@ operator|->
 name|hh
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|c
 operator|->
 name|hh
 argument_list|,
+operator|&
 name|k
 argument_list|)
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|dd
 argument_list|,
+operator|&
 name|k
 argument_list|,
 literal|1
@@ -653,7 +665,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MDC2_Final
 parameter_list|(
 name|unsigned
@@ -781,6 +793,9 @@ argument_list|,
 name|MDC2_BLOCK
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ssl_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/buffer.h>
 end_include
 
@@ -35,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssl_locl.h"
 end_include
 
 begin_function_decl
@@ -109,6 +109,16 @@ condition|(
 name|init
 condition|)
 block|{
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|(
@@ -146,6 +156,12 @@ expr_stmt|;
 name|init
 operator|=
 literal|0
+expr_stmt|;
+block|}
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
 expr_stmt|;
 block|}
 return|return

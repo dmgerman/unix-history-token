@@ -392,7 +392,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 name|cipher
 operator|=
 name|EVP_des_ede3_cbc

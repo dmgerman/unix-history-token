@@ -78,7 +78,7 @@ end_define
 
 begin_function
 name|DES_LONG
-name|des_quad_cksum
+name|DES_quad_cksum
 parameter_list|(
 specifier|const
 name|unsigned
@@ -86,7 +86,7 @@ name|char
 modifier|*
 name|input
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 name|output
 index|[]
 parameter_list|,
@@ -96,7 +96,7 @@ parameter_list|,
 name|int
 name|out_count
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|seed
 parameter_list|)

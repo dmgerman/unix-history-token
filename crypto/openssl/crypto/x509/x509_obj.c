@@ -217,6 +217,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 name|buf
 return|;

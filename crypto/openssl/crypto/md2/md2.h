@@ -22,7 +22,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_MD2
+name|OPENSSL_NO_MD2
 end_ifdef
 
 begin_error
@@ -109,7 +109,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MD2_Init
 parameter_list|(
 name|MD2_CTX
@@ -117,7 +117,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MD2_Update
 parameter_list|(
 name|MD2_CTX
@@ -135,7 +135,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MD2_Final
 parameter_list|(
 name|unsigned

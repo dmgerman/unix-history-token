@@ -546,6 +546,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|"%s"
+argument_list|,
 operator|*
 name|pp
 argument_list|)
@@ -783,7 +785,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -1064,7 +1066,10 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

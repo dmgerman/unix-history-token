@@ -15,7 +15,7 @@ end_include
 
 begin_function
 name|DES_LONG
-name|des_cbc_cksum
+name|DES_cbc_cksum
 parameter_list|(
 specifier|const
 name|unsigned
@@ -23,17 +23,18 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|output
 parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|,
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|ivec
 parameter_list|)
@@ -171,7 +172,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG

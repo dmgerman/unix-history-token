@@ -25,10 +25,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_IDEA
+name|OPENSSL_NO_IDEA
 end_ifdef
 
 begin_function
@@ -858,7 +864,7 @@ argument_list|(
 literal|"ok\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

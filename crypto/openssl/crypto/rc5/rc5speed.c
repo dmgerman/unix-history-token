@@ -21,14 +21,14 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 operator|&&
 operator|(
 operator|!
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -36,6 +36,12 @@ argument_list|(
 name|__DECC
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MACOSX
+argument_list|)
 end_if
 
 begin_define
@@ -96,12 +102,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__DECC
+name|OPENSSL_SYS_VMS_DECC
 argument_list|)
 operator|&&
 operator|!
@@ -1118,7 +1119,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 return|return
 operator|(

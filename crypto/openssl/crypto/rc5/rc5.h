@@ -33,7 +33,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_RC5
+name|OPENSSL_NO_RC5
 error|#
 directive|error
 error|RC5 is disabled.

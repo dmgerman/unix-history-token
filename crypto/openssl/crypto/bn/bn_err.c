@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -181,6 +181,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|BN_F_BN_EXPAND_INTERNAL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"BN_EXPAND_INTERNAL"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|BN_F_BN_MOD_EXP2_MONT
 argument_list|,
 literal|0
@@ -233,12 +246,38 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|BN_F_BN_MOD_LSHIFT_QUICK
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"BN_mod_lshift_quick"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|BN_F_BN_MOD_MUL_RECIPROCAL
 argument_list|,
 literal|0
 argument_list|)
 block|,
 literal|"BN_mod_mul_reciprocal"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|BN_F_BN_MOD_SQRT
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"BN_mod_sqrt"
 block|}
 block|,
 block|{
@@ -365,6 +404,12 @@ literal|"expand on static bignum data"
 block|}
 block|,
 block|{
+name|BN_R_INPUT_NOT_REDUCED
+block|,
+literal|"input not reduced"
+block|}
+block|,
+block|{
 name|BN_R_INVALID_LENGTH
 block|,
 literal|"invalid length"
@@ -377,6 +422,12 @@ literal|"invalid range"
 block|}
 block|,
 block|{
+name|BN_R_NOT_A_SQUARE
+block|,
+literal|"not a square"
+block|}
+block|,
+block|{
 name|BN_R_NOT_INITIALIZED
 block|,
 literal|"not initialized"
@@ -386,6 +437,18 @@ block|{
 name|BN_R_NO_INVERSE
 block|,
 literal|"no inverse"
+block|}
+block|,
+block|{
+name|BN_R_P_IS_NOT_PRIME
+block|,
+literal|"p is not prime"
+block|}
+block|,
+block|{
+name|BN_R_TOO_MANY_ITERATIONS
+block|,
+literal|"too many iterations"
 block|}
 block|,
 block|{
@@ -432,7 +495,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_BN

@@ -245,7 +245,7 @@ name|SSL2_MAX_MASTER_KEY_LENGTH_IN_BITS
 value|256
 ifdef|#
 directive|ifdef
-name|MPE
+name|OPENSSL_SYS_MPE
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
@@ -416,12 +416,6 @@ name|char
 modifier|*
 name|mac_data
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|pad_data_UNUSED
-decl_stmt|;
-comment|/* only for binary compatibility with 0.9.6b */
 name|unsigned
 name|char
 modifier|*

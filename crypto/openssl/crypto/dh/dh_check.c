@@ -39,6 +39,7 @@ begin_function
 name|int
 name|DH_check
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh

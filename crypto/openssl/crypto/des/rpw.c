@@ -32,7 +32,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|des_cblock
+name|DES_cblock
 name|k
 decl_stmt|,
 name|k1

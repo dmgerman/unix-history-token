@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SOCK
+name|OPENSSL_NO_SOCK
 end_ifndef
 
 begin_include
@@ -46,7 +46,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_define
@@ -83,7 +83,7 @@ directive|if
 operator|(
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|&&
 name|__VMS_VER
@@ -148,7 +148,18 @@ function_decl|(
 modifier|*
 name|info_callback
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|BIO
+modifier|*
+name|bio
+parameter_list|,
+name|int
+name|state
+parameter_list|,
+name|int
+name|ret
+parameter_list|)
 function_decl|;
 block|}
 name|BIO_CONNECT
@@ -952,7 +963,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|MPE
+name|OPENSSL_SYS_MPE
 argument_list|)
 name|i
 operator|=
@@ -2290,6 +2301,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -2376,7 +2388,12 @@ block|{
 name|char
 name|buf
 index|[
-literal|16
+name|DECIMAL_SIZE
+argument_list|(
+name|int
+argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|sprintf
@@ -2578,6 +2595,7 @@ operator|->
 name|nbio
 argument_list|)
 expr_stmt|;
+comment|/* FIXME: the cast of the function seems unlikely to be a good idea */
 operator|(
 name|void
 operator|)
@@ -2585,6 +2603,10 @@ name|BIO_set_info_callback
 argument_list|(
 name|dbio
 argument_list|,
+operator|(
+name|bio_info_cb
+operator|*
+operator|)
 name|data
 operator|->
 name|info_callback
@@ -2713,7 +2735,16 @@ name|int
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+specifier|const
+expr|struct
+name|bio_st
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|)
 operator|)
 name|fp
 expr_stmt|;

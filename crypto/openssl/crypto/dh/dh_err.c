@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -116,12 +116,12 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
-name|DH_F_DH_NEW
+name|DH_F_DH_NEW_METHOD
 argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"DH_new"
+literal|"DH_new_method"
 block|}
 block|,
 block|{
@@ -190,7 +190,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_DH

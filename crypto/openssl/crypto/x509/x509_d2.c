@@ -34,7 +34,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function

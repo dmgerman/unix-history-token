@@ -16,13 +16,19 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
 end_include
 
 begin_function
@@ -217,6 +223,22 @@ name|num
 operator|*
 literal|2
 expr_stmt|;
+name|OPENSSL_assert
+argument_list|(
+name|s
+operator|->
+name|s2
+operator|->
+name|key_material_length
+operator|<=
+sizeof|sizeof
+name|s
+operator|->
+name|s2
+operator|->
+name|key_material
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ssl2_generate_key_material
@@ -229,11 +251,27 @@ condition|)
 return|return
 literal|0
 return|;
-name|EVP_EncryptInit
+name|OPENSSL_assert
+argument_list|(
+name|c
+operator|->
+name|iv_len
+operator|<=
+sizeof|sizeof
+name|s
+operator|->
+name|session
+operator|->
+name|key_arg
+argument_list|)
+expr_stmt|;
+name|EVP_EncryptInit_ex
 argument_list|(
 name|ws
 argument_list|,
 name|c
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 operator|(
@@ -260,11 +298,13 @@ operator|->
 name|key_arg
 argument_list|)
 expr_stmt|;
-name|EVP_DecryptInit
+name|EVP_DecryptInit_ex
 argument_list|(
 name|rs
 argument_list|,
 name|c
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 operator|(
@@ -617,7 +657,13 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* There has to be a MAC algorithm. */
-name|EVP_DigestInit
+name|EVP_MD_CTX_init
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+name|EVP_DigestInit_ex
 argument_list|(
 operator|&
 name|c
@@ -625,6 +671,8 @@ argument_list|,
 name|s
 operator|->
 name|read_hash
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
@@ -663,7 +711,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|EVP_DigestFinal
+name|EVP_DigestFinal_ex
 argument_list|(
 operator|&
 name|c
@@ -673,7 +721,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* some would say I should zero the md context */
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -683,7 +736,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NO_SSL2 */
+comment|/* !OPENSSL_NO_SSL2 */
 end_comment
 
 begin_if

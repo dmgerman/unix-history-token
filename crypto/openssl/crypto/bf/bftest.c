@@ -29,10 +29,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_BF
+name|OPENSSL_NO_BF
 end_ifdef
 
 begin_function
@@ -2964,7 +2970,7 @@ operator|=
 name|test
 argument_list|()
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|ret
 argument_list|)
@@ -4314,7 +4320,8 @@ name|cbc_in
 argument_list|,
 literal|0
 argument_list|,
-literal|40
+sizeof|sizeof
+name|cbc_in
 argument_list|)
 expr_stmt|;
 name|memset
@@ -4323,7 +4330,8 @@ name|cbc_out
 argument_list|,
 literal|0
 argument_list|,
-literal|40
+sizeof|sizeof
+name|cbc_out
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -4332,7 +4340,8 @@ name|iv
 argument_list|,
 name|cbc_iv
 argument_list|,
-literal|8
+sizeof|sizeof
+name|iv
 argument_list|)
 expr_stmt|;
 name|BF_cbc_encrypt

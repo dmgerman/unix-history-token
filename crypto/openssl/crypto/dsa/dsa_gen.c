@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|HASH
-value|SHA
+value|EVP_sha()
 end_define
 
 begin_else
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|HASH
-value|SHA1
+value|EVP_sha1()
 end_define
 
 begin_endif
@@ -54,7 +54,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SHA
+name|OPENSSL_NO_SHA
 end_ifndef
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/sha.h>
+file|<openssl/evp.h>
 end_include
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/sha.h>
 end_include
 
 begin_function
@@ -591,22 +597,34 @@ condition|)
 break|break;
 block|}
 comment|/* step 2 */
-name|HASH
+name|EVP_Digest
 argument_list|(
 name|seed
 argument_list|,
 name|SHA_DIGEST_LENGTH
 argument_list|,
 name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|HASH
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|HASH
+name|EVP_Digest
 argument_list|(
 name|buf
 argument_list|,
 name|SHA_DIGEST_LENGTH
 argument_list|,
 name|buf2
+argument_list|,
+name|NULL
+argument_list|,
+name|HASH
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -839,13 +857,19 @@ literal|0
 condition|)
 break|break;
 block|}
-name|HASH
+name|EVP_Digest
 argument_list|(
 name|buf
 argument_list|,
 name|SHA_DIGEST_LENGTH
 argument_list|,
 name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|HASH
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* step 8 */

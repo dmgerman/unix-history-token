@@ -595,11 +595,13 @@ argument_list|,
 literal|" -nocrl         no crl to load, just certs from '-certfile'\n"
 argument_list|)
 expr_stmt|;
-name|EXIT
-argument_list|(
+name|ret
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
 block|}
 name|ERR_load_crypto_strings
 argument_list|()
@@ -974,7 +976,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -1139,7 +1141,10 @@ argument_list|(
 name|crl
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

@@ -34,7 +34,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;

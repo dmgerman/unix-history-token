@@ -58,7 +58,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function_decl
@@ -194,6 +194,38 @@ operator|==
 name|X509_FILETYPE_DEFAULT
 condition|)
 block|{
+name|file
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|Getenv
+argument_list|(
+name|X509_get_default_cert_file_env
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file
+condition|)
+name|ok
+operator|=
+operator|(
+name|X509_load_cert_crl_file
+argument_list|(
+name|ctx
+argument_list|,
+name|file
+argument_list|,
+name|X509_FILETYPE_PEM
+argument_list|)
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
+else|else
 name|ok
 operator|=
 operator|(
@@ -222,36 +254,6 @@ name|X509_F_BY_FILE_CTRL
 argument_list|,
 name|X509_R_LOADING_DEFAULTS
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|file
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Getenv
-argument_list|(
-name|X509_get_default_cert_file_env
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|ok
-operator|=
-operator|(
-name|X509_load_cert_crl_file
-argument_list|(
-name|ctx
-argument_list|,
-name|file
-argument_list|,
-name|X509_FILETYPE_PEM
-argument_list|)
-operator|!=
-literal|0
-operator|)
 expr_stmt|;
 block|}
 block|}
@@ -1121,7 +1123,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NO_STDIO */
+comment|/* OPENSSL_NO_STDIO */
 end_comment
 
 end_unit
