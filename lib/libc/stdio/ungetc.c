@@ -351,17 +351,6 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|c
-operator|==
-name|EOF
-condition|)
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
-if|if
-condition|(
 operator|!
 name|__sdidinit
 condition|)
