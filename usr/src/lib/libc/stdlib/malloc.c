@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.11 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,12 +1085,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a program attempts "storage compaction" as mentioned in the  * old malloc man page, it realloc's an already freed block.  Usually  * this is the last block it freed; occasionally it might be farther  * back.  We have to search all the free lists for the block in order  * to determine its bucket: 1st we make one pass thru the lists  * checking only the first block in each; if that fails we search  * ``realloc_srchlen'' blocks in each list for a match (the variable  * is extern so the caller can modify it).  If that fails we just copy  * however many bytes was given to realloc() and hope it's not huge.  */
+comment|/*  * When a program attempts "storage compaction" as mentioned in the  * old malloc man page, it realloc's an already freed block.  Usually  * this is the last block it freed; occasionally it might be farther  * back.  We have to search all the free lists for the block in order  * to determine its bucket: 1st we make one pass thru the lists  * checking only the first block in each; if that fails we search  * ``__realloc_srchlen'' blocks in each list for a match (the variable  * is extern so the caller can modify it).  If that fails we just copy  * however many bytes was given to realloc() and hope it's not huge.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|realloc_srchlen
+name|__realloc_srchlen
 init|=
 literal|4
 decl_stmt|;
@@ -1194,7 +1194,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Already free, doing "compaction". 		 * 		 * Search for the old block of memory on the 		 * free list.  First, check the most common 		 * case (last element free'd), then (this failing) 		 * the last ``realloc_srchlen'' items free'd. 		 * If all lookups fail, then assume the size of 		 * the memory block being realloc'd is the 		 * largest possible (so that all "nbytes" of new 		 * memory are copied into).  Note that this could cause 		 * a memory fault if the old area was tiny, and the moon 		 * is gibbous.  However, that is very unlikely. 		 */
+comment|/* 		 * Already free, doing "compaction". 		 * 		 * Search for the old block of memory on the 		 * free list.  First, check the most common 		 * case (last element free'd), then (this failing) 		 * the last ``__realloc_srchlen'' items free'd. 		 * If all lookups fail, then assume the size of 		 * the memory block being realloc'd is the 		 * largest possible (so that all "nbytes" of new 		 * memory are copied into).  Note that this could cause 		 * a memory fault if the old area was tiny, and the moon 		 * is gibbous.  However, that is very unlikely. 		 */
 if|if
 condition|(
 operator|(
@@ -1217,7 +1217,7 @@ name|findbucket
 argument_list|(
 name|op
 argument_list|,
-name|realloc_srchlen
+name|__realloc_srchlen
 argument_list|)
 operator|)
 operator|<
