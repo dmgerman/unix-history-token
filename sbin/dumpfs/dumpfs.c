@@ -1264,6 +1264,12 @@ operator|)
 return|;
 name|err
 label|:
+name|libufs_printerror
+argument_list|(
+operator|&
+name|disk
+argument_list|)
+expr_stmt|;
 name|ufs_disk_close
 argument_list|(
 operator|&
