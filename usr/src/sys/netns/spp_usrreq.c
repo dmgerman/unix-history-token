@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)spp_usrreq.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)spp_usrreq.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/tcp_timer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ns.h"
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"spidp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"spp_timer.h"
 end_include
 
 begin_include
@@ -579,10 +579,10 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_KEEP
+name|SPPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 switch|switch
 condition|(
@@ -806,7 +806,7 @@ name|s_force
 operator|=
 literal|1
 operator|+
-name|TCPT_KEEP
+name|SPPT_KEEP
 expr_stmt|;
 name|sppstat
 operator|.
@@ -817,10 +817,10 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_KEEP
+name|SPPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 block|}
 break|break;
@@ -863,7 +863,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 literal|0
@@ -872,10 +872,10 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_KEEP
+name|SPPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 name|soisconnected
 argument_list|(
@@ -964,7 +964,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 literal|0
@@ -1014,7 +1014,7 @@ name|s_rtt
 operator|<<
 literal|1
 expr_stmt|;
-name|TCPT_RANGESET
+name|SPPT_RANGESET
 argument_list|(
 name|cb
 operator|->
@@ -1036,9 +1036,9 @@ operator|)
 operator|>>
 literal|1
 argument_list|,
-name|TCPTV_MIN
+name|SPPTV_MIN
 argument_list|,
-name|TCPTV_REXMTMAX
+name|SPPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 name|cb
@@ -1543,7 +1543,7 @@ name|s_force
 operator|=
 literal|1
 operator|+
-name|TCPT_REXMT
+name|SPPT_REXMT
 expr_stmt|;
 operator|(
 name|void
@@ -1564,7 +1564,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 name|cb
@@ -1819,7 +1819,7 @@ name|s_rxtshift
 operator|=
 literal|0
 expr_stmt|;
-name|TCPT_RANGESET
+name|SPPT_RANGESET
 argument_list|(
 name|cb
 operator|->
@@ -1841,9 +1841,9 @@ operator|)
 operator|>>
 literal|1
 argument_list|,
-name|TCPTV_MIN
+name|SPPTV_MIN
 argument_list|,
-name|TCPTV_REXMTMAX
+name|SPPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -1865,7 +1865,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 literal|0
@@ -1884,7 +1884,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 operator|==
 literal|0
@@ -1893,7 +1893,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 name|cb
@@ -4023,7 +4023,7 @@ name|s_force
 operator|==
 literal|1
 operator|+
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 condition|)
 block|{
 if|if
@@ -4037,7 +4037,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 operator|=
 literal|0
@@ -4094,7 +4094,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 literal|0
@@ -4290,7 +4290,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|==
 literal|0
@@ -4299,7 +4299,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 operator|==
 literal|0
@@ -4765,14 +4765,14 @@ operator|!=
 operator|(
 literal|1
 operator|+
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 operator|)
 operator|||
 name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 operator|==
 literal|0
@@ -4838,7 +4838,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|==
 literal|0
@@ -4856,7 +4856,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 name|cb
@@ -4869,7 +4869,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 condition|)
 block|{
@@ -4877,7 +4877,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 operator|=
 literal|0
@@ -4947,7 +4947,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|==
 literal|0
@@ -4956,7 +4956,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 name|cb
@@ -5270,7 +5270,7 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|&&
 name|spp_do_persist_panics
@@ -5281,13 +5281,13 @@ literal|"spp_output REXMT"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start/restart persistance timer. 	 */
-name|TCPT_RANGESET
+name|SPPT_RANGESET
 argument_list|(
 name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 index|]
 argument_list|,
 name|t
@@ -5299,9 +5299,9 @@ operator|->
 name|s_rxtshift
 index|]
 argument_list|,
-name|TCPTV_PERSMIN
+name|SPPTV_PERSMIN
 argument_list|,
-name|TCPTV_PERSMAX
+name|SPPTV_PERSMAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -5310,7 +5310,7 @@ name|cb
 operator|->
 name|s_rxtshift
 operator|<
-name|TCP_MAXRXTSHIFT
+name|SPP_MAXRXTSHIFT
 condition|)
 name|cb
 operator|->
@@ -6277,17 +6277,17 @@ name|cb
 operator|->
 name|s_rtt
 operator|=
-name|TCPTV_SRTTBASE
+name|SPPTV_SRTTBASE
 expr_stmt|;
 name|cb
 operator|->
 name|s_rttvar
 operator|=
-name|TCPTV_SRTTDFLT
+name|SPPTV_SRTTDFLT
 operator|<<
 literal|2
 expr_stmt|;
-name|TCPT_RANGESET
+name|SPPT_RANGESET
 argument_list|(
 name|cb
 operator|->
@@ -6295,13 +6295,13 @@ name|s_rxtcur
 argument_list|,
 operator|(
 operator|(
-name|TCPTV_SRTTBASE
+name|SPPTV_SRTTBASE
 operator|>>
 literal|2
 operator|)
 operator|+
 operator|(
-name|TCPTV_SRTTDFLT
+name|SPPTV_SRTTDFLT
 operator|<<
 literal|2
 operator|)
@@ -6309,9 +6309,9 @@ operator|)
 operator|>>
 literal|1
 argument_list|,
-name|TCPTV_MIN
+name|SPPTV_MIN
 argument_list|,
-name|TCPTV_REXMTMAX
+name|SPPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 name|nsp
@@ -6493,10 +6493,10 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_KEEP
+name|SPPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 name|cb
 operator|->
@@ -6504,7 +6504,7 @@ name|s_force
 operator|=
 literal|1
 operator|+
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 comment|/* 		 * Other party is required to respond to 		 * the port I send from, but he is not 		 * required to answer from where I am sending to, 		 * so allow wildcarding. 		 * original port I am sending to is still saved in 		 * cb->s_dport. 		 */
 name|nsp
@@ -7526,7 +7526,7 @@ begin_decl_stmt
 name|int
 name|spp_backoff
 index|[
-name|TCP_MAXRXTSHIFT
+name|SPP_MAXRXTSHIFT
 operator|+
 literal|1
 index|]
@@ -7775,7 +7775,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TCPT_NTIMERS
+name|SPPT_NTIMERS
 condition|;
 name|i
 operator|++
@@ -7932,11 +7932,11 @@ condition|)
 block|{
 comment|/* 	 * 2 MSL timeout in shutdown went off.  TCP deletes connection 	 * control block. 	 */
 case|case
-name|TCPT_2MSL
+name|SPPT_2MSL
 case|:
 name|printf
 argument_list|(
-literal|"spp: TCPT_2MSL went off for no reason\n"
+literal|"spp: SPPT_2MSL went off for no reason\n"
 argument_list|)
 expr_stmt|;
 name|cb
@@ -7951,7 +7951,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit one packet. 	 */
 case|case
-name|TCPT_REXMT
+name|SPPT_REXMT
 case|:
 if|if
 condition|(
@@ -7960,14 +7960,14 @@ name|cb
 operator|->
 name|s_rxtshift
 operator|>
-name|TCP_MAXRXTSHIFT
+name|SPP_MAXRXTSHIFT
 condition|)
 block|{
 name|cb
 operator|->
 name|s_rxtshift
 operator|=
-name|TCP_MAXRXTSHIFT
+name|SPP_MAXRXTSHIFT
 expr_stmt|;
 name|sppstat
 operator|.
@@ -8017,7 +8017,7 @@ operator|->
 name|s_rxtshift
 index|]
 expr_stmt|;
-name|TCPT_RANGESET
+name|SPPT_RANGESET
 argument_list|(
 name|cb
 operator|->
@@ -8025,16 +8025,16 @@ name|s_rxtcur
 argument_list|,
 name|rexmt
 argument_list|,
-name|TCPTV_MIN
+name|SPPTV_MIN
 argument_list|,
-name|TCPTV_REXMTMAX
+name|SPPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_REXMT
+name|SPPT_REXMT
 index|]
 operator|=
 name|cb
@@ -8048,7 +8048,7 @@ name|cb
 operator|->
 name|s_rxtshift
 operator|>
-name|TCP_MAXRXTSHIFT
+name|SPP_MAXRXTSHIFT
 operator|/
 literal|4
 condition|)
@@ -8149,7 +8149,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Persistance timer into zero window. 	 * Force a probe to be sent. 	 */
 case|case
-name|TCPT_PERSIST
+name|SPPT_PERSIST
 case|:
 name|sppstat
 operator|.
@@ -8179,7 +8179,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
 case|case
-name|TCPT_KEEP
+name|SPPT_KEEP
 case|:
 name|sppstat
 operator|.
@@ -8216,7 +8216,7 @@ name|cb
 operator|->
 name|s_idle
 operator|>=
-name|TCPTV_MAXIDLE
+name|SPPTV_MAXIDLE
 condition|)
 goto|goto
 name|dropit
@@ -8253,10 +8253,10 @@ name|cb
 operator|->
 name|s_timer
 index|[
-name|TCPT_KEEP
+name|SPPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|SPPTV_KEEP
 expr_stmt|;
 break|break;
 name|dropit
