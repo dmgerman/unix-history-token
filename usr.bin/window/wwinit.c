@@ -634,11 +634,9 @@ default|default:
 case|case
 name|B0
 case|:
-name|wwbaud
-operator|=
-literal|0
-expr_stmt|;
-break|break;
+goto|goto
+name|bad
+goto|;
 case|case
 name|B50
 case|:
