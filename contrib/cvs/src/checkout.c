@@ -102,6 +102,8 @@ literal|"\t-P\tPrune empty directories.\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
 block|,
+literal|"\t-T\tCreate Template file from local repository for remote commit.\n"
+block|,
 literal|"\t-c\t\"cat\" the module database.\n"
 block|,
 literal|"\t-f\tForce a head revision match if tag/date not found.\n"
@@ -268,6 +270,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|pull_template
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|preload_update_dir
@@ -401,7 +412,7 @@ name|CHECKOUT
 expr_stmt|;
 name|valid_options
 operator|=
-literal|"+ANnk:d:flRpQqcsr:D:j:P"
+literal|"+ANnk:d:flRpTQqcsr:D:j:P"
 expr_stmt|;
 name|valid_usage
 operator|=
@@ -496,6 +507,14 @@ case|:
 name|run_module_prog
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|pull_template
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3455,6 +3474,8 @@ argument_list|,
 name|join_rev2
 argument_list|,
 name|preload_update_dir
+argument_list|,
+name|pull_template
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3755,6 +3776,8 @@ argument_list|,
 name|join_rev2
 argument_list|,
 name|preload_update_dir
+argument_list|,
+name|pull_template
 argument_list|)
 expr_stmt|;
 name|out

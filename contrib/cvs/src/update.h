@@ -61,6 +61,9 @@ operator|,
 name|char
 operator|*
 name|preload_update_dir
+operator|,
+name|int
+name|xpull_template
 operator|)
 argument_list|)
 decl_stmt|;

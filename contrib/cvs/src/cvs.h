@@ -3231,6 +3231,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|WriteTemplate
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|dir
+operator|,
+name|char
+operator|*
+name|update_dir
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|cat_module
 name|PROTO
 argument_list|(

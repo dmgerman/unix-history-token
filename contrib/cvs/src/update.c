@@ -520,6 +520,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|pull_template
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|update_build_dirs
 init|=
 literal|0
@@ -636,6 +645,8 @@ literal|"\t-I ign\tMore files to ignore (! to reset).\n"
 block|,
 literal|"\t-W spec\tWrappers specification line.\n"
 block|,
+literal|"\t-T\tUpdate CVS/Template.\n"
+block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
@@ -679,6 +690,11 @@ name|int
 name|which
 decl_stmt|;
 comment|/* where to look for files and dirs */
+name|int
+name|xpull_template
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -713,7 +729,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+ApCPflRQqduk:r:D:j:I:W:"
+literal|"+ApCPflRQTqduk:r:D:j:I:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -827,6 +843,14 @@ literal|"-q or -Q must be specified before \"%s\""
 argument_list|,
 name|command_name
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|xpull_template
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1631,6 +1655,8 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|,
+name|xpull_template
 argument_list|)
 expr_stmt|;
 comment|/* free the space Make_Date allocated if necessary */
@@ -1690,6 +1716,8 @@ parameter_list|,
 name|xjoin_rev2
 parameter_list|,
 name|preload_update_dir
+parameter_list|,
+name|xpull_template
 parameter_list|)
 name|int
 name|argc
@@ -1744,6 +1772,9 @@ name|char
 modifier|*
 name|preload_update_dir
 decl_stmt|;
+name|int
+name|xpull_template
+decl_stmt|;
 block|{
 name|int
 name|err
@@ -1786,6 +1817,10 @@ expr_stmt|;
 name|pipeout
 operator|=
 name|xpipeout
+expr_stmt|;
+name|pull_template
+operator|=
+name|xpull_template
 expr_stmt|;
 comment|/* setup the join support */
 name|join_rev1
@@ -3811,6 +3846,20 @@ expr_stmt|;
 name|nonbranch
 operator|=
 literal|0
+expr_stmt|;
+block|}
+comment|/* keep the CVS/Template file current */
+if|if
+condition|(
+name|pull_template
+condition|)
+block|{
+name|WriteTemplate
+argument_list|(
+name|dir
+argument_list|,
+name|update_dir
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* initialize the ignore list for this directory */
