@@ -3319,7 +3319,24 @@ name|bo_numoutput
 condition|)
 name|panic
 argument_list|(
-literal|"Clean vnode has pending I/O's"
+literal|"%p: Clean vnode has pending I/O's"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"%p: Non-zero use count"
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3332,7 +3349,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"Non-zero write count"
+literal|"%p: Non-zero write count"
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
