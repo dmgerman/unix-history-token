@@ -898,7 +898,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX  * Callouts should be moved into struct tcp directly.  They are currently  * separate becuase the tcpcb structure is exported to userland for sysctl  * parsing purposes, which do not know about callouts.  */
+comment|/*  * XXX  * Callouts should be moved into struct tcp directly.  They are currently  * separate because the tcpcb structure is exported to userland for sysctl  * parsing purposes, which do not know about callouts.  */
 end_comment
 
 begin_struct

@@ -2324,7 +2324,7 @@ operator||=
 name|NOCROSSMOUNT
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * becuase lookup() will dereference ni_startdir. 	 */
+comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * because lookup() will dereference ni_startdir. 	 */
 name|cnp
 operator|->
 name|cn_thread

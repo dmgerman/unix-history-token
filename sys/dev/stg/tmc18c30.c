@@ -3881,7 +3881,7 @@ name|sl_Tnexus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX: 	 * We should ack the reselection as soon as possible, 	 * becuase the target would abort the current reselection seq    	 * due to reselection timeout. 	 */
+comment|/* XXX: 	 * We should ack the reselection as soon as possible, 	 * because the target would abort the current reselection seq    	 * due to reselection timeout. 	 */
 name|tout
 operator|=
 name|STG_DELAY_SELECT_POLLING_MAX
