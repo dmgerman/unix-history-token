@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.82 2004/03/25 21:56:28 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.83 2004/04/09 17:08:12 rsm Exp   */
 end_comment
 
 begin_comment
@@ -4782,6 +4782,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_XIRCOM_CE2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CE2
+value|0x010a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CE2
+value|"Xircom CreditCard Ethernet II"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_XIRCOM_CE3
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -4797,27 +4818,27 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_XIRCOM_CE3
-value|"Xircom CreditCard 10/100 Ethernet"
+value|"Xircom CreditCard Ethernet 10/100"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_XIRCOM_CE2
+name|PCMCIA_CIS_XIRCOM_CE2_2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_XIRCOM_CE2
+name|PCMCIA_PRODUCT_XIRCOM_CE2_2
 value|0x010b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_XIRCOM_CE2
+name|PCMCIA_STR_XIRCOM_CE2_2
 value|"Xircom CreditCard Ethernet II"
 end_define
 
@@ -4929,6 +4950,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_XIRCOM_CEM2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CEM2
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CEM2
+value|"Xircom CreditCard Ethernet + Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_CEM56
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CEM56
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CEM56
+value|"Xircom CreditCard Ethernet + Modem 56"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_REM10
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_REM10
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_REM10
+value|"Xircom CreditCard Ethernet 10 + Modem 56"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_XIRCOM_REM56
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -4950,6 +5034,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_XIRCOM_XEM5600
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_XEM5600
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_XEM5600
+value|"Xircom 10/100 Network + 56K Modem PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_XIRCOM_CEM28
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -4965,27 +5070,27 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_XIRCOM_CEM28
-value|"Xircom CreditCard Ethernet + Modem 28"
+value|"Xircom CreditCard Ethernet + Modem 28.8"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_XIRCOM_CEM56
+name|PCMCIA_CIS_XIRCOM_CEM56_2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_XIRCOM_CEM56
+name|PCMCIA_PRODUCT_XIRCOM_CEM56_2
 value|0x110b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_XIRCOM_CEM56
+name|PCMCIA_STR_XIRCOM_CEM56_2
 value|"Xircom CreditCard Ethernet + Modem 56"
 end_define
 
@@ -5000,14 +5105,35 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_XIRCOM_CEM33
-value|0x110d
+value|0x110c
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCMCIA_STR_XIRCOM_CEM33
-value|"Xircom CreditCard Ethernet + Modem 33"
+value|"Xircom CreditCard Ethernet + Modem 33.6"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_CEM33_2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CEM33_2
+value|0x110d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CEM33_2
+value|"Xircom CreditCard Ethernet + Modem 33.6"
 end_define
 
 begin_comment
