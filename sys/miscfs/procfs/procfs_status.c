@@ -182,7 +182,7 @@ operator|->
 name|p_pid
 else|:
 literal|0
-operator|,
+expr_stmt|;
 name|pgid
 operator|=
 name|p
