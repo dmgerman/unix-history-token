@@ -1817,6 +1817,10 @@ name|EDS
 operator|.
 name|eventType
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|aif
 operator|->
 name|data
@@ -1829,6 +1833,10 @@ name|EDS
 operator|.
 name|DsNum
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|aif
 operator|->
 name|data
