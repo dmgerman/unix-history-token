@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.31	81/04/13	*/
+comment|/*	conf.c	4.32	81/05/05	*/
 end_comment
 
 begin_include
@@ -560,7 +560,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|tsioctl
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
 name|tsdump
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsreset
 value|nodev
 end_define
 
@@ -1816,11 +1830,11 @@ block|,
 name|tswrite
 block|,
 comment|/*16*/
-name|nodev
+name|tsioctl
 block|,
 name|nodev
 block|,
-name|nulldev
+name|tsreset
 block|,
 literal|0
 block|,
@@ -2131,6 +2145,14 @@ name|nodev
 block|,
 name|nodev
 block|,
+operator|(
+name|char
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|()
+operator|)
 name|nodev
 block|,
 name|nodev
