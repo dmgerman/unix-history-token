@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.10.4.1 1995/08/30 07:49:58 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.2 1995/10/09 11:16:28 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,40 +1193,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DebugFD
-operator|!=
-operator|-
-literal|1
-condition|)
-name|dup2
-argument_list|(
-name|DebugFD
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|close
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|open
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
-argument_list|)
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|i
 operator|=
 name|execl
