@@ -466,12 +466,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_BIO_H_
-end_ifndef
-
 begin_function_decl
 name|void
 name|devstat_end_transaction_bio
@@ -488,11 +482,6 @@ name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
