@@ -2626,16 +2626,19 @@ name|ic_state
 operator|==
 name|IEEE80211_S_RUN
 condition|)
+block|{
+comment|/* 		 * Rather than go directly to scan state, try to 		 * reassociate first.  If that fails then the state 		 * machine will drop us into scanning after timing 		 * out waiting for a probe response. 		 */
 name|ieee80211_new_state
 argument_list|(
 name|ic
 argument_list|,
-name|IEEE80211_S_SCAN
+name|IEEE80211_S_ASSOC
 argument_list|,
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
