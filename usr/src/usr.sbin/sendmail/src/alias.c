@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.18 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.19 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.18 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.19 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|DBMMODE
-value|0666
+value|0644
 end_define
 
 begin_macro
@@ -597,7 +597,7 @@ name|atcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM 	**	version or if the mode of the database is 666 -- this 	**	is an attempt to avoid protection problems.  Note the 	**	unpalatable hack to see if the stat succeeded. 	*/
+comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM. 	**	Note the unpalatable hack to see if the stat succeeded. 	*/
 name|modtime
 operator|=
 name|stb
@@ -672,24 +672,12 @@ name|st_ino
 operator|!=
 literal|0
 operator|&&
-operator|(
-operator|(
-name|stb
-operator|.
-name|st_mode
-operator|&
-literal|0777
-operator|)
-operator|==
-literal|0666
-operator|||
 name|stb
 operator|.
 name|st_uid
 operator|==
 name|geteuid
 argument_list|()
-operator|)
 condition|)
 block|{
 name|init
