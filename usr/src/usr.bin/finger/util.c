@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.8 (Berkeley) %G%"
+literal|"@(#)util.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,9 @@ modifier|*
 name|t
 decl_stmt|;
 name|char
+modifier|*
+name|bp
+decl_stmt|,
 name|name
 index|[
 literal|256
@@ -305,7 +308,7 @@ name|void
 operator|)
 name|strcpy
 argument_list|(
-name|p
+name|bp
 operator|=
 name|tbuf
 argument_list|,
@@ -317,12 +320,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|bp
 operator|==
 literal|'*'
 condition|)
 operator|++
-name|p
+name|bp
 expr_stmt|;
 comment|/* ampersands get replaced by the login name */
 if|if
@@ -333,7 +336,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-name|p
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -423,11 +427,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -454,11 +455,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -485,11 +483,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
