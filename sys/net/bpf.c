@@ -1168,7 +1168,7 @@ name|d
 operator|->
 name|bd_bif
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 	 * Check if this descriptor had requested promiscuous mode. 	 * If so, turn it off. 	 */
 if|if
@@ -1256,7 +1256,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1280,7 +1280,7 @@ name|bp
 operator|->
 name|bif_dlist
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* 		 * Let the driver know that there are no more listeners. 		 */
 operator|*
@@ -1288,7 +1288,7 @@ name|bp
 operator|->
 name|bif_driverp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|BPFIF_UNLOCK
 argument_list|(
@@ -1795,7 +1795,7 @@ name|d
 operator|->
 name|bd_hbuf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1989,7 +1989,7 @@ name|d
 operator|->
 name|bd_hbuf
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|d
 operator|->
@@ -2236,7 +2236,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2375,12 +2375,7 @@ argument_list|,
 operator|&
 name|dst
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|NET_UNLOCK_GIANT
@@ -2442,7 +2437,7 @@ name|d
 operator|->
 name|bd_hbuf
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|d
@@ -2634,7 +2629,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2695,7 +2690,7 @@ name|d
 operator|->
 name|bd_bif
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2805,7 +2800,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 			 * No interface attached yet. 			 */
@@ -2873,7 +2868,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2904,7 +2899,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2936,7 +2931,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2968,7 +2963,7 @@ name|d
 operator|->
 name|bd_bif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -3492,7 +3487,7 @@ name|fp
 operator|->
 name|bf_insns
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3517,7 +3512,7 @@ name|d
 operator|->
 name|bd_filter
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|reset_d
 argument_list|(
@@ -3533,7 +3528,7 @@ if|if
 condition|(
 name|old
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -3653,7 +3648,7 @@ if|if
 condition|(
 name|old
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -3739,7 +3734,7 @@ if|if
 condition|(
 name|theywant
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENXIO
@@ -3759,7 +3754,7 @@ name|bpf_iflist
 init|;
 name|bp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|bp
 operator|=
@@ -3781,7 +3776,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|ifp
 operator|!=
@@ -3837,7 +3832,7 @@ name|d
 operator|->
 name|bd_sbuf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -4417,7 +4412,7 @@ name|bif_dlist
 init|;
 name|d
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|d
 operator|=
@@ -4564,7 +4559,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -4698,7 +4693,7 @@ name|bif_dlist
 init|;
 name|d
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|d
 operator|=
@@ -4904,7 +4899,7 @@ name|bif_dlist
 init|;
 name|d
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|d
 operator|=
@@ -5152,7 +5147,7 @@ name|d
 operator|->
 name|bd_fbuf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 			 * We haven't completed the previous read yet, 			 * so drop the packet. 			 */
@@ -5312,7 +5307,7 @@ name|d
 operator|->
 name|bd_fbuf
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -5343,7 +5338,7 @@ name|d
 operator|->
 name|bd_sbuf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
@@ -5405,7 +5400,7 @@ name|d
 operator|->
 name|bd_sbuf
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
@@ -5423,7 +5418,7 @@ name|d
 operator|->
 name|bd_hbuf
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5440,7 +5435,7 @@ name|d
 operator|->
 name|bd_fbuf
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5587,7 +5582,7 @@ if|if
 condition|(
 name|bp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -5598,7 +5593,7 @@ name|bp
 operator|->
 name|bif_dlist
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bp
 operator|->
@@ -5659,7 +5654,7 @@ name|bp
 operator|->
 name|bif_driverp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 	 * Compute the length of the bpf header.  This is not necessarily 	 * equal to SIZEOF_BPF_HDR because we want to insert spacing such 	 * that the network layer header begins on a longword boundary (for 	 * performance reasons and to alleviate alignment restrictions). 	 */
 name|bp
