@@ -5140,7 +5140,10 @@ block|}
 block|,
 comment|/* 379 = kse_exit */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|kse_wakeup_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t

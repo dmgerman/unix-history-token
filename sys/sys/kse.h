@@ -192,7 +192,9 @@ begin_function_decl
 name|int
 name|kse_wakeup
 parameter_list|(
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

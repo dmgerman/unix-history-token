@@ -1632,6 +1632,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* struct kse_wakeup_args { 	struct kse_mailbox *mbx; }; */
+end_comment
+
 begin_function
 name|int
 name|kse_wakeup
