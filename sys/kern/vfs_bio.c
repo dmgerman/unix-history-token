@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.104.2.8 1998/03/05 12:20:08 dg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.104.2.9 1998/05/06 19:10:59 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -5086,11 +5086,12 @@ block|}
 comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * Normally the vnode is locked so this isn't a problem. 		 * VBLK type I/O requests, however, don't lock the vnode. 		 */
 if|if
 condition|(
-operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
 operator|&&
 name|gbincore
 argument_list|(
