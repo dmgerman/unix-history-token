@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.6	82/09/06	*/
+comment|/*	kern_prot.c	5.7	82/09/12	*/
 end_comment
 
 begin_comment
@@ -800,19 +800,6 @@ name|int
 modifier|*
 name|gp
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"gidsetsize %d, gidset %x\n"
-argument_list|,
-name|uap
-operator|->
-name|gidsetsize
-argument_list|,
-name|uap
-operator|->
-name|gidset
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -894,25 +881,6 @@ name|EFAULT
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"copied in %d %d ... \n"
-argument_list|,
-name|u
-operator|.
-name|u_groups
-index|[
-literal|0
-index|]
-argument_list|,
-name|u
-operator|.
-name|u_groups
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|gp
