@@ -164,6 +164,9 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 comment|/* handle obsolete syntax */
 while|while
 condition|(
@@ -263,6 +266,10 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -288,10 +295,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|argv
@@ -300,6 +306,18 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|argc
 operator|--
 operator|,
@@ -514,7 +532,7 @@ condition|)
 do|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
