@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpcinfo.c,v 1.6 1997/08/06 06:49:06 charnier Exp $"
+literal|"$Id: rpcinfo.c,v 1.7 1998/06/09 04:30:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_define
@@ -234,27 +240,6 @@ name|get_inet_address
 parameter_list|(
 comment|/*struct sockaddr_in *addr, char *host*/
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_long
-name|inet_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* in 4.2BSD, arpa/inet.h called that a in_addr */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
 function_decl|;
 end_function_decl
 
