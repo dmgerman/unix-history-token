@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.14 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4491,6 +4491,22 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|rfp
+operator|->
+name|rf_name
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"readcf: I option value %s unrecognized"
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|clearmode
