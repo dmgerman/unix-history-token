@@ -483,6 +483,13 @@ name|MBOX_ENABLE_TARGET_MODE
 value|0x55
 end_define
 
+begin_define
+define|#
+directive|define
+name|ENABLE_TARGET_FLAG
+value|0x8000
+end_define
+
 begin_comment
 comment|/* These are for the ISP2100 FC cards */
 end_comment
@@ -1039,7 +1046,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RQSTYPE_CTIO0
+name|RQSTYPE_CTIO
 value|0x07
 end_define
 
