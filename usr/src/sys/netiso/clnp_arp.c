@@ -112,43 +112,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_var.h"
+file|"iso_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_map.h"
+file|"iso_map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_snpac.h"
+file|"iso_snpac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"clnp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"clnp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_define
@@ -320,7 +320,10 @@ if|if
 condition|(
 name|destiso
 operator|->
-name|isoa_afi
+name|isoa_genaddr
+index|[
+literal|0
+index|]
 operator|==
 name|AFI_SNA
 condition|)
@@ -379,9 +382,13 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|destiso
 operator|->
-name|sna_idi
+name|isoa_genaddr
+index|[
+literal|1
+index|]
 argument_list|,
 operator|(
 name|caddr_t
@@ -770,13 +777,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|arpreq
+name|arpreq_iso
 modifier|*
 name|ar
 init|=
 operator|(
 expr|struct
-name|arpreq
+name|arpreq_iso
 operator|*
 operator|)
 name|data
@@ -806,7 +813,7 @@ name|ar
 operator|->
 name|arp_pa
 operator|.
-name|sa_family
+name|siso_family
 operator|!=
 name|AF_ISO
 condition|)
