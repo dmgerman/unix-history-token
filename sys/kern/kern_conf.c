@@ -861,42 +861,6 @@ name|no_dump
 value|(dumper_t *)enodev
 end_define
 
-begin_function
-name|struct
-name|cdevsw
-modifier|*
-name|devsw
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|)
-block|{
-if|if
-condition|(
-name|dev
-operator|->
-name|si_devsw
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|dev
-operator|->
-name|si_devsw
-operator|)
-return|;
-return|return
-operator|(
-operator|&
-name|dead_cdevsw
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * struct cdev * and u_dev_t primitives  */
 end_comment
