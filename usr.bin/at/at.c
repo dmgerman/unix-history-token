@@ -334,7 +334,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.14 1998/10/15 13:30:48 mckay Exp $"
+literal|"$Id: at.c,v 1.15 1998/12/06 07:42:09 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,13 +356,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|send_mail
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* External variables */

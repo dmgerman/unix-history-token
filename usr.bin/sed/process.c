@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: process.c,v 1.7 1998/04/29 21:58:36 ache Exp $"
+literal|"$Id: process.c,v 1.8 1998/12/07 05:33:39 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2316,6 +2316,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -2366,6 +2367,7 @@ name|termwidth
 operator|=
 literal|60
 expr_stmt|;
+block|}
 for|for
 control|(
 name|count

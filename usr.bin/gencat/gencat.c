@@ -184,7 +184,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|void
+name|int
 decl|main
 argument_list|(
 if|#
@@ -687,6 +687,9 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_block
 

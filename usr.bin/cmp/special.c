@@ -255,6 +255,7 @@ name|ch1
 operator|!=
 name|ch2
 condition|)
+block|{
 if|if
 condition|(
 name|lflag
@@ -280,6 +281,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|diffmsg
 argument_list|(
 name|file1
@@ -292,6 +294,8 @@ name|line
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
+block|}
 if|if
 condition|(
 name|ch1

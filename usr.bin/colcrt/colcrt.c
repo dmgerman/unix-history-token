@@ -207,10 +207,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|c
-expr_stmt|;
-specifier|register
+decl_stmt|;
 name|char
 modifier|*
 name|cp

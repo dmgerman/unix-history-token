@@ -426,6 +426,7 @@ operator|!=
 operator|*
 name|p2
 condition|)
+block|{
 if|if
 condition|(
 name|lflag
@@ -464,6 +465,7 @@ name|line
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
 if|if
 condition|(
 name|ch

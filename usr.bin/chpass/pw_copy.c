@@ -512,6 +512,7 @@ condition|(
 operator|!
 name|done
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|YP
@@ -621,6 +622,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ferror

@@ -321,17 +321,23 @@ begin_comment
 comment|/* Easter or easter depending days */
 end_comment
 
-begin_extern
-extern|extern f_dayAfter;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_dayAfter
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* days after current date */
 end_comment
 
-begin_extern
-extern|extern f_dayBefore;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_dayBefore
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* days bevore current date */
