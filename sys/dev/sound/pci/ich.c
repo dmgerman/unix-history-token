@@ -3231,6 +3231,19 @@ return|return
 name|BUS_PROBE_DEFAULT
 return|;
 case|case
+literal|0x005910de
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"nVidia nForce4"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 literal|0x74451022
 case|:
 name|device_set_desc
