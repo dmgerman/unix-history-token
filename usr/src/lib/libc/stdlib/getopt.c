@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.10 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,11 +174,17 @@ operator|)
 operator|!=
 literal|'-'
 condition|)
+block|{
+name|place
+operator|=
+name|EMSG
+expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|place
@@ -196,6 +202,10 @@ block|{
 comment|/* found "--" */
 operator|++
 name|optind
+expr_stmt|;
+name|place
+operator|=
+name|EMSG
 expr_stmt|;
 return|return
 operator|(
