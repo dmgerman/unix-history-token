@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.63 1998/03/09 14:25:12 ache Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.64 1998/03/09 15:04:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2259,7 +2259,7 @@ block|{
 block|{
 literal|"XF86Setup"
 block|,
-literal|"Use the fully graphical XFree86 configuration tool."
+literal|"Fully graphical XFree86 configuration tool."
 block|,
 name|NULL
 block|,
@@ -2274,7 +2274,7 @@ block|,
 block|{
 literal|"xf86config"
 block|,
-literal|"Use the shell-script based XFree86 configuration tool."
+literal|"Shell-script based XFree86 configuration tool."
 block|,
 name|NULL
 block|,
@@ -2284,6 +2284,21 @@ name|NULL
 block|,
 name|VAR_XF86_CONFIG
 literal|"=xf86config"
+block|}
+block|,
+block|{
+literal|"XF98Setup"
+block|,
+literal|"Fully graphical XFree86 configuration tool (PC98)."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=XF98Setup"
 block|}
 block|,
 block|{
@@ -5220,29 +5235,6 @@ name|DIST_XF86_PROG
 block|}
 block|,
 block|{
-literal|"ps"
-block|,
-literal|"Postscript documentation"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_PS
-block|}
-block|,
-block|{
 literal|"set"
 block|,
 literal|"XFree86 Setup Utility"
@@ -5263,6 +5255,29 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_SET
+block|}
+block|,
+block|{
+literal|"9set"
+block|,
+literal|"XFree86 Setup Utility (PC98)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_9SET
 block|}
 block|,
 block|{
@@ -5947,29 +5962,6 @@ name|DIST_XF86_SERVER_NEST
 block|}
 block|,
 block|{
-literal|"vfb"
-block|,
-literal|"A virtual frame-buffer server"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_VFB
-block|}
-block|,
-block|{
 literal|"PC98"
 block|,
 literal|"Select an X server for a NEC PC98 [Submenu]"
@@ -6194,6 +6186,29 @@ name|DIST_XF86_SERVER_9LPW
 block|}
 block|,
 block|{
+literal|"9MGA"
+block|,
+literal|"PC98 MGA (Matrox) card"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9MGA
+block|}
+block|,
+block|{
 literal|"9NKV"
 block|,
 literal|"PC98 NKV-NEC (cirrus) card"
@@ -6260,6 +6275,29 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_SERVER_9SPW
+block|}
+block|,
+block|{
+literal|"9SVG"
+block|,
+literal|"PC98 generic SVGA card"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9SVG
 block|}
 block|,
 block|{
