@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3076,7 +3076,7 @@ name|FS_44INODEFMT
 condition|)
 block|{
 comment|/* XXX */
-name|quad_t
+name|u_int64_t
 name|sizepb
 init|=
 name|fs
@@ -4886,7 +4886,7 @@ name|FS_44INODEFMT
 condition|)
 block|{
 comment|/* XXX */
-name|long
+name|int32_t
 modifier|*
 name|lp
 decl_stmt|,
@@ -4897,7 +4897,7 @@ comment|/* XXX */
 name|lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&

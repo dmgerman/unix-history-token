@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -226,7 +226,7 @@ name|long
 operator|,
 name|int
 operator|,
-name|u_long
+name|u_int32_t
 argument_list|(
 operator|*
 argument_list|)
@@ -238,7 +238,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|ino_t
 name|ffs_nodealloccg
 name|__P
 argument_list|(
@@ -556,7 +556,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|(
-name|u_long
+name|u_int32_t
 argument_list|(
 operator|*
 argument_list|)
@@ -1264,7 +1264,7 @@ argument_list|,
 name|request
 argument_list|,
 operator|(
-name|u_long
+name|u_int32_t
 argument_list|(
 operator|*
 argument_list|)
@@ -2129,7 +2129,7 @@ argument_list|,
 name|len
 argument_list|,
 operator|(
-name|u_long
+name|u_int32_t
 argument_list|(
 operator|*
 argument_list|)
@@ -3408,7 +3408,7 @@ comment|/* size for data blocks, mode for inodes */
 end_comment
 
 begin_function_decl
-name|u_long
+name|u_int32_t
 function_decl|(
 modifier|*
 name|allocator
@@ -5739,7 +5739,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_long
+name|ino_t
 name|ffs_nodealloccg
 parameter_list|(
 name|ip
@@ -7862,7 +7862,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|long
+name|int32_t
 modifier|*
 name|sump
 decl_stmt|;
