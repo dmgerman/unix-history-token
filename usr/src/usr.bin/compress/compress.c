@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.8 (Berkeley) %G%"
+literal|"@(#)compress.c	@(#)compress.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,7 +754,7 @@ comment|/* initial number of bits/code */
 end_comment
 
 begin_comment
-comment|/*  * compress.c - File compression ala IEEE Computer, June 1984.  *  * Authors:	Spencer W. Thomas	(decvax!harpo!utah-cs!utah-gr!thomas)  *		Jim McKie		(decvax!mcvax!jim)  *		Steve Davies		(decvax!vax135!petsd!peora!srd)  *		Ken Turkowski		(decvax!decwrl!turtlevax!ken)  *		James A. Woods		(decvax!ihnp4!ames!jaw)  *		Joe Orost		(decvax!vax135!petsd!joe)  *  * $Header: compress.c,v 4.0 85/07/30 12:50:00 joe Release $  * $Log:	compress.c,v $  * Revision 4.0  85/07/30  12:50:00  joe  * Removed ferror() calls in output routine on every output except first.  * Prepared for release to the world.  *   * Revision 3.6  85/07/04  01:22:21  joe  * Remove much wasted storage by overlaying hash table with the tables  * used by decompress: tab_suffix[1<<BITS], stack[8000].  Updated USERMEM  * computations.  Fixed dump_tab() DEBUG routine.  *  * Revision 3.5  85/06/30  20:47:21  jaw  * Change hash function to use exclusive-or.  Rip out hash cache.  These  * speedups render the megamemory version defunct, for now.  Make decoder  * stack global.  Parts of the RCS trunks 2.7, 2.6, and 2.1 no longer apply.  *  * Revision 3.4  85/06/27  12:00:00  ken  * Get rid of all floating-point calculations by doing all compression ratio  * calculations in fixed point.  *  * Revision 3.3  85/06/24  21:53:24  joe  * Incorporate portability suggestion for M_XENIX.  Got rid of text on #else  * and #endif lines.  Cleaned up #ifdefs for vax and interdata.  *  * Revision 3.2  85/06/06  21:53:24  jaw  * Incorporate portability suggestions for Z8000, IBM PC/XT from mailing list.  * Default to "quiet" output (no compression statistics).  *  * Revision 3.1  85/05/12  18:56:13  jaw  * Integrate decompress() stack speedups (from early pointer mods by McKie).  * Repair multi-file USERMEM gaffe.  Unify 'force' flags to mimic semantics  * of SVR2 'pack'.  Streamline block-compress table clear logic.  Increase   * output byte count by magic number size.  *   * Revision 3.0   84/11/27  11:50:00  petsd!joe  * Set HSIZE depending on BITS.  Set BITS depending on USERMEM.  Unrolled  * loops in clear routines.  Added "-C" flag for 2.0 compatibility.  Used  * unsigned compares on Perkin-Elmer.  Fixed foreground check.  *  * Revision 2.7   84/11/16  19:35:39  ames!jaw  * Cache common hash codes based on input statistics; this improves  * performance for low-density raster images.  Pass on #ifdef bundle  * from Turkowski.  *  * Revision 2.6   84/11/05  19:18:21  ames!jaw  * Vary size of hash tables to reduce time for small files.  * Tune PDP-11 hash function.  *  * Revision 2.5   84/10/30  20:15:14  ames!jaw  * Junk chaining; replace with the simpler (and, on the VAX, faster)  * double hashing, discussed within.  Make block compression standard.  *  * Revision 2.4   84/10/16  11:11:11  ames!jaw  * Introduce adaptive reset for block compression, to boost the rate  * another several percent.  (See mailing list notes.)  *  * Revision 2.3   84/09/22  22:00:00  petsd!joe  * Implemented "-B" block compress.  Implemented REVERSE sorting of tab_next.  * Bug fix for last bits.  Changed fwrite to putchar loop everywhere.  *  * Revision 2.2   84/09/18  14:12:21  ames!jaw  * Fold in news changes, small machine typedef from thomas,  * #ifdef interdata from joe.  *  * Revision 2.1   84/09/10  12:34:56  ames!jaw  * Configured fast table lookup for 32-bit machines.  * This cuts user time in half for b<= FBITS, and is useful for news batching  * from VAX to PDP sites.  Also sped up decompress() [fwrite->putc] and  * added signal catcher [plus beef in writeerr()] to delete effluvia.  *  * Revision 2.0   84/08/28  22:00:00  petsd!joe  * Add check for foreground before prompting user.  Insert maxbits into  * compressed file.  Force file being uncompressed to end with ".Z".  * Added "-c" flag and "zcat".  Prepared for release.  *  * Revision 1.10  84/08/24  18:28:00  turtlevax!ken  * Will only compress regular files (no directories), added a magic number  * header (plus an undocumented -n flag to handle old files without headers),  * added -f flag to force overwriting of possibly existing destination file,  * otherwise the user is prompted for a response.  Will tack on a .Z to a  * filename if it doesn't have one when decompressing.  Will only replace  * file if it was compressed.  *  * Revision 1.9  84/08/16  17:28:00  turtlevax!ken  * Removed scanargs(), getopt(), added .Z extension and unlimited number of  * filenames to compress.  Flags may be clustered (-Ddvb12) or separated  * (-D -d -v -b 12), or combination thereof.  Modes and other status is  * copied with copystat().  -O bug for 4.2 seems to have disappeared with  * 1.8.  *  * Revision 1.8  84/08/09  23:15:00  joe  * Made it compatible with vax version, installed jim's fixes/enhancements  *  * Revision 1.6  84/08/01  22:08:00  joe  * Sped up algorithm significantly by sorting the compress chain.  *  * Revision 1.5  84/07/13  13:11:00  srd  * Added C version of vax asm routines.  Changed structure to arrays to  * save much memory.  Do unsigned compares where possible (faster on  * Perkin-Elmer)  *  * Revision 1.4  84/07/05  03:11:11  thomas  * Clean up the code a little and lint it.  (Lint complains about all  * the regs used in the asm, but I'm not going to "fix" this.)  *  * Revision 1.3  84/07/05  02:06:54  thomas  * Minor fixes.  *  * Revision 1.2  84/07/05  00:27:27  thomas  * Add variable bit length output.  *  */
+comment|/*  * compress.c - File compression ala IEEE Computer, June 1984.  *  * Authors:	Spencer W. Thomas	(decvax!utah-cs!thomas)  *		Jim McKie		(decvax!mcvax!jim)  *		Steve Davies		(decvax!vax135!petsd!peora!srd)  *		Ken Turkowski		(decvax!decwrl!turtlevax!ken)  *		James A. Woods		(decvax!ihnp4!ames!jaw)  *		Joe Orost		(decvax!vax135!petsd!joe)  *  * $Header: compress.c,v 4.0 85/07/30 12:50:00 joe Release $  * $Log:	compress.c,v $  * Revision 4.0  85/07/30  12:50:00  joe  * Removed ferror() calls in output routine on every output except first.  * Prepared for release to the world.  *   * Revision 3.6  85/07/04  01:22:21  joe  * Remove much wasted storage by overlaying hash table with the tables  * used by decompress: tab_suffix[1<<BITS], stack[8000].  Updated USERMEM  * computations.  Fixed dump_tab() DEBUG routine.  *  * Revision 3.5  85/06/30  20:47:21  jaw  * Change hash function to use exclusive-or.  Rip out hash cache.  These  * speedups render the megamemory version defunct, for now.  Make decoder  * stack global.  Parts of the RCS trunks 2.7, 2.6, and 2.1 no longer apply.  *  * Revision 3.4  85/06/27  12:00:00  ken  * Get rid of all floating-point calculations by doing all compression ratio  * calculations in fixed point.  *  * Revision 3.3  85/06/24  21:53:24  joe  * Incorporate portability suggestion for M_XENIX.  Got rid of text on #else  * and #endif lines.  Cleaned up #ifdefs for vax and interdata.  *  * Revision 3.2  85/06/06  21:53:24  jaw  * Incorporate portability suggestions for Z8000, IBM PC/XT from mailing list.  * Default to "quiet" output (no compression statistics).  *  * Revision 3.1  85/05/12  18:56:13  jaw  * Integrate decompress() stack speedups (from early pointer mods by McKie).  * Repair multi-file USERMEM gaffe.  Unify 'force' flags to mimic semantics  * of SVR2 'pack'.  Streamline block-compress table clear logic.  Increase   * output byte count by magic number size.  *   * Revision 3.0   84/11/27  11:50:00  petsd!joe  * Set HSIZE depending on BITS.  Set BITS depending on USERMEM.  Unrolled  * loops in clear routines.  Added "-C" flag for 2.0 compatibility.  Used  * unsigned compares on Perkin-Elmer.  Fixed foreground check.  *  * Revision 2.7   84/11/16  19:35:39  ames!jaw  * Cache common hash codes based on input statistics; this improves  * performance for low-density raster images.  Pass on #ifdef bundle  * from Turkowski.  *  * Revision 2.6   84/11/05  19:18:21  ames!jaw  * Vary size of hash tables to reduce time for small files.  * Tune PDP-11 hash function.  *  * Revision 2.5   84/10/30  20:15:14  ames!jaw  * Junk chaining; replace with the simpler (and, on the VAX, faster)  * double hashing, discussed within.  Make block compression standard.  *  * Revision 2.4   84/10/16  11:11:11  ames!jaw  * Introduce adaptive reset for block compression, to boost the rate  * another several percent.  (See mailing list notes.)  *  * Revision 2.3   84/09/22  22:00:00  petsd!joe  * Implemented "-B" block compress.  Implemented REVERSE sorting of tab_next.  * Bug fix for last bits.  Changed fwrite to putchar loop everywhere.  *  * Revision 2.2   84/09/18  14:12:21  ames!jaw  * Fold in news changes, small machine typedef from thomas,  * #ifdef interdata from joe.  *  * Revision 2.1   84/09/10  12:34:56  ames!jaw  * Configured fast table lookup for 32-bit machines.  * This cuts user time in half for b<= FBITS, and is useful for news batching  * from VAX to PDP sites.  Also sped up decompress() [fwrite->putc] and  * added signal catcher [plus beef in writeerr()] to delete effluvia.  *  * Revision 2.0   84/08/28  22:00:00  petsd!joe  * Add check for foreground before prompting user.  Insert maxbits into  * compressed file.  Force file being uncompressed to end with ".Z".  * Added "-c" flag and "zcat".  Prepared for release.  *  * Revision 1.10  84/08/24  18:28:00  turtlevax!ken  * Will only compress regular files (no directories), added a magic number  * header (plus an undocumented -n flag to handle old files without headers),  * added -f flag to force overwriting of possibly existing destination file,  * otherwise the user is prompted for a response.  Will tack on a .Z to a  * filename if it doesn't have one when decompressing.  Will only replace  * file if it was compressed.  *  * Revision 1.9  84/08/16  17:28:00  turtlevax!ken  * Removed scanargs(), getopt(), added .Z extension and unlimited number of  * filenames to compress.  Flags may be clustered (-Ddvb12) or separated  * (-D -d -v -b 12), or combination thereof.  Modes and other status is  * copied with copystat().  -O bug for 4.2 seems to have disappeared with  * 1.8.  *  * Revision 1.8  84/08/09  23:15:00  joe  * Made it compatible with vax version, installed jim's fixes/enhancements  *  * Revision 1.6  84/08/01  22:08:00  joe  * Sped up algorithm significantly by sorting the compress chain.  *  * Revision 1.5  84/07/13  13:11:00  srd  * Added C version of vax asm routines.  Changed structure to arrays to  * save much memory.  Do unsigned compares where possible (faster on  * Perkin-Elmer)  *  * Revision 1.4  84/07/05  03:11:11  thomas  * Clean up the code a little and lint it.  (Lint complains about all  * the regs used in the asm, but I'm not going to "fix" this.)  *  * Revision 1.3  84/07/05  02:06:54  thomas  * Minor fixes.  *  * Revision 1.2  84/07/05  00:27:27  thomas  * Add variable bit length output.  *  */
 end_comment
 
 begin_decl_stmt
@@ -796,6 +796,23 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1116,6 +1133,20 @@ begin_comment
 comment|/* Normal machine */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sel
+end_ifdef
+
+begin_comment
+comment|/* gould base register braindamage */
+end_comment
+
+begin_comment
+comment|/*NOBASE*/
+end_comment
+
 begin_decl_stmt
 name|count_int
 name|htab
@@ -1134,6 +1165,40 @@ name|HSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*NOBASE*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|count_int
+name|htab
+index|[
+name|HSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|short
+name|codetab
+index|[
+name|HSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|sel
+end_endif
 
 begin_define
 define|#
@@ -1273,6 +1338,22 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* per-file status */
+end_comment
+
+begin_decl_stmt
+name|int
+name|perm_stat
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* permanent status */
+end_comment
 
 begin_function_decl
 name|code_int
@@ -1500,11 +1581,17 @@ begin_function_decl
 name|int
 function_decl|(
 modifier|*
-name|bgnd_flag
+name|oldint
 function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|bgnd_flag
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1580,11 +1667,15 @@ parameter_list|()
 function|;
 end_function
 
+begin_comment
+comment|/* This bg check only works for sh. */
+end_comment
+
 begin_if
 if|if
 condition|(
 operator|(
-name|bgnd_flag
+name|oldint
 operator|=
 name|signal
 argument_list|(
@@ -1613,6 +1704,71 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_expr_stmt
+name|bgnd_flag
+operator|=
+name|oldint
+operator|!=
+name|SIG_DFL
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* This works for csh but we don't want it. */
+end_comment
+
+begin_block
+block|{
+name|int
+name|tgrp
+decl_stmt|;
+if|if
+condition|(
+name|bgnd_flag
+operator|==
+literal|0
+operator|&&
+name|ioctl
+argument_list|(
+literal|2
+argument_list|,
+name|TIOCGPGRP
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tgrp
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|getpgrp
+argument_list|(
+literal|0
+argument_list|)
+operator|!=
+name|tgrp
+condition|)
+name|bgnd_flag
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2075,8 +2231,6 @@ expr_stmt|;
 if|if
 condition|(
 name|do_decomp
-operator|!=
-literal|0
 condition|)
 block|{
 comment|/* DECOMPRESSION */
@@ -2147,6 +2301,10 @@ argument_list|(
 operator|*
 name|fileptr
 argument_list|)
+expr_stmt|;
+name|perm_stat
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -2330,6 +2488,10 @@ argument_list|(
 operator|*
 name|fileptr
 argument_list|)
+expr_stmt|;
+name|perm_stat
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -2568,8 +2730,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|foreground
-argument_list|()
+name|bgnd_flag
+operator|==
+literal|0
+operator|&&
+name|isatty
+argument_list|(
+literal|2
+argument_list|)
 condition|)
 block|{
 name|fprintf
@@ -2678,6 +2846,10 @@ name|perror
 argument_list|(
 name|ofname
 argument_list|)
+expr_stmt|;
+name|perm_stat
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -2970,6 +3142,10 @@ end_if
 begin_expr_stmt
 name|exit
 argument_list|(
+name|perm_stat
+condition|?
+name|perm_stat
+else|:
 name|exit_stat
 argument_list|)
 expr_stmt|;
@@ -5650,6 +5826,10 @@ name|exit_stat
 operator|=
 literal|1
 expr_stmt|;
+name|perm_stat
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -5688,6 +5868,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|exit_stat
+operator|=
+literal|1
+expr_stmt|;
+name|perm_stat
 operator|=
 literal|1
 expr_stmt|;
@@ -5833,50 +6017,6 @@ name|ofname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * This routine returns 1 if we are running in the foreground and stderr  * is a tty.  */
-name|foreground
-argument_list|()
-block|{
-if|if
-condition|(
-name|bgnd_flag
-condition|)
-block|{
-comment|/* background? */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* foreground */
-if|if
-condition|(
-name|isatty
-argument_list|(
-literal|2
-argument_list|)
-condition|)
-block|{
-comment|/* and stderr is a tty */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-block|}
 name|onintr
 argument_list|( )
 block|{
@@ -5903,8 +6043,6 @@ block|{
 if|if
 condition|(
 name|do_decomp
-operator|==
-literal|1
 condition|)
 name|fprintf
 argument_list|(
@@ -6516,7 +6654,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Berkeley 5.8 %G%\n"
+literal|"%s, Berkeley 5.9 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)
