@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.27 1995/11/20 12:19:49 phk Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.28 1995/12/07 12:48:15 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -951,11 +951,14 @@ name|vm_page_alloc
 argument_list|(
 name|kmem_object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|mapvm
 operator|-
 name|vm_map_min
 argument_list|(
 name|kmem_map
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(
@@ -1522,7 +1525,7 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 decl_stmt|;
 name|vm_offset_t
@@ -1716,16 +1719,12 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
-name|NULL
-argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|prev_entry
 operator|->
 name|offset
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-literal|0
+argument_list|)
 argument_list|,
 call|(
 name|vm_size_t
@@ -2406,7 +2405,7 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 decl_stmt|;
 name|vm_offset_t
@@ -4035,9 +4034,7 @@ name|entry
 operator|->
 name|offset
 argument_list|,
-call|(
-name|vm_size_t
-call|)
+name|OFF_TO_IDX
 argument_list|(
 name|entry
 operator|->
@@ -4078,9 +4075,7 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-call|(
-name|vm_size_t
-call|)
+name|OFF_TO_IDX
 argument_list|(
 name|entry
 operator|->
@@ -4445,7 +4440,7 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 decl_stmt|;
 name|vm_map_lock_read
@@ -4749,11 +4744,17 @@ name|vm_object_page_clean
 argument_list|(
 name|object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|offset
 operator|+
 name|size
+argument_list|)
 argument_list|,
 name|syncio
 argument_list|,
@@ -4768,11 +4769,17 @@ name|vm_object_page_remove
 argument_list|(
 name|object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|offset
 operator|+
 name|size
+argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
@@ -5130,10 +5137,15 @@ name|vm_object_page_remove
 argument_list|(
 name|object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|entry
 operator|->
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|entry
 operator|->
 name|offset
@@ -5143,6 +5155,7 @@ name|e
 operator|-
 name|s
 operator|)
+argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
@@ -5159,10 +5172,15 @@ name|vm_object_pmap_remove
 argument_list|(
 name|object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|entry
 operator|->
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|entry
 operator|->
 name|offset
@@ -5172,6 +5190,7 @@ name|e
 operator|-
 name|s
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5475,6 +5494,9 @@ decl_stmt|,
 name|dst_entry
 decl_stmt|;
 block|{
+name|vm_pindex_t
+name|temp_pindex
+decl_stmt|;
 if|if
 condition|(
 name|src_entry
@@ -5548,10 +5570,15 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|dst_entry
 operator|->
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|dst_entry
 operator|->
 name|offset
@@ -5565,6 +5592,7 @@ name|dst_entry
 operator|->
 name|start
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5653,10 +5681,15 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|src_entry
 operator|->
 name|offset
+argument_list|)
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|src_entry
 operator|->
 name|offset
@@ -5671,10 +5704,20 @@ operator|->
 name|start
 operator|)
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Make a copy of the object. 		 */
+name|temp_pindex
+operator|=
+name|OFF_TO_IDX
+argument_list|(
+name|dst_entry
+operator|->
+name|offset
+argument_list|)
+expr_stmt|;
 name|vm_object_copy
 argument_list|(
 name|src_entry
@@ -5683,21 +5726,11 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
-name|src_entry
-operator|->
-name|offset
-argument_list|,
-call|(
-name|vm_size_t
-call|)
+name|OFF_TO_IDX
 argument_list|(
 name|src_entry
 operator|->
-name|end
-operator|-
-name|src_entry
-operator|->
-name|start
+name|offset
 argument_list|)
 argument_list|,
 operator|&
@@ -5708,12 +5741,19 @@ operator|.
 name|vm_object
 argument_list|,
 operator|&
-name|dst_entry
-operator|->
-name|offset
+name|temp_pindex
 argument_list|,
 operator|&
 name|src_needs_copy
+argument_list|)
+expr_stmt|;
+name|dst_entry
+operator|->
+name|offset
+operator|=
+name|IDX_TO_OFF
+argument_list|(
+name|temp_pindex
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we didn't get a copy-object now, mark the source map 		 * entry so that a shadow will be created to hold its changed 		 * pages. 		 */
@@ -6132,7 +6172,7 @@ name|out_entry
 parameter_list|,
 name|object
 parameter_list|,
-name|offset
+name|pindex
 parameter_list|,
 name|out_prot
 parameter_list|,
@@ -6163,9 +6203,9 @@ modifier|*
 name|object
 decl_stmt|;
 comment|/* OUT */
-name|vm_offset_t
+name|vm_pindex_t
 modifier|*
-name|offset
+name|pindex
 decl_stmt|;
 comment|/* OUT */
 name|vm_prot_t
@@ -6523,9 +6563,7 @@ name|entry
 operator|->
 name|offset
 argument_list|,
-call|(
-name|vm_size_t
-call|)
+name|OFF_TO_IDX
 argument_list|(
 name|entry
 operator|->
@@ -6612,9 +6650,7 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-call|(
-name|vm_size_t
-call|)
+name|OFF_TO_IDX
 argument_list|(
 name|entry
 operator|->
@@ -6643,8 +6679,10 @@ expr_stmt|;
 block|}
 comment|/* 	 * Return the object/offset from this entry.  If the entry was 	 * copy-on-write or empty, it has been fixed up. 	 */
 operator|*
-name|offset
+name|pindex
 operator|=
+name|OFF_TO_IDX
+argument_list|(
 operator|(
 name|share_offset
 operator|-
@@ -6656,6 +6694,7 @@ operator|+
 name|entry
 operator|->
 name|offset
+argument_list|)
 expr_stmt|;
 operator|*
 name|object

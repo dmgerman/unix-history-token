@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.12 1995/12/02 18:58:53 bde Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.13 1995/12/07 12:46:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ name|kmem_malloc
 argument_list|(
 name|kmem_map
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -180,7 +180,7 @@ init|;
 name|i
 operator|<
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|/
 operator|(
 sizeof|sizeof

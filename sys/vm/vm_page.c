@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.39 1995/12/03 12:18:39 bde Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.40 1995/12/07 12:48:23 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -252,6 +252,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|page_shift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vm_page_zero_count
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,12 +1143,16 @@ name|__pure
 name|int
 name|vm_page_hash
 parameter_list|(
-name|vm_object_t
 name|object
 parameter_list|,
-name|vm_offset_t
-name|offset
+name|pindex
 parameter_list|)
+name|vm_object_t
+name|object
+decl_stmt|;
+name|vm_pindex_t
+name|pindex
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -1151,11 +1161,7 @@ name|unsigned
 operator|)
 name|object
 operator|+
-operator|(
-name|offset
-operator|>>
-name|PAGE_SHIFT
-operator|)
+name|pindex
 operator|)
 operator|&
 name|vm_page_hash_mask
@@ -1176,7 +1182,7 @@ name|mem
 parameter_list|,
 name|object
 parameter_list|,
-name|offset
+name|pindex
 parameter_list|)
 specifier|register
 name|vm_page_t
@@ -1187,8 +1193,8 @@ name|vm_object_t
 name|object
 decl_stmt|;
 specifier|register
-name|vm_offset_t
-name|offset
+name|vm_pindex_t
+name|pindex
 decl_stmt|;
 block|{
 specifier|register
@@ -1219,9 +1225,9 @@ name|object
 expr_stmt|;
 name|mem
 operator|->
-name|offset
+name|pindex
 operator|=
-name|offset
+name|pindex
 expr_stmt|;
 comment|/* 	 * Insert it into the object_object/offset hash table 	 */
 name|bucket
@@ -1233,7 +1239,7 @@ name|vm_page_hash
 argument_list|(
 name|object
 argument_list|,
-name|offset
+name|pindex
 argument_list|)
 index|]
 expr_stmt|;
@@ -1322,7 +1328,7 @@ name|object
 argument_list|,
 name|mem
 operator|->
-name|offset
+name|pindex
 argument_list|)
 index|]
 expr_stmt|;
@@ -1378,15 +1384,15 @@ name|vm_page_lookup
 parameter_list|(
 name|object
 parameter_list|,
-name|offset
+name|pindex
 parameter_list|)
 specifier|register
 name|vm_object_t
 name|object
 decl_stmt|;
 specifier|register
-name|vm_offset_t
-name|offset
+name|vm_pindex_t
+name|pindex
 decl_stmt|;
 block|{
 specifier|register
@@ -1412,7 +1418,7 @@ name|vm_page_hash
 argument_list|(
 name|object
 argument_list|,
-name|offset
+name|pindex
 argument_list|)
 index|]
 expr_stmt|;
@@ -1455,9 +1461,9 @@ operator|&&
 operator|(
 name|mem
 operator|->
-name|offset
+name|pindex
 operator|==
-name|offset
+name|pindex
 operator|)
 condition|)
 block|{
@@ -1498,7 +1504,7 @@ name|mem
 parameter_list|,
 name|new_object
 parameter_list|,
-name|new_offset
+name|new_pindex
 parameter_list|)
 specifier|register
 name|vm_page_t
@@ -1508,22 +1514,13 @@ specifier|register
 name|vm_object_t
 name|new_object
 decl_stmt|;
-name|vm_offset_t
-name|new_offset
+name|vm_pindex_t
+name|new_pindex
 decl_stmt|;
 block|{
 name|int
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|mem
-operator|->
-name|object
-operator|==
-name|new_object
-condition|)
-return|return;
 name|s
 operator|=
 name|splhigh
@@ -1540,7 +1537,7 @@ name|mem
 argument_list|,
 name|new_object
 argument_list|,
-name|new_offset
+name|new_pindex
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1714,15 +1711,15 @@ name|vm_page_alloc
 parameter_list|(
 name|object
 parameter_list|,
-name|offset
+name|pindex
 parameter_list|,
 name|page_req
 parameter_list|)
 name|vm_object_t
 name|object
 decl_stmt|;
-name|vm_offset_t
-name|offset
+name|vm_pindex_t
+name|pindex
 decl_stmt|;
 name|int
 name|page_req
@@ -1735,31 +1732,26 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
+comment|/* #ifdef DIAGNOSTIC */
+name|mem
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|object
+argument_list|,
+name|pindex
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|offset
-operator|!=
-name|trunc_page
-argument_list|(
-name|offset
-argument_list|)
+name|mem
 condition|)
 name|panic
 argument_list|(
-literal|"vm_page_alloc: offset not page aligned"
+literal|"vm_page_alloc: page already allocated"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mem = vm_page_lookup(object, offset); 	if (mem) 		panic("vm_page_alloc: page already allocated");
-endif|#
-directive|endif
-endif|#
-directive|endif
+comment|/* #endif */
 if|if
 condition|(
 operator|(
@@ -1830,6 +1822,9 @@ condition|(
 name|mem
 condition|)
 block|{
+operator|--
+name|vm_page_zero_count
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1907,6 +1902,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|--
+name|vm_page_zero_count
+expr_stmt|;
 name|mem
 operator|=
 name|vm_page_queue_zero
@@ -2053,6 +2051,9 @@ condition|(
 name|mem
 condition|)
 block|{
+operator|--
+name|vm_page_zero_count
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2130,6 +2131,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|--
+name|vm_page_zero_count
+expr_stmt|;
 name|mem
 operator|=
 name|vm_page_queue_zero
@@ -2264,6 +2268,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|--
+name|vm_page_zero_count
+expr_stmt|;
 name|mem
 operator|=
 name|vm_page_queue_zero
@@ -2366,7 +2373,7 @@ name|mem
 argument_list|,
 name|object
 argument_list|,
-name|offset
+name|pindex
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2784,9 +2791,12 @@ name|m
 argument_list|,
 name|kernel_object
 argument_list|,
+name|OFF_TO_IDX
+argument_list|(
 name|tmp_addr
 operator|-
 name|VM_MIN_KERNEL_ADDRESS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_wire
@@ -2896,11 +2906,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vm_page_free: offset(%ld), bmapped(%d), busy(%d), PG_BUSY(%d)\n"
+literal|"vm_page_free: pindex(%ld), bmapped(%d), busy(%d), PG_BUSY(%d)\n"
 argument_list|,
 name|mem
 operator|->
-name|offset
+name|pindex
 argument_list|,
 name|mem
 operator|->

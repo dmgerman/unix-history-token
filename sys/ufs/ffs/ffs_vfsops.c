@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $Id: ffs_vfsops.c,v 1.29 1995/11/20 12:25:37 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $Id: ffs_vfsops.c,v 1.30 1995/12/07 12:47:51 davidg Exp $  */
 end_comment
 
 begin_include
@@ -206,20 +206,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ffs_oldfscompat
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|fs
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ffs_vmlimits
 name|__P
 argument_list|(
 operator|(
@@ -1282,11 +1268,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 name|ffs_oldfscompat
-argument_list|(
-name|fs
-argument_list|)
-expr_stmt|;
-name|ffs_vmlimits
 argument_list|(
 name|fs
 argument_list|)
@@ -2379,11 +2360,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-name|ffs_vmlimits
-argument_list|(
-name|fs
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set FS local "last mounted on" information (NULL pad) 	 */
 name|copystr
 argument_list|(
@@ -2618,7 +2594,6 @@ block|int i;
 comment|/* XXX */
 block|quad_t sizepb = fs->fs_bsize;
 comment|/* XXX */
-comment|/* XXX */
 block|fs->fs_maxfilesize = fs->fs_bsize * NDADDR - 1;
 comment|/* XXX */
 block|for (i = 0; i< NIADDR; i++) {
@@ -2638,7 +2613,7 @@ operator|=
 operator|(
 name|u_quad_t
 operator|)
-literal|1
+literal|1LL
 operator|<<
 literal|39
 expr_stmt|;
@@ -2669,59 +2644,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Sanity check for VM file size limits -- temporary until  * VM system can support> 32bit offsets  */
-end_comment
-
-begin_function
-name|void
-name|ffs_vmlimits
-parameter_list|(
-name|fs
-parameter_list|)
-name|struct
-name|fs
-modifier|*
-name|fs
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_maxfilesize
-operator|>
-operator|(
-operator|(
-operator|(
-name|u_quad_t
-operator|)
-literal|1
-operator|<<
-literal|31
-operator|)
-operator|-
-literal|1
-operator|)
-condition|)
-name|fs
-operator|->
-name|fs_maxfilesize
-operator|=
-operator|(
-operator|(
-name|u_quad_t
-operator|)
-literal|1
-operator|<<
-literal|31
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -2877,7 +2799,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|vrele
+comment|/* 	vrele(ump->um_devvp); */
+name|vn_vmio_close
 argument_list|(
 name|ump
 operator|->
@@ -3367,6 +3290,9 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|,
+modifier|*
+name|nvp
 decl_stmt|;
 specifier|register
 name|struct
@@ -3486,11 +3412,7 @@ name|NULL
 condition|;
 name|vp
 operator|=
-name|vp
-operator|->
-name|v_mntvnodes
-operator|.
-name|le_next
+name|nvp
 control|)
 block|{
 comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
@@ -3505,6 +3427,14 @@ condition|)
 goto|goto
 name|loop
 goto|;
+name|nvp
+operator|=
+name|vp
+operator|->
+name|v_mntvnodes
+operator|.
+name|le_next
+expr_stmt|;
 if|if
 condition|(
 name|VOP_ISLOCKED
@@ -3607,6 +3537,7 @@ name|tv
 operator|=
 name|time
 expr_stmt|;
+comment|/* VOP_UPDATE(vp,&tv,&tv, waitfor == MNT_WAIT); */
 name|VOP_UPDATE
 argument_list|(
 name|vp
@@ -3617,9 +3548,7 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-name|waitfor
-operator|==
-name|MNT_WAIT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
