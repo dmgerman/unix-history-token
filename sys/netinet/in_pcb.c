@@ -1954,27 +1954,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * If the destination address is INADDR_ANY, 		 * use the primary local address. 		 * If the supplied address is INADDR_BROADCAST, 		 * and the primary interface supports broadcast, 		 * choose the broadcast address for that interface. 		 */
-define|#
-directive|define
-name|satosin
-parameter_list|(
-name|sa
-parameter_list|)
-value|((struct sockaddr_in *)(sa))
-define|#
-directive|define
-name|sintosa
-parameter_list|(
-name|sin
-parameter_list|)
-value|((struct sockaddr *)(sin))
-define|#
-directive|define
-name|ifatoia
-parameter_list|(
-name|ifa
-parameter_list|)
-value|((struct in_ifaddr *)(ifa))
 if|if
 condition|(
 name|sin

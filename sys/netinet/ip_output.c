@@ -763,16 +763,14 @@ literal|2
 expr_stmt|;
 name|ia
 operator|=
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
+name|ifatoia
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
 operator|->
 name|rt_ifa
+argument_list|)
 expr_stmt|;
 goto|goto
 name|sendit
@@ -1062,20 +1060,6 @@ name|ip_dst
 expr_stmt|;
 block|}
 comment|/* 	 * If routing to interface only, 	 * short circuit routing lookup. 	 */
-define|#
-directive|define
-name|ifatoia
-parameter_list|(
-name|ifa
-parameter_list|)
-value|((struct in_ifaddr *)(ifa))
-define|#
-directive|define
-name|sintosa
-parameter_list|(
-name|sin
-parameter_list|)
-value|((struct sockaddr *)(sin))
 if|if
 condition|(
 name|flags

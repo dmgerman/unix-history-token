@@ -2449,13 +2449,6 @@ argument_list|,
 argument|ia_link
 argument_list|)
 block|{
-define|#
-directive|define
-name|satosin
-parameter_list|(
-name|sa
-parameter_list|)
-value|((struct sockaddr_in *)(sa))
 ifdef|#
 directive|ifdef
 name|BOOTP_COMPAT
@@ -6317,16 +6310,14 @@ operator|)
 return|;
 return|return
 operator|(
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
+name|ifatoia
+argument_list|(
 name|ipforward_rt
 operator|.
 name|ro_rt
 operator|->
 name|rt_ifa
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7285,13 +7276,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * If forwarding packet using same interface that it came in on, 	 * perhaps should send a redirect to sender to shortcut a hop. 	 * Only send redirect if source is sending directly to us, 	 * and if packet was not source routed (or has any options). 	 * Also, don't send redirect if forwarding using a default route 	 * or a route modified by a redirect. 	 */
-define|#
-directive|define
-name|satosin
-parameter_list|(
-name|sa
-parameter_list|)
-value|((struct sockaddr_in *)(sa))
 if|if
 condition|(
 name|rt
