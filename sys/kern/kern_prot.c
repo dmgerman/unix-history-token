@@ -5593,7 +5593,6 @@ name|cr_prison
 operator|!=
 name|NULL
 condition|)
-block|{
 name|active_securelevel
 operator|=
 name|imax
@@ -5607,7 +5606,6 @@ argument_list|,
 name|active_securelevel
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|active_securelevel
@@ -5661,7 +5659,6 @@ name|cr_prison
 operator|!=
 name|NULL
 condition|)
-block|{
 name|active_securelevel
 operator|=
 name|imax
@@ -5675,7 +5672,6 @@ argument_list|,
 name|active_securelevel
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|active_securelevel
