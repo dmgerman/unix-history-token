@@ -794,6 +794,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|PROXIM
+argument_list|,
+name|HARMONY
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|SAMSUNG
 argument_list|,
 name|SWL_2000N
