@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.31 1998/05/07 00:39:56 brian Exp $"
+literal|"$Id: syslogd.c,v 1.32 1998/05/19 12:02:41 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2857,35 +2857,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|line
-argument_list|,
-name|bootfile
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|line
-argument_list|,
-literal|": "
-argument_list|)
-expr_stmt|;
-name|lp
-operator|=
-name|line
-operator|+
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|p
@@ -2899,6 +2870,7 @@ literal|'\0'
 condition|;
 control|)
 block|{
+comment|/* Get message priority, if any */
 name|flags
 operator|=
 name|SYNC_FILE
@@ -2978,6 +2950,72 @@ name|pri
 operator|=
 name|DEFSPRI
 expr_stmt|;
+comment|/* See if kernel provided a prefix; if not, use kernel name */
+for|for
+control|(
+name|q
+operator|=
+name|p
+init|;
+operator|*
+name|q
+operator|&&
+name|isalnum
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|;
+name|q
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+operator|==
+literal|':'
+condition|)
+block|{
+name|lp
+operator|=
+name|line
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|line
+argument_list|,
+name|bootfile
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|line
+argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+name|lp
+operator|=
+name|line
+operator|+
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Append message body to prefix */
 name|q
 operator|=
 name|lp
