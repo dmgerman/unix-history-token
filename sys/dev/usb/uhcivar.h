@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhcivar.h,v 1.5 1998/12/26 12:53:02 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

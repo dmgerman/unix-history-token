@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdi.c,v 1.20 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdi.c,v 1.7 1999/01/07 23:31:42 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -1796,7 +1796,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|,
-name|st
+name|state
 decl_stmt|;
 if|if
 condition|(
@@ -1818,7 +1818,7 @@ operator|=
 name|splusb
 argument_list|()
 expr_stmt|;
-name|st
+name|state
 operator|=
 name|pipe
 operator|->
@@ -1835,7 +1835,7 @@ name|pipe
 operator|->
 name|state
 operator|=
-name|st
+name|state
 expr_stmt|;
 name|splx
 argument_list|(
@@ -2783,50 +2783,7 @@ literal|0
 end_if
 
 begin_endif
-unit|u_int8_t  usbd_bus_count() { 	return (usb_bus_count()); }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_function
-name|usbd_status
-name|usbd_get_bus_handle
-parameter_list|(
-name|index
-parameter_list|,
-name|bus
-parameter_list|)
-name|u_int8_t
-name|index
-decl_stmt|;
-name|usbd_bus_handle
-modifier|*
-name|bus
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|usb_get_bus_handle
-argument_list|(
-name|index
-argument_list|,
-name|bus
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
+unit|u_int8_t  usbd_bus_count() { 	return (usb_bus_count()); }  usbd_status  usbd_get_bus_handle(index, bus) 	u_int8_t index; 	usbd_bus_handle *bus; { 	return (usb_get_bus_handle(index, bus)); }
 endif|#
 directive|endif
 end_endif
@@ -5305,12 +5262,8 @@ return|;
 comment|/* XXX maybe transient, or error? */
 for|for
 control|(
-name|devcount
-operator|--
 init|;
 name|devcount
-operator|>=
-literal|0
 condition|;
 name|devcount
 operator|--

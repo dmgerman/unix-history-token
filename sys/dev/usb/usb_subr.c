@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_subr.c,v 1.27 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb_subr.c,v 1.6 1999/01/07 23:31:40 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -3780,10 +3780,21 @@ name|dev
 operator|->
 name|ddesc
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|int
+name|found
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
-decl_stmt|,
-name|found
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -4104,8 +4115,6 @@ name|nifaces
 expr_stmt|;
 for|for
 control|(
-name|found
-operator|=
 name|i
 operator|=
 literal|0
@@ -4169,6 +4178,12 @@ name|usbd_submatch
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|found
 operator|++
 expr_stmt|;
@@ -4180,8 +4195,27 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* consumed */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 if|if
 condition|(
 name|found
@@ -4193,6 +4227,8 @@ operator|(
 name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 comment|/* No interfaces were attached in any of the configurations. */
 if|if

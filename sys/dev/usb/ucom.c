@@ -53,13 +53,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/device.h>
 end_include
 
 begin_elif
@@ -486,6 +486,18 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"%s: disconnected\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|self
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|devinfo

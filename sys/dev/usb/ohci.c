@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.23 1999/01/07 02:06:05 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.27 1999/01/13 10:33:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3105,8 +3105,6 @@ name|p
 decl_stmt|;
 name|u_int32_t
 name|intrs
-init|=
-literal|0
 decl_stmt|,
 name|eintrs
 decl_stmt|;
@@ -3144,6 +3142,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|intrs
+operator|=
+literal|0
+expr_stmt|;
 name|done
 operator|=
 name|LE
@@ -3566,8 +3568,6 @@ block|{
 name|ohci_soft_td_t
 modifier|*
 name|std
-init|=
-name|NULL
 decl_stmt|,
 modifier|*
 name|sdone

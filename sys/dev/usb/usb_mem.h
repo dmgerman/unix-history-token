@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_mem.h,v 1.4 1999/01/09 12:16:54 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb_mem.h,v 1.4 1999/01/07 23:31:38 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

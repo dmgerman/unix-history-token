@@ -4679,21 +4679,6 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"sc->sc_iobase=0x%x run=0x%x, running=0x%x\n"
-operator|,
-name|sc
-operator|->
-name|sc_iobase
-operator|,
-name|run
-operator|,
-name|running
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|run
@@ -4755,17 +4740,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"run=0x%x, running=0x%x\n"
-operator|,
-name|run
-operator|,
-name|running
-operator|)
-argument_list|)
 expr_stmt|;
 comment|/* return when we've entered the state we want */
 if|if

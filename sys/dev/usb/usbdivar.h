@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdivar.h,v 1.16 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdivar.h,v 1.6 1999/01/07 23:31:45 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -801,21 +801,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usbd_status
-name|usb_get_bus_handle
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|usbd_bus_handle
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|usb_needs_explore
 name|__P
@@ -826,6 +811,18 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|usbd_status	usb_get_bus_handle __P((int, usbd_bus_handle *));
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Locator stuff. */

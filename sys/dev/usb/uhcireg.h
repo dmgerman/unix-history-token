@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhcireg.h,v 1.5 1998/12/27 23:40:52 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

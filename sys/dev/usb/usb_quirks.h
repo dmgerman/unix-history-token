@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_quirks.h,v 1.5 1998/12/29 15:23:59 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

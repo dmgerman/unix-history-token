@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbcdc.h,v 1.3 1999/01/03 01:09:18 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

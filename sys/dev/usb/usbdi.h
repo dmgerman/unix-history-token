@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdi.h,v 1.16 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdi.h,v 1.4 1999/01/07 23:31:43 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -812,27 +812,10 @@ literal|0
 end_if
 
 begin_endif
-unit|u_int8_t usbd_bus_count __P((void));
+unit|u_int8_t usbd_bus_count __P((void)); usbd_status usbd_get_bus_handle __P((u_int8_t index, usbd_bus_handle *bus));
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|usbd_status
-name|usbd_get_bus_handle
-name|__P
-argument_list|(
-operator|(
-name|u_int8_t
-name|index
-operator|,
-name|usbd_bus_handle
-operator|*
-name|bus
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|usbd_status
