@@ -236,6 +236,12 @@ begin_comment
 comment|/* local variables */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -250,6 +256,11 @@ modifier|*
 name|cut_buffer
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* local functions */
@@ -4130,6 +4141,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 if|if
 condition|(
 name|ISGRAPHSC
@@ -4144,9 +4158,6 @@ name|NULL
 operator|)
 condition|)
 break|break;
-ifndef|#
-directive|ifndef
-name|SC_NO_CUTPASTE
 if|if
 condition|(
 operator|(
@@ -4401,6 +4412,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 if|if
 condition|(
 name|ISGRAPHSC
@@ -4415,9 +4429,6 @@ name|NULL
 operator|)
 condition|)
 break|break;
-ifndef|#
-directive|ifndef
-name|SC_NO_CUTPASTE
 switch|switch
 condition|(
 name|mouse
