@@ -171,26 +171,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPI_HARDCLOCK
-value|1
-end_define
-
-begin_comment
-comment|/* Inter-CPU clock handling. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPI_STATCLOCK
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_STATCLOCK
+value|IPI_AST
 end_define
 
 begin_define
@@ -435,6 +417,11 @@ decl_stmt|,
 name|IDTVEC
 argument_list|(
 name|spuriousint
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|timerint
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -788,6 +775,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lapic_handle_timer
+parameter_list|(
+name|struct
+name|clockframe
+name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lapic_set_logical_id
 parameter_list|(
 name|u_int
@@ -881,6 +879,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|lapic_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lapic_setup_clock
 parameter_list|(
 name|void
 parameter_list|)

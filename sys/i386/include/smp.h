@@ -285,24 +285,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|forward_statclock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|forward_hardclock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ipi_bitmap_handler
 parameter_list|(
 name|struct
