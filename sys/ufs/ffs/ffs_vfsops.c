@@ -5671,6 +5671,8 @@ block|}
 name|lockreq
 operator||=
 name|LK_INTERLOCK
+operator||
+name|LK_SLEEPFAIL
 expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
@@ -5796,6 +5798,10 @@ condition|(
 name|error
 operator|==
 name|ENOENT
+operator|||
+name|error
+operator|==
+name|ENOLCK
 condition|)
 goto|goto
 name|loop
@@ -5821,16 +5827,7 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
 name|vp
 argument_list|)
