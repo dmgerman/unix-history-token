@@ -135,74 +135,6 @@ directive|include
 file|"dev/pst/pst-iop.h"
 end_include
 
-begin_comment
-comment|/* device structures */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|d_strategy_t
-name|pststrategy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|pst_cdevsw
-init|=
-block|{
-comment|/* open */
-name|nullopen
-block|,
-comment|/* close */
-name|nullclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strat */
-name|pststrategy
-block|,
-comment|/* name */
-literal|"pst"
-block|,
-comment|/* maj */
-literal|200
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|pstdisk_cdevsw
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|pst_softc
@@ -221,9 +153,6 @@ name|struct
 name|i2o_bsa_device
 modifier|*
 name|info
-decl_stmt|;
-name|dev_t
-name|device
 decl_stmt|;
 name|struct
 name|devstat
@@ -280,6 +209,13 @@ end_struct
 begin_comment
 comment|/* prototypes */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|disk_strategy_t
+name|pststrategy
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -441,6 +377,10 @@ condition|)
 return|return
 name|ENOMEM
 return|;
+if|if
+condition|(
+operator|!
+operator|(
 name|psc
 operator|=
 name|malloc
@@ -457,7 +397,22 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
+operator|)
+condition|)
+block|{
+name|device_delete_child
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|child
+argument_list|)
 expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|psc
 operator|->
 name|iop
@@ -807,8 +762,39 @@ argument_list|)
 expr_stmt|;
 name|psc
 operator|->
-name|device
+name|disk
+operator|.
+name|d_name
 operator|=
+literal|"pst"
+expr_stmt|;
+name|psc
+operator|->
+name|disk
+operator|.
+name|d_strategy
+operator|=
+name|pststrategy
+expr_stmt|;
+name|psc
+operator|->
+name|disk
+operator|.
+name|d_maxsize
+operator|=
+literal|64
+operator|*
+literal|1024
+expr_stmt|;
+comment|/*I2O_SGL_MAX_SEGS * PAGE_SIZE;*/
+name|psc
+operator|->
+name|disk
+operator|.
+name|d_drv1
+operator|=
+name|psc
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|lun
@@ -820,32 +806,11 @@ name|disk
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|pst_cdevsw
+name|NULL
 argument_list|,
-operator|&
-name|pstdisk_cdevsw
+name|NULL
 argument_list|)
 expr_stmt|;
-name|psc
-operator|->
-name|device
-operator|->
-name|si_drv1
-operator|=
-name|psc
-expr_stmt|;
-name|psc
-operator|->
-name|device
-operator|->
-name|si_iosize_max
-operator|=
-literal|64
-operator|*
-literal|1024
-expr_stmt|;
-comment|/*I2O_SGL_MAX_SEGS * PAGE_SIZE;*/
 name|psc
 operator|->
 name|disk
@@ -1146,9 +1111,9 @@ name|psc
 init|=
 name|bp
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 name|mtx_lock
 argument_list|(
