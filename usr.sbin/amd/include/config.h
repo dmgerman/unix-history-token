@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: config.h,v 1.6 1998/08/27 08:09:41 obrien Exp $ */
+comment|/* $Id: config.h,v 1.7 1998/09/04 08:55:29 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -2681,7 +2681,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0a16"
+value|"6.0b1"
 end_define
 
 begin_comment
