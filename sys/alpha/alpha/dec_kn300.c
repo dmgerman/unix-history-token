@@ -219,14 +219,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -242,17 +234,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -267,11 +248,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
