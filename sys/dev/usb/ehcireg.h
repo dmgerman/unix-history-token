@@ -1384,6 +1384,12 @@ index|[
 name|EHCI_QTD_NBUFFERS
 index|]
 decl_stmt|;
+name|ehci_physaddr_t
+name|qtd_buffer_hi
+index|[
+name|EHCI_QTD_NBUFFERS
+index|]
+decl_stmt|;
 block|}
 name|ehci_qtd_t
 typedef|;
