@@ -2503,13 +2503,6 @@ name|u_int32_t
 name|rstamp
 parameter_list|)
 block|{
-define|#
-directive|define
-name|ISPROBE
-parameter_list|(
-name|_st
-parameter_list|)
-value|((_st) == IEEE80211_FC0_SUBTYPE_PROBE_RESP)
 name|struct
 name|ifnet
 modifier|*
@@ -2625,6 +2618,9 @@ decl_stmt|;
 name|u_int16_t
 name|fhdwell
 decl_stmt|;
+name|int
+name|isprobe
+decl_stmt|;
 if|if
 condition|(
 name|ic
@@ -2643,6 +2639,14 @@ block|{
 comment|/* XXX: may be useful for background scan */
 return|return;
 block|}
+name|isprobe
+operator|=
+operator|(
+name|subtype
+operator|==
+name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
+operator|)
+expr_stmt|;
 comment|/* 		 * beacon/probe response frame format 		 *	[8] time stamp 		 *	[2] beacon interval 		 *	[2] capability information 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] country information 		 *	[tlv] parameter set (FH/DS) 		 *	[tlv] erp information 		 *	[tlv] extended supported rates 		 */
 name|IEEE80211_VERIFY_LENGTH
 argument_list|(
@@ -2970,10 +2974,7 @@ literal|"%u\n"
 operator|,
 name|__func__
 operator|,
-name|ISPROBE
-argument_list|(
-name|subtype
-argument_list|)
+name|isprobe
 condition|?
 literal|"probe response"
 else|:
@@ -3014,10 +3015,7 @@ literal|"for channel %u\n"
 operator|,
 name|__func__
 operator|,
-name|ISPROBE
-argument_list|(
-name|subtype
-argument_list|)
+name|isprobe
 condition|?
 literal|"probe response"
 else|:
@@ -3094,10 +3092,7 @@ else|:
 literal|""
 operator|)
 argument_list|,
-name|ISPROBE
-argument_list|(
-name|subtype
-argument_list|)
+name|isprobe
 condition|?
 literal|"probe response"
 else|:
@@ -3272,10 +3267,7 @@ index|]
 operator|!=
 literal|0
 operator|&&
-name|ISPROBE
-argument_list|(
-name|subtype
-argument_list|)
+name|isprobe
 condition|)
 block|{
 comment|/* 			 * Update ESSID at probe response to adopt hidden AP by 			 * Lucent/Cisco, which announces null ESSID in beacon. 			 */
@@ -5435,9 +5427,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-undef|#
-directive|undef
-name|ISPROBE
 block|}
 end_function
 
