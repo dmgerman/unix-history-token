@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.30 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,29 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPPWAIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -193,6 +216,11 @@ include|#
 directive|include
 file|<machine/pte.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -271,64 +299,16 @@ init|=
 block|{
 define|#
 directive|define
-name|STEXT
-value|0
-block|{
-literal|"_text"
-block|}
-block|,
-define|#
-directive|define
-name|SPROC
-value|1
-block|{
-literal|"_proc"
-block|}
-block|,
-define|#
-directive|define
-name|SFIL
-value|2
-block|{
-literal|"_file"
-block|}
-block|,
-define|#
-directive|define
 name|SWAPMAP
-value|3
+value|0
 block|{
 literal|"_swapmap"
 block|}
 block|,
 define|#
 directive|define
-name|SNPROC
-value|4
-block|{
-literal|"_nproc"
-block|}
-block|,
-define|#
-directive|define
-name|SNTEXT
-value|5
-block|{
-literal|"_ntext"
-block|}
-block|,
-define|#
-directive|define
-name|SNFILE
-value|6
-block|{
-literal|"_nfile"
-block|}
-block|,
-define|#
-directive|define
 name|SNSWAPMAP
-value|7
+value|1
 block|{
 literal|"_nswapmap"
 block|}
@@ -336,7 +316,7 @@ block|,
 define|#
 directive|define
 name|SDMMIN
-value|8
+value|2
 block|{
 literal|"_dmmin"
 block|}
@@ -344,7 +324,7 @@ block|,
 define|#
 directive|define
 name|SDMMAX
-value|9
+value|3
 block|{
 literal|"_dmmax"
 block|}
@@ -352,7 +332,7 @@ block|,
 define|#
 directive|define
 name|SNSWDEV
-value|10
+value|4
 block|{
 literal|"_nswdev"
 block|}
@@ -360,20 +340,80 @@ block|,
 define|#
 directive|define
 name|SSWDEVT
-value|11
+value|5
 block|{
 literal|"_swdevt"
 block|}
 block|,
 define|#
 directive|define
+name|SFIL
+value|6
+block|{
+literal|"_file"
+block|}
+block|,
+define|#
+directive|define
+name|SNFILE
+value|7
+block|{
+literal|"_nfile"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|NEWVM
+define|#
+directive|define
 name|NLMANDATORY
-value|SSWDEVT
+value|SNFILE
 comment|/* names up to here are mandatory */
+else|#
+directive|else
+define|#
+directive|define
+name|STEXT
+value|8
+block|{
+literal|"_text"
+block|}
+block|,
+define|#
+directive|define
+name|SNTEXT
+value|9
+block|{
+literal|"_ntext"
+block|}
+block|,
+define|#
+directive|define
+name|SPROC
+value|10
+block|{
+literal|"_proc"
+block|}
+block|,
+define|#
+directive|define
+name|SNPROC
+value|11
+block|{
+literal|"_nproc"
+block|}
+block|,
+define|#
+directive|define
+name|NLMANDATORY
+value|SNPROC
+comment|/* names up to here are mandatory */
+endif|#
+directive|endif
 define|#
 directive|define
 name|SCONS
-value|12
+value|NLMANDATORY + 1
 block|{
 literal|"_cons"
 block|}
@@ -381,7 +421,7 @@ block|,
 define|#
 directive|define
 name|SPTY
-value|13
+value|NLMANDATORY + 2
 block|{
 literal|"_pt_tty"
 block|}
@@ -389,7 +429,7 @@ block|,
 define|#
 directive|define
 name|SNPTY
-value|14
+value|NLMANDATORY + 3
 block|{
 literal|"_npty"
 block|}
@@ -3189,6 +3229,16 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|NEWVM
+name|printf
+argument_list|(
+literal|"no text table in this system\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 specifier|register
 name|struct
 name|text
@@ -3600,6 +3650,8 @@ argument_list|(
 name|xtext
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -3610,6 +3662,16 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|NEWVM
+name|printf
+argument_list|(
+literal|"pstat: -p no longer supported\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|proc
 modifier|*
@@ -4026,6 +4088,8 @@ argument_list|(
 name|xproc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -4605,7 +4669,16 @@ argument|); 		break;  	default: 		printf(
 literal|"%d\n"
 argument|, tp->t_line); 	} }
 comment|/*  * The user structure is going away.  What's left here won't  * be around for long.  */
-argument|dousr() { 	register struct user *up; 	register i
+argument|dousr() {
+ifdef|#
+directive|ifdef
+name|NEWVM
+argument|printf(
+literal|"nothing left in user structure in this system\n"
+argument|);
+else|#
+directive|else
+argument|register struct user *up; 	register i
 argument_list|,
 argument|j
 argument_list|,
@@ -4763,7 +4836,10 @@ argument|; i< sizeof(up->u_cru)/sizeof(int); i++) 		printf(
 literal|"%ld "
 argument|, ip[i]); 	printf(
 literal|"\n"
-argument|); }  oatoi(s) char *s; { 	register v;  	v =
+argument|);
+endif|#
+directive|endif
+argument|}  oatoi(s) char *s; { 	register v;  	v =
 literal|0
 argument|; 	while (*s) 		v = (v<<
 literal|3
@@ -4827,7 +4903,17 @@ argument|) 			printf(
 literal|"  %x\n"
 argument|, fp->f_offset); 		else 			printf(
 literal|"  %ld\n"
-argument|, fp->f_offset); 	} 	free(xfile); }  int dmmin
+argument|, fp->f_offset); 	} 	free(xfile); }
+ifdef|#
+directive|ifdef
+name|NEWVM
+argument|doswap() { 	printf(
+literal|"swap statistics not yet supported in this system\n"
+argument|); }
+else|#
+directive|else
+comment|/* NEWVM */
+argument|int dmmin
 argument_list|,
 argument|dmmax
 argument_list|,
@@ -5036,6 +5122,9 @@ literal|0
 argument|; 	} done: 	return; badrmfree: 	printf(
 literal|"bad rmfree\n"
 argument|); }
+endif|#
+directive|endif
+comment|/* NEWVM */
 include|#
 directive|include
 file|<varargs.h>
