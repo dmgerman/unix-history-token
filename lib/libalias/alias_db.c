@@ -8391,18 +8391,33 @@ name|fw_number
 operator|=
 name|fwhole
 expr_stmt|;
+name|IP_FW_SETNSRCP
+argument_list|(
+operator|&
 name|rule
-operator|.
-name|fw_nports
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
-comment|/* Number of source ports; dest ports follow */
+comment|/* Number of source ports. */
+name|IP_FW_SETNDSTP
+argument_list|(
+operator|&
+name|rule
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Number of destination ports. */
 name|rule
 operator|.
 name|fw_flg
 operator|=
 name|IP_FW_F_ACCEPT
+operator||
+name|IP_FW_F_IN
+operator||
+name|IP_FW_F_OUT
 expr_stmt|;
 name|rule
 operator|.
