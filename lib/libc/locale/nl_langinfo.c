@@ -468,16 +468,12 @@ case|case
 name|CRNCYSTR
 case|:
 comment|/* deprecated */
+comment|/* XXX: need to be implemented */
+comment|/* __get_current_monetary_locale()->currency_symbol    */
+comment|/* but requare special +-. prefixes according to SUSV2 */
 name|ret
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|__get_current_monetary_locale
-argument_list|()
-operator|->
-name|currency_symbol
+literal|""
 expr_stmt|;
 break|break;
 default|default:
