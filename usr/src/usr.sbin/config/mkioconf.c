@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.23 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2577,6 +2577,8 @@ begin_if
 if|#
 directive|if
 name|MACHINE_HP300
+operator|||
+name|MACHINE_LUNA68K
 end_if
 
 begin_macro
@@ -2666,11 +2668,25 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|machine
+operator|==
+name|MACHINE_HP300
+condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
 literal|"#include \"hp/dev/device.h\"\n\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"luna68k/dev/device.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

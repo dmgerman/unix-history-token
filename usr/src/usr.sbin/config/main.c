@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +363,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MACHINE_HP300
+case|:
+case|case
+name|MACHINE_LUNA68K
 case|:
 name|hp300_ioconf
 argument_list|()
