@@ -1398,6 +1398,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|tcp_drop_syn_sent
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|tcp_mtudisc
 name|__P
 argument_list|(

@@ -1589,8 +1589,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRC_NCMDS
+name|PRC_UNREACH_ADMIN_PROHIB
 value|21
+end_define
+
+begin_comment
+comment|/* packet administrativly prohibited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_NCMDS
+value|22
 end_define
 
 begin_define
@@ -1658,6 +1669,8 @@ block|,
 literal|"TX-REASS"
 block|,
 literal|"PARAMPROB"
+block|,
+literal|"ADMIN-UNREACH"
 block|}
 decl_stmt|;
 end_decl_stmt

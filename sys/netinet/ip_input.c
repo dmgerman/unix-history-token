@@ -6473,6 +6473,8 @@ block|,
 literal|0
 block|,
 name|ENOPROTOOPT
+block|,
+name|ENETRESET
 block|}
 decl_stmt|;
 end_decl_stmt
