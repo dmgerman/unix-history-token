@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.9	81/08/31	*/
+comment|/*	hpreg.h	4.10	82/02/08	*/
 end_comment
 
 begin_struct
@@ -963,6 +963,43 @@ end_define
 
 begin_comment
 comment|/* -1200 uinches */
+end_comment
+
+begin_comment
+comment|/* hpmr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPMR_SZ
+value|0174000
+end_define
+
+begin_comment
+comment|/* ML11 system size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPMR_ARRTYP
+value|0002000
+end_define
+
+begin_comment
+comment|/* ML11 array type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPMR_TRT
+value|0001400
+end_define
+
+begin_comment
+comment|/* ML11 transfer rate */
 end_comment
 
 end_unit
