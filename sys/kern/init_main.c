@@ -2927,6 +2927,14 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|cred_update_thread
+argument_list|(
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|initproc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
