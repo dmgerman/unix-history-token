@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.9.2.12 1997/06/25 19:32:31 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.9.2.13 1997/08/14 01:49:05 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -124,8 +124,19 @@ name|in_range
 name|DefMyAddress
 decl_stmt|,
 name|DefHisAddress
-decl_stmt|,
-name|DefTriggerAddress
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|in_addr
+name|TriggerAddress
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|HaveTriggerAddress
 decl_stmt|;
 end_decl_stmt
 
@@ -609,22 +620,28 @@ operator|.
 name|width
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|HaveTriggerAddress
+condition|)
 name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|" Negotiation: %s/%d\n"
+literal|" Negotiation(trigger): %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|DefTriggerAddress
-operator|.
-name|ipaddr
+name|TriggerAddress
 argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|VarTerm
 argument_list|,
-name|DefTriggerAddress
-operator|.
-name|width
+literal|" Negotiation(trigger): MYADDR\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -671,16 +688,15 @@ name|DefHisAddress
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|DefTriggerAddress
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|DefTriggerAddress
-argument_list|)
-argument_list|)
+name|TriggerAddress
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+name|HaveTriggerAddress
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -829,13 +845,7 @@ block|}
 comment|/*    * Some implementation of PPP are:    *  Starting a negotiaion by require sending *special* value as my address,    *  even though standard of PPP is defined full negotiation based.    *  (e.g. "0.0.0.0" or Not "0.0.0.0")    */
 if|if
 condition|(
-name|icp
-operator|->
-name|want_ipaddr
-operator|.
-name|s_addr
-operator|==
-literal|0
+name|HaveTriggerAddress
 condition|)
 block|{
 name|icp
@@ -844,11 +854,21 @@ name|want_ipaddr
 operator|.
 name|s_addr
 operator|=
-name|DefTriggerAddress
-operator|.
-name|ipaddr
+name|TriggerAddress
 operator|.
 name|s_addr
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogLCP
+argument_list|,
+literal|"Using trigger address %s\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|TriggerAddress
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
