@@ -845,7 +845,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIuto"
+literal|"\f qh?en#sdkriIutHo"
 decl_stmt|;
 else|#
 directive|else
@@ -854,7 +854,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIut"
+literal|"\f qh?en#sdkriIutH"
 decl_stmt|;
 endif|#
 directive|endif
@@ -929,13 +929,17 @@ define|#
 directive|define
 name|CMD_selftog
 value|15
+define|#
+directive|define
+name|CMD_thrtog
+value|16
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|16
+value|17
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1049,6 +1053,12 @@ literal|1
 expr_stmt|;
 name|ps
 operator|.
+name|thread
+operator|=
+name|No
+expr_stmt|;
+name|ps
+operator|.
 name|command
 operator|=
 name|NULL
@@ -1129,7 +1139,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"SIbinquvs:d:U:o:t"
+literal|"SIHbinquvs:d:U:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1439,12 +1449,25 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'H'
+case|:
+name|ps
+operator|.
+name|thread
+operator|=
+operator|!
+name|ps
+operator|.
+name|thread
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Top version %s\n\ Usage: %s [-ISbinqut] [-d x] [-s x] [-o field] [-U username] [number]\n"
+literal|"\ Top version %s\n\ Usage: %s [-HISbinqut] [-d x] [-s x] [-o field] [-U username] [number]\n"
 argument_list|,
 name|version_string
 argument_list|()
@@ -3438,6 +3461,41 @@ name|clear_message
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|CMD_thrtog
+case|:
+name|ps
+operator|.
+name|thread
+operator|=
+operator|!
+name|ps
+operator|.
+name|thread
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying threads."
+argument_list|,
+name|ps
+operator|.
+name|thread
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef

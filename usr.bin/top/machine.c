@@ -1786,7 +1786,13 @@ name|kvm_getprocs
 argument_list|(
 name|kd
 argument_list|,
+name|sel
+operator|->
+name|thread
+condition|?
 name|KERN_PROC_ALL
+else|:
+name|KERN_PROC_PROC
 argument_list|,
 literal|0
 argument_list|,

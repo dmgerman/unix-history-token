@@ -156,6 +156,10 @@ name|system
 decl_stmt|;
 comment|/* show system processes */
 name|int
+name|thread
+decl_stmt|;
+comment|/* show threads */
+name|int
 name|uid
 decl_stmt|;
 comment|/* only this uid (unless uid == -1) */
