@@ -3497,7 +3497,7 @@ argument_list|,
 name|dist
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Passing TRUE as 3rd parm to get routine makes this a "probing" get, for which errors 	     * are not considered too significant. 	     */
+comment|/* 	     * Passing TRUE as 3rd parm to get routine makes this a "probing" 	     * get, for which errors are not considered too significant. 	     */
 name|getsingle
 label|:
 name|fp
