@@ -1932,7 +1932,7 @@ name|if_data
 operator|.
 name|ifi_epoch
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 ifdef|#
 directive|ifdef

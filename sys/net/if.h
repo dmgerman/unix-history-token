@@ -252,7 +252,7 @@ comment|/* HW offload capabilities */
 name|time_t
 name|ifi_epoch
 decl_stmt|;
-comment|/* time of attach or stat reset */
+comment|/* uptime at attach or stat reset */
 ifdef|#
 directive|ifdef
 name|__alpha__
