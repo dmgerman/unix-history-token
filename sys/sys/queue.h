@@ -354,6 +354,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|STAILQ_REMOVE_HEAD_UNTIL
+parameter_list|(
+name|head
+parameter_list|,
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	if (((head)->stqh_first = (elm)->field.stqe_next) == NULL)	\ 		(head)->stqh_last =&(head)->stqh_first;		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|STAILQ_REMOVE
 parameter_list|(
 name|head
