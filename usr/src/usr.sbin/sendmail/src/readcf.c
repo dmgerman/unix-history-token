@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.65 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7786,7 +7786,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETCLASS -- set a word into a class ** **	Parameters: **		class -- the class to put the word in. **		word -- the word to enter ** **	Returns: **		none. ** **	Side Effects: **		puts the word into the symbol table. */
+comment|/* **  SETCLASS -- set a string into a class ** **	Parameters: **		class -- the class to put the string in. **		str -- the string to enter ** **	Returns: **		none. ** **	Side Effects: **		puts the word into the symbol table. */
 end_comment
 
 begin_macro
@@ -7794,7 +7794,7 @@ name|setclass
 argument_list|(
 argument|class
 argument_list|,
-argument|word
+argument|str
 argument_list|)
 end_macro
 
@@ -7807,7 +7807,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|word
+name|str
 decl_stmt|;
 end_decl_stmt
 
@@ -7833,14 +7833,14 @@ literal|"setclass(%c, %s)\n"
 argument_list|,
 name|class
 argument_list|,
-name|word
+name|str
 argument_list|)
 expr_stmt|;
 name|s
 operator|=
 name|stab
 argument_list|(
-name|word
+name|str
 argument_list|,
 name|ST_CLASS
 argument_list|,

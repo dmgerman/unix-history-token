@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.132 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.133 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5162,6 +5162,104 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Cray Computer Corporation's CSOS ** **	Contributed by Scott Bolte<scott@craycos.com>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_CRAYCOM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDFSYNC
+value|1
+end_define
+
+begin_comment
+comment|/* no fsync in system library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATHSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_POSIX_CHOWN_RESTRICTED
+value|-1
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|group
+modifier|*
+name|getgrent
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getgrnam
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getgrgid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -5726,7 +5824,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Tweaking for systems that (for example) claim to be BSD but **  don't have all the standard BSD routines (boo hiss). */
+comment|/* **  Tweaking for systems that (for example) claim to be BSD or POSIX **  but don't have all the standard BSD or POSIX routines (boo hiss). */
 end_comment
 
 begin_ifdef
@@ -5743,6 +5841,27 @@ end_undef
 
 begin_comment
 comment|/* doesn't have initgroups(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_CRAYCOM
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HASSETSID
+end_undef
+
+begin_comment
+comment|/* despite POSIX claim, doesn't have setsid */
 end_comment
 
 begin_endif

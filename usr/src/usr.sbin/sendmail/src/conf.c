@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.130 (Berkeley) %G%"
+literal|"@(#)conf.c	8.131 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5452,13 +5452,18 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. */
+comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. */
 end_comment
 
 begin_function
 name|void
 name|reapchild
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|int
 name|olderrno
@@ -7840,6 +7845,11 @@ operator|||
 name|defined
 argument_list|(
 name|_UTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_CRAYCOM
 argument_list|)
 define|#
 directive|define
