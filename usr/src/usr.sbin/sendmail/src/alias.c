@@ -107,7 +107,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	5.41 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.42 (Berkeley) %G% (with NEWDB)"
 expr_stmt|;
 end_expr_stmt
 
@@ -128,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.41 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	5.42 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.41 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	5.42 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2808,10 +2808,12 @@ end_decl_stmt
 begin_block
 block|{
 name|char
-name|buf
-index|[
-literal|60
-index|]
+modifier|*
+name|pp
+decl_stmt|;
+name|char
+modifier|*
+name|ep
 decl_stmt|;
 specifier|extern
 name|bool
@@ -2879,9 +2881,85 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|expand
+name|define
+argument_list|(
+literal|'u'
+argument_list|,
+name|user
+operator|->
+name|q_user
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'h'
+argument_list|,
+name|user
+operator|->
+name|q_host
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ForwardPath
+operator|==
+name|NULL
+condition|)
+name|ForwardPath
+operator|=
+name|newstr
 argument_list|(
 literal|"\001z/.forward"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pp
+operator|=
+name|ForwardPath
+init|;
+name|pp
+operator|!=
+name|NULL
+condition|;
+name|pp
+operator|=
+name|ep
+control|)
+block|{
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|ep
+operator|=
+name|strchr
+argument_list|(
+name|pp
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ep
+operator|=
+literal|'\0'
+expr_stmt|;
+name|expand
+argument_list|(
+name|pp
 argument_list|,
 name|buf
 argument_list|,
@@ -2897,6 +2975,36 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ep
+operator|++
+operator|=
+literal|':'
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"forward: trying %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|include
 argument_list|(
 name|buf
@@ -2909,7 +3017,11 @@ name|sendq
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
 block|}
 end_block
 

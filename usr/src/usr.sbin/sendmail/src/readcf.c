@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.52 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3315,6 +3315,18 @@ comment|/* ignore dot lines in message */
 name|IgnrDot
 operator|=
 name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'J'
+case|:
+comment|/* .forward search path */
+name|ForwardPath
+operator|=
+name|newstr
 argument_list|(
 name|val
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.37 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,6 +1341,9 @@ literal|9
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|include
 argument_list|(
 operator|&
@@ -2395,7 +2398,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		forwarding -- if TRUE, we are reading a .forward file. **			if FALSE, it's a :include: file. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		forwarding -- if TRUE, we are reading a .forward file. **			if FALSE, it's a :include: file. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		open error status ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
 end_comment
 
 begin_decl_stmt
@@ -2405,57 +2408,40 @@ name|CtxIncludeTimeout
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|include
-argument_list|(
-argument|fname
-argument_list|,
-argument|forwarding
-argument_list|,
-argument|ctladdr
-argument_list|,
-argument|sendq
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fname
+parameter_list|,
+name|forwarding
+parameter_list|,
+name|ctladdr
+parameter_list|,
+name|sendq
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|fname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|forwarding
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|ctladdr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -2529,7 +2515,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ETIMEDOUT
+return|;
 block|}
 name|ev
 operator|=
@@ -2569,7 +2557,9 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|EPERM
+return|;
 block|}
 name|fp
 operator|=
@@ -2587,6 +2577,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|ret
+init|=
+name|errno
+decl_stmt|;
 name|usrerr
 argument_list|(
 literal|"Cannot open %s"
@@ -2594,7 +2589,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ret
+return|;
 block|}
 if|if
 condition|(
@@ -2765,8 +2762,11 @@ name|LineNumber
 operator|=
 name|oldlinenumber
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 specifier|static
