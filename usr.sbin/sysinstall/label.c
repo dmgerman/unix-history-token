@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.25 1995/05/25 18:48:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.26 1995/05/26 11:21:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -816,25 +816,32 @@ name|PartInfo
 modifier|*
 name|tmp
 decl_stmt|;
-name|val
-operator|=
-name|msgGetInput
-argument_list|(
+if|if
+condition|(
 name|old
 operator|&&
 name|old
 operator|->
 name|private
-condition|?
-operator|(
-operator|(
-name|PartInfo
-operator|*
-operator|)
+condition|)
+name|tmp
+operator|=
 name|old
 operator|->
 name|private
-operator|)
+expr_stmt|;
+else|else
+name|tmp
+operator|=
+name|NULL
+expr_stmt|;
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|tmp
+condition|?
+name|tmp
 operator|->
 name|mountpoint
 else|:
@@ -884,24 +891,12 @@ block|}
 comment|/* Is it just the same value? */
 if|if
 condition|(
-name|old
-operator|&&
-name|old
-operator|->
-name|private
+name|tmp
 operator|&&
 operator|!
 name|strcmp
 argument_list|(
-operator|(
-operator|(
-name|PartInfo
-operator|*
-operator|)
-name|old
-operator|->
-name|private
-operator|)
+name|tmp
 operator|->
 name|mountpoint
 argument_list|,
@@ -911,6 +906,7 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* Did we use it already? */
 if|if
 condition|(
 name|check_conflict
@@ -930,6 +926,7 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Is it bogus? */
 if|if
 condition|(
 operator|*
@@ -947,6 +944,7 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Is it going to be mounted on root? */
 if|if
 condition|(
 operator|!
@@ -974,7 +972,6 @@ if|if
 condition|(
 name|old
 condition|)
-block|{
 name|old
 operator|->
 name|flags
@@ -982,16 +979,9 @@ operator|&=
 operator|~
 name|CHUNK_IS_ROOT
 expr_stmt|;
-block|}
 name|safe_free
 argument_list|(
-name|old
-condition|?
-name|old
-operator|->
-name|private
-else|:
-name|NULL
+name|tmp
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -2932,10 +2922,10 @@ literal|"/bogus"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|record_label_chunks
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|msgFatal

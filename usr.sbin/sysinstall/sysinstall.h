@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.37 1995/05/27 23:39:32 phk Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.38 1995/05/28 03:05:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -689,6 +689,59 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|HOSTNAME_FIELD_LEN
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPADDR_FIELD_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRAS_FIELD_LEN
+value|256
+end_define
+
+begin_comment
+comment|/* This is the structure that Network devices carry around in their private, erm, structures */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_devPriv
+block|{
+name|char
+name|ipaddr
+index|[
+name|IPADDR_FIELD_LEN
+index|]
+decl_stmt|;
+name|char
+name|netmask
+index|[
+name|IPADDR_FIELD_LEN
+index|]
+decl_stmt|;
+name|char
+name|extras
+index|[
+name|EXTRAS_FIELD_LEN
+index|]
+decl_stmt|;
+block|}
+name|DevInfo
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*** Externs ***/
 end_comment
@@ -1022,12 +1075,67 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuNTP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* NTP time server menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuSyscons
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* System console configuration menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuSysconsKeymap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System console keymap configuration menu	*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuSysconsKeyrate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System console keyrate configuration menu	*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuSysconsSaver
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System console saver configuration menu	*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuNetworking
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Network configuration menu			*/
 end_comment
 
 begin_decl_stmt
@@ -2766,6 +2874,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|configRoutedFlags
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* system.c */
 end_comment
@@ -2999,18 +3119,6 @@ parameter_list|(
 name|char
 modifier|*
 name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|Boolean
-name|tcpStartPPP
-parameter_list|(
-name|Device
-modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
