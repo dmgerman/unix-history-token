@@ -5107,6 +5107,9 @@ operator|+
 name|MAXDSIZ
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|this_is_just_plain_bogus
 name|retcode
 operator|=
 name|vm_mmap
@@ -5140,6 +5143,14 @@ argument_list|,
 name|foff
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|retcode
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+endif|#
+directive|endif
 elif|#
 directive|elif
 name|defined
