@@ -1917,6 +1917,14 @@ name|maxproc
 operator|+
 name|vm_page_array_size
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.pmap.pv_entries"
+argument_list|,
+operator|&
+name|pv_entry_max
+argument_list|)
+expr_stmt|;
 name|pv_entry_high_water
 operator|=
 literal|9
