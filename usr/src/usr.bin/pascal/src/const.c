@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c 1.1 %G%"
+literal|"@(#)const.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,11 +256,15 @@ name|cbn
 operator|==
 literal|1
 condition|)
+block|{
 name|stabcname
 argument_list|(
 name|cid
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|PC

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.1 %G%"
+literal|"@(#)var.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,6 +523,8 @@ argument_list|,
 name|o2
 argument_list|,
 name|w
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 endif|#

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.1 %G%"
+literal|"@(#)fdec.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,6 +1547,10 @@ name|fp
 operator|->
 name|symbol
 argument_list|,
+name|fp
+operator|->
+name|class
+argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
@@ -1712,6 +1716,10 @@ name|fp
 operator|->
 name|symbol
 argument_list|,
+name|fp
+operator|->
+name|class
+argument_list|,
 name|line
 argument_list|,
 name|cbn
@@ -1725,6 +1733,10 @@ block|{
 name|stabfunc
 argument_list|(
 literal|"program"
+argument_list|,
+name|fp
+operator|->
+name|class
 argument_list|,
 name|line
 argument_list|,
@@ -1877,6 +1889,8 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
+name|cbn
+argument_list|,
 name|q
 operator|->
 name|value
@@ -1890,6 +1904,8 @@ name|q
 operator|->
 name|type
 argument_list|)
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 endif|#
