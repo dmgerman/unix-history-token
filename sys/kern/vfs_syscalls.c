@@ -1409,6 +1409,12 @@ name|p_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_iosize_max
+operator|=
+name|DFLTPHYS
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp

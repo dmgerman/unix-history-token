@@ -369,7 +369,9 @@ name|racluster
 operator|=
 name|vp
 operator|->
-name|v_maxio
+name|v_mount
+operator|->
+name|mnt_iosize_max
 operator|/
 name|size
 expr_stmt|;
@@ -1676,7 +1678,9 @@ argument_list|)
 operator|>
 name|vp
 operator|->
-name|v_maxio
+name|v_mount
+operator|->
+name|mnt_iosize_max
 condition|)
 break|break;
 if|if
@@ -2576,7 +2580,9 @@ name|maxclen
 operator|=
 name|vp
 operator|->
-name|v_maxio
+name|v_mount
+operator|->
+name|mnt_iosize_max
 operator|/
 name|lblocksize
 operator|-
@@ -3538,7 +3544,9 @@ operator|>
 operator|(
 name|vp
 operator|->
-name|v_maxio
+name|v_mount
+operator|->
+name|mnt_iosize_max
 operator|/
 name|PAGE_SIZE
 operator|)

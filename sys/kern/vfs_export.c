@@ -1565,6 +1565,12 @@ operator|++
 expr_stmt|;
 name|mp
 operator|->
+name|mnt_iosize_max
+operator|=
+name|DFLTPHYS
+expr_stmt|;
+name|mp
+operator|->
 name|mnt_stat
 operator|.
 name|f_type
@@ -3086,12 +3092,6 @@ operator|->
 name|v_data
 operator|=
 literal|0
-expr_stmt|;
-name|vp
-operator|->
-name|v_maxio
-operator|=
-name|DFLTPHYS
 expr_stmt|;
 name|splx
 argument_list|(

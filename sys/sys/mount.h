@@ -328,6 +328,10 @@ name|time_t
 name|mnt_time
 decl_stmt|;
 comment|/* last time written*/
+name|u_int
+name|mnt_iosize_max
+decl_stmt|;
+comment|/* max IO request size */
 block|}
 struct|;
 end_struct

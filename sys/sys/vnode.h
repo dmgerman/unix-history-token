@@ -300,10 +300,6 @@ name|int
 name|v_clen
 decl_stmt|;
 comment|/* length of current cluster */
-name|int
-name|v_maxio
-decl_stmt|;
-comment|/* maximum I/O cluster size */
 name|struct
 name|vm_object
 modifier|*
