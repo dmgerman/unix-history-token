@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.47 (Berkeley) %G%"
+literal|"@(#)login.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sgtty.h>
 end_include
 
 begin_include
@@ -603,6 +603,15 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
+name|openlog
+argument_list|(
+literal|"login"
+argument_list|,
+name|LOG_ODELAY
+argument_list|,
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
 name|fflag
 operator|=
 name|hflag
@@ -616,6 +625,11 @@ expr_stmt|;
 name|passwd_req
 operator|=
 literal|1
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -670,8 +684,7 @@ literal|'h'
 case|:
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|uid
 condition|)
 block|{
 operator|(
@@ -870,11 +883,18 @@ case|case
 literal|'?'
 case|:
 default|default:
+if|if
+condition|(
+operator|!
+name|uid
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"invalid flag"
+literal|"invalid flag %c"
+argument_list|,
+name|ch
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1120,15 +1140,6 @@ name|tty
 operator|=
 name|ttyn
 expr_stmt|;
-name|openlog
-argument_list|(
-literal|"login"
-argument_list|,
-name|LOG_ODELAY
-argument_list|,
-name|LOG_AUTH
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|cnt
@@ -1171,7 +1182,7 @@ name|getloginname
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 		 * Note if trying multiple user names; 		 * log failures for previous user name, 		 * but don't bother logging one failure 		 * for nonexistent name (mistyped username). 		 */
+comment|/* 		 * Note if trying multiple user names; log failures for 		 * previous user name, but don't bother logging one failure 		 * for nonexistent name (mistyped username). 		 */
 if|if
 condition|(
 name|failures
@@ -1258,12 +1269,6 @@ operator|&&
 name|pwd
 condition|)
 block|{
-name|int
-name|uid
-init|=
-name|getuid
-argument_list|()
-decl_stmt|;
 name|passwd_req
 operator|=
 ifndef|#
@@ -1305,6 +1310,71 @@ name|pw_passwd
 operator|)
 condition|)
 break|break;
+comment|/* 		 * If trying to log in as root, but with insecure terminal, 		 * refuse the login attempt. 		 */
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_uid
+operator|==
+literal|0
+operator|&&
+operator|!
+name|rootterm
+argument_list|(
+name|tty
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s login refused on this terminal.\n"
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hostname
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"LOGIN %s REFUSED FROM %s ON TTY %s"
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+name|hostname
+argument_list|,
+name|tty
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"LOGIN %s REFUSED ON TTY %s"
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+name|tty
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|setpriority
 argument_list|(
 name|PRIO_PROCESS
@@ -1457,59 +1527,6 @@ comment|/* paranoia... */
 name|endpwent
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If valid so far and root is logging in, see if root logins on 	 * this terminal are permitted. 	 */
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
-operator|&&
-operator|!
-name|rootterm
-argument_list|(
-name|tty
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|hostname
-condition|)
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"ROOT LOGIN REFUSED FROM %s"
-argument_list|,
-name|hostname
-argument_list|)
-expr_stmt|;
-else|else
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"ROOT LOGIN REFUSED ON %s"
-argument_list|,
-name|tty
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"Login incorrect\n"
-argument_list|)
-expr_stmt|;
-name|sleepexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|quota
