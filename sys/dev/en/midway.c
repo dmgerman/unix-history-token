@@ -273,6 +273,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -10949,17 +10955,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EN_DEBUG
-ifdef|#
-directive|ifdef
-name|DDB
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"en: unexpected error"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DDB */
 name|sc
 operator|->
 name|ifatm
