@@ -1628,6 +1628,16 @@ name|rn_flags
 operator|=
 name|RNF_ACTIVE
 expr_stmt|;
+name|tt
+operator|->
+name|rn_mklist
+operator|=
+name|t
+operator|->
+name|rn_mklist
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RN_DEBUG
