@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.32 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3016,19 +3016,9 @@ operator|->
 name|e_from
 operator|.
 name|q_home
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_home
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|strcmp
 argument_list|(
 name|e
