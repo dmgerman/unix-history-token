@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: scsi.c,v 1.3 90/01/06 04:56:50 van Exp $"
+literal|"$Header: scsi.c,v 1.3 90/10/10 14:55:08 mike Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,6 +259,18 @@ begin_comment
 comment|/* inhibit sync xfers if 1 */
 end_comment
 
+begin_decl_stmt
+name|int
+name|scsi_pridma
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use "priority" dma */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -294,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|MAXWAIT
-value|2048
+value|1022
 end_define
 
 begin_decl_stmt
@@ -4509,20 +4521,18 @@ expr_stmt|;
 name|cmd
 operator|=
 name|CSR_IE
-operator||
-operator|(
-name|CSR_DE0
-operator|<<
-name|hs
-operator|->
-name|sc_dq
-operator|.
-name|dq_ctlr
-operator|)
 expr_stmt|;
 name|dmaflags
 operator|=
 name|DMAGO_NOINT
+expr_stmt|;
+if|if
+condition|(
+name|scsi_pridma
+condition|)
+name|dmaflags
+operator||=
+name|DMAGO_PRI
 expr_stmt|;
 if|if
 condition|(
@@ -4630,11 +4640,26 @@ name|phase
 operator|=
 name|DATA_OUT_PHASE
 expr_stmt|;
+comment|/* 	 * DMA enable bits must be set after size and direction bits. 	 */
 name|hd
 operator|->
 name|scsi_csr
 operator|=
 name|cmd
+expr_stmt|;
+name|hd
+operator|->
+name|scsi_csr
+operator||=
+operator|(
+name|CSR_DE0
+operator|<<
+name|hs
+operator|->
+name|sc_dq
+operator|.
+name|dq_ctlr
+operator|)
 expr_stmt|;
 comment|/* 	 * Setup the SPC for the transfer.  We don't want to take 	 * first a command complete then a service required interrupt 	 * at the end of the transfer so we try to disable the cmd 	 * complete by setting the transfer counter to more bytes 	 * than we expect.  (XXX - This strategy may have to be 	 * modified to deal with devices that return variable length 	 * blocks, e.g., some tape drives.) 	 */
 name|cmd
@@ -4818,6 +4843,20 @@ name|sc_hc
 operator|->
 name|hp_addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|scsi_debug
+condition|)
+name|printf
+argument_list|(
+literal|"scsi%d: done called!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* dma operation is done -- turn off card dma */
 name|hd
 operator|->
@@ -4973,19 +5012,6 @@ condition|)
 name|len
 operator|-=
 literal|4
-expr_stmt|;
-if|if
-condition|(
-name|len
-condition|)
-name|printf
-argument_list|(
-literal|"scsi%d: transfer length error %d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|len
-argument_list|)
 expr_stmt|;
 name|hs
 operator|->
