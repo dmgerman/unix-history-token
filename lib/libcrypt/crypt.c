@@ -117,7 +117,12 @@ return|;
 else|#
 directive|else
 return|return
-name|NULL
+name|crypt_md5
+argument_list|(
+name|passwd
+argument_list|,
+name|salt
+argument_list|)
 return|;
 endif|#
 directive|endif
