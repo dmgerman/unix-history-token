@@ -1505,9 +1505,30 @@ name|EXP_CASE
 operator|)
 decl_stmt|;
 comment|/* 	 * This routine is slightly over-compilcated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression if we add exponentation.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right. 	 */
+if|#
+directive|if
+name|INT_MAX
+operator|/
+literal|1000000000
+operator|>=
+literal|10
+operator|||
+name|INT_MIN
+operator|/
+literal|1000000000
+operator|<=
+operator|-
+literal|10
+error|#
+directive|error
+literal|"integers with more than 10 digits are not supported"
+endif|#
+directive|endif
 name|CHECKSTRSPACE
 argument_list|(
-literal|8
+literal|12
+operator|-
+literal|2
 argument_list|,
 name|expdest
 argument_list|)
@@ -1617,7 +1638,7 @@ name|fmtstr
 argument_list|(
 name|p
 argument_list|,
-literal|10
+literal|12
 argument_list|,
 literal|"%d"
 argument_list|,
