@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.6 (Berkeley) %G%"
+literal|"@(#)proc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * proc.c  *  * Routines for handling procedures, f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Log:	proc.c,v $  * Revision 5.8  86/01/10  19:02:19  donn  * More dbx hacking -- filter out incomplete declarations (with bogus types).  *   * Revision 5.7  86/01/10  13:53:02  donn  * Since we now postpone determination of the type of an argument, we must  * make sure to emit stab information at the end of the routine when we  * definitely have the type.  Notice some care was taken to make sure that  * arguments appear in order in the output file since that's how dbx wants  * them.  Also a minor change for dummy procedures.  *   * Revision 5.6  86/01/06  16:28:06  donn  * Sigh.  We can't commit to defining a symbol as a variable instead of a  * function based only on what we have seen through the declaration section;  * this was properly handled for normal variables but not for arguments.  *   * Revision 5.5  86/01/01  21:59:17  donn  * Pick up CHARACTER*(*) declarations for variables which aren't dummy  * arguments, and complain about them.  *   * Revision 5.4  85/12/20  19:18:35  donn  * Don't assume that dummy procedures of unknown type are functions of type  * undefined until the user (mis-)uses them that way -- they may also be  * subroutines.  *   * Revision 5.3  85/09/30  23:21:07  donn  * Print space with prspace() in outlocvars() so that alignment is preserved.  *   * Revision 5.2  85/08/10  05:03:34  donn  * Support for NAMELIST i/o from Jerry Berkman.  *   * Revision 5.1  85/08/10  03:49:14  donn  * 4.3 alpha  *   * Revision 3.11  85/06/04  03:45:29  donn  * Changed retval() to recognize that a function declaration might have  * bombed out earlier, leaving an error node behind...  *   * Revision 3.10  85/03/08  23:13:06  donn  * Finally figured out why function calls and array elements are not legal  * dummy array dimension declarator elements.  Hacked safedim() to stop 'em.  *   * Revision 3.9  85/02/02  00:26:10  donn  * Removed the call to entrystab() in enddcl() -- this was redundant (it was  * also done in startproc()) and confusing to dbx to boot.  *   * Revision 3.8  85/01/14  04:21:53  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.7  85/01/11  21:10:35  donn  * In conjunction with other changes to implement SAVE statements, function  * nameblocks were changed to make it appear that they are 'saved' too --  * this arranges things so that function return values are forced out of  * register before a return.  *   * Revision 3.6  84/12/10  19:27:20  donn  * comblock() signals an illegal common block name by returning a null pointer,  * but incomm() wasn't able to handle it, leading to core dumps.  I put the  * fix in incomm() to pick up null common blocks.  *   * Revision 3.5  84/11/21  20:33:31  donn  * It seems that I/O elements are treated as character strings so that their  * length can be passed to the I/O routines...  Unfortunately the compiler  * assumes that no temporaries can be of type CHARACTER and casually tosses  * length and type info away when removing TEMP blocks.  This has been fixed...  *   * Revision 3.4  84/11/05  22:19:30  donn  * Fixed a silly bug in the last fix.  *   * Revision 3.3  84/10/29  08:15:23  donn  * Added code to check the type and shape of subscript declarations,  * per Jerry Berkman's suggestion.  *   * Revision 3.2  84/10/29  05:52:07  donn  * Added change suggested by Jerry Berkman to report an error when an array  * is redimensioned.  *   * Revision 3.1  84/10/13  02:12:31  donn  * Merged Jerry Berkman's version into mine.  *   * Revision 2.1  84/07/19  12:04:09  donn  * Changed comment headers for UofU.  *   * Revision 1.6  84/07/19  11:32:15  donn  * Incorporated fix to setbound() to detect backward array subscript limits.  * The fix is by Bob Corbett, donated by Jerry Berkman.  *   * Revision 1.5  84/07/18  18:25:50  donn  * Fixed problem with doentry() where a placeholder for a return value  * was not allocated if the first entry didn't require one but a later  * entry did.  *   * Revision 1.4  84/05/24  20:52:09  donn  * Installed firewall #ifdef around the code that recycles stack temporaries,  * since it seems to be broken and lacks a good fix for the time being.  *   * Revision 1.3  84/04/16  09:50:46  donn  * Fixed mkargtemp() so that it only passes back a copy of a temporary, keeping  * the original for its own use.  This fixes a set of bugs that are caused by  * elements in the argtemplist getting stomped on.  *   * Revision 1.2  84/02/28  21:12:58  donn  * Added Berkeley changes for subroutine call argument temporaries fix.  *   */
+comment|/*  * proc.c  *  * Routines for handling procedures, f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Log:	proc.c,v $  * Revision 5.9  86/01/28  22:30:28  donn  * Let functions of type character have adjustable length.  *   * Revision 5.8  86/01/10  19:02:19  donn  * More dbx hacking -- filter out incomplete declarations (with bogus types).  *   * Revision 5.7  86/01/10  13:53:02  donn  * Since we now postpone determination of the type of an argument, we must  * make sure to emit stab information at the end of the routine when we  * definitely have the type.  Notice some care was taken to make sure that  * arguments appear in order in the output file since that's how dbx wants  * them.  Also a minor change for dummy procedures.  *   * Revision 5.6  86/01/06  16:28:06  donn  * Sigh.  We can't commit to defining a symbol as a variable instead of a  * function based only on what we have seen through the declaration section;  * this was properly handled for normal variables but not for arguments.  *   * Revision 5.5  86/01/01  21:59:17  donn  * Pick up CHARACTER*(*) declarations for variables which aren't dummy  * arguments, and complain about them.  *   * Revision 5.4  85/12/20  19:18:35  donn  * Don't assume that dummy procedures of unknown type are functions of type  * undefined until the user (mis-)uses them that way -- they may also be  * subroutines.  *   * Revision 5.3  85/09/30  23:21:07  donn  * Print space with prspace() in outlocvars() so that alignment is preserved.  *   * Revision 5.2  85/08/10  05:03:34  donn  * Support for NAMELIST i/o from Jerry Berkman.  *   * Revision 5.1  85/08/10  03:49:14  donn  * 4.3 alpha  *   * Revision 3.11  85/06/04  03:45:29  donn  * Changed retval() to recognize that a function declaration might have  * bombed out earlier, leaving an error node behind...  *   * Revision 3.10  85/03/08  23:13:06  donn  * Finally figured out why function calls and array elements are not legal  * dummy array dimension declarator elements.  Hacked safedim() to stop 'em.  *   * Revision 3.9  85/02/02  00:26:10  donn  * Removed the call to entrystab() in enddcl() -- this was redundant (it was  * also done in startproc()) and confusing to dbx to boot.  *   * Revision 3.8  85/01/14  04:21:53  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.7  85/01/11  21:10:35  donn  * In conjunction with other changes to implement SAVE statements, function  * nameblocks were changed to make it appear that they are 'saved' too --  * this arranges things so that function return values are forced out of  * register before a return.  *   * Revision 3.6  84/12/10  19:27:20  donn  * comblock() signals an illegal common block name by returning a null pointer,  * but incomm() wasn't able to handle it, leading to core dumps.  I put the  * fix in incomm() to pick up null common blocks.  *   * Revision 3.5  84/11/21  20:33:31  donn  * It seems that I/O elements are treated as character strings so that their  * length can be passed to the I/O routines...  Unfortunately the compiler  * assumes that no temporaries can be of type CHARACTER and casually tosses  * length and type info away when removing TEMP blocks.  This has been fixed...  *   * Revision 3.4  84/11/05  22:19:30  donn  * Fixed a silly bug in the last fix.  *   * Revision 3.3  84/10/29  08:15:23  donn  * Added code to check the type and shape of subscript declarations,  * per Jerry Berkman's suggestion.  *   * Revision 3.2  84/10/29  05:52:07  donn  * Added change suggested by Jerry Berkman to report an error when an array  * is redimensioned.  *   * Revision 3.1  84/10/13  02:12:31  donn  * Merged Jerry Berkman's version into mine.  *   * Revision 2.1  84/07/19  12:04:09  donn  * Changed comment headers for UofU.  *   * Revision 1.6  84/07/19  11:32:15  donn  * Incorporated fix to setbound() to detect backward array subscript limits.  * The fix is by Bob Corbett, donated by Jerry Berkman.  *   * Revision 1.5  84/07/18  18:25:50  donn  * Fixed problem with doentry() where a placeholder for a return value  * was not allocated if the first entry didn't require one but a later  * entry did.  *   * Revision 1.4  84/05/24  20:52:09  donn  * Installed firewall #ifdef around the code that recycles stack temporaries,  * since it seems to be broken and lacks a good fix for the time being.  *   * Revision 1.3  84/04/16  09:50:46  donn  * Fixed mkargtemp() so that it only passes back a copy of a temporary, keeping  * the original for its own use.  This fixes a set of bugs that are caused by  * elements in the argtemplist getting stomped on.  *   * Revision 1.2  84/02/28  21:12:58  donn  * Added Berkeley changes for subroutine call argument temporaries fix.  *   */
 end_comment
 
 begin_include
@@ -5665,19 +5665,53 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|!
+operator|(
 name|v
 operator|->
 name|vstg
-operator|!=
+operator|==
 name|STGARG
+operator|||
+name|v
+operator|->
+name|vclass
+operator|==
+name|CLENTRY
+operator|||
+operator|(
+name|v
+operator|->
+name|vclass
+operator|==
+name|CLPROC
+operator|&&
+name|v
+operator|->
+name|vprocclass
+operator|==
+name|PTHISPROC
+operator|)
+operator|)
 condition|)
+block|{
 name|dclerr
 argument_list|(
-literal|"adjustable length character variable that is not a dummy argument"
+literal|"illegal adjustable length character variable"
 argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+name|v
+operator|->
+name|vleng
+operator|=
+name|ICON
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
