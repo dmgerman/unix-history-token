@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -906,6 +906,12 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|struct
+name|ifaddr
+modifier|*
+name|ifa_ifwithdstaddr
+parameter_list|()
+function_decl|;
 name|af
 operator|=
 name|entry
@@ -1213,6 +1219,39 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 		 * If we are adding a route to an interface, 		 * and the interface is a pt to pt link 		 * we should search for the destination 		 * as our clue to the interface.  Otherwise 		 * we can use the local address. 		 */
+if|if
+condition|(
+operator|(
+name|entry
+operator|->
+name|rt_flags
+operator|&
+name|RTF_GATEWAY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|entry
+operator|->
+name|rt_flags
+operator|&
+name|RTF_HOST
+condition|)
+name|ifa
+operator|=
+name|ifa_ifwithdstaddr
+argument_list|(
+operator|&
+name|entry
+operator|->
+name|rt_dst
+argument_list|)
+expr_stmt|;
+else|else
 name|ifa
 operator|=
 name|ifa_ifwithaddr
@@ -1223,6 +1262,21 @@ operator|->
 name|rt_gateway
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* If we are adding a route to a remote net 		 * or host, the gateway may still be on the 		 * other end of a pt to pt link. 		 */
+name|ifa
+operator|=
+name|ifa_ifwithdstaddr
+argument_list|(
+operator|&
+name|entry
+operator|->
+name|rt_gateway
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifa
