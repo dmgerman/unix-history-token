@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.84 (Berkeley) %G%"
+literal|"@(#)conf.c	8.85 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5874,6 +5874,17 @@ begin_comment
 comment|/* use<sys/statfs.h> implementation */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SFS_STATVFS
+value|6
+end_define
+
+begin_comment
+comment|/* use<sys/statvfs.h> implementation */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5972,6 +5983,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|SFS_TYPE
+operator|==
+name|SFS_STATVFS
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/statvfs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|long
 name|freespace
@@ -6037,6 +6067,17 @@ name|FSBLOCKSIZE
 value|fs.fd_bsize
 else|#
 directive|else
+if|#
+directive|if
+name|SFS_TYPE
+operator|==
+name|SFS_STATVFS
+name|struct
+name|statvfs
+name|fs
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|statfs
 name|fs
@@ -6065,6 +6106,8 @@ define|#
 directive|define
 name|f_bavail
 value|f_bfree
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
