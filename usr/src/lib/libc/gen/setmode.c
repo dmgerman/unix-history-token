@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setmode.c	5.8 (Berkeley) %G%"
+literal|"@(#)setmode.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +54,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|SETMODE_DEBUG
-end_define
 
 begin_ifdef
 ifdef|#
