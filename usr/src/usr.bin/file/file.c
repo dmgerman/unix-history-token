@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c 4.1 %G%"
+literal|"@(#)file.c 4.1 10/1/80"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,6 +772,63 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+if|if
+condition|(
+name|mbuf
+operator|.
+name|st_size
+operator|%
+literal|512
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* it may be a PRESS file */
+name|lseek
+argument_list|(
+name|ifile
+argument_list|,
+operator|-
+literal|512L
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* last block */
+if|if
+condition|(
+name|read
+argument_list|(
+name|ifile
+argument_list|,
+name|buf
+argument_list|,
+name|BUFSIZ
+argument_list|)
+operator|>
+literal|0
+operator|&&
+operator|*
+operator|(
+name|short
+name|int
+operator|*
+operator|)
+name|buf
+operator|==
+literal|12138
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"PRESS file\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 name|i
 operator|=
