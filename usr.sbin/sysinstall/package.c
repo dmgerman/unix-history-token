@@ -43,6 +43,8 @@ begin_decl_stmt
 specifier|static
 name|Boolean
 name|sigpipe_caught
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -98,19 +100,6 @@ condition|(
 operator|!
 name|mediaVerify
 argument_list|()
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
-operator|!
-name|mediaDevice
-operator|->
-name|init
-argument_list|(
-name|mediaDevice
-argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE

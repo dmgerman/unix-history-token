@@ -1623,11 +1623,6 @@ name|what
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"Found DNS entry for %s successfully..\n"
@@ -2124,12 +2119,6 @@ name|DITEM_FAILURE
 return|;
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"Found DNS entry for %s successfully.."
@@ -2137,7 +2126,6 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|variable_set2
 argument_list|(

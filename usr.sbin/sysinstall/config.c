@@ -2165,7 +2165,7 @@ expr_stmt|;
 return|return
 name|package_add
 argument_list|(
-literal|"linux_base"
+literal|"linux_lib"
 argument_list|)
 return|;
 block|}

@@ -75,16 +75,6 @@ name|DIST_INFO
 value|0x00080
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_comment
-comment|/* only applicable on x86 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -120,11 +110,6 @@ name|DIST_COMPAT3X
 value|0x01000
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -156,15 +141,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_LOCAL
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_ALL
-value|0x3FFFF
+value|0x1FFFF
 end_define
 
 begin_comment
@@ -462,12 +440,6 @@ name|DIST_XF86_SERVER
 value|0x8000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -565,24 +537,6 @@ directive|define
 name|DIST_XF86_SERVER_9WSN
 value|0x0002000
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__alpha__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_SERVER_TGA
-value|0x0000001
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -234,14 +234,9 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__alpha__
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|signal
 argument_list|(
 name|SIGINT
@@ -422,6 +417,8 @@ else|:
 literal|"serial console"
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
 name|ioctl
 argument_list|(
 literal|0
@@ -463,32 +460,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|sysctlbyname
-argument_list|(
-literal|"machdep.unaligned_print"
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|i
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1538,7 +1509,7 @@ condition|(
 name|msgYesNo
 argument_list|(
 literal|"There seems to be an emergency holographic shell\n"
-literal|"already running on VTY 4.\n\n"
+literal|"already running on VTY 4.\n"
 literal|"Kill it and start a new one?"
 argument_list|)
 condition|)

@@ -2013,6 +2013,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Don't trash the MBR if the first (and therefore only) chunk is marked for a truly dedicated 		 * disk (i.e., the disklabel starts at sector 0), even in cases where the user has requested 		 * booteasy or a "standard" MBR -- both would be fatal in this case. 		 */
+if|#
+directive|if
+literal|0
+block|if ((d->chunks->part->flags& CHUNK_FORCE_ALL) != CHUNK_FORCE_ALL&& (mbrContents = getBootMgr(d->name)) != NULL) 		    Set_Boot_Mgr(d, mbrContents);
+else|#
+directive|else
 comment|/* 		 * Don't offer to update the MBR on this disk if the first "real" chunk looks like 		 * a FreeBSD "all disk" partition, or the disk is entirely FreeBSD. 		 */
 if|if
 condition|(
@@ -2041,7 +2047,8 @@ operator|>
 literal|1
 operator|)
 operator|)
-condition|)
+operator|&&
+operator|(
 name|mbrContents
 operator|=
 name|getBootMgr
@@ -2050,12 +2057,10 @@ name|d
 operator|->
 name|name
 argument_list|)
-expr_stmt|;
-else|else
-name|mbrContents
-operator|=
+operator|)
+operator|!=
 name|NULL
-expr_stmt|;
+condition|)
 name|Set_Boot_Mgr
 argument_list|(
 name|d
@@ -2063,6 +2068,8 @@ argument_list|,
 name|mbrContents
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|DITEM_STATUS
