@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_mbuf.c	7.13 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_mbuf.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -105,7 +105,7 @@ literal|4096
 define|#
 directive|define
 name|NCL_INIT
-value|(4096/MCLBYTES)
+value|(4096/CLBYTES)
 else|#
 directive|else
 define|#
@@ -935,7 +935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* /*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  */
+comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  */
 end_comment
 
 begin_function
