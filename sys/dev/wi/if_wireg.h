@@ -1658,8 +1658,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_NIC_3842_PCMCIA_ATM_ID
+name|WI_NIC_3842_PCMCIA_ATL_ID
 value|0x800D
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_3842_PCMCIA_ATS_ID
+value|0x800E
 end_define
 
 begin_define
@@ -1690,8 +1697,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_NIC_3842_MINI_ATM_ID
+name|WI_NIC_3842_MINI_ATL_ID
 value|0x8014
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_3842_MINI_ATS_ID
+value|0x8015
 end_define
 
 begin_define
@@ -1722,7 +1736,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_NIC_3842_PCI_ATM_ID
+name|WI_NIC_3842_PCI_ATL_ID
+value|0x8018
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_3842_PCI_ATS_ID
 value|0x8018
 end_define
 
@@ -1754,6 +1775,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_NIC_P3_PCMCIA_ATL_ID
+value|0x801C
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_PCMCIA_ATS_ID
+value|0x801D
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_NIC_P3_PCMCIA_STR
 value|"RF:PRISM3(PCMCIA)"
 end_define
@@ -1774,6 +1809,20 @@ define|#
 directive|define
 name|WI_NIC_P3_MINI_SST_ID
 value|0x8022
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_MINI_ATL_ID
+value|0x8023
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_MINI_ATS_ID
+value|0x8024
 end_define
 
 begin_define
