@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cronyx-Sigma adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2004 Cronyx Engineering.  * Rewritten on DDK, ported to NETGRAPH, rewritten for FreeBSD 3.x-5.x by  * Kurakin Roman,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * Cronyx Id: if_cx.c,v 1.1.2.22 2004/02/05 17:10:19 rik Exp $  */
+comment|/*  * Cronyx-Sigma adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2004 Cronyx Engineering.  * Rewritten on DDK, ported to NETGRAPH, rewritten for FreeBSD 3.x-5.x by  * Kurakin Roman,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * Cronyx Id: if_cx.c,v 1.1.2.23 2004/02/26 17:56:40 rik Exp $  */
 end_comment
 
 begin_include
@@ -14582,13 +14582,76 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|502103
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|cx_cdevsw
+init|=
+block|{
+operator|.
+name|d_open
+operator|=
+name|cx_open
+block|,
+operator|.
+name|d_close
+operator|=
+name|cx_close
+block|,
+operator|.
+name|d_read
+operator|=
+name|cx_read
+block|,
+operator|.
+name|d_write
+operator|=
+name|cx_write
+block|,
+operator|.
+name|d_ioctl
+operator|=
+name|cx_ioctl
+block|,
+operator|.
+name|d_poll
+operator|=
+name|ttypoll
+block|,
+operator|.
+name|d_name
+operator|=
+literal|"cx"
+block|,
+operator|.
+name|d_maj
+operator|=
+name|CDEV_MAJOR
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_TTY
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* __FreeBSD_version> 501000 */
+comment|/* __FreeBSD_version>= 502103 */
 end_comment
 
 begin_decl_stmt
@@ -17402,6 +17465,11 @@ name|cdevsw
 modifier|*
 name|cdsw
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502103
 name|dev
 operator|=
 name|udev2dev
@@ -17414,6 +17482,19 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|dev
+operator|=
+name|makedev
+argument_list|(
+name|CDEV_MAJOR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|type
@@ -17424,6 +17505,10 @@ name|MOD_LOAD
 case|:
 if|if
 condition|(
+name|dev
+operator|!=
+name|NODEV
+operator|&&
 operator|(
 name|cdsw
 operator|=
