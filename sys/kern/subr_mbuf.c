@@ -1577,7 +1577,7 @@ literal|"mbuf subsystem general lists lock"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -1991,7 +1991,7 @@ literal|"mbuf PCPU list lock"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mb_list_mbuf
