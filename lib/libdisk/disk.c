@@ -2843,6 +2843,15 @@ argument_list|(
 name|listsize
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|disklist
+argument_list|,
+literal|0
+argument_list|,
+name|listsize
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sysctlbyname
