@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.28 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.22.1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,10 +723,13 @@ operator|->
 name|sin_addr
 argument_list|)
 expr_stmt|;
+name|hostok
+operator|++
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|OLD_LOGIN
-block|}
 elseif|else
 if|if
 condition|(
@@ -793,7 +796,6 @@ operator|->
 name|h_addr_list
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|!
@@ -829,9 +831,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+else|else
+name|hostok
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_block
+
+begin_else
 else|else
 block|{
 if|if
@@ -940,7 +949,6 @@ else|else
 name|hostok
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|use_kerberos
@@ -1578,7 +1586,7 @@ name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_else
 
 begin_decl_stmt
 name|char
