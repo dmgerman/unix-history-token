@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.29 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.30 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.29 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.30 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,7 +772,9 @@ name|message
 argument_list|(
 literal|"553"
 argument_list|,
-literal|"Local configuration error, hostname not recognized as local"
+literal|"%s config error: mail loops back to myself"
+argument_list|,
+name|MyHostName
 argument_list|)
 expr_stmt|;
 break|break;
