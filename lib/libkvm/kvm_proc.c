@@ -450,6 +450,15 @@ return|;
 block|}
 if|if
 condition|(
+name|proc
+operator|.
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
+condition|)
+block|{
+if|if
+condition|(
 name|KREAD
 argument_list|(
 name|kd
@@ -495,6 +504,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1358,7 +1368,6 @@ name|mainthread
 operator|.
 name|td_wmesg
 condition|)
-comment|/* XXXKSE */
 operator|(
 name|void
 operator|)
@@ -1629,11 +1638,13 @@ operator|!=
 name|PRS_ZOMBIE
 operator|)
 operator|&&
+operator|(
 name|mainthread
 operator|.
 name|td_blocked
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|kp
