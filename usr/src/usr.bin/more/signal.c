@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)signal.c	5.1 (Berkeley) %G%"
+literal|"@(#)signal.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,13 +54,6 @@ name|int
 name|sigs
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|S_INTERRUPT
-value|01
-end_define
 
 begin_ifdef
 ifdef|#
@@ -150,37 +143,6 @@ name|reading
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Interrupt signal handler.  */
-end_comment
-
-begin_function
-specifier|static
-name|HANDLER
-name|interrupt
-parameter_list|()
-block|{
-name|SIGNAL
-argument_list|(
-name|SIGINT
-argument_list|,
-name|interrupt
-argument_list|)
-expr_stmt|;
-name|sigs
-operator||=
-name|S_INTERRUPT
-expr_stmt|;
-if|if
-condition|(
-name|reading
-condition|)
-name|intread
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -197,7 +159,10 @@ name|HANDLER
 name|stop
 parameter_list|()
 block|{
-name|SIGNAL
+operator|(
+name|void
+operator|)
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -239,7 +204,7 @@ name|HANDLER
 name|winch
 parameter_list|()
 block|{
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWINCH
 argument_list|,
@@ -281,7 +246,7 @@ name|HANDLER
 name|winch
 parameter_list|()
 block|{
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWIND
 argument_list|,
@@ -336,11 +301,11 @@ comment|/* 		 * Set signal handlers. 		 */
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|interrupt
+name|quit
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -349,7 +314,7 @@ name|SIGTSTP
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -364,7 +329,7 @@ name|SIGWINCH
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWINCH
 argument_list|,
@@ -379,7 +344,7 @@ name|SIGWIND
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWIND
 argument_list|,
@@ -397,7 +362,7 @@ comment|/* 		 * Restore signals to defaults. 		 */
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -410,7 +375,7 @@ name|SIGTSTP
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -425,7 +390,7 @@ name|SIGWINCH
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWINCH
 argument_list|,
@@ -440,7 +405,7 @@ name|SIGWIND
 operator|(
 name|void
 operator|)
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGWIND
 argument_list|,
@@ -556,7 +521,7 @@ comment|/* 		 * Clean up the terminal. 		 */
 ifdef|#
 directive|ifdef
 name|SIGTTOU
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -585,7 +550,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTTOU
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -594,7 +559,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -610,7 +575,7 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* 		 * ... Bye bye. ... 		 * Hopefully we'll be back later and resume here... 		 * Reset the terminal and arrange to repaint the 		 * screen when we get back to the main command loop. 		 */
-name|SIGNAL
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -632,43 +597,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|tsignals
-operator|&
-name|S_INTERRUPT
-condition|)
-block|{
-name|bell
-argument_list|()
-expr_stmt|;
-comment|/* 		 * {{ You may wish to replace the bell() with  		 *    error("Interrupt"); }} 		 */
-comment|/* 		 * If we were interrupted while in the "calculating  		 * line numbers" loop, turn off line numbers. 		 */
-if|if
-condition|(
-name|lnloop
-condition|)
-block|{
-name|lnloop
-operator|=
-literal|0
-expr_stmt|;
-name|linenums
-operator|=
-literal|0
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Line numbers turned off"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
