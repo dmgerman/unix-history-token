@@ -12210,8 +12210,10 @@ name|sc
 operator|->
 name|xold
 operator|)
+operator|*
+literal|10
 operator|/
-literal|4
+literal|85
 expr_stmt|;
 name|y
 operator|=
@@ -12222,8 +12224,10 @@ name|sc
 operator|->
 name|yold
 operator|)
+operator|*
+literal|10
 operator|/
-literal|4
+literal|85
 expr_stmt|;
 block|}
 else|else
