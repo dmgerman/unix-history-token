@@ -523,7 +523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine uses an inb to an unused port, the time to execute that  * inb is approximately 1.25uS.  This value is pretty constant across  * all CPU's and all buses, with the exception of some PCI implentations  * that do not forward this I/O adress to the ISA bus as they know it  * is not a valid ISA bus address, those machines execute this inb in  * 60 nS :-(.  *  * XXX this should be converted to use bios_tick.  */
+comment|/*  * This routine uses an inb to an unused port, the time to execute that  * inb is approximately 1.25uS.  This value is pretty constant across  * all CPU's and all buses, with the exception of some PCI implentations  * that do not forward this I/O address to the ISA bus as they know it  * is not a valid ISA bus address, those machines execute this inb in  * 60 nS :-(.  *  * XXX this should be converted to use bios_tick.  */
 end_comment
 
 begin_function
