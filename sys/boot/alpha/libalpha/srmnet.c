@@ -935,7 +935,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Your firmware may be too old to network-boot NetBSD/Alpha,\n"
+literal|"Your firmware may be too old to network-boot FreeBSD/alpha,\n"
 argument_list|)
 expr_stmt|;
 name|printf
