@@ -14,9 +14,8 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-argument|lint
+name|lint
 argument_list|)
-name|$
 end_if
 
 begin_decl_stmt
@@ -29,21 +28,28 @@ literal|"@(#)err.c^I8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|$
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* LIBC_SCCS and not lint */
-endif|$
+end_comment
+
+begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
 name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

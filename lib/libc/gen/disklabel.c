@@ -14,9 +14,8 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-argument|lint
+name|lint
 argument_list|)
-name|$
 end_if
 
 begin_decl_stmt
@@ -32,9 +31,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-comment|/* LIBC_SCCS and not lint */
-endif|$
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
