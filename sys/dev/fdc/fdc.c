@@ -3592,6 +3592,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|fdc
+operator|->
+name|fdc_dev
+operator|=
+name|dev
+expr_stmt|;
 name|error
 operator|=
 name|fdc_alloc_resources
