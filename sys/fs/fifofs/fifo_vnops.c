@@ -1240,7 +1240,7 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
+if|if
 condition|(
 name|fip
 operator|->
@@ -1294,6 +1294,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 			 * We must have got woken up because we had a writer. 			 * That (and not still having one) is the condition 			 * that we must wait for. 			 */
 block|}
 block|}
 if|if
@@ -1334,7 +1335,7 @@ block|}
 block|}
 else|else
 block|{
-while|while
+if|if
 condition|(
 name|fip
 operator|->
@@ -1352,7 +1353,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX: Some race I havn't located is solved 				 * by timing out after a sec.  Race seen when 				 * sendmail hangs here during boot /phk 				 */
 name|error
 operator|=
 name|tsleep
@@ -1368,7 +1368,7 @@ name|PSOCK
 argument_list|,
 literal|"fifoow"
 argument_list|,
-name|hz
+literal|0
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -1389,6 +1389,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 				 * We must have got woken up because we had 				 * a reader.  That (and not still having one) 				 * is the condition that we must wait for. 				 */
 block|}
 block|}
 block|}
