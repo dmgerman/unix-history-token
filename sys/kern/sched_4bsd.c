@@ -931,7 +931,7 @@ specifier|static
 name|int
 name|forward_wakeup_enabled
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1021,7 +1021,7 @@ specifier|static
 name|int
 name|forward_wakeup_use_mask
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
