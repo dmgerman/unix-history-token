@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.9.2.1 1995/06/04 09:15:29 davidg Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.10 1995/06/11 19:31:31 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -129,7 +129,12 @@ comment|/* VL/ISA Based Controller */
 name|AHC_294
 init|=
 literal|0x440
+block|,
 comment|/* PCI Based Controller */
+name|AHC_394
+init|=
+literal|0x840
+comment|/* Twin Channel PCI Controller */
 block|}
 name|ahc_type
 typedef|;
@@ -247,13 +252,8 @@ decl_stmt|;
 define|#
 directive|define
 name|SCB_DOWN_SIZE
-value|19
+value|26
 comment|/* amount to actually download */
-define|#
-directive|define
-name|SCB_BZERO_SIZE
-value|19
-comment|/* 					 * amount we need to clear between 					 * commands 					 */
 comment|/*23*/
 name|physaddr
 name|data
@@ -294,7 +294,7 @@ comment|/* Used to thread SCBs awaiting 					 * selection 					 */
 define|#
 directive|define
 name|SCB_LIST_NULL
-value|0x10
+value|0xff
 comment|/* SCB list equivelent to NULL */
 if|#
 directive|if
@@ -458,6 +458,10 @@ name|u_short
 name|tagenable
 decl_stmt|;
 comment|/* Targets that can handle tagqueing */
+name|u_short
+name|discenable
+decl_stmt|;
+comment|/* Targets allowed to disconnect */
 name|int
 name|numscbs
 decl_stmt|;

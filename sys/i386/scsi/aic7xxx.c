@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.28.2.3 1995/06/09 18:06:45 davidg Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.29 1995/06/11 19:31:29 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<i386/scsi/aic7xxx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/scsi/93cx6.h>
 end_include
 
 begin_define
@@ -804,6 +810,17 @@ comment|/* Our ID mask */
 end_comment
 
 begin_comment
+comment|/*  * SCSI Transfer Count (pp. 3-19,20)  * These registers count down the number of bytes transfered  * across the SCSI bus.  The counter is decrimented only once  * the data has been safely transfered.  SDONE in SSTAT0 is  * set when STCNT goes to 0  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STCNT
+value|0xc08ul
+end_define
+
+begin_comment
 comment|/*  * SCSI Status 0 (p. 3-21)  * Contains one set of SCSI Interrupt codes  * These are most likely of interest to the sequencer  */
 end_comment
 
@@ -1031,6 +1048,17 @@ define|#
 directive|define
 name|REQINIT
 value|0x01
+end_define
+
+begin_comment
+comment|/*  * SCSI/Host Address (p. 3-30)  * These registers hold the host address for the byte about to be  * transfered on the SCSI bus.  They are counted up in the same  * manner as STCNT is counted down.  SHADDR should always be used  * to determine the address of the last byte transfered since HADDR  * can be squewed by write ahead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHADDR
+value|0xc14ul
 end_define
 
 begin_comment
@@ -1269,6 +1297,63 @@ value|0x01
 end_define
 
 begin_comment
+comment|/*  * Bus On/Off Time (p. 3-44)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUSTIME
+value|0xc85ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOFF
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BON
+value|0x0f
+end_define
+
+begin_comment
+comment|/*  * Bus Speed (p. 3-45)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUSSPD
+value|0xc86ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFTHRSH
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STBOFF
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|STBON
+value|0x07
+end_define
+
+begin_comment
 comment|/*  * Host Control (p. 3-47) R/W  * Overal host control of the device.  */
 end_comment
 
@@ -1327,6 +1412,17 @@ define|#
 directive|define
 name|CHIPRST
 value|0x01
+end_define
+
+begin_comment
+comment|/*  * Host Address (p. 3-48)  * This register contains the address of the byte about  * to be transfered across the host bus.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HADDR
+value|0xc88ul
 end_define
 
 begin_comment
@@ -1648,6 +1744,73 @@ value|0xc86ul
 end_define
 
 begin_comment
+comment|/*  * Serial EEPROM Control (p. 4-92 in 7870 Databook)  * Controls the reading and writing of an external serial 1-bit  * EEPROM Device.  In order to access the serial EEPROM, you must  * first set the SEEMS bit that generates a request to the memory  * port for access to the serial EEPROM device.  When the memory  * port is not busy servicing another request, it reconfigures  * to allow access to the serial EEPROM.  When this happens, SEERDY  * gets set high to verify that the memory port access has been  * granted.    *  * After successful arbitration for the memory port, the SEECS bit of   * the SEECTL register is connected to the chip select.  The SEECK,   * SEEDO, and SEEDI are connected to the clock, data out, and data in   * lines respectively.  The SEERDY bit of SEECTL is useful in that it   * gives us an 800 nsec timer.  After a write to the SEECTL register,   * the SEERDY goes high 800 nsec later.  The one exception to this is   * when we first request access to the memory port.  The SEERDY goes   * high to signify that access has been granted and, for this case, has   * no implied timing.  *  * See 93cx6.c for detailed information on the protocol necessary to   * read the serial EEPROM.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEECTL
+value|0xc1eul
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTARBACK
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTARBREQ
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEMS
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEERDY
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEECS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEECK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEDO
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEDI
+value|0x01
+end_define
+
+begin_comment
 comment|/* ---------------------- Scratch RAM Offsets ------------------------- */
 end_comment
 
@@ -1758,6 +1921,20 @@ define|#
 directive|define
 name|SEND_REJ
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_COUNT
+value|0xc4dul
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT
+value|0xc4eul
 end_define
 
 begin_define
@@ -1882,6 +2059,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HA_274_BIOSCTRL
+value|0xc5ful
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOSMODE
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOSDISABLED
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSG_ABORT
 value|0x06
 end_define
@@ -1913,6 +2111,169 @@ directive|define
 name|BUS_32_BIT
 value|0x02
 end_define
+
+begin_comment
+comment|/*  * Define the format of the SEEPROM registers (16 bits).  *  */
+end_comment
+
+begin_struct
+struct|struct
+name|seeprom_config
+block|{
+comment|/*  * SCSI ID Configuration Flags  */
+define|#
+directive|define
+name|CFXFER
+value|0x0007
+comment|/* synchronous transfer rate */
+define|#
+directive|define
+name|CFSYNCH
+value|0x0008
+comment|/* enable synchronous transfer */
+define|#
+directive|define
+name|CFDISC
+value|0x0010
+comment|/* enable disconnection */
+define|#
+directive|define
+name|CFWIDEB
+value|0x0020
+comment|/* wide bus device */
+comment|/* UNUSED		0x00C0 */
+define|#
+directive|define
+name|CFSTART
+value|0x0100
+comment|/* send start unit SCSI command */
+define|#
+directive|define
+name|CFINCBIOS
+value|0x0200
+comment|/* include in BIOS scan */
+define|#
+directive|define
+name|CFRNFOUND
+value|0x0400
+comment|/* report even if not found */
+comment|/* UNUSED		0xf800 */
+name|unsigned
+name|short
+name|device_flags
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* words 0-15 */
+comment|/*  * BIOS Control Bits  */
+define|#
+directive|define
+name|CFSUPREM
+value|0x0001
+comment|/* support all removeable drives */
+define|#
+directive|define
+name|CFSUPREMB
+value|0x0002
+comment|/* support removeable drives for boot only */
+define|#
+directive|define
+name|CFBIOSEN
+value|0x0004
+comment|/* BIOS enabled */
+comment|/* UNUSED		0x0008 */
+define|#
+directive|define
+name|CFSM2DRV
+value|0x0010
+comment|/* support more than two drives */
+comment|/* UNUSED		0x0060 */
+define|#
+directive|define
+name|CFEXTEND
+value|0x0080
+comment|/* extended translation enabled */
+comment|/* UNUSED		0xff00 */
+name|unsigned
+name|short
+name|bios_control
+decl_stmt|;
+comment|/* word 16 */
+comment|/*  * Host Adapter Control Bits  */
+comment|/* UNUSED		0x0003 */
+define|#
+directive|define
+name|CFSTERM
+value|0x0004
+comment|/* SCSI low byte termination (non-wide cards) */
+define|#
+directive|define
+name|CFWSTERM
+value|0x0008
+comment|/* SCSI high byte termination (wide card) */
+define|#
+directive|define
+name|CFSPARITY
+value|0x0010
+comment|/* SCSI parity */
+comment|/* UNUSED		0x0020 */
+define|#
+directive|define
+name|CFRESETB
+value|0x0040
+comment|/* reset SCSI bus at IC initialization */
+comment|/* UNUSED		0xff80 */
+name|unsigned
+name|short
+name|adapter_control
+decl_stmt|;
+comment|/* word 17 */
+comment|/*  * Bus Release, Host Adapter ID  */
+define|#
+directive|define
+name|CFSCSIID
+value|0x000f
+comment|/* host adapter SCSI ID */
+comment|/* UNUSED		0x00f0 */
+define|#
+directive|define
+name|CFBRTIME
+value|0xff00
+comment|/* bus release time */
+name|unsigned
+name|short
+name|brtime_id
+decl_stmt|;
+comment|/* word 18 */
+comment|/*  * Maximum targets  */
+define|#
+directive|define
+name|CFMAXTARG
+value|0x00ff
+comment|/* maximum targets */
+comment|/* UNUSED		0xff00 */
+name|unsigned
+name|short
+name|max_targets
+decl_stmt|;
+comment|/* word 19 */
+name|unsigned
+name|short
+name|res_1
+index|[
+literal|11
+index|]
+decl_stmt|;
+comment|/* words 20-30 */
+name|unsigned
+name|short
+name|checksum
+decl_stmt|;
+comment|/* word 31 */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Since the sequencer can disable pausing in a critical section, we  * must loop until it actually stops.  * XXX Should add a timeout in here??  */
@@ -2772,6 +3133,16 @@ name|ahc
 operator|->
 name|sc_link_b
 operator|.
+name|adapter_targ
+operator|=
+name|ahc
+operator|->
+name|our_id_b
+expr_stmt|;
+name|ahc
+operator|->
+name|sc_link_b
+operator|.
 name|fordriver
 operator|=
 operator|(
@@ -3160,10 +3531,21 @@ break|break;
 case|case
 name|SEND_REJECT
 case|:
+block|{
+name|u_char
+name|rejbyte
+init|=
+name|inb
+argument_list|(
+name|HA_REJBYTE
+operator|+
+name|iobase
+argument_list|)
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d:%c:%d: Warning - "
-literal|"message reject, message type: 0x%x\n"
+literal|"ahc%d:%c:%d: Warning - message "
+literal|"rejected by target: 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3171,15 +3553,44 @@ name|channel
 argument_list|,
 name|target
 argument_list|,
-name|inb
-argument_list|(
-name|HA_REJBYTE
-operator|+
-name|iobase
-argument_list|)
+name|rejbyte
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rejbyte
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x20
+condition|)
+block|{
+comment|/* Tagged Message */
+name|printf
+argument_list|(
+literal|"ahc%d:%c:%d: Tagged message "
+literal|"rejected.  Disabling tagged "
+literal|"commands for this target.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|tagenable
+operator|&=
+operator|~
+name|targ_mask
+expr_stmt|;
+block|}
 break|break;
+block|}
 case|case
 name|NO_IDENT
 case|:
@@ -3219,7 +3630,8 @@ name|iobase
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d:%c:%d: no active SCB - "
+literal|"ahc%d:%c:%d: no active SCB for "
+literal|"reconnecting target - "
 literal|"issuing ABORT\n"
 argument_list|,
 name|unit
@@ -4013,13 +4425,20 @@ operator|)
 condition|)
 block|{
 name|u_char
-name|flags
+name|control
+init|=
+name|scb
+operator|->
+name|control
 decl_stmt|;
 name|u_char
 name|head
 decl_stmt|;
 name|u_char
 name|tail
+decl_stmt|;
+name|u_short
+name|active
 decl_stmt|;
 name|struct
 name|ahc_dma_seg
@@ -4073,6 +4492,19 @@ argument_list|,
 name|SCB_DOWN_SIZE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_YET
+name|scb
+operator|->
+name|control
+operator||=
+name|control
+operator|&
+name|SCB_DISCENB
+expr_stmt|;
+endif|#
+directive|endif
 name|scb
 operator|->
 name|flags
@@ -4175,6 +4607,61 @@ operator|*
 name|sc
 argument_list|)
 expr_stmt|;
+name|scb
+operator|->
+name|data
+operator|=
+name|sg
+operator|->
+name|addr
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|0
+index|]
+operator|=
+name|sg
+operator|->
+name|len
+operator|&
+literal|0xff
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|sg
+operator|->
+name|len
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|sg
+operator|->
+name|len
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
 name|outb
 argument_list|(
 name|SCBCNT
@@ -4215,6 +4702,57 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Ensure that the target is "BUSY" 					 * so we don't get overlapping  					 * commands if we happen to be doing 					 * tagged I/O. 					 */
+name|active
+operator|=
+name|inb
+argument_list|(
+name|HA_ACTIVE0
+operator|+
+name|iobase
+argument_list|)
+operator||
+operator|(
+name|inb
+argument_list|(
+name|HA_ACTIVE1
+operator|+
+name|iobase
+argument_list|)
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|active
+operator||=
+name|targ_mask
+expr_stmt|;
+name|outb
+argument_list|(
+name|HA_ACTIVE0
+operator|+
+name|iobase
+argument_list|,
+name|active
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|HA_ACTIVE1
+operator|+
+name|iobase
+argument_list|,
+operator|(
+name|active
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
 comment|/* 					 * Add this SCB to the "waiting for 					 * selection" list. 					 */
 name|head
 operator|=
@@ -4237,7 +4775,7 @@ expr_stmt|;
 if|if
 condition|(
 name|head
-operator|&
+operator|==
 name|SCB_LIST_NULL
 condition|)
 block|{
@@ -4257,7 +4795,7 @@ elseif|else
 if|if
 condition|(
 name|tail
-operator|&
+operator|==
 name|SCB_LIST_NULL
 condition|)
 block|{
@@ -4546,12 +5084,22 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Handled Residual of %d bytes\n"
+literal|"SG_COUNT == %d\n"
 argument_list|,
 name|scb
 operator|->
 name|xs
 operator|->
 name|resid
+argument_list|,
+name|inb
+argument_list|(
+name|SCBARRAY
+operator|+
+literal|18
+operator|+
+name|iobase
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5255,6 +5803,158 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|enable_seeprom
+parameter_list|(
+name|u_long
+name|offset
+parameter_list|,
+name|u_short
+name|CS
+parameter_list|,
+comment|/* chip select */
+name|u_short
+name|CK
+parameter_list|,
+comment|/* clock */
+name|u_short
+name|DO
+parameter_list|,
+comment|/* data out */
+name|u_short
+name|DI
+parameter_list|,
+comment|/* data in */
+name|u_short
+name|RDY
+parameter_list|,
+comment|/* ready */
+name|u_short
+name|MS
+comment|/* mode select */
+parameter_list|)
+block|{
+name|int
+name|wait
+decl_stmt|;
+comment|/* 	 * Request access of the memory port.  When access is 	 * granted, SEERDY will go high.  We use a 1 second 	 * timeout which should be near 1 second more than 	 * is needed.  Reason: after the chip reset, there 	 * should be no contention. 	 */
+name|outb
+argument_list|(
+name|offset
+argument_list|,
+name|MS
+argument_list|)
+expr_stmt|;
+name|wait
+operator|=
+literal|1000
+expr_stmt|;
+comment|/* 1 second timeout in msec */
+while|while
+condition|(
+operator|--
+name|wait
+operator|&&
+operator|(
+operator|(
+name|inb
+argument_list|(
+name|offset
+argument_list|)
+operator|&
+name|RDY
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* delay 1 msec */
+block|}
+if|if
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|offset
+argument_list|)
+operator|&
+name|RDY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|outb
+argument_list|(
+name|offset
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|release_seeprom
+parameter_list|(
+name|u_long
+name|offset
+parameter_list|,
+name|u_short
+name|CS
+parameter_list|,
+comment|/* chip select */
+name|u_short
+name|CK
+parameter_list|,
+comment|/* clock */
+name|u_short
+name|DO
+parameter_list|,
+comment|/* data out */
+name|u_short
+name|DI
+parameter_list|,
+comment|/* data in */
+name|u_short
+name|RDY
+parameter_list|,
+comment|/* ready */
+name|u_short
+name|MS
+comment|/* mode select */
+parameter_list|)
+block|{
+comment|/* Release access to the memory port and the serial EEPROM. */
+name|outb
+argument_list|(
+name|offset
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * We have a scb which has been processed by the  * adaptor, now we look to see how the operation  * went.  */
 end_comment
@@ -5542,6 +6242,8 @@ decl_stmt|,
 name|sblkctl
 decl_stmt|,
 name|i
+decl_stmt|,
+name|host_id
 decl_stmt|;
 name|int
 name|intdef
@@ -5551,6 +6253,19 @@ init|=
 literal|16
 decl_stmt|,
 name|wait
+decl_stmt|,
+name|have_seeprom
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|bios_disabled
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|seeprom_config
+name|sc
 decl_stmt|;
 comment|/* 	 * Assume we have a board at this stage 	 * Find out the configured interupt and the card type. 	 */
 ifdef|#
@@ -5696,8 +6411,27 @@ name|type
 condition|)
 block|{
 case|case
+name|AHC_AIC7770
+case|:
+case|case
 name|AHC_274
 case|:
+case|case
+name|AHC_284
+case|:
+block|{
+name|u_char
+name|hostconf
+decl_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_274
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ahc%d: 274x "
@@ -5705,19 +6439,46 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|HA_274_BIOSCTRL
+operator|+
+name|iobase
+argument_list|)
+operator|&
+name|BIOSMODE
+operator|)
+operator|==
+name|BIOSDISABLED
+condition|)
+name|bios_disabled
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|ahc
 operator|->
-name|maxscbs
-operator|=
-literal|0x4
-expr_stmt|;
-break|break;
-case|case
+name|type
+operator|==
 name|AHC_284
-case|:
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: 284x "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ahc%d: Motherboard "
 argument_list|,
 name|unit
 argument_list|)
@@ -5728,7 +6489,45 @@ name|maxscbs
 operator|=
 literal|0x4
 expr_stmt|;
+comment|/* Should we only do this for the 27/284x? */
+comment|/* Setup the FIFO threshold and the bus off time */
+name|hostconf
+operator|=
+name|inb
+argument_list|(
+name|HA_HOSTCONF
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|BUSSPD
+operator|+
+name|iobase
+argument_list|,
+name|hostconf
+operator|&
+name|DFTHRSH
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|BUSTIME
+operator|+
+name|iobase
+argument_list|,
+operator|(
+name|hostconf
+operator|<<
+literal|2
+operator|)
+operator|&
+name|BOFF
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 case|case
 name|AHC_AIC7850
 case|:
@@ -5736,8 +6535,229 @@ case|case
 name|AHC_AIC7870
 case|:
 case|case
+name|AHC_394
+case|:
+case|case
 name|AHC_294
 case|:
+name|host_id
+operator|=
+literal|0x07
+expr_stmt|;
+comment|/* default to SCSI ID 7 for 7850 */
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|!=
+name|AHC_AIC7850
+condition|)
+block|{
+name|unsigned
+name|short
+modifier|*
+name|scarray
+init|=
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|&
+name|sc
+decl_stmt|;
+name|unsigned
+name|short
+name|checksum
+init|=
+literal|0
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"ahc%d: Reading SEEPROM..."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|have_seeprom
+operator|=
+name|enable_seeprom
+argument_list|(
+name|iobase
+operator|+
+name|SEECTL
+argument_list|,
+name|SEECS
+argument_list|,
+name|SEECK
+argument_list|,
+name|SEEDO
+argument_list|,
+name|SEEDI
+argument_list|,
+name|SEERDY
+argument_list|,
+name|SEEMS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have_seeprom
+condition|)
+block|{
+name|have_seeprom
+operator|=
+name|read_seeprom
+argument_list|(
+name|iobase
+operator|+
+name|SEECTL
+argument_list|,
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|&
+name|sc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+argument_list|)
+operator|/
+literal|2
+argument_list|,
+name|SEECS
+argument_list|,
+name|SEECK
+argument_list|,
+name|SEEDO
+argument_list|,
+name|SEEDI
+argument_list|,
+name|SEERDY
+argument_list|,
+name|SEEMS
+argument_list|)
+expr_stmt|;
+name|release_seeprom
+argument_list|(
+name|iobase
+operator|+
+name|SEECTL
+argument_list|,
+name|SEECS
+argument_list|,
+name|SEECK
+argument_list|,
+name|SEEDO
+argument_list|,
+name|SEEDI
+argument_list|,
+name|SEERDY
+argument_list|,
+name|SEEMS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have_seeprom
+condition|)
+block|{
+comment|/* Check checksum */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|sc
+argument_list|)
+operator|/
+literal|2
+operator|-
+literal|1
+operator|)
+condition|;
+name|i
+operator|=
+name|i
+operator|+
+literal|1
+control|)
+name|checksum
+operator|=
+name|checksum
+operator|+
+name|scarray
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|checksum
+operator|!=
+name|sc
+operator|.
+name|checksum
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"checksum error"
+argument_list|)
+expr_stmt|;
+name|have_seeprom
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"done.\n"
+argument_list|)
+expr_stmt|;
+name|host_id
+operator|=
+operator|(
+name|sc
+operator|.
+name|brtime_id
+operator|&
+name|CFSCSIID
+operator|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|have_seeprom
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nahc%d: SEEPROM read failed, "
+literal|"using leftover BIOS values\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|host_id
+operator|=
+literal|0x7
+expr_stmt|;
+block|}
+block|}
 name|ahc
 operator|->
 name|maxscbs
@@ -5783,43 +6803,54 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_394
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"ahc%d: 294x "
+literal|"ahc%d: 3940 "
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|DFTHRESH
-value|3
+comment|/* XXX Test this! ahc->maxscbs = 0xff; */
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"ahc%d: 2940 "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|DSPCISTATUS
 operator|+
 name|iobase
 argument_list|,
-name|DFTHRESH
-operator|<<
-literal|6
+literal|0xc0
+comment|/* DFTHRSH == 100% */
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX Hard coded SCSI ID until we can read it from the 		 * SEEPROM or NVRAM. 		 */
+comment|/* 		 * XXX Use SCSI ID from SEEPROM if we have it; otherwise 		 * its hardcoded to 7 until we can read it from NVRAM. 		 */
 name|outb
 argument_list|(
 name|HA_SCSICONF
 operator|+
 name|iobase
 argument_list|,
-literal|0x07
+name|host_id
 operator||
-operator|(
-name|DFTHRESH
-operator|<<
-literal|6
-operator|)
+literal|0xc0
+comment|/* DFTHRSH = 100% */
 argument_list|)
 expr_stmt|;
 comment|/* In case we are a wide card */
@@ -5831,7 +6862,7 @@ literal|1
 operator|+
 name|iobase
 argument_list|,
-literal|0x07
+name|host_id
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5851,7 +6882,7 @@ operator|+
 name|iobase
 argument_list|)
 operator|&
-literal|0x0f
+literal|0x0a
 operator|)
 condition|)
 block|{
@@ -6024,7 +7055,7 @@ argument_list|,
 name|sblkctl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
+comment|/* 	 * Number of SCBs that will be used. Rev E aic7770s supposedly 	 * can do 255 concurrent commands.  Right now, we just ID the 	 * card until we can find out how this is done. 	 */
 if|if
 condition|(
 operator|!
@@ -6109,6 +7140,20 @@ literal|"aic7770<= Rev C, "
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_AIC7850
+condition|)
+name|printf
+argument_list|(
+literal|"aic7850, "
+argument_list|)
+expr_stmt|;
 else|else
 name|printf
 argument_list|(
@@ -6403,6 +7448,53 @@ name|needwdtr_orig
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Grab the disconnection disable table and invert it for our needs */
+if|if
+condition|(
+name|have_seeprom
+condition|)
+name|ahc
+operator|->
+name|discenable
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bios_disabled
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ahc%d: Host Adapter Bios disabled.  Using default SCSI "
+literal|"device parameters\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|discenable
+operator|=
+literal|0xff
+expr_stmt|;
+block|}
+else|else
+name|ahc
+operator|->
+name|discenable
+operator|=
+operator|~
+operator|(
+name|inw
+argument_list|(
+name|HA_DISC_DSB
+operator|+
+name|iobase
+argument_list|)
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6434,7 +7526,128 @@ control|)
 block|{
 name|u_char
 name|target_settings
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|have_seeprom
+condition|)
+block|{
+name|target_settings
+operator|=
+operator|(
+name|sc
+operator|.
+name|device_flags
+index|[
+name|i
+index|]
+operator|&
+name|CFXFER
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|.
+name|device_flags
+index|[
+name|i
+index|]
+operator|&
+name|CFSYNCH
+condition|)
+name|ahc
+operator|->
+name|needsdtr_orig
+operator||=
+operator|(
+literal|0x01
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|.
+name|device_flags
+index|[
+name|i
+index|]
+operator|&
+name|CFWIDEB
+condition|)
+name|ahc
+operator|->
+name|needwdtr_orig
+operator||=
+operator|(
+literal|0x01
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|.
+name|device_flags
+index|[
+name|i
+index|]
+operator|&
+name|CFDISC
+condition|)
+name|ahc
+operator|->
+name|discenable
+operator||=
+operator|(
+literal|0x01
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bios_disabled
+condition|)
+block|{
+name|target_settings
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 10MHz */
+name|ahc
+operator|->
+name|needsdtr_orig
+operator||=
+operator|(
+literal|0x01
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+name|ahc
+operator|->
+name|needwdtr_orig
+operator||=
+operator|(
+literal|0x01
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Take the settings leftover in scratch RAM. */
+name|target_settings
+operator|=
 name|inb
 argument_list|(
 name|HA_TARG_SCRATCH
@@ -6443,7 +7656,7 @@ name|i
 operator|+
 name|iobase
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|target_settings
@@ -6461,7 +7674,7 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-comment|/* Default to a asyncronous transfers (0 offset) */
+comment|/*Default to a asyncronous transfers(0 offset)*/
 name|target_settings
 operator|&=
 literal|0xf0
@@ -6484,11 +7697,12 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-comment|/* 			 * We'll set the Wide flag when we 			 * are successful with Wide negotiation, 			 * so turn it off for now so we aren't 			 * confused. 			 */
+comment|/* 				 * We'll set the Wide flag when we 				 * are successful with Wide negotiation, 				 * so turn it off for now so we aren't 				 * confused. 				 */
 name|target_settings
 operator|&=
 literal|0x7f
 expr_stmt|;
+block|}
 block|}
 name|outb
 argument_list|(
@@ -6595,7 +7809,7 @@ directive|ifdef
 name|AHC_DEBUG
 name|printf
 argument_list|(
-literal|"NEEDSDTR == 0x%x\nNEEDWDTR == 0x%x\n"
+literal|"NEEDSDTR == 0x%x\nNEEDWDTR == 0x%x\nDISCENABLE == 0x%x\n"
 argument_list|,
 name|ahc
 operator|->
@@ -6604,6 +7818,10 @@ argument_list|,
 name|ahc
 operator|->
 name|needwdtr
+argument_list|,
+name|ahc
+operator|->
+name|discenable
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6658,7 +7876,7 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7770 in fastmode which makes a big 	 * difference when doing many small block transfers.          */
+comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7xxx in fastmode which makes a big 	 * difference when doing many small block transfers.          */
 name|printf
 argument_list|(
 literal|"ahc%d: Downloading Sequencer Program..."
@@ -6717,7 +7935,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -7039,6 +8257,25 @@ name|control
 operator||=
 name|SCB_TE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_YET
+if|if
+condition|(
+name|ahc
+operator|->
+name|discenable
+operator|&
+name|mask
+condition|)
+name|scb
+operator|->
+name|control
+operator||=
+name|SCB_DISCENB
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -7419,6 +8656,70 @@ name|SG_segment_count
 operator|=
 name|seg
 expr_stmt|;
+comment|/* Copy the first SG into the data pointer area */
+name|scb
+operator|->
+name|data
+operator|=
+name|scb
+operator|->
+name|ahc_dma
+operator|->
+name|addr
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|0
+index|]
+operator|=
+name|scb
+operator|->
+name|ahc_dma
+operator|->
+name|len
+operator|&
+literal|0xff
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|scb
+operator|->
+name|ahc_dma
+operator|->
+name|len
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|scb
+operator|->
+name|ahc_dma
+operator|->
+name|len
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
 name|SC_DEBUGN
 argument_list|(
 name|xs
@@ -7481,6 +8782,39 @@ expr_stmt|;
 name|scb
 operator|->
 name|SG_list_pointer
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|data
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|datalen
+index|[
+literal|2
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -8665,6 +9999,8 @@ expr_stmt|;
 name|outb
 argument_list|(
 name|HA_ACTIVE1
+operator|+
+name|iobase
 argument_list|,
 literal|0
 argument_list|)
@@ -8711,6 +10047,8 @@ expr_stmt|;
 name|outb
 argument_list|(
 name|HA_ACTIVE0
+operator|+
+name|iobase
 argument_list|,
 literal|0
 argument_list|)
@@ -8718,6 +10056,8 @@ expr_stmt|;
 name|outb
 argument_list|(
 name|HA_ACTIVE1
+operator|+
+name|iobase
 argument_list|,
 literal|0
 argument_list|)
@@ -8746,6 +10086,8 @@ expr_stmt|;
 name|outb
 argument_list|(
 name|HA_ACTIVE0
+operator|+
+name|iobase
 argument_list|,
 literal|0
 argument_list|)
