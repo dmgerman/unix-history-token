@@ -70,16 +70,32 @@ directive|include
 file|"less.h"
 end_include
 
+begin_comment
+comment|/* NOTE!:   if (wraplines) assert (horiz_off == 0)   */
+end_comment
+
 begin_decl_stmt
 name|int
 name|horiz_off
 init|=
-name|NO_HORIZ_OFF
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* # characters scrolled off left of screen */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wraplines
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wrap lines around screen, yes or no */
 end_comment
 
 begin_decl_stmt
@@ -201,7 +217,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Append the char to the line and get the next char. 		 * The pappend() will throw away any unimportant chars 		 * (ie. not underlines or bolds) as per horiz_off. 		 * 		 * XXX line.c needs to be rewritten... 		 */
+comment|/* 		 * Append the char to the line and get the next char. 		 * The pappend() will throw away any unimportant chars 		 * (ie. not underlines or bolds) as per wraplines. 		 * 		 * XXX line.c needs to be rewritten... 		 */
 if|if
 condition|(
 name|pappend
@@ -213,9 +229,8 @@ block|{
 comment|/* 			 * The char won't fit in the line; the line 			 * is too long to print in the screen width. 			 * End the line here. 			 */
 if|if
 condition|(
-name|horiz_off
-operator|!=
-name|NO_HORIZ_OFF
+operator|!
+name|wraplines
 condition|)
 block|{
 comment|/* Throw away left-over characters on line */
@@ -570,9 +585,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|horiz_off
-operator|==
-name|NO_HORIZ_OFF
+name|wraplines
 condition|)
 block|{
 comment|/* 				 * Got a full printable line, but we haven't 				 * reached our curr_pos yet.  Discard the line 				 * and start a new one. 				 */

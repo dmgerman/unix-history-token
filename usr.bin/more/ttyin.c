@@ -123,6 +123,10 @@ condition|(
 name|result
 operator|!=
 literal|1
+operator|||
+name|c
+operator|==
+literal|0
 condition|)
 do|;
 return|return

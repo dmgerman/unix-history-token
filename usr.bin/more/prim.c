@@ -1709,30 +1709,19 @@ operator|.
 name|horiz_off
 expr_stmt|;
 block|}
-comment|/* Try to be nice about changing the horizontal scroll */
+comment|/* Try to be nice about changing the horizontal scroll and wrapping */
 if|if
 condition|(
-operator|!
-operator|(
-name|horiz_off
-operator|==
-name|NO_HORIZ_OFF
-operator|&&
 name|new_horiz_off
-operator|<=
+operator|>
 name|sc_width
-operator|)
-condition|)
-block|{
-comment|/* 		 * We're going to have to change the horiz_off, even if 		 * it's currently set to NO_HORIZ_OFF: if we don't change 		 * horiz_off the bookmarked location won't show on the screen. 		 */
-if|if
-condition|(
+operator|/
+literal|3
+operator|+
 name|horiz_off
-operator|!=
-name|new_horiz_off
 condition|)
 block|{
-comment|/* We'll need to repaint(), too... */
+comment|/* 		 * We should change horiz_off: if we don't change horiz_off 		 * the bookmarked location won't be readily visible. 		 */
 name|horiz_off
 operator|=
 name|new_horiz_off
@@ -1745,17 +1734,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* No need to repaint. */
-name|jump_loc
-argument_list|(
-name|pos
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* 		 * The user doesn't want horizontal scrolling, and we can 		 * fortunately honour the bookmark request without doing 		 * any horizontal scrolling. 		 */
+comment|/* 		 * We can honour the bookmark request without doing any 		 * horizontal scrolling. 		 */
 name|jump_loc
 argument_list|(
 name|pos
