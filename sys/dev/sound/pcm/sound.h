@@ -135,26 +135,20 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
+operator|<
 literal|500000
 end_if
 
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
+file|<sys/buf.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
 
 begin_include
 include|#
