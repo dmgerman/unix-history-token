@@ -3025,7 +3025,7 @@ goto|goto
 name|match
 goto|;
 block|}
-comment|/* 	 * If bridging, fall back to using any inet address. 	 */
+comment|/* 	 * If bridging, fall back to using any inet address. 	 * This is probably incorrect, the right way being try to match 	 * addresses for interfaces in the same cluster, so if we 	 * get here we should always drop the packet. 	 */
 if|if
 condition|(
 operator|!
@@ -3051,13 +3051,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ia
-operator|=
-name|ifatoia
-argument_list|(
-name|ifa
-argument_list|)
-expr_stmt|;
 name|match
 label|:
 name|myaddr
