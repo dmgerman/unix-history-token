@@ -452,7 +452,13 @@ name|minlen
 operator|=
 name|DEF_LEN
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|minlen
+operator|<
+literal|1
+condition|)
 block|{
 operator|(
 name|void
