@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_seq.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,17 @@ name|bt_flags
 operator||=
 name|BTF_SEQINIT
 expr_stmt|;
+comment|/* don't need the descent stack anymore */
+while|while
+condition|(
+name|_bt_pop
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|P_NONE
+condition|)
+continue|continue;
 if|if
 condition|(
 name|c

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_put.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,20 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-comment|/* okay, try again */
+comment|/* okay, try again (empty the stack first, though) */
+while|while
+condition|(
+name|_bt_pop
+argument_list|(
+operator|(
+name|BTREE
+operator|)
+name|t
+argument_list|)
+operator|!=
+name|P_NONE
+condition|)
+continue|continue;
 return|return
 operator|(
 name|bt_put

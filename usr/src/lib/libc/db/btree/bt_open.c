@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1119,6 +1119,63 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* access method files are always close-on-exec */
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|t
+operator|->
+name|bt_s
+operator|.
+name|bt_d
+operator|.
+name|d_fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|t
+operator|->
+name|bt_s
+operator|.
+name|bt_d
+operator|.
+name|d_fd
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|t
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|BTREE
+operator|)
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* get number of pages, page size if necessary */
 operator|(
 name|void
@@ -1419,6 +1476,17 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+comment|/* clear parent pointer stack */
+while|while
+condition|(
+name|_bt_pop
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|P_NONE
+condition|)
+continue|continue;
 if|if
 condition|(
 name|item
@@ -1434,17 +1502,6 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-comment|/* clear parent pointer stack */
-while|while
-condition|(
-name|_bt_pop
-argument_list|(
-name|t
-argument_list|)
-operator|!=
-name|P_NONE
-condition|)
-continue|continue;
 name|h
 operator|=
 operator|(
@@ -1643,11 +1700,23 @@ argument_list|)
 operator|==
 name|RET_ERROR
 condition|)
+block|{
+while|while
+condition|(
+name|_bt_pop
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|P_NONE
+condition|)
+continue|continue;
 return|return
 operator|(
 name|RET_ERROR
 operator|)
 return|;
+block|}
 block|}
 block|}
 return|return
@@ -1745,6 +1814,17 @@ name|t
 operator|->
 name|bt_curpage
 expr_stmt|;
+comment|/* don't need the descent stack for deletes */
+while|while
+condition|(
+name|_bt_pop
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|P_NONE
+condition|)
+continue|continue;
 comment|/* delete all matching keys */
 for|for
 control|(
@@ -1902,17 +1982,6 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/* clean up the parent stack */
-while|while
-condition|(
-name|_bt_pop
-argument_list|(
-name|t
-argument_list|)
-operator|!=
-name|P_NONE
-condition|)
-continue|continue;
 comment|/* flush changes to disk */
 if|if
 condition|(
