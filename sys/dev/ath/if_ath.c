@@ -7822,7 +7822,7 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-comment|/* setup descriptors */
+comment|/* 	 * Setup descriptors.  For receive we always terminate 	 * the descriptor list with a self-linked entry so we'll 	 * not get overrun under high load (as can happen with a 	 * 5212 when ANI processing enables PHY errors). 	 * 	 * To insure the last descriptor is self-linked we create 	 * each descriptor as self-linked and add it to the end.  As 	 * each additional descriptor is added the previous self-linked 	 * entry is ``fixed'' naturally.  This should be safe even 	 * if DMA is happening.  When processing RX interrupts we 	 * never remove/process the last, self-linked, entry on the 	 * descriptor list.  This insures the hardware always has 	 * someplace to write a new frame. 	 */
 name|ds
 operator|=
 name|bf
@@ -7833,8 +7833,11 @@ name|ds
 operator|->
 name|ds_link
 operator|=
-literal|0
+name|bf
+operator|->
+name|bf_daddr
 expr_stmt|;
+comment|/* link to self */
 name|ds
 operator|->
 name|ds_data
@@ -8027,6 +8030,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|ds
+operator|=
+name|bf
+operator|->
+name|bf_desc
+expr_stmt|;
+if|if
+condition|(
+name|ds
+operator|->
+name|ds_link
+operator|==
+name|bf
+operator|->
+name|bf_daddr
+condition|)
+block|{
+comment|/* NB: never process the self-linked entry at the end */
+break|break;
+block|}
 name|m
 operator|=
 name|bf
@@ -8050,12 +8073,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|ds
-operator|=
-name|bf
-operator|->
-name|bf_desc
-expr_stmt|;
 name|status
 operator|=
 name|ath_hal_rxprocdesc
