@@ -924,11 +924,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -945,6 +940,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 name|sigsetmask
