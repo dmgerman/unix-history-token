@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	1.2 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	1.3 %G%";  */
 end_comment
 
 begin_define
@@ -39,6 +39,16 @@ end_define
 
 begin_comment
 comment|/* don't look up usernames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETUID
+end_define
+
+begin_comment
+comment|/* player and driver run setuid */
 end_comment
 
 begin_define
