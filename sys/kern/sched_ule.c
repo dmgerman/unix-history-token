@@ -2923,6 +2923,23 @@ name|kseq
 modifier|*
 name|kseq
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|kg
+operator|->
+name|kg_proc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We need to adjust the nice counts for running KSEs. 	 */
 if|if
 condition|(

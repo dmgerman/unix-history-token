@@ -1161,12 +1161,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|kg
@@ -1231,12 +1225,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXXKSE silly */
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1707,6 +1695,23 @@ name|int
 name|nice
 parameter_list|)
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|kg
+operator|->
+name|kg_proc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|kg
 operator|->
 name|kg_nice
