@@ -234,6 +234,9 @@ operator|,
 name|char
 index|[]
 operator|,
+name|char
+index|[]
+operator|,
 name|off_t
 operator|)
 argument_list|)
@@ -1445,6 +1448,8 @@ name|jkfprintf
 argument_list|(
 name|tp
 argument_list|,
+name|name
+argument_list|,
 name|file
 argument_list|,
 name|offset
@@ -1472,7 +1477,9 @@ name|jkfprintf
 parameter_list|(
 name|tp
 parameter_list|,
-name|name
+name|user
+parameter_list|,
+name|file
 parameter_list|,
 name|offset
 parameter_list|)
@@ -1482,7 +1489,11 @@ modifier|*
 name|tp
 decl_stmt|;
 name|char
-name|name
+name|user
+index|[]
+decl_stmt|;
+name|char
+name|file
 index|[]
 decl_stmt|;
 name|off_t
@@ -1529,7 +1540,7 @@ name|p
 operator|=
 name|getpwnam
 argument_list|(
-name|name
+name|user
 argument_list|)
 operator|)
 operator|!=
@@ -1552,7 +1563,7 @@ name|fi
 operator|=
 name|fopen
 argument_list|(
-name|name
+name|file
 argument_list|,
 literal|"r"
 argument_list|)
