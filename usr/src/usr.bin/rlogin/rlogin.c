@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.5 82/11/27"
+literal|"@(#)rlogin.c	4.6 82/12/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,16 +208,6 @@ name|lostpeer
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|CTRL
-parameter_list|(
-name|c
-parameter_list|)
-value|('c'& 037)
-end_define
 
 begin_function
 name|main
@@ -1542,9 +1532,6 @@ argument_list|,
 name|oob
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
 name|int
 name|pid
@@ -1568,8 +1555,6 @@ name|pid
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 for|for
 control|(
 init|;
