@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -336,10 +336,10 @@ operator|==
 name|dp
 condition|)
 block|{
+name|VREF
+argument_list|(
 name|vdp
-operator|->
-name|v_count
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1306,10 +1306,10 @@ operator|.
 name|d_ino
 condition|)
 block|{
+name|VREF
+argument_list|(
 name|vdp
-operator|->
-name|v_count
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1620,10 +1620,10 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|VREF
+argument_list|(
 name|vdp
-operator|->
-name|v_count
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* we want ourself, ie "." */
 name|ndp
