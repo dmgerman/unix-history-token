@@ -113,6 +113,21 @@ block|, }
 enum|;
 end_enum
 
+begin_comment
+comment|/* Meta information ID's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_KSOCKET_META_SOCKADDR
+value|1
+end_define
+
+begin_comment
+comment|/* data is struct sockaddr */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
