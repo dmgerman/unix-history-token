@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.17 1997/02/22 09:37:27 peter Exp $  */
 end_comment
 
 begin_comment
@@ -679,6 +679,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WDCC_READ_DMA
+value|0xC8
+end_define
+
+begin_comment
+comment|/* read using DMA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDCC_WRITE_DMA
+value|0xCA
+end_define
+
+begin_comment
+comment|/* write using DMA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WDCC_EXTDCMD
 value|0xE0
 end_define
@@ -734,6 +756,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WDFEA_SETXFER
+value|0x03
+end_define
+
+begin_comment
+comment|/* set transfer mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WD_STEP
 value|0
 end_define
@@ -767,6 +800,7 @@ begin_struct
 struct|struct
 name|wdparams
 block|{
+comment|/* 	 * XXX partly based on DRAFT X3T13/1153D rev 14.   	 * by the time you read this it will have changed. 	 */
 comment|/* drive info */
 name|short
 name|wdp_config
@@ -777,7 +811,7 @@ name|wdp_cylinders
 decl_stmt|;
 comment|/* number of cylinders */
 name|short
-name|wdp_reserved
+name|wdp_reserved2
 decl_stmt|;
 name|u_short
 name|wdp_heads
@@ -850,14 +884,180 @@ literal|40
 index|]
 decl_stmt|;
 comment|/* model name */
-name|short
+name|char
 name|wdp_nsecperint
 decl_stmt|;
 comment|/* sectors per interrupt */
+name|char
+name|wdp_vendorunique1
+decl_stmt|;
 name|short
 name|wdp_usedmovsd
 decl_stmt|;
 comment|/* can use double word read/write? */
+name|char
+name|wdp_vendorunique2
+decl_stmt|;
+name|char
+name|wdp_capability
+decl_stmt|;
+comment|/* various capability bits */
+name|short
+name|wdp_cap_validate
+decl_stmt|;
+comment|/* validation for above */
+name|char
+name|wdp_vendorunique3
+decl_stmt|;
+name|char
+name|wdp_opiomode
+decl_stmt|;
+comment|/* PIO modes 0-2 */
+name|char
+name|wdp_vendorunique4
+decl_stmt|;
+name|char
+name|wdp_odmamode
+decl_stmt|;
+comment|/* old DMA modes, not in ATA-3 */
+name|short
+name|wdp_atavalid
+decl_stmt|;
+comment|/* validation for newer fields */
+name|short
+name|wdp_currcyls
+decl_stmt|;
+name|short
+name|wdp_currheads
+decl_stmt|;
+name|short
+name|wdp_currsectors
+decl_stmt|;
+name|short
+name|wdp_currsize0
+decl_stmt|;
+name|short
+name|wdp_currsize1
+decl_stmt|;
+name|char
+name|wdp_currmultsect
+decl_stmt|;
+name|char
+name|wdp_multsectvalid
+decl_stmt|;
+name|int
+name|wdp_lbasize
+decl_stmt|;
+name|short
+name|wdp_dmasword
+decl_stmt|;
+comment|/* obsolete in ATA-3 */
+name|short
+name|wdp_dmamword
+decl_stmt|;
+comment|/* multiword DMA modes */
+name|short
+name|wdp_eidepiomodes
+decl_stmt|;
+comment|/* advanced PIO modes */
+name|short
+name|wdp_eidedmamin
+decl_stmt|;
+comment|/* fastest possible DMA timing */
+name|short
+name|wdp_eidedmanorm
+decl_stmt|;
+comment|/* recommended DMA timing */
+name|short
+name|wdp_eidepioblind
+decl_stmt|;
+comment|/* fastest possible blind PIO */
+name|short
+name|wdp_eidepioacked
+decl_stmt|;
+comment|/* fastest possible IORDY PIO */
+name|short
+name|wdp_reserved69
+decl_stmt|;
+name|short
+name|wdp_reserved70
+decl_stmt|;
+name|short
+name|wdp_reserved71
+decl_stmt|;
+name|short
+name|wdp_reserved72
+decl_stmt|;
+name|short
+name|wdp_reserved73
+decl_stmt|;
+name|short
+name|wdp_reserved74
+decl_stmt|;
+name|short
+name|wdp_queuelen
+decl_stmt|;
+name|short
+name|wdp_reserved76
+decl_stmt|;
+name|short
+name|wdp_reserved77
+decl_stmt|;
+name|short
+name|wdp_reserved78
+decl_stmt|;
+name|short
+name|wdp_reserved79
+decl_stmt|;
+name|short
+name|wdp_versmaj
+decl_stmt|;
+name|short
+name|wdp_versmin
+decl_stmt|;
+name|short
+name|wdp_featsupp1
+decl_stmt|;
+name|short
+name|wdp_featsupp2
+decl_stmt|;
+name|short
+name|wdp_featsupp3
+decl_stmt|;
+name|short
+name|wdp_featenab1
+decl_stmt|;
+name|short
+name|wdp_featenab2
+decl_stmt|;
+name|short
+name|wdp_featenab3
+decl_stmt|;
+name|short
+name|wdp_udmamode
+decl_stmt|;
+comment|/* UltraDMA modes */
+name|short
+name|wdp_erasetime
+decl_stmt|;
+name|short
+name|wdp_enherasetime
+decl_stmt|;
+name|short
+name|wdp_apmlevel
+decl_stmt|;
+name|short
+name|wdp_reserved92
+index|[
+literal|34
+index|]
+decl_stmt|;
+name|short
+name|wdp_rmvcap
+decl_stmt|;
+name|short
+name|wdp_securelevel
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -890,7 +1090,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * IDE DMA support.  * This is based on what is needed for the IDE DMA function of the Intel  * Triton chipset; hopefully it's general enough to be used for other  * chipsets as well.  *  * To use this:  *	For each drive which you might want to do DMA on, call wdd_candma()  *	to get a cookie.  If it returns a null pointer, then the drive  *	can't do DMA.  *  *	Set up the transfer be calling wdd_dmaprep().  The cookie is what  *	you got before; vaddr is the virtual address of the buffer to be  *	written; len is the length of the buffer; and direction is either  *	B_READ or B_WRITE.  *  *	Send a read/write DMA command to the drive.  *  *	Call wdd_dmastart().  *  *	Wait for an interrupt.  Multi-sector transfers will only interrupt  *	at the end of the transfer.  *  *	Call wdd_dmadone().  It will return the status as defined by the  *	WDDS_* constants below.  */
+comment|/*  * IDE DMA support.  * This is based on what is needed for the IDE DMA function of the Intel  * Triton chipset; hopefully it's general enough to be used for other  * chipsets as well.  *  * To use this:  *	For each drive which you might want to do DMA on, call wdd_candma()  *	to get a cookie.  If it returns a null pointer, then the drive  *	can't do DMA.  Then call wdd_dmainit() to initialize the controller  *	and drive.  wdd_dmainit should leave PIO modes operational, though  *	perhaps with suboptimal performance.  *  *	Check the transfer by calling wdd_dmaverify().  The cookie is what  *	you got before; vaddr is the virtual address of the buffer to be  *	written; len is the length of the buffer; and direction is either  *	B_READ or B_WRITE. This function verifies that the DMA hardware is  *	capable of handling the request you've made.  *  *	Setup the transfer by calling wdd_dmaprep().  This takes the same  *	paramaters as wdd_dmaverify().  *  *	Send a read/write DMA command to the drive.  *  *	Call wdd_dmastart().  *  *	Wait for an interrupt.  Multi-sector transfers will only interrupt  *	at the end of the transfer.  *  *	Call wdd_dmadone().  It will return the status as defined by the  *	WDDS_* constants below.  */
 end_comment
 
 begin_struct
@@ -912,6 +1112,30 @@ name|ctlr
 operator|,
 name|int
 name|drive
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*wdd_dmaverify
+argument_list|)
+comment|/* verify that request is DMA-able */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|cookie
+operator|,
+name|char
+operator|*
+name|vaddr
+operator|,
+name|u_long
+name|len
+operator|,
+name|int
+name|direction
 operator|)
 argument_list|)
 expr_stmt|;
@@ -981,9 +1205,52 @@ name|cookie
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+argument_list|(
+argument|*wdd_dmainit
+argument_list|)
+comment|/* initialize controller and drive */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|cookie
+operator|,
+expr|struct
+name|wdparams
+operator|*
+name|wp
+operator|,
+name|int
+argument_list|(
+argument|wdcmd
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+name|mode
+operator|,
+name|void
+operator|*
+name|wdinfo
+operator|)
+argument_list|)
+operator|,
+name|void
+operator|*
+name|wdinfo
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* logical status bits returned by wdd_dmastatus */
+end_comment
 
 begin_define
 define|#
@@ -1005,6 +1272,121 @@ directive|define
 name|WDDS_INTERRUPT
 value|0x0004
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX are these now useless? */
+end_comment
+
+begin_comment
+comment|/* local defines for ATA timing modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDDMA_GRPMASK
+value|0xf0
+end_define
+
+begin_comment
+comment|/* flow-controlled PIO modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDDMA_PIO
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_PIO3
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_PIO4
+value|0x11
+end_define
+
+begin_comment
+comment|/* multi-word DMA timing modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDDMA_MDMA
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_MDMA0
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_MDMA1
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_MDMA2
+value|0x22
+end_define
+
+begin_comment
+comment|/* Ultra DMA timing modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDDMA_UDMA
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_UDMA0
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_UDMA1
+value|0x31
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDDMA_UDMA2
+value|0x32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
