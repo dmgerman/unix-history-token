@@ -69,7 +69,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|_fetch_info
 parameter_list|(
 name|char

@@ -58,6 +58,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+name|fetchLastErrString
+index|[
+name|MAXERRSTRING
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|fetchTimeout
 decl_stmt|;
