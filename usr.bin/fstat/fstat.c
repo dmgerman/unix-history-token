@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)fstat.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)fstat.c	8.3 (Berkeley) 5/2/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fstat.c,v 1.7.2.3 1997/08/31 01:31:07 alex Exp $"
+literal|"$Id: fstat.c,v 1.7.2.4 1997/09/18 23:19:00 dima Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,12 +187,6 @@ directive|undef
 name|KERNEL
 end_undef
 
-begin_define
-define|#
-directive|define
-name|NFS
-end_define
-
 begin_include
 include|#
 directive|include
@@ -222,12 +216,6 @@ include|#
 directive|include
 file|<nfs/nfsnode.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|NFS
-end_undef
 
 begin_include
 include|#
@@ -281,6 +269,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -757,6 +751,12 @@ decl_stmt|,
 modifier|*
 name|nlistf
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
@@ -1034,7 +1034,7 @@ condition|(
 operator|(
 name|kd
 operator|=
-name|kvm_open
+name|kvm_openfiles
 argument_list|(
 name|nlistf
 argument_list|,
@@ -1044,7 +1044,7 @@ name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
-name|NULL
+name|buf
 argument_list|)
 operator|)
 operator|==
@@ -1056,10 +1056,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|kvm_geterr
-argument_list|(
-name|kd
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 ifdef|#
