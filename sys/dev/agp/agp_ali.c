@@ -433,7 +433,7 @@ operator||
 operator|(
 name|attbase
 operator|&
-literal|0xff
+literal|0xfff
 operator|)
 argument_list|,
 literal|4
@@ -537,7 +537,7 @@ name|AGP_ALI_ATTBASE
 argument_list|,
 name|attbase
 operator|&
-literal|0xff
+literal|0xfff
 argument_list|,
 literal|4
 argument_list|)
@@ -649,7 +649,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xff
+literal|0xf
 decl_stmt|;
 if|if
 condition|(
@@ -740,7 +740,7 @@ operator|(
 name|attbase
 operator|&
 operator|~
-literal|0xff
+literal|0xf
 operator|)
 operator||
 name|i
