@@ -1750,12 +1750,6 @@ modifier|*
 name|Qhook
 call|)
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|*
-operator|)
 operator|&
 name|nsap
 argument_list|,
@@ -3793,11 +3787,6 @@ modifier|*
 name|Rhook
 call|)
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 name|nsap
 argument_list|,
 name|buf

@@ -672,7 +672,7 @@ name|res_send_qhook
 function_decl|)
 parameter_list|(
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 specifier|const
 modifier|*
@@ -712,7 +712,7 @@ function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|ns
 parameter_list|,
