@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.7 (Berkeley) %G%"
+literal|"@(#)lex.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1660,7 +1660,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Branch here on hangup signal and simulate quit.  */
+comment|/*  * Branch here on hangup signal and simulate "exit".  */
 end_comment
 
 begin_comment
@@ -1676,32 +1676,7 @@ end_macro
 
 begin_block
 block|{
-name|holdsigs
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|edit
-condition|)
-block|{
-if|if
-condition|(
-name|setexit
-argument_list|()
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|edstop
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-name|quit
-argument_list|()
-expr_stmt|;
+comment|/* nothing to do? */
 name|exit
 argument_list|(
 literal|0
