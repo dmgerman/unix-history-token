@@ -68,12 +68,6 @@ directive|include
 file|"curses.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_undef
 undef|#
 directive|undef
@@ -86,11 +80,6 @@ name|short
 name|ospeed
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -728,9 +717,6 @@ index|]
 else|:
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 switch|switch
 condition|(
 name|cfgetospeed
@@ -905,9 +891,6 @@ break|break;
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|aoftspace
 operator|=
 name|tspace
