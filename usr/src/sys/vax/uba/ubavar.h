@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.3	%G%	*/
+comment|/*	ubavar.h	4.4	%G%	*/
 end_comment
 
 begin_comment
@@ -58,8 +58,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PHYSUMEM
-value|0x2013e000
+name|PHYSUDEV0
+value|0x20100000
 end_define
 
 begin_else
@@ -77,14 +77,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|PHYSUMEM
-value|(0xfc0000+UNIBASE)
+name|PHYSUDEV0
+value|0xfc0000
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PHYSUMEM0
+value|(PHYSUDEV0+0x3e000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSUMEM
+value|PHYSUMEM0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSUDEVSZ
+value|0x40000
+end_define
 
 begin_if
 if|#
@@ -711,6 +732,38 @@ begin_comment
 comment|/*  * Unibus maps  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
+begin_define
+define|#
+directive|define
+name|NUBABDP
+value|15
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NUBABDP
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -743,38 +796,6 @@ end_decl_stmt
 begin_comment
 comment|/* someone is waiting for buffered data path */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
-begin_define
-define|#
-directive|define
-name|NUBABDP
-value|15
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NUBABDP
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
