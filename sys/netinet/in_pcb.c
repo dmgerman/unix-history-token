@@ -810,7 +810,7 @@ name|ipport_randomized
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable random port allocation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -831,7 +831,8 @@ name|ipport_randomcps
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of random port "
+literal|"allocations before switching to a sequental one"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -852,7 +853,8 @@ name|ipport_randomtime
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Minimum time to keep sequental port "
+literal|"allocation before switching to a random one"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5789,7 +5791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipport_tick runs once per second, determining if random port  * allocation should be continued.  If more than ipport_randomcps  * ports have been allocated in the last second, then we return to  * sequential port allocation. We return to random allocation only  * once we drop below ipport_randomcps for at least 5 seconds.  */
+comment|/*  * ipport_tick runs once per second, determining if random port  * allocation should be continued.  If more than ipport_randomcps  * ports have been allocated in the last second, then we return to  * sequential port allocation. We return to random allocation only  * once we drop below ipport_randomcps for at least ipport_randomtime  * seconds.  */
 end_comment
 
 begin_function
