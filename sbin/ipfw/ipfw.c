@@ -6642,18 +6642,6 @@ literal|"tee divert"
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|IPFW_TEE_IS_FINALLY_IMPLEMENTED
-name|err
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"the ``tee'' action is not implemented"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
