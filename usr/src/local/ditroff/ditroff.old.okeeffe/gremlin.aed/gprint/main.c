@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	1.6	83/06/17  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
+comment|/* main.c	1.7	83/06/24  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
 end_comment
 
 begin_include
@@ -1493,11 +1493,7 @@ literal|8
 expr_stmt|;
 name|BytPrLin
 operator|=
-name|Vbytperlin
-expr_stmt|;
-name|NumOfLin
-operator|=
-name|Wylen
+name|DevRange8
 expr_stmt|;
 block|}
 name|signal
@@ -1873,6 +1869,19 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|WriteRaster
+condition|)
+comment|/* if -t then cut image length */
+while|while
+condition|(
+operator|!
+operator|*
+operator|--
+name|cp2
+condition|)
+empty_stmt|;
 for|for
 control|(
 name|cp1
@@ -1885,6 +1894,7 @@ name|cp2
 condition|;
 control|)
 block|{
+comment|/* write file */
 for|for
 control|(
 name|i
