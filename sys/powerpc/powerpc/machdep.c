@@ -657,10 +657,13 @@ operator|&
 name|RB_HALT
 condition|)
 block|{
-name|OF_exit
+name|OF_halt
 argument_list|()
 expr_stmt|;
 block|}
+name|OF_reboot
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

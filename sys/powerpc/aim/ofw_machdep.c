@@ -559,6 +559,64 @@ end_function
 
 begin_function
 name|void
+name|OF_halt
+parameter_list|()
+block|{
+name|int
+name|retval
+decl_stmt|;
+comment|/* dummy, this may not be needed */
+name|OF_interpret
+argument_list|(
+literal|"shut-down"
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|retval
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+comment|/* just in case */
+block|}
+end_function
+
+begin_function
+name|void
+name|OF_reboot
+parameter_list|()
+block|{
+name|int
+name|retval
+decl_stmt|;
+comment|/* dummy, this may not be needed */
+name|OF_interpret
+argument_list|(
+literal|"reset-all"
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|retval
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+comment|/* just in case */
+block|}
+end_function
+
+begin_function
+name|void
 name|OF_getetheraddr
 parameter_list|(
 name|device_t
