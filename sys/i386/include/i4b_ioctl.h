@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Tue Dec 22 20:33:46 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri Jul 30 08:53:47 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|70
+value|83
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|STEP
-value|00
+value|0
 end_define
 
 begin_comment
@@ -172,12 +172,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTRL_NUMTYPES
+name|CTRL_TINADD
 value|3
 end_define
 
 begin_comment
-comment|/* number of controller types */
+comment|/* Stollmann Tina-dd active card*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_AVMB1
+value|4
+end_define
+
+begin_comment
+comment|/* AVM B1 active card		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_NUMTYPES
+value|5
+end_define
+
+begin_comment
+comment|/* number of controller types	*/
 end_comment
 
 begin_comment
@@ -404,6 +426,61 @@ begin_comment
 comment|/* ITK ix1 micro 		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_AVMA1PCI
+value|19
+end_define
+
+begin_comment
+comment|/* AVM FRITZ!CARD PCI		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_PCC16
+value|20
+end_define
+
+begin_comment
+comment|/* ELSA PCC-16			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_AVM_PNP
+value|21
+end_define
+
+begin_comment
+comment|/* AVM FRITZ!CARD PnP		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_SIE_ISURF2
+value|22
+end_define
+
+begin_comment
+comment|/* Siemens I-Surf 2 PnP		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_ASUSCOMIPAC
+value|23
+end_define
+
+begin_comment
+comment|/* Asuscom ISDNlink 128 K PnP	*/
+end_comment
+
 begin_comment
 comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		support.c, name_of_controller()  *	diehl/diehlctl:	main.c, listall()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
@@ -412,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|18
+value|23
 end_define
 
 begin_comment
@@ -569,6 +646,17 @@ begin_comment
 comment|/* sync Kernel PPP interface driver     */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BDRV_IBC
+value|4
+end_define
+
+begin_comment
+comment|/* BSD/OS point to point driver		*/
+end_comment
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  * B channel protocol  *---------------------------------------------------------------------------*/
 end_comment
@@ -636,6 +724,61 @@ end_define
 begin_comment
 comment|/* highest valid cdid, wraparound to 1	*/
 end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	The shorthold algorithm to use  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHA_FIXU
+value|0
+end_define
+
+begin_comment
+comment|/* timeout algorithm for fix unit charging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHA_VARU
+value|1
+end_define
+
+begin_comment
+comment|/* timeout algorithm for variable unit charging */
+end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	The shorthold data struct  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|shorthold_algorithm
+decl_stmt|;
+comment|/* shorthold algorithm to use	*/
+name|int
+name|unitlen_time
+decl_stmt|;
+comment|/* length of a charging unit	*/
+name|int
+name|idle_time
+decl_stmt|;
+comment|/* time without activity on b ch*/
+name|int
+name|earlyhup_time
+decl_stmt|;
+comment|/* safety area at end of unit	*/
+block|}
+name|msg_shorthold_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/****************************************************************************  	outgoing call: 	--------------  		userland		kernel 		--------		------  		CDID_REQ -----------------><------------------ cdid 	 		CONNECT_REQ --------------><------------------ PROCEEDING_IND (if connect req ok)<------------------ CONNECT_ACTIVE_IND (if connection ok)  		or<------------------ DISCONNECT_IND (if connection failed) 	             		  	incoming call: 	--------------  		userland		kernel 		--------		------<------------------ CONNECT_IND  		CONNECT_RESP -------------><------------------ CONNECT_ACTIVE_IND (if accepted)    	active disconnect: 	------------------  		userland		kernel 		--------		------  		DISCONNECT_REQ ------------><------------------ DISCONNECT_IND 	              	passive disconnect: 	-------------------  		userland		kernel 		--------		------<------------------ DISCONNECT_IND 	              ****************************************************************************/
@@ -717,6 +860,10 @@ define|#
 directive|define
 name|MSG_IFSTATE_CHANGED_IND
 value|'o'
+define|#
+directive|define
+name|MSG_DIALOUTNUMBER_IND
+value|'p'
 name|int
 name|cdid
 decl_stmt|;
@@ -938,6 +1085,42 @@ decl_stmt|;
 comment|/* driver unit number	*/
 block|}
 name|msg_dialout_ind_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	dial a number  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|msg_hdr_t
+name|header
+decl_stmt|;
+comment|/* common header	*/
+name|int
+name|driver
+decl_stmt|;
+comment|/* driver type		*/
+name|int
+name|driver_unit
+decl_stmt|;
+comment|/* driver unit number	*/
+name|int
+name|cmdlen
+decl_stmt|;
+comment|/* length of string	*/
+name|char
+name|cmd
+index|[
+name|TELNO_MAX
+index|]
+decl_stmt|;
+comment|/* the number to dial	*/
+block|}
+name|msg_dialoutnumber_ind_t
 typedef|;
 end_typedef
 
@@ -1290,18 +1473,10 @@ name|int
 name|driver_unit
 decl_stmt|;
 comment|/*      unit number for above driver */
-name|int
-name|unitlen_time
+name|msg_shorthold_t
+name|shorthold_data
 decl_stmt|;
-comment|/* length of a charging unit	     */
-name|int
-name|idle_time
-decl_stmt|;
-comment|/* time without activity on b ch     */
-name|int
-name|earlyhup_time
-decl_stmt|;
-comment|/* safety area at end of unit	     */
+comment|/* the shorthold data		     */
 name|int
 name|unitlen_method
 decl_stmt|;
@@ -1517,6 +1692,10 @@ directive|define
 name|DSTAT_INONLY
 value|3
 comment|/* no outgoing dials allowed */
+name|cause_t
+name|cause
+decl_stmt|;
+comment|/* exact i4b cause */
 block|}
 name|msg_dialout_resp_t
 typedef|;
@@ -1541,18 +1720,9 @@ name|int
 name|cdid
 decl_stmt|;
 comment|/* call descriptor id			*/
-name|int
-name|unitlen_time
+name|msg_shorthold_t
+name|shorthold_data
 decl_stmt|;
-comment|/* length of a charging unit		*/
-name|int
-name|idle_time
-decl_stmt|;
-comment|/* time without activity on b ch	*/
-name|int
-name|earlyhup_time
-decl_stmt|;
-comment|/* safety area at end of unit		*/
 block|}
 name|msg_timeout_upd_t
 typedef|;
@@ -1632,7 +1802,7 @@ value|_IOW('4', 8, msg_alert_req_t)
 end_define
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	request version and release info from kernel part  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	request version and release info from kernel part  *	(msg_vr_req_t is also used by tel& rbch drivers)  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_typedef

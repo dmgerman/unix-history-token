@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:36:47 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri May 28 16:27:07 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -886,8 +886,63 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L4_ISPDBG
+value|0x0040
+end_define
+
+begin_comment
+comment|/* isp driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TELDBG
+value|0x0080
+end_define
+
+begin_comment
+comment|/* tel driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINADBG
+value|0x0100
+end_define
+
+begin_comment
+comment|/* tina driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINAMSG
+value|0x0200
+end_define
+
+begin_comment
+comment|/* tina driver messages		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINAERR
+value|0x0400
+end_define
+
+begin_comment
+comment|/* tina driver error messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L4_DEBUG_MAX
-value|0x003f
+value|0x07ff
 end_define
 
 begin_comment
@@ -898,7 +953,7 @@ begin_define
 define|#
 directive|define
 name|L4_DEBUG_ERR
-value|(L4_ERR)
+value|(L4_ERR | L4_TINADBG |  L4_TINAMSG | L4_TINAERR)
 end_define
 
 begin_ifndef
@@ -1036,6 +1091,159 @@ define|#
 directive|define
 name|I4B_CTL_CLR_HSCXSTAT
 value|_IOW('C', 3, hscxstat_t)
+end_define
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	get LAPD/Q.921 statistics  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* transmit */
+name|u_long
+name|tx_i
+decl_stmt|;
+comment|/* I 	*/
+name|u_long
+name|tx_rr
+decl_stmt|;
+comment|/* RR	*/
+name|u_long
+name|tx_rnr
+decl_stmt|;
+comment|/* RNR 	*/
+name|u_long
+name|tx_rej
+decl_stmt|;
+comment|/* REJ	*/
+name|u_long
+name|tx_sabme
+decl_stmt|;
+comment|/* SABME*/
+name|u_long
+name|tx_dm
+decl_stmt|;
+comment|/* DM	*/
+name|u_long
+name|tx_disc
+decl_stmt|;
+comment|/* DISC */
+name|u_long
+name|tx_ua
+decl_stmt|;
+comment|/* UA	*/
+name|u_long
+name|tx_frmr
+decl_stmt|;
+comment|/* FRMR	*/
+name|u_long
+name|tx_tei
+decl_stmt|;
+comment|/* TEI	*/
+comment|/* receive */
+name|u_long
+name|rx_i
+decl_stmt|;
+comment|/* I    */
+name|u_long
+name|rx_rr
+decl_stmt|;
+comment|/* RR   */
+name|u_long
+name|rx_rnr
+decl_stmt|;
+comment|/* RNR  */
+name|u_long
+name|rx_rej
+decl_stmt|;
+comment|/* REJ  */
+name|u_long
+name|rx_sabme
+decl_stmt|;
+comment|/* SABME*/
+name|u_long
+name|rx_tei
+decl_stmt|;
+comment|/* TEI	*/
+name|u_long
+name|rx_ui
+decl_stmt|;
+comment|/* UI	*/
+name|u_long
+name|rx_disc
+decl_stmt|;
+comment|/* DISC */
+name|u_long
+name|rx_xid
+decl_stmt|;
+comment|/* XID	*/
+name|u_long
+name|rx_dm
+decl_stmt|;
+comment|/* DM	*/
+name|u_long
+name|rx_ua
+decl_stmt|;
+comment|/* UA	*/
+name|u_long
+name|rx_frmr
+decl_stmt|;
+comment|/* FRMR	*/
+comment|/* errors */
+name|u_long
+name|err_rx_len
+decl_stmt|;
+comment|/* incorrect length */
+name|u_long
+name|err_rx_badf
+decl_stmt|;
+comment|/* bad frame type */
+name|u_long
+name|err_rx_bads
+decl_stmt|;
+comment|/* bad s frame */
+name|u_long
+name|err_rx_badu
+decl_stmt|;
+comment|/* bad u frame */
+name|u_long
+name|err_rx_badui
+decl_stmt|;
+comment|/* bad ui frame */
+block|}
+name|lapdstat_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|unit
+decl_stmt|;
+name|lapdstat_t
+name|lapdstat
+decl_stmt|;
+block|}
+name|l2stat_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|I4B_CTL_GET_LAPDSTAT
+value|_IOWR('C', 4, l2stat_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_CTL_CLR_LAPDSTAT
+value|_IOW('C', 5, int)
 end_define
 
 begin_comment
