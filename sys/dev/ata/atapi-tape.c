@@ -1755,6 +1755,7 @@ name|stp
 operator|->
 name|flags
 operator|&=
+operator|~
 name|F_CTL_WARN
 expr_stmt|;
 ifdef|#
