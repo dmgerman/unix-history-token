@@ -2018,12 +2018,6 @@ name|RANDOM_WRITE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Explicit reseed */
-name|reseed
-argument_list|(
-name|FAST
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2326,6 +2320,25 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Helper routine to perform explicit reseeds */
+end_comment
+
+begin_function
+name|void
+name|random_reseed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|reseed
+argument_list|(
+name|FAST
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

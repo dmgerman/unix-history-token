@@ -130,6 +130,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|random_reseed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|read_random_real
 parameter_list|(
