@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smptests.h>
 end_include
 
@@ -649,15 +655,22 @@ comment|/* 'opaque' */
 end_comment
 
 begin_function
-name|int
-name|io_apic_setup
+name|void
+name|io_apic_setup_intpin
 parameter_list|(
 name|int
 name|apic
+parameter_list|,
+name|int
+name|pin
 parameter_list|)
 block|{
 name|int
-name|maxpin
+name|bus
+decl_stmt|,
+name|bustype
+decl_stmt|,
+name|irq
 decl_stmt|;
 name|u_char
 name|select
@@ -676,63 +689,12 @@ name|vector
 decl_stmt|;
 comment|/* the window register is 32 bits */
 name|int
-name|pin
-decl_stmt|,
 name|level
 decl_stmt|;
 name|target
 operator|=
 name|IOART_DEST
 expr_stmt|;
-if|if
-condition|(
-name|apic
-operator|==
-literal|0
-condition|)
-name|apic_pin_trigger
-operator|=
-literal|0
-expr_stmt|;
-comment|/* default to edge-triggered */
-name|maxpin
-operator|=
-name|REDIRCNT_IOAPIC
-argument_list|(
-name|apic
-argument_list|)
-expr_stmt|;
-comment|/* pins in APIC */
-name|printf
-argument_list|(
-literal|"Programming %d pins in IOAPIC #%d\n"
-argument_list|,
-name|maxpin
-argument_list|,
-name|apic
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|pin
-operator|=
-literal|0
-init|;
-name|pin
-operator|<
-name|maxpin
-condition|;
-operator|++
-name|pin
-control|)
-block|{
-name|int
-name|bus
-decl_stmt|,
-name|bustype
-decl_stmt|,
-name|irq
-decl_stmt|;
 name|select
 operator|=
 name|pin
@@ -742,7 +704,7 @@ operator|+
 name|IOAPIC_REDTBL0
 expr_stmt|;
 comment|/* register */
-comment|/*  		 * Always disable interrupts, and by default map 		 * pin X to IRQX because the disable doesn't stick 		 * and the uninitialize vector will get translated  		 * into a panic. 		 * 		 * This is correct for IRQs 1 and 3-15.  In the other cases,  		 * any robust driver will handle the spurious interrupt, and  		 * the effective NOP beats a panic. 		 * 		 * A dedicated "bogus interrupt" entry in the IDT would 		 * be a nicer hack, although some one should find out  		 * why some systems are generating interrupts when they 		 * shouldn't and stop the carnage. 		 */
+comment|/*  	 * Always disable interrupts, and by default map 	 * pin X to IRQX because the disable doesn't stick 	 * and the uninitialize vector will get translated  	 * into a panic. 	 * 	 * This is correct for IRQs 1 and 3-15.  In the other cases,  	 * any robust driver will handle the spurious interrupt, and  	 * the effective NOP beats a panic. 	 * 	 * A dedicated "bogus interrupt" entry in the IDT would 	 * be a nicer hack, although some one should find out  	 * why some systems are generating interrupts when they 	 * shouldn't and stop the carnage. 	 */
 name|vector
 operator|=
 name|NRSVIDT
@@ -750,6 +712,14 @@ operator|+
 name|pin
 expr_stmt|;
 comment|/* IDT vec */
+name|mtx_enter
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|io_apic_write
 argument_list|(
 name|apic
@@ -776,6 +746,14 @@ operator||
 name|vector
 argument_list|)
 expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* we only deal with vectored INTs here */
 if|if
 condition|(
@@ -788,7 +766,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-continue|continue;
+return|return;
 name|irq
 operator|=
 name|apic_irq
@@ -804,7 +782,7 @@ name|irq
 operator|<
 literal|0
 condition|)
-continue|continue;
+return|return;
 comment|/* determine the bus type for this pin */
 name|bus
 operator|=
@@ -822,7 +800,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-continue|continue;
+return|return;
 name|bustype
 operator|=
 name|apic_bus_type
@@ -873,7 +851,7 @@ literal|0x3
 operator|)
 condition|)
 block|{
-comment|/*  			 * A broken BIOS might describe some ISA  			 * interrupts as active-high level-triggered. 			 * Use default ISA flags for those interrupts. 			 */
+comment|/*  		 * A broken BIOS might describe some ISA  		 * interrupts as active-high level-triggered. 		 * Use default ISA flags for those interrupts. 		 */
 name|flags
 operator|=
 name|DEFAULT_ISA_FLAGS
@@ -881,7 +859,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * Program polarity and trigger mode according to  			 * interrupt entry. 			 */
+comment|/*  		 * Program polarity and trigger mode according to  		 * interrupt entry. 		 */
 name|flags
 operator|=
 name|DEFAULT_FLAGS
@@ -954,6 +932,14 @@ operator|+
 name|irq
 expr_stmt|;
 comment|/* IDT vec */
+name|mtx_enter
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|io_apic_write
 argument_list|(
 name|apic
@@ -974,6 +960,80 @@ operator|+
 literal|1
 argument_list|,
 name|target
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|io_apic_setup
+parameter_list|(
+name|int
+name|apic
+parameter_list|)
+block|{
+name|int
+name|maxpin
+decl_stmt|;
+name|int
+name|pin
+decl_stmt|;
+if|if
+condition|(
+name|apic
+operator|==
+literal|0
+condition|)
+name|apic_pin_trigger
+operator|=
+literal|0
+expr_stmt|;
+comment|/* default to edge-triggered */
+name|maxpin
+operator|=
+name|REDIRCNT_IOAPIC
+argument_list|(
+name|apic
+argument_list|)
+expr_stmt|;
+comment|/* pins in APIC */
+name|printf
+argument_list|(
+literal|"Programming %d pins in IOAPIC #%d\n"
+argument_list|,
+name|maxpin
+argument_list|,
+name|apic
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pin
+operator|=
+literal|0
+init|;
+name|pin
+operator|<
+name|maxpin
+condition|;
+operator|++
+name|pin
+control|)
+block|{
+name|io_apic_setup_intpin
+argument_list|(
+name|apic
+argument_list|,
+name|pin
 argument_list|)
 expr_stmt|;
 block|}
