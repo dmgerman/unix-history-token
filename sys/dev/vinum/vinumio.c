@@ -3414,7 +3414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Look at all disks on the system for vinum slices. */
+comment|/*  * Seach disks on system for vinum slices and add  * them to the configuuration if they're not  * there already.  devicename is a blank-separate  * list of device names.  If not provided, use  * sysctl to get a list of all disks on the  * system.  *  * Return an error indication.  */
 end_comment
 
 begin_function
@@ -3424,10 +3424,6 @@ parameter_list|(
 name|char
 modifier|*
 name|devicename
-index|[]
-parameter_list|,
-name|int
-name|drives
 parameter_list|)
 block|{
 name|struct
@@ -3483,26 +3479,153 @@ name|status
 decl_stmt|;
 name|int
 modifier|*
-specifier|volatile
 name|drivelist
 decl_stmt|;
 comment|/* list of drive indices */
-define|#
-directive|define
-name|DRIVENAMELEN
-value|64
-define|#
-directive|define
-name|DRIVEPARTS
-value|35
-comment|/* max partitions per drive, excluding c */
 name|char
+modifier|*
 name|partname
-index|[
-name|DRIVENAMELEN
-index|]
 decl_stmt|;
 comment|/* for creating partition names */
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+comment|/* pointer to start of disk name */
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+comment|/* and to first char after name */
+name|char
+modifier|*
+name|np
+decl_stmt|;
+comment|/* name pointer in naem we build */
+name|size_t
+name|alloclen
+decl_stmt|;
+name|int
+name|malloced
+decl_stmt|;
+name|int
+name|partnamelen
+decl_stmt|;
+comment|/* length of partition name */
+name|int
+name|drives
+decl_stmt|;
+name|malloced
+operator|=
+literal|0
+expr_stmt|;
+comment|/* devicename not malloced */
+if|if
+condition|(
+name|devicename
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no devices specified, */
+comment|/* get a list of all disks in the system */
+comment|/* Get size of disk list */
+name|error
+operator|=
+name|kernel_sysctlbyname
+argument_list|(
+operator|&
+name|thread0
+argument_list|,
+literal|"kern.disks"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|alloclen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum: can't get disk list: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+name|devicename
+operator|=
+name|Malloc
+argument_list|(
+name|alloclen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devicename
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vinum: can't allocate memory for drive list"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+else|else
+name|malloced
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Now det the list of disks */
+name|kernel_sysctlbyname
+argument_list|(
+operator|&
+name|thread0
+argument_list|,
+literal|"kern.disks"
+argument_list|,
+name|devicename
+argument_list|,
+operator|&
+name|alloclen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"vinum_scandisk: devicename is %s\n"
+argument_list|,
+name|devicename
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|status
 operator|=
 literal|0
@@ -3515,6 +3638,30 @@ operator||=
 name|VF_READING_CONFIG
 expr_stmt|;
 comment|/* reading config from disk */
+name|partname
+operator|=
+name|Malloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+comment|/* extract name of disk here */
+if|if
+condition|(
+name|partname
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vinum_scandisk: can't allocate memory for drive name"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|gooddrives
 operator|=
 literal|0
@@ -3537,6 +3684,11 @@ literal|0
 expr_stmt|;
 comment|/* are we a virgin? */
 comment|/* allocate a drive pointer list */
+name|drives
+operator|=
+literal|256
+expr_stmt|;
+comment|/* should be enough for most cases */
 name|drivelist
 operator|=
 operator|(
@@ -3546,8 +3698,6 @@ operator|)
 name|Malloc
 argument_list|(
 name|drives
-operator|*
-name|DRIVEPARTS
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3565,16 +3715,16 @@ expr_stmt|;
 comment|/* Open all drives and find which was modified most recently */
 for|for
 control|(
-name|driveno
+name|cp
 operator|=
-literal|0
+name|devicename
 init|;
-name|driveno
-operator|<
-name|drives
+operator|*
+name|cp
 condition|;
-name|driveno
-operator|++
+name|cp
+operator|=
+name|ep
 control|)
 block|{
 name|char
@@ -3588,6 +3738,104 @@ name|int
 name|founddrive
 decl_stmt|;
 comment|/* flag when we find a vinum drive */
+while|while
+condition|(
+operator|*
+name|cp
+operator|==
+literal|' '
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+comment|/* find start of name */
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+comment|/* done, */
+break|break;
+name|ep
+operator|=
+name|cp
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|ep
+operator|&&
+operator|(
+operator|*
+name|ep
+operator|!=
+literal|' '
+operator|)
+condition|)
+comment|/* find end of name */
+name|ep
+operator|++
+expr_stmt|;
+name|np
+operator|=
+name|partname
+expr_stmt|;
+comment|/* start building up a name here */
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'/'
+condition|)
+block|{
+comment|/* name doesn't start with /, */
+name|strcpy
+argument_list|(
+name|np
+argument_list|,
+literal|"/dev/"
+argument_list|)
+expr_stmt|;
+comment|/* assume /dev */
+name|np
+operator|+=
+name|strlen
+argument_list|(
+literal|"/dev/"
+argument_list|)
+expr_stmt|;
+block|}
+name|memcpy
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+name|ep
+operator|-
+name|cp
+argument_list|)
+expr_stmt|;
+comment|/* put in name */
+name|np
+operator|+=
+name|ep
+operator|-
+name|cp
+expr_stmt|;
+comment|/* and point past */
+name|partnamelen
+operator|=
+name|MAXPATHLEN
+operator|+
+name|np
+operator|-
+name|partname
+expr_stmt|;
+comment|/* remaining length in partition name */
 name|founddrive
 operator|=
 literal|0
@@ -3631,16 +3879,11 @@ block|{
 comment|/* don't do the c partition */
 name|snprintf
 argument_list|(
-name|partname
+name|np
 argument_list|,
-name|DRIVENAMELEN
+name|partnamelen
 argument_list|,
-literal|"%ss%d%c"
-argument_list|,
-name|devicename
-index|[
-name|driveno
-index|]
+literal|"s%d%c"
 argument_list|,
 name|slice
 argument_list|,
@@ -3706,6 +3949,25 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|gooddrives
+operator|==
+name|drives
+condition|)
+comment|/* ran out of entries */
+name|EXPAND
+argument_list|(
+name|drivelist
+argument_list|,
+name|int
+argument_list|,
+name|drives
+argument_list|,
+name|drives
+argument_list|)
+expr_stmt|;
+comment|/* double the size */
 name|drivelist
 index|[
 name|gooddrives
@@ -3765,17 +4027,11 @@ block|{
 comment|/* don't do the c partition */
 name|snprintf
 argument_list|(
-name|partname
+name|np
 argument_list|,
-comment|/* /dev/sd0a */
-name|DRIVENAMELEN
+name|partnamelen
 argument_list|,
-literal|"%s%c"
-argument_list|,
-name|devicename
-index|[
-name|driveno
-index|]
+literal|"%c"
 argument_list|,
 name|part
 argument_list|)
@@ -3839,6 +4095,25 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|gooddrives
+operator|==
+name|drives
+condition|)
+comment|/* ran out of entries */
+name|EXPAND
+argument_list|(
+name|drivelist
+argument_list|,
+name|int
+argument_list|,
+name|drives
+argument_list|,
+name|drives
+argument_list|)
+expr_stmt|;
+comment|/* double the size */
 name|drivelist
 index|[
 name|gooddrives
@@ -3864,6 +4139,11 @@ block|}
 block|}
 block|}
 block|}
+name|Free
+argument_list|(
+name|partname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gooddrives
@@ -3888,6 +4168,15 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"vinum: no additional drives found\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|malloced
+condition|)
+name|Free
+argument_list|(
+name|devicename
 argument_list|)
 expr_stmt|;
 return|return
@@ -4268,6 +4557,15 @@ name|VF_READING_CONFIG
 argument_list|)
 expr_stmt|;
 comment|/* update from disk config */
+if|if
+condition|(
+name|malloced
+condition|)
+name|Free
+argument_list|(
+name|devicename
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;

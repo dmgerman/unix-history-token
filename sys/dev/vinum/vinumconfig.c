@@ -2426,7 +2426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a drive given its device name.  * devname must be valid.  * Otherwise the same as find_drive above  */
+comment|/*  * Find a drive given its device name.  * devname must be valid.  * Otherwise the same as find_drive above.  */
 end_comment
 
 begin_function
@@ -7465,27 +7465,6 @@ condition|)
 block|{
 comment|/* decide what to do */
 case|case
-name|kw_read
-case|:
-comment|/* read config from a specified drive */
-name|status
-operator|=
-name|vinum_scandisk
-argument_list|(
-operator|&
-name|token
-index|[
-literal|1
-index|]
-argument_list|,
-name|tokens
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* read the config from disk */
-break|break;
-case|case
 name|kw_drive
 case|:
 name|config_drive
@@ -7582,22 +7561,6 @@ argument_list|,
 name|keyset
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-name|ENOENT
-condition|)
-comment|/* from scandisk, but it can't tell us */
-name|strcpy
-argument_list|(
-name|ioctl_reply
-operator|->
-name|msg
-argument_list|,
-literal|"no drives found"
 argument_list|)
 expr_stmt|;
 name|ioctl_reply
