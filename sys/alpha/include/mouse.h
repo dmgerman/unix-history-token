@@ -394,6 +394,13 @@ name|MOUSE_IF_SYSMOUSE
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_IF_USB
+value|5
+end_define
+
 begin_comment
 comment|/* type */
 end_comment
@@ -1101,6 +1108,13 @@ end_define
 begin_comment
 comment|/* right */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MSC_MAXBUTTON
+value|3
+end_define
 
 begin_comment
 comment|/* MM series mouse data packet */
