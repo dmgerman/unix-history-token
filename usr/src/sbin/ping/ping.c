@@ -101,14 +101,34 @@ begin_comment
 comment|/* max time to wait for response, sec. */
 end_comment
 
-begin_decl_stmt
-name|char
-name|ttyobuf
-index|[
-literal|4096
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|4096
+end_define
+
+begin_comment
+comment|/* max packet size */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXHOSTNAMELEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -120,7 +140,7 @@ begin_decl_stmt
 name|u_char
 name|packet
 index|[
-literal|1024
+name|MAXPACKET
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -197,7 +217,7 @@ name|char
 name|usage
 index|[]
 init|=
-literal|"Usage:  ping [-drv] host [data size]\n"
+literal|"Usage:  ping [-drv] host [data size] [npackets]\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,7 +232,7 @@ begin_decl_stmt
 name|char
 name|hnamebuf
 index|[
-literal|64
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -345,6 +365,11 @@ name|on
 init|=
 literal|1
 decl_stmt|;
+name|struct
+name|protoent
+modifier|*
+name|proto
+decl_stmt|;
 name|argc
 operator|--
 operator|,
@@ -449,6 +474,55 @@ name|sockaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|to
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|to
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|to
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|hnamebuf
+argument_list|,
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|hostname
+operator|=
+name|hnamebuf
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hp
 operator|=
 name|gethostbyname
@@ -500,38 +574,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|to
-operator|->
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
-name|to
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|inet_addr
-argument_list|(
-name|av
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|to
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s: unknown host %s\n"
@@ -543,26 +585,16 @@ index|]
 argument_list|,
 name|av
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|strcpy
+name|exit
 argument_list|(
-name|hnamebuf
-argument_list|,
-name|av
-index|[
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
-name|hostname
-operator|=
-name|hnamebuf
-expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -587,6 +619,26 @@ literal|64
 operator|-
 literal|8
 expr_stmt|;
+if|if
+condition|(
+name|datalen
+operator|>
+name|MAXPACKET
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: packet size too large\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|datalen
@@ -627,6 +679,33 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|proto
+operator|=
+name|getprotobyname
+argument_list|(
+literal|"icmp"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"icmp: unknown protocol\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|socket
@@ -635,7 +714,9 @@ name|AF_INET
 argument_list|,
 name|SOCK_RAW
 argument_list|,
-name|IPPROTO_ICMP
+name|proto
+operator|->
+name|p_proto
 argument_list|)
 operator|)
 operator|<
@@ -708,16 +789,9 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-name|setbuffer
+name|setlinebuf
 argument_list|(
 name|stdout
-argument_list|,
-name|ttyobuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ttyobuf
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|signal
@@ -923,7 +997,7 @@ specifier|static
 name|u_char
 name|outpack
 index|[
-literal|1024
+name|MAXPACKET
 index|]
 decl_stmt|;
 specifier|register
@@ -1285,6 +1359,11 @@ decl_stmt|;
 name|int
 name|triptime
 decl_stmt|;
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
 name|from
 operator|->
 name|sin_addr
@@ -1325,15 +1404,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d bytes from x%x: "
+literal|"%d bytes from %s: "
 argument_list|,
 name|cc
 argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ntohl
+argument_list|(
 name|from
 operator|->
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1390,11 +1475,6 @@ operator|->
 name|icmp_code
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 return|return;
 block|}
@@ -1410,15 +1490,21 @@ return|return;
 comment|/* 'Twas not our ECHO */
 name|printf
 argument_list|(
-literal|"%d bytes from x%x: "
+literal|"%d bytes from %s: "
 argument_list|,
 name|cc
 argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ntohl
+argument_list|(
 name|from
 operator|->
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1500,23 +1586,12 @@ expr_stmt|;
 name|nreceived
 operator|++
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  *			I N _ C K S U M  *  * Checksum routine for Internet Protocol family headers (VAX Version).  *  * Shamelessly pilfered from /sys/vax/in_cksum.c, with all the MBUF stuff  * ripped out.  */
+comment|/*  *			I N _ C K S U M  *  * Checksum routine for Internet Protocol family headers (C Version)  *  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|vax
-end_if
 
 begin_macro
 name|in_cksum
@@ -1548,12 +1623,6 @@ name|nleft
 init|=
 name|len
 decl_stmt|;
-comment|/* on vax, (user mode), r11 */
-specifier|register
-name|int
-name|xxx
-decl_stmt|;
-comment|/* on vax, (user mode), r10 */
 specifier|register
 name|u_short
 modifier|*
@@ -1561,29 +1630,22 @@ name|w
 init|=
 name|addr
 decl_stmt|;
-comment|/* on vax, known to be r9 */
+specifier|register
+name|u_short
+name|answer
+decl_stmt|;
 specifier|register
 name|int
 name|sum
 init|=
 literal|0
 decl_stmt|;
-comment|/* on vax, known to be r8 */
-comment|/* 	 * Force to long boundary so we do longword aligned 	 * memory operations.  It is too hard to do byte 	 * adjustment, do only word adjustment. 	 */
-if|if
+comment|/* 	 *  Our algorithm is simple, using a 32 bit accumulator (sum), 	 *  we add sequential 16 bit words to it, and at the end, fold 	 *  back all the carry bits from the top 16 bits into the lower 	 *  16 bits. 	 */
+while|while
 condition|(
-operator|(
-operator|(
-name|int
-operator|)
-name|w
-operator|&
-literal|0x2
-operator|)
-operator|&&
 name|nleft
-operator|>=
-literal|2
+operator|>
+literal|1
 condition|)
 block|{
 name|sum
@@ -1597,97 +1659,13 @@ operator|-=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 	 * Do as much of the checksum as possible 32 bits at at time. 	 * In fact, this loop is unrolled to make overhead from 	 * branches&c small. 	 * 	 * We can do a 16 bit ones complement sum 32 bits at a time 	 * because the 32 bit register is acting as two 16 bit 	 * registers for adding, with carries from the low added 	 * into the high (by normal carry-chaining) and carries 	 * from the high carried into the low on the next word 	 * by use of the adwc instruction.  This lets us run 	 * this loop at almost memory speed. 	 * 	 * Here there is the danger of high order carry out, and 	 * we carefully use adwc. 	 */
-while|while
-condition|(
-operator|(
-name|nleft
-operator|-=
-literal|32
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-undef|#
-directive|undef
-name|ADD
-asm|asm("clrl r0");
-comment|/* clears carry */
-define|#
-directive|define
-name|ADD
-value|asm("adwc (r9)+,r8;");
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-asm|asm("adwc $0,r8");
-block|}
-name|nleft
-operator|+=
-literal|32
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|nleft
-operator|-=
-literal|8
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-asm|asm("clrl r0");
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-asm|asm("adwc $0,r8");
-block|}
-name|nleft
-operator|+=
-literal|8
-expr_stmt|;
-comment|/* 	 * Now eliminate the possibility of carry-out's by 	 * folding back to a 16 bit number (adding high and 	 * low parts together.)  Then mop up trailing words 	 * and maybe an odd byte. 	 */
-block|{
-asm|asm("ashl $-16,r8,r0; addw2 r0,r8");
-asm|asm("adwc $0,r8; movzwl r8,r8");
-block|}
-while|while
-condition|(
-operator|(
-name|nleft
-operator|-=
-literal|2
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-asm|asm("movzwl (r9)+,r0; addl2 r0,r8");
-block|}
+comment|/* mop up an odd byte, if necessary */
 if|if
 condition|(
 name|nleft
 operator|==
-operator|-
 literal|1
 condition|)
-block|{
 name|sum
 operator|+=
 operator|*
@@ -1697,25 +1675,29 @@ operator|*
 operator|)
 name|w
 expr_stmt|;
-block|}
-comment|/* 	 * Add together high and low parts of sum 	 * and carry to get cksum. 	 * Have to be careful to not drop the last 	 * carry here. 	 */
-block|{
-asm|asm("ashl $-16,r8,r0; addw2 r0,r8; adwc $0,r8");
-asm|asm("mcoml r8,r8; movzwl r8,r8");
-block|}
-return|return
+comment|/* 	 * add back carry outs from top 16 bits to low 16 bits 	 */
+name|sum
+operator|+=
 operator|(
 name|sum
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+comment|/* add hi 16 to low 16 */
+name|answer
+operator|=
+operator|~
+name|sum
+expr_stmt|;
+comment|/* truncate to 16 bits */
+return|return
+operator|(
+name|answer
 operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|vax
-end_endif
 
 begin_comment
 comment|/*  * 			T V S U B  *   * Subtract 2 timeval structs:  out = out - in.  *   * Out is assumed to be>= in.  */
