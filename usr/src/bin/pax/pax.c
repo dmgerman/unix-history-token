@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pax.c	1.1 (Berkeley) %G%"
+literal|"@(#)pax.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * BSD PAX main routines, general globals and some simple start up routines  */
+comment|/*  * PAX main routines, general globals and some simple start up routines  */
 end_comment
 
 begin_comment
@@ -262,6 +262,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* same as uflag except inode change time */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Hflag
 decl_stmt|;
 end_decl_stmt
@@ -292,12 +302,22 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Yflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* same as Dflg except after name mode */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Zflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* move file time check to after name mode */
+comment|/* same as uflg except after name mode */
 end_comment
 
 begin_decl_stmt
@@ -407,7 +427,11 @@ comment|/* signal mask for cleanup critical sect */
 end_comment
 
 begin_comment
-comment|/*  *	PAX - Portable Archive Interchange  *  * 	A utility to read, write, and write lists of the members of archive  *	files and copy directory hierarchies. A variety of archive formats  *	are supported (some are described in POSIX 1003.1 10.1):  *  *		ustar - 10.1.1 extended tar interchange format  *		cpio  - 10.1.2 extended cpio interchange format  *		tar - old BSD 4.3 tar format  *		binary cpio - old cpio with binary header format  *		sysVR4 cpio -  with and without CRC  *  * This version is a superset of IEEE Std 1003.2b-d3  *  * Summary of Extensions to the IEEE Standard:  *  * 1	Read enhancements  * 1.1	Operations which read archives will continue to operate even when  *	processing archives which may be damaged, truncated, or fail to meet   *	format specs in several different ways. Damaged sections of archives  *	are detected and avoided if possible. Attempts will be made to resync  *	archive read operations even with badly damaged media.  * 1.2	Blocksize requirements are not strictly enforced on archive read.  *	Tapes which have variable sized records can be read without errors.  * 1.3	The user can specify via the non-standard option flag -E if error  *	resync operation should stop on a media error, try a specified number  *	of times to correct, or try to correct forever.  * 1.4	Sparse files (lseek holes) stored on the archive (but stored with blocks  *	of all zeros will be restored with holes appropriate for the target  *	filesystem  * 1.5	The user is notified whenever something is found during archive  *	read operations which violates spec (but the read will continue).  * 1.6	Multiple archive volumes can be read and may span over different  *	archive devices   * 1.7	Rigidly restores all file attributes exactly as they are stored on the  *	archive.  * 1.8	Modification time ranges can be specified via multiple -T options.  *	These allow a user to select files whose modification time lies within a  *	specific time range.  * 1.9	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 1.10	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 1.11	File modification time can be checked against exisiting file after  *	name modification (-Z)  *  * 2	Write enhancements  * 2.1	Write operation will stop instead of allowing a user to create a flawed  *	flawed archive (due to any problem).  * 2.2	Archives writtens by pax are forced to strictly conform to both the  *	archive and pax the spceific format specifications.  * 2.3	Blocking size and format is rigidly enforced on writes.  * 2.4	Formats which may exhibit header overflow problems (they have fields  *	too small for large file systems, such as inode number storage), use  *	routines designed to repair this problem. These techniques still  *	conform to both pax and format specifications, but no longer truncate  *	these fields. This removes any restrictions on using these archive  *	formats on large file systems.  * 2.5	Multiple archive volumes can be written and may span over different  *	archive devices   * 2.6	A archive volume record limit allows the user to specify the number  *	of bytes stored on an archive volume. When reached the user is  *	prompted for the next archive volume. This is specified with the  *	non-standard -B flag. THe limit is rounded up to the next blocksize.  * 2.7	All archive padding during write use zero filled sections. This makes  *	it much easier to pull data out of flawed archive during read  *	operations.  * 2.8	Access time reset with the -t applies to all file nodes (including  *	directories).  * 2.9	Symbolic links can be followed with -L (optional in the spec).  * 2.10	Modification time ranges can be specified via multiple -T options. These  *	allow a user to select files whose modification time lies within a  *	specific time range.  * 2.11	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 2.12	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 2.13	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  *  * 3	Copy enhancements  * 3.1	Sparse files (lseek holes) can be copied without expanding the holes  *	into zero filled blocks. The file copy is created with holes which are  *	appropriate for the target filesystem  * 3.2	Access time as well as modification time on copied file trees can be  *	preserved with the appropriate -p options.  * 3.3	Access time reset with the -t applies to all file nodes (including  *	directories).  * 3.4	Symbolic links can be followed with -L (optional in the spec).  * 3.5	Modification time ranges can be specified via multiple -T options. These  *	allow a user to select files whose modification time lies within a  *	specific time range.  * 3.6	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 3.7	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 3.8	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  * 3.9	File modification time can be checked against exisiting file after  *	name modification (-Z)  *  * 4	General enhancements  * 4.1	Internal structure is designed to isolate format dependent and   *	independent functions. Formats are selected via a format driver table.  *	This encourages the addition of new archive formats by only having to  *	write those routines which id, read and write the archive header.  */
+comment|/*  *	PAX - Portable Archive Interchange  *  * 	A utility to read, write, and write lists of the members of archive  *	files and copy directory hierarchies. A variety of archive formats  *	are supported (some are described in POSIX 1003.1 10.1):  *  *		ustar - 10.1.1 extended tar interchange format  *		cpio  - 10.1.2 extended cpio interchange format  *		tar - old BSD 4.3 tar format  *		binary cpio - old cpio with binary header format  *		sysVR4 cpio -  with and without CRC  *  * This version is a superset of IEEE Std 1003.2b-d3  *  * Summary of Extensions to the IEEE Standard:  *  * 1	READ ENHANCEMENTS  * 1.1	Operations which read archives will continue to operate even when  *	processing archives which may be damaged, truncated, or fail to meet   *	format specs in several different ways. Damaged sections of archives  *	are detected and avoided if possible. Attempts will be made to resync  *	archive read operations even with badly damaged media.  * 1.2	Blocksize requirements are not strictly enforced on archive read.  *	Tapes which have variable sized records can be read without errors.  * 1.3	The user can specify via the non-standard option flag -E if error  *	resync operation should stop on a media error, try a specified number  *	of times to correct, or try to correct forever.  * 1.4	Sparse files (lseek holes) stored on the archive (but stored with blocks  *	of all zeros will be restored with holes appropriate for the target  *	filesystem  * 1.5	The user is notified whenever something is found during archive  *	read operations which violates spec (but the read will continue).  * 1.6	Multiple archive volumes can be read and may span over different  *	archive devices   * 1.7	Rigidly restores all file attributes exactly as they are stored on the  *	archive.  * 1.8	Modification change time ranges can be specified via multiple -T  *	options. These allow a user to select files whose modification time  *	lies within a specific time range.  * 1.9	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 1.10	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 1.11	File modification time can be checked against exisiting file after  *	name modification (-Z)  *  * 2	WRITE ENHANCEMENTS  * 2.1	Write operation will stop instead of allowing a user to create a flawed  *	flawed archive (due to any problem).  * 2.2	Archives writtens by pax are forced to strictly conform to both the  *	archive and pax the spceific format specifications.  * 2.3	Blocking size and format is rigidly enforced on writes.  * 2.4	Formats which may exhibit header overflow problems (they have fields  *	too small for large file systems, such as inode number storage), use  *	routines designed to repair this problem. These techniques still  *	conform to both pax and format specifications, but no longer truncate  *	these fields. This removes any restrictions on using these archive  *	formats on large file systems.  * 2.5	Multiple archive volumes can be written and may span over different  *	archive devices   * 2.6	A archive volume record limit allows the user to specify the number  *	of bytes stored on an archive volume. When reached the user is  *	prompted for the next archive volume. This is specified with the  *	non-standard -B flag. THe limit is rounded up to the next blocksize.  * 2.7	All archive padding during write use zero filled sections. This makes  *	it much easier to pull data out of flawed archive during read  *	operations.  * 2.8	Access time reset with the -t applies to all file nodes (including  *	directories).  * 2.9	Symbolic links can be followed with -L (optional in the spec).  * 2.10	Modification or inode change time ranges can be specified via  *	multiple -T options. These allow a user to select files whose  *	modification or inode change time lies within a specific time range.  * 2.11	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 2.12	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 2.13	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  *  * 3	COPY ENHANCEMENTS  * 3.1	Sparse files (lseek holes) can be copied without expanding the holes  *	into zero filled blocks. The file copy is created with holes which are  *	appropriate for the target filesystem  * 3.2	Access time as well as modification time on copied file trees can be  *	preserved with the appropriate -p options.  * 3.3	Access time reset with the -t applies to all file nodes (including  *	directories).  * 3.4	Symbolic links can be followed with -L (optional in the spec).  * 3.5	Modification or inode change time ranges can be specified via  *	multiple -T options. These allow a user to select files whose  *	modification or inode change time lies within a specific time range.  * 3.6	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 3.7	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 3.8	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  * 3.9  File inode change time can be checked against exisiting file before  *	name modification (-D)  * 3.10 File inode change time can be checked against exisiting file after  *	name modification (-Y)  * 3.11	File modification time can be checked against exisiting file after  *	name modification (-Z)  *  * 4	GENERAL ENHANCEMENTS  * 4.1	Internal structure is designed to isolate format dependent and   *	independent functions. Formats are selected via a format driver table.  *	This encourages the addition of new archive formats by only having to  *	write those routines which id, read and write the archive header.  */
+end_comment
+
+begin_comment
+comment|/*  * main()  *	parse options, set up and operate as specified by the user.  *	any operational flaw will set exit_val to non-zero  * Return: 0 if ok, 1 otherwise  */
 end_comment
 
 begin_if
@@ -447,7 +471,7 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-comment|/* 	 * parse options, set up and operate as specified by the user. 	 * any operational flaw will set exit_val to none zero 	 */
+comment|/* 	 * parse options, determine operational mode, general init 	 */
 name|options
 argument_list|(
 name|argc
@@ -528,248 +552,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * usage()  *	print the usage summary to the user  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
-name|usage
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|usage
-argument_list|()
-endif|#
-directive|endif
-block|{
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"usage: pax [-cdnv] [-E limit] [-f archive]"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|" [-s replstr] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date]] ...  [pattern ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -r [-cdiknuvZ] [-E limit] "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-f archive] [-o options] ... \n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"           [-p string] ... [-s replstr] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|" [-U user] ... [-G group] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-T [from_date][,to_date]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|" [pattern ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -w [-dituvHLX] [-b blocksize] "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[ [-a] [-f archive] ] [-x format] \n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"           [-B bytes] [-s replstr] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-o options] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date]] ... [file ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -r -w [-diklntuvHLXZ]"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-p string] ... [-s replstr] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[file ...] directory\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/*  * sig_cleanup()  *	when interrupted we try to do whatever delayed processing we can.  *	This is not critical, but we really ought to limit our damage when we  *	are aborted by the user.  * Return:  *	never....  */
 end_comment
 
@@ -798,7 +580,9 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-comment|/* 	 * restore modes and times for any dirs we may have created 	 * or any dirs we may have read 	 */
+comment|/* 	 * restore modes and times for any dirs we may have created 	 * or any dirs we may have read. Set vflag and vfpart so the user 	 * will clearly see the message on a line by itself. 	 */
+name|vflag
+operator|=
 name|vfpart
 operator|=
 literal|1
@@ -1027,7 +811,7 @@ argument_list|(
 literal|"LC_TIME"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * signal handling to reset stored directory times and modes. Since 	 * we deal with broken pipes via failed writes we ignore it. We also 	 * deal with exceeed file size limit with failed writes. Cpu time 	 * limits is caught and a cleanup is forced. All other "user" 	 * generated signals are handled. 	 */
+comment|/* 	 * signal handling to reset stored directory times and modes. Since 	 * we deal with broken pipes via failed writes we ignore it. We also 	 * deal with any file size limit thorugh failed writes. Cpu time 	 * limits are caught and a cleanup is forced. 	 */
 if|if
 condition|(
 operator|(
@@ -1435,6 +1219,268 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/*  * usage()  *	print the usage summary to the user  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_decl_stmt
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+else|#
+directive|else
+name|void
+name|usage
+argument_list|()
+endif|#
+directive|endif
+block|{
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"usage: pax [-cdnv] [-E limit] [-f archive] "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-s replstr] ... [-U user] ..."
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"\n           [-G group] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-T [from_date][,to_date]] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[pattern ...]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"       pax -r [-cdiknuvDYZ] [-E limit] "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-f archive] [-o options] ... \n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"           [-p string] ... [-s replstr] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-U user] ... [-G group] ...\n           "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-T [from_date][,to_date]] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|" [pattern ...]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"       pax -w [-dituvHLX] [-b blocksize] "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[ [-a] [-f archive] ] [-x format] \n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"           [-B bytes] [-s replstr] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-o options] ... [-U user] ..."
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"\n           [-G group] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-T [from_date][,to_date][/[c][m]]] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[file ...]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"       pax -r -w [-diklntuvDHLXYZ]"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-p string] ... [-s replstr] ... [-U user] ..."
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"\n           [-G group] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[-T [from_date][,to_date][/[c][m]]] ... "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"[file ...]\n           directory\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
