@@ -2131,6 +2131,10 @@ literal|1
 operator|&&
 operator|!
 name|o_stdout
+operator|&&
+name|v_level
+operator|>
+literal|0
 condition|)
 name|warnx
 argument_list|(
