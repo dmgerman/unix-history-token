@@ -56,10 +56,12 @@ parameter_list|(
 specifier|const
 name|sigset_t
 modifier|*
+name|__restrict
 name|set
 parameter_list|,
 name|int
 modifier|*
+name|__restrict
 name|sig
 parameter_list|)
 block|{
