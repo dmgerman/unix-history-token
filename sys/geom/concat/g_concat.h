@@ -134,10 +134,6 @@ begin_struct
 struct|struct
 name|g_concat_softc
 block|{
-name|int
-name|sc_flags
-decl_stmt|;
-comment|/* flags */
 name|u_int
 name|sc_type
 decl_stmt|;
