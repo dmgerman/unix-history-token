@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.17	%G%	*/
+comment|/*	hp.c	3.18	%G%	*/
 end_comment
 
 begin_include
@@ -218,14 +218,14 @@ begin_define
 define|#
 directive|define
 name|_hpSDIST
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|_hpRDIST
-value|6
+value|3
 end_define
 
 begin_decl_stmt
