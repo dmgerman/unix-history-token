@@ -3,6 +3,32 @@ begin_comment
 comment|/*  * Copyright (c) 1996 Whistle Communications  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * Whistle Communications allows free use of this software in its "as is"  * condition.  Whistle Communications disclaims any liability of any kind for  * any damages whatsoever resulting from the use of this software.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -18,6 +44,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -25,42 +63,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -80,7 +82,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* force the longs to be long alligned */
+comment|/* force the longs to be long aligned */
 name|unsigned
 name|char
 name|bootinst
@@ -164,29 +166,12 @@ name|dflag
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nameblock
-init|=
-name|NAMEBLOCK
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|BOOT_MAGIC
 value|0xAA55
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -200,25 +185,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" usage: %s [-b] device bootstring [bootstring] ...\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: nextboot [-b] device bootstring [bootstring] ..."
 argument_list|,
-literal|"    or: %s {-e,-d} device \n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"The -e and -d flags are mutually exclusive\n"
+literal|"       nextboot {-e,-d} device"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -230,6 +201,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -408,15 +380,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|errx
 argument_list|(
-literal|"open"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"file: %s\n"
+literal|1
+argument_list|,
+literal|"can't open %s"
 argument_list|,
 name|argv
 index|[
@@ -424,10 +392,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 name|argc
 operator|--
 expr_stmt|;
@@ -449,18 +413,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|read
@@ -480,18 +439,13 @@ argument_list|)
 operator|!=
 name|BLOCKSIZE
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"read0"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|mboot
@@ -504,18 +458,13 @@ name|short
 operator|)
 name|BOOT_MAGIC
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|" no fdisk part.. not touching block 1\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no fdisk part.. not touching block 1"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/******************************************* 	 * And check that none of the partitions in it cover the name block; 	 */
 for|for
 control|(
@@ -577,25 +526,15 @@ operator|>
 name|NAMEBLOCK
 operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|" Name sector lies within a Bios partition.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" Aborting write.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"name sector lies within a Bios partition: aborting write"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/******************************************* 	 *  Now check the  name sector itself to see if it's been initialised. 	 */
+comment|/******************************************* 	 *  Now check the  name sector itself to see if it's been initialized. 	 */
 if|if
 condition|(
 name|lseek
@@ -612,18 +551,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|read
@@ -637,19 +571,14 @@ argument_list|)
 operator|!=
 name|BLOCKSIZE
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"read1"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/******************************************* 	 * check if we are just enabling or disabling 	 * Remember the flags are exlusive.. 	 */
+comment|/******************************************* 	 * check if we are just enabling or disabling 	 * Remember the flags are exclusive.. 	 */
 if|if
 condition|(
 operator|!
@@ -676,17 +605,11 @@ name|ENABLE_MAGIC
 case|:
 break|break;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"namesector not  initialised.."
-literal|"use the -b flag..\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"namesector not initialized, use the -b flag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -851,18 +774,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|write
@@ -876,23 +794,18 @@ argument_list|)
 operator|!=
 name|BLOCKSIZE
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"write"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|#
 directive|if
 literal|0
 comment|/******************************************* 	 * just to be safe/paranoid.. read it back.. 	 * and print it.. 	 */
-block|if (lseek(fd,NAMEBLOCK * BLOCKSIZE,0) == -1) { 		perror("lseek (second) "); 		exit(1); 	} 	read (fd,namebuf,512); 	for (i = 0;i< 16;i++) { 		for ( j = 0; j< 16; j++) { 			printf("%02x ",(unsigned char )namebuf[(i*16) + j ]); 		} 		printf("\n"); 	}
+block|if (lseek(fd,NAMEBLOCK * BLOCKSIZE,0) == -1) 		err(1, "lseek (second)"); 	read (fd,namebuf,512); 	for (i = 0;i< 16;i++) { 		for ( j = 0; j< 16; j++) { 			printf("%02x ",(unsigned char )namebuf[(i*16) + j ]); 		} 		printf("\n"); 	}
 endif|#
 directive|endif
 name|exit
