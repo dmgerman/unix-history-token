@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2241,6 +2241,8 @@ condition|)
 continue|continue;
 name|quotaoff
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|i
@@ -2646,6 +2648,8 @@ name|error
 operator|=
 name|quotaoff
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|type
