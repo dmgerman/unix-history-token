@@ -53,13 +53,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|Suff_EndTransform
 parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
+specifier|const
+name|struct
+name|GNode
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1769,43 +1769,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Suff_EndTransform --  *	Handle the finish of a transformation definition, removing the  *	transformation from the graph if it has neither commands nor  *	sources. This is a callback procedure for the Parse module via  *	Lst_ForEach  *  * Results:  *	=== 0  *  * Side Effects:  *	If the node has no commands or children, the children and parents  *	lists of the affected suffices are altered.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Suff_EndTransform --  *	Handle the finish of a transformation definition, removing the  *	transformation from the graph if it has neither commands nor  *	sources. This is called from the Parse module at the end of  *	a dependency block.  *  * Side Effects:  *	If the node has no commands or children, the children and parents  *	lists of the affected suffices are altered.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|Suff_EndTransform
 parameter_list|(
-name|void
-modifier|*
-name|gnp
-parameter_list|,
-name|void
-modifier|*
-name|dummy
-name|__unused
-parameter_list|)
-block|{
+specifier|const
 name|GNode
 modifier|*
 name|gn
-init|=
-operator|(
-name|GNode
-operator|*
-operator|)
-name|gnp
+parameter_list|)
+block|{
+name|Suff
+modifier|*
+name|s
+decl_stmt|,
+modifier|*
+name|t
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_TRANSFORM
-operator|)
-operator|&&
+operator|!
 name|Lst_IsEmpty
 argument_list|(
 operator|&
@@ -1813,7 +1799,8 @@ name|gn
 operator|->
 name|commands
 argument_list|)
-operator|&&
+operator|||
+operator|!
 name|Lst_IsEmpty
 argument_list|(
 operator|&
@@ -1823,14 +1810,22 @@ name|children
 argument_list|)
 condition|)
 block|{
-name|Suff
-modifier|*
-name|s
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|;
-comment|/* 		 * SuffParseTransform() may fail for special rules which are not 		 * actual transformation rules (e.g., .DEFAULT). 		 */
+name|DEBUGF
+argument_list|(
+name|SUFF
+argument_list|,
+operator|(
+literal|"transformation %s complete\n"
+operator|,
+name|gn
+operator|->
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * SuffParseTransform() may fail for special rules which are not 	 * actual transformation rules (e.g., .DEFAULT). 	 */
 if|if
 condition|(
 operator|!
@@ -1847,11 +1842,7 @@ operator|&
 name|t
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|DEBUGF
 argument_list|(
 name|SUFF
@@ -1869,7 +1860,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove the source from the target's children list. We check 		 * for a NULL return to handle a beanhead saying something like 		 *  .c.o .c.o: 		 * 		 * We'll be called twice when the next target is seen, but .c 		 * and .o are only linked once... 		 */
+comment|/* 	 * Remove the source from the target's children list. We check 	 * for a NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c 	 * and .o are only linked once... 	 */
 name|SuffRemove
 argument_list|(
 operator|&
@@ -1880,7 +1871,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove the target from the source's parents list 		 */
+comment|/* 	 * Remove the target from the source's parents list 	 */
 name|SuffRemove
 argument_list|(
 operator|&
@@ -1891,36 +1882,6 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_TRANSFORM
-condition|)
-block|{
-name|DEBUGF
-argument_list|(
-name|SUFF
-argument_list|,
-operator|(
-literal|"transformation %s complete\n"
-operator|,
-name|gn
-operator|->
-name|name
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
