@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.48 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,6 +542,12 @@ condition|(
 name|queueup
 condition|)
 block|{
+name|char
+modifier|*
+name|msg
+init|=
+literal|"Transient parse error -- message queued for future delivery"
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -558,8 +564,22 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"Transient parse error -- message queued for future delivery"
+name|msg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_message
+operator|=
+name|msg
 expr_stmt|;
 name|a
 operator|->
