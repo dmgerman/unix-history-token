@@ -63,7 +63,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* do not block */
+comment|/* ok to block */
 end_comment
 
 begin_define
