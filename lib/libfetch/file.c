@@ -101,7 +101,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|f
 operator|=
@@ -154,7 +156,9 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|f
+operator|)
 return|;
 block|}
 end_function
@@ -176,6 +180,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|fetchXGetFile
 argument_list|(
 name|u
@@ -184,6 +189,7 @@ name|NULL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -278,7 +284,9 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|f
+operator|)
 return|;
 block|}
 end_function
@@ -338,8 +346,10 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|us
@@ -367,7 +377,9 @@ operator|.
 name|st_mtime
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -394,6 +406,7 @@ name|__unused
 parameter_list|)
 block|{
 return|return
+operator|(
 name|_fetch_stat_file
 argument_list|(
 name|u
@@ -402,6 +415,7 @@ name|doc
 argument_list|,
 name|us
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -424,10 +438,6 @@ name|flags
 name|__unused
 parameter_list|)
 block|{
-name|DIR
-modifier|*
-name|dir
-decl_stmt|;
 name|struct
 name|dirent
 modifier|*
@@ -456,6 +466,10 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|DIR
+modifier|*
+name|dir
+decl_stmt|;
 name|int
 name|l
 decl_stmt|;
@@ -479,7 +493,9 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|ue
@@ -610,7 +626,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ue
+operator|)
 return|;
 block|}
 end_function

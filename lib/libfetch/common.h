@@ -54,7 +54,9 @@ block|{
 specifier|const
 name|int
 name|num
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|int
 name|cat
 decl_stmt|;
 specifier|const

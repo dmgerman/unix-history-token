@@ -869,12 +869,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* I/O timeout */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|fetchTimeout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Restart interrupted syscalls */
+end_comment
 
 begin_decl_stmt
 specifier|extern

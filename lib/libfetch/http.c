@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The following copyright applies to the base64 code:  *  *-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * The following copyright applies to the base64 code:  *  *-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *  * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -207,7 +207,7 @@ name|HTTP_REDIRECT
 parameter_list|(
 name|xyz
 parameter_list|)
-value|((xyz) == HTTP_MOVED_PERM \                             || (xyz) == HTTP_MOVED_TEMP \                             || (xyz) == HTTP_SEE_OTHER)
+value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_SEE_OTHER)
 end_define
 
 begin_define
@@ -219,9 +219,6 @@ name|xyz
 parameter_list|)
 value|((xyz)> 400&& (xyz)< 599)
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * I/O functions for decoding chunked streams  */
@@ -315,8 +312,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -336,8 +335,10 @@ name|buf
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -354,11 +355,6 @@ operator|*
 name|p
 argument_list|)
 operator|&&
-operator|*
-name|p
-operator|!=
-literal|';'
-operator|&&
 name|p
 operator|<
 name|c
@@ -372,6 +368,15 @@ condition|;
 operator|++
 name|p
 control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|';'
+condition|)
+break|break;
 if|if
 condition|(
 operator|!
@@ -382,10 +387,11 @@ name|p
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-elseif|else
 if|if
 condition|(
 name|isdigit
@@ -394,6 +400,7 @@ operator|*
 name|p
 argument_list|)
 condition|)
+block|{
 name|c
 operator|->
 name|chunksize
@@ -409,7 +416,9 @@ name|p
 operator|-
 literal|'0'
 expr_stmt|;
+block|}
 else|else
+block|{
 name|c
 operator|->
 name|chunksize
@@ -430,6 +439,8 @@ argument_list|)
 operator|-
 literal|'a'
 expr_stmt|;
+block|}
+block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -491,9 +502,11 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|c
 operator|->
 name|chunksize
+operator|)
 return|;
 block|}
 end_function
@@ -520,8 +533,10 @@ operator|->
 name|error
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -530,7 +545,9 @@ operator|->
 name|eof
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -560,8 +577,10 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 case|case
 literal|0
@@ -573,7 +592,9 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -612,8 +633,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|c
 operator|->
@@ -657,8 +680,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|c
 operator|->
@@ -713,8 +738,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|c
@@ -724,9 +751,11 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|c
 operator|->
 name|b_len
+operator|)
 return|;
 block|}
 end_function
@@ -776,8 +805,10 @@ operator|->
 name|error
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -786,7 +817,9 @@ operator|->
 name|eof
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 for|for
 control|(
@@ -887,11 +920,15 @@ operator|->
 name|error
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|pos
+operator|)
 return|;
 block|}
 end_function
@@ -931,6 +968,7 @@ operator|)
 name|v
 decl_stmt|;
 return|return
+operator|(
 name|write
 argument_list|(
 name|c
@@ -941,6 +979,7 @@ name|buf
 argument_list|,
 name|len
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1002,7 +1041,9 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
 block|}
 end_function
@@ -1052,7 +1093,9 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|c
@@ -1061,10 +1104,6 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|f
 operator|=
 name|funopen
@@ -1079,7 +1118,12 @@ name|NULL
 argument_list|,
 name|_http_closefn
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
 condition|)
 block|{
 name|_fetch_syserr
@@ -1091,17 +1135,18 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|f
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * Helper functions for talking to the server and parsing its replies  */
@@ -1309,8 +1354,10 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|r
@@ -1341,12 +1388,16 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1388,10 +1439,12 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-comment|/*      * A valid status line looks like "HTTP/m.n xyz reason" where m      * and n are the major and minor protocol version numbers and xyz      * is the reply code.      * Unfortunately, there are servers out there (NCSA 1.5.1, to name      * just one) that do not send a version number, so we can't rely      * on finding one, but if we do, insist on it being 1.0 or 1.1.      * We don't care about the reason phrase.      */
+comment|/* 	 * A valid status line looks like "HTTP/m.n xyz reason" where m 	 * and n are the major and minor protocol version numbers and xyz 	 * is the reply code. 	 * Unfortunately, there are servers out there (NCSA 1.5.1, to name 	 * just one) that do not send a version number, so we can't rely 	 * on finding one, but if we do, insist on it being 1.0 or 1.1. 	 * We don't care about the reason phrase. 	 */
 if|if
 condition|(
 name|strncmp
@@ -1406,7 +1459,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|HTTP_PROTOCOL_ERROR
+operator|)
 return|;
 name|p
 operator|=
@@ -1455,7 +1510,9 @@ literal|'1'
 operator|)
 condition|)
 return|return
+operator|(
 name|HTTP_PROTOCOL_ERROR
+operator|)
 return|;
 name|p
 operator|+=
@@ -1497,7 +1554,9 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 name|HTTP_PROTOCOL_ERROR
+operator|)
 return|;
 return|return
 operator|(
@@ -1537,7 +1596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a header; if the type matches the given string, return a  * pointer to the beginning of the value.  */
+comment|/*  * Check a header; if the type matches the given string, return a pointer  * to the beginning of the value.  */
 end_comment
 
 begin_function
@@ -1593,7 +1652,9 @@ operator|!=
 literal|':'
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 while|while
 condition|(
@@ -1610,7 +1671,9 @@ condition|)
 comment|/* nothing */
 empty_stmt|;
 return|return
+operator|(
 name|hdr
+operator|)
 return|;
 block|}
 end_function
@@ -1657,7 +1720,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|hdr_syserror
+operator|)
 return|;
 while|while
 condition|(
@@ -1690,9 +1755,11 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|hdr_end
+operator|)
 return|;
-comment|/*      * We could check for malformed headers but we don't really care.      * A valid header starts with a token immediately followed by a      * colon; a token is any sequence of non-control, non-whitespace      * characters except "()<>@,;:\\\"{}".      */
+comment|/* 	 * We could check for malformed headers but we don't really care. 	 * A valid header starts with a token immediately followed by a 	 * colon; a token is any sequence of non-control, non-whitespace 	 * characters except "()<>@,;:\\\"{}". 	 */
 for|for
 control|(
 name|i
@@ -1733,15 +1800,19 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|hdr_names
 index|[
 name|i
 index|]
 operator|.
 name|num
+operator|)
 return|;
 return|return
+operator|(
 name|hdr_unknown
+operator|)
 return|;
 block|}
 end_function
@@ -1827,8 +1898,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|DEBUG
 argument_list|(
@@ -1879,7 +1952,9 @@ name|tm
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1943,8 +2018,10 @@ operator|*
 name|p
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|DEBUG
 argument_list|(
@@ -1968,7 +2045,9 @@ operator|=
 name|len
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2021,8 +2100,10 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -2065,8 +2146,10 @@ operator|!=
 literal|'-'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -2112,8 +2195,10 @@ operator|!=
 literal|'/'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -2161,8 +2246,10 @@ operator|+
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|DEBUG
 argument_list|(
@@ -2212,13 +2299,12 @@ operator|=
 name|len
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * Helper functions for authorization  */
@@ -2234,6 +2320,7 @@ name|char
 modifier|*
 name|_http_base64
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|src
@@ -2295,7 +2382,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|dst
 operator|=
@@ -2586,7 +2675,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|str
+operator|)
 return|;
 block|}
 end_function
@@ -2671,8 +2762,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|auth
 operator|=
@@ -2693,8 +2786,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|r
 operator|=
@@ -2715,7 +2810,9 @@ name|auth
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
 block|}
 end_function
@@ -2808,8 +2905,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -2825,8 +2924,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* XXX */
 name|user
@@ -2867,25 +2968,26 @@ name|str
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * Helper functions for connecting to a server or proxy  */
 end_comment
 
 begin_comment
-comment|/*  * Connect to the correct HTTP server or proxy.   */
+comment|/*  * Connect to the correct HTTP server or proxy.  */
 end_comment
 
 begin_function
@@ -2995,8 +3097,10 @@ block|{
 comment|/* can't talk http to an ftp server */
 comment|/* XXX should set an error code */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -3025,11 +3129,15 @@ literal|1
 condition|)
 comment|/* _fetch_connect() has already set an error code */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|fd
+operator|)
 return|;
 block|}
 end_function
@@ -3134,7 +3242,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|purl
+operator|)
 return|;
 name|fetchFreeURL
 argument_list|(
@@ -3143,7 +3253,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -3280,6 +3392,7 @@ literal|2
 expr_stmt|;
 block|}
 block|}
+elseif|else
 if|if
 condition|(
 name|tag
@@ -3402,9 +3515,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * Core  */
@@ -3657,6 +3767,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|_ftp_request
 argument_list|(
 name|url
@@ -3669,6 +3780,7 @@ name|purl
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -3683,6 +3795,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|_ftp_request
 argument_list|(
 name|url
@@ -3695,6 +3808,7 @@ name|purl
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 comment|/* connect to server or proxy */
@@ -4147,7 +4261,7 @@ case|:
 case|case
 name|HTTP_SEE_OTHER
 case|:
-comment|/* 	     * Not so fine, but we still have to read the headers to 	     * get the new location. 	     */
+comment|/* 			 * Not so fine, but we still have to read the headers to 			 * get the new location. 			 */
 break|break;
 case|case
 name|HTTP_NEED_AUTH
@@ -4157,7 +4271,7 @@ condition|(
 name|need_auth
 condition|)
 block|{
-comment|/* 		 * We already sent out authorization code, so there's 		 * nothing more we can do. 		 */
+comment|/* 				 * We already sent out authorization code, so there's 				 * nothing more we can do. 				 */
 name|_http_seterr
 argument_list|(
 name|code
@@ -4181,7 +4295,7 @@ break|break;
 case|case
 name|HTTP_NEED_PROXY_AUTH
 case|:
-comment|/* 	     * If we're talking to a proxy, we already sent our proxy 	     * authorization code, so there's nothing more we can do. 	     */
+comment|/* 			 * If we're talking to a proxy, we already sent our proxy 			 * authorization code, so there's nothing more we can do. 			 */
 name|_http_seterr
 argument_list|(
 name|code
@@ -4873,7 +4987,9 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|f
+operator|)
 return|;
 name|ouch
 label|:
@@ -4910,13 +5026,12 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*****************************************************************************  * Entry points  */
@@ -4948,6 +5063,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|_http_request
 argument_list|(
 name|URL
@@ -4961,6 +5077,7 @@ argument_list|()
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4986,6 +5103,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|fetchXGetHTTP
 argument_list|(
 name|URL
@@ -4994,6 +5112,7 @@ name|NULL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5026,7 +5145,9 @@ literal|"fetchPutHTTP(): not implemented"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -5082,8 +5203,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|fclose
 argument_list|(
@@ -5091,7 +5214,9 @@ name|f
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5125,7 +5250,9 @@ literal|"fetchListHTTP(): not implemented"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function

@@ -232,6 +232,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchXGetFile
 argument_list|(
 name|URL
@@ -240,6 +241,7 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -256,6 +258,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchXGetHTTP
 argument_list|(
 name|URL
@@ -264,6 +267,7 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -281,6 +285,7 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|fetchXGetFTP
 argument_list|(
 name|URL
@@ -289,6 +294,7 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 else|else
@@ -299,7 +305,9 @@ name|URL_BAD_SCHEME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -326,6 +334,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|fetchXGet
 argument_list|(
 name|URL
@@ -334,6 +343,7 @@ name|NULL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -382,12 +392,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchPutFile
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -404,12 +416,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchPutHTTP
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -427,12 +441,14 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|fetchPutFTP
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 else|else
@@ -443,7 +459,9 @@ name|URL_BAD_SCHEME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -497,6 +515,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchStatFile
 argument_list|(
 name|URL
@@ -505,6 +524,7 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -521,6 +541,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchStatHTTP
 argument_list|(
 name|URL
@@ -529,6 +550,7 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -544,8 +566,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|fetchStatFTP
 argument_list|(
 name|URL
@@ -554,20 +576,19 @@ name|us
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
-block|}
-else|else
-block|{
 name|_url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -616,12 +637,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchListFile
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -638,12 +661,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|fetchListHTTP
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -659,27 +684,26 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|fetchListFTP
 argument_list|(
 name|URL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
-block|}
-else|else
-block|{
 name|_url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -731,7 +755,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|f
 operator|=
@@ -750,7 +776,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|f
+operator|)
 return|;
 block|}
 end_function
@@ -776,6 +804,7 @@ name|flags
 parameter_list|)
 block|{
 return|return
+operator|(
 name|fetchXGetURL
 argument_list|(
 name|URL
@@ -784,6 +813,7 @@ name|NULL
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -831,7 +861,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|f
 operator|=
@@ -848,7 +880,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|f
+operator|)
 return|;
 block|}
 end_function
@@ -899,8 +933,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|s
 operator|=
@@ -919,7 +955,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|s
+operator|)
 return|;
 block|}
 end_function
@@ -969,7 +1007,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|ue
 operator|=
@@ -986,7 +1026,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ue
+operator|)
 return|;
 block|}
 end_function
@@ -1055,7 +1097,9 @@ name|URL_MALFORMED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -1075,7 +1119,9 @@ name|URL_BAD_PORT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* allocate struct url */
@@ -1101,7 +1147,9 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -1133,7 +1181,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 define|#
@@ -1173,7 +1223,9 @@ operator|=
 name|port
 expr_stmt|;
 return|return
+operator|(
 name|u
+operator|)
 return|;
 block|}
 end_function
@@ -1237,7 +1289,9 @@ name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* scheme name */
@@ -1284,7 +1338,7 @@ operator|=
 operator|++
 name|p
 expr_stmt|;
-comment|/* 	 * Only one slash: no host, leave slash as part of document 	 * Two slashes: host follows, strip slashes 	 */
+comment|/* 		 * Only one slash: no host, leave slash as part of document 		 * Two slashes: host follows, strip slashes 		 */
 if|if
 condition|(
 name|URL
@@ -1907,7 +1961,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|u
+operator|)
 return|;
 name|ouch
 label|:
@@ -1917,7 +1973,9 @@ name|u
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
