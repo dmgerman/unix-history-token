@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.7 (Berkeley) %G%"
+literal|"@(#)ps.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2271,9 +2271,7 @@ argument_list|(
 name|thisversion
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|thisversion
-argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -2326,11 +2324,9 @@ operator|.
 name|st_mtime
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|stb
 operator|.
 name|st_mtime
-argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -7758,7 +7754,7 @@ name|char
 modifier|*
 name|vhdr
 init|=
-literal|" SIZE  PID TT STAT  TIME SL RE PAGEIN SIZE  RSS  LIM TSIZ TRS %CPU %MEM"
+literal|" SIZE  PID TT STAT  TIME SL RE PAGEIN SIZE  RSS   LIM TSIZ TRS %CPU %MEM"
 operator|+
 literal|5
 decl_stmt|;
@@ -7895,13 +7891,13 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"   xx"
+literal|"    xx"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%5d"
+literal|"%6d"
 argument_list|,
 name|pgtok
 argument_list|(
