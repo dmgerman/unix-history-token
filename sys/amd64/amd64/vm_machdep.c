@@ -615,38 +615,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-name|struct
-name|pcb
-modifier|*
-name|pcb
-init|=
-name|td
-operator|->
-name|td_pcb
-decl_stmt|;
-if|if
-condition|(
-name|pcb
-operator|->
-name|pcb_flags
-operator|&
-name|PCB_DBREGS
-condition|)
-block|{
-comment|/* disable all hardware breakpoints */
-name|reset_dbregs
-argument_list|()
-expr_stmt|;
-name|pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|PCB_DBREGS
-expr_stmt|;
-block|}
-block|}
+block|{ }
 end_function
 
 begin_function

@@ -1107,15 +1107,6 @@ name|mdproc
 modifier|*
 name|mdp
 decl_stmt|;
-name|struct
-name|pcb
-modifier|*
-name|pcb
-init|=
-name|td
-operator|->
-name|td_pcb
-decl_stmt|;
 comment|/* Reset pc->pcb_gs and %gs before possibly invalidating it. */
 name|mdp
 operator|=
@@ -1150,27 +1141,6 @@ name|user_ldt_free
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pcb
-operator|->
-name|pcb_flags
-operator|&
-name|PCB_DBREGS
-condition|)
-block|{
-comment|/* disable all hardware breakpoints */
-name|reset_dbregs
-argument_list|()
-expr_stmt|;
-name|pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|PCB_DBREGS
 expr_stmt|;
 block|}
 block|}
