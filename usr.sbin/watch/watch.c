@@ -1962,6 +1962,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|SNP_DETACH
 case|:
@@ -2004,6 +2005,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|nread
 operator|=
