@@ -696,6 +696,18 @@ begin_comment
 comment|/* KRB5 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"auth-pam.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth2-pam.h"
+end_include
+
 begin_function_decl
 name|Authctxt
 modifier|*

@@ -19,6 +19,83 @@ directive|define
 name|SSH_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_in */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_comment
+comment|/* For struct pw */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/* For va_list */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_comment
+comment|/* For LOG_AUTH and friends */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/fake-socket.h"
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Cipher used for encrypting authentication files. */
 end_comment
@@ -110,6 +187,33 @@ name|SSH_SERVICE_NAME
 value|"ssh"
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SSHD_PAM_SERVICE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SSHD_PAM_SERVICE
+value|__progname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Name of the environment variable containing the pathname of the  * authentication socket.  */
 end_comment
@@ -191,12 +295,23 @@ begin_comment
 comment|/*  * unprivileged user when UsePrivilegeSeparation=yes;  * sshd will change its privileges to this user and its  * primary group.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_PRIVSEP_USER
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SSH_PRIVSEP_USER
 value|"sshd"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Minimum modulus size (n) for RSA keys. */

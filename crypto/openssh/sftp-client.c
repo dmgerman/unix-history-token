@@ -36,7 +36,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|"openbsd-compat/fake-queue.h"
 end_include
 
 begin_include
@@ -4714,6 +4714,9 @@ name|handle_len
 argument_list|)
 expr_stmt|;
 comment|/* Override umask and utimes if asked */
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 if|if
 condition|(
 name|pflag
@@ -4728,6 +4731,25 @@ operator|==
 operator|-
 literal|1
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|pflag
+operator|&&
+name|chmod
+argument_list|(
+name|local_path
+argument_list|,
+name|mode
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_FCHMOD */
 name|error
 argument_list|(
 literal|"Couldn't set mode on \"%s\": %s"

@@ -2238,7 +2238,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|uint32_t
+name|u_int32_t
 name|seqnr
 parameter_list|,
 name|void

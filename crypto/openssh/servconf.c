@@ -24,11 +24,6 @@ name|defined
 argument_list|(
 name|KRB4
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
 end_if
 
 begin_include
@@ -36,6 +31,53 @@ include|#
 directive|include
 file|<krb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HEIMDAL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Bodge - but then, so is using the kerberos IV KEYFILE to get a Kerberos V  * keytab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFILE
+value|"/etc/krb5.keytab"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -205,6 +247,15 @@ name|options
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Portable-specific options */
+name|options
+operator|->
+name|pam_authentication_via_kbd_int
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Standard Options */
 name|options
 operator|->
 name|num_ports
@@ -633,6 +684,23 @@ modifier|*
 name|options
 parameter_list|)
 block|{
+comment|/* Portable-specific options */
+if|if
+condition|(
+name|options
+operator|->
+name|pam_authentication_via_kbd_int
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|pam_authentication_via_kbd_int
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Standard Options */
 if|if
 condition|(
 name|options
@@ -1470,6 +1538,50 @@ name|use_privsep
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_MMAP
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|MAP_ANON
+argument_list|)
+if|if
+condition|(
+name|use_privsep
+operator|&&
+name|options
+operator|->
+name|compression
+operator|==
+literal|1
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"This platform does not support both privilege "
+literal|"separation and compression"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Compression disabled"
+argument_list|)
+expr_stmt|;
+name|options
+operator|->
+name|compression
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1484,6 +1596,10 @@ block|{
 name|sBadOption
 block|,
 comment|/* == unknown option */
+comment|/* Portable-specific options */
+name|sPAMAuthenticationViaKbdInt
+block|,
+comment|/* Standard Options */
 name|sPort
 block|,
 name|sHostKeyFile
@@ -1652,6 +1768,14 @@ name|keywords
 index|[]
 init|=
 block|{
+comment|/* Portable-specific options */
+block|{
+literal|"PAMAuthenticationViaKbdInt"
+block|,
+name|sPAMAuthenticationViaKbdInt
+block|}
+block|,
+comment|/* Standard Options */
 block|{
 literal|"port"
 block|,
@@ -2502,6 +2626,21 @@ condition|(
 name|opcode
 condition|)
 block|{
+comment|/* Portable-specific options */
+case|case
+name|sPAMAuthenticationViaKbdInt
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|pam_authentication_via_kbd_int
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+comment|/* Standard Options */
 case|case
 name|sBadOption
 case|:

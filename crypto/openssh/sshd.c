@@ -41,6 +41,29 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SECUREWARE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/security.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<prot.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -288,6 +311,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -295,6 +324,23 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Server configuration options. */
@@ -323,6 +369,25 @@ begin_comment
 comment|/*  * Flag indicating whether IPv4 or IPv6.  This can be set on the command line.  * Default value is AF_UNSPEC means both IPv4 and IPv6.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV4_DEFAULT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|IPv4or6
+init|=
+name|AF_INET
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|IPv4or6
@@ -330,6 +395,11 @@ init|=
 name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Debug mode flag.  This can be set on the command line.  If debug  * mode is enabled, extra debugging output will be sent to the system  * log, the daemon will not go to background, and will exit after processing  * the first connection.  */
@@ -400,6 +470,12 @@ name|char
 modifier|*
 modifier|*
 name|saved_argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|saved_argc
 decl_stmt|;
 end_decl_stmt
 
@@ -3162,7 +3238,39 @@ name|key_used
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SECUREWARE
+operator|(
+name|void
+operator|)
+name|set_auth_parameters
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|init_rng
+argument_list|()
+expr_stmt|;
 comment|/* Save argv. */
+name|saved_argc
+operator|=
+name|ac
+expr_stmt|;
 name|saved_argv
 operator|=
 name|av
@@ -3617,6 +3725,18 @@ argument_list|,
 operator|!
 name|inetd_flag
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_CRAY
+comment|/* Cray can define user privs drop all prives now! 	 * Not needed on PRIV_SU systems! 	 */
+name|drop_cray_privs
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|seed_rng
+argument_list|()
 expr_stmt|;
 comment|/* Read server configuration options from the configuration file. */
 name|read_server_config
@@ -4125,6 +4245,28 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clear out any supplemental groups we may have inherited.  This 	 * prevents inadvertent creation of files with bad modes (in the 	 * portable version at least, it's certainly possible for PAM  	 * to create a file, and we can't control the code in every  	 * module which might be used). 	 */
+if|if
+condition|(
+name|setgroups
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|debug
+argument_list|(
+literal|"setgroups() failed: %.200s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the log (it is reinitialized below in case we forked). */
 if|if
 condition|(
@@ -4563,6 +4705,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ai
+operator|->
+name|ai_next
+condition|)
 name|error
 argument_list|(
 literal|"Bind to port %s on %s failed: %.200s."
@@ -4700,7 +4849,7 @@ name|options
 operator|.
 name|pid_file
 argument_list|,
-literal|"w"
+literal|"wb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5474,23 +5623,13 @@ block|}
 block|}
 comment|/* This is the child processing a new connection. */
 comment|/* 	 * Create a new session and process group since the 4.4BSD 	 * setlogin() affects the entire process group.  We don't 	 * want the child to be able to affect the parent. 	 */
-if|if
-condition|(
-name|setsid
-argument_list|()
-operator|<
+if|#
+directive|if
 literal|0
-condition|)
-name|error
-argument_list|(
-literal|"setsid: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* XXX: this breaks Solaris */
+block|if (setsid()< 0) 		error("setsid: %.100s", strerror(errno));
+endif|#
+directive|endif
 comment|/* 	 * Disable the key regeneration alarm.  We will not regenerate the 	 * key since we are no longer in a position to give it to anyone. We 	 * will not restart on SIGHUP since it no longer makes sense. 	 */
 name|alarm
 argument_list|(
@@ -5528,6 +5667,13 @@ expr_stmt|;
 name|signal
 argument_list|(
 name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
 argument_list|,
 name|SIG_DFL
 argument_list|)
@@ -5912,6 +6058,15 @@ argument_list|,
 name|remote_ip
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|finish_pam
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_PAM */
 name|packet_close
 argument_list|()
 expr_stmt|;

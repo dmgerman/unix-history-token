@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<glob.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"buffer.h"
 end_include
 
@@ -4642,6 +4636,9 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|HAVE_SETVBUF
 name|setvbuf
 argument_list|(
 name|stdout
@@ -4664,6 +4661,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;

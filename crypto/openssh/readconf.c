@@ -673,6 +673,9 @@ name|Forward
 modifier|*
 name|fwd
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 specifier|extern
 name|uid_t
 name|original_real_uid
@@ -692,6 +695,8 @@ argument_list|(
 literal|"Privileged ports can only be forwarded by root."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|options

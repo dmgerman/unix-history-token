@@ -14,6 +14,12 @@ name|ETCDIR
 value|"/etc"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSHDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -21,12 +27,28 @@ name|SSHDIR
 value|ETCDIR "/ssh"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SSH_PIDDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_SSH_PIDDIR
 value|"/var/run"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * System-wide file containing host keys of known hosts.  This file should be  * world-readable.  */
@@ -93,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DH_MODULI
-value|ETCDIR "/moduli"
+value|SSHDIR "/moduli"
 end_define
 
 begin_comment
@@ -104,8 +126,14 @@ begin_define
 define|#
 directive|define
 name|_PATH_DH_PRIMES
-value|ETCDIR "/primes"
+value|SSHDIR "/primes"
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SSH_PROGRAM
+end_ifndef
 
 begin_define
 define|#
@@ -113,6 +141,11 @@ directive|define
 name|_PATH_SSH_PROGRAM
 value|"/usr/bin/ssh"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The process id of the daemon listening for connections is saved here to  * make it easier to kill the correct daemon when necessary.  */
@@ -242,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_HOSTS_EQUIV
-value|ETCDIR "/shosts.equiv"
+value|SSHDIR "/shosts.equiv"
 end_define
 
 begin_define
@@ -256,6 +289,12 @@ begin_comment
 comment|/*  * Default location of askpass  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SSH_ASKPASS_DEFAULT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -263,9 +302,20 @@ name|_PATH_SSH_ASKPASS_DEFAULT
 value|"/usr/X11R6/bin/ssh-askpass"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Location of ssh-keysign for hostbased authentication */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SSH_KEY_SIGN
+end_ifndef
 
 begin_define
 define|#
@@ -274,9 +324,20 @@ name|_PATH_SSH_KEY_SIGN
 value|"/usr/libexec/ssh-keysign"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* xauth for X11 forwarding */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_XAUTH
+end_ifndef
 
 begin_define
 define|#
@@ -285,9 +346,20 @@ name|_PATH_XAUTH
 value|"/usr/X11R6/bin/xauth"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* UNIX domain socket for X11 server; displaynum will replace %u */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX_X
+end_ifndef
 
 begin_define
 define|#
@@ -296,9 +368,20 @@ name|_PATH_UNIX_X
 value|"/tmp/.X11-unix/X%u"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* for scp */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_CP
+end_ifndef
 
 begin_define
 define|#
@@ -307,9 +390,20 @@ name|_PATH_CP
 value|"cp"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* for sftp */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SFTP_SERVER
+end_ifndef
 
 begin_define
 define|#
@@ -318,16 +412,20 @@ name|_PATH_SFTP_SERVER
 value|"/usr/libexec/sftp-server"
 end_define
 
-begin_define
-define|#
-directive|define
-name|_PATH_LS
-value|"ls"
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* chroot directory for unprivileged user when UsePrivilegeSeparation=yes */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_PRIVSEP_CHROOT_DIR
+end_ifndef
 
 begin_define
 define|#
@@ -335,6 +433,104 @@ directive|define
 name|_PATH_PRIVSEP_CHROOT_DIR
 value|"/var/empty"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_LS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_LS
+value|"ls"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* path to login program */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOGIN_PROGRAM
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_PROGRAM_FALLBACK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOGIN_PROGRAM
+value|LOGIN_PROGRAM_FALLBACK
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOGIN_PROGRAM
+value|"/usr/bin/login"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOGIN_PROGRAM */
+end_comment
+
+begin_comment
+comment|/* Askpass program define */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASKPASS_PROGRAM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASKPASS_PROGRAM
+value|"/usr/lib/ssh/ssh-askpass"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ASKPASS_PROGRAM */
+end_comment
 
 end_unit
 

@@ -184,6 +184,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -192,9 +198,45 @@ name|__progname
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command line.    Default value is AF_UNSPEC means both IPv4 and IPv6. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV4_DEFAULT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|IPv4or6
+init|=
+name|AF_INET
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|int
@@ -203,6 +245,11 @@ init|=
 name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Flag indicating whether debug mode is on.  This can be set on the command line. */
@@ -804,6 +851,19 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|init_rng
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Save the original real uid.  It will be needed later (uid-swapping 	 * may clobber the real uid). 	 */
 name|original_real_uid
 operator|=
@@ -815,6 +875,9 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETRLIMIT
 comment|/* If we are installed setuid root be careful to not drop core. */
 if|if
 condition|(
@@ -860,6 +923,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Get user data. */
 name|pw
 operator|=
@@ -2277,6 +2342,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|seed_rng
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|options
@@ -2311,6 +2379,20 @@ operator|.
 name|hostname
 expr_stmt|;
 comment|/* Disable rhosts authentication if not running as root. */
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+comment|/* Ignore uid if running under Windows */
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|use_privileged_port
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|original_effective_uid
@@ -2323,6 +2405,8 @@ operator|.
 name|use_privileged_port
 condition|)
 block|{
+endif|#
+directive|endif
 name|debug
 argument_list|(
 literal|"Rhosts Authentication disabled, "
@@ -2356,6 +2440,15 @@ name|options
 operator|.
 name|connection_attempts
 argument_list|,
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+name|options
+operator|.
+name|use_privileged_port
+argument_list|,
+else|#
+directive|else
 name|original_effective_uid
 operator|==
 literal|0
@@ -2364,6 +2457,8 @@ name|options
 operator|.
 name|use_privileged_port
 argument_list|,
+endif|#
+directive|endif
 name|options
 operator|.
 name|proxy_command
@@ -2877,9 +2972,6 @@ return|return
 name|exit_status
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|x11_get_proto
@@ -3155,9 +3247,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ssh_init_forwarding
@@ -3355,9 +3444,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|check_agent_present
@@ -3399,9 +3485,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ssh_session
@@ -3955,9 +4038,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|client_subsystem_reply
@@ -4030,9 +4110,6 @@ name|id
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|client_global_request_reply
 parameter_list|(
@@ -4138,13 +4215,7 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* request pty/x11/agent/tcpfwd/shell for channel */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ssh_session2_setup
@@ -4526,13 +4597,7 @@ name|interactive
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* open new channel for a session */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ssh_session2_open
@@ -4740,9 +4805,6 @@ operator|->
 name|self
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ssh_session2
@@ -4819,9 +4881,6 @@ name|id
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|load_public_identity_files

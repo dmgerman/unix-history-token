@@ -456,6 +456,9 @@ name|char
 modifier|*
 name|authorized_keys_file2
 decl_stmt|;
+name|int
+name|pam_authentication_via_kbd_int
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;

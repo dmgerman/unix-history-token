@@ -97,6 +97,8 @@ name|MONITOR_REQ_RSARESPONSE
 block|,
 name|MONITOR_ANS_RSARESPONSE
 block|,
+name|MONITOR_REQ_PAM_START
+block|,
 name|MONITOR_REQ_TERM
 block|}
 enum|;

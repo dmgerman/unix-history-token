@@ -356,6 +356,10 @@ expr_stmt|;
 name|packet_write_wait
 argument_list|()
 expr_stmt|;
+name|client_user
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -505,11 +509,6 @@ argument_list|,
 name|client_user
 argument_list|)
 expr_stmt|;
-name|xfree
-argument_list|(
-name|client_user
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -564,11 +563,6 @@ argument_list|)
 argument_list|,
 literal|" tktuser %.100s"
 argument_list|,
-name|client_user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|client_user
 argument_list|)
 expr_stmt|;
@@ -675,11 +669,6 @@ name|info
 argument_list|,
 literal|" ruser %.100s"
 argument_list|,
-name|client_user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|client_user
 argument_list|)
 expr_stmt|;
@@ -800,11 +789,6 @@ name|info
 argument_list|,
 literal|" ruser %.100s"
 argument_list|,
-name|client_user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|client_user
 argument_list|)
 expr_stmt|;
@@ -1110,6 +1094,47 @@ operator|->
 name|user
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+if|if
+condition|(
+name|authenticated
+operator|&&
+operator|!
+name|check_nt_auth
+argument_list|(
+name|type
+operator|==
+name|SSH_CMSG_AUTH_PASSWORD
+argument_list|,
+name|pw
+argument_list|)
+condition|)
+block|{
+name|packet_disconnect
+argument_list|(
+literal|"Authentication rejected for uid %d."
+argument_list|,
+name|pw
+operator|==
+name|NULL
+condition|?
+operator|-
+literal|1
+else|:
+name|pw
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|#
+directive|else
 comment|/* Special handling for root */
 if|if
 condition|(
@@ -1136,6 +1161,34 @@ name|authenticated
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+operator|!
+name|use_privsep
+operator|&&
+name|authenticated
+operator|&&
+operator|!
+name|do_pam_account
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|client_user
+argument_list|)
+condition|)
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Log before sending the reply */
 name|auth_log
 argument_list|(
@@ -1153,6 +1206,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|client_user
+operator|!=
+name|NULL
+condition|)
+block|{
+name|xfree
+argument_list|(
+name|client_user
+argument_list|)
+expr_stmt|;
+name|client_user
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|authenticated
 condition|)
 return|return;
@@ -1165,6 +1235,30 @@ operator|++
 operator|>
 name|AUTH_FAIL_MAX
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|WITH_AIXAUTHENTICATE
+comment|/* XXX: privsep */
+name|loginfailed
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|,
+name|get_canonical_hostname
+argument_list|(
+name|options
+operator|.
+name|verify_reverse_mapping
+argument_list|)
+argument_list|,
+literal|"ssh"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_AIXAUTHENTICATE */
 name|packet_disconnect
 argument_list|(
 name|AUTH_FAIL_MSG
@@ -1174,6 +1268,7 @@ operator|->
 name|user
 argument_list|)
 expr_stmt|;
+block|}
 name|packet_start
 argument_list|(
 name|SSH_SMSG_FAILURE
@@ -1369,7 +1464,31 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are not running as root, the user must have the same uid as 	 * the server. 	 */
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|PRIVSEP
+argument_list|(
+name|start_pam
+argument_list|(
+name|authctxt
+operator|->
+name|pw
+operator|==
+name|NULL
+condition|?
+literal|"NOUSER"
+else|:
+name|user
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * If we are not running as root, the user must have the same uid as 	 * the server. (Unless you are running Windows) 	 */
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 if|if
 condition|(
 operator|!
@@ -1398,6 +1517,8 @@ argument_list|(
 literal|"Cannot change user when server not running as root."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Loop until the user has been authenticated or the connection is 	 * closed, do_authloop() returns only if authentication is successful 	 */
 name|do_authloop
 argument_list|(
