@@ -389,10 +389,6 @@ name|rawmode
 parameter_list|)
 block|{
 name|int
-name|first
-init|=
-literal|1
-decl_stmt|,
 name|cur_x
 decl_stmt|,
 name|cur_y
@@ -937,19 +933,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|p
+init|=
+name|tempstr
+decl_stmt|;
 comment|/* Print prompt word by word, wrap around if necessary */
 while|while
 condition|(
 operator|(
 name|word
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-name|first
-condition|?
-name|tempstr
-else|:
-name|NULL
+operator|&
+name|p
 argument_list|,
 literal|"\t\n "
 argument_list|)
@@ -967,13 +966,12 @@ name|sc
 decl_stmt|;
 if|if
 condition|(
-name|first
+operator|*
+name|word
+operator|==
+literal|'\0'
 condition|)
-comment|/* First iteration */
-name|first
-operator|=
-literal|0
-expr_stmt|;
+continue|continue;
 do|do
 block|{
 name|loop
