@@ -474,7 +474,7 @@ decl_stmt|;
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|vm_map_pageable
+name|vm_map_wire
 argument_list|(
 operator|&
 name|curproc
@@ -524,7 +524,7 @@ decl_stmt|;
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|vm_map_pageable
+name|vm_map_unwire
 argument_list|(
 operator|&
 name|curproc
@@ -551,7 +551,7 @@ operator|+
 name|len
 argument_list|)
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

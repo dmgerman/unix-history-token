@@ -1156,7 +1156,7 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|vm_map_pageable
+name|vm_map_wire
 argument_list|(
 name|map
 argument_list|,

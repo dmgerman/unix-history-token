@@ -3643,7 +3643,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vm_map_user_pageable
+name|vm_map_wire
 argument_list|(
 operator|&
 name|td
@@ -3660,7 +3660,7 @@ name|addr
 operator|+
 name|size
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -3934,7 +3934,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vm_map_user_pageable
+name|vm_map_unwire
 argument_list|(
 operator|&
 name|td

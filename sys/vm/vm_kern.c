@@ -506,13 +506,10 @@ comment|/* 	 * And finally, mark the data as non-pageable. 	 */
 operator|(
 name|void
 operator|)
-name|vm_map_pageable
+name|vm_map_wire
 argument_list|(
 name|map
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|addr
 argument_list|,
 name|addr
