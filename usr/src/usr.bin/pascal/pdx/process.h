@@ -3,15 +3,9 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)process.h 1.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "@(#)process.h 1.2 %G%"; */
+end_comment
 
 begin_comment
 comment|/*  * Definitions for process module.  *  * This module contains the routines to manage the execution and  * tracing of the debuggee process.  */

@@ -3,15 +3,9 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)mappings.h 1.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "@(#)mappings.h 1.2 %G%"; */
+end_comment
 
 begin_comment
 comment|/*  * Mappings definitions.  *  * The mappings module is the interface between the object code and  * source file representations of the program.  *  * This module is strongly tied to the object module, and needs the  * most of the data defined in "object.h".  */

@@ -3,15 +3,9 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)tree.h 1.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "@(#)tree.h 1.2 %G%"; */
+end_comment
 
 begin_comment
 comment|/*  * This file contains the declarations of the variables and routines  * within the "tree" subdirectory that are accessible from outside.  */

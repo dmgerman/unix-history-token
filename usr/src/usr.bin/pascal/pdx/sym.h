@@ -3,15 +3,9 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)sym.h 1.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "@(#)sym.h 1.2 %G%"; */
+end_comment
 
 begin_comment
 comment|/*  * This header file declares the variables and routines that  * are defined within the "sym" subdirectory and that can be  * accessed from outside.  */

@@ -3,15 +3,9 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)command.h 1.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "@(#)command.h 1.2 %G%"; */
+end_comment
 
 begin_comment
 comment|/*  * Definitions for the command module.  *  * The command module scans and parses the commands.  This includes  * input file management (i.e. the "source" command), and some error  * handling.  */
