@@ -634,6 +634,24 @@ literal|1024
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entries
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bad aperture size\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|gatt
 operator|=
 name|malloc

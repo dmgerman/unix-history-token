@@ -318,6 +318,26 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|initial_aperture
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bad initial aperture size, disabling\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 for|for
 control|(
 init|;
