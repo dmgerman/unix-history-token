@@ -924,6 +924,7 @@ name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -1085,6 +1086,7 @@ name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -1199,6 +1201,7 @@ name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -1315,6 +1318,7 @@ name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|)
 block|{
 name|struct

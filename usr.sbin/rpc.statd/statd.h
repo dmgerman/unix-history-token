@@ -190,6 +190,7 @@ specifier|extern
 name|void
 name|init_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 comment|/*filename*/

@@ -140,22 +140,22 @@ begin_function_decl
 specifier|static
 name|void
 name|handle_sigchld
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -442,14 +442,7 @@ name|handle_sigchld
 parameter_list|(
 name|int
 name|sig
-parameter_list|,
-name|int
-name|code
-parameter_list|,
-name|struct
-name|sigcontext
-modifier|*
-name|scp
+name|__unused
 parameter_list|)
 block|{
 name|int

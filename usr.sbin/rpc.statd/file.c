@@ -432,6 +432,7 @@ begin_function
 name|void
 name|init_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename
