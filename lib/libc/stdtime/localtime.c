@@ -6001,6 +6001,7 @@ operator|&
 name|gmtime_mutex
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Changed to follow draft 4 pthreads standard, which 	 * is what BSD currently has. 	 */
 if|if
 condition|(
 operator|(
@@ -6011,20 +6012,6 @@ argument_list|(
 name|gmtime_key
 argument_list|)
 operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|p_tm
 operator|==
 name|NULL
 condition|)
