@@ -884,7 +884,16 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"device is routed to IRQ %d\n"
+literal|"slot %d INT%c is routed to irq %d\n"
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|'A'
+operator|+
+name|pin
 argument_list|,
 name|crsres
 operator|->
@@ -1169,7 +1178,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"couldn't route interrupt %d via %s, interupt resource build failed - %s\n"
+literal|"couldn't route interrupt %d via %s, interrupt resource build failed - %s\n"
 argument_list|,
 name|prsres
 operator|->
@@ -1250,7 +1259,16 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"routed interrupt %d via %s\n"
+literal|"slot %d INT%c routed to irq %d via %s\n"
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|'A'
+operator|+
+name|pin
 argument_list|,
 name|prsres
 operator|->

@@ -1885,7 +1885,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"routed slot %d INT%c to irq %d\n"
+literal|"slot %d INT%c is routed to irq %d\n"
 argument_list|,
 name|pci_get_slot
 argument_list|(
