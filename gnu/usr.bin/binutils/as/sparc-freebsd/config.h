@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"i386-unknown-freebsdelf"
+value|"i386-unknown-freebsd"
 end_define
 
 begin_define
@@ -128,14 +128,14 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"i386-unknown-freebsdelf"
+value|"i386-unknown-freebsd"
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_OS
-value|"freebsdelf"
+value|"freebsd"
 end_define
 
 begin_define
