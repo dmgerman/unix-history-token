@@ -4240,37 +4240,11 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
-name|int
-name|privileged
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|rthdr_exist
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|p
-operator|&&
-operator|!
-name|suser
-argument_list|(
-name|p
-argument_list|)
-condition|)
-name|privileged
-operator|++
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SO_TIMESTAMP
@@ -4519,7 +4493,7 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-comment|/* 	 * IPV6_HOPOPTS socket option. We require super-user privilege 	 * for the option, but it might be too strict, since there might 	 * be some hop-by-hop options which can be returned to normal user. 	 * See RFC 2292 section 6. 	 */
+comment|/* 	 * IPV6_HOPOPTS socket option.  Recall that we required super-user 	 * privilege for the option (see ip6_ctloutput), but it might be too 	 * strict, since there might be some hop-by-hop options which can be 	 * returned to normal user. 	 * See also RFC 2292 section 6. 	 */
 if|if
 condition|(
 operator|(
@@ -4531,8 +4505,6 @@ name|IN6P_HOPOPTS
 operator|)
 operator|!=
 literal|0
-operator|&&
-name|privileged
 condition|)
 block|{
 comment|/* 		 * Check if a hop-by-hop options header is contatined in the 		 * received packet, and if so, store the options as ancillary 		 * data. Note that a hop-by-hop options header must be 		 * just after the IPv6 header, which fact is assured through 		 * the IPv6 input processing. 		 */
@@ -5125,13 +5097,6 @@ name|IN6P_DSTOPTS
 operator|)
 operator|==
 literal|0
-condition|)
-break|break;
-comment|/* 				 * We also require super-user privilege for 				 * the option. 				 * See the comments on IN6_HOPOPTS. 				 */
-if|if
-condition|(
-operator|!
-name|privileged
 condition|)
 break|break;
 operator|*
