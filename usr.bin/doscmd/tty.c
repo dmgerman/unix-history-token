@@ -233,7 +233,7 @@ begin_decl_stmt
 name|int
 name|flipdelete
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -10894,6 +10894,15 @@ name|PointerMotionMask
 argument_list|)
 expr_stmt|;
 block|}
+name|XStoreName
+argument_list|(
+name|dpy
+argument_list|,
+name|win
+argument_list|,
+literal|"DOS"
+argument_list|)
+expr_stmt|;
 name|XMapWindow
 argument_list|(
 name|dpy
