@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uipc_mbuf.c 1.7 81/11/04 */
+comment|/* uipc_mbuf.c 1.8 81/11/08 */
 end_comment
 
 begin_include
@@ -54,26 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet_systm.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../inet/inet_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../inet/ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../inet/tcp.h"
-end_include
+begin_comment
+comment|/* ### */
+end_comment
 
 begin_include
 include|#
@@ -104,7 +90,7 @@ name|m_lowat
 operator|+
 name|mbufs
 operator|>
-name|NNETPAGES
+name|NMBPAGES
 operator|*
 name|NMBPG
 operator|-
@@ -279,7 +265,7 @@ name|m_expand
 argument_list|()
 condition|)
 block|{
-name|netstat
+name|mbstat
 operator|.
 name|m_drops
 operator|++
@@ -410,7 +396,7 @@ block|}
 end_block
 
 begin_macro
-name|mbufinit
+name|mbinit
 argument_list|()
 end_macro
 
@@ -438,7 +424,7 @@ name|mbuf
 operator|*
 operator|)
 operator|&
-name|netutl
+name|mbutl
 index|[
 literal|0
 index|]
@@ -447,7 +433,7 @@ comment|/* ->start of buffer virt mem */
 name|vmemall
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 literal|0
 index|]
@@ -462,7 +448,7 @@ expr_stmt|;
 name|vmaccess
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 literal|0
 index|]
@@ -557,7 +543,7 @@ name|i
 operator|=
 name|rmalloc
 argument_list|(
-name|netmap
+name|mbmap
 argument_list|,
 name|n
 argument_list|)
@@ -589,7 +575,7 @@ condition|(
 name|memall
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -614,7 +600,7 @@ block|}
 name|vmaccess
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -718,7 +704,7 @@ name|i
 operator|=
 name|rmalloc
 argument_list|(
-name|netmap
+name|mbmap
 argument_list|,
 name|n
 argument_list|)
@@ -750,7 +736,7 @@ condition|(
 name|memall
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -772,7 +758,7 @@ return|;
 name|vmaccess
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -1124,7 +1110,6 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-comment|/* 	for (m = mp; m; m = m->m_next) { 		printf("a %x %d\n", m, m->m_len); 	} */
 name|COUNT
 argument_list|(
 name|M_ADJ
@@ -1148,7 +1133,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* adjust from top of msg chain */
 while|while
 condition|(
 name|m
@@ -1169,7 +1153,6 @@ operator|<=
 name|len
 condition|)
 block|{
-comment|/* free this mbuf */
 name|len
 operator|-=
 name|m
@@ -1191,7 +1174,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* adjust mbuf */
 name|m
 operator|->
 name|m_len
@@ -1210,7 +1192,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* adjust from bottom of msg chain */
+comment|/* a 2 pass algorithm might be better */
 name|len
 operator|=
 operator|-
@@ -1229,7 +1211,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* find end of chain */
 while|while
 condition|(
 name|m
@@ -1263,7 +1244,6 @@ operator|<=
 name|len
 condition|)
 block|{
-comment|/* last mbuf */
 name|len
 operator|-=
 name|n
@@ -1283,7 +1263,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* adjust length */
 name|n
 operator|->
 name|m_len
@@ -1294,100 +1273,6 @@ break|break;
 block|}
 block|}
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * convert mbuf virtual to physical addr for uballoc  */
-end_comment
-
-begin_expr_stmt
-name|mtophys
-argument_list|(
-name|m
-argument_list|)
-specifier|register
-expr|struct
-name|mbuf
-operator|*
-name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|i
-expr_stmt|;
-specifier|register
-name|unsigned
-name|long
-name|addr
-decl_stmt|;
-specifier|register
-name|struct
-name|pte
-modifier|*
-name|pte
-decl_stmt|;
-name|COUNT
-argument_list|(
-name|MTOPHYS
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-operator|(
-operator|(
-operator|(
-name|int
-operator|)
-name|m
-operator|&
-operator|~
-name|PGOFSET
-operator|)
-operator|-
-operator|(
-name|int
-operator|)
-name|netutl
-operator|)
-operator|>>
-name|PGSHIFT
-expr_stmt|;
-name|pte
-operator|=
-operator|&
-name|Netmap
-index|[
-name|i
-index|]
-expr_stmt|;
-name|addr
-operator|=
-operator|(
-name|pte
-operator|->
-name|pg_pfnum
-operator|<<
-name|PGSHIFT
-operator|)
-operator||
-operator|(
-operator|(
-name|int
-operator|)
-name|m
-operator|&
-name|PGOFSET
-operator|)
-expr_stmt|;
-return|return
-operator|(
-name|addr
-operator|)
-return|;
 block|}
 end_block
 
