@@ -114,7 +114,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ldd [-v] [-f format] program ...\n"
+literal|"usage: ldd [-a] [-v] [-f format] program ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -160,10 +160,16 @@ name|int
 name|c
 decl_stmt|;
 name|int
+name|aflag
+decl_stmt|,
 name|vflag
-init|=
-literal|0
 decl_stmt|;
+name|aflag
+operator|=
+name|vflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -175,7 +181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"vf:"
+literal|"avf:"
 argument_list|)
 operator|)
 operator|!=
@@ -188,6 +194,13 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|aflag
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'v'
 case|:
@@ -313,7 +326,7 @@ name|setenv
 argument_list|(
 literal|"LD_TRACE_LOADED_OBJECTS"
 argument_list|,
-literal|"1"
+literal|"yes"
 argument_list|,
 literal|1
 argument_list|)
@@ -800,6 +813,20 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|aflag
+condition|)
+name|setenv
+argument_list|(
+literal|"LD_TRACE_LOADED_OBJECTS_ALL"
+argument_list|,
+literal|"1"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|fmt1
