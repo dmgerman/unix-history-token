@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.82 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.83 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6699,6 +6699,8 @@ name|SysExMsg
 index|[
 name|i
 index|]
+operator|+
+literal|1
 argument_list|,
 name|statmsg
 argument_list|)
@@ -6809,17 +6811,33 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+name|mbuf
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|Errors
 operator|++
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|mbuf
+argument_list|,
+literal|"%.3s %%s"
+argument_list|,
+name|statmsg
+argument_list|)
+expr_stmt|;
 name|usrerr
 argument_list|(
-name|statmsg
+name|mbuf
 argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
+operator|&
+name|statmsg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
