@@ -365,6 +365,9 @@ decl_stmt|;
 block|}
 name|u_tx_rt
 union|;
+name|int
+name|sc_tx_th_len
+decl_stmt|;
 union|union
 block|{
 name|struct
@@ -380,6 +383,9 @@ decl_stmt|;
 block|}
 name|u_rx_rt
 union|;
+name|int
+name|sc_rx_th_len
+decl_stmt|;
 name|struct
 name|ath_desc
 modifier|*
