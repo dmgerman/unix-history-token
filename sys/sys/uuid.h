@@ -15,6 +15,12 @@ directive|define
 name|_SYS_UUID_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/* Length of a node address (an IEEE 802 address). */
 end_comment
@@ -142,6 +148,7 @@ typedef|;
 end_typedef
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|uuidgen
 parameter_list|(
@@ -153,6 +160,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
