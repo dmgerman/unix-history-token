@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_notify.c,v 8.10 2000/04/21 06:54:09 vixie Exp $"
+literal|"$Id: ns_notify.c,v 8.12 2000/12/23 08:14:40 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,6 +616,13 @@ name|type
 operator|=
 name|type
 expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|ni
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|evInitID
 argument_list|(
 operator|&
@@ -1047,9 +1054,6 @@ specifier|const
 name|char
 modifier|*
 name|zname
-decl_stmt|,
-modifier|*
-name|fname
 decl_stmt|;
 name|u_int32_t
 name|zserial

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.38 2000/04/21 06:54:01 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.40 2000/11/29 06:55:46 marka Exp $  */
 end_comment
 
 begin_comment
@@ -130,6 +130,10 @@ begin_comment
 comment|/*  * Hash table structures.  */
 end_comment
 
+begin_comment
+comment|/*  * XXX  * For IPv6 transport support we need a seperate reference counted  * database of source addresses and d_addr should become a union with  * a pointer into that database.  A bit can be robbed from d_rode to  * indicate what the union is being used for.  This should require less  * memory than making d_addr a union of struct in6_addr and struct in_addr.  */
+end_comment
+
 begin_struct
 struct|struct
 name|databuf
@@ -141,9 +145,8 @@ name|d_next
 decl_stmt|;
 comment|/* linked list */
 name|struct
-name|nameser
-modifier|*
-name|d_ns
+name|in_addr
+name|d_addr
 decl_stmt|;
 comment|/* NS from whence this came */
 name|u_int32_t
@@ -209,6 +212,16 @@ comment|/* size of data area */
 name|u_int32_t
 name|d_rcnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+name|u_int32_t
+name|d_hitcnt
+decl_stmt|;
+comment|/* Number of requests for this data. */
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|u_int16_t
 name|d_nstime
 decl_stmt|;
@@ -237,6 +250,28 @@ name|n
 parameter_list|)
 value|(sizeof(struct databuf) - sizeof(void*) + n)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|db_total_hits
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HITCOUNTS */
+end_comment
 
 begin_ifdef
 ifdef|#

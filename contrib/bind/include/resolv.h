@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.31 2000/03/30 20:16:50 vixie Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.32 2000/12/23 08:14:49 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -1635,8 +1635,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|res_npquery
-value|__res_npquery
+name|res_pquery
+value|__res_pquery
 end_define
 
 begin_define
@@ -2360,7 +2360,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|res_npquery
+name|res_pquery
 name|__P
 argument_list|(
 operator|(

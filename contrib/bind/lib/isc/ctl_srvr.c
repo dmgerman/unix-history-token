@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_srvr.c,v 8.23 2000/02/04 08:28:33 vixie Exp $"
+literal|"$Id: ctl_srvr.c,v 8.24 2000/11/14 01:10:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2515,6 +2515,13 @@ name|ctx
 operator|->
 name|cur_sess
 operator|++
+expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|sess
+argument_list|,
+name|link
+argument_list|)
 expr_stmt|;
 name|APPEND
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.55 2000/07/20 22:50:38 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.56 2000/12/02 18:39:25 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default configuration file */
+comment|/* configuration file name */
 end_comment
 
 begin_decl_stmt
@@ -246,6 +246,17 @@ name|DECL
 name|char
 modifier|*
 name|conffile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* configuration file mtime */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|time_t
+name|confmtime
 decl_stmt|;
 end_decl_stmt
 

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_save.c,v 8.27 2000/04/21 06:54:03 vixie Exp $"
+literal|"$Id: db_save.c,v 8.28 2000/11/29 06:55:48 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,9 +457,14 @@ name|NOERROR
 expr_stmt|;
 name|dp
 operator|->
-name|d_ns
+name|d_addr
+operator|.
+name|s_addr
 operator|=
-name|NULL
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|dp
 operator|->

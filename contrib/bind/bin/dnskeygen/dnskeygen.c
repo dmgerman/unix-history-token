@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnskeygen.c,v 1.9 1999/10/13 16:38:59 vixie Exp $"
+literal|"$Id: dnskeygen.c,v 1.11 2000/12/23 08:14:31 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,19 +246,11 @@ decl_stmt|,
 name|err
 init|=
 literal|0
-decl_stmt|,
-name|n
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|;
-name|char
-name|array
-index|[
-literal|1024
-index|]
 decl_stmt|;
 name|dst_init
 argument_list|()
@@ -1035,6 +1027,12 @@ literal|"No size specified"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+comment|/* size == 0 */
+name|sign_val
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_pton.c,v 8.3 1999/01/08 19:23:41 vixie Exp $"
+literal|"$Id: inet_cidr_pton.c,v 8.4 2000/12/23 08:14:53 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,6 +545,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|dst
@@ -561,6 +562,7 @@ else|else
 goto|goto
 name|enoent
 goto|;
+block|}
 comment|/* If nothing was written to the destination, we found no address. */
 if|if
 condition|(

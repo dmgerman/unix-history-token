@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.16 2000/07/11 04:36:26 vixie Exp $"
+literal|"$Id: getinfo.c,v 8.17 2000/12/23 08:14:46 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3155,54 +3155,43 @@ begin_comment
 comment|/*  * Perform a query on the concatenation of name and domain,  * removing a trailing dot from name if domain is NULL.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|GetHostDomain
-argument_list|(
-argument|nsAddrPtr
-argument_list|,
-argument|queryClass
-argument_list|,
-argument|queryType
-argument_list|,
-argument|name
-argument_list|,
-argument|domain
-argument_list|,
-argument|hostPtr
-argument_list|,
-argument|isServer
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nsAddrPtr
+parameter_list|,
+name|queryClass
+parameter_list|,
+name|queryType
+parameter_list|,
+name|name
+parameter_list|,
+name|domain
+parameter_list|,
+name|hostPtr
+parameter_list|,
+name|isServer
+parameter_list|)
 name|struct
 name|in_addr
 modifier|*
 name|nsAddrPtr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|queryClass
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|queryType
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|,
-modifier|*
+decl|*
 name|domain
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|HostInfo

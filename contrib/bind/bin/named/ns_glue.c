@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_glue.c,v 8.17 2000/07/17 07:36:52 vixie Exp $"
+literal|"$Id: ns_glue.c,v 8.18 2000/11/08 06:16:36 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1986,49 +1986,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * rename() is lame (can't overwrite an existing file) on some systems.  * use movefile() instead, and let lame OS ports do what they need to.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_MOVEFILE
-end_ifndef
-
-begin_function
-name|int
-name|movefile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|oldname
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|newname
-parameter_list|)
-block|{
-return|return
-operator|(
-name|rename
-argument_list|(
-name|oldname
-argument_list|,
-name|newname
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

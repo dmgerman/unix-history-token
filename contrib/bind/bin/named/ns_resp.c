@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.144 2000/07/11 08:26:09 vixie Exp $"
+literal|"$Id: ns_resp.c,v 8.149 2001/01/03 09:47:27 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -707,6 +707,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|char
+name|nsbuf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|char
+name|abuf
+index|[
+literal|20
+index|]
+decl_stmt|;
 name|a
 operator|=
 name|ns
@@ -775,25 +787,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|NS_OPTION_P
-argument_list|(
-name|OPTION_HOSTSTATS
-argument_list|)
-condition|)
-block|{
-name|char
-name|nsbuf
-index|[
-literal|20
-index|]
-decl_stmt|;
-if|if
-condition|(
 name|db
 operator|->
-name|d_ns
+name|d_addr
+operator|.
+name|s_addr
 operator|!=
-name|NULL
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
 name|strcpy
@@ -804,9 +807,7 @@ name|inet_ntoa
 argument_list|(
 name|db
 operator|->
-name|d_ns
-operator|->
-name|addr
+name|d_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -828,7 +829,6 @@ index|]
 operator|.
 name|z_origin
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -856,20 +856,6 @@ operator|->
 name|d_data
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|NS_OPTION_P
-argument_list|(
-name|OPTION_HOSTSTATS
-argument_list|)
-condition|)
-block|{
-name|char
-name|abuf
-index|[
-literal|20
-index|]
-decl_stmt|;
 name|db
 operator|=
 name|qp
@@ -892,9 +878,14 @@ if|if
 condition|(
 name|db
 operator|->
-name|d_ns
+name|d_addr
+operator|.
+name|s_addr
 operator|!=
-name|NULL
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
 name|strcpy
@@ -905,9 +896,7 @@ name|inet_ntoa
 argument_list|(
 name|db
 operator|->
-name|d_ns
-operator|->
-name|addr
+name|d_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -929,7 +918,6 @@ index|]
 operator|.
 name|z_origin
 expr_stmt|;
-block|}
 block|}
 block|}
 break|break;
@@ -2136,7 +2124,7 @@ name|sin_addr
 argument_list|)
 condition|)
 break|break;
-comment|/* 	/* 	 * find the qinfo pointer and update 	 * the rtt and fact that we have called on this server before. 	 */
+comment|/* 	 * find the qinfo pointer and update 	 * the rtt and fact that we have called on this server before. 	 */
 block|{
 name|struct
 name|timeval
@@ -4971,6 +4959,20 @@ name|DB_C_ADDITIONAL
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+operator|++
+name|dp
+operator|->
+name|d_hitcnt
+expr_stmt|;
+operator|++
+name|db_total_hits
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|rrsetadd
 argument_list|(
 name|flushset
@@ -7192,7 +7194,7 @@ name|ns_info
 argument_list|(
 name|ns_log_default
 argument_list|,
-literal|"ns_forw: tcp_send(%s) failed: %s"
+literal|"ns_resp: tcp_send(%s) failed: %s"
 argument_list|,
 name|sin_ntoa
 argument_list|(
@@ -14430,6 +14432,20 @@ name|done
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+operator|++
+name|dp
+operator|->
+name|d_hitcnt
+expr_stmt|;
+operator|++
+name|db_total_hits
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 comment|/* Don't put anything but key or sig RR's in response to 			     requests for key or sig */
 if|if
 condition|(
@@ -14869,7 +14885,7 @@ else|:
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* shuffle the SIG records down to the bottom of the array 		 * as we need to make sure they get packed last, no matter 		 * what the ordering is. We're sure to maintain the 		 * original ordering within the two sets of records (so 		 * that fixed_order can work). 		 * First we pack the non-SIG records into the temp array. 		 */
+comment|/* 		 * shuffle the SIG records down to the bottom of the array 		 * as we need to make sure they get packed last, no matter 		 * what the ordering is. We're sure to maintain the 		 * original ordering within the two sets of records (so 		 * that fixed_order can work). 		 * First we pack the non-SIG records into the temp array. 		 */
 for|for
 control|(
 name|idx
@@ -14925,7 +14941,7 @@ name|first_sig
 operator|=
 name|jdx
 expr_stmt|;
-comment|/* now shift the SIG records down to the end of the array 		 *  and copy in the non-SIG records 		 */
+comment|/* 		 * now shift the SIG records down to the end of the array 		 *  and copy in the non-SIG records 		 */
 for|for
 control|(
 name|i
@@ -14936,7 +14952,7 @@ name|found_count
 operator|-
 literal|1
 init|;
-name|idx
+name|i
 operator|>=
 literal|0
 condition|;

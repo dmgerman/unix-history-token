@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_lexer.c,v 8.20 2000/04/21 06:54:07 vixie Exp $"
+literal|"$Id: ns_lexer.c,v 8.22 2000/11/29 06:55:58 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,10 +1163,28 @@ block|,
 name|T_HINT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+block|{
+literal|"hit-count"
+block|,
+name|T_HITCOUNT
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 block|{
 literal|"host-statistics"
 block|,
 name|T_HOSTSTATS
+block|}
+block|,
+block|{
+literal|"host-statistics-max"
+block|,
+name|T_HOSTSTATSMAX
 block|}
 block|,
 block|{

@@ -399,6 +399,11 @@ argument_list|(
 name|newmsg
 argument_list|)
 expr_stmt|;
+name|dst_free_key
+argument_list|(
+name|dstkey
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -498,6 +503,11 @@ argument_list|(
 name|newmsg
 argument_list|)
 expr_stmt|;
+name|dst_free_key
+argument_list|(
+name|dstkey
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -572,6 +582,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|newmsg
+argument_list|)
+expr_stmt|;
+name|dst_free_key
+argument_list|(
+name|dstkey
 argument_list|)
 expr_stmt|;
 if|if
@@ -654,6 +669,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|newmsg
+argument_list|)
+expr_stmt|;
+name|dst_free_key
+argument_list|(
+name|dstkey
 argument_list|)
 expr_stmt|;
 return|return

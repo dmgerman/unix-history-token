@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntop.c,v 1.8 1999/10/13 16:39:28 vixie Exp $"
+literal|"$Id: inet_ntop.c,v 1.10 2001/01/25 20:21:10 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,7 +354,7 @@ literal|3
 index|]
 operator|)
 argument_list|)
-operator|>
+operator|>=
 name|size
 condition|)
 block|{

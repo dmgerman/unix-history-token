@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 8.13 1999/10/13 16:39:20 vixie Exp $"
+literal|"$Id: subr.c,v 8.14 2000/12/23 08:14:48 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include

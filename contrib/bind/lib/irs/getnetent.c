@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetent.c,v 1.17 1999/10/13 16:39:30 vixie Exp $"
+literal|"$Id: getnetent.c,v 1.18 2000/12/23 08:14:53 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -903,6 +903,7 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -923,6 +924,7 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -952,11 +954,15 @@ name|bits
 operator|=
 literal|16
 expr_stmt|;
+block|}
 else|else
+block|{
 name|bits
 operator|=
 literal|24
 expr_stmt|;
+block|}
+block|}
 name|net_data
 operator|->
 name|nww_last

@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_connects.c,v 8.26 2000/02/04 08:28:34 vixie Exp $"
+literal|"$Id: ev_connects.c,v 8.27 2000/11/14 01:10:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,6 +1314,13 @@ operator|)
 return|;
 block|}
 block|}
+name|INIT_LINK
+argument_list|(
+name|new
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|APPEND
 argument_list|(
 name|ctx

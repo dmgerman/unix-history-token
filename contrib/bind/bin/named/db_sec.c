@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_sec.c,v 8.31 2000/04/21 06:54:04 vixie Exp $"
+literal|"$Id: db_sec.c,v 8.32 2000/12/23 08:14:36 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2792,9 +2792,9 @@ operator|->
 name|dk_flags
 operator|&
 name|NS_KEY_SIGNATORYMASK
+operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 continue|continue;
 comment|/* 		 * If we're still here, we have a non-null key that's either 		 * a zone key or an entity key with signing authority. 		 */

@@ -59,7 +59,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.14 2000/03/30 23:25:34 vixie Exp $"
+literal|"$Id: main.c,v 8.16 2000/12/23 08:14:47 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"port_after.h"
 end_include
 
@@ -190,6 +196,15 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_function_decl
+name|int
+name|yylex
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Name of a top-level name server. Can be changed with   * the "set root" command.  */
 end_comment
@@ -204,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_SERVER
-value|"a.root-servers.net."
+value|"f.root-servers.net."
 end_define
 
 begin_endif
@@ -358,6 +373,7 @@ comment|/*  * Forward declarations.  */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|LocalServer
 parameter_list|(
@@ -369,6 +385,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|res_re_init
 parameter_list|(
@@ -378,12 +395,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|res_dnsrch
 parameter_list|(
 name|char
 modifier|*
 name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|Usage
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -396,20 +424,17 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1125,12 +1150,13 @@ begin_comment
 comment|/*  ******************************************************************************  *  *  Usage --  *  *	Lists the proper methods to run the program and exits.  *  ******************************************************************************  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|Usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1173,7 +1199,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2228,17 +2254,13 @@ begin_function
 name|int
 name|LookupHostWithServer
 parameter_list|(
-name|string
-parameter_list|,
-name|putToFile
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|putToFile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|file
@@ -3109,7 +3131,7 @@ name|ERROR
 operator|)
 return|;
 block|}
-name|queryType
+name|i
 operator|=
 name|StringToType
 argument_list|(
@@ -3119,6 +3141,31 @@ name|queryType
 argument_list|,
 name|stderr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ns_t_xfr_p
+argument_list|(
+name|i
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** qtype may not be a zone transfer\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
+name|queryType
+operator|=
+name|i
 expr_stmt|;
 block|}
 block|}

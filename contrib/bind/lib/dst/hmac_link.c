@@ -18,7 +18,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/hmac_link.c,v 1.8 1999/10/15 21:30:07 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/hmac_link.c,v 1.8 1999/10/15 21:30:07 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
