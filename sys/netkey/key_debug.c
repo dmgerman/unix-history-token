@@ -1378,7 +1378,7 @@ block|{
 default|default:
 name|printf
 argument_list|(
-literal|" type=%d id=%lu"
+literal|" type=%u id=%lu"
 argument_list|,
 name|id
 operator|->
@@ -1605,7 +1605,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  { id=%d ivlen=%d min=%d max=%d }\n"
+literal|"  { id=%u ivlen=%u min=%u max=%u }\n"
 argument_list|,
 name|alg
 operator|->
@@ -1981,7 +1981,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kdebug_sadb_key: key length mismatch, bit:%d len:%ld.\n"
+literal|"kdebug_sadb_key: key length mismatch, bit:%u len:%ld.\n"
 argument_list|,
 name|key
 operator|->
@@ -2550,7 +2550,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"kdebug_secpolicy: Invalid policy found. %d\n"
+literal|"kdebug_secpolicy: Invalid policy found. %u\n"
 argument_list|,
 name|sp
 operator|->

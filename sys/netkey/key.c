@@ -1399,7 +1399,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (
+value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%u SA=%u)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -1416,7 +1416,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sp)) {						\ 		ipseclog((LOG_DEBUG, "%s: direction mismatched (TREE=%d SP=%d), " \ 			"anyway continue.\n",				\ 			(name), (head), (sp)));				\ 	}								\ } while (
+value|do { \ 	if ((head) != (sp)) {						\ 		ipseclog((LOG_DEBUG, "%s: direction mismatched (TREE=%u SP=%u), " \ 			"anyway continue.\n",				\ 			(name), (head), (sp)));				\ 	}								\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -3225,7 +3225,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"protocol family mismatched %d != %d\n."
+literal|"protocol family mismatched %u != %u\n"
 operator|,
 name|isrc
 operator|->
@@ -6504,7 +6504,7 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: reqid=%d range "
+literal|"key_msg2sp: reqid=%u range "
 literal|"violation, updated by kernel.\n"
 operator|,
 name|xisr
@@ -19235,7 +19235,7 @@ name|LOG_DEBUG
 operator|,
 literal|"key_timehandler: "
 literal|"invalid sav->state "
-literal|"(queue: %d SA: %d): "
+literal|"(queue: %u SA: %u): "
 literal|"kill it anyway\n"
 operator|,
 name|SADB_SASTATE_DEAD
@@ -24285,7 +24285,7 @@ name|LOG_DEBUG
 operator|,
 literal|"key_delete_all: "
 literal|"invalid sav->state "
-literal|"(queue: %d SA: %d)\n"
+literal|"(queue: %u SA: %u)\n"
 operator|,
 name|state
 operator|,
