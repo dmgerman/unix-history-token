@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwclreol.c	3.14 %G%"
+literal|"@(#)wwclreol.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,9 +78,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|int
-name|gain
-decl_stmt|;
 comment|/* 	 * Clear the buffer right off 	 */
 block|{
 specifier|register
@@ -307,6 +304,11 @@ name|ntouched
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|gain
+init|=
+literal|0
+decl_stmt|;
 name|i
 operator|=
 name|col
@@ -337,10 +339,6 @@ name|ww_win
 index|[
 name|row
 index|]
-expr_stmt|;
-name|gain
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -511,13 +509,9 @@ index|]
 operator||=
 name|WWU_TOUCHED
 expr_stmt|;
-block|}
-comment|/* 	 * Can/Should we use clear eol? 	 */
+comment|/* 		 * Can/should we use clear eol? 		 */
 if|if
 condition|(
-operator|!
-name|cleared
-operator|&&
 name|tt
 operator|.
 name|tt_clreol
@@ -529,12 +523,6 @@ operator|>
 literal|4
 condition|)
 block|{
-specifier|register
-name|union
-name|ww_char
-modifier|*
-name|s
-decl_stmt|;
 comment|/* clear to the end */
 call|(
 modifier|*
@@ -588,6 +576,7 @@ name|c_w
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

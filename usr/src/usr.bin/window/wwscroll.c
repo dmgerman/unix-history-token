@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwscroll.c	3.13 %G%"
+literal|"@(#)wwscroll.c	3.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,12 +480,28 @@ modifier|*
 modifier|*
 name|cqq
 decl_stmt|;
-comment|/* 		 * Don't worry about retain when scrolling down. 		 * But do worry when scrolling up.  For hp2621. 		 */
+comment|/* 		 * Don't worry about retain when scrolling down, 		 * but do worry when scrolling up, for hp2621. 		 */
 if|if
 condition|(
 name|dir
 operator|>
 literal|0
+condition|)
+block|{
+comment|/* 			 * We're going to assume that a line feed at the 			 * bottom of the screen will cause a scroll, unless 			 * "ns" is set.  This should work at least 99% 			 * of the time.  At any rate, vi seems to do it. 			 */
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_noscroll
+operator|||
+name|row1x
+operator|!=
+literal|0
+operator|||
+name|row2x
+operator|!=
+name|wwnrow
 condition|)
 block|{
 call|(
@@ -536,6 +552,39 @@ operator|.
 name|tt_insline
 call|)
 argument_list|()
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_row
+operator|!=
+name|wwnrow
+operator|-
+literal|1
+condition|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_move
+call|)
+argument_list|(
+name|wwnrow
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ttputc
+argument_list|(
+literal|'\n'
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Fix up the old screen. 			 */

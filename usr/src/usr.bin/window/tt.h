@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tt.h	3.15 %G%  */
+comment|/*  * @(#)tt.h	3.16 %G%  */
 end_comment
 
 begin_comment
@@ -162,6 +162,10 @@ name|char
 name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
+name|char
+name|tt_noscroll
+decl_stmt|;
+comment|/* terminal doesn't scroll (ns flag) */
 comment|/* the frame characters */
 name|short
 modifier|*

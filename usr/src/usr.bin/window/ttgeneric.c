@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.30 %G%"
+literal|"@(#)ttgeneric.c	3.31 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,6 +463,12 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|gen_DB
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|gen_NS
 decl_stmt|;
 end_decl_stmt
 
@@ -1835,6 +1841,13 @@ argument_list|(
 literal|"db"
 argument_list|)
 expr_stmt|;
+name|gen_NS
+operator|=
+name|tgetflag
+argument_list|(
+literal|"ns"
+argument_list|)
+expr_stmt|;
 name|gen_XN
 operator|=
 name|tgetflag
@@ -2098,6 +2111,12 @@ operator|.
 name|tt_retain
 operator|=
 name|gen_DB
+expr_stmt|;
+name|tt
+operator|.
+name|tt_noscroll
+operator|=
+name|gen_NS
 expr_stmt|;
 name|tt
 operator|.
