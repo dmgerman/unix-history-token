@@ -122,6 +122,10 @@ name|WRDE_NOCMD
 value|0x4
 end_define
 
+begin_comment
+comment|/* disallow command substitution */
+end_comment
+
 begin_define
 define|#
 directive|define
