@@ -4212,17 +4212,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s%d: Malloc disk\n"
-argument_list|,
-name|MD_NAME
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 name|mdinit
 argument_list|(
 name|sc
