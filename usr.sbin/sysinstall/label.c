@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -992,7 +998,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|daddr_t
 name|space_free
 parameter_list|(
 name|struct
@@ -1006,7 +1012,7 @@ name|chunk
 modifier|*
 name|c1
 decl_stmt|;
-name|int
+name|daddr_t
 name|sz
 init|=
 name|c
@@ -2481,15 +2487,13 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|spaces
-decl_stmt|,
 name|srow
 decl_stmt|,
 name|prow
 decl_stmt|,
 name|pcol
 decl_stmt|;
-name|int
+name|daddr_t
 name|sz
 decl_stmt|;
 name|char
@@ -3005,7 +3009,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disk: %s\t\tFree: %d blocks (%dGB)"
+literal|"Disk: %s\t\tFree: %jd blocks (%jdGB)"
 argument_list|,
 name|label_chunk_info
 index|[
@@ -3018,13 +3022,19 @@ name|disk
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|sz
 operator|/
 name|ONE_GIG
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3035,7 +3045,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disk: %s\t\tFree: %d blocks (%dMB)"
+literal|"Disk: %s\t\tFree: %jd blocks (%jdMB)"
 argument_list|,
 name|label_chunk_info
 index|[
@@ -3048,13 +3058,19 @@ name|disk
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|sz
 operator|/
 name|ONE_MEG
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3075,7 +3091,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disk: %s\tPartition name: %s\tFree: %d blocks (%dGB)"
+literal|"Disk: %s\tPartition name: %s\tFree: %jd blocks (%jdGB)"
 argument_list|,
 name|label_chunk_info
 index|[
@@ -3097,13 +3113,19 @@ name|c
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|sz
 operator|/
 name|ONE_GIG
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3114,7 +3136,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disk: %s\tPartition name: %s\tFree: %d blocks (%dMB)"
+literal|"Disk: %s\tPartition name: %s\tFree: %jd blocks (%jdMB)"
 argument_list|,
 name|label_chunk_info
 index|[
@@ -3136,13 +3158,19 @@ name|c
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|sz
 operator|/
 name|ONE_MEG
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3695,7 +3723,7 @@ name|num
 argument_list|,
 literal|10
 argument_list|,
-literal|"%5ldMB"
+literal|"%5dMB"
 argument_list|,
 literal|0
 argument_list|)
@@ -3724,8 +3752,11 @@ name|num
 argument_list|,
 literal|10
 argument_list|,
-literal|"%5ldMB"
+literal|"%5jdMB"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|label_chunk_info
 index|[
 name|i
@@ -3745,8 +3776,11 @@ name|num
 argument_list|,
 literal|10
 argument_list|,
-literal|"%5ldGB"
+literal|"%5jdGB"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|label_chunk_info
 index|[
 name|i
@@ -4094,9 +4128,10 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|int
+name|daddr_t
 name|sz
-decl_stmt|,
+decl_stmt|;
+name|int
 name|key
 init|=
 literal|0
@@ -4712,7 +4747,7 @@ name|char
 modifier|*
 name|val
 decl_stmt|;
-name|int
+name|daddr_t
 name|size
 decl_stmt|;
 name|struct
@@ -4735,8 +4770,11 @@ name|sprintf
 argument_list|(
 name|osize
 argument_list|,
-literal|"%d"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|)
 expr_stmt|;
@@ -4756,10 +4794,16 @@ directive|else
 literal|"gigabytes, M for megabytes, or C for cylinders.\n"
 endif|#
 directive|endif
-literal|"%d blocks (%dMB) are free."
+literal|"%jd blocks (%jdMB) are free."
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 operator|/
 name|ONE_MEG
@@ -4773,7 +4817,7 @@ operator|||
 operator|(
 name|size
 operator|=
-name|strtol
+name|strtoimax
 argument_list|(
 name|val
 argument_list|,
@@ -6458,14 +6502,14 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|int
+name|daddr_t
 name|requested_part_size
 parameter_list|(
 name|char
 modifier|*
 name|varName
 parameter_list|,
-name|int
+name|daddr_t
 name|nom
 parameter_list|,
 name|int
@@ -6479,7 +6523,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|daddr_t
 name|sz
 decl_stmt|;
 if|if
@@ -6497,9 +6541,13 @@ name|NULL
 condition|)
 name|sz
 operator|=
-name|atoi
+name|strtoimax
 argument_list|(
 name|cp
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -6554,7 +6602,7 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-name|int
+name|daddr_t
 name|sz
 decl_stmt|;
 name|struct
@@ -6813,10 +6861,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
+name|daddr_t
 name|nom
 decl_stmt|;
-name|int
+name|daddr_t
 name|def
 decl_stmt|;
 name|mib
@@ -7822,9 +7870,10 @@ name|entries
 operator|++
 control|)
 block|{
-name|int
+name|intmax_t
 name|sz
-decl_stmt|,
+decl_stmt|;
+name|int
 name|soft
 init|=
 literal|0
@@ -7865,7 +7914,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%s %d %s %d"
+literal|"%s %jd %s %d"
 argument_list|,
 name|typ
 argument_list|,

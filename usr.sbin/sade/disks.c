@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -232,7 +238,7 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|daddr_t
 name|last_free
 init|=
 literal|0
@@ -331,7 +337,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|daddr_t
 name|Total
 decl_stmt|;
 end_decl_stmt
@@ -355,7 +361,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
+name|daddr_t
 name|sz
 decl_stmt|;
 name|char
@@ -390,11 +396,13 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
+name|Total
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
-operator|=
-name|Total
 operator|=
 literal|0
 init|;
@@ -561,7 +569,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"DISK Geometry:\t%lu cyls/%lu heads/%lu sectors = %lu sectors (%luMB)"
+literal|"DISK Geometry:\t%lu cyls/%lu heads/%lu sectors = %jd sectors (%jdMB)"
 argument_list|,
 name|d
 operator|->
@@ -575,6 +583,9 @@ name|d
 operator|->
 name|bios_sect
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 operator|->
 name|bios_cyl
@@ -587,6 +598,9 @@ name|d
 operator|->
 name|bios_sect
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 operator|->
 name|bios_cyl
@@ -758,8 +772,11 @@ name|row
 argument_list|,
 literal|0
 argument_list|,
-literal|"%10ld %10lu %10lu %8s %6d %10s %8d\t%-6s"
+literal|"%10jd %10jd %10jd %8s %6d %10s %8d\t%-6s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|chunk_info
 index|[
 name|i
@@ -767,8 +784,14 @@ index|]
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|chunk_info
 index|[
 name|i
@@ -1926,9 +1949,10 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|daddr_t
 name|size
-decl_stmt|,
+decl_stmt|;
+name|int
 name|subtype
 decl_stmt|;
 name|chunk_e
@@ -1993,8 +2017,11 @@ name|tmp
 argument_list|,
 literal|20
 argument_list|,
-literal|"%lu"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|chunk_info
 index|[
 name|current_chunk
@@ -2020,7 +2047,7 @@ operator|&&
 operator|(
 name|size
 operator|=
-name|strtol
+name|strtoimax
 argument_list|(
 name|val
 argument_list|,
@@ -3996,11 +4023,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|sz
-decl_stmt|,
 name|all_disk
 init|=
 literal|0
+decl_stmt|;
+name|daddr_t
+name|sz
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4310,7 +4338,7 @@ condition|(
 operator|(
 name|sz
 operator|=
-name|strtol
+name|strtoimax
 argument_list|(
 name|cp
 argument_list|,
@@ -4449,8 +4477,11 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to find %d free blocks on this disk!"
+literal|"Unable to find %jd free blocks on this disk!"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sz
 argument_list|)
 expr_stmt|;

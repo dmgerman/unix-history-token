@@ -271,13 +271,13 @@ name|disk
 modifier|*
 name|disk
 decl_stmt|;
-name|long
+name|daddr_t
 name|offset
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|size
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|end
 decl_stmt|;
 name|char
@@ -539,9 +539,9 @@ name|struct
 name|chunk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
 specifier|const
 name|char
@@ -642,9 +642,9 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
 name|chunk_e
 parameter_list|,
@@ -815,7 +815,7 @@ comment|/* Write all the MBRs, disklabels, bootblocks and boot managers */
 end_comment
 
 begin_function_decl
-name|u_long
+name|daddr_t
 name|Next_Cyl_Aligned
 parameter_list|(
 specifier|const
@@ -823,7 +823,7 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -833,7 +833,7 @@ comment|/* Round offset up to next cylinder according to the bios-geometry */
 end_comment
 
 begin_function_decl
-name|u_long
+name|daddr_t
 name|Prev_Cyl_Aligned
 parameter_list|(
 specifier|const
@@ -841,7 +841,7 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -859,7 +859,7 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -869,7 +869,7 @@ comment|/* Check if offset is aligned on a track according to the bios geometry 
 end_comment
 
 begin_function_decl
-name|u_long
+name|daddr_t
 name|Next_Track_Aligned
 parameter_list|(
 specifier|const
@@ -877,7 +877,7 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -887,7 +887,7 @@ comment|/* Round offset up to next track according to the bios-geometry */
 end_comment
 
 begin_function_decl
-name|u_long
+name|daddr_t
 name|Prev_Track_Aligned
 parameter_list|(
 specifier|const
@@ -895,7 +895,7 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -918,7 +918,7 @@ name|struct
 name|chunk
 modifier|*
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
 name|chunk_e
 parameter_list|,
@@ -1024,9 +1024,9 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-name|long
+name|daddr_t
 parameter_list|,
-name|u_long
+name|daddr_t
 parameter_list|,
 specifier|const
 name|char

@@ -20,31 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
 end_include
 
 begin_include
@@ -84,6 +66,30 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libdisk.h"
 end_include
 
@@ -97,7 +103,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -135,7 +141,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|daddr_t
 name|Prev_Track_Aligned
 parameter_list|(
 specifier|const
@@ -144,7 +150,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -185,7 +191,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|daddr_t
 name|Next_Track_Aligned
 parameter_list|(
 specifier|const
@@ -194,7 +200,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -246,7 +252,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -294,7 +300,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|daddr_t
 name|Prev_Cyl_Aligned
 parameter_list|(
 specifier|const
@@ -303,7 +309,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -359,7 +365,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|daddr_t
 name|Next_Cyl_Aligned
 parameter_list|(
 specifier|const
@@ -368,7 +374,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|)
 block|{
@@ -697,12 +703,12 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|PC98
-literal|"chunk '%s' [%ld..%ld] does not start"
+literal|"chunk '%s' [%jd..%jd] does not start"
 literal|" on a cylinder boundary\n"
 argument_list|,
 else|#
 directive|else
-literal|"chunk '%s' [%ld..%ld] does not start"
+literal|"chunk '%s' [%jd..%jd] does not start"
 literal|" on a track boundary\n"
 argument_list|,
 endif|#
@@ -711,10 +717,16 @@ name|c1
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|end
@@ -760,17 +772,23 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"chunk '%s' [%ld..%ld] does not end"
+literal|"chunk '%s' [%jd..%jd] does not end"
 literal|" on a cylinder boundary\n"
 argument_list|,
 name|c1
 operator|->
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|end

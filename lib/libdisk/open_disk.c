@@ -234,7 +234,7 @@ decl_stmt|,
 modifier|*
 name|sn
 decl_stmt|;
-name|off_t
+name|daddr_t
 name|o
 decl_stmt|,
 name|len
@@ -254,7 +254,7 @@ name|hd
 decl_stmt|,
 name|alt
 decl_stmt|;
-name|off_t
+name|daddr_t
 name|lo
 index|[
 literal|10
@@ -585,7 +585,7 @@ argument_list|)
 expr_stmt|;
 name|o
 operator|=
-name|strtoul
+name|strtoimax
 argument_list|(
 name|b
 argument_list|,

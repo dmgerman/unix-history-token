@@ -1114,10 +1114,10 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|,
-name|u_long
+name|daddr_t
 name|size
 parameter_list|,
 name|chunk_e
@@ -1151,7 +1151,7 @@ name|CHUNK_FORCE_ALL
 operator|)
 condition|)
 block|{
-name|u_long
+name|daddr_t
 name|l
 decl_stmt|;
 ifdef|#
@@ -1288,7 +1288,7 @@ name|chunk
 modifier|*
 name|parent
 parameter_list|,
-name|u_long
+name|daddr_t
 name|size
 parameter_list|,
 name|chunk_e
@@ -1309,7 +1309,7 @@ name|chunk
 modifier|*
 name|c1
 decl_stmt|;
-name|long
+name|daddr_t
 name|offset
 decl_stmt|;
 if|if

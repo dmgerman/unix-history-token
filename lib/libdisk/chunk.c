@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -39,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -175,10 +181,10 @@ name|chunk
 modifier|*
 name|chunks
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|,
-name|u_long
+name|daddr_t
 name|end
 parameter_list|,
 name|chunk_e
@@ -619,10 +625,10 @@ name|chunk
 modifier|*
 name|c2
 parameter_list|,
-name|u_long
+name|daddr_t
 name|offset
 parameter_list|,
-name|u_long
+name|daddr_t
 name|size
 parameter_list|,
 specifier|const
@@ -1123,10 +1129,10 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|long
+name|daddr_t
 name|offset
 parameter_list|,
-name|u_long
+name|daddr_t
 name|size
 parameter_list|,
 specifier|const
@@ -1159,7 +1165,7 @@ name|c2
 decl_stmt|,
 name|ct
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|end
 init|=
 name|offset
@@ -2073,16 +2079,25 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%8ld %8lu %8lu %-8s %-16s %-8s 0x%02x %s"
+literal|"%8jd %8jd %8jd %-8s %-16s %-8s 0x%02x %s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|c1
 operator|->
 name|end
@@ -2219,7 +2234,7 @@ decl_stmt|,
 modifier|*
 name|c3
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|offset
 init|=
 name|c
