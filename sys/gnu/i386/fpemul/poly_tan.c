@@ -571,6 +571,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 name|pos_poly
 operator|.
@@ -614,6 +618,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 name|neg_poly
 operator|.
@@ -776,6 +784,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 name|pos_poly
 operator|.
@@ -858,6 +870,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 name|neg_poly
 operator|.
