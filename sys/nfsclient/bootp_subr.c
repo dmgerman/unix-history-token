@@ -4479,9 +4479,9 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking done */
 name|error
 operator|=
 name|socreate
