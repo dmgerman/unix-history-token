@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -303,6 +303,15 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|npxproc
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -343,6 +352,17 @@ name|pcb
 name|nullpcb
 decl_stmt|;
 comment|/* pcb to overwrite on last swtch */
+comment|/* free cporcessor (if we have it) */
+if|if
+condition|(
+name|p
+operator|==
+name|npxproc
+condition|)
+name|npxproc
+operator|=
+literal|0
+expr_stmt|;
 comment|/* move to inactive space and stack, passing arg accross */
 name|p
 operator|=
@@ -415,22 +435,20 @@ end_expr_stmt
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|vm_map_remove
-argument_list|(
-operator|&
+comment|/* free coprocessor (if we have it) */
+if|if
+condition|(
 name|p
-operator|->
-name|p_vmspace
-operator|->
-name|vm_map
-argument_list|,
-name|VM_MIN_ADDRESS
-argument_list|,
-name|VM_MAXUSER_ADDRESS
-argument_list|)
+operator|==
+name|npxproc
+condition|)
+name|npxproc
+operator|=
+literal|0
+expr_stmt|;
+name|curproc
+operator|=
+name|p
 expr_stmt|;
 name|swtch
 argument_list|()

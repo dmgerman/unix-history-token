@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -68,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|"../include/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../include/frame.h"
 end_include
 
 begin_include
@@ -2018,7 +2012,7 @@ name|char
 name|proc0paddr
 index|[]
 decl_stmt|,
-name|u
+name|kstack
 index|[]
 decl_stmt|;
 comment|/* XXX! */
@@ -2030,19 +2024,19 @@ decl_stmt|;
 comment|/* XXX! */
 if|if
 condition|(
-name|u
+name|kstack
 operator|<=
 name|addr
 operator|&&
 name|addr
 operator|<
-name|u
+name|kstack
 operator|+
 name|UPAGES
 operator|*
 name|NBPG
 condition|)
-comment|/* 		 * Horrid hack -- the U area and kernel stack are mapped 		 * by the user page table, but we guarantee (?) their presence. 		 */
+comment|/* 		 * Horrid hack -- the kernel stack is mapped 		 * by the user page table, but we guarantee (?) their presence. 		 */
 return|return
 operator|(
 literal|1
@@ -2069,7 +2063,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|if (addr< proc0paddr + UPAGES * NBPG  || 	    u<= addr&& addr< u + UPAGES * NBPG) 		return (1);
+block|if (addr< proc0paddr + UPAGES * NBPG  || 	    kstack<= addr&& addr< kstack + UPAGES * NBPG) 		return (1);
 endif|#
 directive|endif
 return|return

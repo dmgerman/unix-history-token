@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -252,6 +252,10 @@ begin_comment
 comment|/* set when safe to use msgbuf */
 end_comment
 
+begin_comment
+comment|/*  * Machine-dependent startup code  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|boothowto
@@ -265,17 +269,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|dumplo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|physmem
+decl_stmt|,
+name|maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|bootdev
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMALL
+end_ifdef
+
 begin_decl_stmt
+specifier|extern
 name|int
 name|forcemaxmem
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -287,14 +317,18 @@ begin_extern
 extern|extern cyloffset;
 end_extern
 
-begin_comment
-comment|/*  * cpu_startup: allocate memory for variable-sized tables,  * initialize cpu, and do autoconfiguration.  */
-end_comment
-
 begin_macro
 name|cpu_startup
-argument_list|()
+argument_list|(
+argument|firstaddr
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|firstaddr
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -322,8 +356,6 @@ name|caddr_t
 name|v
 decl_stmt|;
 name|int
-name|firstaddr
-decl_stmt|,
 name|maxbufs
 decl_stmt|,
 name|base
@@ -993,62 +1025,6 @@ operator|*
 name|CLBYTES
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|somewhere
-comment|/* 	 *  cmap must not allocate the hole, so toss memory 	 */
-if|if
-condition|(
-name|firstaddr
-operator|<
-literal|640
-operator|/
-literal|4
-operator|&&
-name|maxmem
-operator|>
-literal|1024
-operator|/
-literal|4
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"[not using %dK due to hole]\n"
-argument_list|,
-literal|4
-operator|*
-operator|(
-literal|640
-operator|/
-literal|4
-operator|-
-name|firstaddr
-operator|)
-argument_list|)
-expr_stmt|;
-name|firstaddr
-operator|=
-literal|0x100
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|maxmem
-operator|<
-literal|2048
-operator|/
-literal|4
-operator|-
-literal|10
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: NOT ENOUGH RAM MEMORY - RUNNING IN DEGRADED MODE\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
 name|initcpu
 argument_list|()
@@ -1252,7 +1228,6 @@ name|pcb_flags
 operator|&
 name|FM_TRAP
 expr_stmt|;
-comment|/*#include "dbg.h" dprintf(DALLTRAPS|DPAGIN,"s %d %d ", sig, frm);*/
 comment|/* 	 * Allocate and validate space for the signal handler 	 * context. Note that if the stack is in P0 space, the 	 * call to grow() is a nop, and the useracc() check 	 * will fail if the process has not already allocated 	 * the space with a `brk'. 	 */
 if|if
 condition|(
@@ -1273,11 +1248,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"onstack?"
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 operator|(
@@ -1402,22 +1372,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"fail %x %x\n"
-argument_list|,
-name|fp
-argument_list|,
-name|regs
-index|[
-name|frmtrap
-condition|?
-name|tESP
-else|:
-name|sESP
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
 name|SIGACTION
 argument_list|(
@@ -1463,7 +1417,6 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
-comment|/*dprintf(DALLTRAPS|DPAGIN,"ill ");*/
 return|return;
 block|}
 comment|/*  	 * Build the argument list for the signal handler. 	 */
@@ -1653,7 +1606,6 @@ argument_list|)
 operator|->
 name|pcb_sigc
 expr_stmt|;
-comment|/*dprintf(DALLTRAPS|DPAGIN,"E ");*/
 block|}
 else|else
 block|{
@@ -1730,7 +1682,6 @@ argument_list|)
 operator|->
 name|pcb_sigc
 expr_stmt|;
-comment|/*dprintf(DALLTRAPS|DPAGIN,"e "); */
 block|}
 block|}
 end_function
@@ -2062,11 +2013,6 @@ decl_stmt|;
 name|howto
 operator|=
 name|arghowto
-expr_stmt|;
-name|pg
-argument_list|(
-literal|"reboot?"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2661,7 +2607,7 @@ block|{ }
 end_block
 
 begin_comment
-comment|/*  * Set registers on exec.  * XXX Should clear registers except sp, pc,  * but would break init; should be fixed soon.  */
+comment|/*  * Clear registers on exec  */
 end_comment
 
 begin_macro
@@ -3760,9 +3706,15 @@ begin_comment
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 end_comment
 
-begin_comment
-comment|/*pg("init386 first %x&x %x Maxmem %x", first,&x, Maxmem); pg("init386 PTmap[0] %x PTD[0] %x", *(int *)PTmap, *(int *)PTD);*/
-end_comment
+begin_expr_stmt
+name|cninit
+argument_list|(
+name|KERNBASE
+operator|+
+literal|0xa0000
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* make gdt memory segments */
@@ -4461,10 +4413,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*pg("isa");*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -4490,10 +4438,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*pg("gdt");*/
-end_comment
-
 begin_expr_stmt
 name|lgdt
 argument_list|(
@@ -4508,10 +4452,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*pg("idt");*/
-end_comment
 
 begin_expr_stmt
 name|lidt
@@ -4528,10 +4468,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*pg("ldt");*/
-end_comment
-
 begin_expr_stmt
 name|lldt
 argument_list|(
@@ -4544,10 +4480,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*pg("after ldt");*/
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -4637,33 +4569,6 @@ operator|=
 name|i
 operator|/
 name|NBPG
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|forcemaxmem
-operator|&&
-name|maxmem
-operator|>
-name|forcemaxmem
-condition|)
-name|maxmem
-operator|=
-name|forcemaxmem
-operator|-
-literal|1
-expr_stmt|;
-end_if
-
-begin_expr_stmt
-name|cninit
-argument_list|(
-name|KERNBASE
-operator|+
-literal|0xa0000
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -5101,13 +5006,8 @@ name|IdlePTD
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|/*probemem(i) { 	int val;  	val = *(int *) i; 	*(int *) i = PAT; 	asm("inb $0x84,%al" ::: "ax"); }*/
-end_comment
-
 begin_decl_stmt
-unit|extern
+unit|}  extern
 name|struct
 name|pte
 modifier|*

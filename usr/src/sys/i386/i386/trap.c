@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -134,25 +134,12 @@ name|nsysent
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * trap(frame):  *	Exception, fault, and trap interface to BSD kernel. This  * common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed. Note that the  * effect is as if the arguments were passed call by reference.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|caddr_t
-name|edata
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|rcr2
-argument_list|()
-decl_stmt|,
-name|Sysbase
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -161,11 +148,9 @@ name|cpl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|um
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * trap(frame):  *	Exception, fault, and trap interface to BSD kernel. This  * common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed. Note that the  * effect is as if the arguments were passed call by reference.  */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -184,10 +169,6 @@ name|trapframe
 name|frame
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*#define type frame.tf_trapno #define code frame.tf_err #define pc frame.tf_eip*/
-end_comment
 
 begin_block
 block|{
@@ -216,114 +197,6 @@ name|code
 decl_stmt|,
 name|eva
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*dprintf(DALLTRAPS, "\n%d(%s). trap",p->p_pid, p->p_comm);*/
-name|dprintf
-argument_list|(
-name|DALLTRAPS
-argument_list|,
-literal|" pc:%x cs:%x ds:%x eflags:%x isp %x\n"
-argument_list|,
-name|frame
-operator|.
-name|tf_eip
-argument_list|,
-name|frame
-operator|.
-name|tf_cs
-argument_list|,
-name|frame
-operator|.
-name|tf_ds
-argument_list|,
-name|frame
-operator|.
-name|tf_eflags
-argument_list|,
-name|frame
-operator|.
-name|tf_isp
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-name|DALLTRAPS
-argument_list|,
-literal|"edi %x esi %x ebp %x ebx %x esp %x\n"
-argument_list|,
-name|frame
-operator|.
-name|tf_edi
-argument_list|,
-name|frame
-operator|.
-name|tf_esi
-argument_list|,
-name|frame
-operator|.
-name|tf_ebp
-argument_list|,
-name|frame
-operator|.
-name|tf_ebx
-argument_list|,
-name|frame
-operator|.
-name|tf_esp
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-name|DALLTRAPS
-argument_list|,
-literal|"edx %x ecx %x eax %x\n"
-argument_list|,
-name|frame
-operator|.
-name|tf_edx
-argument_list|,
-name|frame
-operator|.
-name|tf_ecx
-argument_list|,
-name|frame
-operator|.
-name|tf_eax
-argument_list|)
-expr_stmt|;
-comment|/* dprintf(DALLTRAPS, "sig %x %x %x \n", 		p->p_sigignore, p->p_sigcatch, p->p_sigmask); */
-name|dprintf
-argument_list|(
-name|DALLTRAPS
-argument_list|,
-literal|" ec %x type %x cpl %x "
-argument_list|,
-name|frame
-operator|.
-name|tf_err
-operator|&
-literal|0xffff
-argument_list|,
-name|frame
-operator|.
-name|tf_trapno
-argument_list|,
-name|cpl
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"trap cr2 %x "
-argument_list|,
-name|rcr2
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*if(um&& frame.tf_trapno == 0xc&& (rcr2()&0xfffff000) == 0){ 	if (ISPL(locr0[tCS]) != SEL_UPL) { 		if(curpcb->pcb_onfault) goto anyways; 		locr0[tEFLAGS] |= PSL_T; 		*(int *)PTmap |= 1; load_cr3(rcr3()); 		return; 	} } else if (um) { printf("p %x ", *(int *) PTmap); *(int *)PTmap&= 0xfffffffe; load_cr3(rcr3()); printf("p %x ", *(int *) PTmap); } anyways:  if(pc == 0) um++;*/
 name|frame
 operator|.
 name|tf_eflags
@@ -405,36 +278,6 @@ name|FM_TRAP
 expr_stmt|;
 comment|/* used by sendsig */
 block|}
-if|if
-condition|(
-operator|(
-name|caddr_t
-operator|)
-name|p
-operator|<
-name|edata
-condition|)
-name|printf
-argument_list|(
-literal|"trap with curproc garbage "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|caddr_t
-operator|)
-name|p
-operator|->
-name|p_regs
-operator|<
-name|edata
-condition|)
-name|printf
-argument_list|(
-literal|"trap with pregs garbage "
-argument_list|)
-expr_stmt|;
 name|ucode
 operator|=
 literal|0
@@ -456,7 +299,7 @@ name|type
 condition|)
 block|{
 default|default:
-name|bit_sucker
+name|we_re_toast
 label|:
 ifdef|#
 directive|ifdef
@@ -728,7 +571,7 @@ operator|&
 name|PGEX_P
 condition|)
 goto|goto
-name|bit_sucker
+name|we_re_toast
 goto|;
 comment|/* fall into */
 case|case
@@ -782,7 +625,6 @@ name|eva
 argument_list|)
 expr_stmt|;
 comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& T_USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
-comment|/*if (type == T_PAGEFLT&& !curpcb->pcb_onfault)*/
 if|if
 condition|(
 name|type
@@ -844,7 +686,7 @@ name|va
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bit_sucker
+name|we_re_toast
 goto|;
 block|}
 endif|#
@@ -902,11 +744,6 @@ name|rlim_cur
 argument_list|)
 condition|)
 block|{
-name|pg
-argument_list|(
-literal|"stk fuck"
-argument_list|)
-expr_stmt|;
 name|rv
 operator|=
 name|KERN_FAILURE
@@ -943,7 +780,6 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*pg("pt fault");*/
 name|rv
 operator|=
 name|vm_fault
@@ -1073,7 +909,6 @@ goto|;
 block|}
 name|nogo
 label|:
-comment|/*pg("nogo");*/
 if|if
 condition|(
 name|type
@@ -1113,7 +948,7 @@ name|code
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bit_sucker
+name|we_re_toast
 goto|;
 block|}
 name|i
@@ -1141,27 +976,6 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-if|if
-condition|(
-name|um
-condition|)
-block|{
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|PTmap
-operator|&=
-literal|0xfffffffe
-expr_stmt|;
-name|load_cr3
-argument_list|(
-name|rcr3
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Q: how do we turn it on again? */
 return|return;
 case|case
@@ -1217,12 +1031,11 @@ condition|)
 return|return;
 else|else
 goto|goto
-name|bit_sucker
+name|we_re_toast
 goto|;
 endif|#
 directive|endif
 block|}
-comment|/*if(u.u_procp&& (u.u_procp->p_pid == 1 || u.u_procp->p_pid == 3)) { 	if( *(u_char *) 0xf7c != 0xc7) { 		printf("%x!", *(u_char *) 0xf7c); 		*(u_char *) 0xf7c = 0xc7; 	} }*/
 name|trapsignal
 argument_list|(
 name|p
@@ -1668,19 +1481,6 @@ name|code
 index|]
 expr_stmt|;
 block|}
-name|dprintf
-argument_list|(
-name|DALLSYSC
-argument_list|,
-literal|"%d. call %d "
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
