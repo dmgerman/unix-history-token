@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -120,6 +120,24 @@ block|}
 name|ldiv_t
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
