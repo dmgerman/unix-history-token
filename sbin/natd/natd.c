@@ -5032,11 +5032,16 @@ name|link
 init|=
 name|NULL
 decl_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|parms
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract protocol.  */
@@ -5644,11 +5649,16 @@ name|protoent
 modifier|*
 name|protoent
 decl_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|parms
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract protocol.  */
@@ -5850,11 +5860,16 @@ name|alias_link
 modifier|*
 name|link
 decl_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|parms
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract local address.  */
