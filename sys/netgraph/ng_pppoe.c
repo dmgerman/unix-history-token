@@ -2545,7 +2545,7 @@ block|{
 name|printf
 argument_list|(
 literal|"pppoe: init data has bad length,"
-literal|" %d should be %d\n"
+literal|" %d should be %zd\n"
 argument_list|,
 name|ourmsg
 operator|->
