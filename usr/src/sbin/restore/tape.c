@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.19 (Berkeley) %G%"
+literal|"@(#)tape.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|bct
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|numtrec
 decl_stmt|;
 end_decl_stmt
 
@@ -3510,11 +3517,13 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
+name|top
+label|:
 if|if
 condition|(
 name|bct
 operator|<
-name|ntrec
+name|numtrec
 condition|)
 block|{
 name|bcopy
@@ -3575,9 +3584,15 @@ name|c_magic
 operator|=
 literal|0
 expr_stmt|;
-name|bct
-operator|=
+if|if
+condition|(
+name|numtrec
+operator|==
 literal|0
+condition|)
+name|numtrec
+operator|=
+name|ntrec
 expr_stmt|;
 name|cnt
 operator|=
@@ -3626,6 +3641,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Check for mid-tape short read error. 	 * If found, return rest of buffer. 	 */
+if|if
+condition|(
+name|numtrec
+operator|<
+name|ntrec
+operator|&&
+name|i
+operator|!=
+literal|0
+condition|)
+block|{
+name|numtrec
+operator|=
+name|ntrec
+expr_stmt|;
+goto|goto
+name|top
+goto|;
+block|}
+comment|/* 	 * Handle partial block read. 	 */
 if|if
 condition|(
 name|i
@@ -3687,29 +3723,15 @@ operator|*
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|endoftapemark
-argument_list|,
-operator|&
-name|tbf
-index|[
+name|numtrec
+operator|=
 name|i
-index|]
-argument_list|,
-operator|(
-name|long
-operator|)
+operator|/
 name|TP_BSIZE
-argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Handle read error. 	 */
 if|if
 condition|(
 name|i
@@ -3859,6 +3881,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Handle end of tape. 	 */
 if|if
 condition|(
 name|i
@@ -3879,6 +3902,10 @@ operator|+
 literal|1
 expr_stmt|;
 name|volno
+operator|=
+literal|0
+expr_stmt|;
+name|numtrec
 operator|=
 literal|0
 expr_stmt|;
@@ -3935,6 +3962,10 @@ name|TP_BSIZE
 argument_list|)
 expr_stmt|;
 block|}
+name|bct
+operator|=
+literal|0
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -4091,6 +4122,10 @@ operator|=
 name|i
 operator|/
 name|TP_BSIZE
+expr_stmt|;
+name|numtrec
+operator|=
+name|ntrec
 expr_stmt|;
 name|vprintf
 argument_list|(
