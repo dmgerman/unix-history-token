@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)zic.c	8.1 (Berkeley) %G%"
+literal|"@(#)zic.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10112,6 +10112,8 @@ condition|)
 name|wday
 operator|=
 name|LDAYSPERWEEK
+operator|-
+literal|1
 expr_stmt|;
 operator|--
 name|i
