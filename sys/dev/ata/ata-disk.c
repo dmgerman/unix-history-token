@@ -498,6 +498,16 @@ name|transfersize
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
+if|if
+condition|(
+name|ad_version
+argument_list|(
+name|AD_PARAM
+operator|->
+name|versmajor
+argument_list|)
+condition|)
+block|{
 name|secsperint
 operator|=
 name|max
@@ -563,6 +573,7 @@ name|transfersize
 operator|*=
 name|secsperint
 expr_stmt|;
+block|}
 comment|/* enable read/write cacheing if not default on device */
 if|if
 condition|(
