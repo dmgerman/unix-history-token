@@ -1306,6 +1306,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|fwohci_detach
+argument_list|(
+name|sc
+argument_list|,
+name|self
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
