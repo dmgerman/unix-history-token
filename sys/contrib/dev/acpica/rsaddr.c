@@ -121,6 +121,18 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
+comment|/* Check for the minimum length. */
+if|if
+condition|(
+name|Temp16
+operator|<
+literal|13
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+argument_list|)
+expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
@@ -482,13 +494,15 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
 literal|16
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -1295,6 +1309,18 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
+comment|/* Check for the minimum length. */
+if|if
+condition|(
+name|Temp16
+operator|<
+literal|23
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+argument_list|)
+expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
@@ -1656,13 +1682,15 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
 literal|26
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -2468,6 +2496,18 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
+comment|/* Check for the minimum length. */
+if|if
+condition|(
+name|Temp16
+operator|<
+literal|43
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+argument_list|)
+expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
@@ -2829,13 +2869,15 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
 literal|46
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* Dereference the Index */
