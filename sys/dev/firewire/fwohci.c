@@ -3206,14 +3206,6 @@ argument_list|,
 name|OHCI_CNTL_SID
 argument_list|)
 expr_stmt|;
-name|fw_busreset
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fc
-argument_list|)
-expr_stmt|;
 comment|/* Enable link */
 name|OWRITE
 argument_list|(
