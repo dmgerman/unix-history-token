@@ -3111,11 +3111,6 @@ name|struct
 name|msqid_ds
 name|bsd_msqid
 decl_stmt|;
-name|struct
-name|msqid_ds
-modifier|*
-name|bsd_msqptr
-decl_stmt|;
 name|error
 operator|=
 name|linux_msqid_pullup
@@ -3189,9 +3184,6 @@ name|bsd_cmd
 argument_list|,
 operator|&
 name|bsd_msqid
-argument_list|,
-operator|&
-name|bsd_msqptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3224,7 +3216,8 @@ condition|)
 block|{
 name|bsd_to_linux_msqid_ds
 argument_list|(
-name|bsd_msqptr
+operator|&
+name|bsd_msqid
 argument_list|,
 operator|&
 name|linux_msqid
