@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.31 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,25 +864,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|isascii
-argument_list|(
 operator|*
 name|p
-argument_list|)
-operator|&&
-operator|(
-operator|*
-name|p
-operator|&
-literal|0377
-operator|)
-operator|!=
-operator|(
-name|SpaceSub
-operator|&
-literal|0377
-operator|)
+operator|==
+literal|'\\'
 condition|)
 name|quoted
 operator|=

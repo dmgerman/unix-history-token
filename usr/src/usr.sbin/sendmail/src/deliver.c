@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.58 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2487,6 +2487,19 @@ expr|*
 name|mci
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mci
+argument_list|,
+sizeof|sizeof
+expr|*
+name|mci
+argument_list|)
+expr_stmt|;
 name|mci
 operator|->
 name|mci_in
@@ -2498,12 +2511,6 @@ operator|->
 name|mci_out
 operator|=
 name|stdout
-expr_stmt|;
-name|mci
-operator|->
-name|mci_pid
-operator|=
-literal|0
 expr_stmt|;
 name|mci
 operator|->
@@ -2520,12 +2527,6 @@ operator|->
 name|mci_mailer
 operator|=
 name|m
-expr_stmt|;
-name|mci
-operator|->
-name|mci_flags
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -2921,6 +2922,12 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|mci
+operator|->
+name|mci_pid
+operator|=
+literal|0
+expr_stmt|;
 else|#
 directive|else
 comment|/* no DAEMON */
@@ -3549,6 +3556,19 @@ expr|*
 name|mci
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mci
+argument_list|,
+sizeof|sizeof
+expr|*
+name|mci
+argument_list|)
+expr_stmt|;
 name|mci
 operator|->
 name|mci_mailer
@@ -3564,6 +3584,12 @@ condition|?
 name|MCIS_OPENING
 else|:
 name|MCIS_OPEN
+expr_stmt|;
+name|mci
+operator|->
+name|mci_pid
+operator|=
+name|pid
 expr_stmt|;
 operator|(
 name|void

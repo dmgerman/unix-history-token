@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.51 (Berkeley) %G%"
+literal|"@(#)main.c	5.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,6 +396,10 @@ index|]
 decl_stmt|;
 comment|/* holds MyHostName */
 specifier|extern
+name|int
+name|DtableSize
+decl_stmt|;
+specifier|extern
 name|bool
 name|safefile
 parameter_list|()
@@ -603,6 +607,31 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */
+end_comment
+
+begin_expr_stmt
+name|DtableSize
+operator|=
+name|getdtablesize
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|DtableSize
+operator|>
+literal|256
+condition|)
+name|DtableSize
+operator|=
+literal|256
+expr_stmt|;
+end_if
+
+begin_comment
 comment|/* 	**  Be sure we have enough file descriptors. 	**	But also be sure that 0, 1,& 2 are open. 	*/
 end_comment
 
@@ -641,27 +670,9 @@ end_while
 begin_expr_stmt
 name|i
 operator|=
-name|getdtablesize
-argument_list|()
+name|DtableSize
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|i
-operator|>
-literal|256
-condition|)
-name|i
-operator|=
-literal|256
-expr_stmt|;
-end_if
 
 begin_while
 while|while
