@@ -2915,7 +2915,7 @@ name|pages
 decl_stmt|;
 name|retkva
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|pages
 operator|=
@@ -2969,7 +2969,7 @@ if|if
 condition|(
 name|retkva
 operator|==
-name|NULL
+literal|0
 condition|)
 name|retkva
 operator|=

@@ -9356,7 +9356,7 @@ name|addr
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 name|pte

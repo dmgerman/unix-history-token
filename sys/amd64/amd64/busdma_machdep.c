@@ -2317,7 +2317,7 @@ name|bpage
 operator|->
 name|vaddr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|free

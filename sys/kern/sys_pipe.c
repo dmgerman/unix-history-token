@@ -1571,7 +1571,7 @@ name|pipe_map
 operator|.
 name|kva
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -5833,7 +5833,7 @@ name|pipe_map
 operator|.
 name|kva
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|amountpipekva

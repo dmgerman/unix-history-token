@@ -1614,7 +1614,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|sysctl_disks
 argument_list|,

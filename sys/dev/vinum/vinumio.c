@@ -2823,7 +2823,7 @@ operator|(
 expr|union
 name|daemoninfo
 operator|)
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
