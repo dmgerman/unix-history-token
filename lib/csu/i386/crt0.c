@@ -157,10 +157,58 @@ name|MAP_ANON
 value|0
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199306
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* BSD>=199306 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sun */
+end_comment
 
 begin_include
 include|#
