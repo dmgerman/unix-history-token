@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/kern/RCS/tty.c,v 1.3 92/01/21 21:31:11 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty.c,v 1.1.1.1 1993/06/12 14:57:31 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1902,6 +1902,9 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
+case|case
+name|TIOCSTAT
+case|:
 ifdef|#
 directive|ifdef
 name|COMPAT_43
@@ -2894,6 +2897,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Give load average stats if requested (tcsh uses raw mode 	 * and directly sends the ioctl() to the tty driver) 	 */
+case|case
+name|TIOCSTAT
+case|:
+name|ttyinfo
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* 	 * Set controlling terminal. 	 * Session ctty vnode pointer set in vnode layer. 	 */
 case|case
 name|TIOCSCTTY
