@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.8	%G%	*/
+comment|/*	vfs_cluster.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -3750,22 +3750,34 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|,
-modifier|*
-name|dp
 decl_stmt|;
+specifier|register
+name|struct
+name|bufhd
+modifier|*
+name|hp
+decl_stmt|;
+define|#
+directive|define
 name|dp
+value|((struct buf *)hp)
+for|for
+control|(
+name|hp
 operator|=
-name|bdevsw
+name|bufhash
+init|;
+name|hp
+operator|<
+operator|&
+name|bufhash
 index|[
-name|major
-argument_list|(
-name|dev
-argument_list|)
+name|BUFHSZ
 index|]
-operator|.
-name|d_tab
-expr_stmt|;
+condition|;
+name|hp
+operator|++
+control|)
 for|for
 control|(
 name|bp
