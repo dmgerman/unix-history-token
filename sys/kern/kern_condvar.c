@@ -113,7 +113,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CV_DEBUG
+name|INVARIANTS
 end_ifdef
 
 begin_define
