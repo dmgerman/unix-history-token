@@ -4592,7 +4592,19 @@ literal|"Warn about printf format anomalies"
 block|}
 block|,
 block|{
+literal|"-Wnon-const-format"
+block|,
+literal|"Warn about printf-like format strings"
+block|}
+block|,
+block|{
 literal|"-Wno-format"
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"-Wno-format-extra-args"
 block|,
 literal|""
 block|}
