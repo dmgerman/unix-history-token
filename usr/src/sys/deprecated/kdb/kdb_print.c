@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,51 +54,51 @@ end_include
 begin_decl_stmt
 name|char
 modifier|*
-name|BADRAD
+name|kdbBADRAD
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|lastframe
+name|kdblastframe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|callpc
+name|kdbcallpc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|BADMOD
+name|kdbBADMOD
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|lp
+name|kdblp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|maxpos
+name|kdbmaxpos
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|radix
+name|kdbradix
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|lastc
+name|kdblastc
 decl_stmt|;
 end_decl_stmt
 
@@ -108,14 +108,14 @@ end_comment
 
 begin_decl_stmt
 name|BKPTR
-name|bkpthead
+name|kdbbkpthead
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|REGLIST
-name|reglist
+name|kdbreglist
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -125,7 +125,7 @@ comment|/* general printing routines ($) */
 end_comment
 
 begin_macro
-name|printtrace
+name|kdbprinttrace
 argument_list|(
 argument|modif
 argument_list|)
@@ -180,11 +180,11 @@ name|allproc
 decl_stmt|;
 if|if
 condition|(
-name|cntflg
+name|kdbcntflg
 operator|==
 literal|0
 condition|)
-name|cntval
+name|kdbcntval
 operator|=
 operator|-
 literal|1
@@ -199,34 +199,34 @@ literal|'d'
 case|:
 if|if
 condition|(
-name|adrflg
+name|kdbadrflg
 condition|)
 block|{
 if|if
 condition|(
-name|adrval
+name|kdbadrval
 operator|<
 literal|2
 operator|||
-name|adrval
+name|kdbadrval
 operator|>
 literal|16
 condition|)
-name|error
+name|kdberror
 argument_list|(
-name|BADRAD
+name|kdbBADRAD
 argument_list|)
 expr_stmt|;
-name|radix
+name|kdbradix
 operator|=
-name|adrval
+name|kdbadrval
 expr_stmt|;
 block|}
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"radix=%d base ten"
 argument_list|,
-name|radix
+name|kdbradix
 argument_list|)
 expr_stmt|;
 break|break;
@@ -236,16 +236,16 @@ case|:
 case|case
 literal|'W'
 case|:
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"maxpos=%d"
 argument_list|,
-name|maxpos
+name|kdbmaxpos
 operator|=
 operator|(
-name|adrflg
+name|kdbadrflg
 condition|?
-name|adrval
+name|kdbadrval
 else|:
 name|MAXPOS
 operator|)
@@ -258,16 +258,16 @@ case|:
 case|case
 literal|'S'
 case|:
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"maxoff=%d"
 argument_list|,
-name|maxoff
+name|kdbmaxoff
 operator|=
 operator|(
-name|adrflg
+name|kdbadrflg
 condition|?
-name|adrval
+name|kdbadrval
 else|:
 name|MAXOFF
 operator|)
@@ -277,7 +277,7 @@ break|break;
 case|case
 literal|'V'
 case|:
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"variables\n"
 argument_list|)
@@ -297,13 +297,13 @@ operator|++
 control|)
 if|if
 condition|(
-name|var
+name|kdbvar
 index|[
 name|i
 index|]
 condition|)
 block|{
-name|printc
+name|kdbprintc
 argument_list|(
 operator|(
 name|i
@@ -320,11 +320,11 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|" = %R\n"
 argument_list|,
-name|var
+name|kdbvar
 index|[
 name|i
 index|]
@@ -347,15 +347,15 @@ expr|struct
 name|proc
 operator|*
 operator|)
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'p'
 argument_list|)
 index|]
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"pid = %d\n"
 argument_list|,
@@ -365,24 +365,24 @@ name|p_pid
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"in idle loop\n"
 argument_list|)
 expr_stmt|;
-name|printtrap
+name|kdbprinttrap
 argument_list|(
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'t'
 argument_list|)
 index|]
 argument_list|,
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'c'
 argument_list|)
@@ -396,7 +396,7 @@ case|:
 case|case
 literal|'R'
 case|:
-name|printregs
+name|kdbprintregs
 argument_list|(
 name|modif
 argument_list|)
@@ -410,14 +410,14 @@ literal|'C'
 case|:
 if|if
 condition|(
-name|adrflg
+name|kdbadrflg
 condition|)
 block|{
 name|frame
 operator|=
-name|adrval
+name|kdbadrval
 expr_stmt|;
-name|callpc
+name|kdbcallpc
 operator|=
 name|getprevpc
 argument_list|(
@@ -429,18 +429,18 @@ else|else
 block|{
 name|frame
 operator|=
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_fp
 expr_stmt|;
-name|callpc
+name|kdbcallpc
 operator|=
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_pc
 expr_stmt|;
 block|}
-name|lastframe
+name|kdblastframe
 operator|=
 name|NOFRAME
 expr_stmt|;
@@ -450,7 +450,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|cntval
+name|kdbcntval
 operator|--
 operator|&&
 name|frame
@@ -462,7 +462,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|chkerr
+name|kdbchkerr
 argument_list|()
 expr_stmt|;
 comment|/* check for pc in pcb (signal trampoline code) */
@@ -470,7 +470,7 @@ if|if
 condition|(
 name|issignalpc
 argument_list|(
-name|callpc
+name|kdbcallpc
 argument_list|)
 condition|)
 block|{
@@ -491,23 +491,23 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|findsym
+name|kdbfindsym
 argument_list|(
 operator|(
 name|long
 operator|)
-name|callpc
+name|kdbcallpc
 argument_list|,
 name|ISYM
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cursym
+name|kdbcursym
 condition|)
 name|name
 operator|=
-name|cursym
+name|kdbcursym
 operator|->
 name|n_un
 operator|.
@@ -519,7 +519,7 @@ operator|=
 literal|"?"
 expr_stmt|;
 block|}
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s("
 argument_list|,
@@ -558,11 +558,11 @@ condition|(
 name|narg
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%R"
 argument_list|,
-name|get
+name|kdbget
 argument_list|(
 call|(
 name|off_t
@@ -587,23 +587,23 @@ name|narg
 operator|!=
 literal|0
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 literal|','
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|kdbprintf
 argument_list|(
 literal|") at "
 argument_list|)
 expr_stmt|;
-name|psymoff
+name|kdbpsymoff
 argument_list|(
 operator|(
 name|long
 operator|)
-name|callpc
+name|kdbcallpc
 argument_list|,
 name|ISYM
 argument_list|,
@@ -619,7 +619,7 @@ condition|)
 block|{
 while|while
 condition|(
-name|localsym
+name|kdblocalsym
 argument_list|(
 operator|(
 name|long
@@ -630,21 +630,21 @@ condition|)
 block|{
 name|word
 operator|=
-name|get
+name|kdbget
 argument_list|(
 operator|(
 name|off_t
 operator|)
-name|localval
+name|kdblocalval
 argument_list|,
 name|DSP
 argument_list|)
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%8t%s:%10t"
 argument_list|,
-name|cursym
+name|kdbcursym
 operator|->
 name|n_un
 operator|.
@@ -653,21 +653,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errflg
+name|kdberrflg
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"?\n"
 argument_list|)
 expr_stmt|;
-name|errflg
+name|kdberrflg
 operator|=
 literal|0
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%R\n"
 argument_list|,
@@ -683,14 +683,14 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|callpc
+name|kdbcallpc
 operator|=
 name|getprevpc
 argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-name|lastframe
+name|kdblastframe
 operator|=
 name|frame
 expr_stmt|;
@@ -703,17 +703,17 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|callpc
+name|kdbcallpc
 operator|=
 name|getsignalpc
 argument_list|(
-name|lastframe
+name|kdblastframe
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|adrflg
+name|kdbadrflg
 operator|&&
 operator|!
 name|INSTACK
@@ -735,11 +735,11 @@ for|for
 control|(
 name|sp
 operator|=
-name|symtab
+name|kdbsymtab
 init|;
 name|sp
 operator|<
-name|esymtab
+name|kdbesymtab
 condition|;
 name|sp
 operator|++
@@ -766,7 +766,7 @@ operator||
 name|N_EXT
 operator|)
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s:%12t%R\n"
 argument_list|,
@@ -776,7 +776,7 @@ name|n_un
 operator|.
 name|n_name
 argument_list|,
-name|get
+name|kdbget
 argument_list|(
 operator|(
 name|off_t
@@ -797,7 +797,7 @@ case|:
 case|case
 literal|'B'
 case|:
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"breakpoints\ncount%8tbkpt%24tcommand\n"
 argument_list|)
@@ -806,7 +806,7 @@ for|for
 control|(
 name|bkptr
 operator|=
-name|bkpthead
+name|kdbbkpthead
 init|;
 name|bkptr
 condition|;
@@ -823,7 +823,7 @@ operator|->
 name|flag
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%-8.8d"
 argument_list|,
@@ -832,7 +832,7 @@ operator|->
 name|count
 argument_list|)
 expr_stmt|;
-name|psymoff
+name|kdbpsymoff
 argument_list|(
 operator|(
 name|long
@@ -857,7 +857,7 @@ condition|(
 operator|*
 name|comptr
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 operator|*
 name|comptr
@@ -910,7 +910,7 @@ operator|->
 name|p_nxt
 control|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%X pid %5d%c%5d %c "
 argument_list|,
@@ -927,9 +927,9 @@ expr|struct
 name|proc
 operator|*
 operator|)
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'p'
 argument_list|)
@@ -984,7 +984,7 @@ name|p
 operator|->
 name|p_wchan
 condition|)
-name|psymoff
+name|kdbpsymoff
 argument_list|(
 operator|(
 name|long
@@ -1052,7 +1052,7 @@ name|U
 operator|->
 name|u_ttyp
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|" ctty %x "
 argument_list|,
@@ -1063,7 +1063,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
+name|kdbprintf
 argument_list|(
 literal|" %.8s "
 argument_list|,
@@ -1076,7 +1076,7 @@ undef|#
 directive|undef
 name|U
 block|}
-name|printc
+name|kdbprintc
 argument_list|(
 name|EOR
 argument_list|)
@@ -1104,10 +1104,10 @@ case|:
 comment|/* XXX - debug */
 if|if
 condition|(
-name|adrflg
+name|kdbadrflg
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"dev       state  rawq   canq  outq  lwat hwat\n"
 argument_list|)
@@ -1115,8 +1115,8 @@ expr_stmt|;
 define|#
 directive|define
 name|T
-value|((struct tty *)adrval)
-name|printf
+value|((struct tty *)kdbadrval)
+name|kdbprintf
 argument_list|(
 literal|"%x  %x %d %d %d %d %d\n"
 argument_list|,
@@ -1155,12 +1155,12 @@ operator|->
 name|t_hiwat
 argument_list|)
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"&rawq&canq&outq&outq.c_cf&rawq.c_cf\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|" %x %x  %x %x %x \n"
 argument_list|,
@@ -1214,7 +1214,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"Locked vnodes\n"
 argument_list|)
@@ -1276,9 +1276,9 @@ do|;
 break|break;
 block|}
 default|default:
-name|error
+name|kdberror
 argument_list|(
-name|BADMOD
+name|kdbBADMOD
 argument_list|)
 expr_stmt|;
 block|}
@@ -1287,7 +1287,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|printregs
+name|kdbprintregs
 argument_list|(
 argument|c
 argument_list|)
@@ -1303,7 +1303,7 @@ for|for
 control|(
 name|p
 operator|=
-name|reglist
+name|kdbreglist
 init|;
 name|p
 operator|->
@@ -1332,7 +1332,7 @@ name|p
 operator|->
 name|rkern
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s%6t%R %16t"
 argument_list|,
@@ -1343,7 +1343,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|valpr
+name|kdbvalpr
 argument_list|(
 operator|(
 name|long
@@ -1355,7 +1355,7 @@ operator|->
 name|rkern
 operator|==
 operator|&
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_pc
 condition|?
@@ -1364,19 +1364,19 @@ else|:
 name|DSYM
 argument_list|)
 expr_stmt|;
-name|printc
+name|kdbprintc
 argument_list|(
 name|EOR
 argument_list|)
 expr_stmt|;
 block|}
-name|printpc
+name|kdbprintpc
 argument_list|()
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  getreg
+unit|}  kdbgetreg
 operator|(
 name|regnam
 operator|)
@@ -1396,13 +1396,13 @@ name|olp
 block|;
 name|olp
 operator|=
-name|lp
+name|kdblp
 block|;
 for|for
 control|(
 name|p
 operator|=
-name|reglist
+name|kdbreglist
 init|;
 name|p
 operator|->
@@ -1434,7 +1434,7 @@ name|regptr
 condition|)
 if|if
 condition|(
-name|readchar
+name|kdbreadchar
 argument_list|()
 operator|!=
 operator|*
@@ -1455,7 +1455,7 @@ condition|(
 operator|*
 name|regptr
 condition|)
-name|lp
+name|kdblp
 operator|=
 name|olp
 expr_stmt|;
@@ -1474,7 +1474,7 @@ end_if
 
 begin_expr_stmt
 unit|} 	}
-name|lp
+name|kdblp
 operator|=
 name|olp
 expr_stmt|;
@@ -1490,16 +1490,16 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  printpc
+unit|}  kdbprintpc
 operator|(
 operator|)
 block|{
-name|psymoff
+name|kdbpsymoff
 argument_list|(
 operator|(
 name|long
 operator|)
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_pc
 argument_list|,
@@ -1508,19 +1508,19 @@ argument_list|,
 literal|":%16t"
 argument_list|)
 block|;
-name|printins
+name|kdbprintins
 argument_list|(
 name|ISP
 argument_list|,
 operator|(
 name|long
 operator|)
-name|chkget
+name|kdbchkget
 argument_list|(
 operator|(
 name|off_t
 operator|)
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_pc
 argument_list|,
@@ -1528,7 +1528,7 @@ name|ISP
 argument_list|)
 argument_list|)
 block|;
-name|printc
+name|kdbprintc
 argument_list|(
 name|EOR
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_output.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_output.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -11,13 +11,13 @@ end_include
 
 begin_decl_stmt
 name|long
-name|maxpos
+name|kdbmaxpos
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|radix
+name|kdbradix
 init|=
 literal|16
 decl_stmt|;
@@ -25,7 +25,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|printbuf
+name|kdbprintbuf
 index|[
 name|MAXLIN
 index|]
@@ -35,21 +35,21 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|printptr
+name|kdbprintptr
 init|=
-name|printbuf
+name|kdbprintbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|digitptr
+name|kdbdigitptr
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|printc
+name|kdbprintc
 argument_list|(
 argument|c
 argument_list|)
@@ -80,14 +80,14 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|mkfault
+name|kdbmkfault
 condition|)
 return|return;
 if|if
 condition|(
 operator|(
 operator|*
-name|printptr
+name|kdbprintptr
 operator|=
 name|c
 operator|)
@@ -105,7 +105,7 @@ literal|0
 expr_stmt|;
 name|q
 operator|=
-name|printbuf
+name|kdbprintbuf
 expr_stmt|;
 for|for
 control|(
@@ -115,9 +115,9 @@ literal|0
 init|;
 name|p
 operator|<
-name|printptr
+name|kdbprintptr
 operator|-
-name|printbuf
+name|kdbprintbuf
 condition|;
 name|p
 operator|++
@@ -125,7 +125,7 @@ control|)
 block|{
 name|d
 operator|=
-name|printbuf
+name|kdbprintbuf
 index|[
 name|p
 index|]
@@ -208,16 +208,16 @@ name|EOR
 expr_stmt|;
 name|kdbwrite
 argument_list|(
-name|printbuf
+name|kdbprintbuf
 argument_list|,
 name|q
 operator|-
-name|printbuf
+name|kdbprintbuf
 argument_list|)
 expr_stmt|;
-name|printptr
+name|kdbprintptr
 operator|=
-name|printbuf
+name|kdbprintbuf
 expr_stmt|;
 block|}
 elseif|else
@@ -229,7 +229,7 @@ name|TB
 condition|)
 block|{
 operator|*
-name|printptr
+name|kdbprintptr
 operator|++
 operator|=
 name|SP
@@ -237,15 +237,15 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|printptr
+name|kdbprintptr
 operator|-
-name|printbuf
+name|kdbprintbuf
 operator|)
 operator|&
 literal|7
 condition|)
 operator|*
-name|printptr
+name|kdbprintptr
 operator|++
 operator|=
 name|SP
@@ -256,15 +256,15 @@ if|if
 condition|(
 name|c
 condition|)
-name|printptr
+name|kdbprintptr
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|printptr
+name|kdbprintptr
 operator|>=
 operator|&
-name|printbuf
+name|kdbprintbuf
 index|[
 name|MAXLIN
 operator|-
@@ -274,23 +274,23 @@ condition|)
 block|{
 name|kdbwrite
 argument_list|(
-name|printbuf
+name|kdbprintbuf
 argument_list|,
-name|printptr
+name|kdbprintptr
 operator|-
-name|printbuf
+name|kdbprintbuf
 argument_list|)
 expr_stmt|;
-name|printptr
+name|kdbprintptr
 operator|=
-name|printbuf
+name|kdbprintbuf
 expr_stmt|;
 block|}
 block|}
 end_block
 
 begin_macro
-name|charpos
+name|kdbcharpos
 argument_list|()
 end_macro
 
@@ -298,16 +298,16 @@ begin_block
 block|{
 return|return
 operator|(
-name|printptr
+name|kdbprintptr
 operator|-
-name|printbuf
+name|kdbprintbuf
 operator|)
 return|;
 block|}
 end_block
 
 begin_macro
-name|flushbuf
+name|kdbflushbuf
 argument_list|()
 end_macro
 
@@ -315,11 +315,11 @@ begin_block
 block|{
 if|if
 condition|(
-name|printptr
+name|kdbprintptr
 operator|!=
-name|printbuf
+name|kdbprintbuf
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 name|EOR
 argument_list|)
@@ -332,7 +332,7 @@ comment|/* VARARGS1 */
 end_comment
 
 begin_macro
-name|printf
+name|kdbprintf
 argument_list|(
 argument|fmat
 argument_list|,
@@ -420,7 +420,7 @@ operator|!=
 literal|'%'
 condition|)
 block|{
-name|printc
+name|kdbprintc
 argument_list|(
 name|c
 argument_list|)
@@ -450,7 +450,7 @@ literal|'r'
 expr_stmt|;
 name|width
 operator|=
-name|convert
+name|kdbconvert
 argument_list|(
 operator|&
 name|fptr
@@ -469,7 +469,7 @@ operator|++
 expr_stmt|;
 name|prec
 operator|=
-name|convert
+name|kdbconvert
 argument_list|(
 operator|&
 name|fptr
@@ -482,7 +482,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|digitptr
+name|kdbdigitptr
 operator|=
 name|digits
 expr_stmt|;
@@ -510,7 +510,7 @@ block|{
 case|case
 literal|'d'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -525,7 +525,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -539,7 +539,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -553,7 +553,7 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -568,7 +568,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -582,7 +582,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -597,21 +597,21 @@ break|break;
 case|case
 literal|'R'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
 operator|)
 name|lx
 argument_list|,
-name|radix
+name|kdbradix
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'D'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -626,7 +626,7 @@ break|break;
 case|case
 literal|'U'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -640,7 +640,7 @@ break|break;
 case|case
 literal|'O'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -654,7 +654,7 @@ break|break;
 case|case
 literal|'Q'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -669,7 +669,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -683,7 +683,7 @@ break|break;
 case|case
 literal|'Z'
 case|:
-name|printnum
+name|kdbprintnum
 argument_list|(
 operator|(
 name|u_long
@@ -698,7 +698,7 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|printc
+name|kdbprintc
 argument_list|(
 name|x
 argument_list|)
@@ -754,14 +754,14 @@ name|width
 condition|)
 name|width
 operator|-=
-name|charpos
+name|kdbcharpos
 argument_list|()
 operator|%
 name|width
 expr_stmt|;
 break|break;
 default|default:
-name|printc
+name|kdbprintc
 argument_list|(
 name|c
 argument_list|)
@@ -779,7 +779,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|digitptr
+name|kdbdigitptr
 operator|=
 literal|0
 expr_stmt|;
@@ -828,7 +828,7 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 name|SP
 argument_list|)
@@ -838,7 +838,7 @@ condition|(
 name|n
 operator|--
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 operator|*
 name|s
@@ -852,12 +852,12 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|printc
+name|kdbprintc
 argument_list|(
 name|SP
 argument_list|)
 expr_stmt|;
-name|digitptr
+name|kdbdigitptr
 operator|=
 name|digits
 expr_stmt|;
@@ -867,7 +867,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|convert
+name|kdbconvert
 argument_list|(
 name|cp
 argument_list|)
@@ -939,7 +939,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|printnum
+name|kdbprintnum
 argument_list|(
 name|n
 argument_list|,
@@ -996,7 +996,7 @@ operator|-
 name|n
 expr_stmt|;
 operator|*
-name|digitptr
+name|kdbdigitptr
 operator|++
 operator|=
 literal|'-'
@@ -1047,7 +1047,7 @@ operator|--
 name|dptr
 expr_stmt|;
 operator|*
-name|digitptr
+name|kdbdigitptr
 operator|++
 operator|=
 operator|(
@@ -1071,7 +1071,7 @@ block|}
 end_block
 
 begin_macro
-name|endline
+name|kdbendline
 argument_list|()
 end_macro
 
@@ -1079,12 +1079,12 @@ begin_block
 block|{
 if|if
 condition|(
-name|maxpos
+name|kdbmaxpos
 operator|<=
-name|charpos
+name|kdbcharpos
 argument_list|()
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"\n"
 argument_list|)

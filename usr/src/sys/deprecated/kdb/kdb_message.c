@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_message.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_message.c	7.4 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../kdb/redef.h"
-end_include
 
 begin_decl_stmt
 name|char
 modifier|*
-name|BADCOM
+name|kdbBADCOM
 init|=
 literal|"bad command"
 decl_stmt|;
@@ -21,7 +15,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADSYM
+name|kdbBADSYM
 init|=
 literal|"symbol not found"
 decl_stmt|;
@@ -30,7 +24,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADLOC
+name|kdbBADLOC
 init|=
 literal|"automatic variable not found"
 decl_stmt|;
@@ -39,7 +33,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|NOCFN
+name|kdbNOCFN
 init|=
 literal|"c routine not found"
 decl_stmt|;
@@ -48,7 +42,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|NOMATCH
+name|kdbNOMATCH
 init|=
 literal|"cannot locate value"
 decl_stmt|;
@@ -57,7 +51,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADKET
+name|kdbBADKET
 init|=
 literal|"unexpected ')'"
 decl_stmt|;
@@ -66,7 +60,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|NOADR
+name|kdbNOADR
 init|=
 literal|"address expected"
 decl_stmt|;
@@ -75,7 +69,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADVAR
+name|kdbBADVAR
 init|=
 literal|"bad variable"
 decl_stmt|;
@@ -84,7 +78,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|ADWRAP
+name|kdbADWRAP
 init|=
 literal|"address wrap around"
 decl_stmt|;
@@ -93,7 +87,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADEQ
+name|kdbBADEQ
 init|=
 literal|"unexpected `='"
 decl_stmt|;
@@ -102,7 +96,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADSYN
+name|kdbBADSYN
 init|=
 literal|"syntax error"
 decl_stmt|;
@@ -111,7 +105,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|NOEOR
+name|kdbNOEOR
 init|=
 literal|"newline expected"
 decl_stmt|;
@@ -120,7 +114,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|NOBKPT
+name|kdbNOBKPT
 init|=
 literal|"no breakpoint set"
 decl_stmt|;
@@ -129,7 +123,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|SZBKPT
+name|kdbSZBKPT
 init|=
 literal|"bkpt command too long"
 decl_stmt|;
@@ -138,7 +132,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|EXBKPT
+name|kdbEXBKPT
 init|=
 literal|"too many breakpoints"
 decl_stmt|;
@@ -147,7 +141,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADMOD
+name|kdbBADMOD
 init|=
 literal|"bad modifier"
 decl_stmt|;
@@ -156,7 +150,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|BADRAD
+name|kdbBADRAD
 init|=
 literal|"invalid radix"
 decl_stmt|;

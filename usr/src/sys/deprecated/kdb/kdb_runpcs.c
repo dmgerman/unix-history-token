@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_runpcs.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_runpcs.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_decl_stmt
 name|char
 modifier|*
-name|lp
+name|kdblp
 decl_stmt|;
 end_decl_stmt
 
@@ -22,44 +22,44 @@ end_comment
 
 begin_decl_stmt
 name|BKPTR
-name|bkpthead
+name|kdbbkpthead
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|lastc
+name|kdblastc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|dot
+name|kdbdot
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|adrflg
+name|kdbadrflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|loopcnt
+name|kdbloopcnt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|userpc
+name|kdbuserpc
 init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|runpcs
+name|kdbrunpcs
 argument_list|(
 argument|runmode
 argument_list|,
@@ -75,11 +75,11 @@ name|bkpt
 decl_stmt|;
 if|if
 condition|(
-name|adrflg
+name|kdbadrflg
 condition|)
-name|userpc
+name|kdbuserpc
 operator|=
-name|dot
+name|kdbdot
 expr_stmt|;
 if|if
 condition|(
@@ -87,7 +87,7 @@ name|execsig
 operator|==
 literal|0
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"kdb: running\n"
 argument_list|)
@@ -100,7 +100,7 @@ name|SINGLE
 condition|)
 block|{
 comment|/* 		 * To single step, delete the 		 * breakpoints and invoke the 		 * hardware single step in the 		 * main loop. 		 */
-name|delbp
+name|kdbdelbp
 argument_list|()
 expr_stmt|;
 name|reset
@@ -114,20 +114,20 @@ if|if
 condition|(
 name|bkpt
 operator|=
-name|scanbkpt
+name|kdbscanbkpt
 argument_list|(
-name|userpc
+name|kdbuserpc
 argument_list|)
 condition|)
 block|{
-name|execbkpt
+name|kdbexecbkpt
 argument_list|(
 name|bkpt
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-name|setbp
+name|kdbsetbp
 argument_list|()
 expr_stmt|;
 name|reset
@@ -141,7 +141,7 @@ end_block
 begin_decl_stmt
 specifier|static
 name|int
-name|execbkptf
+name|kdbexecbkptf
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ comment|/*  * Continue execution after a trap.  *  * If tracetrap is nonzero, we
 end_comment
 
 begin_macro
-name|nextpcs
+name|kdbnextpcs
 argument_list|(
 argument|tracetrap
 argument_list|)
@@ -175,19 +175,19 @@ name|clrsstep
 argument_list|()
 expr_stmt|;
 comment|/* clear hardware single step */
-name|delbp
+name|kdbdelbp
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|execbkptf
+name|kdbexecbkptf
 condition|)
 block|{
-name|execbkptf
+name|kdbexecbkptf
 operator|=
 literal|0
 expr_stmt|;
-name|runpcs
+name|kdbrunpcs
 argument_list|(
 name|CONTIN
 argument_list|,
@@ -204,15 +204,15 @@ operator|&&
 operator|(
 name|bkpt
 operator|=
-name|scanbkpt
+name|kdbscanbkpt
 argument_list|(
-name|userpc
+name|kdbuserpc
 argument_list|)
 operator|)
 condition|)
 block|{
 comment|/* 		 * Stopped at a breakpoint, 		 * execute any command. 		 */
-name|dot
+name|kdbdot
 operator|=
 name|bkpt
 operator|->
@@ -244,7 +244,7 @@ index|]
 operator|!=
 name|EOR
 operator|&&
-name|command
+name|kdbcommand
 argument_list|(
 name|bkpt
 operator|->
@@ -260,10 +260,10 @@ name|count
 operator|)
 condition|)
 block|{
-name|loopcnt
+name|kdbloopcnt
 operator|++
 expr_stmt|;
-name|execbkpt
+name|kdbexecbkpt
 argument_list|(
 name|bkpt
 argument_list|)
@@ -293,11 +293,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|--
-name|loopcnt
+name|kdbloopcnt
 operator|>
 literal|0
 condition|)
-name|runpcs
+name|kdbrunpcs
 argument_list|(
 name|rc
 condition|?
@@ -333,14 +333,14 @@ end_define
 begin_decl_stmt
 specifier|static
 name|int
-name|bpstate
+name|kdbbpstate
 init|=
 name|BPOUT
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|execbkpt
+name|kdbexecbkpt
 argument_list|(
 argument|bkptr
 argument_list|)
@@ -354,7 +354,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|delbp
+name|kdbdelbp
 argument_list|()
 expr_stmt|;
 name|bkptr
@@ -363,7 +363,7 @@ name|flag
 operator|=
 name|BKPTSET
 expr_stmt|;
-name|execbkptf
+name|kdbexecbkptf
 operator|++
 expr_stmt|;
 name|reset
@@ -376,7 +376,7 @@ end_block
 
 begin_function
 name|BKPTR
-name|scanbkpt
+name|kdbscanbkpt
 parameter_list|(
 name|addr
 parameter_list|)
@@ -392,7 +392,7 @@ for|for
 control|(
 name|bkptr
 operator|=
-name|bkpthead
+name|kdbbkpthead
 init|;
 name|bkptr
 condition|;
@@ -424,7 +424,7 @@ block|}
 end_function
 
 begin_macro
-name|delbp
+name|kdbdelbp
 argument_list|()
 end_macro
 
@@ -440,7 +440,7 @@ name|bkptr
 decl_stmt|;
 if|if
 condition|(
-name|bpstate
+name|kdbbpstate
 operator|==
 name|BPOUT
 condition|)
@@ -449,7 +449,7 @@ for|for
 control|(
 name|bkptr
 operator|=
-name|bkpthead
+name|kdbbkpthead
 init|;
 name|bkptr
 condition|;
@@ -472,7 +472,7 @@ name|bkptr
 operator|->
 name|loc
 expr_stmt|;
-name|put
+name|kdbput
 argument_list|(
 operator|(
 name|off_t
@@ -490,7 +490,7 @@ name|ins
 argument_list|)
 expr_stmt|;
 block|}
-name|bpstate
+name|kdbbpstate
 operator|=
 name|BPOUT
 expr_stmt|;
@@ -498,7 +498,7 @@ block|}
 end_block
 
 begin_macro
-name|setbp
+name|kdbsetbp
 argument_list|()
 end_macro
 
@@ -514,7 +514,7 @@ name|bkptr
 decl_stmt|;
 if|if
 condition|(
-name|bpstate
+name|kdbbpstate
 operator|==
 name|BPIN
 condition|)
@@ -523,7 +523,7 @@ for|for
 control|(
 name|bkptr
 operator|=
-name|bkpthead
+name|kdbbkpthead
 init|;
 name|bkptr
 condition|;
@@ -550,14 +550,14 @@ name|bkptr
 operator|->
 name|ins
 operator|=
-name|get
+name|kdbget
 argument_list|(
 name|a
 argument_list|,
 name|ISP
 argument_list|)
 expr_stmt|;
-name|put
+name|kdbput
 argument_list|(
 name|a
 argument_list|,
@@ -575,7 +575,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|bpstate
+name|kdbbpstate
 operator|=
 name|BPIN
 expr_stmt|;

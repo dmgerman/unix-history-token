@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_pcs.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_pcs.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,28 +12,28 @@ end_include
 begin_decl_stmt
 name|char
 modifier|*
-name|NOBKPT
+name|kdbNOBKPT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|SZBKPT
+name|kdbSZBKPT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|EXBKPT
+name|kdbEXBKPT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|BADMOD
+name|kdbBADMOD
 decl_stmt|;
 end_decl_stmt
 
@@ -43,20 +43,20 @@ end_comment
 
 begin_decl_stmt
 name|BKPTR
-name|bkpthead
+name|kdbbkpthead
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|lp
+name|kdblp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|lastc
+name|kdblastc
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_function_decl
 
 begin_decl_stmt
 name|long
-name|loopcnt
+name|kdbloopcnt
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ comment|/* sub process control */
 end_comment
 
 begin_macro
-name|subpcs
+name|kdbsubpcs
 argument_list|(
 argument|modif
 argument_list|)
@@ -102,9 +102,9 @@ name|char
 modifier|*
 name|comptr
 decl_stmt|;
-name|loopcnt
+name|kdbloopcnt
 operator|=
-name|cntval
+name|kdbcntval
 expr_stmt|;
 switch|switch
 condition|(
@@ -122,12 +122,12 @@ if|if
 condition|(
 name|bkptr
 operator|=
-name|scanbkpt
+name|kdbscanbkpt
 argument_list|(
 operator|(
 name|ADDR
 operator|)
-name|dot
+name|kdbdot
 argument_list|)
 condition|)
 block|{
@@ -139,9 +139,9 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|error
+name|kdberror
 argument_list|(
-name|NOBKPT
+name|kdbNOBKPT
 argument_list|)
 expr_stmt|;
 comment|/* set breakpoint */
@@ -155,12 +155,12 @@ if|if
 condition|(
 name|bkptr
 operator|=
-name|scanbkpt
+name|kdbscanbkpt
 argument_list|(
 operator|(
 name|ADDR
 operator|)
-name|dot
+name|kdbdot
 argument_list|)
 condition|)
 name|bkptr
@@ -173,7 +173,7 @@ for|for
 control|(
 name|bkptr
 operator|=
-name|bkpthead
+name|kdbbkpthead
 init|;
 name|bkptr
 condition|;
@@ -221,18 +221,18 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|error
+name|kdberror
 argument_list|(
-name|SZBKPT
+name|kdbSZBKPT
 argument_list|)
 expr_stmt|;
 name|bkptr
 operator|->
 name|nxtbkpt
 operator|=
-name|bkpthead
+name|kdbbkpthead
 expr_stmt|;
-name|bkpthead
+name|kdbbkpthead
 operator|=
 name|bkptr
 expr_stmt|;
@@ -241,7 +241,7 @@ name|bkptr
 operator|->
 name|loc
 operator|=
-name|dot
+name|kdbdot
 expr_stmt|;
 name|bkptr
 operator|->
@@ -251,7 +251,7 @@ name|bkptr
 operator|->
 name|count
 operator|=
-name|cntval
+name|kdbcntval
 expr_stmt|;
 name|bkptr
 operator|->
@@ -274,10 +274,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rdc
+name|kdbrdc
 argument_list|()
 expr_stmt|;
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 do|do
@@ -285,7 +285,7 @@ operator|*
 name|comptr
 operator|++
 operator|=
-name|readchar
+name|kdbreadchar
 argument_list|()
 expr_stmt|;
 do|while
@@ -293,7 +293,7 @@ condition|(
 name|check
 operator|--
 operator|&&
-name|lastc
+name|kdblastc
 operator|!=
 name|EOR
 condition|)
@@ -303,7 +303,7 @@ name|comptr
 operator|=
 literal|0
 expr_stmt|;
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 if|if
@@ -311,9 +311,9 @@ condition|(
 name|check
 condition|)
 return|return;
-name|error
+name|kdberror
 argument_list|(
-name|EXBKPT
+name|kdbEXBKPT
 argument_list|)
 expr_stmt|;
 comment|/* single step */
@@ -354,19 +354,19 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 default|default:
-name|error
+name|kdberror
 argument_list|(
-name|BADMOD
+name|kdbBADMOD
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|loopcnt
+name|kdbloopcnt
 operator|>
 literal|0
 condition|)
-name|runpcs
+name|kdbrunpcs
 argument_list|(
 name|runmode
 argument_list|,

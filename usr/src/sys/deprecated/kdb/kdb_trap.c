@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_trap.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_trap.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,44 +16,44 @@ end_include
 begin_decl_stmt
 name|char
 modifier|*
-name|NOEOR
+name|kdbNOEOR
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|executing
+name|kdbexecuting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|lp
+name|kdblp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|lastc
+name|kdblastc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|userpc
+name|kdbuserpc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|lastcom
+name|kdblastcom
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
-name|maxoff
+name|kdbmaxoff
 init|=
 name|MAXOFF
 decl_stmt|;
@@ -61,7 +61,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|maxpos
+name|kdbmaxpos
 init|=
 name|MAXPOS
 decl_stmt|;
@@ -108,9 +108,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'t'
 argument_list|)
@@ -118,9 +118,9 @@ index|]
 operator|=
 name|type
 expr_stmt|;
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'c'
 argument_list|)
@@ -128,9 +128,9 @@ index|]
 operator|=
 name|code
 expr_stmt|;
-name|var
+name|kdbvar
 index|[
-name|varchk
+name|kdbvarchk
 argument_list|(
 literal|'p'
 argument_list|)
@@ -143,12 +143,12 @@ name|curproc
 expr_stmt|;
 if|if
 condition|(
-name|executing
+name|kdbexecuting
 condition|)
-name|delbp
+name|kdbdelbp
 argument_list|()
 expr_stmt|;
-name|executing
+name|kdbexecuting
 operator|=
 literal|0
 expr_stmt|;
@@ -156,13 +156,13 @@ if|if
 condition|(
 name|kstack
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"(from kernel stack)\n"
 argument_list|)
 expr_stmt|;
 comment|/* after delbp() */
-name|printtrap
+name|kdbprinttrap
 argument_list|(
 operator|(
 name|long
@@ -175,11 +175,11 @@ operator|)
 name|code
 argument_list|)
 expr_stmt|;
-name|userpc
+name|kdbuserpc
 operator|=
-name|dot
+name|kdbdot
 operator|=
-name|pcb
+name|kdbpcb
 operator|.
 name|pcb_pc
 expr_stmt|;
@@ -218,35 +218,35 @@ literal|0
 case|:
 if|if
 condition|(
-name|nextpcs
+name|kdbnextpcs
 argument_list|(
 name|type
 argument_list|)
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"breakpoint%16t"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"stopped at%16t"
 argument_list|)
 expr_stmt|;
-name|printpc
+name|kdbprintpc
 argument_list|()
 expr_stmt|;
 break|break;
 block|}
 if|if
 condition|(
-name|executing
+name|kdbexecuting
 condition|)
-name|delbp
+name|kdbdelbp
 argument_list|()
 expr_stmt|;
-name|executing
+name|kdbexecuting
 operator|=
 literal|0
 expr_stmt|;
@@ -256,41 +256,41 @@ init|;
 condition|;
 control|)
 block|{
-name|flushbuf
+name|kdbflushbuf
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|errflg
+name|kdberrflg
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|errflg
+name|kdberrflg
 argument_list|)
 expr_stmt|;
-name|errflg
+name|kdberrflg
 operator|=
 literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|mkfault
+name|kdbmkfault
 condition|)
 block|{
-name|mkfault
+name|kdbmkfault
 operator|=
 literal|0
 expr_stmt|;
-name|printc
+name|kdbprintc
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|printf
+name|kdbprintf
 argument_list|(
 name|DBNAME
 argument_list|)
@@ -303,23 +303,23 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|lp
+name|kdblp
 operator|=
 literal|0
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rdc
+name|kdbrdc
 argument_list|()
 expr_stmt|;
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|command
+name|kdbcommand
 argument_list|(
 operator|(
 name|char
@@ -327,20 +327,20 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|lastcom
+name|kdblastcom
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lp
+name|kdblp
 operator|&&
-name|lastc
+name|kdblastc
 operator|!=
 literal|'\n'
 condition|)
-name|error
+name|kdberror
 argument_list|(
-name|NOEOR
+name|kdbNOEOR
 argument_list|)
 expr_stmt|;
 block|}
@@ -352,7 +352,7 @@ comment|/*  * If there has been an error or a fault, take the error.  */
 end_comment
 
 begin_macro
-name|chkerr
+name|kdbchkerr
 argument_list|()
 end_macro
 
@@ -360,13 +360,13 @@ begin_block
 block|{
 if|if
 condition|(
-name|errflg
+name|kdberrflg
 operator|||
-name|mkfault
+name|kdbmkfault
 condition|)
-name|error
+name|kdberror
 argument_list|(
-name|errflg
+name|kdberrflg
 argument_list|)
 expr_stmt|;
 block|}
@@ -377,7 +377,7 @@ comment|/*  * An error occurred; save the message for  * later printing, and res
 end_comment
 
 begin_macro
-name|error
+name|kdberror
 argument_list|(
 argument|n
 argument_list|)
@@ -392,7 +392,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|errflg
+name|kdberrflg
 operator|=
 name|n
 expr_stmt|;
