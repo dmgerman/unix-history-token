@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.90 2000/05/08 18:28:46 thorpej Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.91 2000/06/01 14:28:58 augustss Exp $	*/
 end_comment
 
 begin_comment
