@@ -2126,6 +2126,8 @@ init|=
 literal|0
 decl_stmt|,
 name|linkNum
+decl_stmt|,
+name|linksSeen
 decl_stmt|;
 name|int
 name|manycast
@@ -2797,9 +2799,11 @@ for|for
 control|(
 name|linkNum
 operator|=
+name|linksSeen
+operator|=
 literal|0
 init|;
-name|linkNum
+name|linksSeen
 operator|<=
 name|priv
 operator|->
@@ -2829,7 +2833,7 @@ decl_stmt|;
 comment|/* 		 * If we have checked all the links then now 		 * send the original on its reserved link 		 */
 if|if
 condition|(
-name|linkNum
+name|linksSeen
 operator|==
 name|priv
 operator|->
@@ -2872,6 +2876,15 @@ name|links
 index|[
 name|linkNum
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|destLink
+operator|!=
+name|NULL
+condition|)
+name|linksSeen
+operator|++
 expr_stmt|;
 comment|/* Skip incoming link and disconnected links */
 if|if
