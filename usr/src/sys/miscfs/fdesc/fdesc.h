@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc.h	8.7 (Berkeley) %G%  *  * $Id: fdesc.h,v 1.8 1993/04/06 15:28:33 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc.h	8.8 (Berkeley) %G%  *  * $Id: fdesc.h,v 1.8 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_ifdef
@@ -220,41 +220,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|fdesc_fhtovp
-value|((int (*) __P((struct mount *, struct fid *, \ 	    struct mbuf *, struct vnode **, int *, struct ucred **)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_quotactl
-value|((int (*) __P((struct mount *, int, uid_t, caddr_t, \ 	    struct proc *)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_sysctl
-value|((int (*) __P((int *, u_int, void *, size_t *, void *, \ 	    size_t, struct proc *)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_vget
-value|((int (*) __P((struct mount *, ino_t, struct vnode **))) \ 	    eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_vptofh
-value|((int (*) __P((struct vnode *, struct fid *)))eopnotsupp)
-end_define
 
 begin_function_decl
 specifier|extern
