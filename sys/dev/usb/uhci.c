@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  *	$NetBSD: uhci.c,v 1.177 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: uhci.c,v 1.178 2004/03/02 16:32:05 martin Exp $  */
 end_comment
 
 begin_include
@@ -6385,6 +6385,9 @@ decl_stmt|;
 name|uhci_intr_info_t
 modifier|*
 name|ii
+decl_stmt|,
+modifier|*
+name|nextii
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -6418,13 +6421,15 @@ name|intr_context
 operator|++
 expr_stmt|;
 comment|/* 	 * Interrupts on UHCI really suck.  When the host controller 	 * interrupts because a transfer is completed there is no 	 * way of knowing which transfer it was.  You can scan down 	 * the TDs and QHs of the previous frame to limit the search, 	 * but that assumes that the interrupt was not delayed by more 	 * than 1 ms, which may not always be true (e.g. after debug 	 * output on a slow console). 	 * We scan all interrupt descriptors to see if any have 	 * completed. 	 */
-name|LIST_FOREACH
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ii
 argument_list|,
 argument|&sc->sc_intrhead
 argument_list|,
 argument|list
+argument_list|,
+argument|nextii
 argument_list|)
 name|uhci_check_intr
 argument_list|(
@@ -16922,7 +16927,11 @@ argument_list|)
 case|:
 if|if
 condition|(
+operator|(
 name|value
+operator|&
+literal|0xff
+operator|)
 operator|!=
 literal|0
 condition|)
