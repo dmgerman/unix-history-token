@@ -237,7 +237,7 @@ block|,
 block|{
 literal|0x0025
 block|,
-literal|"Error flushing cached write data to array"
+literal|"Error flushing cached write data to disk"
 block|}
 block|,
 block|{
@@ -412,6 +412,192 @@ block|{
 literal|0x0043
 block|,
 literal|"Latent error found in backup DCB"
+block|}
+block|,
+block|{
+literal|0x0044
+block|,
+literal|"Voltage is within normal range"
+block|}
+block|,
+block|{
+literal|0x0045
+block|,
+literal|"Voltage is in low warning range"
+block|}
+block|,
+block|{
+literal|0x0046
+block|,
+literal|"Voltage is in high warning range"
+block|}
+block|,
+block|{
+literal|0x0047
+block|,
+literal|"Voltage is below operating range"
+block|}
+block|,
+block|{
+literal|0x0048
+block|,
+literal|"Voltage is above operating range"
+block|}
+block|,
+block|{
+literal|0x0049
+block|,
+literal|"Temperature is within normal range"
+block|}
+block|,
+block|{
+literal|0x004A
+block|,
+literal|"Temperature is in low warning range"
+block|}
+block|,
+block|{
+literal|0x004B
+block|,
+literal|"Temperature is high warning range"
+block|}
+block|,
+block|{
+literal|0x004C
+block|,
+literal|"Temperature is below operating range"
+block|}
+block|,
+block|{
+literal|0x004D
+block|,
+literal|"Temperature is above operating range"
+block|}
+block|,
+block|{
+literal|0x004E
+block|,
+literal|"Low current test started"
+block|}
+block|,
+block|{
+literal|0x0050
+block|,
+literal|"Low current test stopped"
+block|}
+block|,
+block|{
+literal|0x0051
+block|,
+literal|"High current test started"
+block|}
+block|,
+block|{
+literal|0x0052
+block|,
+literal|"High current test stopped"
+block|}
+block|,
+block|{
+literal|0x0053
+block|,
+literal|"Charge termination voltage is at high level"
+block|}
+block|,
+block|{
+literal|0x0054
+block|,
+literal|"Charge termination voltage is at high level"
+block|}
+block|,
+block|{
+literal|0x0055
+block|,
+literal|"Charge started"
+block|}
+block|,
+block|{
+literal|0x0056
+block|,
+literal|"Charge stopped"
+block|}
+block|,
+block|{
+literal|0x0057
+block|,
+literal|"Charge is in fault condition"
+block|}
+block|,
+block|{
+literal|0x0058
+block|,
+literal|"Capacity is below warning level"
+block|}
+block|,
+block|{
+literal|0x0059
+block|,
+literal|"Capacity is below error level"
+block|}
+block|,
+block|{
+literal|0x005A
+block|,
+literal|"Battery is present"
+block|}
+block|,
+block|{
+literal|0x005B
+block|,
+literal|"Battery is not present"
+block|}
+block|,
+block|{
+literal|0x005C
+block|,
+literal|"High current test is in warning level"
+block|}
+block|,
+block|{
+literal|0x005D
+block|,
+literal|"High current test is in fault level"
+block|}
+block|,
+block|{
+literal|0x0060
+block|,
+literal|"Bad cache meta data checksum"
+block|}
+block|,
+block|{
+literal|0x0061
+block|,
+literal|"Bad cache meta data signature"
+block|}
+block|,
+block|{
+literal|0x0062
+block|,
+literal|"Cache meta data restore failed"
+block|}
+block|,
+block|{
+literal|0x0063
+block|,
+literal|"Cache meta data was lost"
+block|}
+block|,
+block|{
+literal|0x0064
+block|,
+literal|"Cache write data sync failed"
+block|}
+block|,
+block|{
+literal|0x0065
+block|,
+literal|"Not able to sync cache write data"
 block|}
 block|,
 block|{
@@ -651,7 +837,7 @@ block|,
 block|{
 literal|0x0124
 block|,
-literal|"Replace drive capacity too small"
+literal|"Drive capacity too small"
 block|}
 block|,
 block|{
@@ -685,6 +871,24 @@ literal|"Cannot update status to DCB"
 block|}
 block|,
 block|{
+literal|0x012A
+block|,
+literal|"Dchnl cannot be split"
+block|}
+block|,
+block|{
+literal|0x012B
+block|,
+literal|"Dchnl cannot be joined"
+block|}
+block|,
+block|{
+literal|0x012C
+block|,
+literal|"No migration recovery"
+block|}
+block|,
+block|{
 literal|0x0130
 block|,
 literal|"Invalid stripe handle"
@@ -699,7 +903,7 @@ block|,
 block|{
 literal|0x0132
 block|,
-literal|"Handle that was not empy"
+literal|"Handle that was not empty"
 block|}
 block|,
 block|{
@@ -871,6 +1075,30 @@ literal|"Corrupt flash file system detected"
 block|}
 block|,
 block|{
+literal|0x01CB
+block|,
+literal|"Flash file has no component directory"
+block|}
+block|,
+block|{
+literal|0x01CC
+block|,
+literal|"Flash file component not found"
+block|}
+block|,
+block|{
+literal|0x01CD
+block|,
+literal|"Flash Write cycle Failed"
+block|}
+block|,
+block|{
+literal|0x01CE
+block|,
+literal|"Flash Erase cycle Failed"
+block|}
+block|,
+block|{
 literal|0x01D0
 block|,
 literal|"Invalid field in parameter list"
@@ -969,13 +1197,13 @@ block|,
 block|{
 literal|0x0211
 block|,
-literal|"Host PCI bus abort"
+literal|"PCI abort error"
 block|}
 block|,
 block|{
 literal|0x0212
 block|,
-literal|"Host PCI parity error"
+literal|"PCI parity error"
 block|}
 block|,
 block|{
@@ -1041,7 +1269,7 @@ block|,
 block|{
 literal|0x0235
 block|,
-literal|"Image downloaded overflowed buffer"
+literal|"Binary image overflowed buffer"
 block|}
 block|,
 block|{
@@ -1069,6 +1297,30 @@ literal|"SO-DIMM unsupported"
 block|}
 block|,
 block|{
+literal|0x0244
+block|,
+literal|"I2C clock is held low - Transfer aborted"
+block|}
+block|,
+block|{
+literal|0x0245
+block|,
+literal|"I2C data  is held low - Transfer aborted"
+block|}
+block|,
+block|{
+literal|0x0246
+block|,
+literal|"I2C slave device NACKed the transfer"
+block|}
+block|,
+block|{
+literal|0x0247
+block|,
+literal|"I2C buffer in-sufficient"
+block|}
+block|,
+block|{
 literal|0x0248
 block|,
 literal|"SPI transfer status error"
@@ -1083,25 +1335,25 @@ block|,
 block|{
 literal|0x0250
 block|,
-literal|"Invalid unit descriptor size in CreateUnit"
+literal|"Invalid unit descriptor size"
 block|}
 block|,
 block|{
 literal|0x0251
 block|,
-literal|"Unit descriptor size exceeds data buffer in CreateUnit"
+literal|"Unit descriptor size exceeds data buffer"
 block|}
 block|,
 block|{
 literal|0x0252
 block|,
-literal|"Invalid value in CreateUnit descriptor"
+literal|"Invalid value in unit descriptor"
 block|}
 block|,
 block|{
 literal|0x0253
 block|,
-literal|"Inadequate disk space to support descriptor in CreateUnit"
+literal|"Inadequate disk space to support descriptor"
 block|}
 block|,
 block|{
@@ -1125,43 +1377,235 @@ block|,
 block|{
 literal|0x0257
 block|,
-literal|"CreateUnit does not support this descriptor version"
+literal|"CreateUnit/MigrateUnit does not support this descriptor version"
 block|}
 block|,
 block|{
 literal|0x0258
 block|,
-literal|"Invalid subunit for RAID 0 or 5 in CreateUnit"
+literal|"Invalid subunit for RAID 0 or 5 in CreateUnit/MigrateUnit"
 block|}
 block|,
 block|{
 literal|0x0259
 block|,
-literal|"Too many descriptors in CreateUnit"
+literal|"Too many descriptors in CreateUnit/MigrateUnit"
 block|}
 block|,
 block|{
 literal|0x025A
 block|,
-literal|"Invalid configuration specified in CreateUnit descriptor"
+literal|"Invalid configuration specified in unit descriptor"
 block|}
 block|,
 block|{
 literal|0x025B
 block|,
-literal|"Invalid LBA offset specified in CreateUnit descriptor"
+literal|"Invalid LBA offset specified in unit descriptor"
 block|}
 block|,
 block|{
 literal|0x025C
 block|,
-literal|"Invalid stripelet size specified in CreateUnit descriptor"
+literal|"Invalid stripelet size specified in unit descriptor"
+block|}
+block|,
+block|{
+literal|0x025D
+block|,
+literal|"JBOD unit is not allowed"
 block|}
 block|,
 block|{
 literal|0x0260
 block|,
 literal|"SMART attribute exceeded threshold"
+block|}
+block|,
+block|{
+literal|0x0270
+block|,
+literal|"Unit is not in NORMAL state"
+block|}
+block|,
+block|{
+literal|0x0271
+block|,
+literal|"Invalid drive members"
+block|}
+block|,
+block|{
+literal|0x0272
+block|,
+literal|"Converted unit is not supported"
+block|}
+block|,
+block|{
+literal|0x0300
+block|,
+literal|"Internal errorcode (BBU base) - should not occur"
+block|}
+block|,
+block|{
+literal|0x0301
+block|,
+literal|"Invalid BBU state change request"
+block|}
+block|,
+block|{
+literal|0x0302
+block|,
+literal|"The BBU resource needed is in use ; retry command after a delay"
+block|}
+block|,
+block|{
+literal|0x0303
+block|,
+literal|"Command requires a battery pack to be present and enabled"
+block|}
+block|,
+block|{
+literal|0x0310
+block|,
+literal|"BBU command packet error"
+block|}
+block|,
+block|{
+literal|0x0311
+block|,
+literal|"BBU command not implemented"
+block|}
+block|,
+block|{
+literal|0x0312
+block|,
+literal|"BBU command buffer underflow"
+block|}
+block|,
+block|{
+literal|0x0313
+block|,
+literal|"BBU command buffer overflow"
+block|}
+block|,
+block|{
+literal|0x0314
+block|,
+literal|"BBU command incomplete"
+block|}
+block|,
+block|{
+literal|0x0315
+block|,
+literal|"BBU command checksum error"
+block|}
+block|,
+block|{
+literal|0x0316
+block|,
+literal|"BBU command timeout"
+block|}
+block|,
+block|{
+literal|0x0320
+block|,
+literal|"BBU parameter not defined"
+block|}
+block|,
+block|{
+literal|0x0321
+block|,
+literal|"BBU parameter size mismatch"
+block|}
+block|,
+block|{
+literal|0x0322
+block|,
+literal|"Cannot write a read-only BBU parameter"
+block|}
+block|,
+block|{
+literal|0x0323
+block|,
+literal|"BBU firmware version string not found"
+block|}
+block|,
+block|{
+literal|0x0324
+block|,
+literal|"BBU operating state not available"
+block|}
+block|,
+block|{
+literal|0x0325
+block|,
+literal|"BBU not present"
+block|}
+block|,
+block|{
+literal|0x0326
+block|,
+literal|"BBU not ready"
+block|}
+block|,
+block|{
+literal|0x0327
+block|,
+literal|"BBU S1 not compatible with HBA"
+block|}
+block|,
+block|{
+literal|0x0328
+block|,
+literal|"BBU S0 not compatible with HBA"
+block|}
+block|,
+block|{
+literal|0x0329
+block|,
+literal|"BBU not compatible with HBA"
+block|}
+block|,
+block|{
+literal|0x032A
+block|,
+literal|"BBU not in S0"
+block|}
+block|,
+block|{
+literal|0x032B
+block|,
+literal|"BBU not in S1"
+block|}
+block|,
+block|{
+literal|0x032C
+block|,
+literal|"Timeout on BBU power fail interrupt"
+block|}
+block|,
+block|{
+literal|0x032D
+block|,
+literal|"BBU command checksum error"
+block|}
+block|,
+block|{
+literal|0x0330
+block|,
+literal|"Log updates not allowed"
+block|}
+block|,
+block|{
+literal|0x0331
+block|,
+literal|"Logs are invalid"
+block|}
+block|,
+block|{
+literal|0x0332
+block|,
+literal|"Logs not found"
 block|}
 block|,
 block|{
