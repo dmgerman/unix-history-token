@@ -46,7 +46,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(_C_LABEL(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	_C_LABEL(x);				\ 	.set	_C_LABEL(x),_C_LABEL(__CONCAT(__sys_,x));	\ 	.weak	_C_LABEL(__CONCAT(_,x));				\ 	.set	_C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bso	2b
+value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bso	2b
 end_define
 
 begin_define
@@ -57,7 +57,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	_C_LABEL(__CONCAT(_,x));				\ 	.set	_C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	b	PIC_PLT(_C_LABEL(HIDENAME(cerror)))
+value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(_C_LABEL(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	_C_LABEL(x);					\ 	.set	_C_LABEL(x),_C_LABEL(__CONCAT(__sys_,x));	\ 	.weak	_C_LABEL(__CONCAT(_,x));				\ 	.set	_C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	b	PIC_PLT(_C_LABEL(HIDENAME(cerror)))
+value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
 end_define
 
 end_unit
