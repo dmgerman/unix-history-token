@@ -542,7 +542,7 @@ value|SOCKBUF_LOCK_ASSERT(&(_so)->so_rcv)
 end_define
 
 begin_comment
-comment|/*-  * Socket state bits.  *  * Historically, this bits were all kept in the so_state field.  For  * locking reasons, they are now in multiple fields, as they are  * locked differently.  so_state maintains basic socket state protected  * by the socket lock.  so_qstate holds information about the socket  * accept queues.  Each socket buffer also has a state field holding  * information relevant to that socket buffer (can't send, rcv).  Many  * fields will be read without locks to improve performance and avoid  * lock order issues.  However, this approach must be used with caution.  */
+comment|/*  * Socket state bits.  *  * Historically, this bits were all kept in the so_state field.  For  * locking reasons, they are now in multiple fields, as they are  * locked differently.  so_state maintains basic socket state protected  * by the socket lock.  so_qstate holds information about the socket  * accept queues.  Each socket buffer also has a state field holding  * information relevant to that socket buffer (can't send, rcv).  Many  * fields will be read without locks to improve performance and avoid  * lock order issues.  However, this approach must be used with caution.  */
 end_comment
 
 begin_define
