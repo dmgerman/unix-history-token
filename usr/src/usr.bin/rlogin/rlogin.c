@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.6 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,14 +267,6 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|dosigwinch
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nosigwin
 init|=
 literal|0
 decl_stmt|;
@@ -576,35 +568,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|argc
-operator|>
-literal|0
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-w"
-argument_list|)
-condition|)
-block|{
-name|nosigwin
-operator|++
-expr_stmt|;
-name|argv
-operator|++
-operator|,
-name|argc
-operator|--
-expr_stmt|;
-goto|goto
-name|another
-goto|;
-block|}
-if|if
-condition|(
 name|host
 operator|==
 literal|0
@@ -875,7 +838,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ] [ -L ] [ -w ]\n"
+literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ] [ -L ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1220,18 +1183,6 @@ argument_list|,
 name|catchild
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|nosigwin
-condition|)
-name|signal
-argument_list|(
-name|SIGWINCH
-argument_list|,
-name|sigwinch
-argument_list|)
-expr_stmt|;
 name|writer
 argument_list|()
 expr_stmt|;
@@ -1307,9 +1258,18 @@ name|dosigwinch
 operator|==
 literal|0
 condition|)
+block|{
 name|sendwindow
 argument_list|()
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGWINCH
+argument_list|,
+name|sigwinch
+argument_list|)
+expr_stmt|;
+block|}
 name|dosigwinch
 operator|=
 literal|1
@@ -1786,9 +1746,6 @@ decl_stmt|;
 if|if
 condition|(
 name|dosigwinch
-operator|&&
-operator|!
-name|nosigwin
 operator|&&
 name|ioctl
 argument_list|(
