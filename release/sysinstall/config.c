@@ -4274,6 +4274,15 @@ block|}
 else|else
 block|{
 comment|/* If inetd is enabled, we'll need an inetd.conf */
+name|variable_set2
+argument_list|(
+literal|"inetd_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4308,15 +4317,6 @@ expr_stmt|;
 name|systemExecute
 argument_list|(
 name|cmd
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"inetd_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
