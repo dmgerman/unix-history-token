@@ -337,6 +337,23 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|bread
+name|__P
+argument_list|(
+operator|(
+name|daddr_t
+operator|,
+name|char
+operator|*
+operator|,
+name|ssize_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|long
 name|atol
@@ -2575,6 +2592,10 @@ name|bread
 argument_list|(
 name|SBOFF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|fs
 argument_list|,
 name|SBSIZE
@@ -2757,6 +2778,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|buf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ssize_t
+name|cnt
 decl_stmt|;
 end_decl_stmt
 
