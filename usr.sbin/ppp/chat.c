@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.4 1995/05/30 03:50:29 rgrimes Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.5 1995/09/02 17:20:50 amurai Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -400,7 +400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  \r	Carrige return character  *  \s  Space character  *  \n  Line feed character  *  \T  Telephone number (defined via `set phone'  *  \t  Tab character  */
+comment|/*  *  \r	Carrige return character  *  \s  Space character  *  \n  Line feed character  *  \T  Telephone number(s) (defined via `set phone')  *  \t  Tab character  */
 end_comment
 
 begin_function
@@ -430,6 +430,10 @@ name|int
 name|addcr
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|phone
 decl_stmt|;
 if|if
 condition|(
@@ -561,15 +565,35 @@ break|break;
 case|case
 literal|'T'
 case|:
+if|if
+condition|(
+name|VarNextPhone
+operator|==
+name|NULL
+condition|)
+name|VarNextPhone
+operator|=
+name|VarPhoneList
+expr_stmt|;
+name|phone
+operator|=
+name|strsep
+argument_list|(
+operator|&
+name|VarNextPhone
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
-name|VarPhone
+name|phone
 argument_list|,
 name|result
 argument_list|,
 name|strlen
 argument_list|(
-name|VarPhone
+name|phone
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -577,7 +601,30 @@ name|result
 operator|+=
 name|strlen
 argument_list|(
-name|VarPhone
+name|phone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_INTER
+operator||
+name|MODE_AUTO
+operator|)
+operator|)
+operator|==
+name|MODE_INTER
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Phone: %s\n"
+argument_list|,
+name|phone
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.13 1996/01/11 17:48:41 phk Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.14 1996/01/30 20:04:28 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -242,6 +242,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|cmdtab
+specifier|const
+name|SetCommands
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|in_addr
 name|ifnetmask
@@ -385,6 +395,17 @@ name|VarLocalAuth
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|plist
+operator|==
+name|SetCommands
+condition|)
+name|printf
+argument_list|(
+literal|"set "
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s %s\n"
@@ -1094,7 +1115,7 @@ name|LOCAL_AUTH
 block|,
 literal|"delete route"
 block|,
-literal|"dest gateway"
+literal|"ALL | dest gateway [mask]"
 block|}
 block|,
 block|{
@@ -1278,7 +1299,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Quit PPP program"
 block|,
-name|StrNull
+literal|"[all]"
 block|}
 block|,
 block|{
@@ -4173,18 +4194,22 @@ name|VAR_PHONE
 case|:
 name|strncpy
 argument_list|(
-name|VarPhone
+name|VarPhoneList
 argument_list|,
 operator|*
 name|argv
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|VarPhone
+name|VarPhoneList
 argument_list|)
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|VarNextPhone
+operator|=
+name|VarPhoneList
 expr_stmt|;
 break|break;
 block|}
@@ -4489,7 +4514,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set destination address"
 block|,
-literal|"src-addr dst-addr netmask"
+literal|"[src-addr [dst-addr [netmask [trg-addr]]]]"
 block|}
 block|,
 block|{
@@ -4591,9 +4616,9 @@ name|SetVariable
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Set telephone number"
+literal|"Set telephone number(s)"
 block|,
-literal|"phone-number"
+literal|"phone1[:phone2[...]]"
 block|,
 operator|(
 name|void
@@ -4727,7 +4752,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Use ``set ?'' to get a list.\n"
+literal|"Use `set ?' to get a list or `set ?<var>' for syntax help.\n"
 argument_list|)
 expr_stmt|;
 return|return

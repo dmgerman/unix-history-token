@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.11 1996/01/11 17:48:54 phk Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.12 1996/01/30 11:08:43 dfr Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -170,13 +170,26 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|PacketMode
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|TtyTermMode
+argument_list|()
+decl_stmt|,
+name|TtyCommandMode
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|TermMode
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -844,6 +857,44 @@ name|connect_time
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|TermMode
+condition|)
+block|{
+name|modem
+operator|=
+name|OpenModem
+argument_list|(
+name|mode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"failed to open modem.\n"
+argument_list|)
+expr_stmt|;
+name|modem
+operator|=
+literal|0
+expr_stmt|;
+name|TtyCommandMode
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|TtyTermMode
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1967,8 +2018,6 @@ name|c_iflag
 operator||=
 operator|(
 name|IGNBRK
-operator||
-name|ISTRIP
 operator||
 name|IGNPAR
 operator||
@@ -3222,6 +3271,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_INTER
+operator||
+name|MODE_AUTO
+operator|)
+operator|)
+operator|==
+name|MODE_INTER
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3246,6 +3309,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_INTER
+operator||
+name|MODE_AUTO
+operator|)
+operator|)
+operator|==
+name|MODE_INTER
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3261,6 +3338,20 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_INTER
+operator||
+name|MODE_AUTO
+operator|)
+operator|)
+operator|==
+name|MODE_INTER
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3275,6 +3366,21 @@ expr_stmt|;
 comment|/* Dummy call to check modem status */
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_INTER
+operator||
+name|MODE_AUTO
+operator|)
+operator|)
+operator|==
+name|MODE_INTER
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3282,6 +3388,7 @@ argument_list|,
 literal|"dial failed.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|HangupModem
 argument_list|(
 literal|0
@@ -3456,9 +3563,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PhoneNumber = %s\n"
+literal|"PhoneNumber(s) = %s\n"
 argument_list|,
-name|VarPhone
+name|VarPhoneList
 argument_list|)
 expr_stmt|;
 return|return
