@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.10 %G%"
+literal|"@(#)newfs.c	4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +925,20 @@ operator|*
 name|special
 operator|==
 literal|'r'
+operator|&&
+name|special
+index|[
+literal|1
+index|]
+operator|!=
+literal|'a'
+operator|&&
+name|special
+index|[
+literal|1
+index|]
+operator|!=
+literal|'b'
 condition|)
 name|special
 operator|++
