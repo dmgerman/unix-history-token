@@ -1043,6 +1043,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_LOOS
+value|0x60000000
+end_define
+
+begin_comment
+comment|/* First of OS specific semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_HIOS
+value|0x6fffffff
+end_define
+
+begin_comment
+comment|/* Last of OS specific semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHT_LOPROC
 value|0x70000000
 end_define
@@ -1216,12 +1238,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PT_COUNT
+name|PT_TLS
 value|7
 end_define
 
 begin_comment
+comment|/* Thread local storage segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_COUNT
+value|8
+end_define
+
+begin_comment
 comment|/* Number of defined p_type values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_LOOS
+value|0x60000000
+end_define
+
+begin_comment
+comment|/* OS-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_HIOS
+value|0x6fffffff
+end_define
+
+begin_comment
+comment|/* OS-specific */
 end_comment
 
 begin_define
@@ -1460,7 +1515,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* String table offset of library path. */
+comment|/* String table offset of library path. [sup] */
 end_comment
 
 begin_define
@@ -1471,7 +1526,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Indicates "symbolic" linking. */
+comment|/* Indicates "symbolic" linking. [sup] */
 end_comment
 
 begin_define
@@ -1537,7 +1592,7 @@ value|22
 end_define
 
 begin_comment
-comment|/* Indicates there may be relocations in 				   non-writable segments. */
+comment|/* Indicates there may be relocations in 				   non-writable segments. [sup] */
 end_comment
 
 begin_define
@@ -1554,12 +1609,214 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_COUNT
+name|DT_BIND_NOW
 value|24
 end_define
 
 begin_comment
+comment|/* [sup] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_INIT_ARRAY
+value|25
+end_define
+
+begin_comment
+comment|/* Address of the array of pointers to 				   initialization functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_FINI_ARRAY
+value|26
+end_define
+
+begin_comment
+comment|/* Address of the array of pointers to 				   termination functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_INIT_ARRAYSZ
+value|27
+end_define
+
+begin_comment
+comment|/* Size in bytes of the array of 				   initialization functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_FINI_ARRAYSZ
+value|28
+end_define
+
+begin_comment
+comment|/* Size in bytes of the array of 				   terminationfunctions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_RUNPATH
+value|29
+end_define
+
+begin_comment
+comment|/* String table offset of a null-terminated 				   library search path string. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_FLAGS
+value|30
+end_define
+
+begin_comment
+comment|/* Object specific flag values. #define	DT_ENCODING	32	/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', even == 'd_val' 				   or none */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_PREINIT_ARRAY
+value|32
+end_define
+
+begin_comment
+comment|/* Address of the array of pointers to 				   pre-initialization functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_PREINIT_ARRAYSZ
+value|33
+end_define
+
+begin_comment
+comment|/* Size in bytes of the array of 				   pre-initialization functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_COUNT
+value|33
+end_define
+
+begin_comment
 comment|/* Number of defined d_tag values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_LOOS
+value|0x6000000d
+end_define
+
+begin_comment
+comment|/* First OS-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HIOS
+value|0x6fff0000
+end_define
+
+begin_comment
+comment|/* Last OS-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_LOPROC
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* First processor-specific type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HIPROC
+value|0x7fffffff
+end_define
+
+begin_comment
+comment|/* Last processor-specific type. */
+end_comment
+
+begin_comment
+comment|/* Values for DT_FLAGS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_ORIGIN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Indicates that the object being loaded may 				   make reference to the $ORIGIN substitution 				   string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_SYMBOLIC
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Indicates "symbolic" linking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_TEXTREL
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Indicates there may be relocations in 				   non-writable segments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_BIND_NOW
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Indicates that the dynamic linker should 				   process all relocations for the object 				   containing this entry before transferring 				   control to the program. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_STATIC_TLS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Indicates that the shared object or 				   executable contains code using a static 				   thread-local storage scheme. */
 end_comment
 
 begin_comment

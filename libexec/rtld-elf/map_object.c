@@ -1548,6 +1548,13 @@ name|free
 argument_list|(
 name|obj
 operator|->
+name|origin_path
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|obj
+operator|->
 name|priv
 argument_list|)
 expr_stmt|;

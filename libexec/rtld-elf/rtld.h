@@ -369,6 +369,11 @@ modifier|*
 name|path
 decl_stmt|;
 comment|/* Pathname of underlying file (%) */
+name|char
+modifier|*
+name|origin_path
+decl_stmt|;
+comment|/* Directory path of origin file */
 name|int
 name|refcount
 decl_stmt|;
@@ -547,6 +552,10 @@ name|bool
 name|symbolic
 decl_stmt|;
 comment|/* True if generated with "-Bsymbolic" */
+name|bool
+name|bind_now
+decl_stmt|;
+comment|/* True if all relocations should be made first */
 name|bool
 name|traced
 decl_stmt|;
