@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	8.1 (Berkeley) %G%  *  * from: $Header: cons.c,v 1.11 92/11/26 01:09:28 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	7.5 (Berkeley) %G%  *  * from: $Header: cons.c,v 1.12 93/07/20 00:49:45 torek Exp $  */
 end_comment
 
 begin_comment
@@ -552,6 +552,24 @@ operator|=
 name|TS_ISOPEN
 operator||
 name|TS_CARR_ON
+expr_stmt|;
+call|(
+name|void
+call|)
+argument_list|(
+operator|*
+name|tp
+operator|->
+name|t_param
+argument_list|)
+argument_list|(
+name|tp
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|t_termios
+argument_list|)
 expr_stmt|;
 name|ttsetwater
 argument_list|(
