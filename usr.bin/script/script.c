@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: script.c,v 1.8 1998/03/08 14:19:18 peter Exp $"
+literal|"$Id: script.c,v 1.9 1998/09/19 09:45:42 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1179,7 +1179,7 @@ name|execl
 argument_list|(
 name|shell
 argument_list|,
-literal|"sh"
+name|shell
 argument_list|,
 literal|"-i"
 argument_list|,
