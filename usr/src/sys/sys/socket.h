@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socket.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socket.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|SO_DEBUG
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|SO_ACCEPTCONN
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|SO_REUSEADDR
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|SO_KEEPALIVE
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|SO_DONTROUTE
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|SO_BROADCAST
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|SO_USELOOPBACK
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -151,11 +151,22 @@ begin_define
 define|#
 directive|define
 name|SO_LINGER
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* linger on close if data present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_OOBINLINE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* leave received OOB data in line */
 end_comment
 
 begin_comment
