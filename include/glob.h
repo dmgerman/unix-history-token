@@ -286,13 +286,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GLOB_MAXPATH
+name|GLOB_LIMIT
 value|0x1000
 end_define
 
 begin_comment
 comment|/* limit number of returned paths */
 end_comment
+
+begin_comment
+comment|/* backwards compatibility, this is the old name for this option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_MAXPATH
+value|GLOB_LIMIT
+end_define
 
 begin_define
 define|#
@@ -314,17 +325,6 @@ end_define
 
 begin_comment
 comment|/* Unignored error. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_LIMIT
-value|(-3)
-end_define
-
-begin_comment
-comment|/* Path limit was hit. */
 end_comment
 
 begin_decl_stmt
