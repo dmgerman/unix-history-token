@@ -6045,6 +6045,20 @@ literal|"gated"
 block|}
 block|,
 block|{
+literal|"Novell"
+block|,
+literal|"Install the Novell client/server demo package"
+block|,
+name|dmenuVarCheck
+block|,
+name|configNovell
+block|,
+name|NULL
+block|,
+literal|"novell"
+block|}
+block|,
+block|{
 literal|"Ntpdate"
 block|,
 literal|"Select a clock-syncronization server"
