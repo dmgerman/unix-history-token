@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.9 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,19 +118,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|REBOOT
-value|"/etc/reboot"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HALT
-value|"/etc/halt"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -138,37 +130,30 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
+begin_undef
+undef|#
+directive|undef
+name|_PATH_NOLOGIN
+end_undef
+
 begin_define
 define|#
 directive|define
-name|NOLOGIN
+name|_PATH_NOLOGIN
 value|"./nologin"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|_PATH_FASTBOOT
+end_undef
+
 begin_define
 define|#
 directive|define
-name|FASTBOOT
+name|_PATH_FASTBOOT
 value|"./fastboot"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NOLOGIN
-value|"/etc/nologin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FASTBOOT
-value|"/fastboot"
 end_define
 
 begin_endif
@@ -897,13 +882,6 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|WALL_CMD
-value|"/bin/wall"
-end_define
-
 begin_macro
 name|loop
 argument_list|()
@@ -1150,7 +1128,7 @@ name|pf
 operator|=
 name|popen
 argument_list|(
-name|WALL_CMD
+name|_PATH_WALL
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1163,7 +1141,7 @@ name|LOG_ERR
 argument_list|,
 literal|"shutdown: can't find %s: %m"
 argument_list|,
-name|WALL_CMD
+name|_PATH_WALL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1463,7 +1441,7 @@ condition|)
 block|{
 name|execle
 argument_list|(
-name|REBOOT
+name|_PATH_REBOOT
 argument_list|,
 literal|"reboot"
 argument_list|,
@@ -1480,7 +1458,7 @@ name|LOG_ERR
 argument_list|,
 literal|"shutdown: can't exec %s: %m."
 argument_list|,
-name|REBOOT
+name|_PATH_REBOOT
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1497,7 +1475,7 @@ condition|)
 block|{
 name|execle
 argument_list|(
-name|HALT
+name|_PATH_HALT
 argument_list|,
 literal|"halt"
 argument_list|,
@@ -1514,7 +1492,7 @@ name|LOG_ERR
 argument_list|,
 literal|"shutdown: can't exec %s: %m."
 argument_list|,
-name|HALT
+name|_PATH_HALT
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1948,9 +1926,9 @@ argument_list|(
 name|year
 argument_list|)
 condition|?
-name|DAYS_PER_LYEAR
+name|DAYSPERLYEAR
 else|:
-name|DAYS_PER_NYEAR
+name|DAYSPERNYEAR
 expr_stmt|;
 while|while
 condition|(
@@ -1972,7 +1950,7 @@ literal|1
 expr_stmt|;
 name|shuttime
 operator|=
-name|HOURS_PER_DAY
+name|HOURSPERDAY
 operator|*
 name|shuttime
 operator|+
@@ -1980,7 +1958,7 @@ name|hour
 expr_stmt|;
 name|shuttime
 operator|=
-name|MINS_PER_HOUR
+name|MINSPERHOUR
 operator|*
 name|shuttime
 operator|+
@@ -1988,7 +1966,7 @@ name|min
 expr_stmt|;
 name|shuttime
 operator|*=
-name|SECS_PER_MIN
+name|SECSPERMIN
 expr_stmt|;
 name|shuttime
 operator|-=
@@ -2053,7 +2031,7 @@ name|fastfd
 operator|=
 name|open
 argument_list|(
-name|FASTBOOT
+name|_PATH_FASTBOOT
 argument_list|,
 name|O_WRONLY
 operator||
@@ -2130,7 +2108,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|NOLOGIN
+name|_PATH_NOLOGIN
 argument_list|)
 expr_stmt|;
 comment|/* in case linked to another file */
@@ -2181,7 +2159,7 @@ name|logfd
 operator|=
 name|open
 argument_list|(
-name|NOLOGIN
+name|_PATH_NOLOGIN
 argument_list|,
 name|O_WRONLY
 operator||
@@ -2286,7 +2264,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|NOLOGIN
+name|_PATH_NOLOGIN
 argument_list|)
 expr_stmt|;
 name|exit
