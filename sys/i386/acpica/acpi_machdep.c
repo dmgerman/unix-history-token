@@ -249,9 +249,8 @@ name|state
 decl_stmt|;
 name|state
 operator|=
-literal|0xff
+name|APM_UNKNOWN
 expr_stmt|;
-comment|/* XXX unknown */
 if|if
 condition|(
 name|battp
@@ -312,7 +311,7 @@ if|if
 condition|(
 name|state
 operator|==
-literal|0xff
+name|APM_UNKNOWN
 condition|)
 block|{
 if|if
@@ -473,7 +472,7 @@ name|ai_capabilities
 operator|=
 literal|0xff00
 expr_stmt|;
-comment|/* XXX unknown */
+comment|/* unknown */
 if|if
 condition|(
 name|acpi_acad_get_acline
@@ -486,7 +485,7 @@ name|aip
 operator|->
 name|ai_acline
 operator|=
-literal|0xff
+name|APM_UNKNOWN
 expr_stmt|;
 comment|/* unknown */
 else|else
@@ -513,16 +512,14 @@ name|aip
 operator|->
 name|ai_batt_stat
 operator|=
-literal|0xff
+name|APM_UNKNOWN
 expr_stmt|;
-comment|/* unknown */
 name|aip
 operator|->
 name|ai_batt_life
 operator|=
-literal|0xff
+name|APM_UNKNOWN
 expr_stmt|;
-comment|/* unknown */
 name|aip
 operator|->
 name|ai_batt_time
@@ -535,8 +532,10 @@ name|aip
 operator|->
 name|ai_batteries
 operator|=
-literal|0
+operator|~
+literal|0U
 expr_stmt|;
+comment|/* unknown */
 block|}
 else|else
 block|{
@@ -742,9 +741,8 @@ name|app
 operator|->
 name|ap_acline
 operator|=
-literal|0xff
+name|APM_UNKNOWN
 expr_stmt|;
-comment|/* unknown */
 else|else
 name|app
 operator|->
