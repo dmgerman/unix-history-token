@@ -833,6 +833,19 @@ argument_list|(
 name|spec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vfstype
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not determine filesystem type"
+argument_list|)
+expr_stmt|;
 name|type
 operator|=
 name|vfstype
@@ -2637,15 +2650,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"cannot get disklabel for `%s'"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 operator|(
 name|void
 operator|)
