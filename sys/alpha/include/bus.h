@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: bus.h,v 1.2 1998/09/16 08:22:57 dfr Exp $ */
 end_comment
 
 begin_ifndef
@@ -4444,12 +4444,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUS_DMA_BUS1
+name|BUS_DMA_ISA
 value|0x10
 end_define
 
 begin_comment
-comment|/* placeholders for bus functions... */
+comment|/* map memory for ISA dma */
 end_comment
 
 begin_define
@@ -4458,6 +4458,10 @@ directive|define
 name|BUS_DMA_BUS2
 value|0x20
 end_define
+
+begin_comment
+comment|/* placeholders for bus functions... */
+end_comment
 
 begin_define
 define|#
