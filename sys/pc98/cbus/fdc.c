@@ -10471,23 +10471,23 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|<
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fd%d: fdstrat: bad request blkno = %lu, bcount = %ld\n"
+literal|"fd%d: fdstrat: bad request offset = %ju, bcount = %ld\n"
 argument_list|,
 name|fdu
 argument_list|,
 operator|(
-name|u_long
+name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 argument_list|,
 name|bp
 operator|->
@@ -10541,39 +10541,11 @@ goto|;
 block|}
 block|}
 comment|/* 	 * Set up block calculations. 	 */
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_blkno
-operator|>
-literal|20000000
-condition|)
-block|{
-comment|/* 		 * Reject unreasonably high block number, prevent the 		 * multiplication below from overflowing. 		 */
-name|bp
-operator|->
-name|bio_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|bp
-operator|->
-name|bio_flags
-operator||=
-name|BIO_ERROR
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|blknum
 operator|=
 name|bp
 operator|->
-name|bio_blkno
-operator|*
-name|DEV_BSIZE
+name|bio_offset
 operator|/
 name|fdblk
 expr_stmt|;
@@ -15152,7 +15124,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up a bio request for fdstrategy().  bio_blkno is faked 	 * so that fdstrategy() will seek to the the requested 	 * cylinder, and use the desired head. 	 */
+comment|/* 	 * Set up a bio request for fdstrategy().  bio_offset is faked 	 * so that fdstrategy() will seek to the the requested 	 * cylinder, and use the desired head. 	 */
 name|bp
 operator|->
 name|bio_cmd
@@ -15168,7 +15140,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|=
 operator|(
 name|finfo
@@ -15201,8 +15173,6 @@ name|sectrac
 operator|)
 operator|*
 name|fdblk
-operator|/
-name|DEV_BSIZE
 expr_stmt|;
 name|bp
 operator|->
@@ -15229,7 +15199,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|=
 operator|(
 name|idfield
@@ -15262,8 +15232,6 @@ name|sectrac
 operator|)
 operator|*
 name|fdblk
-operator|/
-name|DEV_BSIZE
 expr_stmt|;
 name|bp
 operator|->
