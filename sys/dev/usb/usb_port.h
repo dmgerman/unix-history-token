@@ -240,6 +240,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_MATCH_SETUP
+end_define
+
+begin_comment
+comment|/* nop */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_ATTACH
 parameter_list|(
 name|dname
@@ -650,6 +660,16 @@ parameter_list|)
 define|\
 value|struct usb_attach_arg *uaa = aux
 end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MATCH_SETUP
+end_define
+
+begin_comment
+comment|/* nop */
+end_comment
 
 begin_define
 define|#
@@ -1070,6 +1090,14 @@ name|uaa
 parameter_list|)
 define|\
 value|struct usb_attach_arg *uaa = device_get_ivars(self)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MATCH_SETUP
+define|\
+value|sc->sc_dev = self
 end_define
 
 begin_define

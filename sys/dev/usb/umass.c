@@ -2650,6 +2650,8 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+name|USB_MATCH_SETUP
+expr_stmt|;
 if|if
 condition|(
 name|uaa
