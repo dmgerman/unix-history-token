@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
