@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.8 (Berkeley) %G%"
+literal|"@(#)date.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,19 +67,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -103,7 +103,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -120,7 +132,67 @@ name|nflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|setthetime
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|badformat
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|logwtmp
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -322,18 +394,13 @@ operator|&
 name|tz
 argument_list|)
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"date: settimeofday"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"settimeofday"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -348,18 +415,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"date: time"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"time"
 argument_list|)
 expr_stmt|;
-block|}
 name|format
 operator|=
 literal|"%a %b %e %H:%M:%S %Z %Y\n"
@@ -471,19 +533,17 @@ parameter_list|)
 value|((ar)[0] - '0') * 10 + ((ar)[1] - '0'); (ar) += 2;
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|setthetime
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -869,37 +929,30 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|badformat
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
+begin_function
+specifier|static
 name|void
-operator|)
-name|fprintf
+name|badformat
+parameter_list|()
+block|{
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"date: illegal time format.\n"
+literal|"illegal time format"
 argument_list|)
 expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -927,7 +980,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netdate.c	5.2 (Berkeley) %G%"
+literal|"@(#)netdate.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -79,7 +73,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -92,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_define
@@ -127,20 +139,15 @@ begin_comment
 comment|/*  * Set the date in the machines controlled by timedaemons by communicating the  * new date to the local timedaemon.  If the timedaemon is in the master state,  * it performs the correction on all slaves.  If it is in the slave state, it  * notifies the master that a correction is needed.  * Returns 0 on success.  Returns> 0 on failure, setting retval to 2;  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|netsettime
-argument_list|(
-argument|tval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tval
+parameter_list|)
 name|time_t
 name|tval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timeval
@@ -204,14 +211,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"date: udp/timed: unknown service.n"
+literal|"udp/timed: unknown service"
 argument_list|)
 expr_stmt|;
 return|return
@@ -274,9 +276,9 @@ name|errno
 operator|!=
 name|EPROTONOSUPPORT
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"date: timed"
+literal|"timed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -287,14 +289,12 @@ literal|2
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sin
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -374,9 +374,9 @@ name|errno
 operator|!=
 name|EADDRNOTAVAIL
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"date: bind"
+literal|"bind"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -392,14 +392,9 @@ operator|/
 literal|2
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"date: all ports in use.\n"
+literal|"all ports in use"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -431,9 +426,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"date: gethostname"
+literal|"gethostname"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -525,9 +520,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"date: connect"
+literal|"connect"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -565,9 +560,9 @@ name|errno
 operator|!=
 name|ECONNREFUSED
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"date: send"
+literal|"send"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -674,9 +669,9 @@ name|err
 operator|!=
 name|ECONNREFUSED
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"date: send (delayed error)"
+literal|"send (delayed error)"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -744,9 +739,9 @@ name|errno
 operator|!=
 name|ECONNREFUSED
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"date: recvfrom"
+literal|"recvfrom"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -832,14 +827,9 @@ literal|0
 operator|)
 return|;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"date: wrong ack received from timed: %s.\n"
+literal|"wrong ack received from timed: %s"
 argument_list|,
 name|tsptype
 index|[
@@ -864,14 +854,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"date: can't reach time daemon, time set locally.\n"
+literal|"can't reach time daemon, time set locally"
 argument_list|)
 expr_stmt|;
 name|bad
@@ -892,7 +877,7 @@ literal|2
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
