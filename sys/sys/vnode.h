@@ -1856,6 +1856,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vop_strategy_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
