@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	5.6	83/05/27	*/
+comment|/*	vm_machdep.c	5.7	83/06/14	*/
 end_comment
 
 begin_include
@@ -151,9 +151,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|mapin
+end_ifndef
 
 begin_macro
 name|mapin
@@ -237,6 +239,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
