@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)el.c	5.2 (Berkeley) %G%"
+literal|"@(#)el.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1034,19 +1034,21 @@ modifier|*
 name|fname
 decl_stmt|;
 block|{
-name|char
-name|path
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|char
 modifier|*
 name|ptr
+decl_stmt|,
+name|path
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1158,12 +1160,22 @@ name|fgetline
 argument_list|(
 name|fp
 argument_list|,
-name|NULL
+operator|&
+name|len
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
+name|ptr
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|parse_line
