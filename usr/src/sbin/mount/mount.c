@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.49 (Berkeley) %G%"
+literal|"@(#)mount.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1886,6 +1886,17 @@ if|if
 condition|(
 name|flags
 operator|&
+name|MNT_UNION
+condition|)
+name|PR
+argument_list|(
+literal|"union"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
 name|MNT_EXPORTED
 condition|)
 name|PR
@@ -2290,6 +2301,36 @@ name|flagp
 operator|&=
 operator|~
 name|MNT_SYNCHRONOUS
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"union"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|negative
+condition|)
+operator|*
+name|flagp
+operator||=
+name|MNT_UNION
+expr_stmt|;
+else|else
+operator|*
+name|flagp
+operator|&=
+operator|~
+name|MNT_UNION
 expr_stmt|;
 continue|continue;
 block|}
