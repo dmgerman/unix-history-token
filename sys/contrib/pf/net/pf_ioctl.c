@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_ioctl.c,v 1.81 2003/08/22 21:50:34 david Exp $ */
+comment|/*	$OpenBSD: pf_ioctl.c,v 1.81.2.1 2004/03/28 01:34:15 brad Exp $ */
 end_comment
 
 begin_comment
@@ -3726,6 +3726,9 @@ name|anchor
 argument_list|,
 name|M_TEMP
 argument_list|)
+expr_stmt|;
+name|pf_update_anchor_rules
+argument_list|()
 expr_stmt|;
 block|}
 block|}
