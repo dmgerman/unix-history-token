@@ -525,10 +525,12 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ip_maxfragpackets
-init|=
-literal|200
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* initialized in ip_init() */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1310,6 +1312,12 @@ index|]
 argument_list|)
 expr_stmt|;
 name|maxnipq
+operator|=
+name|nmbclusters
+operator|/
+literal|4
+expr_stmt|;
+name|ip_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/

@@ -1199,10 +1199,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|ip6_maxfragpackets
-init|=
-literal|200
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* initialized in frag6.c:frag6_init() */
+end_comment
 
 begin_decl_stmt
 name|int
