@@ -910,10 +910,6 @@ parameter_list|(
 name|char
 modifier|*
 name|drivename
-index|[]
-parameter_list|,
-name|int
-name|drives
 parameter_list|)
 function_decl|;
 end_function_decl
