@@ -1326,31 +1326,6 @@ goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-ifdef|#
-directive|ifdef
-name|DDB
-comment|/* NMI can be hooked up to a pushbutton for debugging */
-name|printf
-argument_list|(
-literal|"NMI ... going to debugger\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kdb_trap
-argument_list|(
-name|type
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|frame
-argument_list|)
-condition|)
-return|return;
-endif|#
-directive|endif
-comment|/* DDB */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -1361,7 +1336,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* NMI can be hooked up to a pushbutton for debugging */
+name|printf
+argument_list|(
+literal|"NMI ... going to debugger\n"
+argument_list|)
+expr_stmt|;
+name|kdb_trap
+argument_list|(
+name|type
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|frame
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DDB */
 return|return;
+block|}
 name|panic
 argument_list|(
 literal|"NMI indicates hardware failure"
@@ -1821,31 +1820,6 @@ block|}
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-ifdef|#
-directive|ifdef
-name|DDB
-comment|/* NMI can be hooked up to a pushbutton for debugging */
-name|printf
-argument_list|(
-literal|"NMI ... going to debugger\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kdb_trap
-argument_list|(
-name|type
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|frame
-argument_list|)
-condition|)
-return|return;
-endif|#
-directive|endif
-comment|/* DDB */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -1856,7 +1830,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* NMI can be hooked up to a pushbutton for debugging */
+name|printf
+argument_list|(
+literal|"NMI ... going to debugger\n"
+argument_list|)
+expr_stmt|;
+name|kdb_trap
+argument_list|(
+name|type
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|frame
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DDB */
 return|return;
+block|}
 comment|/* FALL THROUGH */
 endif|#
 directive|endif
