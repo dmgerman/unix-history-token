@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.7 (Berkeley) %G%"
+literal|"@(#)input.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,6 +641,7 @@ operator|&&
 name|el
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|rl_cp
