@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.168 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.169 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1045,38 +1045,6 @@ begin_comment
 comment|/* no vfork primitive available */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|IRIX64
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IRIX5
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|WAITUNION
-value|1
-end_define
-
-begin_comment
-comment|/* use "union wait" as wait argument type */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1089,13 +1057,6 @@ define|#
 directive|define
 name|GIDSET_T
 value|gid_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGV_T
-value|const char **
 end_define
 
 begin_define
@@ -1158,6 +1119,55 @@ end_define
 
 begin_comment
 comment|/* mask for nlist() values */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IRIX64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IRIX5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARGV_T
+value|char *const *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARGV_T
+value|const char **
+end_define
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_comment
+comment|/* use "union wait" as wait argument type */
 end_comment
 
 begin_endif
