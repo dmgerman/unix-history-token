@@ -849,6 +849,32 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x00101166
+case|:
+name|s
+operator|=
+literal|"ServerWorks CIOB30 host to PCI bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|nexus_pcib_read_config
+argument_list|(
+literal|0
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x00111166
 case|:
 comment|/* FALLTHROUGH */
