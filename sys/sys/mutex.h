@@ -262,6 +262,17 @@ end_comment
 
 begin_function_decl
 name|void
+name|mtx_sysinit
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mtx_init
 parameter_list|(
 name|struct
@@ -1136,6 +1147,44 @@ parameter_list|(
 name|rval
 parameter_list|)
 value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	return (_val);							\ } while (0)
+end_define
+
+begin_struct
+struct|struct
+name|mtx_args
+block|{
+name|struct
+name|mtx
+modifier|*
+name|ma_mtx
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ma_desc
+decl_stmt|;
+name|int
+name|ma_opts
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MTX_SYSINIT
+parameter_list|(
+name|name
+parameter_list|,
+name|mtx
+parameter_list|,
+name|desc
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|static struct mtx_args name##_args = {				\ 		mtx,							\ 		desc,							\ 		opts							\ 	};								\ 	SYSINIT(name##_mtx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_sysinit,&name##_args)
 end_define
 
 begin_comment

@@ -3558,6 +3558,44 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * General init routine used by the MTX_SYSINIT() macro.  */
+end_comment
+
+begin_function
+name|void
+name|mtx_sysinit
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|mtx_args
+modifier|*
+name|margs
+init|=
+name|arg
+decl_stmt|;
+name|mtx_init
+argument_list|(
+name|margs
+operator|->
+name|ma_mtx
+argument_list|,
+name|margs
+operator|->
+name|ma_desc
+argument_list|,
+name|margs
+operator|->
+name|ma_opts
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Mutex initialization routine; initialize lock `m' of type contained in  * `opts' with options contained in `opts' and description `description.'  */
 end_comment
 

@@ -98,6 +98,17 @@ end_ifdef
 
 begin_function_decl
 name|void
+name|sx_sysinit
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sx_init
 parameter_list|(
 name|struct
@@ -313,6 +324,39 @@ name|line
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct
+struct|struct
+name|sx_args
+block|{
+name|struct
+name|sx
+modifier|*
+name|sa_sx
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sa_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SX_SYSINIT
+parameter_list|(
+name|name
+parameter_list|,
+name|sxa
+parameter_list|,
+name|desc
+parameter_list|)
+define|\
+value|static struct sx_args name##_args = {				\ 		sxa,							\ 		desc							\ 	};								\ 	SYSINIT(name##_sx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    sx_sysinit,&name##_args)
+end_define
 
 begin_endif
 endif|#
