@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.7 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|options
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|prompt
@@ -301,7 +307,7 @@ name|escape
 init|=
 name|ctrl
 argument_list|(
-literal|'_'
+literal|']'
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -646,6 +652,33 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
+operator|>
+literal|1
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-d"
+argument_list|)
+condition|)
+name|options
+operator|=
+name|SO_DEBUG
+operator|,
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|argc
 operator|!=
 literal|1
 condition|)
@@ -886,6 +919,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|swab
+argument_list|(
+name|sin
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -900,7 +944,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|options
 argument_list|)
 operator|)
 operator|<
