@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.12 (Berkeley) %G%"
+literal|"@(#)output.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,6 +669,33 @@ name|n
 operator|->
 name|rip_dst
 operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|osa
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct osockaddr *)(&(x)))
+name|osa
+argument_list|(
+name|n
+operator|->
+name|rip_dst
+argument_list|)
+operator|->
 name|sa_family
 operator|=
 name|htons

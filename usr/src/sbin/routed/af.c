@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.8 (Berkeley) %G%"
+literal|"@(#)af.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,16 @@ name|sockaddr_in
 name|inet_default
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|RTM_ADD
+sizeof|sizeof
+argument_list|(
+name|inet_default
+argument_list|)
+block|,
+endif|#
+directive|endif
 name|AF_INET
 block|,
 name|INADDR_ANY
@@ -414,6 +424,24 @@ name|s_port
 expr_stmt|;
 if|if
 condition|(
+name|sin
+operator|->
+name|sin_len
+operator|==
+literal|0
+condition|)
+name|sin
+operator|->
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sendto
 argument_list|(
 name|s
@@ -597,6 +625,16 @@ operator|->
 name|sin_port
 operator|=
 literal|0
+expr_stmt|;
+name|sin
+operator|->
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sin
+argument_list|)
 expr_stmt|;
 block|}
 end_block
