@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.11	%G%	*/
+comment|/*	rk.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ comment|/* GROT */
 end_comment
 
 begin_comment
-comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  */
+comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * THIS DRIVER DOESN'T DEAL WITH DRIVES SPINNING DOWN AND UP  */
 end_comment
 
 begin_define
@@ -1949,6 +1949,16 @@ block|{
 name|int
 name|recal
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+name|int
+name|del
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|u_short
 name|ds
 init|=
@@ -1984,58 +1994,79 @@ expr_stmt|;
 name|rkerrs
 operator|++
 expr_stmt|;
-comment|/* GROT */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* THIS ATTEMPTED TO FIND OUT IF THE DRIVE IS SPUN */
+comment|/* DOWN BUT IT DOESN'T SEEM TO WORK... THE DRIVE SEEMS TO */
+comment|/* TELL PAINFULLY LITTLE WHEN IT IS SPUN DOWN (I.E. NOTHING CHANGES) */
+comment|/* THE DRIVE JUST KEEPS SAYING IT WANTS ATTENTION AND BLOWING ALL COMMANDS */
 if|if
 condition|(
-name|rkflags
+name|ds
 operator|&
-literal|1
+name|RK_CDA
 condition|)
-comment|/* GROT */
-name|printf
-argument_list|(
-literal|"%d ds %o cs2 %o er %o\n"
-argument_list|,
-comment|/* GROT */
-name|um
+block|{
+name|rkaddr
 operator|->
-name|um_tab
-operator|.
-name|b_errcnt
-argument_list|,
-name|ds
-argument_list|,
-name|cs2
-argument_list|,
-name|er
+name|rkcs1
+operator|=
+name|RK_CDT
+operator||
+name|RK_CERR
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs2
+operator|=
+name|ui
+operator|->
+name|ui_slave
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs1
+operator|=
+name|RK_CDT
+operator||
+name|RK_SELECT
+operator||
+name|RK_GO
+expr_stmt|;
+name|rkwait
+argument_list|(
+name|rkaddr
 argument_list|)
 expr_stmt|;
-comment|/* GROT */
+while|while
+condition|(
+operator|(
+name|rkaddr
+operator|->
+name|rkds
+operator|&
+name|RK_SVAL
+operator|)
+operator|==
+literal|0
+condition|)
 if|if
 condition|(
-name|er
-operator|&
-name|RK_WLE
+operator|++
+name|del
+operator|>
+literal|512
 condition|)
-name|printf
-argument_list|(
-literal|"rk%d is write locked\n"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* THIS DOESN'T SEEM TO HAPPEN */
-comment|/* OR WAS SOMETHING BROKEN WHEN WE TRIED */
-comment|/* SPINNING A DRIVE DOWN ? */
+break|break;
+block|}
 if|if
 condition|(
-name|ds
-operator|&
-name|RKDS_HARD
+name|del
+operator|>
+literal|512
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"rk%d is down\n"
@@ -2046,6 +2077,41 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+block|}
+elseif|else
+endif|#
+directive|endif
+if|if
+condition|(
+name|ds
+operator|&
+name|RK_WLE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rk%d is write locked\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|++
