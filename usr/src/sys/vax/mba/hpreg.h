@@ -1161,6 +1161,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SICAPD
+value|0x0500
+end_define
+
+begin_comment
+comment|/* Capricorn direct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SICAPN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Capricorn mapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9751D
+value|0x0f00
+end_define
+
+begin_comment
+comment|/* Eagle direct */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIRM03
 value|0x8000
 end_define
