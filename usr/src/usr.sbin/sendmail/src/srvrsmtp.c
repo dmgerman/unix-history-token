@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -710,7 +710,9 @@ name|message
 argument_list|(
 literal|"250"
 argument_list|,
-literal|"Recipient ok"
+literal|"%s... Recipient ok"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|rcps
