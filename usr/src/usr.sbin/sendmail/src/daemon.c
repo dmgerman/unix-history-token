@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.42 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.42.1.1 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.42 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.42.1.1 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +499,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
+comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		mci -- a pointer to the mail connection information **			structure to be filled in. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
@@ -509,9 +509,7 @@ argument|host
 argument_list|,
 argument|port
 argument_list|,
-argument|outfile
-argument_list|,
-argument|infile
+argument|mci
 argument_list|,
 argument|usesecureport
 argument_list|)
@@ -531,18 +529,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
+specifier|register
+name|MCONINFO
 modifier|*
-modifier|*
-name|outfile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-modifier|*
-name|infile
+name|mci
 decl_stmt|;
 end_decl_stmt
 

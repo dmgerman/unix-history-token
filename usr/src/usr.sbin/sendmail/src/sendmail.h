@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.30		%G%"
+literal|"@(#)sendmail.h	5.30.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1613,50 +1613,52 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Information about hosts that we have looked up recently. ** **	This stuff is 4.2/3bsd specific. */
+comment|/* **  Information about currently open connections to mailers, or to **  hosts that we have looked up recently. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAEMON
-end_ifdef
 
 begin_define
 define|#
 directive|define
-name|HOSTINFO
-value|struct hostinfo
+name|MCONINFO
+value|struct mailer_con_info
 end_define
 
 begin_macro
-name|HOSTINFO
+name|MCONINFO
 end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|ho_name
-decl_stmt|;
-comment|/* name of this host */
-name|struct
-name|in_addr
-name|ho_inaddr
-decl_stmt|;
-comment|/* internet address */
 name|short
-name|ho_flags
+name|mci_flags
 decl_stmt|;
 comment|/* flag bits, see below */
 name|short
-name|ho_errno
+name|mci_errno
 decl_stmt|;
 comment|/* error number on last connection */
 name|short
-name|ho_exitstat
+name|mci_exitstat
 decl_stmt|;
 comment|/* exit status from last connection */
+name|FILE
+modifier|*
+name|mci_in
+decl_stmt|;
+comment|/* input side of connection */
+name|FILE
+modifier|*
+name|mci_out
+decl_stmt|;
+comment|/* output side of connection */
+name|int
+name|mci_pid
+decl_stmt|;
+comment|/* process id of subordinate proc */
+name|short
+name|mci_state
+decl_stmt|;
+comment|/* SMTP state */
 block|}
 end_block
 
@@ -1671,19 +1673,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HOF_VALID
+name|MCIF_VALID
 value|00001
 end_define
 
 begin_comment
 comment|/* this entry is valid */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|DAEMON
-end_endif
 
 begin_escape
 end_escape
@@ -1732,16 +1728,10 @@ modifier|*
 name|sv_alias
 decl_stmt|;
 comment|/* alias */
-ifdef|#
-directive|ifdef
-name|HOSTINFO
-name|HOSTINFO
-name|sv_host
+name|MCONINFO
+name|sv_mci
 decl_stmt|;
-comment|/* host information */
-endif|#
-directive|endif
-endif|HOSTINFO
+comment|/* mailer connection info */
 block|}
 name|s_value
 union|;
@@ -1819,12 +1809,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_HOST
+name|ST_MCONINFO
 value|5
 end_define
 
 begin_comment
-comment|/* host information */
+comment|/* mailer connection info (offset) */
 end_comment
 
 begin_define
@@ -1855,17 +1845,11 @@ name|s_alias
 value|s_value.sv_alias
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|s_host
-end_undef
-
 begin_define
 define|#
 directive|define
-name|s_host
-value|s_value.sv_host
+name|s_mci
+value|s_value.sv_mci
 end_define
 
 begin_function_decl

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.20 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.20.1.1 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.20 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.20.1.1 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,28 +160,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* save failure error messages */
-end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|SmtpOut
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* output file */
-end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|SmtpIn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input file */
 end_comment
 
 begin_decl_stmt
@@ -323,12 +301,6 @@ argument_list|(
 literal|"smtpinit: already open"
 argument_list|)
 expr_stmt|;
-name|SmtpIn
-operator|=
-name|SmtpOut
-operator|=
-name|NULL
-expr_stmt|;
 name|SmtpState
 operator|=
 name|SMTP_CLOSED
@@ -360,7 +332,7 @@ argument_list|,
 name|SmtpPhase
 argument_list|)
 expr_stmt|;
-name|SmtpPid
+name|mci
 operator|=
 name|openmailer
 argument_list|(
@@ -375,12 +347,6 @@ operator|)
 name|NULL
 argument_list|,
 name|TRUE
-argument_list|,
-operator|&
-name|SmtpOut
-argument_list|,
-operator|&
-name|SmtpIn
 argument_list|)
 expr_stmt|;
 if|if
@@ -882,7 +848,11 @@ name|stab
 argument_list|(
 name|CurHostName
 argument_list|,
-name|ST_HOST
+name|ST_MCONINFO
+operator|+
+name|m
+operator|->
+name|m_mno
 argument_list|,
 name|ST_ENTER
 argument_list|)
@@ -1356,12 +1326,12 @@ end_comment
 begin_expr_stmt
 name|smtpquit
 argument_list|(
-name|m
+name|mci
 argument_list|)
 specifier|register
-name|MAILER
+name|MCONINFO
 operator|*
-name|m
+name|mci
 expr_stmt|;
 end_expr_stmt
 
@@ -1373,9 +1343,11 @@ decl_stmt|;
 comment|/* if the connection is already closed, don't bother */
 if|if
 condition|(
-name|SmtpIn
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|NULL
+name|MCI_CLOSED
 condition|)
 return|return;
 comment|/* send the quit message if not a forced quit */
@@ -1413,39 +1385,12 @@ name|SMTP_CLOSED
 condition|)
 return|return;
 block|}
-comment|/* now actually close the connection */
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|SmtpIn
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|SmtpOut
-argument_list|)
-expr_stmt|;
-name|SmtpIn
-operator|=
-name|SmtpOut
-operator|=
-name|NULL
-expr_stmt|;
-name|SmtpState
-operator|=
-name|SMTP_CLOSED
-expr_stmt|;
-comment|/* and pick up the zombie */
+comment|/* now actually close the connection and pick up the zombie */
 name|i
 operator|=
 name|endmailer
 argument_list|(
-name|SmtpPid
+name|mci
 argument_list|,
 name|m
 operator|->
