@@ -31,12 +31,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../general.h"
 end_include
 
@@ -1018,9 +1012,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|char
+name|buffer
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|sprintf
 argument_list|(
-name|stderr
+name|buffer
 argument_list|,
 literal|"File %s, line %d:  No room in network buffer!\n"
 argument_list|,
@@ -1029,7 +1029,14 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-return|return;
+name|ExitString
+argument_list|(
+name|buffer
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 block|}
 operator|*
@@ -2069,10 +2076,6 @@ name|OutputClock
 decl_stmt|,
 name|TransparentClock
 decl_stmt|;
-specifier|extern
-name|int
-name|bellwinup
-decl_stmt|;
 specifier|static
 name|int
 name|shifted
@@ -2090,15 +2093,6 @@ parameter_list|()
 value|((shifted? 1:0) + ((alted?1:0)<<1))
 if|if
 condition|(
-name|bellwinup
-condition|)
-block|{
-name|BellOff
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
 operator|*
 name|buffer
 operator|>=
@@ -2110,8 +2104,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2263,8 +2255,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2411,8 +2401,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2533,8 +2521,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Illegal or undefined scancode!\n"
 argument_list|,
 literal|1
@@ -2571,8 +2557,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"More BREAK_SHIFT than MAKE_SHIFT.\n"
 argument_list|,
 literal|1
@@ -2603,8 +2587,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"More BREAK_ALT than MAKE_ALT.\n"
 argument_list|,
 literal|1
@@ -2779,6 +2761,12 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_ERASE
+argument_list|)
 case|case
 name|FCN_ERASE
 case|:
@@ -2820,6 +2808,15 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_ERASE) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_WERASE
+argument_list|)
 case|case
 name|FCN_WERASE
 case|:
@@ -2938,6 +2935,15 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* defined(WERASE) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_FERASE
+argument_list|)
 case|case
 name|FCN_FERASE
 case|:
@@ -2973,6 +2979,15 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_FERASE) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_RESET
+argument_list|)
 case|case
 name|FCN_RESET
 case|:
@@ -2981,6 +2996,15 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_RESET) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_MASTER_RESET
+argument_list|)
 case|case
 name|FCN_MASTER_RESET
 case|:
@@ -2992,6 +3016,9 @@ name|RefreshScreen
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_MASTER_RESET) */
 case|case
 name|FCN_UP
 case|:
@@ -3483,6 +3510,12 @@ break|break;
 endif|#
 directive|endif
 comment|/* NOTUSED */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_ESCAPE
+argument_list|)
 case|case
 name|FCN_ESCAPE
 case|:
@@ -3501,21 +3534,15 @@ name|ConnectScreen
 argument_list|()
 expr_stmt|;
 break|break;
-case|case
-name|FCN_DISC
-case|:
-name|StopScreen
+endif|#
+directive|endif
+comment|/* defined(FCN_ESCAPE)  #if	defined(FCN_DISC) 	    case FCN_DISC: 		StopScreen(1); 		suspend(); 		ConnectScreen(); 		break; #endif	/* defined(FCN_DISC) */
+if|#
+directive|if
+name|defined
 argument_list|(
-literal|1
+name|FCN_RESHOW
 argument_list|)
-expr_stmt|;
-name|suspend
-argument_list|()
-expr_stmt|;
-name|ConnectScreen
-argument_list|()
-expr_stmt|;
-break|break;
 case|case
 name|FCN_RESHOW
 case|:
@@ -3523,6 +3550,15 @@ name|RefreshScreen
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_RESHOW) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_SETTAB
+argument_list|)
 case|case
 name|FCN_SETTAB
 case|:
@@ -3537,6 +3573,15 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_SETTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_DELTAB
+argument_list|)
 case|case
 name|FCN_DELTAB
 case|:
@@ -3551,6 +3596,15 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_DELTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_CLRTAB
+argument_list|)
 comment|/* 		 * Clear all tabs, home line, and left margin. 		 */
 case|case
 name|FCN_CLRTAB
@@ -3587,6 +3641,15 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_CLRTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_COLTAB
+argument_list|)
 case|case
 name|FCN_COLTAB
 case|:
@@ -3594,6 +3657,15 @@ name|ColTab
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_COLTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_COLBAK
+argument_list|)
 case|case
 name|FCN_COLBAK
 case|:
@@ -3601,6 +3673,15 @@ name|ColBak
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_COLBAK) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_INDENT
+argument_list|)
 case|case
 name|FCN_INDENT
 case|:
@@ -3615,6 +3696,15 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_INDENT) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_UNDENT
+argument_list|)
 case|case
 name|FCN_UNDENT
 case|:
@@ -3629,6 +3719,15 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_UNDENT) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_SETMRG
+argument_list|)
 case|case
 name|FCN_SETMRG
 case|:
@@ -3640,6 +3739,15 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_SETMRG) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_SETHOM
+argument_list|)
 case|case
 name|FCN_SETHOM
 case|:
@@ -3651,6 +3759,15 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_SETHOM) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_WORDTAB
+argument_list|)
 comment|/* 		 * Point to first character of next unprotected word on 		 * screen. 		 */
 case|case
 name|FCN_WORDTAB
@@ -3736,6 +3853,15 @@ operator|=
 name|i
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_WORDTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_WORDBACKTAB
+argument_list|)
 case|case
 name|FCN_WORDBACKTAB
 case|:
@@ -3820,6 +3946,15 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_WORDBACKTAB) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_WORDEND
+argument_list|)
 comment|/* Point to last non-blank character of this/next 			 * unprotected word. 			 */
 case|case
 name|FCN_WORDEND
@@ -3905,6 +4040,15 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* defined(WORDEND) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FCN_FIELDEND
+argument_list|)
 comment|/* Get to last non-blank of this/next unprotected 			 * field. 			 */
 case|case
 name|FCN_FIELDEND
@@ -3962,6 +4106,9 @@ block|}
 comment|/* else - nowhere else on screen to be; stay here */
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* defined(FCN_FIELDEND) */
 default|default:
 comment|/* We don't handle this yet */
 name|RingBell
