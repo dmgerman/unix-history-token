@@ -1352,6 +1352,10 @@ comment|/* debugging */
 name|u_int
 name|debug
 decl_stmt|;
+comment|/* transmit mbuf count */
+name|int
+name|txmbuf
+decl_stmt|;
 endif|#
 directive|endif
 block|}
