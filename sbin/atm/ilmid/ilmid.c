@@ -1628,7 +1628,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* 	 * Print as 4 groups of four bytes. Each byte seperated 	 * by space, each block of four seperated, and two blocks` 	 * of eight also seperated. 	 */
+comment|/* 	 * Print as 4 groups of four bytes. Each byte is separated 	 * by a space, each block of four is separated, and two blocks 	 * of eight are also separated. 	 */
 for|for
 control|(
 name|i
