@@ -1695,6 +1695,12 @@ expr_stmt|;
 name|intr_init2
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Finish pmap initialization now that we're ready for mutexes. 	 */
+name|PMAP_LOCK_INIT
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 name|OF_getprop
 argument_list|(
 name|root
