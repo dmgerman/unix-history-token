@@ -4824,7 +4824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Get the maximum unit number used in a devclass  *  * @param dc		the devclass to examine  */
+comment|/**  * @brief Get the maximum unit number used in a devclass  *  * Note that this is one greater than the highest currently-allocated  * unit.  *  * @param dc		the devclass to examine  */
 end_comment
 
 begin_function
