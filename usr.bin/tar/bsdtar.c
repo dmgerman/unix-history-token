@@ -235,6 +235,13 @@ name|OPTION_NODUMP
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPTION_HELP
+value|4
+end_define
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -420,7 +427,7 @@ name|no_argument
 block|,
 name|NULL
 block|,
-literal|'h'
+name|OPTION_HELP
 block|}
 block|,
 block|{
@@ -990,6 +997,17 @@ expr_stmt|;
 break|break;
 case|case
 literal|'h'
+case|:
+comment|/* Linux LSB for 'tar'; synonym for -H */
+name|bsdtar
+operator|->
+name|symlink_mode
+operator|=
+literal|'H'
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_HELP
 case|:
 name|long_help
 argument_list|()
