@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tail.c	4.5 (Berkeley) %G%"
+literal|"@(#)tail.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* tail command   *  *	tail where [file]  *	where is +/-n[type]  *	- means n lines before end  *	+ means nth line from beginning  *	type 'b' means tail n blocks, not lines  *	type 'c' means tail n characters  *	Type 'r' means in lines in reverse order from end  *	 (for -r, default is entire buffer )  *	option 'f' means loop endlessly trying to read more  *		characters after the end of file, on the  assumption  *		that the file is growing */
@@ -35,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -245,6 +262,9 @@ operator|>
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
@@ -280,16 +300,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 literal|0
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 literal|0
 argument_list|,
-literal|1
+name|L_INCR
 argument_list|)
 expr_stmt|;
 name|piped
@@ -530,6 +553,9 @@ literal|'\n'
 condition|)
 do|;
 block|}
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -553,6 +579,9 @@ condition|(
 operator|!
 name|piped
 condition|)
+operator|(
+name|void
+operator|)
 name|fstat
 argument_list|(
 literal|0
@@ -618,13 +647,19 @@ name|i
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|n
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 block|}
@@ -647,6 +682,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -677,6 +715,9 @@ operator|!
 name|piped
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fstat
 argument_list|(
 literal|0
@@ -702,14 +743,20 @@ name|st_size
 operator|>
 name|di
 condition|)
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|-
 name|di
 argument_list|,
-literal|2
+name|L_XTND
 argument_list|)
 expr_stmt|;
 if|if
@@ -903,6 +950,9 @@ if|if
 condition|(
 name|bkwds
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -955,6 +1005,9 @@ name|k
 operator|<
 name|lastnl
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -974,6 +1027,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -993,6 +1049,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -1071,6 +1130,9 @@ name|k
 operator|<
 name|i
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -1092,6 +1154,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -1111,6 +1176,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -1193,6 +1261,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
