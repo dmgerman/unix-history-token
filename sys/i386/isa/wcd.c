@@ -6937,61 +6937,6 @@ begin_comment
 comment|/*  * Device table entries.  * These get copied at modload time into the kernels  * lkm dummy device driver entries (see sys/i386/i386/conf.c).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NOSTOP
-value|(d_stop_t*)  enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOWRITE
-value|(d_rdwr_t*)  enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|NORESET
-value|(d_reset_t*) nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|NODEVTOTTY
-value|(d_ttycv_t*) nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOMMAP
-value|(d_mmap_t*)  enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|NODUMP
-value|(d_dump_t*)  enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZEROSIZE
-value|(d_psize_t*) 0
-end_define
-
-begin_decl_stmt
-name|d_rdwr_t
-name|rawread
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|struct
 name|bdevsw
@@ -7006,9 +6951,9 @@ name|wcdstrategy
 block|,
 name|wcdioctl
 block|,
-name|NODUMP
+name|nodump
 block|,
-name|ZEROSIZE
+name|nopsize
 block|,
 literal|0
 block|}
@@ -7027,19 +6972,19 @@ name|wcdrclose
 block|,
 name|rawread
 block|,
-name|NOWRITE
+name|nowrite
 block|,
 name|wcdioctl
 block|,
-name|NOSTOP
+name|nostop
 block|,
-name|NORESET
+name|nullreset
 block|,
-name|NODEVTOTTY
+name|nodevtotty
 block|,
 name|seltrue
 block|,
-name|NOMMAP
+name|nommap
 block|,
 name|wcdstrategy
 block|}
