@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.20 (Berkeley) %G%"
+literal|"@(#)rlogind.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,10 @@ name|argv
 decl_stmt|;
 block|{
 name|int
+name|on
+init|=
+literal|1
+decl_stmt|,
 name|options
 init|=
 literal|0
@@ -223,9 +227,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0

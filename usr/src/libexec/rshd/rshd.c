@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.19 (Berkeley) %G%"
+literal|"@(#)rshd.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,8 +142,14 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
+name|struct
 name|linger
+name|linger
+decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
 decl_stmt|,
 name|fromlen
 decl_stmt|;
@@ -207,9 +213,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -234,6 +244,14 @@ argument_list|)
 expr_stmt|;
 block|}
 name|linger
+operator|.
+name|l_onoff
+operator|=
+literal|1
+expr_stmt|;
+name|linger
+operator|.
+name|l_linger
 operator|=
 literal|60
 expr_stmt|;

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	4.2 (Berkeley) %G%"
+literal|"@(#)inetd.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,6 +1087,10 @@ argument_list|()
 decl_stmt|;
 name|int
 name|omask
+decl_stmt|,
+name|on
+init|=
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -1382,6 +1386,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+define|#
+directive|define
+name|turnon
+parameter_list|(
+name|fd
+parameter_list|,
+name|opt
+parameter_list|)
+define|\
+value|setsockopt(fd, SOL_SOCKET, opt,&on, sizeof (on))
 if|if
 condition|(
 name|strcmp
@@ -1401,19 +1415,13 @@ operator|&
 name|SO_DEBUG
 operator|)
 operator|&&
-name|setsockopt
+name|turnon
 argument_list|(
 name|sep
 operator|->
 name|se_fd
 argument_list|,
-name|SOL_SOCKET
-argument_list|,
 name|SO_DEBUG
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -1427,19 +1435,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setsockopt
+name|turnon
 argument_list|(
 name|sep
 operator|->
 name|se_fd
 argument_list|,
-name|SOL_SOCKET
-argument_list|,
 name|SO_REUSEADDR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -1451,6 +1453,9 @@ argument_list|,
 literal|"setsockopt (SO_REUSEADDR): %m"
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|turnon
 if|if
 condition|(
 name|bind

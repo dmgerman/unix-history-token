@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.27 (Berkeley) %G%"
+literal|"@(#)telnetd.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,10 @@ name|sockaddr_in
 name|from
 decl_stmt|;
 name|int
+name|on
+init|=
+literal|1
+decl_stmt|,
 name|fromlen
 decl_stmt|;
 name|fromlen
@@ -385,9 +389,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
