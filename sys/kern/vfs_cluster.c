@@ -114,12 +114,6 @@ name|CLUSTERDEBUG
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|int
