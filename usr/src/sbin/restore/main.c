@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.11 %G%"
+literal|"@(#)main.c 2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6118,7 +6118,7 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
 operator|==
