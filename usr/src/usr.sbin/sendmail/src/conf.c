@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.197 (Berkeley) %G%"
+literal|"@(#)conf.c	8.198 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8331,7 +8331,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
+comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		user -- the name of the user we are checking. **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
 end_comment
 
 begin_if
@@ -8484,8 +8484,14 @@ begin_function
 name|bool
 name|usershellok
 parameter_list|(
+name|user
+parameter_list|,
 name|shell
 parameter_list|)
+name|char
+modifier|*
+name|user
+decl_stmt|;
 name|char
 modifier|*
 name|shell
@@ -8517,6 +8523,13 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|wordinclass
+argument_list|(
+name|user
+argument_list|,
+literal|'t'
+argument_list|)
 operator|||
 name|ConfigLevel
 operator|<=
@@ -8603,6 +8616,13 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|wordinclass
+argument_list|(
+name|user
+argument_list|,
+literal|'t'
+argument_list|)
 condition|)
 return|return
 name|TRUE

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.93 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.94 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2164,24 +2164,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pw
-operator|->
-name|pw_shell
-operator|!=
-name|NULL
-operator|&&
-name|pw
-operator|->
-name|pw_shell
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-operator|&&
 operator|!
 name|usershellok
 argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
 name|pw
 operator|->
 name|pw_shell
@@ -4116,6 +4105,10 @@ condition|(
 operator|!
 name|usershellok
 argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
 name|sh
 argument_list|)
 condition|)
