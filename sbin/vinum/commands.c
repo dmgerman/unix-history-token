@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.5 1999/01/18 03:36:32 grog Exp grog $ */
+comment|/* $Id: commands.c,v 1.10 1999/03/23 04:54:59 grog Exp $ */
 end_comment
 
 begin_include
@@ -451,7 +451,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 comment|/* can't get config? */
@@ -617,7 +618,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 block|{
