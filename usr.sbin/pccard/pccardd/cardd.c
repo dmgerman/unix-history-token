@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.38 1999/07/23 08:53:20 hosokawa Exp $"
+literal|"$Id: cardd.c,v 1.39 1999/07/23 14:58:33 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -495,7 +501,8 @@ literal|0
 condition|)
 name|die
 argument_list|(
-literal|"can't allocate memory for controller access"
+literal|"can't allocate memory for "
+literal|"controller access"
 argument_list|)
 expr_stmt|;
 if|if
@@ -788,9 +795,9 @@ name|card
 modifier|*
 name|cp
 decl_stmt|;
-name|sleep
+name|usleep
 argument_list|(
-literal|5
+name|pccard_init_sleep
 argument_list|)
 expr_stmt|;
 name|sp
@@ -1260,9 +1267,13 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
 literal|"Found existing driver (%s) for %s\n"
@@ -1278,8 +1289,7 @@ operator|->
 name|manuf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|conf
 operator|->
 name|driver
@@ -1567,12 +1577,25 @@ name|cisconf
 operator|==
 literal|0
 condition|)
+block|{
+name|logmsg
+argument_list|(
+literal|"Config id %d not present in this card"
+argument_list|,
+name|sp
+operator|->
+name|config
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|sp
 operator|->
 name|card_config
@@ -1724,9 +1747,13 @@ name|cardaddr
 operator|=
 literal|0x4000
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
 literal|"Using mem addr 0x%x, size %d, card addr 0x%x\n"
@@ -1750,8 +1777,7 @@ operator|.
 name|cardaddr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 block|}
 comment|/* Now look at I/O. */
 name|bzero
@@ -2069,9 +2095,13 @@ name|IODF_16BIT
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
 literal|"Using I/O addr 0x%x, size %d\n"
@@ -2089,8 +2119,7 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 block|}
 name|sp
 operator|->
@@ -2329,12 +2358,17 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
-literal|"Setting config reg at offs 0x%lx to 0x%x, Reset time = %d ms\n"
+literal|"Setting config reg at offs 0x%lx to 0x%x, "
+literal|"Reset time = %d ms\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2351,11 +2385,10 @@ operator|->
 name|reset_time
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|sleep
+block|}
+name|usleep
 argument_list|(
-literal|5
+name|pccard_init_sleep
 argument_list|)
 expr_stmt|;
 name|usleep
@@ -2601,12 +2634,17 @@ literal|0
 block|io.start = sp->io.addr& ~((1<< sp->io.cardaddr) - 1); 		io.size = 1<< sp->io.cardaddr; 		if (io.start< 0x100) { 			io.start = 0x100; 			io.size = 0x300; 		}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
-literal|"Assigning I/O window %d, start 0x%x, size 0x%x flags 0x%x\n"
+literal|"Assigning I/O window %d, start 0x%x, "
+literal|"size 0x%x flags 0x%x\n"
 argument_list|,
 name|io
 operator|.
@@ -2625,8 +2663,7 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|io
 operator|.
 name|flags
@@ -2771,10 +2808,30 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DEV_DESC_HAS_SIZE
+name|drv
+operator|.
+name|iosize
+operator|=
+name|sp
+operator|->
+name|io
+operator|.
+name|size
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|0
+condition|)
+block|{
 name|logmsg
 argument_list|(
-literal|"Assign %s%d, io 0x%x, mem 0x%lx, %d bytes, irq %d, flags %x\n"
+literal|"Assign %s%d, io 0x%x-0x%x, mem 0x%lx, %d bytes, "
+literal|"irq %d, flags %x\n"
 argument_list|,
 name|drv
 operator|.
@@ -2787,6 +2844,18 @@ argument_list|,
 name|drv
 operator|.
 name|iobase
+argument_list|,
+name|drv
+operator|.
+name|iobase
+operator|+
+name|sp
+operator|->
+name|io
+operator|.
+name|size
+operator|-
+literal|1
 argument_list|,
 name|drv
 operator|.
@@ -2805,8 +2874,7 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* 	 * If the driver fails to be connected to the device, 	 * then it may mean that the driver did not recognise it. 	 */
 name|memcpy
 argument_list|(
@@ -2838,13 +2906,24 @@ condition|)
 block|{
 name|logmsg
 argument_list|(
-literal|"driver allocation failed for %s"
+literal|"driver allocation failed for %s(%s): %s"
 argument_list|,
 name|sp
 operator|->
 name|card
 operator|->
 name|manuf
+argument_list|,
+name|sp
+operator|->
+name|card
+operator|->
+name|version
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

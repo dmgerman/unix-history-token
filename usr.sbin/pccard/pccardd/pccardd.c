@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardd.c,v 1.3 1999/06/17 21:07:59 markm Exp $"
+literal|"$Id: pccardd.c,v 1.4 1999/07/23 01:46:47 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|debug_level
+operator|=
+literal|0
+expr_stmt|;
+name|pccard_init_sleep
+operator|=
+literal|5000000
+expr_stmt|;
 while|while
 condition|(
 operator|(

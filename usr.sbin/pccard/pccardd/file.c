@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.18 1999/07/15 03:04:31 imp Exp $"
+literal|"$Id: file.c,v 1.19 1999/07/23 01:33:34 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,9 @@ comment|/* 11 */
 literal|"iosize"
 block|,
 comment|/* 12 */
+literal|"debuglevel"
+block|,
+comment|/* 13 */
 literal|0
 block|}
 decl_stmt|;
@@ -224,6 +227,13 @@ name|KWD_IOSIZE
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|KWD_DEBUGLEVEL
+value|13
+end_define
+
 begin_struct
 struct|struct
 name|flags
@@ -307,6 +317,16 @@ begin_function_decl
 specifier|static
 name|int
 name|irq_tok
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|debuglevel_tok
 parameter_list|(
 name|int
 parameter_list|)
@@ -742,6 +762,27 @@ case|:
 comment|/* Card definition. */
 name|parse_card
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|KWD_DEBUGLEVEL
+case|:
+name|i
+operator|=
+name|debuglevel_tok
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+name|debug_level
+operator|=
+name|i
 expr_stmt|;
 break|break;
 default|default:
@@ -1749,6 +1790,51 @@ argument_list|(
 literal|"illegal IRQ value"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	debuglevel token. Must be between 0 and 9.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|debuglevel_tok
+parameter_list|(
+name|int
+name|force
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|num_tok
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|0
+operator|&&
+name|i
+operator|<=
+literal|9
+condition|)
+return|return
+operator|(
+name|i
+operator|)
+return|;
 return|return
 operator|(
 operator|-
