@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c	8.1 (Berkeley) %G%"
+literal|"@(#)yymain.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,9 +353,8 @@ name|ERRS
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|fout
@@ -363,9 +362,25 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0l
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"copyfile: lseek"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"copyfile"
 argument_list|)
 expr_stmt|;
 while|while
@@ -653,11 +668,6 @@ name|struct
 name|pxhdr
 name|pxhd
 decl_stmt|;
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|magichdr
@@ -748,16 +758,31 @@ name|magicnum
 operator|=
 name|MAGICNUM
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|ofil
 argument_list|,
-literal|0l
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"magic2: lseek1"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"magic2"
 argument_list|)
 expr_stmt|;
 name|write
@@ -780,15 +805,14 @@ name|exec
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|ofil
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|HEADER_BYTES
@@ -800,6 +824,19 @@ argument_list|)
 argument_list|)
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"magic2: lseek2"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"magic2"
 argument_list|)
 expr_stmt|;
 name|write

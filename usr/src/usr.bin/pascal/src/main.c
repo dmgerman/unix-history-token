@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,11 +291,6 @@ specifier|extern
 name|char
 modifier|*
 name|myctime
-parameter_list|()
-function_decl|;
-specifier|extern
-name|long
-name|lseek
 parameter_list|()
 function_decl|;
 name|int
@@ -1589,19 +1584,31 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|efil
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|seekpt
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+name|err_file
+argument_list|)
+operator|,
+name|pexit
+argument_list|(
+name|DIED
 argument_list|)
 expr_stmt|;
 if|if

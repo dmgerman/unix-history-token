@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c	8.1 (Berkeley) %G%"
+literal|"@(#)put.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3132,11 +3132,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
 name|short
 name|val
 decl_stmt|;
@@ -3256,15 +3251,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|ofil
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|loc
 operator|+
@@ -3272,7 +3266,22 @@ literal|2
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"patchfil: lseek1"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"patchfil"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofil
@@ -3288,20 +3297,44 @@ operator|)
 argument_list|,
 literal|2
 argument_list|)
+operator|!=
+literal|2
+condition|)
+name|perror
+argument_list|(
+literal|"patchfil: write"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"patchfil"
+argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|ofil
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 literal|0
 argument_list|,
 literal|2
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"patchfil: lseek2"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"patchfil"
 argument_list|)
 expr_stmt|;
 block|}

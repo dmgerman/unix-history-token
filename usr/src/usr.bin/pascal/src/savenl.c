@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c	8.1 (Berkeley) %G%"
+literal|"@(#)savenl.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,11 +342,6 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
 name|int
 name|symfd
 decl_stmt|,
@@ -492,16 +487,31 @@ name|ERRS
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|ofil
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|2
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"copynlfile: lseek"
+argument_list|)
+operator|,
+name|panic
+argument_list|(
+literal|"copynlfile"
 argument_list|)
 expr_stmt|;
 name|write
