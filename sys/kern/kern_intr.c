@@ -632,7 +632,7 @@ name|CTR3
 argument_list|(
 name|KTR_INTR
 argument_list|,
-literal|"sched_sihand pid %d(%s) need=%d"
+literal|"sched_swi pid %d(%s) need=%d"
 argument_list|,
 name|p
 operator|->
