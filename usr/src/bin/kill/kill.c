@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)kill.c	4.3 (Berkeley) %G%"
+literal|"@(#)kill.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,17 +385,21 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
+name|isdigit
+argument_list|(
 operator|*
 operator|*
 name|argv
-operator|<
-literal|'0'
+argument_list|)
 operator|||
 operator|*
 operator|*
 name|argv
-operator|>
-literal|'9'
+operator|==
+literal|'-'
+operator|)
 condition|)
 goto|goto
 name|usage
