@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Log: co.c,v $  * Revision 5.9  1991/10/07  17:32:46  eggert  * ci -u src/RCS/co.c,v src/co.c<<\.  * -k affects just working file, not RCS file.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Warn before removing somebody else's file.  * Add -M.  Fix co -j bugs.  Tune.  *  * Revision 5.7  1991/04/21  11:58:15  eggert  * Ensure that working file is newer than RCS file after co -[lu].  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1990/12/04  05:18:38  eggert  * Don't checkaccesslist() unless necessary.  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.5  1990/11/01  05:03:26  eggert  * Fix -j.  Add -I.  *  * Revision 5.4  1990/10/04  06:30:11  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:09  eggert  * co -kv yields a readonly working file.  *  * Revision 5.2  1990/09/04  08:02:13  eggert  * Standardize yes-or-no procedure.  *  * Revision 5.0  1990/08/22  08:10:02  eggert  * Permit multiple locks by same user.  Add setuid support.  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Switch to GMT.  * Make lock and temp files faster and safer.  * Ansify and Posixate.  Add -k, -V.  Remove snooping.  Tune.  *  * Revision 4.7  89/05/01  15:11:41  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:12:15  eggert  * Fix "co -d" core dump; rawdate wasn't always initialized.  * Use execv(), not system(); fix putchar('\0') and diagnose() botches; remove lint  *   * Revision 4.5  87/12/18  11:35:40  narten  * lint cleanups (from Guy Harris)  *   * Revision 4.4  87/10/18  10:20:53  narten  * Updating version numbers changes relative to 1.1, are actually  * relative to 4.2  *   * Revision 1.3  87/09/24  13:58:30  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:21:38  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  13:39:48  wft  * made rewriteflag external.  *   * Revision 4.1  83/05/10  16:52:55  wft  * Added option -u and -f.  * Added handling of default branch.  * Replaced getpwuid() with getcaller().  * Removed calls to stat(); now done by pairfilenames().  * Changed and renamed rmoldfile() to rmworkfile().  * Replaced catchints() calls with restoreints(), unlink()--link() with rename();  *   * Revision 3.7  83/02/15  15:27:07  wft  * Added call to fastcopy() to copy remainder of RCS file.  *  * Revision 3.6  83/01/15  14:37:50  wft  * Added ignoring of interrupts while RCS file is renamed; this avoids  * deletion of RCS files during the unlink/link window.  *  * Revision 3.5  82/12/08  21:40:11  wft  * changed processing of -d to use DATEFORM; removed actual from  * call to preparejoin; re-fixed printing of done at the end.  *  * Revision 3.4  82/12/04  18:40:00  wft  * Replaced getdelta() with gettree(), SNOOPDIR with SNOOPFILE.  * Fixed printing of "done".  *  * Revision 3.3  82/11/28  22:23:11  wft  * Replaced getlogin() with getpwuid(), flcose() with ffclose(),  * %02d with %.2d, mode generation for working file with WORKMODE.  * Fixed nil printing. Fixed -j combined with -l and -p, and exit  * for non-existing revisions in preparejoin().  *  * Revision 3.2  82/10/18  20:47:21  wft  * Mode of working file is now maintained even for co -l, but write permission  * is removed.  * The working file inherits its mode from the RCS file, plus write permission  * for the owner. The write permission is not given if locking is strict and  * co does not lock.  * An existing working file without write permission is deleted automatically.  * Otherwise, co asks (empty answer: abort co).  * Call to getfullRCSname() added, check for write error added, call  * for getlogin() fixed.  *  * Revision 3.1  82/10/13  16:01:30  wft  * fixed type of variables receiving from getc() (char -> int).  * removed unused variables.  */
+comment|/* $Log: co.c,v $  * Revision 1.1.1.1  1993/06/18  04:22:11  jkh  * Updated GNU utilities  *  * Revision 5.9  1991/10/07  17:32:46  eggert  * ci -u src/RCS/co.c,v src/co.c<<\.  * -k affects just working file, not RCS file.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Warn before removing somebody else's file.  * Add -M.  Fix co -j bugs.  Tune.  *  * Revision 5.7  1991/04/21  11:58:15  eggert  * Ensure that working file is newer than RCS file after co -[lu].  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1990/12/04  05:18:38  eggert  * Don't checkaccesslist() unless necessary.  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.5  1990/11/01  05:03:26  eggert  * Fix -j.  Add -I.  *  * Revision 5.4  1990/10/04  06:30:11  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:09  eggert  * co -kv yields a readonly working file.  *  * Revision 5.2  1990/09/04  08:02:13  eggert  * Standardize yes-or-no procedure.  *  * Revision 5.0  1990/08/22  08:10:02  eggert  * Permit multiple locks by same user.  Add setuid support.  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Switch to GMT.  * Make lock and temp files faster and safer.  * Ansify and Posixate.  Add -k, -V.  Remove snooping.  Tune.  *  * Revision 4.7  89/05/01  15:11:41  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:12:15  eggert  * Fix "co -d" core dump; rawdate wasn't always initialized.  * Use execv(), not system(); fix putchar('\0') and diagnose() botches; remove lint  *   * Revision 4.5  87/12/18  11:35:40  narten  * lint cleanups (from Guy Harris)  *   * Revision 4.4  87/10/18  10:20:53  narten  * Updating version numbers changes relative to 1.1, are actually  * relative to 4.2  *   * Revision 1.3  87/09/24  13:58:30  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:21:38  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  13:39:48  wft  * made rewriteflag external.  *   * Revision 4.1  83/05/10  16:52:55  wft  * Added option -u and -f.  * Added handling of default branch.  * Replaced getpwuid() with getcaller().  * Removed calls to stat(); now done by pairfilenames().  * Changed and renamed rmoldfile() to rmworkfile().  * Replaced catchints() calls with restoreints(), unlink()--link() with rename();  *   * Revision 3.7  83/02/15  15:27:07  wft  * Added call to fastcopy() to copy remainder of RCS file.  *  * Revision 3.6  83/01/15  14:37:50  wft  * Added ignoring of interrupts while RCS file is renamed; this avoids  * deletion of RCS files during the unlink/link window.  *  * Revision 3.5  82/12/08  21:40:11  wft  * changed processing of -d to use DATEFORM; removed actual from  * call to preparejoin; re-fixed printing of done at the end.  *  * Revision 3.4  82/12/04  18:40:00  wft  * Replaced getdelta() with gettree(), SNOOPDIR with SNOOPFILE.  * Fixed printing of "done".  *  * Revision 3.3  82/11/28  22:23:11  wft  * Replaced getlogin() with getpwuid(), flcose() with ffclose(),  * %02d with %.2d, mode generation for working file with WORKMODE.  * Fixed nil printing. Fixed -j combined with -l and -p, and exit  * for non-existing revisions in preparejoin().  *  * Revision 3.2  82/10/18  20:47:21  wft  * Mode of working file is now maintained even for co -l, but write permission  * is removed.  * The working file inherits its mode from the RCS file, plus write permission  * for the owner. The write permission is not given if locking is strict and  * co does not lock.  * An existing working file without write permission is deleted automatically.  * Otherwise, co asks (empty answer: abort co).  * Call to getfullRCSname() added, check for write error added, call  * for getlogin() fixed.  *  * Revision 3.1  82/10/13  16:01:30  wft  * fixed type of variables receiving from getc() (char -> int).  * removed unused variables.  */
 end_comment
 
 begin_include
@@ -138,6 +138,9 @@ name|suffixarg
 decl_stmt|,
 modifier|*
 name|versionarg
+decl_stmt|,
+modifier|*
+name|incexcarg
 decl_stmt|;
 end_decl_stmt
 
@@ -249,7 +252,7 @@ argument|coId
 argument_list|,
 literal|"co"
 argument_list|,
-literal|"$Id: co.c,v 5.9 1991/10/07 17:32:46 eggert Exp $"
+literal|"$Id: co.c,v 1.1.1.1 1993/06/18 04:22:11 jkh Exp $"
 argument_list|)
 end_macro
 
@@ -642,6 +645,21 @@ expr_stmt|;
 name|setRCSversion
 argument_list|(
 name|versionarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+comment|/*  set keyword inclusions/exclusions  */
+name|incexcarg
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+name|setIncExc
+argument_list|(
+name|incexcarg
 argument_list|)
 expr_stmt|;
 break|break;
