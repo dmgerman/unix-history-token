@@ -854,11 +854,11 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|DB_COMMAND
+name|DB_SHOW_COMMAND
 argument_list|(
-argument|tbuf
+argument|ktr_first
 argument_list|,
-argument|db_mach_tbuf
+argument|db_ktr_first
 argument_list|)
 end_macro
 
@@ -915,11 +915,11 @@ block|}
 end_block
 
 begin_macro
-name|DB_COMMAND
+name|DB_SHOW_COMMAND
 argument_list|(
-argument|tall
+argument|ktr
 argument_list|,
-argument|db_mach_tall
+argument|db_ktr_all
 argument_list|)
 end_macro
 
@@ -928,7 +928,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|db_mach_tbuf
+name|db_ktr_first
 argument_list|(
 name|addr
 argument_list|,
@@ -964,11 +964,11 @@ block|}
 end_block
 
 begin_macro
-name|DB_COMMAND
+name|DB_SHOW_COMMAND
 argument_list|(
-argument|tnext
+argument|ktr_next
 argument_list|,
-argument|db_mach_tnext
+argument|db_ktr_next
 argument_list|)
 end_macro
 
