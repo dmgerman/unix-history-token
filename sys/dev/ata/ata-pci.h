@@ -469,6 +469,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801EB
+value|0x24db8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_NVIDIA_ID
 value|0x10de
 end_define
