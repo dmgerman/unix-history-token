@@ -3182,9 +3182,13 @@ argument_list|(
 name|secmask
 operator|<
 name|PAGE_SIZE
+operator|&&
+name|secmask
+operator|>
+literal|0
 argument_list|,
 operator|(
-literal|"vnode_pager_generic_getpages: sector size %d too large\n"
+literal|"vnode_pager_generic_getpages: sector size %d too large"
 operator|,
 name|secmask
 operator|+
