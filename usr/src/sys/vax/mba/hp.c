@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.10	%G%	*/
+comment|/*	hp.c	3.11	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * RP06/RM03 disk driver  */
+comment|/*  * RP06/RM03/RM05 disk driver  */
 end_comment
 
 begin_include
@@ -203,6 +203,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RM5
+value|027
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSECT
 value|22
 end_define
@@ -285,46 +292,17 @@ literal|15884
 block|,
 literal|0
 block|,
-comment|/* cyl 0 thru 37 */
+comment|/* A=cyl 0 thru 37 */
 literal|33440
 block|,
 literal|38
 block|,
-comment|/* cyl 38 thru 117 */
-literal|8360
-block|,
-literal|98
-block|,
-comment|/* cyl 98 thru 117 */
-ifdef|#
-directive|ifdef
-name|ERNIE
-literal|15884
-block|,
-literal|118
-block|,
-comment|/* cyl 118 thru 155 */
-literal|66880
-block|,
-literal|156
-block|,
-comment|/* cyl 156 thru 315 */
-literal|0
+comment|/* B=cyl 38 thru 117 */
+literal|340670
 block|,
 literal|0
 block|,
-literal|291346
-block|,
-literal|118
-block|,
-comment|/* cyl 118 thru 814, (like distrib) */
-literal|208582
-block|,
-literal|316
-block|,
-comment|/* cyl 316 thru 814 */
-else|#
-directive|else
+comment|/* C=cyl 0 thru 814 */
 literal|0
 block|,
 literal|0
@@ -341,14 +319,11 @@ literal|291346
 block|,
 literal|118
 block|,
-comment|/* cyl 118 thru 814 */
+comment|/* G=cyl 118 thru 814 */
 literal|0
 block|,
 literal|0
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 struct|,
 name|rm_sizes
 index|[
@@ -360,16 +335,17 @@ literal|15884
 block|,
 literal|0
 block|,
-comment|/* cyl 0 thru 99 */
+comment|/* A=cyl 0 thru 99 */
 literal|33440
 block|,
 literal|100
 block|,
-comment|/* cyl 100 thru 309 */
-literal|0
+comment|/* B=cyl 100 thru 309 */
+literal|131680
 block|,
 literal|0
 block|,
+comment|/* C=cyl 0 thru 822 */
 literal|0
 block|,
 literal|0
@@ -386,11 +362,59 @@ literal|82080
 block|,
 literal|310
 block|,
-comment|/* cyl 310 thru 822 */
+comment|/* G=cyl 310 thru 822 */
 literal|0
 block|,
 literal|0
 block|, }
+struct|,
+name|rm5_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 26 */
+literal|33440
+block|,
+literal|27
+block|,
+comment|/* B=cyl 27 thru 81 */
+literal|500992
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 823 */
+literal|15884
+block|,
+literal|562
+block|,
+comment|/* D=cyl 562 thru 588 */
+literal|55936
+block|,
+literal|589
+block|,
+comment|/* E=cyl 589 thru 680 */
+literal|86944
+block|,
+literal|681
+block|,
+comment|/* F=cyl 681 thru 823 */
+literal|159296
+block|,
+literal|562
+block|,
+comment|/* G=cyl 562 thru 823 */
+literal|291346
+block|,
+literal|82
+block|,
+comment|/* H=cyl 82 thru 561 */
+block|}
 struct|;
 end_struct
 
@@ -821,16 +845,17 @@ operator|->
 name|hpdt
 expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
 name|hp_type
 index|[
 name|unit
 index|]
-operator|==
-name|RM
 condition|)
 block|{
+case|case
+name|RM
+case|:
 name|sizes
 operator|=
 name|rm_sizes
@@ -841,9 +866,24 @@ name|NRMSECT
 operator|*
 name|NRMTRAC
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|RM5
+case|:
+name|sizes
+operator|=
+name|rm5_sizes
+expr_stmt|;
+name|nspc
+operator|=
+name|NRMSECT
+operator|*
+name|NTRAC
+expr_stmt|;
+break|break;
+case|case
+name|RP
+case|:
 name|sizes
 operator|=
 name|hp_sizes
@@ -854,6 +894,31 @@ name|NSECT
 operator|*
 name|NTRAC
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"hp: unknown device type 0%o\n"
+argument_list|,
+name|hp_type
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+name|unit
+operator|=
+name|NHP
+operator|+
+literal|1
+expr_stmt|;
+comment|/* force error */
 block|}
 if|if
 condition|(
@@ -1177,16 +1242,17 @@ name|bp
 operator|->
 name|b_cylin
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|hp_type
 index|[
 name|unit
 index|]
-operator|==
-name|RM
 condition|)
 block|{
+case|case
+name|RM
+case|:
 name|sn
 operator|=
 name|bn
@@ -1209,9 +1275,36 @@ operator|)
 operator|%
 name|NRMSECT
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|RM5
+case|:
+name|sn
+operator|=
+name|bn
+operator|%
+operator|(
+name|NRMSECT
+operator|*
+name|NTRAC
+operator|)
+expr_stmt|;
+name|sn
+operator|=
+operator|(
+name|sn
+operator|+
+name|NRMSECT
+operator|-
+name|hpSDIST
+operator|)
+operator|%
+name|NRMSECT
+expr_stmt|;
+break|break;
+case|case
+name|RP
+case|:
 name|sn
 operator|=
 name|bn
@@ -1233,6 +1326,13 @@ name|hpSDIST
 operator|)
 operator|%
 name|NSECT
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"hpustart"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1516,16 +1616,17 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|hp_type
 index|[
 name|dn
 index|]
-operator|==
-name|RM
 condition|)
 block|{
+case|case
+name|RM
+case|:
 name|nspc
 operator|=
 name|NRMSECT
@@ -1547,9 +1648,35 @@ index|]
 operator|.
 name|cyloff
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|RM5
+case|:
+name|nspc
+operator|=
+name|NRMSECT
+operator|*
+name|NTRAC
+expr_stmt|;
+name|ns
+operator|=
+name|NRMSECT
+expr_stmt|;
+name|cn
+operator|=
+name|rm5_sizes
+index|[
+name|unit
+operator|&
+literal|07
+index|]
+operator|.
+name|cyloff
+expr_stmt|;
+break|break;
+case|case
+name|RP
+case|:
 name|nspc
 operator|=
 name|NSECT
@@ -1570,6 +1697,13 @@ literal|07
 index|]
 operator|.
 name|cyloff
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"hpstart"
+argument_list|)
 expr_stmt|;
 block|}
 name|cn
@@ -2648,16 +2782,17 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|hp_type
 index|[
 name|dn
 index|]
-operator|==
-name|RM
 condition|)
 block|{
+case|case
+name|RM
+case|:
 name|ns
 operator|=
 name|NRMSECT
@@ -2666,9 +2801,22 @@ name|nt
 operator|=
 name|NRMTRAC
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|RM5
+case|:
+name|ns
+operator|=
+name|NRMSECT
+expr_stmt|;
+name|nt
+operator|=
+name|NTRAC
+expr_stmt|;
+break|break;
+case|case
+name|RP
+case|:
 name|ns
 operator|=
 name|NSECT
@@ -2676,6 +2824,13 @@ expr_stmt|;
 name|nt
 operator|=
 name|NTRAC
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"hpecc"
+argument_list|)
 expr_stmt|;
 block|}
 name|cn
