@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.113 1997/12/28 02:46:26 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.114 1997/12/28 21:55:04 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -473,7 +473,7 @@ name|stat
 operator|=
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -496,7 +496,7 @@ name|void
 operator|)
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -582,9 +582,9 @@ name|CS8
 expr_stmt|;
 name|tcsetattr
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
-name|TCSADRAIN
+name|TCSANOW
 argument_list|,
 operator|&
 name|newtio
@@ -628,7 +628,7 @@ condition|)
 return|return;
 name|tcgetattr
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 operator|&
 name|newtio
@@ -662,7 +662,7 @@ name|OPOST
 expr_stmt|;
 name|tcsetattr
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|TCSADRAIN
 argument_list|,
@@ -674,7 +674,7 @@ name|stat
 operator|=
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -697,7 +697,7 @@ name|void
 operator|)
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -733,7 +733,7 @@ name|stat
 decl_stmt|;
 name|tcsetattr
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|TCSADRAIN
 argument_list|,
@@ -745,7 +745,7 @@ name|stat
 operator|=
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -769,7 +769,7 @@ name|void
 operator|)
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -796,7 +796,7 @@ name|stat
 operator|=
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -820,7 +820,7 @@ name|void
 operator|)
 name|fcntl
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -830,9 +830,9 @@ expr_stmt|;
 block|}
 name|tcsetattr
 argument_list|(
-literal|0
+name|netfd
 argument_list|,
-name|TCSANOW
+name|TCSADRAIN
 argument_list|,
 operator|&
 name|oldtio
@@ -1102,7 +1102,7 @@ argument_list|()
 operator|==
 name|tcgetpgrp
 argument_list|(
-literal|0
+name|netfd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1727,6 +1727,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|tcgetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+operator|&
+name|oldtio
+argument_list|)
+expr_stmt|;
+comment|/* Save original tty mode */
 name|argc
 operator|--
 expr_stmt|;
@@ -1889,10 +1898,6 @@ name|label
 else|:
 literal|"default"
 expr_stmt|;
-name|VarTerm
-operator|=
-literal|0
-expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LogWARN
@@ -1988,7 +1993,6 @@ name|mode
 operator|&
 name|MODE_INTER
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -1996,11 +2000,6 @@ argument_list|,
 literal|"Interactive mode\n"
 argument_list|)
 expr_stmt|;
-name|netfd
-operator|=
-name|STDOUT_FILENO
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2040,15 +2039,6 @@ return|return
 name|EX_START
 return|;
 block|}
-name|tcgetattr
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|oldtio
-argument_list|)
-expr_stmt|;
-comment|/* Save original tty mode */
 name|pending_signal
 argument_list|(
 name|SIGHUP
@@ -2491,12 +2481,12 @@ expr_stmt|;
 comment|/* We know it's currently stdout */
 name|close
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2505,7 +2495,7 @@ name|mode
 operator|&
 name|MODE_DIRECT
 condition|)
-comment|/* fd 0 gets used by OpenModem in DIRECT mode */
+comment|/* STDIN_FILENO gets used by OpenModem in DIRECT mode */
 name|TtyInit
 argument_list|(
 literal|1
@@ -2524,7 +2514,7 @@ argument_list|()
 expr_stmt|;
 name|close
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 block|}
@@ -2533,12 +2523,41 @@ else|else
 block|{
 name|close
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|netfd
+operator|=
+name|open
+argument_list|(
+name|_PATH_TTY
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot open %s for intput !\n"
+argument_list|,
+name|_PATH_TTY
+argument_list|)
+expr_stmt|;
+return|return
+literal|2
+return|;
+block|}
 name|close
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 name|TtyInit
@@ -2941,10 +2960,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-name|fileno
-argument_list|(
-name|VarTerm
-argument_list|)
+name|netfd
 argument_list|,
 operator|&
 name|ch
