@@ -2121,14 +2121,6 @@ block|{
 comment|/* 			 * This allows pages to be virtually copied from a  			 * backing_object into the first_object, where the  			 * backing object has no other refs to it, and cannot 			 * gain any more refs.  Instead of a bcopy, we just  			 * move the page from the backing object to the  			 * first object.  Note that we must mark the page  			 * dirty in the first object so that it will go out  			 * to swap when needed. 			 */
 if|if
 condition|(
-name|map_generation
-operator|==
-name|fs
-operator|.
-name|map
-operator|->
-name|timestamp
-operator|&&
 comment|/* 				 * Only one shadow object 				 */
 operator|(
 name|fs
@@ -2186,7 +2178,6 @@ operator|)
 operator|)
 operator|&&
 comment|/* 				 * We don't chase down the shadow chain 				 */
-operator|(
 name|fs
 operator|.
 name|object
@@ -2196,29 +2187,8 @@ operator|.
 name|first_object
 operator|->
 name|backing_object
-operator|)
-operator|&&
-comment|/* 				 * grab the lock if we need to 				 */
-operator|(
-name|fs
-operator|.
-name|lookup_still_valid
-operator|||
-name|vm_map_trylock
-argument_list|(
-name|fs
-operator|.
-name|map
-argument_list|)
-operator|)
 condition|)
 block|{
-name|fs
-operator|.
-name|lookup_still_valid
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 				 * get rid of the unnecessary page 				 */
 name|vm_page_lock_queues
 argument_list|()
