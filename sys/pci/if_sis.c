@@ -8625,6 +8625,26 @@ name|sc
 operator|->
 name|sis_type
 operator|==
+name|SIS_TYPE_83816
+condition|)
+block|{
+comment|/* 		 * MPII03.D: Half Duplex Excessive Collisions. 		 * Also page 49 in 83816 manual 		 */
+name|SIS_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_TX_CFG
+argument_list|,
+name|SIS_TXCFG_MPII03D
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sis_type
+operator|==
 name|SIS_TYPE_83815
 operator|&&
 name|IFM_SUBTYPE
