@@ -1322,7 +1322,7 @@ name|ubsa_softc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * initialize rts, dtr variables to something 	 * different from boolean 0, 1  	 */
+comment|/* 	 * initialize rts, dtr variables to something 	 * different from boolean 0, 1 	 */
 name|sc
 operator|->
 name|sc_dtr
