@@ -35,10 +35,33 @@ begin_comment
 comment|/* For struct klist. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/filedesc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
 end_include
 
 begin_include
@@ -67,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<sys/runq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sigio.h>
 end_include
 
 begin_include
