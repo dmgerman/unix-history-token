@@ -2939,9 +2939,9 @@ block|{
 comment|/* kludge for __dtoa irregularity */
 if|if
 condition|(
-name|prec
-operator|==
-literal|0
+name|expt
+operator|>=
+name|ndig
 operator|&&
 operator|(
 name|flags
