@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: pcb.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -55,6 +55,10 @@ name|fpreg
 name|pcb_fp
 decl_stmt|;
 comment|/* FP registers		[SW] */
+name|u_int64_t
+name|pcb_fp_control
+decl_stmt|;
+comment|/* IEEE control word	[SW] */
 name|unsigned
 name|long
 name|pcb_onfault
