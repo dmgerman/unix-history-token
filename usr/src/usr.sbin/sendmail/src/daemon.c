@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -304,10 +304,6 @@ for|for
 control|(
 init|;
 condition|;
-name|sleep
-argument_list|(
-literal|10
-argument_list|)
 control|)
 block|{
 comment|/* get a socket for the SMTP connection */
@@ -368,8 +364,7 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* wait for a connection */
-do|do
-block|{
+comment|/* contorted code is due to a 4.1a kernel bug */
 name|errno
 operator|=
 literal|0
@@ -391,19 +386,6 @@ operator|(
 name|s
 operator|)
 return|;
-block|}
-do|while
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-do|;
-name|syserr
-argument_list|(
-literal|"getconnection: accept"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -412,6 +394,24 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"getconnection: accept"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_block
