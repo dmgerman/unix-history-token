@@ -544,7 +544,7 @@ modifier|*
 name|data
 decl_stmt|;
 comment|/* position in data buffer so far */
-name|int32
+name|int32_t
 name|datalen
 decl_stmt|;
 comment|/* bytes remaining to transfer */
@@ -831,7 +831,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32
+name|int32_t
 name|nca_scsi_cmd
 parameter_list|(
 name|struct
@@ -844,7 +844,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32
+name|u_int32_t
 name|nca_adapter_info
 parameter_list|(
 name|int
@@ -3047,7 +3047,7 @@ comment|/*  * Return some information to the caller about  * the adapter and its
 end_comment
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|nca_adapter_info
 parameter_list|(
 name|int
@@ -3224,7 +3224,7 @@ comment|/*  * Start a scsi operation given the command and the data address.  * 
 end_comment
 
 begin_function
-name|int32
+name|int32_t
 name|nca_scsi_cmd
 parameter_list|(
 name|struct

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.18 1996/01/04 21:11:21 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.19 1996/01/07 19:22:35 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3409,7 +3409,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|aic_adapter_info
 name|__P
 argument_list|(
@@ -3499,7 +3499,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32
+name|int32_t
 name|aic_scsi_cmd
 name|__P
 argument_list|(
@@ -5023,7 +5023,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int32
+name|int32_t
 name|aic_scsi_cmd
 parameter_list|(
 name|xs
@@ -5430,7 +5430,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32
+name|u_int32_t
 name|aic_adapter_info
 parameter_list|(
 name|unit
