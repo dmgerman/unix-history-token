@@ -343,6 +343,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates for file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|fssize
 decl_stmt|;
 end_decl_stmt
@@ -1474,6 +1485,18 @@ operator|.
 name|fs_maxsymlinklen
 operator|=
 name|MAXSYMLINKLEN
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Uflag
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_flags
+operator||=
+name|FS_DOSOFTDEP
 expr_stmt|;
 block|}
 comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 */
@@ -4307,7 +4330,7 @@ name|B2MBFACTOR
 value|(1 / (1024.0 * 1024.0))
 name|printf
 argument_list|(
-literal|"\t%.1fMB in %d cyl groups (%d c/g, %.2fMB/g, %d i/g)\n"
+literal|"\t%.1fMB in %d cyl groups (%d c/g, %.2fMB/g, %d i/g)%s\n"
 argument_list|,
 operator|(
 name|float
@@ -4346,6 +4369,16 @@ argument_list|,
 name|sblock
 operator|.
 name|fs_ipg
+argument_list|,
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_DOSOFTDEP
+condition|?
+literal|" SOFTUPDATES"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 undef|#
