@@ -2108,7 +2108,7 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|bp
 parameter_list|,
 specifier|const
 name|void
@@ -2119,6 +2119,13 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|bp
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -2172,7 +2179,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|m
+name|bp
 operator|=
 name|m_prepend
 argument_list|(
@@ -2186,7 +2193,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|m
+name|bp
 return|;
 block|}
 end_function
