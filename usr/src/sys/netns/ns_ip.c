@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -595,6 +595,7 @@ operator|>>
 literal|2
 operator|)
 condition|)
+block|{
 name|ip_stripoptions
 argument_list|(
 name|ip
@@ -607,6 +608,51 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+name|s
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|=
+name|m_pullup
+argument_list|(
+name|m
+argument_list|,
+name|s
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nsipif
+operator|.
+name|if_ierrors
+operator|++
+expr_stmt|;
+return|return;
+block|}
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Make mbuf data length reflect IDP length. 	 * If not enough data to reflect IDP length, drop. 	 */
 name|m
 operator|->
@@ -696,18 +742,7 @@ name|m
 expr_stmt|;
 return|return;
 block|}
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|len
-operator|-
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-comment|/* ip->ip_len = len; */
+comment|/* Any extra will be trimmed off by the NS routines */
 block|}
 comment|/* 	 * Deliver to NS 	 */
 name|s
@@ -1057,7 +1092,7 @@ name|ip
 operator|->
 name|ip_p
 operator|=
-name|IPPROTO_PUP
+name|IPPROTO_IDP
 expr_stmt|;
 name|ip
 operator|->
