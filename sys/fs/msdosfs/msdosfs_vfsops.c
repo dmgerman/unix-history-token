@@ -906,7 +906,7 @@ operator|&=
 operator|~
 name|MSDOSFSMNT_RONLY
 expr_stmt|;
-comment|/* [2753891] Now that the volume is modifiable, mark it dirty */
+comment|/* Now that the volume is modifiable, mark it dirty. */
 name|error
 operator|=
 name|markvoldirty
@@ -921,7 +921,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -2869,7 +2871,7 @@ name|MSDOSFSMNT_RONLY
 expr_stmt|;
 else|else
 block|{
-comment|/* [2753891] Mark the volume dirty while it is mounted read/write */
+comment|/* Mark the volume dirty while it is mounted read/write. */
 if|if
 condition|(
 operator|(
@@ -3214,7 +3216,7 @@ name|si_mountpoint
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* [2753891] If the volume was mounted read/write, mark it clean now */
+comment|/* If the volume was mounted read/write, mark it clean now. */
 if|if
 condition|(
 operator|(
@@ -3241,12 +3243,13 @@ if|if
 condition|(
 name|error
 operator|&&
-operator|!
 operator|(
 name|flags
 operator|&
 name|FORCECLOSE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
