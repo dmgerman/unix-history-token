@@ -445,6 +445,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0444
 argument_list|)
