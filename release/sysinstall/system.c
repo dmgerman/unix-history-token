@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.13 1995/10/22 14:06:38 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.15 1995/10/26 08:56:13 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -329,6 +329,10 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|struct
+name|termios
+name|foo
+decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -342,6 +346,40 @@ name|DialogActive
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|foo
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+literal|'\010'
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+literal|0
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+expr_stmt|;
+block|}
 name|status
 operator|=
 name|system
