@@ -189,6 +189,19 @@ define|\
 value|(((type)< Pproc) ? \ 			((type) + 2) : \ 			((((pid)+1)<< 4) + ((int) (type))))
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHECKIO
+parameter_list|(
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+define|\
+value|((((p1)->p_cred->pc_ucred->cr_uid == (p2)->p_cred->p_ruid)&& \        ((p1)->p_cred->p_ruid == (p2)->p_cred->p_ruid)&& \        ((p1)->p_cred->p_svuid == (p2)->p_cred->p_ruid)&& \        ((p2)->p_flag& P_SUGID) == 0) || \       (suser_xxx((p1)->p_cred->pc_ucred, (p1), PRISON_ROOT) == 0))
+end_define
+
 begin_comment
 comment|/*  * Convert between pfsnode vnode  */
 end_comment

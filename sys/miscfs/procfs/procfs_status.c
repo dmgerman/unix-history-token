@@ -772,6 +772,14 @@ operator|&&
 operator|(
 name|ps_argsopen
 operator|||
+operator|(
+name|CHECKIO
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|)
+operator|&&
 operator|!
 name|p_trespass
 argument_list|(
@@ -779,6 +787,7 @@ name|curp
 argument_list|,
 name|p
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{

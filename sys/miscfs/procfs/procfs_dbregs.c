@@ -88,6 +88,14 @@ name|kl
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|CHECKIO
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|)
+operator|||
 name|p_trespass
 argument_list|(
 name|curp
