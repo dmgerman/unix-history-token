@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#92 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#106 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -169,21 +169,14 @@ begin_define
 define|#
 directive|define
 name|SCB_LIST_NULL_LE
-value|(ahd_htole16(SCB_LIST_NULL))
+value|(aic_htole16(SCB_LIST_NULL))
 end_define
 
 begin_define
 define|#
 directive|define
 name|QOUTFIFO_ENTRY_VALID
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|QOUTFIFO_ENTRY_VALID_LE
-value|(ahd_htole16(0x8000))
+value|0x80
 end_define
 
 begin_define
@@ -418,7 +411,7 @@ parameter_list|(
 name|scb
 parameter_list|)
 define|\
-value|ahd_le16toh(scb->hscb->tag)
+value|aic_le16toh(scb->hscb->tag)
 end_define
 
 begin_ifndef
@@ -639,6 +632,13 @@ begin_comment
 comment|/******************* Chip Characteristics/Operating Settings  *****************/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|ahd_attach_to_HostRAID_controllers
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Chip Type  * The chip order is from least sophisticated to most sophisticated.  */
 end_comment
@@ -732,12 +732,21 @@ init|=
 literal|0x10000
 block|,
 comment|/* SCSIENWRDIS bit */
+name|AHD_FAST_CDB_DELIVERY
+init|=
+literal|0x20000
+block|,
+comment|/* CDB acks released to Output Sync */
 name|AHD_REMOVABLE
 init|=
 literal|0x00000
 block|,
 comment|/* Hot-Swap supported - None so far*/
 name|AHD_AIC7901_FE
+init|=
+name|AHD_FENONE
+block|,
+name|AHD_AIC7901A_FE
 init|=
 name|AHD_FENONE
 block|,
@@ -1010,6 +1019,15 @@ block|,
 name|AHD_HAD_FIRST_SEL
 init|=
 literal|0x1000000
+block|,
+name|AHD_SHUTDOWN_RECOVERY
+init|=
+literal|0x2000000
+block|,
+comment|/* Terminate recovery thread. */
+name|AHD_HOSTRAID_BOARD
+init|=
+literal|0x4000000
 block|}
 name|ahd_flag
 typedef|;
@@ -1343,7 +1361,7 @@ name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
 name|bus_addr_t
-name|physaddr
+name|busaddr
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -1442,7 +1460,12 @@ block|,
 name|SCB_SILENT
 init|=
 literal|0x10000
+block|,
 comment|/* 					   * Be quiet about transmission type 					   * errors.  They are expected and we 					   * don't want to upset the user.  This 					   * flag is typically used during DV. 					   */
+name|SCB_TIMEDOUT
+init|=
+literal|0x20000
+comment|/* 					  * SCB has timed out and is on the 					  * timedout list. 					  */
 block|}
 name|scb_flag
 typedef|;
@@ -1511,12 +1534,18 @@ define|#
 directive|define
 name|collision_links
 value|links2.le
+name|LIST_ENTRY
+argument_list|(
+argument|scb
+argument_list|)
+name|timedout_links
+expr_stmt|;
 name|struct
 name|scb
 modifier|*
 name|col_scb
 decl_stmt|;
-name|ahd_io_ctx_t
+name|aic_io_ctx_t
 name|io_ctx
 decl_stmt|;
 name|struct
@@ -3109,6 +3138,29 @@ end_typedef
 
 begin_struct
 struct|struct
+name|ahd_completion
+block|{
+name|uint16_t
+name|tag
+decl_stmt|;
+name|uint8_t
+name|sg_status
+decl_stmt|;
+name|uint8_t
+name|pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint8_t
+name|valid_tag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ahd_softc
 block|{
 name|bus_space_tag_t
@@ -3141,6 +3193,11 @@ name|hardware_scb
 modifier|*
 name|next_queued_hscb
 decl_stmt|;
+name|struct
+name|map_node
+modifier|*
+name|next_queued_hscb_map
+decl_stmt|;
 comment|/* 	 * SCBs that have been sent to the controller 	 */
 name|LIST_HEAD
 argument_list|(
@@ -3148,6 +3205,14 @@ argument_list|,
 argument|scb
 argument_list|)
 name|pending_scbs
+expr_stmt|;
+comment|/* 	 * SCBs whose timeout routine has been called. 	 */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|timedout_scbs
 expr_stmt|;
 comment|/* 	 * Current register window mode information. 	 */
 name|ahd_mode
@@ -3170,7 +3235,7 @@ modifier|*
 name|platform_data
 decl_stmt|;
 comment|/* 	 * Platform specific device information. 	 */
-name|ahd_dev_softc_t
+name|aic_dev_softc_t
 name|dev_softc
 decl_stmt|;
 comment|/* 	 * Bus specific device information. 	 */
@@ -3199,10 +3264,10 @@ modifier|*
 name|pending_device
 decl_stmt|;
 comment|/* 	 * Timer handles for timer driven callbacks. 	 */
-name|ahd_timer_t
+name|aic_timer_t
 name|reset_timer
 decl_stmt|;
-name|ahd_timer_t
+name|aic_timer_t
 name|stat_timer
 decl_stmt|;
 comment|/* 	 * Statistics. 	 */
@@ -3245,14 +3310,12 @@ name|seeprom_config
 modifier|*
 name|seep_config
 decl_stmt|;
-comment|/* Values to store in the SEQCTL register for pause and unpause */
-name|uint8_t
-name|unpause
-decl_stmt|;
-name|uint8_t
-name|pause
-decl_stmt|;
 comment|/* Command Queues */
+name|struct
+name|ahd_completion
+modifier|*
+name|qoutfifo
+decl_stmt|;
 name|uint16_t
 name|qoutfifonext
 decl_stmt|;
@@ -3268,9 +3331,16 @@ index|[
 name|AHD_SCB_MAX
 index|]
 decl_stmt|;
+comment|/* 	 * Our qfreeze count.  The sequencer compares 	 * this value with its own counter to determine 	 * whether to allow selections to occur. 	 */
 name|uint16_t
-modifier|*
-name|qoutfifo
+name|qfreeze_cnt
+decl_stmt|;
+comment|/* Values to store in the SEQCTL register for pause and unpause */
+name|uint8_t
+name|unpause
+decl_stmt|;
+name|uint8_t
+name|pause
 decl_stmt|;
 comment|/* Critical Section Data */
 name|struct
@@ -3357,11 +3427,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|shared_data_dmat
 decl_stmt|;
-name|bus_dmamap_t
-name|shared_data_dmamap
-decl_stmt|;
-name|bus_addr_t
-name|shared_data_busaddr
+name|struct
+name|map_node
+name|shared_data_map
 decl_stmt|;
 comment|/* Information saved through suspend/resume cycles */
 name|struct
@@ -3606,7 +3674,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_IOADDR0
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -3617,7 +3685,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_MEMADDR
-value|(PCIR_MAPS + 4)
+value|PCIR_BAR(1)
 end_define
 
 begin_comment
@@ -3628,7 +3696,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_IOADDR1
-value|(PCIR_MAPS + 12)
+value|PCIR_BAR(3)
 end_define
 
 begin_comment
@@ -3852,7 +3920,7 @@ name|ahd_pci_identity
 modifier|*
 name|ahd_find_pci_device
 parameter_list|(
-name|ahd_dev_softc_t
+name|aic_dev_softc_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4682,6 +4750,30 @@ name|struct
 name|scb
 modifier|*
 name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_timeout
+parameter_list|(
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_recover_commands
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
 parameter_list|)
 function_decl|;
 end_function_decl
