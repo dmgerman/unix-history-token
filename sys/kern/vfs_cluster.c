@@ -2416,6 +2416,8 @@ parameter_list|(
 name|bp
 parameter_list|,
 name|filesize
+parameter_list|,
+name|seqcount
 parameter_list|)
 name|struct
 name|buf
@@ -2424,6 +2426,9 @@ name|bp
 decl_stmt|;
 name|u_quad_t
 name|filesize
+decl_stmt|;
+name|int
+name|seqcount
 decl_stmt|;
 block|{
 name|struct
@@ -2591,7 +2596,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Next block is not sequential. 			 * 			 * If we are not writing at end of file, the process 			 * seeked to another point in the file since its last 			 * write, or we have reached our maximum cluster size, 			 * then push the previous cluster. Otherwise try 			 * reallocating to make it sequential. 			 */
+comment|/* 			 * Next block is not sequential. 			 * 			 * If we are not writing at end of file, the process 			 * seeked to another point in the file since its last 			 * write, or we have reached our maximum cluster size, 			 * then push the previous cluster. Otherwise try 			 * reallocating to make it sequential. 			 * 			 * Change to algorithm: only push previous cluster if 			 * it was sequential from the point of view of the 			 * seqcount heuristic, otherwise leave the buffer  			 * intact so we can potentially optimize the I/O 			 * later on in the buf_daemon or update daemon 			 * flush. 			 */
 name|cursize
 operator|=
 name|vp
@@ -2638,7 +2643,12 @@ if|if
 condition|(
 operator|!
 name|async
+operator|&&
+name|seqcount
+operator|>
+literal|0
 condition|)
+block|{
 name|cluster_wbuild_wb
 argument_list|(
 name|vp
@@ -2652,6 +2662,7 @@ argument_list|,
 name|cursize
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2703,7 +2714,7 @@ name|buflist
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Failed, push the previous cluster. 					 */
+comment|/* 					 * Failed, push the previous cluster 					 * if *really* writing sequentially 					 * in the logical file (seqcount> 1), 					 * otherwise delay it in the hopes that 					 * the low level disk driver can 					 * optimize the write ordering. 					 */
 for|for
 control|(
 name|bpp
@@ -2732,6 +2743,13 @@ argument_list|,
 name|M_SEGMENT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|seqcount
+operator|>
+literal|1
+condition|)
+block|{
 name|cluster_wbuild_wb
 argument_list|(
 name|vp
@@ -2745,6 +2763,7 @@ argument_list|,
 name|cursize
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2954,12 +2973,18 @@ operator|->
 name|v_clen
 condition|)
 block|{
-comment|/* 		 * At end of cluster, write it out. 		 */
+comment|/* 		 * At end of cluster, write it out if seqcount tells us we 		 * are operating sequentially, otherwise let the buf or 		 * update daemon handle it. 		 */
 name|bdwrite
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|seqcount
+operator|>
+literal|1
+condition|)
 name|cluster_wbuild_wb
 argument_list|(
 name|vp
@@ -2993,12 +3018,14 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* 		 * In the middle of a cluster, so just delay the I/O for now. 		 */
 name|bdwrite
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 name|vp
 operator|->
 name|v_lastw

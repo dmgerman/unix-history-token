@@ -300,9 +300,9 @@ name|f_seqcount
 decl_stmt|;
 comment|/* 				 * count of sequential accesses -- cleared 				 * by most seek operations. 				 */
 name|off_t
-name|f_nextread
+name|f_nextoff
 decl_stmt|;
-comment|/* 				 * offset of next expected read 				 */
+comment|/* 				 * offset of next expected read or write 				 */
 name|off_t
 name|f_offset
 decl_stmt|;

@@ -764,7 +764,7 @@ comment|/* exclusive create request */
 end_comment
 
 begin_comment
-comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead)  */
+comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead and  * help with write clustering)  */
 end_comment
 
 begin_define
