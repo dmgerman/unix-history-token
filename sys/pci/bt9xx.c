@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946 and BT956 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt9xx.c,v 1.3 1995/12/14 14:19:19 peter Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946 and BT956 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt9xx.c,v 1.3.2.1 1996/02/12 17:03:27 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -74,13 +74,6 @@ end_include
 begin_comment
 comment|/* XXX Need more device IDs */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_BASEADR0
-value|PCI_MAP_REG_START
-end_define
 
 begin_define
 define|#
@@ -224,6 +217,9 @@ name|int
 name|unit
 decl_stmt|;
 block|{
+name|u_char
+name|reg
+decl_stmt|;
 name|u_long
 name|io_port
 decl_stmt|;
@@ -237,26 +233,64 @@ name|bt_data
 modifier|*
 name|bt
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+for|for
+control|(
+name|reg
+operator|=
+name|PCI_MAP_REG_START
+init|;
+name|reg
+operator|<
+name|PCI_MAP_REG_END
+condition|;
+name|reg
+operator|+=
+literal|4
+control|)
+block|{
 name|io_port
 operator|=
 name|pci_conf_read
 argument_list|(
 name|config_id
 argument_list|,
-name|PCI_BASEADR0
+name|reg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|io_port
+operator|&
+operator|~
+literal|7
 operator|)
+operator|==
+literal|0
 condition|)
-return|return;
-comment|/* 	 * The first bit of PCI_BASEADR0 is always 	 * set hence we mask it off. 	 */
+continue|continue;
+if|if
+condition|(
+name|io_port
+operator|&
+name|PCI_MAP_IO
+condition|)
+block|{
 name|io_port
 operator|&=
-literal|0xfffffffe
+operator|~
+name|PCI_MAP_IO
 expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|reg
+operator|==
+name|PCI_MAP_REG_END
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
