@@ -1046,7 +1046,7 @@ literal|"GenuineTMx86"
 argument_list|)
 operator|!=
 literal|0
-operator|||
+operator|&&
 name|strcmp
 argument_list|(
 name|cpu_vendor
