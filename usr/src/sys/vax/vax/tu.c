@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%M	6.1	83/07/29	*/
+comment|/*	%M	6.2	83/10/12	*/
 end_comment
 
 begin_if
@@ -3333,7 +3333,6 @@ expr_stmt|;
 name|timeout
 argument_list|(
 name|tustart
-argument_list|()
 argument_list|,
 operator|(
 name|caddr_t
