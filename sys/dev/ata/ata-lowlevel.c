@@ -1396,6 +1396,18 @@ condition|)
 block|{
 comment|/* ATA PIO data transfer and control commands */
 default|default:
+comment|/* XXX Doesn't handle the non-PIO case. */
+if|if
+condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+condition|)
+return|return
+name|ATA_OP_FINISHED
+return|;
 comment|/* on control commands read back registers to the request struct */
 if|if
 condition|(
