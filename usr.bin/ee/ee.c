@@ -6282,6 +6282,7 @@ argument_list|(
 name|window
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|)
 name|character
@@ -6301,6 +6302,7 @@ argument_list|(
 name|window
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|)
 name|character
