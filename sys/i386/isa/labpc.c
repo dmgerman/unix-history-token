@@ -1751,7 +1751,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cltr
+name|ctlr
 operator|*
 argument_list|)
 argument_list|)
