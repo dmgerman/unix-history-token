@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tttermcap.c	3.1 83/08/17"
+literal|"@(#)tttermcap.c	3.2 83/12/17"
 decl_stmt|;
 end_decl_stmt
 

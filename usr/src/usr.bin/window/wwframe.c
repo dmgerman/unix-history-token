@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwframe.c	3.12 83/12/02"
+literal|"@(#)wwframe.c	3.13 83/12/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,8 +1283,6 @@ name|code
 operator|&
 name|WWF_MASK
 index|]
-operator|&
-name|WWC_CMASK
 expr_stmt|;
 name|f
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.8 83/09/15  */
+comment|/*  *	@(#)tt.h	3.9 83/12/17  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
 comment|/* the frame characters */
-name|char
+name|short
 modifier|*
 name|tt_frame
 decl_stmt|;
