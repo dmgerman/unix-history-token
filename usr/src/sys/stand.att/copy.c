@@ -1,10 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)copy.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)copy.c	7.5 (Berkeley) %G%  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BSIZE
+value|10240
+end_define
+
 begin_comment
-comment|/*  * Copy from to in 10K units.  * Intended for use in system  * installation.  */
+comment|/*  * Copy from from to to.  Intended for use in system installation.  */
 end_comment
 
 begin_function
@@ -22,11 +29,15 @@ decl_stmt|,
 name|to
 decl_stmt|,
 name|record
+decl_stmt|,
+name|rcc
+decl_stmt|,
+name|wcc
 decl_stmt|;
 name|char
-name|buffer
+name|buf
 index|[
-literal|10240
+name|BSIZE
 index|]
 decl_stmt|;
 name|from
@@ -54,35 +65,25 @@ operator|=
 literal|0
 init|;
 condition|;
-name|record
 operator|++
+name|record
 control|)
 block|{
-specifier|register
-name|int
-name|rcc
-decl_stmt|,
-name|wcc
-decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|rcc
 operator|=
 name|read
 argument_list|(
 name|from
 argument_list|,
-name|buffer
+name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
+name|BSIZE
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rcc
-operator|==
-literal|0
+operator|)
 condition|)
 break|break;
 if|if
@@ -105,12 +106,31 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
+name|record
+operator|&&
+name|rcc
+operator|!=
+name|BSIZE
+condition|)
+block|{
+name|rcc
+operator|=
+name|BSIZE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Block size set from input; %d bytes\n"
+argument_list|,
+name|BSIZE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|rcc
 operator|<
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
+name|BSIZE
 condition|)
 name|printf
 argument_list|(
@@ -118,45 +138,41 @@ literal|"Record %d: read short; expected %d, got %d\n"
 argument_list|,
 name|record
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
+name|BSIZE
 argument_list|,
 name|rcc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For bug in ht driver. 		 */
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* For bug in ht driver. */
 if|if
 condition|(
 name|rcc
 operator|>
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
+name|BSIZE
 condition|)
 name|rcc
 operator|=
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
+name|BSIZE
 expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
 name|wcc
 operator|=
 name|write
 argument_list|(
 name|to
 argument_list|,
-name|buffer
+name|buf
 argument_list|,
 name|rcc
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wcc
+operator|)
 operator|<
 literal|0
 condition|)
@@ -195,12 +211,11 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"Copy completed: %d records copied\n"
+literal|"copy completed: %d records copied\n"
 argument_list|,
 name|record
 argument_list|)
 expr_stmt|;
-comment|/* can't call exit here */
 block|}
 end_function
 
