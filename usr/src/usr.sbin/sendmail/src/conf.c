@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -56,6 +56,8 @@ block|,
 literal|"from"
 block|,
 name|H_ADDR
+operator||
+name|H_FROM
 operator||
 name|H_CHECK
 block|,
