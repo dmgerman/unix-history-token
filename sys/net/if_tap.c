@@ -613,6 +613,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|clone_cleanup
+argument_list|(
+operator|&
+name|tapclones
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
