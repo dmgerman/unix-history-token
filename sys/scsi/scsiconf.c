@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.29 1995/05/03 18:09:13 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.30 1995/05/30 08:13:45 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1150,6 +1150,38 @@ block|,
 name|SC_MORE_LUS
 block|}
 block|,
+block|{
+name|T_READONLY
+block|,
+name|T_REMOV
+block|,
+literal|"PIONEER"
+block|,
+literal|"CD-ROM DRM-602X"
+block|,
+literal|"*"
+block|,
+literal|"cd"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+block|{
+name|T_READONLY
+block|,
+name|T_REMOV
+block|,
+literal|"CHINON"
+block|,
+literal|"CD-ROM CDS-535"
+block|,
+literal|"*"
+block|,
+literal|"cd"
+block|,
+name|SC_ONE_LU
+block|}
+block|,
 endif|#
 directive|endif
 endif|#
@@ -1271,9 +1303,9 @@ name|T_READONLY
 operator|,
 name|T_REMOV
 operator|,
-literal|"SONY    "
+literal|"SONY"
 operator|,
-literal|"CD-ROM CDU-8012 "
+literal|"CD-ROM CDU-8012"
 operator|,
 literal|"3.1a"
 operator|,
@@ -1287,15 +1319,47 @@ name|T_READONLY
 operator|,
 name|T_REMOV
 operator|,
-literal|"PIONEER "
+literal|"PIONEER"
 operator|,
-literal|"CD-ROM DRM-600  "
+literal|"CD-ROM DRM-600"
 operator|,
 literal|"any"
 operator|,
 literal|"cd"
 operator|,
 name|SC_MORE_LUS
+block|}
+operator|,
+block|{
+name|T_READONLY
+operator|,
+name|T_REMOV
+operator|,
+literal|"PIONEER"
+operator|,
+literal|"CD-ROM DRM-602X"
+operator|,
+literal|"any"
+operator|,
+literal|"cd"
+operator|,
+name|SC_MORE_LUS
+block|}
+operator|,
+block|{
+name|T_READONLY
+operator|,
+name|T_REMOV
+operator|,
+literal|"CHINON"
+operator|,
+literal|"CD-ROM CDS-535"
+operator|,
+literal|"any"
+operator|,
+literal|"cd"
+operator|,
+name|SC_ONE_LU
 block|}
 operator|,
 endif|#
@@ -5115,7 +5179,7 @@ name|SC_SHOWME
 condition|)
 name|printf
 argument_list|(
-literal|"\n%s-\n%s-"
+literal|"'%s'-'%s'\n"
 argument_list|,
 name|thisentry
 operator|->
@@ -5164,7 +5228,7 @@ name|SC_SHOWME
 condition|)
 name|printf
 argument_list|(
-literal|"\n%s-\n%s-"
+literal|"'%s'-'%s'\n"
 argument_list|,
 name|thisentry
 operator|->
@@ -5213,7 +5277,7 @@ name|SC_SHOWME
 condition|)
 name|printf
 argument_list|(
-literal|"\n%s-\n%s-"
+literal|"'%s'-'%s'\n"
 argument_list|,
 name|thisentry
 operator|->
