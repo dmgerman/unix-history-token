@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuname.c	5.2 (Berkeley) %G%"
+literal|"@(#)uuname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,8 +33,15 @@ file|<signal.h>
 end_include
 
 begin_comment
-comment|/*******  *      uuname  -  return list of all remote systems   *		   recognized by uucp, or  (with -l) the local  *		   uucp name.  *  *      return codes: 0 | 1  (can't read)  */
+comment|/*  *      return list of all remote systems   *	recognized by uucp, or  (with -l) the local  uucp name.  *  *      return codes: 0 | 1  (can't read)  */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
