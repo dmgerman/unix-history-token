@@ -1446,6 +1446,7 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: This credential should be managed using crget(9) 		 * and related calls.  Right now, this tramples on any 		 * extensible data in the ucred, fails to initialize the 		 * mutex, and worse.  This must be fixed before FreeBSD 		 * 5.0-RELEASE. 		 */
 name|bzero
 argument_list|(
 operator|(
