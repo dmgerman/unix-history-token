@@ -33,6 +33,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_CLOCKID_T_
+value|int
+end_define
+
+begin_comment
+comment|/* clockid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_PTRDIFF_T_
 value|long
 end_define
@@ -51,6 +62,13 @@ end_define
 begin_comment
 comment|/* sizeof() */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_SOCKLEN_T_
+value|__uint32_t
+end_define
 
 begin_define
 define|#
@@ -77,28 +95,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_VA_LIST_
-value|__builtin_va_list
-end_define
-
-begin_comment
-comment|/* va_list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_CLOCKID_T_
-value|int
-end_define
-
-begin_comment
-comment|/* clockid_t */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_TIMER_T_
 value|int
 end_define
@@ -110,12 +106,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_SOCKLEN_T_
-value|__uint32_t
+name|_BSD_VA_LIST_
+value|__builtin_va_list
 end_define
 
 begin_comment
-comment|/* socklen_t */
+comment|/* va_list */
 end_comment
 
 begin_comment
