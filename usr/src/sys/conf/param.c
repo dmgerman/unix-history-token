@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -118,12 +118,52 @@ begin_comment
 comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DHZ=xx -DTIMEZONE=x -DDST=x -DMAXUSERS=xx  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HZ
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|HZ
 value|100
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TAHOE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
