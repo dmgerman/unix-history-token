@@ -108,6 +108,16 @@ end_expr_stmt
 begin_expr_stmt
 name|__strong_reference
 argument_list|(
+name|kse_switchin
+argument_list|,
+name|_thr_kse_switchin
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
 name|sigaction
 argument_list|,
 name|_thr_sigaction
