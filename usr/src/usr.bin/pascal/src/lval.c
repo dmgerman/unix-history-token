@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.3 %G%"
+literal|"@(#)lval.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,10 @@ return|;
 endif|#
 directive|endif
 endif|PC
+ifdef|#
+directive|ifdef
+name|OBJ
+comment|/* 		 *	pi uses the rest of the function 		 */
 name|firstp
 operator|=
 name|p
@@ -1079,6 +1083,9 @@ operator|(
 name|NIL
 operator|)
 return|;
+endif|#
+directive|endif
+endif|OBJ
 block|}
 end_function
 
