@@ -1117,7 +1117,7 @@ expr_stmt|;
 define|#
 directive|define
 name|HEADER
-value|"USER     TTY FROM              LOGIN@  IDLE WHAT\n"
+value|"USER             TTY FROM              LOGIN@  IDLE WHAT\n"
 define|#
 directive|define
 name|WUSED
