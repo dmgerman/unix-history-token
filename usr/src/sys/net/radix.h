@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	8.1.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	8.1.2.1 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -330,6 +330,32 @@ name|radix_node
 modifier|*
 argument_list|(
 operator|*
+name|rnh_lookup
+argument_list|)
+comment|/* locate based on sockaddr */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|v
+operator|,
+name|void
+operator|*
+name|mask
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|head
+operator|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+argument_list|(
+operator|*
 name|rnh_matchpkt
 argument_list|)
 comment|/* locate based on packet hdr */
@@ -477,6 +503,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Bcopy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|n
+parameter_list|)
+value|bcopy(((char *)(a)), ((char *)(b)), (unsigned)(n))
+end_define
+
+begin_define
+define|#
+directive|define
 name|Bzero
 parameter_list|(
 name|p
@@ -578,6 +618,15 @@ name|p
 parameter_list|)
 value|free((caddr_t)p, M_RTABLE);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL*/
+end_comment
 
 begin_endif
 endif|#
