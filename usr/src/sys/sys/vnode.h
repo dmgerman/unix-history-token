@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.61 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -665,6 +665,28 @@ end_define
 
 begin_comment
 comment|/* vclean: close active files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_SAVE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vinvalbuf: sync file first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_SAVEMETA
+value|0x0002
+end_define
+
+begin_comment
+comment|/* vinvalbuf: leave indirect blocks */
 end_comment
 
 begin_ifdef
