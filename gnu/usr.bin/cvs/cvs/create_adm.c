@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
 end_comment
 
 begin_include
@@ -21,9 +21,16 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)create_adm.c 1.24 92/03/31"
+literal|"$CVSid: @(#)create_adm.c 1.28 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
@@ -78,25 +85,6 @@ condition|(
 name|noexec
 condition|)
 return|return;
-if|if
-condition|(
-operator|!
-name|isdir
-argument_list|(
-name|repository
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"there is no repository %s"
-argument_list|,
-name|repository
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dir
@@ -230,6 +218,20 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CVSADM_ROOT
+comment|/* record the current cvs root for later use */
+name|Create_Root
+argument_list|(
+name|dir
+argument_list|,
+name|CVSroot
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CVSADM_ROOT */
 if|if
 condition|(
 name|dir

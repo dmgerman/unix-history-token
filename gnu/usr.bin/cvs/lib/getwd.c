@@ -7,6 +7,23 @@ begin_comment
 comment|/* Some systems which include both getwd() and getcwd() have an implementation    of getwd() which is much faster than getcwd().  As a result, we use the    system's getwd() if it is available */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

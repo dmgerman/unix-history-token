@@ -8,8 +8,25 @@ comment|/* Written by Paul Sander, HaL Computer Systems, Inc.<paul@hal.com>    B
 end_comment
 
 begin_comment
-comment|/*************************************************************************  *  * signal.c -- This file contains code that manipulates chains of signal  *             handlers.  *  *             Facilities are provided to register a signal handler for  *             any specific signal.  When a signal is received, all of the  *             registered signal handlers are invoked in the reverse order  *             in which they are registered.  Note that the signal handlers  *             must not themselves make calls to the signal handling  *             facilities.  *  * @(#)sighandle.c 1.9 92/03/31  *  *************************************************************************/
+comment|/*************************************************************************  *  * signal.c -- This file contains code that manipulates chains of signal  *             handlers.  *  *             Facilities are provided to register a signal handler for  *             any specific signal.  When a signal is received, all of the  *             registered signal handlers are invoked in the reverse order  *             in which they are registered.  Note that the signal handlers  *             must not themselves make calls to the signal handling  *             facilities.  *  * $CVSid: @(#)sighandle.c 1.13 94/10/07 $  *  *************************************************************************/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -137,24 +154,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGTYPE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SIGTYPE
-value|void
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Define the highest signal number (usually) */
 end_comment
@@ -169,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|SIGMAX
-value|32
+value|64
 end_define
 
 begin_endif
@@ -185,7 +184,7 @@ begin_struct
 struct|struct
 name|SIG_hlist
 block|{
-name|SIGTYPE
+name|RETSIGTYPE
 function_decl|(
 modifier|*
 name|handler
@@ -261,7 +260,7 @@ end_else
 
 begin_function_decl
 specifier|static
-name|SIGTYPE
+name|RETSIGTYPE
 function_decl|(
 modifier|*
 modifier|*
@@ -390,6 +389,10 @@ name|i
 operator|=
 literal|1
 init|;
+name|i
+operator|<
+name|SIGMAX
+operator|&&
 name|sigismember
 argument_list|(
 operator|&
@@ -403,19 +406,7 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|BROKEN_SIGISMEMBER
-if|if
-condition|(
-name|i
-operator|>=
-name|NSIG
-condition|)
-break|break
-endif|#
-directive|endif
-break|;
+empty_stmt|;
 if|if
 condition|(
 name|i
@@ -505,7 +496,7 @@ condition|)
 name|SIG_defaults
 operator|=
 operator|(
-name|SIGTYPE
+name|RETSIGTYPE
 argument_list|(
 operator|*
 operator|*
@@ -518,7 +509,7 @@ name|i
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|SIGTYPE
+name|RETSIGTYPE
 argument_list|(
 operator|*
 operator|*
@@ -581,7 +572,7 @@ end_comment
 
 begin_function
 specifier|static
-name|SIGTYPE
+name|RETSIGTYPE
 name|SIG_handle
 parameter_list|(
 name|sig
@@ -657,7 +648,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|SIGTYPE
+name|RETSIGTYPE
 function_decl|(
 modifier|*
 name|fn
@@ -947,7 +938,7 @@ argument_list|)
 operator|)
 operator|==
 operator|(
-name|SIGTYPE
+name|RETSIGTYPE
 argument_list|(
 operator|*
 argument_list|)
@@ -1104,7 +1095,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|SIGTYPE
+name|RETSIGTYPE
 function_decl|(
 modifier|*
 name|fn
@@ -1408,7 +1399,7 @@ index|]
 argument_list|)
 operator|==
 operator|(
-name|SIGTYPE
+name|RETSIGTYPE
 argument_list|(
 operator|*
 argument_list|)

@@ -1,10 +1,61 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    Copyright (C) 1987-1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987, 88, 89, 90, 91, 92, 1993 	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
 end_escape
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|emacs
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -12,12 +63,21 @@ directive|include
 file|"getopt.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__STDC__
-end_if
+end_ifndef
+
+begin_comment
+comment|/* This is a separate conditional since some stdc systems    reject `defined (const)'.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|const
+end_ifndef
 
 begin_define
 define|#
@@ -30,19 +90,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* Comment out all this code if we are using the GNU C Library, and are not    actually compiling the library itself.  This code is part of the GNU C    Library, but also included in many other GNU distributions.  Compiling    and linking in this code is a waste when using the GNU C library    (especially if it is a shared library).  Rather than having every GNU    program understand `configure --with-gnu-libc' and omit the object files,    it is simpler to just do this in the source for each such file.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|STDC_HEADERS
+name|_LIBC
 argument_list|)
 operator|||
+operator|!
 name|defined
 argument_list|(
 name|__GNU_LIBRARY__
 argument_list|)
 end_if
+
+begin_comment
+comment|/* This needs to come after some library #include    to get __GNU_LIBRARY__ defined.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNU_LIBRARY__
+end_ifdef
 
 begin_include
 include|#
@@ -54,10 +140,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* STDC_HEADERS or __GNU_LIBRARY__ */
-end_comment
 
 begin_function_decl
 name|char
@@ -72,19 +154,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* STDC_HEADERS or __GNU_LIBRARY__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NULL
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -100,7 +174,7 @@ end_endif
 
 begin_function
 name|int
-name|gnu_getopt_long
+name|getopt_long
 parameter_list|(
 name|argc
 parameter_list|,
@@ -117,6 +191,7 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 decl_stmt|;
@@ -136,62 +211,32 @@ modifier|*
 name|opt_index
 decl_stmt|;
 block|{
-name|int
-name|val
-decl_stmt|;
-comment|/* For strict POSIX compatibility, we must turn off long options.  */
-if|if
-condition|(
-name|getenv
-argument_list|(
-literal|"POSIX_ME_HARDER"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|_getopt_long_options
-operator|=
-name|long_options
-expr_stmt|;
-name|val
-operator|=
-name|gnu_getopt
+return|return
+name|_getopt_internal
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
 name|options
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|==
+argument_list|,
+name|long_options
+argument_list|,
+name|opt_index
+argument_list|,
 literal|0
-operator|&&
-name|opt_index
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|opt_index
-operator|=
-name|option_index
-expr_stmt|;
-return|return
-name|val
+argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Like getopt_long, but '-' as well as '+' can indicate a long option.    If an option that starts with '-' doesn't match a long option,    but does match a short option, it is parsed as a short option    instead. */
+comment|/* Like getopt_long, but '-' as well as '--' can indicate a long option.    If an option that starts with '-' (not '--') doesn't match a long option,    but does match a short option, it is parsed as a short option    instead.  */
 end_comment
 
 begin_function
 name|int
-name|gnu_getopt_long_only
+name|getopt_long_only
 parameter_list|(
 name|argc
 parameter_list|,
@@ -208,6 +253,7 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 decl_stmt|;
@@ -227,48 +273,33 @@ modifier|*
 name|opt_index
 decl_stmt|;
 block|{
-name|int
-name|val
-decl_stmt|;
-name|_getopt_long_options
-operator|=
-name|long_options
-expr_stmt|;
-name|_getopt_long_only
-operator|=
-literal|1
-expr_stmt|;
-name|val
-operator|=
-name|gnu_getopt
+return|return
+name|_getopt_internal
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
 name|options
+argument_list|,
+name|long_options
+argument_list|,
+name|opt_index
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-literal|0
-operator|&&
-name|opt_index
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|opt_index
-operator|=
-name|option_index
-expr_stmt|;
-return|return
-name|val
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _LIBC or not __GNU_LIBRARY__.  */
+end_comment
 
 begin_escape
 end_escape
@@ -323,12 +354,6 @@ condition|?
 name|optind
 else|:
 literal|1
-decl_stmt|;
-name|char
-modifier|*
-name|name
-init|=
-literal|'\0'
 decl_stmt|;
 name|int
 name|option_index
@@ -448,12 +473,10 @@ name|printf
 argument_list|(
 literal|"option %s"
 argument_list|,
-operator|(
 name|long_options
 index|[
 name|option_index
 index|]
-operator|)
 operator|.
 name|name
 argument_list|)
@@ -556,6 +579,17 @@ case|:
 name|printf
 argument_list|(
 literal|"option c with value `%s'\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|printf
+argument_list|(
+literal|"option d with value `%s'\n"
 argument_list|,
 name|optarg
 argument_list|)

@@ -28,11 +28,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|emacs
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -93,7 +101,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* emacs */
+comment|/* emacs || HAVE_CONFIG_H*/
 end_comment
 
 begin_if

@@ -3,18 +3,29 @@ begin_comment
 comment|/* strippath.c -- remove unnecessary components from a path specifier    Copyright (C) 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|STDC_HEADERS
-argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|USG
-argument_list|)
+name|HAVE_STRING_H
 end_if
 
 begin_include
@@ -23,28 +34,42 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|index
-end_ifndef
+begin_comment
+comment|/* An ANSI string.h and pre-ANSI memory.h might conflict. */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
+begin_if
+if|#
+directive|if
+operator|!
+name|STDC_HEADERS
+operator|&&
+name|HAVE_MEMORY_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not STDC_HEADERS and HAVE_MEMORY_H */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* not STDC_HJEADERS and not HAVE_STRING_H */
+end_comment
 
 begin_include
 include|#
@@ -52,10 +77,18 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_comment
+comment|/* memory.h and strings.h conflict on some systems. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not STDC_HEADERS and not HAVE_STRING_H */
+end_comment
 
 begin_include
 include|#
@@ -161,7 +194,7 @@ init|;
 operator|(
 name|slash
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

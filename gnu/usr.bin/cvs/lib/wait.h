@@ -6,7 +6,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX
+name|HAVE_SYS_WAIT_H
 end_ifdef
 
 begin_include
