@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.6 1994/09/13 16:02:20 davidg Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.7 1994/09/25 19:33:50 phk Exp $  */
 end_comment
 
 begin_comment
@@ -355,6 +355,13 @@ operator|=
 name|cblock_alloc
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+return|return;
 name|free
 argument_list|(
 name|tmp
