@@ -197,11 +197,11 @@ init|=
 block|{
 block|{
 block|{
-name|PCCARD_STR_TDK_LAK_CD021BX
+name|PCMCIA_STR_TDK_LAK_CD021BX
 block|,
-name|PCCARD_VENDOR_TDK
+name|PCMCIA_VENDOR_TDK
 block|,
-name|PCCARD_PRODUCT_TDK_LAK_CD021BX
+name|PCMCIA_PRODUCT_TDK_LAK_CD021BX
 block|,
 literal|0
 block|}
@@ -214,11 +214,11 @@ block|}
 block|,
 block|{
 block|{
-name|PCCARD_STR_TDK_LAK_CF010
+name|PCMCIA_STR_TDK_LAK_CF010
 block|,
-name|PCCARD_VENDOR_TDK
+name|PCMCIA_VENDOR_TDK
 block|,
-name|PCCARD_PRODUCT_TDK_LAK_CF010
+name|PCMCIA_PRODUCT_TDK_LAK_CF010
 block|,
 literal|0
 block|}
@@ -233,16 +233,16 @@ if|#
 directive|if
 literal|0
 comment|/* XXX 86960-based? */
-block|{ { PCCARD_STR_TDK_LAK_DFL9610,         PCCARD_VENDOR_TDK,             PCCARD_PRODUCT_TDK_LAK_DFL9610,     1 },           0, -1 },
+block|{ { PCMCIA_STR_TDK_LAK_DFL9610,         PCMCIA_VENDOR_TDK,             PCMCIA_PRODUCT_TDK_LAK_DFL9610,     1 },           0, -1 },
 endif|#
 directive|endif
 block|{
 block|{
-name|PCCARD_STR_CONTEC_CNETPC
+name|PCMCIA_STR_CONTEC_CNETPC
 block|,
-name|PCCARD_VENDOR_CONTEC
+name|PCMCIA_VENDOR_CONTEC
 block|,
-name|PCCARD_PRODUCT_CONTEC_CNETPC
+name|PCMCIA_PRODUCT_CONTEC_CNETPC
 block|,
 literal|0
 block|}
@@ -255,11 +255,11 @@ block|}
 block|,
 block|{
 block|{
-name|PCCARD_STR_FUJITSU_LA501
+name|PCMCIA_STR_FUJITSU_LA501
 block|,
-name|PCCARD_VENDOR_FUJITSU
+name|PCMCIA_VENDOR_FUJITSU
 block|,
-name|PCCARD_PRODUCT_FUJITSU_LA501
+name|PCMCIA_PRODUCT_FUJITSU_LA501
 block|,
 literal|0
 block|}
@@ -272,11 +272,11 @@ block|}
 block|,
 block|{
 block|{
-name|PCCARD_STR_FUJITSU_LA10S
+name|PCMCIA_STR_FUJITSU_LA10S
 block|,
-name|PCCARD_VENDOR_FUJITSU
+name|PCMCIA_VENDOR_FUJITSU
 block|,
-name|PCCARD_PRODUCT_FUJITSU_LA10S
+name|PCMCIA_PRODUCT_FUJITSU_LA10S
 block|,
 literal|0
 block|}
@@ -289,11 +289,11 @@ block|}
 block|,
 block|{
 block|{
-name|PCCARD_STR_RATOC_REX_R280
+name|PCMCIA_STR_RATOC_REX_R280
 block|,
-name|PCCARD_VENDOR_RATOC
+name|PCMCIA_VENDOR_RATOC
 block|,
-name|PCCARD_PRODUCT_RATOC_REX_R280
+name|PCMCIA_PRODUCT_RATOC_REX_R280
 block|,
 literal|0
 block|}
