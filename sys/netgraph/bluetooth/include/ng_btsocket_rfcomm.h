@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|RFCOMM_DEFAULT_MTU
-value|127
+value|667
 end_define
 
 begin_define
@@ -933,7 +933,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_RFCOMM_SENDSPACE
 define|\
-value|(RFCOMM_MAX_CREDITS * RFCOMM_DEFAULT_MTU * 10)
+value|(RFCOMM_MAX_CREDITS * RFCOMM_DEFAULT_MTU * 2)
 end_define
 
 begin_define
@@ -941,7 +941,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_RFCOMM_RECVSPACE
 define|\
-value|(RFCOMM_MAX_CREDITS * RFCOMM_DEFAULT_MTU * 10)
+value|(RFCOMM_MAX_CREDITS * RFCOMM_DEFAULT_MTU * 2)
 end_define
 
 begin_comment
