@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.4 83/08/16"
+literal|"@(#)cmd2.c	3.5 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,7 +841,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tnupdt\tntouch\tnmiss\n"
+literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tnupdate\tntouchd\tnmiss\n"
 argument_list|)
 expr_stmt|;
 operator|(
