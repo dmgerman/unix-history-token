@@ -285,6 +285,23 @@ operator|/
 name|SECSPERMIN
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|idle
+operator|/
+name|SECSPERMIN
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"     - "
+argument_list|)
+expr_stmt|;
 comment|/* Else print the minutes idle. */
 else|else
 operator|(
