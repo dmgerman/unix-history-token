@@ -307,11 +307,11 @@ name|struct
 name|nfs4_fctx
 name|n_wfc
 decl_stmt|;
-comment|/* 	 * The last component name is needed for the NFSv4 OPEN 	 * operation. 	 */
 name|u_char
 modifier|*
 name|n_name
 decl_stmt|;
+comment|/* leaf name, for v4 OPEN op */
 name|uint32_t
 name|n_namelen
 decl_stmt|;

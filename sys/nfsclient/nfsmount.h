@@ -181,6 +181,11 @@ name|u_int64_t
 name|nm_maxfilesize
 decl_stmt|;
 comment|/* maximum file size */
+name|struct
+name|nfs_rpcops
+modifier|*
+name|nm_rpcops
+decl_stmt|;
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid

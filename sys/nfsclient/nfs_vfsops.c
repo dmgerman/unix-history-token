@@ -554,6 +554,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|nfs_rpcops
+name|nfs_rpcops
+init|=
+block|{
+name|nfs_readrpc
+block|,
+name|nfs_writerpc
+block|,
+name|nfs_writebp
+block|,
+name|nfs_readlinkrpc
+block|,
+name|nfs_invaldir
+block|,
+name|nfs_commit
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This structure must be filled in by a primary bootstrap or bootstrap  * server for a diskless/dataless machine. It is initialized below just  * to ensure that it is allocated to initialized data (.data not .bss).  */
 end_comment
@@ -4428,6 +4450,13 @@ operator|=
 name|argp
 operator|->
 name|proto
+expr_stmt|;
+name|nmp
+operator|->
+name|nm_rpcops
+operator|=
+operator|&
+name|nfs_rpcops
 expr_stmt|;
 name|nfs_decode_args
 argument_list|(
