@@ -7601,10 +7601,6 @@ expr_stmt|;
 name|origpte
 operator|=
 operator|*
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
 name|pte
 expr_stmt|;
 name|opa
@@ -7903,7 +7899,7 @@ comment|/* 	 * Now validate mapping with desired protection/wiring. 	 */
 name|newpte
 operator|=
 call|(
-name|vm_offset_t
+name|pt_entry_t
 call|)
 argument_list|(
 name|pa

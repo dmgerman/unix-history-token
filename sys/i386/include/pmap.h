@@ -644,10 +644,6 @@ block|{
 name|pa
 operator|=
 operator|*
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
 name|vtopte
 argument_list|(
 name|va
