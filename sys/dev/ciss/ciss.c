@@ -1243,32 +1243,46 @@ name|cdevsw
 name|ciss_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ciss_open
 block|,
+comment|/* close */
 name|ciss_close
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|ciss_ioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"ciss"
 block|,
+comment|/* maj */
 name|CISS_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|,
+comment|/* kqfilter */
 name|nokqfilter
 block|}
 decl_stmt|;
