@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1161,7 +1161,7 @@ define|#
 directive|define
 name|resetty
 parameter_list|()
-value|(_tty.sg_flags = _res_flg, \ 	(void) ioctl(_tty_ch, TIOCSETP,&_tty))
+value|(_tty.sg_flags = _res_flg, \ 	_echoit = ((_res_flg& ECHO) == ECHO), \ 	_rawmode = ((_res_flg& (CBREAK|RAW)) != 0), \ 	_pfast = ((_res_flg& CRMOD) ? _rawmode : TRUE), \ 	(void) ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
