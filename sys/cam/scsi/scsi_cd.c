@@ -453,6 +453,23 @@ name|T_CDROM
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
+literal|"NAKAMICH"
+block|,
+literal|"MJ-*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/* quirks */
+name|CD_Q_CHANGER
+block|}
+block|,
+block|{
+block|{
+name|T_CDROM
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
 literal|"CHINON"
 block|,
 literal|"CD-ROM CDS-535"
