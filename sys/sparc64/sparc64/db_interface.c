@@ -193,6 +193,11 @@ name|tf
 expr_stmt|;
 name|kf
 operator|=
+operator|(
+expr|struct
+name|kdbframe
+operator|*
+operator|)
 name|ddb_regs
 operator|.
 name|tf_arg

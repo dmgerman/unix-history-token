@@ -214,21 +214,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_CLOCK
+name|T_SPILL
 value|0x1c
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SPILL
+name|T_FILL
 value|0x1d
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FILL
+name|T_FILL_RET
 value|0x1e
 end_define
 
@@ -256,72 +256,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_SOFT
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_KERNEL
 value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_TYPE_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_TYPE_SIZE
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_TYPE_MASK
-value|(((1<< T_TYPE_SIZE) - 1)<< T_TYPE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_TYPE
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(((type)& T_TYPE_MASK)>> T_TYPE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LEVEL_SHIFT
-value|T_TYPE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LEVEL_SIZE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LEVEL_MASK
-value|(((1<< T_LEVEL_SIZE) - 1)<< T_LEVEL_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LEVEL
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(((type)& T_LEVEL_MASK)>> T_LEVEL_SHIFT)
 end_define
 
 begin_ifndef

@@ -242,14 +242,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl0_trap_withstack
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
 name|_start
 index|[]
 decl_stmt|;
@@ -673,6 +665,11 @@ condition|)
 block|{
 name|kfp
 operator|=
+operator|(
+expr|struct
+name|kdbframe
+operator|*
+operator|)
 name|DDB_REGS
 operator|->
 name|tf_arg
@@ -830,13 +827,6 @@ operator|(
 name|u_long
 operator|)
 name|tl0_trap
-operator|||
-name|value
-operator|==
-operator|(
-name|u_long
-operator|)
-name|tl0_trap_withstack
 condition|)
 block|{
 name|nfp
@@ -1170,6 +1160,11 @@ name|ofp
 decl_stmt|;
 name|kfp
 operator|=
+operator|(
+expr|struct
+name|kdbframe
+operator|*
+operator|)
 name|DDB_REGS
 operator|->
 name|tf_arg
@@ -1300,6 +1295,11 @@ name|cfp
 decl_stmt|;
 name|kfp
 operator|=
+operator|(
+expr|struct
+name|kdbframe
+operator|*
+operator|)
 name|DDB_REGS
 operator|->
 name|tf_arg
@@ -1373,7 +1373,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|static int								\ db_show_ ## name ## num(struct db_variable *dp, db_expr_t *vp, int op)	\ {									\ 	struct kdbframe *kfp;						\ 	struct frame *fp;						\ 									\ 	kfp = DDB_REGS->tf_arg;						\ 	fp = (struct frame *)(kfp->kf_cfp + SPOFF);			\ 	if (op == DB_VAR_GET)						\ 		*vp = db_get_value((db_addr_t)&fp->f_ ## name ## [num],	\ 		    sizeof(u_long), FALSE);				\ 	else								\ 		db_put_value((db_addr_t)&fp->f_ ## name ## [num],	\ 		    sizeof(u_long), *vp);				\ 	return (0);							\ }
+value|static int								\ db_show_ ## name ## num(struct db_variable *dp, db_expr_t *vp, int op)	\ {									\ 	struct kdbframe *kfp;						\ 	struct frame *fp;						\ 									\ 	kfp = (struct kdbframe *)DDB_REGS->tf_arg;			\ 	fp = (struct frame *)(kfp->kf_cfp + SPOFF);			\ 	if (op == DB_VAR_GET)						\ 		*vp = db_get_value((db_addr_t)&fp->f_ ## name ## [num],	\ 		    sizeof(u_long), FALSE);				\ 	else								\ 		db_put_value((db_addr_t)&fp->f_ ## name ## [num],	\ 		    sizeof(u_long), *vp);				\ 	return (0);							\ }
 end_define
 
 begin_macro
