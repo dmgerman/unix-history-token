@@ -211,45 +211,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|pci_hdrtypedata
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|int
-name|b
-parameter_list|,
-name|int
-name|s
-parameter_list|,
-name|int
-name|f
-parameter_list|,
-name|pcicfgregs
-modifier|*
-name|cfg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pci_read_extcap
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|pcicfgregs
-modifier|*
-name|cfg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|pci_porten
 parameter_list|(
@@ -1343,7 +1304,6 @@ comment|/* extract header type specific config data */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|pci_hdrtypedata
 parameter_list|(
@@ -1987,7 +1947,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pci_read_extcap
 parameter_list|(
@@ -2200,7 +2159,6 @@ operator|=
 operator|&
 name|pci_devq
 expr_stmt|;
-comment|/* XXX this hasn't been tested */
 name|STAILQ_REMOVE
 argument_list|(
 name|devlist_head
@@ -6526,11 +6484,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|rman_get_device
+argument_list|(
 name|rle
 operator|->
 name|res
-operator|->
-name|r_dev
+argument_list|)
 operator|!=
 name|dev
 operator|||
