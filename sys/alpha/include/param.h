@@ -15,6 +15,72 @@ begin_comment
 comment|/*  * Machine dependent constants for the Alpha.  */
 end_comment
 
+begin_comment
+comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  *  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   *  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIGNBYTES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIGNBYTES
+value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIGN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIGN
+parameter_list|(
+name|p
+parameter_list|)
+value|(((u_long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIGNED_POINTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIGNED_POINTER
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|((((u_long)(p))& (sizeof(t)-1)) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -32,6 +98,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_ARCH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_ARCH
+value|alpha
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NO_NAMESPACE_POLLUTION
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_PARAM_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_PARAM_H_
+end_define
 
 begin_ifndef
 ifndef|#
@@ -44,24 +146,6 @@ define|#
 directive|define
 name|MACHINE
 value|"alpha"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MACHINE_ARCH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_MACHINE_ARCH
-value|alpha
 end_define
 
 begin_endif
@@ -131,15 +215,11 @@ name|MAXCPU
 value|1
 end_define
 
-begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  *  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   *  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ALIGNBYTES
-value|7
+value|_ALIGNBYTES
 end_define
 
 begin_define
@@ -149,7 +229,7 @@ name|ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_long)(p) + ALIGNBYTES)&~ ALIGNBYTES)
+value|_ALIGN(p)
 end_define
 
 begin_define
@@ -161,7 +241,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((u_long)(p))& (sizeof(t)-1)) == 0)
+value|_ALIGNED_POINTER(p,t)
 end_define
 
 begin_define
@@ -579,6 +659,24 @@ name|x
 parameter_list|)
 value|((x) * (PAGE_SIZE / 1024))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_PARAM_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NO_NAMESPACE_POLLUTION */
+end_comment
 
 end_unit
 

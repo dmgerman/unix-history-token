@@ -15,6 +15,24 @@ directive|define
 name|_SYS_SOCKET_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|_NO_NAMESPACE_POLLUTION
+end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_NO_NAMESPACE_POLLUTION
+end_undef
+
 begin_comment
 comment|/*  * Definitions related to sockets: types, address families, options.  */
 end_comment
@@ -1495,7 +1513,7 @@ name|CMSG_DATA
 parameter_list|(
 name|cmsg
 parameter_list|)
-value|((u_char *)(cmsg) + \ 				 ALIGN(sizeof(struct cmsghdr)))
+value|((u_char *)(cmsg) + \ 				 _ALIGN(sizeof(struct cmsghdr)))
 end_define
 
 begin_comment
@@ -1512,7 +1530,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|(((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len) + \ 	  ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len)))
+value|(((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define
@@ -1536,7 +1554,7 @@ name|CMSG_SPACE
 parameter_list|(
 name|l
 parameter_list|)
-value|(ALIGN(sizeof(struct cmsghdr)) + ALIGN(l))
+value|(_ALIGN(sizeof(struct cmsghdr)) + _ALIGN(l))
 end_define
 
 begin_define
@@ -1546,7 +1564,7 @@ name|CMSG_LEN
 parameter_list|(
 name|l
 parameter_list|)
-value|(ALIGN(sizeof(struct cmsghdr)) + (l))
+value|(_ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
 
 begin_comment
