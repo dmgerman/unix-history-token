@@ -1541,7 +1541,17 @@ name|disk
 operator|.
 name|d_fwsectors
 operator|=
-literal|0
+name|sc
+operator|->
+name|nsect
+operator|>
+literal|63
+condition|?
+literal|63
+else|:
+name|sc
+operator|->
+name|nsect
 expr_stmt|;
 name|sc
 operator|->
@@ -1549,7 +1559,7 @@ name|disk
 operator|.
 name|d_fwheads
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|sc
 operator|->
