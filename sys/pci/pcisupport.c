@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.6 1994/12/22 21:20:39 se Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.7 1995/02/02 12:36:19 davidg Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_escape
@@ -14,6 +14,24 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
 end_include
 
 begin_include
@@ -82,10 +100,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pci_driver
+name|pci_device
 name|chipset_device
 init|=
 block|{
+literal|"chip"
+block|,
 name|chipset_probe
 block|,
 name|chipset_attach
@@ -95,6 +115,16 @@ name|chipset_count
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pcidevice_set
+argument_list|,
+name|chipset_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -1698,10 +1728,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pci_driver
+name|pci_device
 name|vga_device
 init|=
 block|{
+literal|"vga"
+block|,
 name|vga_probe
 block|,
 name|vga_attach
@@ -1711,6 +1743,16 @@ name|vga_count
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pcidevice_set
+argument_list|,
+name|vga_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1845,10 +1887,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pci_driver
+name|pci_device
 name|lkm_device
 init|=
 block|{
+literal|"lkm"
+block|,
 name|lkm_probe
 block|,
 name|lkm_attach
@@ -1858,6 +1902,16 @@ name|lkm_count
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pcidevice_set
+argument_list|,
+name|lkm_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1944,10 +1998,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pci_driver
+name|pci_device
 name|ign_device
 init|=
 block|{
+name|NULL
+block|,
 name|ign_probe
 block|,
 name|ign_attach
@@ -1957,6 +2013,16 @@ name|ign_count
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pcidevice_set
+argument_list|,
+name|ign_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

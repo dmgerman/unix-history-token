@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.3 1995/01/22 00:47:50 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.4 1995/02/02 12:36:14 davidg Exp $  */
 end_comment
 
 begin_include
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
 end_include
 
 begin_include
@@ -117,10 +123,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pci_driver
+name|pci_device
 name|ahc_device
 init|=
 block|{
+literal|"ahc"
+block|,
 name|aic7870_probe
 block|,
 name|aic7870_attach
@@ -130,6 +138,16 @@ name|aic7870_count
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pcidevice_set
+argument_list|,
+name|ahc_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
