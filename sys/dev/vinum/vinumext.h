@@ -82,6 +82,24 @@ end_ifdef
 
 begin_function_decl
 name|int
+name|vinum_inactive
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_vinum
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|give_sd_to_plex
 parameter_list|(
 name|int
@@ -308,6 +326,22 @@ name|name
 parameter_list|,
 name|int
 name|create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|return_drive_space
+parameter_list|(
+name|int
+name|driveno
+parameter_list|,
+name|int64_t
+name|offset
+parameter_list|,
+name|int
+name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -620,7 +654,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|checkernel
+name|checkdiskconfig
 parameter_list|(
 name|char
 modifier|*
@@ -828,7 +862,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vinum_scandisk
 parameter_list|(
 name|char
