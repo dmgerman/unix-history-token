@@ -2637,6 +2637,16 @@ name|KTRFAC_ROOT
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|targetp
+operator|->
+name|p_flag
+operator|&
+name|P_SUGID
+operator|)
+operator|==
+literal|0
 operator|)
 operator|||
 name|caller
