@@ -4930,11 +4930,11 @@ argument_list|(
 literal|"cg 0: bad magic number\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|exit
+argument_list|(
+literal|38
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4952,11 +4952,11 @@ argument_list|(
 literal|"first cylinder group ran out of space\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|exit
+argument_list|(
+literal|39
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -5004,11 +5004,11 @@ argument_list|(
 literal|"internal error: can't find block in cyl 0\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|exit
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
 name|goth
 label|:
 name|blkno
