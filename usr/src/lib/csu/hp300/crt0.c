@@ -1,22 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -24,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.2 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBC_SCCS and not lint */
+comment|/* not lint */
 end_comment
 
 begin_comment
@@ -63,33 +54,6 @@ name|fd
 decl_stmt|;
 end_decl_stmt
 
-begin_asm
-asm|asm("#define _start start");
-end_asm
-
-begin_asm
-asm|asm("#define _eprol eprol");
-end_asm
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|hp300
-end_ifdef
-
-begin_asm
-asm|asm("#define link .long 0; linkw");
-end_asm
-
-begin_comment
-comment|/* Yuk!! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -103,8 +67,29 @@ specifier|extern
 name|unsigned
 name|char
 name|eprol
+name|asm
+argument_list|(
+literal|"eprol"
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern			start(
+end_extern
+
+begin_asm
+unit|)
+asm|asm("start");
+end_asm
+
+begin_asm
+asm|asm(".text; orb #0,d0");
+end_asm
+
+begin_comment
+comment|/* 32 bits of zero at location 0 */
+end_comment
 
 begin_macro
 name|start
@@ -145,17 +130,12 @@ block|}
 struct|;
 comment|/* 	 *	ALL REGISTER VARIABLES!!! 	 */
 specifier|register
-name|int
-name|d7
-decl_stmt|;
-comment|/* needed for init (this will be 					   a problem with GCC) */
-specifier|register
 name|struct
 name|kframe
 modifier|*
 name|kfp
 decl_stmt|;
-comment|/* PCC a5 */
+comment|/* r10 */
 specifier|register
 name|char
 modifier|*
@@ -188,17 +168,8 @@ expr_stmt|;
 else|#
 directive|else
 else|not lint
-ifdef|#
-directive|ifdef
-name|__GNUC__
 asm|asm("lea a6@(4),%0" : "=r" (kfp));
 comment|/* catch it quick */
-else|#
-directive|else
-asm|asm("	lea	a6@(4),a5");
-comment|/* catch it quick */
-endif|#
-directive|endif
 endif|#
 directive|endif
 endif|not lint
@@ -317,18 +288,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_asm
-asm|asm("#undef link");
-end_asm
-
-begin_asm
-asm|asm("#undef _start");
-end_asm
-
-begin_asm
-asm|asm("#undef _eprol");
-end_asm
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -350,10 +309,6 @@ name|code
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* PCC d7 */
-end_comment
-
 begin_block
 block|{
 name|monitor
@@ -364,18 +319,10 @@ expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
 asm|asm("movl %1,sp@-" : "=m" (*(char *)0) : "r" (code));
-else|#
-directive|else
-asm|asm("	movl d7,sp@-");
-endif|#
-directive|endif
-asm|asm("	subql #4,sp");
-asm|asm("	movl #1,d0");
-asm|asm("	trap #0");
+asm|asm("subql #4,sp");
+asm|asm("movl #1,d0");
+asm|asm("trap #0");
 block|}
 end_block
 
@@ -413,11 +360,11 @@ block|{  }
 end_block
 
 begin_asm
-asm|asm("	.globl	mcount");
+asm|asm(".globl mcount");
 end_asm
 
 begin_asm
-asm|asm("mcount:	rts");
+asm|asm("mcount: rts");
 end_asm
 
 begin_endif
