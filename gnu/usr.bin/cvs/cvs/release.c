@@ -21,54 +21,36 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)release.c 1.21 92/02/29"
+literal|"$CVSid: @(#)release.c 1.23 94/09/21 $"
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|release_delete
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|dir
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|void
-name|release_delete
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -186,7 +168,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -477,7 +459,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|val
 operator|.
@@ -548,7 +530,7 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|margc
 argument_list|,
@@ -665,7 +647,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 literal|"MARCZ"
 argument_list|,
@@ -892,9 +874,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*      * XXX - shouldn't this just delete the CVS-controlled files and, perhaps,      * the files that would normally be ignored and leave everything else?      */
 name|run_setup
 argument_list|(
-literal|"%s -r"
+literal|"%s -fr"
 argument_list|,
 name|RM
 argument_list|)

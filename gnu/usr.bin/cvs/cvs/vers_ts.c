@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
 end_comment
 
 begin_include
@@ -21,27 +21,31 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)vers_ts.c 1.36 92/03/31"
+literal|"$CVSid: @(#)vers_ts.c 1.45 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX - should use gmtime/asctime */
-end_comment
+parameter_list|(
+name|X
+parameter_list|)
+value|do not use ctime, please
+end_define
 
 begin_comment
 comment|/*  * Fill in and return a Vers_TS structure "user" is the name of the local  * file; entries is the entries file - preparsed for our pleasure. xfiles is  * all source code control files, preparsed for our pleasure  */
@@ -137,13 +141,15 @@ name|Vers_TS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|vers_ts
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -234,6 +240,17 @@ argument_list|(
 name|entdata
 operator|->
 name|timestamp
+argument_list|)
+expr_stmt|;
+name|vers_ts
+operator|->
+name|ts_conflict
+operator|=
+name|xstrdup
+argument_list|(
+name|entdata
+operator|->
+name|conflict
 argument_list|)
 expr_stmt|;
 if|if
@@ -533,7 +550,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|repository
+operator|!=
+name|NULL
+condition|)
 name|rcsdata
 operator|=
 name|RCS_parse
@@ -542,6 +565,11 @@ name|user
 argument_list|,
 name|repository
 argument_list|)
+expr_stmt|;
+else|else
+name|rcsdata
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -654,6 +682,23 @@ name|struct
 name|utimbuf
 name|t
 decl_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|t
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vers_ts
@@ -714,6 +759,7 @@ operator|*
 operator|)
 name|NULL
 condition|)
+block|{
 name|vers_ts
 operator|->
 name|ts_user
@@ -723,6 +769,7 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|vers_ts
@@ -783,46 +830,20 @@ name|ts
 operator|=
 name|xmalloc
 argument_list|(
-literal|51
+literal|25
 argument_list|)
 expr_stmt|;
-comment|/* 51 = 2 ctime strings + NULL */
 name|cp
 operator|=
-name|ctime
+name|asctime
 argument_list|(
-operator|&
-name|sb
-operator|.
-name|st_ctime
-argument_list|)
-expr_stmt|;
-comment|/* copy in the create time */
-name|cp
-index|[
-literal|24
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|ts
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-name|ctime
+name|gmtime
 argument_list|(
 operator|&
 name|sb
 operator|.
 name|st_mtime
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy in the modify time */
@@ -831,12 +852,12 @@ index|[
 literal|24
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strcpy
 argument_list|(
 name|ts
 argument_list|,
@@ -1021,6 +1042,25 @@ name|versp
 operator|)
 operator|->
 name|date
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|versp
+operator|)
+operator|->
+name|ts_conflict
+condition|)
+name|free
+argument_list|(
+operator|(
+operator|*
+name|versp
+operator|)
+operator|->
+name|ts_conflict
 argument_list|)
 expr_stmt|;
 name|free

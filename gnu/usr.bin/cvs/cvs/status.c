@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   * Status Information  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Status Information  */
 end_comment
 
 begin_include
@@ -21,118 +21,94 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)status.c 1.48 92/03/31"
+literal|"$CVSid: @(#)status.c 1.56 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|Dtype
 name|status_dirproc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|dir
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|repos
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|update_dir
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|status_fileproc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|update_dir
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|repository
-parameter_list|,
+operator|,
 name|List
-modifier|*
+operator|*
 name|entries
-parameter_list|,
+operator|,
 name|List
-modifier|*
+operator|*
 name|srcfiles
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|tag_list_proc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|Node
-modifier|*
+operator|*
 name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|tag_list_proc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|status_fileproc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|Dtype
-name|status_dirproc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
+operator|,
+name|void
+operator|*
+name|closure
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -149,6 +125,22 @@ name|int
 name|long_format
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|xfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|List
+modifier|*
+name|xsrcfiles
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +211,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -328,6 +320,8 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -429,6 +423,10 @@ name|srcfiles
 argument_list|,
 operator|&
 name|vers
+argument_list|,
+name|update_dir
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -479,6 +477,17 @@ break|break;
 case|case
 name|T_MODIFIED
 case|:
+if|if
+condition|(
+name|vers
+operator|->
+name|ts_conflict
+condition|)
+name|sstat
+operator|=
+literal|"Unresolved Conflict"
+expr_stmt|;
+else|else
 name|sstat
 operator|=
 literal|"Locally Modified"
@@ -549,7 +558,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"File: %-17.17s\tStatus: %s\n\n"
+literal|"File: %-17s\tStatus: %s\n\n"
 argument_list|,
 name|file
 argument_list|,
@@ -569,7 +578,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Version:\t\tNo entry for %s\n"
+literal|"   Working revision:\tNo entry for %s\n"
 argument_list|,
 name|file
 argument_list|)
@@ -600,7 +609,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Version:\t\tNew file!\n"
+literal|"   Working revision:\tNew file!\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -609,19 +618,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Version:\t\t%s\t%s\n"
+literal|"   Working revision:\t%s\t%s\n"
 argument_list|,
 name|vers
 operator|->
 name|vn_user
 argument_list|,
-operator|&
 name|vers
 operator|->
 name|ts_rcs
-index|[
-literal|25
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -637,7 +642,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    RCS Version:\tNo revision control file\n"
+literal|"   Repository revision:\tNo revision control file\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -646,7 +651,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    RCS Version:\t%s\t%s\n"
+literal|"   Repository revision:\t%s\t%s\n"
 argument_list|,
 name|vers
 operator|->
@@ -696,7 +701,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Tag:\t\t%s - MISSING from RCS file!\n"
+literal|"   Sticky Tag:\t\t%s - MISSING from RCS file!\n"
 argument_list|,
 name|edata
 operator|->
@@ -722,7 +727,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Tag:\t\t%s\n"
+literal|"   Sticky Tag:\t\t%s\n"
 argument_list|,
 name|edata
 operator|->
@@ -730,35 +735,57 @@ name|tag
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+block|{
+name|int
+name|isbranch
+init|=
+name|RCS_isbranch
 argument_list|(
-literal|"    Sticky Tag:\t\t%s (%s: %s)\n"
+name|file
 argument_list|,
 name|edata
 operator|->
 name|tag
 argument_list|,
-name|numdots
-argument_list|(
-name|vers
-operator|->
-name|vn_rcs
+name|srcfiles
 argument_list|)
-operator|%
-literal|2
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"   Sticky Tag:\t\t%s (%s: %s)\n"
+argument_list|,
+name|edata
+operator|->
+name|tag
+argument_list|,
+name|isbranch
 condition|?
-literal|"revision"
-else|:
 literal|"branch"
+else|:
+literal|"revision"
 argument_list|,
+name|isbranch
+condition|?
+name|RCS_whatbranch
+argument_list|(
+name|file
+argument_list|,
+name|edata
+operator|->
+name|tag
+argument_list|,
+name|srcfiles
+argument_list|)
+else|:
 name|vers
 operator|->
 name|vn_rcs
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -767,7 +794,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Tag:\t\t(none)\n"
+literal|"   Sticky Tag:\t\t(none)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -781,7 +808,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Date:\t%s\n"
+literal|"   Sticky Date:\t\t%s\n"
 argument_list|,
 name|edata
 operator|->
@@ -794,7 +821,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Date:\t(none)\n"
+literal|"   Sticky Date:\t\t(none)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -815,7 +842,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Options:\t%s\n"
+literal|"   Sticky Options:\t%s\n"
 argument_list|,
 name|edata
 operator|->
@@ -828,7 +855,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Sticky Options:\t(none)\n"
+literal|"   Sticky Options:\t(none)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -840,36 +867,51 @@ operator|->
 name|srcfile
 condition|)
 block|{
+name|List
+modifier|*
+name|symbols
+init|=
+name|RCS_symbols
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|)
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n    Existing Tags:\n"
+literal|"\n   Existing Tags:\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vers
-operator|->
-name|srcfile
-operator|->
 name|symbols
 condition|)
+block|{
+name|xfile
+operator|=
+name|file
+expr_stmt|;
+name|xsrcfiles
+operator|=
+name|srcfiles
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|walklist
 argument_list|(
-name|vers
-operator|->
-name|srcfile
-operator|->
 name|symbols
 argument_list|,
 name|tag_list_proc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 operator|(
 name|void
@@ -969,12 +1011,32 @@ name|int
 name|tag_list_proc
 parameter_list|(
 name|p
+parameter_list|,
+name|closure
 parameter_list|)
 name|Node
 modifier|*
 name|p
 decl_stmt|;
+name|void
+modifier|*
+name|closure
+decl_stmt|;
 block|{
+name|int
+name|isbranch
+init|=
+name|RCS_isbranch
+argument_list|(
+name|xfile
+argument_list|,
+name|p
+operator|->
+name|key
+argument_list|,
+name|xsrcfiles
+argument_list|)
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -986,19 +1048,25 @@ name|p
 operator|->
 name|key
 argument_list|,
-name|numdots
+name|isbranch
+condition|?
+literal|"branch"
+else|:
+literal|"revision"
+argument_list|,
+name|isbranch
+condition|?
+name|RCS_whatbranch
 argument_list|(
+name|xfile
+argument_list|,
 name|p
 operator|->
-name|data
-argument_list|)
-operator|%
-literal|2
-condition|?
-literal|"revision"
-else|:
-literal|"branch"
+name|key
 argument_list|,
+name|xsrcfiles
+argument_list|)
+else|:
 name|p
 operator|->
 name|data

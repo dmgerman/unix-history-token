@@ -4,7 +4,7 @@ comment|/* system-dependent definitions for CVS.    Copyright (C) 1989-1992 Free
 end_comment
 
 begin_comment
-comment|/* @(#)system.h 1.14 92/04/10 */
+comment|/* $CVSid: @(#)system.h 1.18 94/09/25 $ */
 end_comment
 
 begin_include
@@ -343,9 +343,10 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|MKFIFO_MISSING
+name|HAVE_MKFIFO
 argument_list|)
 end_if
 
@@ -366,11 +367,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|POSIX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -383,24 +392,6 @@ include|#
 directive|include
 file|<limits.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PATH_MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PATH_MAX
-value|pathconf ("/", _PC_PATH_MAX)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -447,11 +438,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIMEB_H_MISSING
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_TIMEB_H
+end_ifndef
 
 begin_struct
 struct|struct
@@ -506,9 +497,10 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|FTIME_MISSING
+name|HAVE_FTIME
 argument_list|)
 operator|&&
 operator|!
@@ -528,14 +520,12 @@ name|timezone
 argument_list|)
 end_if
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|long
 name|timezone
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -547,40 +537,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|POSIX
-end_ifndef
+begin_comment
+comment|/* **  MAXPATHLEN and PATH_MAX ** **     On most systems MAXPATHLEN is defined in sys/param.h to be 1024. Of **     those that this is not true, again most define PATH_MAX in limits.h **     or sys/limits.h which usually gets included by limits.h. On the few **     remaining systems that neither statement is true, _POSIX_PATH_MAX  **     is defined. ** **     So: **         1. If PATH_MAX is defined just use it. **         2. If MAXPATHLEN is defined but not PATH_MAX, then define **            PATH_MAX in terms of MAXPATHLEN. **         3. If neither is defined, include limits.h and check for **            PATH_MAX again. **         4. If PATH_MAX is still not defined but _POSIX_PATH_MAX is, **            then define PATH_MAX in terms of _POSIX_PATH_MAX. **         5. And if even _POSIX_PATH_MAX doesn't exist just put in **            a reasonable value. ** **     This works on: **         Sun Sparc 10        SunOS 4.1.3&  Solaris 1.2 **         HP 9000/700         HP/UX 8.07&  HP/UX 9.01 **         Tektronix XD88/10   UTekV 3.2e **         IBM RS6000          AIX 3.2 **         Dec Alpha           OSF 1 ???? **         Intel 386           BSDI BSD/386 **         Apollo              Domain 10.4 **         NEC                 SVR4 */
+end_comment
+
+begin_comment
+comment|/* On MOST systems this will get you MAXPATHLEN */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_PATH_MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_POSIX_PATH_MAX
-value|255
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -606,6 +575,24 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_MAX
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_PATH_MAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -613,20 +600,58 @@ name|PATH_MAX
 value|_POSIX_PATH_MAX
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX
+value|1024
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _POSIX_PATH_MAX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PATH_MAX   */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MAXPATHLEN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PATH_MAX   */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX
+name|HAVE_UTIME_H
 end_ifdef
 
 begin_include
@@ -680,15 +705,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|STDC_HEADERS
-argument_list|)
+operator|||
+name|HAVE_STRING_H
 end_if
 
 begin_include
@@ -697,11 +716,18 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* An ANSI string.h and pre-ANSI memory.h might conflict. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
 name|STDC_HEADERS
-end_ifndef
+operator|&&
+name|HAVE_MEMORY_H
+end_if
 
 begin_include
 include|#
@@ -713,6 +739,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not STDC_HEADERS and HAVE_MEMORY_H */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -732,6 +762,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* index */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -750,53 +784,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|bcopy
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|len
-parameter_list|)
-value|memcpy ((to), (from), (len))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|bzero
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) memset ((s), 0, (n))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* rindex */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -815,7 +805,7 @@ name|s2
 parameter_list|,
 name|n
 parameter_list|)
-value|memcmp((s1), (s2), (n))
+value|memcmp ((s1), (s2), (n))
 end_define
 
 begin_endif
@@ -823,10 +813,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* bcmp */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bzero
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|memset ((s), 0, (n))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* bzero */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* not STDC_HJEADERS and not HAVE_STRING_H */
+end_comment
 
 begin_include
 include|#
@@ -834,10 +859,18 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_comment
+comment|/* memory.h and strings.h conflict on some systems. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not STDC_HEADERS and not HAVE_STRING_H */
+end_comment
 
 begin_include
 include|#
@@ -906,85 +939,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|bsdi
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<alloca.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_AIX
-end_ifndef
-
-begin_comment
-comment|/* AIX alloca decl has to be the first thing in the file, bletch! */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -999,12 +953,6 @@ name|POSIX
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
 begin_function_decl
 name|char
 modifier|*
@@ -1018,12 +966,6 @@ else|#
 directive|else
 end_else
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
 begin_function_decl
 name|char
 modifier|*
@@ -1031,6 +973,34 @@ name|getwd
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
 
 begin_endif
 endif|#
@@ -1108,11 +1078,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* unistd.h defines _POSIX_VERSION on POSIX.1 systems.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DIRENT
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_POSIX_VERSION
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -1120,28 +1102,14 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|direct
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|direct
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
-name|direct
-value|dirent
+name|NLENGTH
+parameter_list|(
+name|dirent
+parameter_list|)
+value|(strlen((dirent)->d_name))
 end_define
 
 begin_else
@@ -1149,10 +1117,31 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* not (DIRENT or _POSIX_VERSION) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dirent
+value|direct
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLENGTH
+parameter_list|(
+name|dirent
+parameter_list|)
+value|((dirent)->d_namlen)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYSNDIR
+name|HAVE_SYS_NDIR_H
 end_ifdef
 
 begin_include
@@ -1161,31 +1150,16 @@ directive|include
 file|<sys/ndir.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NDIR
+name|HAVE_SYS_DIR_H
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ndir.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* must be BSD */
-end_comment
 
 begin_include
 include|#
@@ -1198,6 +1172,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NDIR_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ndir.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1207,6 +1193,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not (DIRENT or _POSIX_VERSION) */
+end_comment
 
 begin_comment
 comment|/* Convert B 512-byte blocks to kilobytes if K is nonzero,    otherwise return it unchanged. */
@@ -1242,18 +1232,70 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Some UNIX distributions don't include these in their stat.h Defined here  * because "config.h" is always included last.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIGTYPE
+name|S_IWRITE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIGTYPE
-value|void
+name|S_IWRITE
+value|0000200
 end_define
+
+begin_comment
+comment|/* write permission, owner */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IWGRP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IWGRP
+value|0000020
+end_define
+
+begin_comment
+comment|/* write permission, grougroup */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IWOTH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IWOTH
+value|0000002
+end_define
+
+begin_comment
+comment|/* write permission, other */
+end_comment
 
 begin_endif
 endif|#

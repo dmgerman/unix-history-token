@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)error.c 1.9 92/03/31"
+literal|"$CVSid: @(#)error.c 1.13 94/09/30 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,23 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -103,11 +120,11 @@ begin_comment
 comment|/* CVS_SUPPORT */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VPRINTF_MISSING
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_VPRINTF
+end_ifdef
 
 begin_if
 if|#
@@ -166,11 +183,11 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DOPRNT_MISSING
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DOPRNT
+end_ifdef
 
 begin_define
 define|#
@@ -215,11 +232,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|STDC_HEADERS
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -280,64 +297,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STRERROR_MISSING
-end_ifdef
-
-begin_function
-specifier|static
+begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|strerror
-parameter_list|(
-name|errnum
-parameter_list|)
-name|int
-name|errnum
-decl_stmt|;
-block|{
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-if|if
-condition|(
-name|errnum
-operator|>
-literal|0
-operator|&&
-name|errnum
-operator|<
-name|sys_nerr
-condition|)
-return|return
-name|sys_errlist
-index|[
-name|errnum
-index|]
-return|;
-return|return
-literal|"Unknown system error"
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STRERROR_MISSING */
-end_comment
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status STATUS if it is nonzero. */
@@ -351,10 +318,9 @@ begin_decl_stmt
 name|void
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|VPRINTF_MISSING
+name|HAVE_VPRINTF
 argument_list|)
 operator|&&
 name|__STDC__
@@ -428,9 +394,9 @@ name|command_name
 decl_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|VPRINTF_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_VPRINTF
 name|va_list
 name|args
 decl_stmt|;
@@ -496,9 +462,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|VPRINTF_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_VPRINTF
 name|VA_START
 argument_list|(
 name|args
@@ -522,9 +488,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifndef|#
-directive|ifndef
-name|DOPRNT_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_DOPRNT
 name|_doprnt
 argument_list|(
 name|message
@@ -632,10 +598,9 @@ begin_function
 name|void
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|VPRINTF_MISSING
+name|HAVE_VPRINTF
 argument_list|)
 operator|&&
 name|__STDC__
@@ -694,9 +659,9 @@ name|char
 modifier|*
 name|program_name
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|VPRINTF_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_VPRINTF
 name|va_list
 name|args
 decl_stmt|;
@@ -711,9 +676,9 @@ argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VPRINTF_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_VPRINTF
 name|VA_START
 argument_list|(
 name|args
@@ -737,9 +702,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifndef|#
-directive|ifndef
-name|DOPRNT_MISSING
+ifdef|#
+directive|ifdef
+name|HAVE_DOPRNT
 name|_doprnt
 argument_list|(
 name|message

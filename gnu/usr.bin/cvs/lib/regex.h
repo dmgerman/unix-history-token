@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version REPLACE-WITH-VERSION.     Copyright (C) 1985, 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.     Copyright (C) 1985, 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,8 +16,29 @@ name|__REGEXP_LIBRARY_H__
 end_define
 
 begin_comment
-comment|/* POSIX says that<sys/types.h> must be included before<regex.h>.  */
+comment|/* POSIX says that<sys/types.h> must be included (by the caller) before<regex.h>.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMS
+end_ifdef
+
+begin_comment
+comment|/* VMS doesn't have `size_t' in<sys/types.h>, even though POSIX says it    should be there.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The following bits are used to determine the regexp syntax we    recognize.  The set/not-set meanings are chosen so that Emacs syntax    remains the value 0.  The bits are given in alphabetical order, and    the definitions shifted by one from the previous bit; thus, when we    add or remove a bit, only one other definition need change.  */
@@ -64,7 +85,7 @@ value|(RE_BK_PLUS_QM<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.      This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX now says that the behavior of * etc. in leading positions is    undefined.  We have already implemented a previous draft which    made those constructs invalid, so we may as well not change the code    back.  */
+comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions, of course).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.       This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX draft 11.2 says that * etc. in leading positions is undefined.    We already implemented a previous draft which made those constructs    invalid, though, so we haven't changed the code back.  */
 end_comment
 
 begin_define
@@ -86,7 +107,7 @@ value|(RE_CONTEXT_INDEP_ANCHORS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then *, +, ?, and { cannot be first in an re or    immediately after an alternation or begin-group operator.    Furthermore, alternation cannot be first or last in an re, or    immediately follow another alternation or begin-group.  */
+comment|/* If this bit is set, then *, +, ?, and { cannot be first in an re or      immediately after an alternation or begin-group operator.  */
 end_comment
 
 begin_define
@@ -97,7 +118,7 @@ value|(RE_CONTEXT_INDEP_OPS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then . matches a newline.    If not set, then it doesn't.  */
+comment|/* If this bit is set, then . matches newline.    If not set, then it doesn't.  */
 end_comment
 
 begin_define
@@ -108,7 +129,7 @@ value|(RE_CONTEXT_INVALID_OPS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then period doesn't match a null.    If not set, then it does.  */
+comment|/* If this bit is set, then . doesn't match NUL.    If not set, then it does.  */
 end_comment
 
 begin_define
@@ -141,7 +162,7 @@ value|(RE_HAT_LISTS_NOT_NEWLINE<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set,  +, ? and | aren't recognized as operators.    If not set, they are.  */
+comment|/* If this bit is set, +, ? and | aren't recognized as operators.    If not set, they are.  */
 end_comment
 
 begin_define
@@ -163,25 +184,14 @@ value|(RE_LIMITED_OPS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, newline in the pattern is an ordinary character.    If not set, newline before ^ or after $ allows the ^ or $ to be an      anchor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_NEWLINE_ORDINARY
-value|(RE_NEWLINE_ALT<< 1)
-end_define
-
-begin_comment
-comment|/* If this bit is not set, then \{ and \} defines an interval,      and { and } are literals.    If set, then { and } defines an interval, and \{ and \} are literals.  */
+comment|/* If this bit is set, then `{...}' defines an interval, and \{ and \}      are literals.   If not set, then `\{...\}' defines an interval.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RE_NO_BK_BRACES
-value|(RE_NEWLINE_ORDINARY<< 1)
+value|(RE_NEWLINE_ALT<< 1)
 end_define
 
 begin_comment
@@ -196,7 +206,7 @@ value|(RE_NO_BK_BRACES<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then back references (i.e., \<digit>) are not      recognized.    If not set, then they are.  */
+comment|/* If this bit is set, then \<digit> matches<digit>.    If not set, then \<digit> is a back-reference.  */
 end_comment
 
 begin_define
@@ -218,58 +228,25 @@ value|(RE_NO_BK_REFS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then you can't have empty alternatives.    If not set, then you can.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_NO_EMPTY_ALTS
-value|(RE_NO_BK_VBAR<< 1)
-end_define
-
-begin_comment
-comment|/* If this bit is set, then you can't have empty groups.    If not set, then you can.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_NO_EMPTY_GROUPS
-value|(RE_NO_EMPTY_ALTS<< 1)
-end_define
-
-begin_comment
-comment|/* If this bit is set, then an ending range point has to collate higher      than or equal to the starting range point.    If not set, then when the ending range point collates higher than the      starting range point, we consider such a range to be empty.  */
+comment|/* If this bit is set, then an ending range point collating higher      than the starting range point, as in [z-a], is invalid.    If not set, then when ending range point collates higher than the      starting range point, the range is ignored.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RE_NO_EMPTY_RANGES
-value|(RE_NO_EMPTY_GROUPS<< 1)
+value|(RE_NO_BK_VBAR<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then all back references must refer to a preceding      subexpression.    If not set, then a back reference to a nonexistent subexpression is      treated as literal characters.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_NO_MISSING_BK_REF
-value|(RE_NO_EMPTY_RANGES<< 1)
-end_define
-
-begin_comment
-comment|/* If this bit is set, then Regex considers an unmatched close-group      operator to be the ordinary character parenthesis.    If not set, then an unmatched close-group operator is invalid.  */
+comment|/* If this bit is set, then an unmatched ) is ordinary.    If not set, then an unmatched ) is invalid.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RE_UNMATCHED_RIGHT_PAREN_ORD
-value|(RE_NO_MISSING_BK_REF<< 1)
+value|(RE_NO_EMPTY_RANGES<< 1)
 end_define
 
 begin_comment
@@ -279,12 +256,15 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|reg_syntax_t
-name|obscure_syntax
+name|re_syntax_options
 decl_stmt|;
 end_decl_stmt
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* Define combinations of the above bits for the standard possibilities.    (The [[[ comments delimit what gets put into the Texinfo file.) */
+comment|/* Define combinations of the above bits for the standard possibilities.    (The [[[ comments delimit what gets put into the Texinfo file, so    don't delete them!)  */
 end_comment
 
 begin_comment
@@ -301,17 +281,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|RE_SYNTAX_POSIX_AWK
+name|RE_SYNTAX_AWK
 define|\
-value|(RE_CONTEXT_INDEP_ANCHORS | RE_CONTEXT_INDEP_OPS | RE_NO_BK_PARENS	\    | RE_NO_BK_VBAR)
+value|(RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DOT_NOT_NULL			\    | RE_NO_BK_PARENS            | RE_NO_BK_REFS				\    | RE_NO_BK_VBAR               | RE_NO_EMPTY_RANGES			\    | RE_UNMATCHED_RIGHT_PAREN_ORD)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RE_SYNTAX_AWK
+name|RE_SYNTAX_POSIX_AWK
 define|\
-value|(RE_BACKSLASH_ESCAPE_IN_LISTS | RE_SYNTAX_POSIX_AWK)
+value|(RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS)
 end_define
 
 begin_define
@@ -319,7 +299,7 @@ define|#
 directive|define
 name|RE_SYNTAX_GREP
 define|\
-value|(RE_BK_PLUS_QM | RE_NEWLINE_ALT)
+value|(RE_BK_PLUS_QM              | RE_CHAR_CLASSES				\    | RE_HAT_LISTS_NOT_NEWLINE | RE_INTERVALS				\    | RE_NEWLINE_ALT)
 end_define
 
 begin_define
@@ -327,7 +307,45 @@ define|#
 directive|define
 name|RE_SYNTAX_EGREP
 define|\
-value|(RE_CONTEXT_INDEP_ANCHORS | RE_CONTEXT_INDEP_OPS			\    | RE_NEWLINE_ALT | RE_NO_BK_PARENS | RE_NO_BK_VBAR)
+value|(RE_CHAR_CLASSES        | RE_CONTEXT_INDEP_ANCHORS			\    | RE_CONTEXT_INDEP_OPS | RE_HAT_LISTS_NOT_NEWLINE			\    | RE_NEWLINE_ALT       | RE_NO_BK_PARENS				\    | RE_NO_BK_VBAR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_POSIX_EGREP
+define|\
+value|(RE_SYNTAX_EGREP | RE_INTERVALS | RE_NO_BK_BRACES)
+end_define
+
+begin_comment
+comment|/* P1003.2/D11.2, section 4.20.7.1, lines 5078ff.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_ED
+value|RE_SYNTAX_POSIX_BASIC
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_SED
+value|RE_SYNTAX_POSIX_BASIC
+end_define
+
+begin_comment
+comment|/* Syntax bits common to both basic and extended POSIX regex syntax.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_RE_SYNTAX_POSIX_COMMON
+define|\
+value|(RE_CHAR_CLASSES | RE_DOT_NEWLINE      | RE_DOT_NOT_NULL		\    | RE_INTERVALS  | RE_NO_EMPTY_RANGES)
 end_define
 
 begin_define
@@ -335,7 +353,19 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_BASIC
 define|\
-value|(RE_CHAR_CLASSES | RE_DOT_NEWLINE					\    | RE_DOT_NOT_NULL | RE_INTERVALS | RE_LIMITED_OPS			\    | RE_NEWLINE_ORDINARY | RE_NO_EMPTY_RANGES | RE_NO_MISSING_BK_REF)
+value|(_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM)
+end_define
+
+begin_comment
+comment|/* Differs from ..._POSIX_BASIC only in that RE_BK_PLUS_QM becomes    RE_LIMITED_OPS, i.e., \? \+ \| are not recognized.  Actually, this    isn't minimal, since other operators, such as \`, aren't disabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_POSIX_MINIMAL_BASIC
+define|\
+value|(_RE_SYNTAX_POSIX_COMMON | RE_LIMITED_OPS)
 end_define
 
 begin_define
@@ -343,7 +373,19 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_EXTENDED
 define|\
-value|(RE_CHAR_CLASSES | RE_CONTEXT_INDEP_ANCHORS				\    | RE_CONTEXT_INVALID_OPS | RE_DOT_NEWLINE | RE_DOT_NOT_NULL		\    | RE_INTERVALS | RE_NEWLINE_ORDINARY | RE_NO_BK_BRACES		\    | RE_NO_BK_PARENS | RE_NO_BK_REFS | RE_NO_BK_VBAR			\    | RE_NO_EMPTY_ALTS | RE_NO_EMPTY_GROUPS | RE_NO_EMPTY_RANGES		\    | RE_UNMATCHED_RIGHT_PAREN_ORD)
+value|(_RE_SYNTAX_POSIX_COMMON | RE_CONTEXT_INDEP_ANCHORS			\    | RE_CONTEXT_INDEP_OPS  | RE_NO_BK_BRACES				\    | RE_NO_BK_PARENS       | RE_NO_BK_VBAR				\    | RE_UNMATCHED_RIGHT_PAREN_ORD)
+end_define
+
+begin_comment
+comment|/* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INVALID_OPS    replaces RE_CONTEXT_INDEP_OPS and RE_NO_BK_REFS is added.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RE_SYNTAX_POSIX_MINIMAL_EXTENDED
+define|\
+value|(_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS			\    | RE_CONTEXT_INVALID_OPS | RE_NO_BK_BRACES				\    | RE_NO_BK_PARENS        | RE_NO_BK_REFS				\    | RE_NO_BK_VBAR	    | RE_UNMATCHED_RIGHT_PAREN_ORD)
 end_define
 
 begin_comment
@@ -354,14 +396,25 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Maximum number of duplicates an interval can allow.  */
+comment|/* Maximum number of duplicates an interval can allow.  Some systems    (erroneously) define this in other header files, but we want our    value, so remove any previous define.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RE_DUP_MAX
+end_ifdef
 
 begin_undef
 undef|#
 directive|undef
 name|RE_DUP_MAX
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -371,7 +424,7 @@ value|((1<< 15) - 1)
 end_define
 
 begin_comment
-comment|/* POSIX `cflags' bits (i.e., information for regcomp).  */
+comment|/* POSIX `cflags' bits (i.e., information for `regcomp').  */
 end_comment
 
 begin_comment
@@ -557,19 +610,37 @@ comment|/* Number of subexpressions found by the compiler.  */
 name|size_t
 name|re_nsub
 decl_stmt|;
-comment|/* Set to 1 by re_compile_fastmap if this pattern can match the            null string; 0 prevents the searcher from matching it with            the null string.  Set to 2 if it might match the null string            either at the end of a search range or just before a            character listed in the fastmap.  */
+comment|/* Zero if this pattern cannot match the empty string, one else.            Well, in truth it's used only in `re_search_2', to see            whether or not we should use the fastmap, so we don't set            this absolutely perfectly; see `re_compile_fastmap' (the            `duplicate' case).  */
 name|unsigned
 name|can_be_null
 range|:
+literal|1
+decl_stmt|;
+comment|/* If REGS_UNALLOCATED, allocate space in the `regs' structure              for `max (RE_NREGS, re_nsub + 1)' groups.            If REGS_REALLOCATE, reallocate space if necessary.            If REGS_FIXED, use what's there.  */
+define|#
+directive|define
+name|REGS_UNALLOCATED
+value|0
+define|#
+directive|define
+name|REGS_REALLOCATE
+value|1
+define|#
+directive|define
+name|REGS_FIXED
+value|2
+name|unsigned
+name|regs_allocated
+range|:
 literal|2
 decl_stmt|;
-comment|/* Set to zero when regex_compile compiles a pattern; set to one            by re_compile_fastmap when it updates the fastmap, if any.  */
+comment|/* Set to zero when `regex_compile' compiles a pattern; set to one            by `re_compile_fastmap' if it updates the fastmap.  */
 name|unsigned
 name|fastmap_accurate
 range|:
 literal|1
 decl_stmt|;
-comment|/* If set, regexec reports only success or failure and does not            return anything in pmatch.  */
+comment|/* If set, `re_match_2' does not return information about            subexpressions.  */
 name|unsigned
 name|no_sub
 range|:
@@ -590,12 +661,6 @@ decl_stmt|;
 comment|/* If true, an anchor at a newline matches.  */
 name|unsigned
 name|newline_anchor
-range|:
-literal|1
-decl_stmt|;
-comment|/* If set, re_match_2 assumes a non-null REGS argument is            initialized.  If not set, REGS is initialized to the max of            RE_NREGS and re_nsub + 1 registers.  */
-name|unsigned
-name|caller_allocated_regs
 range|:
 literal|1
 decl_stmt|;
@@ -627,7 +692,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Type for byte offsets within the string.  POSIX mandates us defining    this.  */
+comment|/* Type for byte offsets within the string.  POSIX mandates this.  */
 end_comment
 
 begin_typedef
@@ -661,7 +726,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* If `caller_allocated_regs' is zero in the pattern buffer, re_match_2    returns information about this many registers.  */
+comment|/* If `regs_allocated' is REGS_UNALLOCATED in the pattern buffer,    `re_match_2' returns information about at least this many registers    the first time a `regs' structure is passed.  */
 end_comment
 
 begin_ifndef
@@ -710,371 +775,25 @@ begin_comment
 comment|/* Declarations for routines.  */
 end_comment
 
+begin_comment
+comment|/* To avoid duplicating every routine declaration -- once with a    prototype (if we are ANSI), and once without (if we aren't) -- we    use the following macro to declare argument types.  This    unfortunately clutters up the declarations a bit, but I think it's    worth it.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|__STDC__
 end_if
 
-begin_comment
-comment|/* Sets the current syntax to SYNTAX.  You can also simply assign to the    `obscure_syntax' variable.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|reg_syntax_t
-name|re_set_syntax
+begin_define
+define|#
+directive|define
+name|_RE_ARGS
 parameter_list|(
-name|reg_syntax_t
-name|syntax
+name|args
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Compile the regular expression PATTERN, with length LENGTH    and syntax given by the global `obscure_syntax', into the buffer    BUFFER.  Return NULL if successful, and an error string if not.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|re_compile_pattern
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|pattern
-parameter_list|,
-name|int
-name|length
-parameter_list|,
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Compile a fastmap for the compiled pattern in BUFFER; used to    accelerate searches.  Return 0 if successful and -2 if was an    internal error.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_compile_fastmap
-parameter_list|(
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Search in the string STRING (with length LENGTH) for the pattern    compiled into BUFFER.  Start searching at position START, for RANGE    characters.  Return the starting position of the match, -1 for no    match, or -2 for an internal error.  Also return register    information in REGS (if REGS and BUFFER->no_sub are nonzero).  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_search
-parameter_list|(
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|int
-name|length
-parameter_list|,
-name|int
-name|start
-parameter_list|,
-name|int
-name|range
-parameter_list|,
-name|struct
-name|re_registers
-modifier|*
-name|regs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Like `re_search', but search in the concatenation of STRING1 and    STRING2.  Also, stop searching at index START + STOP.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_search_2
-parameter_list|(
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string1
-parameter_list|,
-name|int
-name|length1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string2
-parameter_list|,
-name|int
-name|length2
-parameter_list|,
-name|int
-name|start
-parameter_list|,
-name|int
-name|range
-parameter_list|,
-name|struct
-name|re_registers
-modifier|*
-name|regs
-parameter_list|,
-name|int
-name|stop
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Like `re_search', but return how many characters in STRING the regexp    in BUFFER matched, starting at position START.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_match
-parameter_list|(
-specifier|const
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|int
-name|length
-parameter_list|,
-name|int
-name|start
-parameter_list|,
-name|struct
-name|re_registers
-modifier|*
-name|regs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Relates to `re_match' as `re_search_2' relates to `re_search'.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_match_2
-parameter_list|(
-specifier|const
-name|struct
-name|re_pattern_buffer
-modifier|*
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string1
-parameter_list|,
-name|int
-name|length1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string2
-parameter_list|,
-name|int
-name|length2
-parameter_list|,
-name|int
-name|start
-parameter_list|,
-name|struct
-name|re_registers
-modifier|*
-name|regs
-parameter_list|,
-name|int
-name|stop
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__386BSD__
-end_ifndef
-
-begin_comment
-comment|/* 4.2 bsd compatibility.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|bsdi
-end_ifndef
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|re_comp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_exec
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POSIX compatibility.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|regcomp
-parameter_list|(
-name|regex_t
-modifier|*
-name|preg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|pattern
-parameter_list|,
-name|int
-name|cflags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|regexec
-parameter_list|(
-specifier|const
-name|regex_t
-modifier|*
-name|preg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|size_t
-name|nmatch
-parameter_list|,
-name|regmatch_t
-name|pmatch
-index|[]
-parameter_list|,
-name|int
-name|eflags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|regerror
-parameter_list|(
-name|int
-name|errcode
-parameter_list|,
-specifier|const
-name|regex_t
-modifier|*
-name|preg
-parameter_list|,
-name|char
-modifier|*
-name|errbuf
-parameter_list|,
-name|size_t
-name|errbuf_size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|regfree
-parameter_list|(
-name|regex_t
-modifier|*
-name|preg
-parameter_list|)
-function_decl|;
-end_function_decl
+value|args
+end_define
 
 begin_else
 else|#
@@ -1085,111 +804,15 @@ begin_comment
 comment|/* not __STDC__ */
 end_comment
 
-begin_comment
-comment|/* Support old C compilers.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|const
+name|_RE_ARGS
+parameter_list|(
+name|args
+parameter_list|)
+value|()
 end_define
-
-begin_function_decl
-specifier|extern
-name|reg_syntax_t
-name|re_set_syntax
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|re_compile_pattern
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|re_search
-argument_list|()
-decl_stmt|,
-name|re_search_2
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|re_match
-argument_list|()
-decl_stmt|,
-name|re_match_2
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 4.2 BSD compatibility.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|re_comp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|re_exec
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* POSIX compatibility.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|regcomp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|regexec
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|regerror
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|regfree
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -1199,6 +822,416 @@ end_endif
 begin_comment
 comment|/* not __STDC__ */
 end_comment
+
+begin_comment
+comment|/* Sets the current default syntax to SYNTAX, and return the old syntax.    You can also simply assign to the `re_syntax_options' variable.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|reg_syntax_t
+name|re_set_syntax
+name|_RE_ARGS
+argument_list|(
+operator|(
+name|reg_syntax_t
+name|syntax
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Compile the regular expression PATTERN, with length LENGTH    and syntax given by the global `re_syntax_options', into the buffer    BUFFER.  Return NULL if successful, and an error string if not.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|re_compile_pattern
+name|_RE_ARGS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|pattern
+operator|,
+name|int
+name|length
+operator|,
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Compile a fastmap for the compiled pattern in BUFFER; used to    accelerate searches.  Return 0 if successful and -2 if was an    internal error.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_compile_fastmap
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Search in the string STRING (with length LENGTH) for the pattern    compiled into BUFFER.  Start searching at position START, for RANGE    characters.  Return the starting position of the match, -1 for no    match, or -2 for an internal error.  Also return register    information in REGS (if REGS and BUFFER->no_sub are nonzero).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_search
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|,
+specifier|const
+name|char
+operator|*
+name|string
+operator|,
+name|int
+name|length
+operator|,
+name|int
+name|start
+operator|,
+name|int
+name|range
+operator|,
+expr|struct
+name|re_registers
+operator|*
+name|regs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Like `re_search', but search in the concatenation of STRING1 and    STRING2.  Also, stop searching at index START + STOP.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_search_2
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|,
+specifier|const
+name|char
+operator|*
+name|string1
+operator|,
+name|int
+name|length1
+operator|,
+specifier|const
+name|char
+operator|*
+name|string2
+operator|,
+name|int
+name|length2
+operator|,
+name|int
+name|start
+operator|,
+name|int
+name|range
+operator|,
+expr|struct
+name|re_registers
+operator|*
+name|regs
+operator|,
+name|int
+name|stop
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Like `re_search', but return how many characters in STRING the regexp    in BUFFER matched, starting at position START.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_match
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|,
+specifier|const
+name|char
+operator|*
+name|string
+operator|,
+name|int
+name|length
+operator|,
+name|int
+name|start
+operator|,
+expr|struct
+name|re_registers
+operator|*
+name|regs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Relates to `re_match' as `re_search_2' relates to `re_search'.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_match_2
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|,
+specifier|const
+name|char
+operator|*
+name|string1
+operator|,
+name|int
+name|length1
+operator|,
+specifier|const
+name|char
+operator|*
+name|string2
+operator|,
+name|int
+name|length2
+operator|,
+name|int
+name|start
+operator|,
+expr|struct
+name|re_registers
+operator|*
+name|regs
+operator|,
+name|int
+name|stop
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set REGS to hold NUM_REGS registers, storing them in STARTS and    ENDS.  Subsequent matches using BUFFER and REGS will use this memory    for recording register information.  STARTS and ENDS must be    allocated with malloc, and must each be at least `NUM_REGS * sizeof    (regoff_t)' bytes long.     If NUM_REGS == 0, then subsequent matches should allocate their own    register data.     Unless this function is called, the first search or match using    PATTERN_BUFFER will allocate its own register data, without    freeing the old data.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|re_set_registers
+name|_RE_ARGS
+argument_list|(
+operator|(
+expr|struct
+name|re_pattern_buffer
+operator|*
+name|buffer
+operator|,
+expr|struct
+name|re_registers
+operator|*
+name|regs
+operator|,
+name|unsigned
+name|num_regs
+operator|,
+name|regoff_t
+operator|*
+name|starts
+operator|,
+name|regoff_t
+operator|*
+name|ends
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 4.2 bsd compatibility.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|re_comp
+name|_RE_ARGS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|re_exec
+name|_RE_ARGS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* POSIX compatibility.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|regcomp
+name|_RE_ARGS
+argument_list|(
+operator|(
+name|regex_t
+operator|*
+name|preg
+operator|,
+specifier|const
+name|char
+operator|*
+name|pattern
+operator|,
+name|int
+name|cflags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|regexec
+name|_RE_ARGS
+argument_list|(
+operator|(
+specifier|const
+name|regex_t
+operator|*
+name|preg
+operator|,
+specifier|const
+name|char
+operator|*
+name|string
+operator|,
+name|size_t
+name|nmatch
+operator|,
+name|regmatch_t
+name|pmatch
+index|[]
+operator|,
+name|int
+name|eflags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|regerror
+name|_RE_ARGS
+argument_list|(
+operator|(
+name|int
+name|errcode
+operator|,
+specifier|const
+name|regex_t
+operator|*
+name|preg
+operator|,
+name|char
+operator|*
+name|errbuf
+operator|,
+name|size_t
+name|errbuf_size
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|regfree
+name|_RE_ARGS
+argument_list|(
+operator|(
+name|regex_t
+operator|*
+name|preg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

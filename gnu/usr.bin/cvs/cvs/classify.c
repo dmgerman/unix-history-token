@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   */
 end_comment
 
 begin_include
@@ -21,65 +21,47 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)classify.c 1.11 92/03/31"
+literal|"$CVSid: @(#)classify.c 1.17 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|sticky_ck
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|int
 name|aflag
-parameter_list|,
+operator|,
 name|Vers_TS
-modifier|*
+operator|*
 name|vers
-parameter_list|,
+operator|,
 name|List
-modifier|*
+operator|*
 name|entries
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|void
-name|sticky_ck
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Classify the state of a file  */
@@ -108,6 +90,10 @@ parameter_list|,
 name|srcfiles
 parameter_list|,
 name|versp
+parameter_list|,
+name|update_dir
+parameter_list|,
+name|pipeout
 parameter_list|)
 name|char
 modifier|*
@@ -148,6 +134,13 @@ modifier|*
 modifier|*
 name|versp
 decl_stmt|;
+name|char
+modifier|*
+name|update_dir
+decl_stmt|;
+name|int
+name|pipeout
+decl_stmt|;
 block|{
 name|Vers_TS
 modifier|*
@@ -156,6 +149,55 @@ decl_stmt|;
 name|Ctype
 name|ret
 decl_stmt|;
+name|char
+modifier|*
+name|fullname
+decl_stmt|;
+name|fullname
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|update_dir
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|file
+argument_list|)
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|update_dir
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|strcpy
+argument_list|(
+name|fullname
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|fullname
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|update_dir
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 comment|/* get all kinds of good data about the file */
 name|vers
 operator|=
@@ -239,7 +281,7 @@ literal|0
 argument_list|,
 literal|"nothing known about %s"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -279,7 +321,7 @@ literal|0
 argument_list|,
 literal|"use `cvs add' to create an entry for %s"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -308,7 +350,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+block|{
+comment|/* 		     * The user file doesn't necessarily have anything 		     * to do with this. 		     */
+name|ret
+operator|=
+name|T_CHECKOUT
+expr_stmt|;
+block|}
 comment|/* 		 * There is a user file; print a warning and add it to the 		 * conflict list, only if it is indeed different from what we 		 * plan to extract 		 */
+elseif|else
 if|if
 condition|(
 name|No_Difference
@@ -318,6 +372,10 @@ argument_list|,
 name|vers
 argument_list|,
 name|entries
+argument_list|,
+name|repository
+argument_list|,
+name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -335,7 +393,7 @@ literal|0
 argument_list|,
 literal|"move away %s; it is in the way"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -391,7 +449,7 @@ literal|0
 argument_list|,
 literal|"warning: new-born %s has disappeared"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -431,7 +489,7 @@ literal|0
 argument_list|,
 literal|"conflict: %s created independently by second party"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -541,7 +599,7 @@ literal|0
 argument_list|,
 literal|"conflict: removed %s was modified by second party"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -566,7 +624,7 @@ literal|0
 argument_list|,
 literal|"%s should be removed and is still there"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -611,7 +669,7 @@ literal|0
 argument_list|,
 literal|"warning: %s is not (any longer) pertinent"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -650,7 +708,7 @@ literal|0
 argument_list|,
 literal|"%s is no longer in the repository"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -670,6 +728,10 @@ argument_list|,
 name|vers
 argument_list|,
 name|entries
+argument_list|,
+name|repository
+argument_list|,
+name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -687,7 +749,7 @@ literal|0
 argument_list|,
 literal|"conflict: %s is modified but no longer in the repository"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -711,7 +773,7 @@ literal|0
 argument_list|,
 literal|"warning: %s is not (any longer) pertinent"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -773,7 +835,7 @@ literal|0
 argument_list|,
 literal|"warning: %s was lost"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -857,6 +919,10 @@ argument_list|,
 name|vers
 argument_list|,
 name|entries
+argument_list|,
+name|repository
+argument_list|,
+name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -1000,7 +1066,7 @@ literal|0
 argument_list|,
 literal|"warning: %s was lost"
 argument_list|,
-name|file
+name|fullname
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1042,6 +1108,10 @@ argument_list|,
 name|vers
 argument_list|,
 name|entries
+argument_list|,
+name|repository
+argument_list|,
+name|update_dir
 argument_list|)
 condition|)
 comment|/* really modified, needs to merge */
@@ -1080,6 +1150,11 @@ name|freevers_ts
 argument_list|(
 operator|&
 name|vers
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fullname
 argument_list|)
 expr_stmt|;
 comment|/* return the status of the file */
@@ -1255,6 +1330,10 @@ argument_list|,
 name|vers
 operator|->
 name|date
+argument_list|,
+name|vers
+operator|->
+name|ts_conflict
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS 1.3 kit.  *  * Modules  *  *	Functions for accessing the modules file.  *  *	The modules file supports basically three formats of lines:  *		key [options] directory files... [ -x directory [files] ] ...  *		key [options] directory [ -x directory [files] ] ...  *		key -a aliases...  *  *	The -a option allows an aliasing step in the parsing of the modules  *	file.  The "aliases" listed on a line following the -a are  *	processed one-by-one, as if they were specified as arguments on the  *	command line.  */
+comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS 1.4 kit.  *  * Modules  *  *	Functions for accessing the modules file.  *  *	The modules file supports basically three formats of lines:  *		key [options] directory files... [ -x directory [files] ] ...  *		key [options] directory [ -x directory [files] ] ...  *		key -a aliases...  *  *	The -a option allows an aliasing step in the parsing of the modules  *	file.  The "aliases" listed on a line following the -a are  *	processed one-by-one, as if they were specified as arguments on the  *	command line.  */
 end_comment
 
 begin_include
@@ -21,9 +21,16 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)modules.c 1.57 92/04/10"
+literal|"$CVSid: @(#)modules.c 1.62 94/09/29 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
@@ -54,79 +61,49 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|sort_order
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|CONST
 name|PTR
 name|l
-parameter_list|,
+operator|,
 name|CONST
 name|PTR
 name|r
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|save_d
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|k
-parameter_list|,
+operator|,
 name|int
 name|ks
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|d
-parameter_list|,
+operator|,
 name|int
 name|ds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|sort_order
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|save_d
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Open the modules file, and die if the CVSROOT environment variable  * was not set.  If the modules file does not exist, that's fine, and  * a warning message is displayed and a NULL is returned.  */
@@ -458,6 +435,37 @@ argument_list|,
 name|cwd
 argument_list|)
 expr_stmt|;
+comment|/* if this is a directory to ignore, add it to that list */
+if|if
+condition|(
+name|mname
+index|[
+literal|0
+index|]
+operator|==
+literal|'!'
+operator|&&
+name|mname
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|ign_dir_add
+argument_list|(
+name|mname
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 comment|/* strip extra stuff from the module name */
 name|strip_path
 argument_list|(
@@ -532,7 +540,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|val
 operator|.
@@ -561,6 +569,41 @@ name|cp
 argument_list|)
 condition|)
 do|;
+block|}
+else|else
+block|{
+comment|/* Always strip trailing spaces */
+name|cp
+operator|=
+name|strchr
+argument_list|(
+name|val
+operator|.
+name|dptr
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|cp
+operator|>
+name|val
+operator|.
+name|dptr
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+operator|--
+name|cp
+argument_list|)
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 name|value
 operator|=
@@ -617,7 +660,7 @@ condition|(
 operator|(
 name|acp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|mname
 argument_list|,
@@ -727,7 +770,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|mname
 argument_list|,
@@ -758,7 +801,7 @@ argument_list|)
 expr_stmt|;
 name|slashp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|value
 argument_list|,
@@ -847,7 +890,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|mname
 argument_list|,
@@ -936,7 +979,7 @@ condition|(
 operator|(
 name|cp2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|val
 operator|.
@@ -1053,7 +1096,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|value
 argument_list|,
@@ -1220,6 +1263,25 @@ argument_list|,
 literal|0777
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|nullrepos
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"there is no repository %s"
+argument_list|,
+name|nullrepos
+argument_list|)
+expr_stmt|;
 name|Create_Admin
 argument_list|(
 literal|"."
@@ -1339,7 +1401,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|modargc
 argument_list|,
@@ -1538,6 +1600,33 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|mname
+argument_list|,
+name|modargv
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"module `%s' in modules file contains infinite loop"
+argument_list|,
+name|mname
+argument_list|)
+expr_stmt|;
+else|else
 name|err
 operator|+=
 name|do_module
@@ -1566,6 +1655,7 @@ argument_list|,
 name|extra_arg
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mwhere
@@ -1645,7 +1735,7 @@ name|next_opt
 decl_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|spec_opt
 argument_list|,
@@ -2502,7 +2592,7 @@ init|;
 operator|(
 name|cp2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -2588,7 +2678,7 @@ name|cp2
 operator|=
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -3023,7 +3113,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -3048,6 +3138,10 @@ condition|(
 name|c
 operator|==
 literal|'a'
+operator|||
+name|c
+operator|==
+literal|'l'
 condition|)
 block|{
 operator|(
@@ -3055,7 +3149,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" -a"
+literal|" -%c"
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|wid

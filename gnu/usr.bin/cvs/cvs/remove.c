@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   * Remove a File  *   * Removes entries from the present version. The entries will be removed from  * the RCS repository upon the next "commit".  *   * "remove" accepts no options, only file names that are to be removed.  The  * file must not exist in the current directory for "remove" to work  * correctly.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Remove a File  *   * Removes entries from the present version. The entries will be removed from  * the RCS repository upon the next "commit".  *   * "remove" accepts no options, only file names that are to be removed.  The  * file must not exist in the current directory for "remove" to work  * correctly.  */
 end_comment
 
 begin_include
@@ -21,94 +21,82 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)remove.c 1.34 92/04/10"
+literal|"$CVSid: @(#)remove.c 1.39 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|remove_fileproc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|update_dir
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|repository
-parameter_list|,
+operator|,
 name|List
-modifier|*
+operator|*
 name|entries
-parameter_list|,
+operator|,
 name|List
-modifier|*
+operator|*
 name|srcfiles
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|Dtype
 name|remove_dirproc
-parameter_list|(
+name|PROTO
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|dir
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|repos
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|update_dir
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|Dtype
-name|remove_dirproc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
-name|remove_fileproc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+name|force
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -127,7 +115,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|auto_removed_files
+name|existing_files
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +127,9 @@ name|remove_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lR] [files...]\n"
+literal|"Usage: %s %s [-flR] [files...]\n"
+block|,
+literal|"\t-f\tDelete the file before removing it.\n"
 block|,
 literal|"\t-l\tProcess this directory only (not recursive).\n"
 block|,
@@ -193,13 +183,13 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gnu_getopt
+name|getopt
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lR"
+literal|"flR"
 argument_list|)
 operator|)
 operator|!=
@@ -212,6 +202,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -294,6 +292,8 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -321,11 +321,9 @@ else|:
 literal|"these files"
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-operator|!
-name|auto_removed_files
+name|existing_files
 condition|)
 name|error
 argument_list|(
@@ -333,7 +331,19 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"no files removed; use `%s' to remove the file first"
+operator|(
+operator|(
+name|existing_files
+operator|==
+literal|1
+operator|)
+condition|?
+literal|"%d file exists; use `%s' to remove it first"
+else|:
+literal|"%d files exist; use `%s' to remove them first"
+operator|)
+argument_list|,
+name|existing_files
 argument_list|,
 name|RM
 argument_list|)
@@ -400,6 +410,19 @@ name|Vers_TS
 modifier|*
 name|vers
 decl_stmt|;
+comment|/*      * If unlinking the file works, good.  If not, the "unremoved"      * error will indicate problems.      */
+if|if
+condition|(
+name|force
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|vers
 operator|=
 name|Version_TS
@@ -444,18 +467,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|freevers_ts
+name|existing_files
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|error
 argument_list|(
-operator|&
-name|vers
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"file `%s' still in working directory"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|vers
@@ -476,23 +508,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"nothing known about %s"
+literal|"nothing known about `%s'"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|freevers_ts
-argument_list|(
-operator|&
-name|vers
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|vers
@@ -581,13 +603,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"removed `%s'."
+literal|"removed `%s'"
 argument_list|,
 name|file
 argument_list|)
-expr_stmt|;
-name|auto_removed_files
-operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -603,17 +622,22 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|freevers_ts
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|error
 argument_list|(
-operator|&
-name|vers
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"file `%s' already scheduled for removal"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -663,6 +687,10 @@ argument_list|,
 name|vers
 operator|->
 name|date
+argument_list|,
+name|vers
+operator|->
+name|ts_conflict
 argument_list|)
 expr_stmt|;
 if|if
@@ -670,14 +698,13 @@ condition|(
 operator|!
 name|quiet
 condition|)
-block|{
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"scheduling %s for removal"
+literal|"scheduling `%s' for removal"
 argument_list|,
 name|file
 argument_list|)
@@ -685,7 +712,6 @@ expr_stmt|;
 name|removed_files
 operator|++
 expr_stmt|;
-block|}
 block|}
 name|freevers_ts
 argument_list|(

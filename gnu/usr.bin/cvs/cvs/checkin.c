@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  *   * Check In  *   * Does a very careful checkin of the file "user", and tries not to spoil its  * modification time (to avoid needless recompilations). When RCS ID keywords  * get expanded on checkout, however, the modification time is updated and  * there is no good way to get around this.  *   * Returns non-zero on error.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Check In  *   * Does a very careful checkin of the file "user", and tries not to spoil its  * modification time (to avoid needless recompilations). When RCS ID keywords  * get expanded on checkout, however, the modification time is updated and  * there is no good way to get around this.  *   * Returns non-zero on error.  */
 end_comment
 
 begin_include
@@ -21,9 +21,16 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)checkin.c 1.40 92/03/31"
+literal|"$CVSid: @(#)checkin.c 1.48 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
@@ -45,6 +52,8 @@ parameter_list|,
 name|rev
 parameter_list|,
 name|tag
+parameter_list|,
+name|options
 parameter_list|,
 name|message
 parameter_list|,
@@ -75,6 +84,10 @@ name|tag
 decl_stmt|;
 name|char
 modifier|*
+name|options
+decl_stmt|;
+name|char
+modifier|*
 name|message
 decl_stmt|;
 name|List
@@ -91,6 +104,9 @@ decl_stmt|;
 name|Vers_TS
 modifier|*
 name|vers
+decl_stmt|;
+name|int
+name|set_time
 decl_stmt|;
 operator|(
 name|void
@@ -156,6 +172,24 @@ name|run_args
 argument_list|(
 literal|"-m%s"
 argument_list|,
+operator|(
+operator|*
+name|message
+operator|==
+literal|'\0'
+operator|||
+name|strcmp
+argument_list|(
+name|message
+argument_list|,
+literal|"\n"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+literal|"*** empty log message ***\n"
+else|:
 name|message
 argument_list|)
 expr_stmt|;
@@ -183,14 +217,34 @@ literal|0
 case|:
 comment|/* everything normal */
 comment|/* 	     * The checkin succeeded, so now check the new file back out and 	     * see if it matches exactly with the one we checked in. If it 	     * does, just move the original user file back, thus preserving 	     * the modes; otherwise, we have no recourse but to leave the 	     * newly checkout file as the user file and remove the old 	     * original user file. 	     */
-comment|/* XXX - make sure -k options are used on the co; and tag/date? */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|options
+argument_list|,
+literal|"-V4"
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* upgrade to V5 now */
+name|options
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|run_setup
 argument_list|(
-literal|"%s%s -q %s%s"
+literal|"%s%s -q %s %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
 name|RCS_CO
+argument_list|,
+name|options
 argument_list|,
 name|rev
 condition|?
@@ -242,6 +296,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|rename_file
 argument_list|(
 name|fname
@@ -249,7 +304,14 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* the time was correct, so leave it alone */
+name|set_time
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -258,6 +320,12 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
+comment|/* sync up with the time from the RCS file */
+name|set_time
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	     * If we want read-only files, muck the permissions here, before 	     * getting the file time-stamp. 	     */
 if|if
 condition|(
@@ -347,7 +415,7 @@ name|file
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+name|set_time
 argument_list|,
 name|entries
 argument_list|,
@@ -405,6 +473,12 @@ argument_list|,
 name|vers
 operator|->
 name|date
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|history_write

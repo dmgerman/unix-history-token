@@ -7,6 +7,23 @@ begin_comment
 comment|/* Modified slightly by Brian Berliner<berliner@sun.com> for CVS use */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* IGNORE(@ */
 end_comment
@@ -53,24 +70,6 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|__STDC__
-end_if
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
 
 begin_endif
 endif|#

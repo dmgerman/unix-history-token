@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.3 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
 end_comment
 
 begin_include
@@ -21,9 +21,16 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)parseinfo.c 1.16 92/04/10"
+literal|"$CVSid: @(#)parseinfo.c 1.18 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|USE
+argument_list|(
+argument|rcsid
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
@@ -346,7 +353,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|value
 argument_list|,

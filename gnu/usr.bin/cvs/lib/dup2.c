@@ -3,6 +3,23 @@ begin_comment
 comment|/* 	dup2 -- 7th Edition UNIX system call emulation for UNIX System V  	last edit:	11-Feb-1987	D A Gwyn */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
