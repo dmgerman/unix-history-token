@@ -216,6 +216,16 @@ decl_stmt|;
 name|int
 name|cd_pending
 decl_stmt|;
+comment|/* debounce timeout active */
+name|int
+name|cd_present
+decl_stmt|;
+comment|/* debounced card-present state */
+name|struct
+name|callout_handle
+name|cd_ch
+decl_stmt|;
+comment|/* handle for pcic_cd_insert */
 block|}
 struct|;
 end_struct

@@ -852,23 +852,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CB_SM_CD
-value|0x6
-end_define
-
-begin_comment
-comment|/* Socket MASK Card detect */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CB_SE_CD
 value|0x6
 end_define
 
 begin_comment
 comment|/* Socket Event Card detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SM_CD
+value|0x6
+end_define
+
+begin_comment
+comment|/* Socket MASK Card detect */
 end_comment
 
 begin_define
