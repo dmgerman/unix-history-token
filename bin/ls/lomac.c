@@ -188,6 +188,7 @@ name|char
 modifier|*
 name|get_lattr
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|ent
