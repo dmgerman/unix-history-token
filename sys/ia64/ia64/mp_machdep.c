@@ -172,6 +172,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ia64_count_aps
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
@@ -463,15 +472,32 @@ end_macro
 begin_block
 block|{
 comment|/* 	 * We've already discovered any APs when they're present. 	 * Just return the result here. 	 */
+if|if
+condition|(
+name|mp_hardware
+condition|)
+block|{
+name|mp_maxid
+operator|=
+name|ia64_count_aps
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-name|mp_hardware
-operator|&&
-name|mp_ncpus
+name|mp_maxid
 operator|>
-literal|1
+literal|0
 operator|)
 return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 end_block
 
@@ -922,9 +948,6 @@ operator|!
 name|mp_hardware
 condition|)
 return|return;
-name|breakpoint
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|mp_ipi_test
