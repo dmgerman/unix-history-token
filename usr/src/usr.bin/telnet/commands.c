@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.1 (Berkeley) %G%"
+literal|"@(#)commands.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_if
 if|#
@@ -46,7 +40,24 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_endif
@@ -174,48 +185,6 @@ include|#
 directive|include
 file|<netinet/in_systm.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* vax */
-end_comment
 
 begin_endif
 endif|#
