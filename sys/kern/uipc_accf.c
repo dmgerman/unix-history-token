@@ -12,6 +12,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"opt_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
