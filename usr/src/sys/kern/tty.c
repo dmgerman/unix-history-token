@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.46	83/07/06	*/
+comment|/*	tty.c	4.47	83/07/09	*/
 end_comment
 
 begin_include
@@ -4892,10 +4892,12 @@ name|max
 argument_list|(
 operator|(
 operator|(
+operator|(
 name|unsigned
 operator|)
 operator|*
 name|colp
+operator|)
 operator|>>
 literal|4
 operator|)
