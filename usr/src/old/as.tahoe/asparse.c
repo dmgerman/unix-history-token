@@ -4571,7 +4571,6 @@ name|TYPF
 case|:
 name|bwrite
 argument_list|(
-operator|&
 operator|(
 operator|(
 expr|struct
