@@ -685,7 +685,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLICE_INTERACTIVE
-value|(slice_min * 4)
+value|(slice_max)
 end_define
 
 begin_define
