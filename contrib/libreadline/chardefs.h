@@ -395,6 +395,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CTYPE_NON_ASCII
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NON_NEGATIVE
+parameter_list|(
+name|c
+parameter_list|)
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -404,6 +428,11 @@ name|c
 parameter_list|)
 value|((unsigned char)(c) == (c))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Some systems define these; we want our definitions. */

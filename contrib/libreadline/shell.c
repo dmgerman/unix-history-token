@@ -566,6 +566,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 name|b
 operator|=
 operator|(
@@ -598,6 +603,11 @@ argument_list|,
 name|b
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|b
 argument_list|)
 expr_stmt|;
 endif|#

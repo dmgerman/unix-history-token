@@ -317,6 +317,24 @@ begin_comment
 comment|/* !HAVE_POSIX_SIGNALS */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SA_RESTART
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_RESTART
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|SigHandler
@@ -389,6 +407,23 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|rl_catch_sigwinch
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for the readline state struct in readline.c */
+end_comment
 
 begin_endif
 endif|#
@@ -987,9 +1022,16 @@ name|act
 operator|.
 name|sa_flags
 operator|=
+operator|(
+name|sig
+operator|==
+name|SIGWINCH
+operator|)
+condition|?
+name|SA_RESTART
+else|:
 literal|0
 expr_stmt|;
-comment|/* XXX - should we set SA_RESTART for SIGWINCH? */
 name|sigemptyset
 argument_list|(
 operator|&

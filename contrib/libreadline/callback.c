@@ -357,6 +357,9 @@ block|}
 if|if
 condition|(
 name|rl_pending_input
+operator|||
+name|_rl_pushed_input_available
+argument_list|()
 condition|)
 name|eof
 operator|=

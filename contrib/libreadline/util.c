@@ -1030,7 +1030,7 @@ name|v
 operator|>
 literal|1
 condition|)
-name|string
+name|string1
 operator|+=
 name|v
 operator|-

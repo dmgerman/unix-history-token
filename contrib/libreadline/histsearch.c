@@ -247,7 +247,7 @@ operator|||
 operator|(
 operator|(
 name|i
-operator|==
+operator|>=
 name|history_length
 operator|)
 operator|&&
@@ -267,12 +267,15 @@ name|reverse
 operator|&&
 operator|(
 name|i
-operator|==
+operator|>=
 name|history_length
 operator|)
 condition|)
 name|i
-operator|--
+operator|=
+name|history_length
+operator|-
+literal|1
 expr_stmt|;
 define|#
 directive|define

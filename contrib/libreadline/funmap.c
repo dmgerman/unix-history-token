@@ -647,6 +647,12 @@ name|rl_universal_argument
 block|}
 block|,
 block|{
+literal|"unix-filename-rubout"
+block|,
+name|rl_unix_filename_rubout
+block|}
+block|,
+block|{
 literal|"unix-line-discard"
 block|,
 name|rl_unix_line_discard

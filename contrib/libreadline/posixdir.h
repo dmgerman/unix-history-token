@@ -42,6 +42,30 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRUCT_DIRENT_D_NAMLEN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|D_NAMLEN
+parameter_list|(
+name|d
+parameter_list|)
+value|((d)->d_namlen)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -51,6 +75,15 @@ name|d
 parameter_list|)
 value|(strlen ((d)->d_name))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STRUCT_DIRENT_D_NAMLEN */
+end_comment
 
 begin_else
 else|#
@@ -167,13 +200,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STRUCT_DIRENT_HAS_D_INO
+name|HAVE_STRUCT_DIRENT_D_INO
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|STRUCT_DIRENT_HAS_D_FILENO
+name|HAVE_STRUCT_DIRENT_D_FILENO
 argument_list|)
 end_if
 
@@ -201,7 +234,7 @@ operator|(
 operator|!
 name|defined
 argument_list|(
-name|STRUCT_DIRENT_HAS_D_INO
+name|HAVE_STRUCT_DIRENT_D_INO
 argument_list|)
 operator|||
 name|defined

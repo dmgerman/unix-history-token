@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* History.h -- the names of functions that you can call in history. */
+comment|/* history.h -- the names of functions that you can call in history. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1989-2003 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,10 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+include|#
+directive|include
+file|<time.h>
+comment|/* XXX - for history timestamp code */
 if|#
 directive|if
 name|defined
@@ -77,12 +81,25 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
+name|char
+modifier|*
+name|timestamp
+decl_stmt|;
+comment|/* char * rather than time_t for read/write */
 name|histdata_t
 name|data
 decl_stmt|;
 block|}
 name|HIST_ENTRY
 typedef|;
+comment|/* Size of the history-library-managed space in history entry HS. */
+define|#
+directive|define
+name|HISTENT_BYTES
+parameter_list|(
+name|hs
+parameter_list|)
+value|(strlen ((hs)->line) + strlen ((hs)->timestamp))
 comment|/* A structure used to pass the current state of the history stuff around. */
 typedef|typedef
 struct|struct
@@ -167,6 +184,19 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Change the timestamp associated with the most recent history entry to    STRING. */
+specifier|extern
+name|void
+name|add_history_time
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* A reasonably useless function, only here for completeness.  WHICH    is the magic number that tells us which element to delete.  The    elements are numbered from 0. */
 specifier|extern
 name|HIST_ENTRY
@@ -176,6 +206,18 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Free the history entry H and return any application-specific data    associated with it. */
+specifier|extern
+name|histdata_t
+name|free_history_entry
+name|PARAMS
+argument_list|(
+operator|(
+name|HIST_ENTRY
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -287,6 +329,18 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Return the timestamp associated with the HIST_ENTRY * passed as an    argument */
+specifier|extern
+name|time_t
+name|history_get_time
+name|PARAMS
+argument_list|(
+operator|(
+name|HIST_ENTRY
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -571,6 +625,10 @@ decl_stmt|;
 specifier|extern
 name|int
 name|history_quotes_inhibit_expansion
+decl_stmt|;
+specifier|extern
+name|int
+name|history_write_timestamps
 decl_stmt|;
 comment|/* Backwards compatibility */
 specifier|extern
