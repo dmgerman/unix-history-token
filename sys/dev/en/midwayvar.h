@@ -417,6 +417,28 @@ begin_comment
 comment|/* on rx software service list */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VCC_CLOSE_RX
+value|0x0004
+end_define
+
+begin_comment
+comment|/* currently closing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCC_ASYNC
+value|0x0008
+end_define
+
+begin_comment
+comment|/* async close */
+end_comment
+
 begin_comment
 comment|/*  * softc  */
 end_comment
@@ -563,6 +585,11 @@ decl_stmt|;
 name|u_int
 name|vccs_open
 decl_stmt|;
+name|struct
+name|cv
+name|cv_close
+decl_stmt|;
+comment|/* close CV */
 comment|/* stats */
 name|struct
 name|en_stats
