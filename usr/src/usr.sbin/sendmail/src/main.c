@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.80
+literal|3.81
 operator|%
 name|G
 operator|%
@@ -2022,6 +2022,12 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|realname
@@ -2268,6 +2274,13 @@ block|}
 comment|/* 	**  Set up the $r and $s macros to show who it came from. 	*/
 if|if
 condition|(
+name|macvalue
+argument_list|(
+literal|'s'
+argument_list|)
+operator|==
+name|NULL
+operator|&&
 name|CurEnv
 operator|->
 name|e_from
