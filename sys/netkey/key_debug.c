@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_debug.c,v 1.25 2000/07/24 13:23:12 itojun Exp $	*/
+comment|/*	$KAME: key_debug.c,v 1.26 2001/06/27 10:46:50 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -1687,7 +1687,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  reserved1=%u reserved2=%u reserved3=%u }\n"
+literal|"  reserved1=%u reserved2=%u sequence=%u }\n"
 argument_list|,
 name|sa2
 operator|->
@@ -1695,11 +1695,11 @@ name|sadb_x_sa2_reserved1
 argument_list|,
 name|sa2
 operator|->
-name|sadb_x_sa2_reserved1
+name|sadb_x_sa2_reserved2
 argument_list|,
 name|sa2
 operator|->
-name|sadb_x_sa2_reserved1
+name|sadb_x_sa2_sequence
 argument_list|)
 expr_stmt|;
 return|return;

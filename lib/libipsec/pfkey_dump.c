@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: pfkey_dump.c,v 1.27 2001/03/12 09:03:38 itojun Exp $	*/
+comment|/*	$KAME: pfkey_dump.c,v 1.28 2001/06/27 10:46:51 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -1347,7 +1347,11 @@ block|}
 comment|/* replay windoe size& flags */
 name|printf
 argument_list|(
-literal|"\treplay=%u flags=0x%08x "
+literal|"\tseq=0x%08x replay=%u flags=0x%08x "
+argument_list|,
+name|m_sa2
+operator|->
+name|sadb_x_sa2_sequence
 argument_list|,
 name|m_sa
 operator|->
@@ -1375,21 +1379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"seq=%lu pid=%lu\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|m
-operator|->
-name|sadb_msg_seq
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|m
-operator|->
-name|sadb_msg_pid
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* lifetime */
@@ -1628,10 +1618,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\tsadb_seq=%lu pid=%lu "
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|m
+operator|->
+name|sadb_msg_seq
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|m
+operator|->
+name|sadb_msg_pid
+argument_list|)
+expr_stmt|;
 comment|/* XXX DEBUG */
 name|printf
 argument_list|(
-literal|"\trefcnt=%u\n"
+literal|"refcnt=%u\n"
 argument_list|,
 name|m
 operator|->

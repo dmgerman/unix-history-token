@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: pfkeyv2.h,v 1.25 2001/03/12 08:34:06 itojun Exp $	*/
+comment|/*	$KAME: pfkeyv2.h,v 1.26 2001/06/27 10:49:49 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -619,7 +619,7 @@ name|u_int16_t
 name|sadb_x_sa2_reserved2
 decl_stmt|;
 name|u_int32_t
-name|sadb_x_sa2_reserved3
+name|sadb_x_sa2_sequence
 decl_stmt|;
 name|u_int32_t
 name|sadb_x_sa2_reqid
