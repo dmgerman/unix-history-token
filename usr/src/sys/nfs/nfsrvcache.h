@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,14 +11,14 @@ begin_define
 define|#
 directive|define
 name|NFSRVCACHESIZ
-value|128
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSRCHSZ
-value|32
+value|256
 end_define
 
 begin_struct
@@ -37,36 +37,17 @@ comment|/* Hash chain links */
 name|struct
 name|nfsrvcache
 modifier|*
-name|rc_next
+name|rc_lchain
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* Lru list */
-name|struct
-name|nfsrvcache
-modifier|*
-name|rc_prev
-decl_stmt|;
-name|int
-name|rc_state
-decl_stmt|;
-comment|/* Current state of request */
-name|int
-name|rc_flag
-decl_stmt|;
-comment|/* Flag bits */
-name|struct
-name|mbuf
-name|rc_nam
-decl_stmt|;
-comment|/* Sockaddr of requestor */
 name|u_long
 name|rc_xid
 decl_stmt|;
 comment|/* rpc id number */
-name|int
-name|rc_proc
-decl_stmt|;
-comment|/* rpc proc number */
-name|long
+name|time_t
 name|rc_timestamp
 decl_stmt|;
 comment|/* Time stamp */
@@ -75,16 +56,33 @@ block|{
 name|struct
 name|mbuf
 modifier|*
-name|rc_repmb
+name|ru_repmb
 decl_stmt|;
 comment|/* Reply mbuf list OR */
 name|int
-name|rc_repstat
+name|ru_repstat
 decl_stmt|;
 comment|/* Reply status */
 block|}
 name|rc_un
 union|;
+name|union
+name|nethostaddr
+name|rc_haddr
+decl_stmt|;
+comment|/* Host address */
+name|short
+name|rc_proc
+decl_stmt|;
+comment|/* rpc proc number */
+name|u_char
+name|rc_state
+decl_stmt|;
+comment|/* Current state of request */
+name|u_char
+name|rc_flag
+decl_stmt|;
+comment|/* Flag bits */
 block|}
 struct|;
 end_struct
@@ -106,26 +104,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|rc_status
-value|rc_un.rc_repstat
+name|rc_next
+value|rc_lchain[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|rc_prev
+value|rc_lchain[1]
 end_define
 
 begin_define
 define|#
 directive|define
 name|rc_reply
-value|rc_un.rc_repmb
+value|rc_un.ru_repmb
 end_define
 
 begin_define
 define|#
 directive|define
-name|put_at_head
-parameter_list|(
-name|rp
-parameter_list|)
-define|\
-value|(rp)->rc_prev->rc_next = (rp)->rc_next; \ 		(rp)->rc_next->rc_prev = (rp)->rc_prev; \ 		(rp)->rc_next = nfsrvcachehead.rc_next; \ 		(rp)->rc_next->rc_prev = (rp); \ 		nfsrvcachehead.rc_next = (rp); \ 		(rp)->rc_prev =&nfsrvcachehead
+name|rc_status
+value|rc_un.ru_repstat
+end_define
+
+begin_define
+define|#
+directive|define
+name|rc_inetaddr
+value|rc_haddr.had_inetaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|rc_nam
+value|rc_haddr.had_nam
 end_define
 
 begin_comment
@@ -186,28 +201,49 @@ begin_define
 define|#
 directive|define
 name|RC_LOCKED
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|RC_WANTED
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|RC_REPSTATUS
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|RC_REPMBUF
-value|0x8
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_NQNFS
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_INETADDR
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_NAM
+value|0x40
 end_define
 
 begin_comment

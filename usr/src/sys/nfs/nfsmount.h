@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,6 +21,10 @@ modifier|*
 name|nm_mountp
 decl_stmt|;
 comment|/* Vfs structure for this filesystem */
+name|int
+name|nm_numgrps
+decl_stmt|;
+comment|/* Max. size of groupslist */
 name|nfsv2fh_t
 name|nm_fh
 decl_stmt|;
@@ -49,58 +53,43 @@ modifier|*
 name|nm_nam
 decl_stmt|;
 comment|/* Addr of server */
-name|short
+name|int
+name|nm_timeo
+decl_stmt|;
+comment|/* Init timer for NFSMNT_DUMBTIMR */
+name|int
 name|nm_retry
 decl_stmt|;
-comment|/* Max retry count */
-name|short
-name|nm_rexmit
-decl_stmt|;
-comment|/* Rexmit on previous request */
-name|short
-name|nm_rtt
-decl_stmt|;
-comment|/* Round trip timer ticks @ NFS_HZ */
-name|short
-name|nm_rto
-decl_stmt|;
-comment|/* Current timeout */
-name|short
+comment|/* Max retries */
+name|int
 name|nm_srtt
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* Smoothed round trip time */
-name|short
-name|nm_rttvar
+comment|/* Timers for rpcs */
+name|int
+name|nm_sdrtt
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* RTT variance */
-name|short
-name|nm_currto
-decl_stmt|;
-comment|/* Current rto of any nfsmount */
-name|short
-name|nm_currexmit
-decl_stmt|;
-comment|/* Max rexmit count of nfsmounts */
-name|short
+name|int
 name|nm_sent
 decl_stmt|;
 comment|/* Request send count */
-name|short
-name|nm_window
+name|int
+name|nm_cwnd
 decl_stmt|;
-comment|/* Request send window (max) */
-name|short
-name|nm_winext
+comment|/* Request send window */
+name|int
+name|nm_timeouts
 decl_stmt|;
-comment|/* Window incremental value */
-name|short
-name|nm_ssthresh
+comment|/* Request timeouts */
+name|int
+name|nm_deadthresh
 decl_stmt|;
-comment|/* Slowstart threshold */
-name|short
-name|nm_salen
-decl_stmt|;
-comment|/* Actual length of nm_sockaddr */
+comment|/* Threshold of timeouts-->dead server*/
 name|int
 name|nm_rsize
 decl_stmt|;
@@ -109,6 +98,48 @@ name|int
 name|nm_wsize
 decl_stmt|;
 comment|/* Max size of write rpc */
+name|int
+name|nm_readahead
+decl_stmt|;
+comment|/* Num. of blocks to readahead */
+name|int
+name|nm_leaseterm
+decl_stmt|;
+comment|/* Term (sec) for NQNFS lease */
+name|struct
+name|nfsnode
+modifier|*
+name|nm_tnext
+decl_stmt|;
+comment|/* Head of lease timer queue */
+name|struct
+name|nfsnode
+modifier|*
+name|nm_tprev
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|nm_inprog
+decl_stmt|;
+comment|/* Vnode in prog by nqnfs_clientd() */
+name|uid_t
+name|nm_authuid
+decl_stmt|;
+comment|/* Uid for authenticator */
+name|int
+name|nm_authtype
+decl_stmt|;
+comment|/* Authenticator type */
+name|int
+name|nm_authlen
+decl_stmt|;
+comment|/* and length */
+name|char
+modifier|*
+name|nm_authstr
+decl_stmt|;
+comment|/* Authenticator string */
 block|}
 struct|;
 end_struct
@@ -333,6 +364,9 @@ expr|struct
 name|fid
 operator|*
 name|fhp
+operator|,
+name|int
+name|setgen
 operator|,
 expr|struct
 name|vnode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsproto.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsproto.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -84,8 +84,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFS_NPROCS
-value|18
+name|NFS_MINPACKET
+value|20
 end_define
 
 begin_define
@@ -197,7 +197,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSERR_NAMETOOLONG
+name|NFSERR_NAMETOL
 value|63
 end_define
 
@@ -303,8 +303,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSPROC_ROOT
+name|NFSPROC_NOOP
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSPROC_ROOT
+value|NFSPROC_NOOP
 end_define
 
 begin_comment
@@ -336,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|NFSPROC_WRITECACHE
-value|7
+value|NFSPROC_NOOP
 end_define
 
 begin_comment
@@ -411,6 +418,45 @@ define|#
 directive|define
 name|NFSPROC_STATFS
 value|17
+end_define
+
+begin_comment
+comment|/* NQ nfs numbers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQNFSPROC_READDIRLOOK
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|NQNFSPROC_GETLEASE
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|NQNFSPROC_VACATED
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NQNFSPROC_EVICTED
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_NPROCS
+value|22
 end_define
 
 begin_comment

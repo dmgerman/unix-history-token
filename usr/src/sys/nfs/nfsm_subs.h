@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -34,23 +34,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSMGETHDR
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|MGETHDR(m, M_WAIT, MT_DATA); \ 		(m)->m_pkthdr.len = 0; \ 		(m)->m_pkthdr.rcvif = (struct ifnet *)0
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFSMINOFF
 parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|if (M_HASCL(m)) \ 			(m)->m_data = (m)->m_ext.ext_buf; \ 		else \ 			(m)->m_data = (m)->m_dat
+value|if (M_HASCL(m)) \ 			(m)->m_data = (m)->m_ext.ext_buf; \ 		else if ((m)->m_flags& M_PKTHDR) \ 			(m)->m_data = (m)->m_pktdat; \ 		else \ 			(m)->m_data = (m)->m_dat
 end_define
 
 begin_define
@@ -79,12 +68,6 @@ begin_comment
 comment|/*  * Now for the macros that do the simple stuff and call the functions  * for the hard stuff.  * These macros use several vars. declared in nfsm_reqhead and these  * vars. must not be used elsewhere unless you are careful not to corrupt  * them. The vars. starting with pN and tN (N=1,2,3,..) are temporaries  * that may be used so long as the value is not expected to retained  * after a macro.  * I know, this is kind of dorkey, but it makes the actual op functions  * fairly clean and deals with the mess caused by the xdr discriminating  * unions.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -97,22 +80,13 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|t1 = NFSMSIZ(mb); \ 		if ((s)> (t1-mb->m_len)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			if ((s)> MLEN) \ 				panic("build> MLEN"); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s)
+value|{ if ((s)> M_TRAILINGSPACE(mb)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			if ((s)> MLEN) \ 				panic("build> MLEN"); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s); }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|nfsm_build
+name|nfsm_dissect
 parameter_list|(
 name|a
 parameter_list|,
@@ -121,22 +95,13 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|t1 = NFSMSIZ(mb); \ 		if ((s)> (t1-mb->m_len)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s)
+value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, TRUE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|nfsm_disect
+name|nfsm_dissecton
 parameter_list|(
 name|a
 parameter_list|,
@@ -145,22 +110,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, TRUE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		}
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_disecton
-parameter_list|(
-name|a
-parameter_list|,
-name|c
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, FALSE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		}
+value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, FALSE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
 end_define
 
 begin_define
@@ -195,7 +145,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|{ struct nfsnode *np; nfsv2fh_t *fhp; \ 		nfsm_disect(fhp,nfsv2fh_t *,NFSX_FH); \ 		if (error = nfs_nget((d)->v_mount, fhp,&np)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = NFSTOV(np); \ 		nfsm_loadattr(v, (struct vattr *)0); \ 		}
+value|{ struct nfsnode *np; nfsv2fh_t *fhp; \ 		nfsm_dissect(fhp,nfsv2fh_t *,NFSX_FH); \ 		if (error = nfs_nget((d)->v_mount, fhp,&np)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = NFSTOV(np); \ 		nfsm_loadattr(v, (struct vattr *)0); \ 		}
 end_define
 
 begin_define
@@ -221,7 +171,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|nfsm_disect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m)) { \ 			m_freem(mrep); \ 			error = EBADRPC; \ 			goto nfsmout; \ 		}
+value|{ nfsm_dissect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m)) { \ 			m_freem(mrep); \ 			error = EBADRPC; \ 			goto nfsmout; \ 		} }
 end_define
 
 begin_define
@@ -234,7 +184,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|nfsm_disect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m) || (s)<= 0) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		}
+value|{ nfsm_dissect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m) || (s)<= 0) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		} }
 end_define
 
 begin_define
@@ -268,14 +218,14 @@ define|#
 directive|define
 name|nfsm_reqhead
 parameter_list|(
-name|a
+name|v
 parameter_list|,
-name|c
+name|a
 parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if ((mreq = nfsm_reqh(nfs_prog,nfs_vers,(a),(c),(s),&bpos,&mb,&xid)) == NULL) { \ 			error = ENOBUFS; \ 			goto nfsmout; \ 		}
+value|mb = mreq = nfsm_reqh((v),(a),(s),&bpos)
 end_define
 
 begin_define
@@ -306,10 +256,10 @@ name|t
 parameter_list|,
 name|p
 parameter_list|,
-name|h
+name|c
 parameter_list|)
 define|\
-value|if (error = nfs_request((v), mreq, xid, (t), (p), (h), \ 		   (v)->v_mount,&mrep,&md,&dpos)) \ 			goto nfsmout
+value|if (error = nfs_request((v), mreq, (t), (p), \ 		   (c),&mrep,&md,&dpos)) \ 			goto nfsmout
 end_define
 
 begin_define
@@ -324,7 +274,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if(t2<=(NFSMSIZ(mb)-mb->m_len)){ \ 			nfsm_build(tl,u_long *,t2); \ 			*tl++ = txdr_unsigned(s); \ 			*(tl+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)tl, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
+value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if (t2<= M_TRAILINGSPACE(mb)) { \ 			nfsm_build(tl,u_long *,t2); \ 			*tl++ = txdr_unsigned(s); \ 			*(tl+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)tl, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -335,12 +285,6 @@ define|\
 value|nfsmout: \ 		return(error)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -349,37 +293,8 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{ \ 		*repstat = error; \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error) \ 			return(0); \ 		}
+value|{ \ 		nfsd->nd_repstat = error; \ 		if (error) \ 		   (void) nfs_rephead(0, nfsd, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		else \ 		   (void) nfs_rephead((s), nfsd, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error) \ 			return(0); \ 		}
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* lint */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nfsm_reply
-parameter_list|(
-name|s
-parameter_list|)
-define|\
-value|{ \ 		*repstat = error; \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		mrep = mreq; \ 		if (error) \ 			return(0); \ 		}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_define
 define|#
@@ -400,7 +315,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|nfsm_disecton(tl, u_long *, NFSX_FH); \ 		bcopy((caddr_t)tl, (caddr_t)f, NFSX_FH)
+value|nfsm_dissecton(tl, u_long *, NFSX_FH); \ 		bcopy((caddr_t)tl, (caddr_t)f, NFSX_FH)
 end_define
 
 begin_define
@@ -408,7 +323,7 @@ define|#
 directive|define
 name|nfsm_clget
 define|\
-value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			MCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		tl = (u_long *)bp
+value|if (bp>= be) { \ 			if (mp == mb) \ 				mp->m_len += bp-bpos; \ 			MGET(mp, M_WAIT, MT_DATA); \ 			MCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			mp2->m_next = mp; \ 			mp2 = mp; \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		tl = (u_long *)bp
 end_define
 
 begin_define

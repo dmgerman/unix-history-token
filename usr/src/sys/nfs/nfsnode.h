@@ -1,7 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.16 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Silly rename structure that hangs off the nfsnode until the name  * can be removed by nfs_inactive()  */
+end_comment
+
+begin_struct
+struct|struct
+name|sillyrename
+block|{
+name|struct
+name|ucred
+modifier|*
+name|s_cred
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|s_dvp
+decl_stmt|;
+name|long
+name|s_namlen
+decl_stmt|;
+name|char
+name|s_name
+index|[
+literal|20
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * The nfsnode is the nfs equivalent to ufs's inode. Any similarity  * is purely coincidental.  * There is a unique nfsnode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An nfsnode is 'named' by its file handle. (nget/nfs_node.c)  */
@@ -33,11 +64,11 @@ name|vnode
 modifier|*
 name|n_vnode
 decl_stmt|;
-comment|/* vnode associated with this nfsnode */
+comment|/* vnode associated with this node */
 name|time_t
 name|n_attrstamp
 decl_stmt|;
-comment|/* Time stamp (sec) for attributes */
+comment|/* Time stamp for cached attributes */
 name|struct
 name|vattr
 name|n_vattr
@@ -53,45 +84,124 @@ name|u_long
 name|n_size
 decl_stmt|;
 comment|/* Current size of file */
-name|time_t
-name|n_mtime
-decl_stmt|;
-comment|/* Prev modify time to maintain data cache consistency*/
-name|time_t
-name|n_ctime
-decl_stmt|;
-comment|/* Prev create time for name cache consistency*/
 name|int
 name|n_error
 decl_stmt|;
 comment|/* Save write error value */
-name|pid_t
-name|n_lockholder
-decl_stmt|;
-comment|/* holder of nfsnode lock */
-name|pid_t
-name|n_lockwaiter
-decl_stmt|;
-comment|/* most recent waiter for nfsnode lock */
 name|u_long
 name|n_direofoffset
 decl_stmt|;
 comment|/* Dir. EOF offset cache */
+union|union
+block|{
+struct|struct
+block|{
+name|time_t
+name|un_mtime
+decl_stmt|;
+comment|/* Prev modify time. */
+name|time_t
+name|un_ctime
+decl_stmt|;
+comment|/* Prev create time. */
+block|}
+name|un_nfs
+struct|;
+struct|struct
+block|{
+name|u_quad_t
+name|un_brev
+decl_stmt|;
+comment|/* Modify rev when cached */
+name|u_quad_t
+name|un_lrev
+decl_stmt|;
+comment|/* Modify rev for lease */
+name|time_t
+name|un_expiry
+decl_stmt|;
+comment|/* Lease expiry time */
+name|struct
+name|nfsnode
+modifier|*
+name|un_tnext
+decl_stmt|;
+comment|/* Nqnfs timer chain */
+name|struct
+name|nfsnode
+modifier|*
+name|un_tprev
+decl_stmt|;
+block|}
+name|un_nqnfs
+struct|;
+block|}
+name|n_un
+union|;
 name|struct
 name|sillyrename
 name|n_silly
 decl_stmt|;
-comment|/* allocate here since we have room */
+comment|/* Silly rename struct */
 name|long
 name|n_spare
 index|[
-literal|7
+literal|11
 index|]
 decl_stmt|;
-comment|/* round up to size 256 */
+comment|/* Up to a power of 2 */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|n_mtime
+value|n_un.un_nfs.un_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_ctime
+value|n_un.un_nfs.un_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_brev
+value|n_un.un_nqnfs.un_brev
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_lrev
+value|n_un.un_nqnfs.un_lrev
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_expiry
+value|n_un.un_nqnfs.un_expiry
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_tnext
+value|n_un.un_nqnfs.un_tnext
+end_define
+
+begin_define
+define|#
+directive|define
+name|n_tprev
+value|n_un.un_nqnfs.un_tprev
+end_define
 
 begin_define
 define|#
@@ -149,30 +259,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NLOCKED
-value|0x1
-end_define
-
-begin_comment
-comment|/* Lock the node for other local accesses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NWANT
-value|0x2
-end_define
-
-begin_comment
-comment|/* Want above lock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NMODIFIED
-value|0x4
+value|0x0004
 end_define
 
 begin_comment
@@ -183,11 +271,44 @@ begin_define
 define|#
 directive|define
 name|NWRITEERR
-value|0x8
+value|0x0008
 end_define
 
 begin_comment
 comment|/* Flag write errors so close will know */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQNFSNONCACHE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Non-cachable lease */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQNFSWRITE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Write lease */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQNFSEVICTED
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Has been evicted */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)rpcv2.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)rpcv2.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,6 +41,13 @@ define|#
 directive|define
 name|RPCAUTH_SHORT
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCAUTH_NQNFS
+value|300000
 end_define
 
 begin_define
@@ -131,7 +138,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RPC_AUTHFAIL
+name|RPC_AUTHERR
 value|1
 end_define
 

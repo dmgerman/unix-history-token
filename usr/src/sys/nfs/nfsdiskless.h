@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsdiskless.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsdiskless.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Structure that must be initialized for a diskless nfs client.  * This structure is used by nfs_mountroot() to set up the root and swap  * vnodes plus do a partial ifconfig(8) and route(8) so that the critical net  * interface can communicate with the server.  * For now it is statically initialized in swapvmunix.c, but someday a primary  * bootstrap should fill it in.  */
+comment|/*  * Structure that must be initialized for a diskless nfs client.  * This structure is used by nfs_mountroot() to set up the root and swap  * vnodes plus do a partial ifconfig(8) and route(8) so that the critical net  * interface can communicate with the server.  * The primary bootstrap is expected to fill in the appropriate fields before  * starting vmunix. Whether or not the swap area is nfs mounted is determined  * by the value in swdevt[0]. (equal to NODEV --> swap over nfs)  * Currently only works for AF_INET protocols.  * NB: All fields are stored in net byte order to avoid hassles with  * client/server byte ordering differences.  */
 end_comment
 
 begin_struct
@@ -15,12 +15,12 @@ name|struct
 name|ifaliasreq
 name|myif
 decl_stmt|;
-comment|/* Info. for partial ifconfig */
+comment|/* Default interface */
 name|struct
-name|sockaddr
+name|sockaddr_in
 name|mygateway
 decl_stmt|;
-comment|/* Default gateway for "route add" */
+comment|/* Default gateway */
 name|struct
 name|nfs_args
 name|swap_args
@@ -34,15 +34,21 @@ index|]
 decl_stmt|;
 comment|/* Swap file's file handle */
 name|struct
-name|sockaddr
+name|sockaddr_in
 name|swap_saddr
 decl_stmt|;
 comment|/* Address of swap server */
 name|char
-modifier|*
 name|swap_hostnam
+index|[
+name|MNAMELEN
+index|]
 decl_stmt|;
 comment|/* Host name for mount pt */
+name|int
+name|swap_nblks
+decl_stmt|;
+comment|/* Size of server swap file */
 name|struct
 name|nfs_args
 name|root_args
@@ -56,13 +62,15 @@ index|]
 decl_stmt|;
 comment|/* File handle of root dir */
 name|struct
-name|sockaddr
+name|sockaddr_in
 name|root_saddr
 decl_stmt|;
 comment|/* Address of root server */
 name|char
-modifier|*
 name|root_hostnam
+index|[
+name|MNAMELEN
+index|]
 decl_stmt|;
 comment|/* Host name for mount pt */
 block|}
