@@ -185,11 +185,15 @@ parameter_list|)
 value|__STRING(x)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|I386_CPU
-end_ifndef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* #ifndef I386_CPU */
+end_comment
 
 begin_comment
 comment|/*  * For 486 and newer processors.  */
