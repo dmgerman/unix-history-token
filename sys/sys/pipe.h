@@ -116,6 +116,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL_PIPE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SMALL_PIPE_SIZE
+value|4096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * PIPE_MINDIRECT MUST be smaller than PIPE_SIZE and MUST be bigger  * than PIPE_BUF.  */
 end_comment
@@ -144,6 +162,31 @@ directive|define
 name|PIPENPAGES
 value|(BIG_PIPE_SIZE / PAGE_SIZE + 1)
 end_define
+
+begin_comment
+comment|/*  * See sys_pipe.c for info on what these limits mean.   */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxpipes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxpipekva
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxpipekvawired
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Pipe buffer information.  * Separate in, out, cnt are used to simplify calculations.  * Buffered write is active when the buffer.cnt field is set.  */
