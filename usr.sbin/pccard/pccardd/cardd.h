@@ -457,6 +457,20 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|irq_init
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initial IRQ allocations */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|struct
 name|driver
 modifier|*
@@ -498,7 +512,23 @@ begin_decl_stmt
 name|EXTERN
 name|bitstr_t
 modifier|*
+name|mem_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|bitstr_t
+modifier|*
 name|io_avail
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|bitstr_t
+modifier|*
+name|io_init
 decl_stmt|;
 end_decl_stmt
 
