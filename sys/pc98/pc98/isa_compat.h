@@ -60,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ep.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"fe.h"
 end_include
 
@@ -477,14 +465,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|eldriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|epdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,20 +1276,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|eddriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NEP
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|epdriver
 block|}
 block|,
 endif|#
