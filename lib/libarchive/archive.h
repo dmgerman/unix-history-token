@@ -15,6 +15,57 @@ directive|define
 name|ARCHIVE_H_INCLUDED
 end_define
 
+begin_comment
+comment|/*  * If ARCHIVE_API_VERSION != archive_api_version(), then the library you  * were linked with is using an incompatible API.  This is almost  * certainly a fatal problem.  *  * ARCHIVE_API_FEATURE is incremented with each significant feature  * addition, so you can test (at compile or run time) if a particular  * feature is implemented.  It's no big deal if ARCHIVE_API_FEATURE !=  * archive_api_feature(), as long as both are high enough to include  * the features you're relying on.  Specific values of FEATURE are  * documented here:  *  *    1 - Version test is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_API_VERSION
+value|1
+end_define
+
+begin_function_decl
+name|int
+name|archive_api_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_API_FEATURE
+value|1
+end_define
+
+begin_function_decl
+name|int
+name|archive_api_feature
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Textual name/version of the library. */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|archive_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
@@ -104,19 +155,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARCHIVE_WARN
-value|(-1)
-end_define
-
-begin_comment
-comment|/* Sucess, but minor problem. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARCHIVE_RETRY
-value|(-2)
+value|(-10)
 end_define
 
 begin_comment
@@ -126,8 +166,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARCHIVE_WARN
+value|(-20)
+end_define
+
+begin_comment
+comment|/* Partial sucess. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ARCHIVE_FATAL
-value|(-3)
+value|(-30)
 end_define
 
 begin_comment
@@ -1222,14 +1273,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* void		 archive_set_errno(struct archive *, int); */
-end_comment
-
-begin_comment
-comment|/* void		 archive_error_printf(struct archive *, const char *fmt, ...); */
-end_comment
 
 begin_function_decl
 name|void
