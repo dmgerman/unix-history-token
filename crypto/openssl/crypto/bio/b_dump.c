@@ -247,13 +247,7 @@ name|char
 operator|)
 operator|*
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|s
-operator|)
 operator|+
 name|i
 operator|*
@@ -336,13 +330,7 @@ name|char
 operator|)
 operator|*
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|s
-operator|)
 operator|+
 name|i
 operator|*

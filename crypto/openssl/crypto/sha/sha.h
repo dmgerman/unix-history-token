@@ -31,9 +31,24 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NO_SHA
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|NO_SHA0
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NO_SHA1
+argument_list|)
+operator|)
 error|#
 directive|error
 error|SHA is disabled.
@@ -150,8 +165,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -201,6 +215,7 @@ name|SHA_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -228,8 +243,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -279,6 +293,7 @@ name|SHA_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

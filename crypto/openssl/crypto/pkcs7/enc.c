@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/bio.h>
 end_include
 
@@ -111,7 +117,7 @@ name|recips
 operator|=
 name|NULL
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 name|data
@@ -289,6 +295,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -381,11 +389,30 @@ condition|(
 operator|!
 name|cipher
 condition|)
+block|{
+ifndef|#
+directive|ifndef
+name|NO_DES
 name|cipher
 operator|=
 name|EVP_des_ede3_cbc
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No cipher selected\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 operator|!

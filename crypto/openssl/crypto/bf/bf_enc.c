@@ -20,7 +20,7 @@ file|"bf_locl.h"
 end_include
 
 begin_comment
-comment|/* Blowfish as implemented from 'Blowfish: Springer-Verlag paper'  * (From LECTURE NOTES IN COIMPUTER SCIENCE 809, FAST SOFTWARE ENCRYPTION,  * CAMBRIDGE SECURITY WORKSHOP, CAMBRIDGE, U.K., DECEMBER 9-11, 1993)  */
+comment|/* Blowfish as implemented from 'Blowfish: Springer-Verlag paper'  * (From LECTURE NOTES IN COMPUTER SCIENCE 809, FAST SOFTWARE ENCRYPTION,  * CAMBRIDGE SECURITY WORKSHOP, CAMBRIDGE, U.K., DECEMBER 9-11, 1993)  */
 end_comment
 
 begin_if
@@ -58,6 +58,7 @@ name|BF_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|BF_KEY
 modifier|*
 name|key
@@ -71,7 +72,10 @@ name|BF_LONG
 name|l
 decl_stmt|,
 name|r
-decl_stmt|,
+decl_stmt|;
+specifier|const
+specifier|register
+name|BF_LONG
 modifier|*
 name|p
 decl_stmt|,
@@ -746,6 +750,7 @@ name|BF_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|BF_KEY
 modifier|*
 name|key
@@ -759,7 +764,10 @@ name|BF_LONG
 name|l
 decl_stmt|,
 name|r
-decl_stmt|,
+decl_stmt|;
+specifier|const
+specifier|register
+name|BF_LONG
 modifier|*
 name|p
 decl_stmt|,
@@ -1424,6 +1432,7 @@ begin_function
 name|void
 name|BF_cbc_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1437,14 +1446,15 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|BF_KEY
 modifier|*
-name|ks
+name|schedule
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
-name|iv
+name|ivec
 parameter_list|,
 name|int
 name|encrypt
@@ -1485,19 +1495,19 @@ condition|)
 block|{
 name|n2l
 argument_list|(
-name|iv
+name|ivec
 argument_list|,
 name|tout0
 argument_list|)
 expr_stmt|;
 name|n2l
 argument_list|(
-name|iv
+name|ivec
 argument_list|,
 name|tout1
 argument_list|)
 expr_stmt|;
-name|iv
+name|ivec
 operator|-=
 literal|8
 expr_stmt|;
@@ -1556,7 +1566,7 @@ name|BF_encrypt
 argument_list|(
 name|tin
 argument_list|,
-name|ks
+name|schedule
 argument_list|)
 expr_stmt|;
 name|tout0
@@ -1635,7 +1645,7 @@ name|BF_encrypt
 argument_list|(
 name|tin
 argument_list|,
-name|ks
+name|schedule
 argument_list|)
 expr_stmt|;
 name|tout0
@@ -1671,14 +1681,14 @@ name|l2n
 argument_list|(
 name|tout0
 argument_list|,
-name|iv
+name|ivec
 argument_list|)
 expr_stmt|;
 name|l2n
 argument_list|(
 name|tout1
 argument_list|,
-name|iv
+name|ivec
 argument_list|)
 expr_stmt|;
 block|}
@@ -1686,19 +1696,19 @@ else|else
 block|{
 name|n2l
 argument_list|(
-name|iv
+name|ivec
 argument_list|,
 name|xor0
 argument_list|)
 expr_stmt|;
 name|n2l
 argument_list|(
-name|iv
+name|ivec
 argument_list|,
 name|xor1
 argument_list|)
 expr_stmt|;
-name|iv
+name|ivec
 operator|-=
 literal|8
 expr_stmt|;
@@ -1749,7 +1759,7 @@ name|BF_decrypt
 argument_list|(
 name|tin
 argument_list|,
-name|ks
+name|schedule
 argument_list|)
 expr_stmt|;
 name|tout0
@@ -1833,7 +1843,7 @@ name|BF_decrypt
 argument_list|(
 name|tin
 argument_list|,
-name|ks
+name|schedule
 argument_list|)
 expr_stmt|;
 name|tout0
@@ -1880,14 +1890,14 @@ name|l2n
 argument_list|(
 name|xor0
 argument_list|,
-name|iv
+name|ivec
 argument_list|)
 expr_stmt|;
 name|l2n
 argument_list|(
 name|xor1
 argument_list|,
-name|iv
+name|ivec
 argument_list|)
 expr_stmt|;
 block|}

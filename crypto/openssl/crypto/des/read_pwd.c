@@ -35,11 +35,33 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_UNISTD
+end_ifdef
+
 begin_include
 include|#
 directive|include
 include|OPENSSL_UNISTD
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* If unistd.h defines _POSIX_VERSION, we conclude that we  * are on a POSIX system and have sigaction and termios. */
@@ -384,6 +406,18 @@ name|defined
 argument_list|(
 name|MSDOS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAC_OS_pre_X
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAC_OS_GUSI_SOURCE
+argument_list|)
 end_if
 
 begin_undef
@@ -594,6 +628,12 @@ name|defined
 argument_list|(
 name|VMS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAC_OS_pre_X
+argument_list|)
 end_if
 
 begin_include
@@ -684,6 +724,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MAC_OS_pre_X
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MAC_OS_GUSI_SOURCE
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * This one needs work. As a matter of fact the code is unoperational  * and this is only a trick to get it compiled.  *<appro@fy.chalmers.se>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_STRUCT
+value|int
+end_define
 
 begin_endif
 endif|#

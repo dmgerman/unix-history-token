@@ -132,7 +132,7 @@ name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
 comment|/* Setup all the global SSL stuff */
-name|SSLeay_add_ssl_algorithms
+name|OpenSSL_add_ssl_algorithms
 argument_list|()
 expr_stmt|;
 name|ssl_ctx

@@ -110,7 +110,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-specifier|register
+specifier|const
 name|unsigned
 name|char
 modifier|*

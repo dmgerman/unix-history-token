@@ -892,10 +892,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 operator|->
 name|data
@@ -912,10 +908,14 @@ operator|*
 operator|)
 name|Malloc
 argument_list|(
+name|len
+condition|?
 operator|(
 name|int
 operator|)
 name|len
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1168,7 +1168,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|CONST_STRICT
-comment|/* disable purely for compile-time strict const checking. Doing this on a "real" compile will cause mempory leaks */
+comment|/* disable purely for compile-time strict const checking. Doing this on a "real" compile will cause memory leaks */
 if|if
 condition|(
 name|a

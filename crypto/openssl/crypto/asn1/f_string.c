@@ -676,10 +676,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|s
 argument_list|)
 expr_stmt|;

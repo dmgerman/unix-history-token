@@ -883,7 +883,7 @@ name|defined
 argument_list|(
 name|NO_SSL3
 argument_list|)
-comment|/* SSLv2/v3 compatablitity states */
+comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
 case|case
 name|SSL23_ST_CW_CLNT_HELLO_A
@@ -1827,7 +1827,7 @@ name|defined
 argument_list|(
 name|NO_SSL3
 argument_list|)
-comment|/* SSLv2/v3 compatablitity states */
+comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
 case|case
 name|SSL23_ST_CW_CLNT_HELLO_A
@@ -2149,7 +2149,7 @@ name|SSL3_AD_UNEXPECTED_MESSAGE
 case|:
 name|str
 operator|=
-literal|"unexected_message"
+literal|"unexpected_message"
 expr_stmt|;
 break|break;
 case|case
@@ -2221,7 +2221,7 @@ name|SSL3_AD_CERTIFICATE_UNKNOWN
 case|:
 name|str
 operator|=
-literal|"certifcate unknown"
+literal|"certificate unknown"
 expr_stmt|;
 break|break;
 case|case

@@ -66,40 +66,118 @@ value|(64)
 comment|/* 32 */
 if|#
 directive|if
-literal|0
-ifndef|#
-directive|ifndef
-name|BN_MUL_COMBA
-comment|/* #define bn_mul_comba8(r,a,b)	bn_mul_normal(r,a,8,b,8) */
-comment|/* #define bn_mul_comba4(r,a,b)	bn_mul_normal(r,a,4,b,4) */
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|BN_SQR_COMBA
-comment|/* This is probably faster than using the C code - I need to check */
+operator|!
+name|defined
+argument_list|(
+name|NO_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_INLINE_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PEDANTIC
+argument_list|)
+comment|/*  * BN_UMULT_HIGH section.  *  * No, I'm not trying to overwhelm you when stating that the  * product of N-bit numbers is 2*N bits wide:-) No, I don't expect  * you to be impressed when I say that if the compiler doesn't  * support 2*N integer type, then you have to replace every N*N  * multiplication with 4 (N/2)*(N/2) accompanied by some shifts  * and additions which unavoidably results in severe performance  * penalties. Of course provided that the hardware is capable of  * producing 2*N result... That's when you normally start  * considering assembler implementation. However! It should be  * pointed out that some CPUs (most notably Alpha, PowerPC and  * upcoming IA-64 family:-) provide *separate* instruction  * calculating the upper half of the product placing the result  * into a general purpose register. Now *if* the compiler supports  * inline assembler, then it's not impossible to implement the  * "bignum" routines (and have the compiler optimize 'em)  * exhibiting "native" performance in C. That's what BN_UMULT_HIGH  * macro is about:-)  *  *<appro@fy.chalmers.se>  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|SIXTY_FOUR_BIT_LONG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SIXTY_FOUR_BIT
+argument_list|)
+operator|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__DECC
+argument_list|)
+include|#
+directive|include
+file|<c_asm.h>
 define|#
 directive|define
-name|bn_sqr_comba8
+name|BN_UMULT_HIGH
 parameter_list|(
-name|r
-parameter_list|,
 name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|bn_mul_normal(r,a,8,a,8)
+value|(BN_ULONG)asm("umulh %a0,%a1,%v0",(a),(b))
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
 define|#
 directive|define
-name|bn_sqr_comba4
+name|BN_UMULT_HIGH
 parameter_list|(
-name|r
-parameter_list|,
 name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|bn_mul_normal(r,a,4,a,4)
+value|({	\ 	register BN_ULONG ret;		\ 	asm ("umulh	%1,%2,%0"	\ 	     : "=r"(ret)		\ 	     : "r"(a), "r"(b));		\ 	ret;			})
 endif|#
 directive|endif
+comment|/* compiler */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_ARCH_PPC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__64BIT__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIXTY_FOUR_BIT_LONG
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+define|#
+directive|define
+name|BN_UMULT_HIGH
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|({	\ 	register BN_ULONG ret;		\ 	asm ("mulhdu	%0,%1,%2"	\ 	     : "=r"(ret)		\ 	     : "r"(a), "r"(b));		\ 	ret;			})
 endif|#
 directive|endif
+comment|/* compiler */
+endif|#
+directive|endif
+comment|/* cpu */
+endif|#
+directive|endif
+comment|/* NO_ASM */
 comment|/*************************************************************  * Using the long long type  */
 define|#
 directive|define
@@ -115,36 +193,25 @@ parameter_list|(
 name|t
 parameter_list|)
 value|(((BN_ULONG)((t)>>BN_BITS2))&BN_MASK2)
-comment|/* These are used for internal error checking and are not normally used */
+comment|/* This is used for internal error checking and is not normally used */
 ifdef|#
 directive|ifdef
 name|BN_DEBUG
+include|#
+directive|include
+file|<assert.h>
 define|#
 directive|define
 name|bn_check_top
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|{ if (((a)->top< 0) || ((a)->top> (a)->max)) \ 		{ char *nullp=NULL; *nullp='z'; } }
-define|#
-directive|define
-name|bn_check_num
-parameter_list|(
-name|a
-parameter_list|)
-value|if ((a)< 0) { char *nullp=NULL; *nullp='z'; }
+value|assert ((a)->top>= 0&& (a)->top<= (a)->max);
 else|#
 directive|else
 define|#
 directive|define
 name|bn_check_top
-parameter_list|(
-name|a
-parameter_list|)
-define|#
-directive|define
-name|bn_check_num
 parameter_list|(
 name|a
 parameter_list|)
@@ -196,7 +263,6 @@ name|n
 parameter_list|)
 define|\
 value|{ \ 	if ((a)->top> (n)) \ 		{ \ 		(r)->top=(a)->top-n; \ 		(r)->d=&((a)->d[n]); \ 		} \ 	else \ 		(r)->top=0; \ 	(r)->neg=(a)->neg; \ 	(r)->flags|=BN_FLG_STATIC_DATA; \ 	bn_set_max(r); \ 	}
-comment|/* #define bn_expand(n,b) ((((b)/BN_BITS2)<= (n)->max)?(n):bn_expand2((n),(b))) */
 ifdef|#
 directive|ifdef
 name|BN_LLONG
@@ -226,6 +292,60 @@ parameter_list|,
 name|c
 parameter_list|)
 value|{ \ 	BN_ULLONG t; \ 	t=(BN_ULLONG)w * (a) + (c); \ 	(r)= Lw(t); \ 	(c)= Hw(t); \ 	}
+define|#
+directive|define
+name|sqr
+parameter_list|(
+name|r0
+parameter_list|,
+name|r1
+parameter_list|,
+name|a
+parameter_list|)
+value|{ \ 	BN_ULLONG t; \ 	t=(BN_ULLONG)(a)*(a); \ 	(r0)=Lw(t); \ 	(r1)=Hw(t); \ 	}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BN_UMULT_HIGH
+argument_list|)
+define|#
+directive|define
+name|mul_add
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|,
+name|w
+parameter_list|,
+name|c
+parameter_list|)
+value|{		\ 	BN_ULONG high,low,ret,tmp=(a);	\ 	ret =  (r);			\ 	high=  BN_UMULT_HIGH(w,tmp);	\ 	ret += (c);			\ 	low =  (w) * tmp;		\ 	(c) =  (ret<(c))?1:0;		\ 	(c) += high;			\ 	ret += low;			\ 	(c) += (ret<low)?1:0;		\ 	(r) =  ret;			\ 	}
+define|#
+directive|define
+name|mul
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|,
+name|w
+parameter_list|,
+name|c
+parameter_list|)
+value|{		\ 	BN_ULONG high,low,ret,ta=(a);	\ 	low =  (w) * ta;		\ 	high=  BN_UMULT_HIGH(w,ta);	\ 	ret =  low + (c);		\ 	(c) =  high;			\ 	(c) += (ret<low)?1:0;		\ 	(r) =  ret;			\ 	}
+define|#
+directive|define
+name|sqr
+parameter_list|(
+name|r0
+parameter_list|,
+name|r1
+parameter_list|,
+name|a
+parameter_list|)
+value|{		\ 	BN_ULONG tmp=(a);		\ 	(r0) = tmp * tmp;		\ 	(r1) = BN_UMULT_HIGH(tmp,tmp);	\ 	}
 else|#
 directive|else
 comment|/*************************************************************  * No long long type  */
@@ -333,56 +453,7 @@ comment|/* non-multiply part */
 value|\ 	l+=(c); if ((l&BN_MASK2)< (c)) h++; \ 	(c)=h&BN_MASK2; \ 	(r)=l&BN_MASK2; \ 	}
 endif|#
 directive|endif
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_bits
-decl_stmt|;
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_num
-decl_stmt|;
-comment|/* (1<<bn_limit_bits) */
-comment|/* Recursive 'low' limit */
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_bits_low
-decl_stmt|;
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_num_low
-decl_stmt|;
-comment|/* (1<<bn_limit_bits_low) */
-comment|/* Do modified 'high' part calculation' */
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_bits_high
-decl_stmt|;
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_num_high
-decl_stmt|;
-comment|/* (1<<bn_limit_bits_high) */
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_bits_mont
-decl_stmt|;
-name|OPENSSL_EXTERN
-name|int
-name|bn_limit_num_mont
-decl_stmt|;
-comment|/* (1<<bn_limit_bits_mont) */
-name|BIGNUM
-modifier|*
-name|bn_expand2
-parameter_list|(
-name|BIGNUM
-modifier|*
-name|b
-parameter_list|,
-name|int
-name|bits
-parameter_list|)
-function_decl|;
+comment|/* !BN_LLONG */
 name|void
 name|bn_mul_normal
 parameter_list|(

@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* Code for stacks  * Author - Eric Young v 1.0  * 1.2 eay 12-Mar-97 -	Modified sk_find so that it _DOES_ return the  *			lowest index for the seached item.  *  * 1.1 eay - Take from netdb and added to SSLeay  *  * 1.0 eay - First version 29/07/92  */
+comment|/* Code for stacks  * Author - Eric Young v 1.0  * 1.2 eay 12-Mar-97 -	Modified sk_find so that it _DOES_ return the  *			lowest index for the searched item.  *  * 1.1 eay - Take from netdb and added to SSLeay  *  * 1.0 eay - First version 29/07/92  */
 end_comment
 
 begin_include
@@ -445,10 +445,6 @@ end_label
 begin_expr_stmt
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -1453,10 +1449,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|st
 operator|->
 name|data
@@ -1464,10 +1456,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|st
 argument_list|)
 expr_stmt|;

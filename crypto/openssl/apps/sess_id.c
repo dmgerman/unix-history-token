@@ -86,7 +86,7 @@ literal|"usage: sess_id args\n"
 block|,
 literal|"\n"
 block|,
-literal|" -inform arg     - input format - default PEM (one of DER, TXT or PEM)\n"
+literal|" -inform arg     - input format - default PEM (DER or PEM)\n"
 block|,
 literal|" -outform arg    - output format - default PEM\n"
 block|,
@@ -119,6 +119,19 @@ name|file
 parameter_list|,
 name|int
 name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -317,6 +317,10 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 operator|(
 name|net
@@ -441,6 +445,10 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 operator|(
 name|net

@@ -224,12 +224,16 @@ name|SSL_TXT_SHA
 value|"SHA"
 define|#
 directive|define
-name|SSL_TXT_EXP40
+name|SSL_TXT_EXP
 value|"EXP"
 define|#
 directive|define
 name|SSL_TXT_EXPORT
 value|"EXPORT"
+define|#
+directive|define
+name|SSL_TXT_EXP40
+value|"EXPORT40"
 define|#
 directive|define
 name|SSL_TXT_EXP56
@@ -251,24 +255,10 @@ directive|define
 name|SSL_TXT_ALL
 value|"ALL"
 comment|/* 'DEFAULT' at the start of the cipher list insert the following string  * in addition to this being the default cipher string */
-ifndef|#
-directive|ifndef
-name|NO_RSA
 define|#
 directive|define
 name|SSL_DEFAULT_CIPHER_LIST
-value|"ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP"
-else|#
-directive|else
-define|#
-directive|define
-name|SSL_ALLOW_ADH
-define|#
-directive|define
-name|SSL_DEFAULT_CIPHER_LIST
-value|"HIGH:MEDIUM:LOW:ADH+3DES:ADH+RC4:ADH+DES:+EXP"
-endif|#
-directive|endif
+value|"ALL:!ADH:RC4+RSA:+SSLv2:@STRENGTH"
 comment|/* Used in SSL_set_shutdown()/SSL_get_shutdown(); */
 define|#
 directive|define
@@ -296,6 +286,30 @@ file|<openssl/pem.h>
 include|#
 directive|include
 file|<openssl/x509.h>
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|NO_RSA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NO_MD5
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_SSL2
+argument_list|)
+define|#
+directive|define
+name|NO_SSL2
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL_FILETYPE_ASN1
@@ -337,14 +351,32 @@ decl_stmt|;
 comment|/* what ciphers are used */
 name|unsigned
 name|long
+name|algo_strength
+decl_stmt|;
+comment|/* strength and export flags */
+name|unsigned
+name|long
 name|algorithm2
 decl_stmt|;
 comment|/* Extra flags */
+name|int
+name|strength_bits
+decl_stmt|;
+comment|/* Number of bits really used */
+name|int
+name|alg_bits
+decl_stmt|;
+comment|/* Number of bits for algorithm */
 name|unsigned
 name|long
 name|mask
 decl_stmt|;
 comment|/* used for matching */
+name|unsigned
+name|long
+name|mask_strength
+decl_stmt|;
+comment|/* also used for matching */
 block|}
 name|SSL_CIPHER
 typedef|;
@@ -651,10 +683,52 @@ name|ssl_version
 function_decl|)
 parameter_list|()
 function_decl|;
+name|long
+function_decl|(
+modifier|*
+name|ssl_callback_ctrl
+function_decl|)
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cb_id
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+name|long
+function_decl|(
+modifier|*
+name|ssl_ctx_callback_ctrl
+function_decl|)
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cb_id
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
 block|}
 name|SSL_METHOD
 typedef|;
-comment|/* Lets make this into an ASN.1 type structure as follows  * SSL_SESSION_ID ::= SEQUENCE {  *	version 		INTEGER,	-- structure version number  *	SSLversion 		INTEGER,	-- SSL version number  *	Cipher 			OCTET_STRING,	-- the 3 byte cipher ID  *	Session_ID 		OCTET_STRING,	-- the Session ID  *	Master_key 		OCTET_STRING,	-- the master key  *	Key_Arg [ 0 ] IMPLICIT	OCTET_STRING,	-- the optional Key argument  *	Time [ 1 ] EXPLICIT	INTEGER,	-- optional Start Time  *	Timeout [ 2 ] EXPLICIT	INTEGER,	-- optional Timeout ins seconds  *	Peer [ 3 ] EXPLICIT	X509,		-- optional Peer Certificate  *	Session_ID_context [ 4 ] EXPLICIT OCTET_STRING,   -- the Session ID context  *	Compression [5] IMPLICIT ASN1_OBJECT	-- compression OID XXXXX  *	}  * Look in ssl/ssl_asn1.c for more details  * I'm using EXPLICIT tags so I can read the damn things using asn1parse :-).  */
+comment|/* Lets make this into an ASN.1 type structure as follows  * SSL_SESSION_ID ::= SEQUENCE {  *	version 		INTEGER,	-- structure version number  *	SSLversion 		INTEGER,	-- SSL version number  *	Cipher 			OCTET_STRING,	-- the 3 byte cipher ID  *	Session_ID 		OCTET_STRING,	-- the Session ID  *	Master_key 		OCTET_STRING,	-- the master key  *	Key_Arg [ 0 ] IMPLICIT	OCTET_STRING,	-- the optional Key argument  *	Time [ 1 ] EXPLICIT	INTEGER,	-- optional Start Time  *	Timeout [ 2 ] EXPLICIT	INTEGER,	-- optional Timeout ins seconds  *	Peer [ 3 ] EXPLICIT	X509,		-- optional Peer Certificate  *	Session_ID_context [ 4 ] EXPLICIT OCTET_STRING,   -- the Session ID context  *	Verify_result [ 5 ] EXPLICIT INTEGER    -- X509_V_... code for `Peer'  *	Compression [6] IMPLICIT ASN1_OBJECT	-- compression OID XXXXX  *	}  * Look in ssl/ssl_asn1.c for more details  * I'm using EXPLICIT tags so I can read the damn things using asn1parse :-).  */
 typedef|typedef
 struct|struct
 name|ssl_session_st
@@ -724,6 +798,11 @@ name|X509
 modifier|*
 name|peer
 decl_stmt|;
+comment|/* when app_verify_callback accepts a session where the peer's certificate 	 * is not ok, we must remember the error for session reuse: */
+name|long
+name|verify_result
+decl_stmt|;
+comment|/* only for servers */
 name|int
 name|references
 decl_stmt|;
@@ -833,6 +912,7 @@ define|#
 directive|define
 name|SSL_OP_NETSCAPE_CA_DN_BUG
 value|0x20000000L
+comment|/* SSL_OP_NON_EXPORT_FIRST looks utterly broken .. */
 define|#
 directive|define
 name|SSL_OP_NON_EXPORT_FIRST
@@ -1019,8 +1099,8 @@ comment|/* LHASH */
 modifier|*
 name|sessions
 decl_stmt|;
-comment|/* a set of SSL_SESSION's */
-comment|/* Most session-ids that will be cached, default is 	 * SSL_SESSION_CACHE_SIZE_DEFAULT. 0 is unlimited. */
+comment|/* a set of SSL_SESSIONs */
+comment|/* Most session-ids that will be cached, default is 	 * SSL_SESSION_CACHE_MAX_SIZE_DEFAULT. 0 is unlimited. */
 name|unsigned
 name|long
 name|session_cache_size
@@ -1043,7 +1123,7 @@ comment|/* If timeout is not 0, it is the default timeout value set 	 * when SSL
 name|long
 name|session_timeout
 decl_stmt|;
-comment|/* If this callback is not null, it will be called each 	 * time a session id is added to the cache.  If this function 	 * returns 1, it means that the callback will do a 	 * SSL_SESSION_free() when it has finished using it.  Otherwise, 	 * on 0, it means the callback has finished with it. 	 * If remove_session_cb is not null, it will be called when 	 * a session-id is removed from the cache.  Again, a return 	 * of 0 mens that SSLeay should not SSL_SESSION_free() since 	 * the application is doing something with it. */
+comment|/* If this callback is not null, it will be called each 	 * time a session id is added to the cache.  If this function 	 * returns 1, it means that the callback will do a 	 * SSL_SESSION_free() when it has finished using it.  Otherwise, 	 * on 0, it means the callback has finished with it. 	 * If remove_session_cb is not null, it will be called when 	 * a session-id is removed from the cache.  After the call, 	 * OpenSSL will SSL_SESSION_free() it. */
 name|int
 function_decl|(
 modifier|*
@@ -1224,6 +1304,14 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+name|int
+name|purpose
+decl_stmt|;
+comment|/* Purpose setting */
+name|int
+name|trust
+decl_stmt|;
+comment|/* Trust setting */
 comment|/* Default password callback. */
 comment|/**/
 name|pem_password_cb
@@ -1247,7 +1335,7 @@ parameter_list|(
 comment|/* SSL *ssl, X509 **x509, EVP_PKEY **pkey */
 parameter_list|)
 function_decl|;
-comment|/* what we put in client requests */
+comment|/* what we put in client cert requests */
 name|STACK_OF
 argument_list|(
 name|X509_NAME
@@ -1322,6 +1410,16 @@ define|#
 directive|define
 name|SSL_SESS_CACHE_NO_INTERNAL_LOOKUP
 value|0x0100
+name|struct
+name|lhash_st
+modifier|*
+name|SSL_CTX_sessions
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|SSL_CTX_sess_number
@@ -1660,13 +1758,13 @@ name|int
 name|packet_length
 decl_stmt|;
 name|struct
-name|ssl2_ctx_st
+name|ssl2_state_st
 modifier|*
 name|s2
 decl_stmt|;
 comment|/* SSLv2 variables */
 name|struct
-name|ssl3_ctx_st
+name|ssl3_state_st
 modifier|*
 name|s3
 decl_stmt|;
@@ -1674,11 +1772,19 @@ comment|/* SSLv3 variables */
 name|int
 name|read_ahead
 decl_stmt|;
-comment|/* Read as many input bytes as possible */
+comment|/* Read as many input bytes as possible 	               	 	 * (for non-blocking reads) */
 name|int
 name|hit
 decl_stmt|;
 comment|/* reusing a previous session */
+name|int
+name|purpose
+decl_stmt|;
+comment|/* Purpose setting */
+name|int
+name|trust
+decl_stmt|;
+comment|/* Trust setting */
 comment|/* crypto */
 name|STACK_OF
 argument_list|(
@@ -1694,7 +1800,7 @@ argument_list|)
 operator|*
 name|cipher_list_by_id
 expr_stmt|;
-comment|/* These are the ones being used, the ones is SSL_SESSION are 	 * the ones to be 'copied' into these ones */
+comment|/* These are the ones being used, the ones in SSL_SESSION are 	 * the ones to be 'copied' into these ones */
 name|EVP_CIPHER_CTX
 modifier|*
 name|enc_read_ctx
@@ -1856,7 +1962,7 @@ decl_stmt|;
 name|int
 name|client_version
 decl_stmt|;
-comment|/* what was passed, used for 				 * SSLv3/TLS rolback check */
+comment|/* what was passed, used for 				 * SSLv3/TLS rollback check */
 block|}
 struct|;
 include|#
@@ -1872,7 +1978,7 @@ comment|/* This is mostly sslv3 with a few tweaks */
 include|#
 directive|include
 file|<openssl/ssl23.h>
-comment|/* compatablity */
+comment|/* compatibility */
 define|#
 directive|define
 name|SSL_set_app_data
@@ -1921,7 +2027,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 value|(SSL_CTX_set_ex_data(ctx,0,(char *)arg))
-comment|/* The following are the possible values for ssl->state are are  * used to indicate where we are upto in the SSL connection establishment.  * The macros that follow are about the only things you should need to use  * and even then, only when using non-blocking IO.  * It can also be useful to work out where you were when the connection  * failed */
+comment|/* The following are the possible values for ssl->state are are  * used to indicate where we are up to in the SSL connection establishment.  * The macros that follow are about the only things you should need to use  * and even then, only when using non-blocking IO.  * It can also be useful to work out where you were when the connection  * failed */
 define|#
 directive|define
 name|SSL_ST_CONNECT
@@ -2059,6 +2165,37 @@ define|#
 directive|define
 name|SSL_ST_READ_DONE
 value|0xF2
+comment|/* Obtain latest Finished message  *   -- that we sent (SSL_get_finished)  *   -- that we expected from peer (SSL_get_peer_finished).  * Returns length (0 == no Finished so far), copies up to 'count' bytes. */
+name|size_t
+name|SSL_get_finished
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
+name|size_t
+name|SSL_get_peer_finished
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
 comment|/* use either SSL_VERIFY_NONE or SSL_VERIFY_PEER, the last 2 options  * are 'ored' with SSL_VERIFY_PEER if they are desired */
 define|#
 directive|define
@@ -2078,10 +2215,15 @@ name|SSL_VERIFY_CLIENT_ONCE
 value|0x04
 define|#
 directive|define
+name|OpenSSL_add_ssl_algorithms
+parameter_list|()
+value|SSL_library_init()
+define|#
+directive|define
 name|SSLeay_add_ssl_algorithms
 parameter_list|()
 value|SSL_library_init()
-comment|/* this is for backward compatablility */
+comment|/* this is for backward compatibility */
 if|#
 directive|if
 literal|0
@@ -2135,7 +2277,7 @@ parameter_list|)
 value|SSL_CTX_flush_sessions((a),(b))
 endif|#
 directive|endif
-comment|/* More backward compatablity */
+comment|/* More backward compatibility */
 define|#
 directive|define
 name|SSL_get_cipher
@@ -2360,8 +2502,8 @@ name|SSL_AD_DECRYPT_ERROR
 value|TLS1_AD_DECRYPT_ERROR
 define|#
 directive|define
-name|SSL_AD_EXPORT_RESTRICION
-value|TLS1_AD_EXPORT_RESTRICION
+name|SSL_AD_EXPORT_RESTRICTION
+value|TLS1_AD_EXPORT_RESTRICTION
 comment|/* fatal */
 define|#
 directive|define
@@ -2380,8 +2522,8 @@ value|TLS1_AD_INTERNAL_ERROR
 comment|/* fatal */
 define|#
 directive|define
-name|SSL_AD_USER_CANCLED
-value|TLS1_AD_USER_CANCLED
+name|SSL_AD_USER_CANCELLED
+value|TLS1_AD_USER_CANCELLED
 define|#
 directive|define
 name|SSL_AD_NO_RENEGOTIATION
@@ -2763,6 +2905,7 @@ parameter_list|(
 name|SSL_CTX
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -3025,6 +3168,7 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -3896,6 +4040,50 @@ name|int
 name|sid_ctx_len
 parameter_list|)
 function_decl|;
+name|int
+name|SSL_CTX_set_purpose
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|purpose
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_set_purpose
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|purpose
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_CTX_set_trust
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|trust
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_set_trust
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|trust
+parameter_list|)
+function_decl|;
 name|void
 name|SSL_free
 parameter_list|(
@@ -3985,6 +4173,21 @@ name|parg
 parameter_list|)
 function_decl|;
 name|long
+name|SSL_callback_ctrl
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+name|long
 name|SSL_CTX_ctrl
 parameter_list|(
 name|SSL_CTX
@@ -4002,6 +4205,21 @@ modifier|*
 name|parg
 parameter_list|)
 function_decl|;
+name|long
+name|SSL_CTX_callback_ctrl
+parameter_list|(
+name|SSL_CTX
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
 name|int
 name|SSL_get_error
 parameter_list|(
@@ -4013,6 +4231,7 @@ name|int
 name|ret_code
 parameter_list|)
 function_decl|;
+specifier|const
 name|char
 modifier|*
 name|SSL_get_version
@@ -4478,6 +4697,11 @@ modifier|*
 name|CApath
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|SSL_get0_session
+value|SSL_get_session
+comment|/* just peek at pointer */
 name|SSL_SESSION
 modifier|*
 name|SSL_get_session
@@ -4487,6 +4711,16 @@ modifier|*
 name|ssl
 parameter_list|)
 function_decl|;
+name|SSL_SESSION
+modifier|*
+name|SSL_get1_session
+parameter_list|(
+name|SSL
+modifier|*
+name|ssl
+parameter_list|)
+function_decl|;
+comment|/* obtain a reference count */
 name|SSL_CTX
 modifier|*
 name|SSL_get_SSL_CTX
@@ -4583,30 +4817,21 @@ parameter_list|(
 name|long
 name|argl
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|argp
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_new
 modifier|*
 name|new_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_dup
 modifier|*
 name|dup_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|void
-function_decl|(
+name|CRYPTO_EX_free
 modifier|*
 name|free_func
-function_decl|)
-parameter_list|()
 parameter_list|)
 function_decl|;
 name|int
@@ -4642,30 +4867,21 @@ parameter_list|(
 name|long
 name|argl
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|argp
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_new
 modifier|*
 name|new_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_dup
 modifier|*
 name|dup_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|void
-function_decl|(
+name|CRYPTO_EX_free
 modifier|*
 name|free_func
-function_decl|)
-parameter_list|()
 parameter_list|)
 function_decl|;
 name|int
@@ -4701,30 +4917,21 @@ parameter_list|(
 name|long
 name|argl
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|argp
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_new
 modifier|*
 name|new_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|int
-function_decl|(
+name|CRYPTO_EX_dup
 modifier|*
 name|dup_func
-function_decl|)
-parameter_list|()
 parameter_list|,
-name|void
-function_decl|(
+name|CRYPTO_EX_free
 modifier|*
 name|free_func
-function_decl|)
-parameter_list|()
 parameter_list|)
 function_decl|;
 name|int
@@ -5069,6 +5276,10 @@ name|SSL_F_SSL3_ACCEPT
 value|128
 define|#
 directive|define
+name|SSL_F_SSL3_CALLBACK_CTRL
+value|233
+define|#
+directive|define
 name|SSL_F_SSL3_CHANGE_CIPHER_STATE
 value|129
 define|#
@@ -5233,6 +5444,14 @@ name|SSL_F_SSL_CHECK_PRIVATE_KEY
 value|163
 define|#
 directive|define
+name|SSL_F_SSL_CIPHER_PROCESS_RULESTR
+value|230
+define|#
+directive|define
+name|SSL_F_SSL_CIPHER_STRENGTH_SORT
+value|231
+define|#
+directive|define
 name|SSL_F_SSL_CLEAR
 value|164
 define|#
@@ -5245,6 +5464,10 @@ name|SSL_F_SSL_CREATE_CIPHER_LIST
 value|166
 define|#
 directive|define
+name|SSL_F_SSL_CTRL
+value|232
+define|#
+directive|define
 name|SSL_F_SSL_CTX_CHECK_PRIVATE_KEY
 value|168
 define|#
@@ -5253,12 +5476,20 @@ name|SSL_F_SSL_CTX_NEW
 value|169
 define|#
 directive|define
+name|SSL_F_SSL_CTX_SET_PURPOSE
+value|226
+define|#
+directive|define
 name|SSL_F_SSL_CTX_SET_SESSION_ID_CONTEXT
 value|219
 define|#
 directive|define
 name|SSL_F_SSL_CTX_SET_SSL_VERSION
 value|170
+define|#
+directive|define
+name|SSL_F_SSL_CTX_SET_TRUST
+value|229
 define|#
 directive|define
 name|SSL_F_SSL_CTX_USE_CERTIFICATE
@@ -5369,6 +5600,10 @@ name|SSL_F_SSL_SET_PKEY
 value|193
 define|#
 directive|define
+name|SSL_F_SSL_SET_PURPOSE
+value|227
+define|#
+directive|define
 name|SSL_F_SSL_SET_RFD
 value|194
 define|#
@@ -5379,6 +5614,10 @@ define|#
 directive|define
 name|SSL_F_SSL_SET_SESSION_ID_CONTEXT
 value|218
+define|#
+directive|define
+name|SSL_F_SSL_SET_TRUST
+value|228
 define|#
 directive|define
 name|SSL_F_SSL_SET_WFD
@@ -5478,10 +5717,6 @@ name|SSL_R_BAD_CHECKSUM
 value|104
 define|#
 directive|define
-name|SSL_R_BAD_CLIENT_REQUEST
-value|105
-define|#
-directive|define
 name|SSL_R_BAD_DATA_RETURNED_BY_CALLBACK
 value|106
 define|#
@@ -5508,6 +5743,10 @@ define|#
 directive|define
 name|SSL_R_BAD_DSA_SIGNATURE
 value|112
+define|#
+directive|define
+name|SSL_R_BAD_HELLO_REQUEST
+value|105
 define|#
 directive|define
 name|SSL_R_BAD_LENGTH
@@ -5666,6 +5905,10 @@ name|SSL_R_ENCRYPTED_LENGTH_TOO_LONG
 value|150
 define|#
 directive|define
+name|SSL_R_ERROR_GENERATING_TMP_RSA_KEY
+value|1092
+define|#
+directive|define
 name|SSL_R_ERROR_IN_RECEIVED_CIPHER_LIST
 value|151
 define|#
@@ -5696,6 +5939,18 @@ define|#
 directive|define
 name|SSL_R_INVALID_CHALLENGE_LENGTH
 value|158
+define|#
+directive|define
+name|SSL_R_INVALID_COMMAND
+value|280
+define|#
+directive|define
+name|SSL_R_INVALID_PURPOSE
+value|278
+define|#
+directive|define
+name|SSL_R_INVALID_TRUST
+value|279
 define|#
 directive|define
 name|SSL_R_LENGTH_MISMATCH
@@ -6066,7 +6321,7 @@ name|SSL_R_TLSV1_ALERT_DECRYPT_ERROR
 value|1051
 define|#
 directive|define
-name|SSL_R_TLSV1_ALERT_EXPORT_RESTRICION
+name|SSL_R_TLSV1_ALERT_EXPORT_RESTRICTION
 value|1060
 define|#
 directive|define
@@ -6094,7 +6349,7 @@ name|SSL_R_TLSV1_ALERT_UNKNOWN_CA
 value|1048
 define|#
 directive|define
-name|SSL_R_TLSV1_ALERT_USER_CANCLED
+name|SSL_R_TLSV1_ALERT_USER_CANCELLED
 value|1090
 define|#
 directive|define
@@ -6204,6 +6459,10 @@ define|#
 directive|define
 name|SSL_R_UNSUPPORTED_COMPRESSION_ALGORITHM
 value|257
+define|#
+directive|define
+name|SSL_R_UNSUPPORTED_OPTION
+value|1091
 define|#
 directive|define
 name|SSL_R_UNSUPPORTED_PROTOCOL

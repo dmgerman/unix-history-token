@@ -835,6 +835,7 @@ name|char
 modifier|*
 name|t
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1607,6 +1608,7 @@ name|char
 modifier|*
 name|t
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -162,12 +162,16 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* seed, out_p, out_q, out_g are taken from the updated Appendix 5 to  * FIPS PUB 186 and also appear in Appendix 5 to FIPS PIB 186-1 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -565,6 +569,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+name|rnd_seed
+index|[]
+init|=
+literal|"string to make the random number generator think it has entropy"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|BIO
 modifier|*
 name|bio_err
@@ -625,6 +640,17 @@ name|unsigned
 name|int
 name|siglen
 decl_stmt|;
+name|ERR_load_crypto_strings
+argument_list|()
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+name|rnd_seed
+argument_list|,
+sizeof|sizeof
+name|rnd_seed
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bio_err
@@ -652,13 +678,6 @@ argument_list|,
 literal|"test generation of DSA parameters\n"
 argument_list|)
 expr_stmt|;
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|"expect '.*' followed by 5 lines of '.'s and '+'s\n"
-argument_list|)
-expr_stmt|;
 name|dsa
 operator|=
 name|DSA_generate_parameters
@@ -677,10 +696,6 @@ name|h
 argument_list|,
 name|dsa_cb
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;
@@ -1025,6 +1040,11 @@ argument_list|(
 name|dsa
 argument_list|)
 expr_stmt|;
+name|ERR_remove_state
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|CRYPTO_mem_leaks
 argument_list|(
 name|bio_err
@@ -1036,11 +1056,17 @@ name|bio_err
 operator|!=
 name|NULL
 condition|)
+block|{
 name|BIO_free
 argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
+name|bio_err
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 operator|!
@@ -1067,7 +1093,7 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
 parameter_list|)
@@ -1140,10 +1166,6 @@ literal|'\n'
 expr_stmt|;
 name|BIO_write
 argument_list|(
-operator|(
-name|BIO
-operator|*
-operator|)
 name|arg
 argument_list|,
 operator|&
@@ -1157,10 +1179,6 @@ name|void
 operator|)
 name|BIO_flush
 argument_list|(
-operator|(
-name|BIO
-operator|*
-operator|)
 name|arg
 argument_list|)
 expr_stmt|;

@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/bio.h>
 end_include
 
@@ -165,7 +171,7 @@ argument_list|)
 operator|*
 name|sk
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 name|bio_err
@@ -385,6 +391,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -406,6 +414,8 @@ operator|=
 name|PEM_read_bio_PrivateKey
 argument_list|(
 name|in
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -447,6 +457,8 @@ operator|=
 name|PEM_read_bio_PKCS7
 argument_list|(
 name|data
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

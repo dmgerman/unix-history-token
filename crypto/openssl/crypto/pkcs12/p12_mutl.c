@@ -523,7 +523,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ASN1_OCTET_STRING_set
+name|M_ASN1_OCTET_STRING_set
 argument_list|(
 name|p12
 operator|->
@@ -617,7 +617,7 @@ name|mac
 operator|->
 name|iter
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 condition|)
@@ -699,7 +699,10 @@ condition|(
 operator|!
 name|salt
 condition|)
-name|RAND_bytes
+block|{
+if|if
+condition|(
+name|RAND_pseudo_bytes
 argument_list|(
 name|p12
 operator|->
@@ -711,7 +714,13 @@ name|data
 argument_list|,
 name|saltlen
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+block|}
 else|else
 name|memcpy
 argument_list|(

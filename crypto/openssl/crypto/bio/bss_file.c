@@ -212,6 +212,8 @@ block|,
 name|file_new
 block|,
 name|file_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt
@@ -644,7 +646,7 @@ operator|=
 name|inl
 expr_stmt|;
 comment|/* ret=fwrite(in,1,(int)inl,(FILE *)b->ptr); */
-comment|/* acording to Tim Hudson<tjh@cryptsoft.com>, the commented 		 * out version above can cause 'inl' write calls under 		 * some stupid stdio implementations (VMS) */
+comment|/* according to Tim Hudson<tjh@cryptsoft.com>, the commented 		 * out version above can cause 'inl' write calls under 		 * some stupid stdio implementations (VMS) */
 block|}
 return|return
 operator|(

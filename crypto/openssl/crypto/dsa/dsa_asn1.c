@@ -519,7 +519,7 @@ condition|)
 goto|goto
 name|err_bn
 goto|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|bs
 argument_list|)
@@ -578,7 +578,7 @@ name|bs
 operator|!=
 name|NULL
 condition|)
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|bs
 argument_list|)

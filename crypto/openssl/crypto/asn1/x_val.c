@@ -192,7 +192,7 @@ name|ret
 operator|->
 name|notBefore
 argument_list|,
-name|ASN1_TIME_new
+name|M_ASN1_TIME_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -201,7 +201,7 @@ name|ret
 operator|->
 name|notAfter
 argument_list|,
-name|ASN1_TIME_new
+name|M_ASN1_TIME_new
 argument_list|)
 expr_stmt|;
 return|return
@@ -233,14 +233,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_TIME_free
+name|M_ASN1_TIME_free
 argument_list|(
 name|a
 operator|->
 name|notBefore
 argument_list|)
 expr_stmt|;
-name|ASN1_TIME_free
+name|M_ASN1_TIME_free
 argument_list|(
 name|a
 operator|->
@@ -249,10 +249,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

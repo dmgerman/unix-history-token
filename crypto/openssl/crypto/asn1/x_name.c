@@ -1029,7 +1029,7 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-name|ASN1_BIT_STRING_free
+name|M_ASN1_BIT_STRING_free
 argument_list|(
 name|a
 operator|->

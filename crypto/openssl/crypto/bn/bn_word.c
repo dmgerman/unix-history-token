@@ -29,6 +29,7 @@ begin_function
 name|BN_ULONG
 name|BN_mod_word
 parameter_list|(
+specifier|const
 name|BIGNUM
 modifier|*
 name|a

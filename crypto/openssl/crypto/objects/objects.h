@@ -181,6 +181,10 @@ name|OBJ_md5WithRSAEncryption
 value|OBJ_pkcs,1L,4L
 define|#
 directive|define
+name|SN_pbeWithMD2AndDES_CBC
+value|"PBE-MD2-DES"
+define|#
+directive|define
 name|LN_pbeWithMD2AndDES_CBC
 value|"pbeWithMD2AndDES-CBC"
 define|#
@@ -191,6 +195,10 @@ define|#
 directive|define
 name|OBJ_pbeWithMD2AndDES_CBC
 value|OBJ_pkcs,5L,1L
+define|#
+directive|define
+name|SN_pbeWithMD5AndDES_CBC
+value|"PBE-MD5-DES"
 define|#
 directive|define
 name|LN_pbeWithMD5AndDES_CBC
@@ -540,6 +548,10 @@ define|#
 directive|define
 name|NID_idea_cbc
 value|34
+define|#
+directive|define
+name|OBJ_idea_cbc
+value|1L,3L,6L,1L,4L,1L,188L,7L,1L,1L,2L
 define|#
 directive|define
 name|SN_idea_cfb64
@@ -994,6 +1006,10 @@ value|OBJ_algorithm,12L
 comment|/* proposed by microsoft to RSA */
 define|#
 directive|define
+name|SN_pbeWithSHA1AndRC2_CBC
+value|"PBE-SHA1-RC2-64"
+define|#
+directive|define
 name|LN_pbeWithSHA1AndRC2_CBC
 value|"pbeWithSHA1AndRC2-CBC"
 define|#
@@ -1358,6 +1374,10 @@ define|#
 directive|define
 name|NID_bf_cbc
 value|91
+define|#
+directive|define
+name|OBJ_bf_cbc
+value|1L,3L,6L,1L,4L,1L,3029L,1L,2L
 define|#
 directive|define
 name|SN_bf_ecb
@@ -1737,7 +1757,7 @@ define|#
 directive|define
 name|OBJ_ripemd160
 value|1L,3L,36L,3L,2L,1L
-comment|/* The name should actually be rsaSignatureWithripemd160, but I'm going  * to contiune using the convention I'm using with the other ciphers */
+comment|/* The name should actually be rsaSignatureWithripemd160, but I'm going  * to continue using the convention I'm using with the other ciphers */
 define|#
 directive|define
 name|SN_ripemd160WithRSA
@@ -1822,7 +1842,7 @@ value|124
 define|#
 directive|define
 name|OBJ_rle_compression
-value|1L,1L,1L,1L,666L.1L
+value|1L,1L,1L,1L,666L,1L
 define|#
 directive|define
 name|SN_zlib_compression
@@ -1838,7 +1858,7 @@ value|125
 define|#
 directive|define
 name|OBJ_zlib_compression
-value|1L,1L,1L,1L,666L.2L
+value|1L,1L,1L,1L,666L,2L
 define|#
 directive|define
 name|SN_ext_key_usage
@@ -2041,7 +2061,7 @@ define|#
 directive|define
 name|OBJ_ms_efs
 value|1L,3L,6L,1L,4L,1L,311L,10L,3L,4L
-comment|/* Addidional usage: Netscape */
+comment|/* Additional usage: Netscape */
 define|#
 directive|define
 name|SN_ns_sgc
@@ -2133,6 +2153,10 @@ name|OBJ_pkcs12_pbeids
 value|OBJ_pkcs12, 1
 define|#
 directive|define
+name|SN_pbe_WithSHA1And128BitRC4
+value|"PBE-SHA1-RC4-128"
+define|#
+directive|define
 name|LN_pbe_WithSHA1And128BitRC4
 value|"pbeWithSHA1And128BitRC4"
 define|#
@@ -2143,6 +2167,10 @@ define|#
 directive|define
 name|OBJ_pbe_WithSHA1And128BitRC4
 value|OBJ_pkcs12_pbeids, 1L
+define|#
+directive|define
+name|SN_pbe_WithSHA1And40BitRC4
+value|"PBE-SHA1-RC4-40"
 define|#
 directive|define
 name|LN_pbe_WithSHA1And40BitRC4
@@ -2157,6 +2185,10 @@ name|OBJ_pbe_WithSHA1And40BitRC4
 value|OBJ_pkcs12_pbeids, 2L
 define|#
 directive|define
+name|SN_pbe_WithSHA1And3_Key_TripleDES_CBC
+value|"PBE-SHA1-3DES"
+define|#
+directive|define
 name|LN_pbe_WithSHA1And3_Key_TripleDES_CBC
 value|"pbeWithSHA1And3-KeyTripleDES-CBC"
 define|#
@@ -2167,6 +2199,10 @@ define|#
 directive|define
 name|OBJ_pbe_WithSHA1And3_Key_TripleDES_CBC
 value|OBJ_pkcs12_pbeids, 3L
+define|#
+directive|define
+name|SN_pbe_WithSHA1And2_Key_TripleDES_CBC
+value|"PBE-SHA1-2DES"
 define|#
 directive|define
 name|LN_pbe_WithSHA1And2_Key_TripleDES_CBC
@@ -2181,6 +2217,10 @@ name|OBJ_pbe_WithSHA1And2_Key_TripleDES_CBC
 value|OBJ_pkcs12_pbeids, 4L
 define|#
 directive|define
+name|SN_pbe_WithSHA1And128BitRC2_CBC
+value|"PBE-SHA1-RC2-128"
+define|#
+directive|define
 name|LN_pbe_WithSHA1And128BitRC2_CBC
 value|"pbeWithSHA1And128BitRC2-CBC"
 define|#
@@ -2191,6 +2231,10 @@ define|#
 directive|define
 name|OBJ_pbe_WithSHA1And128BitRC2_CBC
 value|OBJ_pkcs12_pbeids, 5L
+define|#
+directive|define
+name|SN_pbe_WithSHA1And40BitRC2_CBC
+value|"PBE-SHA1-RC2-40"
 define|#
 directive|define
 name|LN_pbe_WithSHA1And40BitRC2_CBC
@@ -2448,7 +2492,11 @@ value|167
 define|#
 directive|define
 name|OBJ_SMIMECapabilities
-value|OBJ_id_pkcs9,15L
+value|OBJ_pkcs9,15L
+define|#
+directive|define
+name|SN_pbeWithMD2AndRC2_CBC
+value|"PBE-MD2-RC2-64"
 define|#
 directive|define
 name|LN_pbeWithMD2AndRC2_CBC
@@ -2463,6 +2511,10 @@ name|OBJ_pbeWithMD2AndRC2_CBC
 value|OBJ_pkcs,5L,4L
 define|#
 directive|define
+name|SN_pbeWithMD5AndRC2_CBC
+value|"PBE-MD5-RC2-64"
+define|#
+directive|define
 name|LN_pbeWithMD5AndRC2_CBC
 value|"pbeWithMD5AndRC2-CBC"
 define|#
@@ -2475,6 +2527,10 @@ name|OBJ_pbeWithMD5AndRC2_CBC
 value|OBJ_pkcs,5L,6L
 define|#
 directive|define
+name|SN_pbeWithSHA1AndDES_CBC
+value|"PBE-SHA1-DES"
+define|#
+directive|define
 name|LN_pbeWithSHA1AndDES_CBC
 value|"pbeWithSHA1AndDES-CBC"
 define|#
@@ -2485,6 +2541,159 @@ define|#
 directive|define
 name|OBJ_pbeWithSHA1AndDES_CBC
 value|OBJ_pkcs,5L,10L
+comment|/* Extension request OIDs */
+define|#
+directive|define
+name|LN_ms_ext_req
+value|"Microsoft Extension Request"
+define|#
+directive|define
+name|SN_ms_ext_req
+value|"msExtReq"
+define|#
+directive|define
+name|NID_ms_ext_req
+value|171
+define|#
+directive|define
+name|OBJ_ms_ext_req
+value|1L,3L,6L,1L,4L,1L,311L,2L,1L,14L
+define|#
+directive|define
+name|LN_ext_req
+value|"Extension Request"
+define|#
+directive|define
+name|SN_ext_req
+value|"extReq"
+define|#
+directive|define
+name|NID_ext_req
+value|172
+define|#
+directive|define
+name|OBJ_ext_req
+value|OBJ_pkcs9,14L
+define|#
+directive|define
+name|SN_name
+value|"name"
+define|#
+directive|define
+name|LN_name
+value|"name"
+define|#
+directive|define
+name|NID_name
+value|173
+define|#
+directive|define
+name|OBJ_name
+value|OBJ_X509,41L
+define|#
+directive|define
+name|SN_dnQualifier
+value|"dnQualifier"
+define|#
+directive|define
+name|LN_dnQualifier
+value|"dnQualifier"
+define|#
+directive|define
+name|NID_dnQualifier
+value|174
+define|#
+directive|define
+name|OBJ_dnQualifier
+value|OBJ_X509,46L
+define|#
+directive|define
+name|SN_id_pe
+value|"id-pe"
+define|#
+directive|define
+name|NID_id_pe
+value|175
+define|#
+directive|define
+name|OBJ_id_pe
+value|OBJ_id_pkix,1L
+define|#
+directive|define
+name|SN_id_ad
+value|"id-ad"
+define|#
+directive|define
+name|NID_id_ad
+value|176
+define|#
+directive|define
+name|OBJ_id_ad
+value|OBJ_id_pkix,48L
+define|#
+directive|define
+name|SN_info_access
+value|"authorityInfoAccess"
+define|#
+directive|define
+name|LN_info_access
+value|"Authority Information Access"
+define|#
+directive|define
+name|NID_info_access
+value|177
+define|#
+directive|define
+name|OBJ_info_access
+value|OBJ_id_pe,1L
+define|#
+directive|define
+name|SN_ad_OCSP
+value|"OCSP"
+define|#
+directive|define
+name|LN_ad_OCSP
+value|"OCSP"
+define|#
+directive|define
+name|NID_ad_OCSP
+value|178
+define|#
+directive|define
+name|OBJ_ad_OCSP
+value|OBJ_id_ad,1L
+define|#
+directive|define
+name|SN_ad_ca_issuers
+value|"caIssuers"
+define|#
+directive|define
+name|LN_ad_ca_issuers
+value|"CA Issuers"
+define|#
+directive|define
+name|NID_ad_ca_issuers
+value|179
+define|#
+directive|define
+name|OBJ_ad_ca_issuers
+value|OBJ_id_ad,2L
+define|#
+directive|define
+name|SN_OCSP_sign
+value|"OCSPSigning"
+define|#
+directive|define
+name|LN_OCSP_sign
+value|"OCSP Signing"
+define|#
+directive|define
+name|NID_OCSP_sign
+value|180
+define|#
+directive|define
+name|OBJ_OCSP_sign
+value|OBJ_id_kp,9L
 include|#
 directive|include
 file|<openssl/bio.h>

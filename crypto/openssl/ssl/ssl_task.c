@@ -695,7 +695,7 @@ expr_stmt|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* DRM, this was the original, but there is no such thing as SSLv2() 	s_ctx=SSL_CTX_new(SSLv2()); */

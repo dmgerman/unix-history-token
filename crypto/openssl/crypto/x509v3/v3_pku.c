@@ -325,14 +325,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_GENERALIZEDTIME_free
+name|M_ASN1_GENERALIZEDTIME_free
 argument_list|(
 name|a
 operator|->
 name|notBefore
 argument_list|)
 expr_stmt|;
-name|ASN1_GENERALIZEDTIME_free
+name|M_ASN1_GENERALIZEDTIME_free
 argument_list|(
 name|a
 operator|->
@@ -341,10 +341,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

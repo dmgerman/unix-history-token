@@ -736,7 +736,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_print
+name|M_ASN1_OCTET_STRING_print
 argument_list|(
 name|out
 argument_list|,

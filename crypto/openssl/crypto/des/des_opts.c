@@ -2093,7 +2093,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"To get the most acurate results, try to run this\n"
+literal|"To get the most accurate results, try to run this\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2105,7 +2105,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|key
@@ -2113,7 +2113,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|key2
@@ -2121,7 +2121,7 @@ argument_list|,
 name|sch2
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|key3
@@ -2139,7 +2139,7 @@ argument_list|,
 literal|"First we calculate the approximate speed ...\n"
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|key

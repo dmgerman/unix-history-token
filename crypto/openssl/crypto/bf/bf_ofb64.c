@@ -27,6 +27,7 @@ begin_function
 name|void
 name|BF_ofb64_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -40,6 +41,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|BF_KEY
 modifier|*
 name|schedule

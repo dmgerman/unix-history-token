@@ -82,6 +82,7 @@ name|MDC2_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -160,7 +161,7 @@ name|MDC2_CTX
 modifier|*
 name|c
 parameter_list|,
-specifier|register
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -382,6 +383,7 @@ name|MDC2_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -528,7 +530,7 @@ operator|->
 name|h
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|c
@@ -555,7 +557,7 @@ operator|->
 name|hh
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|c

@@ -22,20 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SYS_TYPES_H
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -458,10 +463,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|signature
 operator|->
 name|data
@@ -483,7 +484,7 @@ name|length
 operator|=
 name|outl
 expr_stmt|;
-comment|/* In the interests of compatability, I'll make sure that 	 * the bit string has a 'not-used bits' value of 0 	 */
+comment|/* In the interests of compatibility, I'll make sure that 	 * the bit string has a 'not-used bits' value of 0 	 */
 name|signature
 operator|->
 name|flags
@@ -542,10 +543,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf_in
 argument_list|)
 expr_stmt|;
@@ -572,10 +569,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf_out
 argument_list|)
 expr_stmt|;

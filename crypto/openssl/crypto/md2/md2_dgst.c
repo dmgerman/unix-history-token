@@ -68,6 +68,7 @@ name|MD2_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -77,7 +78,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* The magic S table - I have converted it to hex since it is  * basicaly just a random byte string. */
+comment|/* The magic S table - I have converted it to hex since it is  * basically just a random byte string. */
 end_comment
 
 begin_decl_stmt
@@ -705,7 +706,7 @@ name|MD2_CTX
 modifier|*
 name|c
 parameter_list|,
-specifier|register
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -906,6 +907,7 @@ name|MD2_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

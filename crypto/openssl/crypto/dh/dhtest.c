@@ -60,6 +60,12 @@ directive|include
 file|<openssl/bn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -175,11 +181,13 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|BIO
-modifier|*
-name|out
+specifier|static
+specifier|const
+name|char
+name|rnd_seed
+index|[]
 init|=
-name|NULL
+literal|"string to make the random number generator think it has entropy"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,9 +207,12 @@ block|{
 name|DH
 modifier|*
 name|a
-decl_stmt|,
+decl_stmt|;
+name|DH
 modifier|*
 name|b
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
@@ -236,6 +247,10 @@ name|ret
 init|=
 literal|1
 decl_stmt|;
+name|BIO
+modifier|*
+name|out
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WIN32
@@ -244,6 +259,14 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|RAND_seed
+argument_list|(
+name|rnd_seed
+argument_list|,
+sizeof|sizeof
+name|rnd_seed
+argument_list|)
+expr_stmt|;
 name|out
 operator|=
 name|BIO_new
@@ -717,6 +740,33 @@ condition|)
 name|Free
 argument_list|(
 name|bbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|b
+operator|!=
+name|NULL
+condition|)
+name|DH_free
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|!=
+name|NULL
+condition|)
+name|DH_free
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|out
 argument_list|)
 expr_stmt|;
 name|exit

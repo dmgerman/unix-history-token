@@ -220,13 +220,14 @@ name|PKCS7_ENC_CONTENT
 argument_list|)
 expr_stmt|;
 comment|/* M_ASN1_New(ret->content_type,ASN1_OBJECT_new); */
+comment|/* We will almost always want this: so make it the default */
 name|ret
 operator|->
 name|content_type
 operator|=
 name|OBJ_nid2obj
 argument_list|(
-name|NID_pkcs7_encrypted
+name|NID_pkcs7_data
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -287,7 +288,7 @@ operator|->
 name|algorithm
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -296,10 +297,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

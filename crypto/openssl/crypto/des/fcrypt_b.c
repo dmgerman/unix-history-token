@@ -14,7 +14,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* This version of crypt has been developed from my MIT compatable  * DES library.  * The library is available at pub/Crypto/DES at ftp.psy.uq.oz.au  * Eric Young (eay@cryptsoft.com)  */
+comment|/* This version of crypt has been developed from my MIT compatible  * DES library.  * The library is available at pub/Crypto/DES at ftp.psy.uq.oz.au  * Eric Young (eay@cryptsoft.com)  */
 end_comment
 
 begin_define
@@ -172,8 +172,8 @@ name|j
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|DES_UNROLL
 specifier|register
 name|int

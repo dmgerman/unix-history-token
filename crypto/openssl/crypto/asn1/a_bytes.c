@@ -109,7 +109,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|asn1_collate_primative
+name|asn1_collate_primitive
 parameter_list|(
 name|ASN1_STRING
 modifier|*
@@ -388,10 +388,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 operator|->
 name|data
@@ -867,7 +863,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|asn1_collate_primative
+name|asn1_collate_primitive
 argument_list|(
 name|ret
 argument_list|,
@@ -926,10 +922,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 operator|->
 name|data
@@ -948,6 +940,8 @@ operator|(
 name|int
 operator|)
 name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -985,6 +979,13 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
+name|s
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|p
 operator|+=
 name|len
@@ -1006,10 +1007,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 operator|->
 name|data
@@ -1107,7 +1104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We are about to parse 0..n d2i_ASN1_bytes objects, we are to collapes  * them into the one struture that is then returned */
+comment|/* We are about to parse 0..n d2i_ASN1_bytes objects, we are to collapse  * them into the one structure that is then returned */
 end_comment
 
 begin_comment
@@ -1117,7 +1114,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|asn1_collate_primative
+name|asn1_collate_primitive
 parameter_list|(
 name|ASN1_STRING
 modifier|*

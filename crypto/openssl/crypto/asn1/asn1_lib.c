@@ -595,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* class 0 is constructed  * constructed == 2 for indefinitle length constructed */
+comment|/* class 0 is constructed  * constructed == 2 for indefinite length constructed */
 end_comment
 
 begin_function
@@ -1532,7 +1532,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* an alowance for strings :-) */
+comment|/* an allowance for strings :-) */
 name|str
 operator|->
 name|data
@@ -1675,10 +1675,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 operator|->
 name|data
@@ -1686,10 +1682,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -1840,6 +1832,85 @@ argument_list|,
 name|buf2
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ASN1_STRING_length
+parameter_list|(
+name|ASN1_STRING
+modifier|*
+name|x
+parameter_list|)
+block|{
+return|return
+name|M_ASN1_STRING_length
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ASN1_STRING_length_set
+parameter_list|(
+name|ASN1_STRING
+modifier|*
+name|x
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|M_ASN1_STRING_length_set
+argument_list|(
+name|x
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+name|int
+name|ASN1_STRING_type
+parameter_list|(
+name|ASN1_STRING
+modifier|*
+name|x
+parameter_list|)
+block|{
+return|return
+name|M_ASN1_STRING_type
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|char
+modifier|*
+name|ASN1_STRING_data
+parameter_list|(
+name|ASN1_STRING
+modifier|*
+name|x
+parameter_list|)
+block|{
+return|return
+name|M_ASN1_STRING_data
+argument_list|(
+name|x
+argument_list|)
+return|;
 block|}
 end_function
 

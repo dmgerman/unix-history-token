@@ -184,6 +184,11 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
 end_if
 
 begin_define

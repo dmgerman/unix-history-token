@@ -767,7 +767,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"To get the most acurate results, try to run this\n"
+literal|"To get the most accurate results, try to run this\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -171,7 +171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* only return when we have read 'n' bytes */
+comment|/* return regularly only when we have read (at least) 'n' bytes */
 end_comment
 
 begin_function
