@@ -417,6 +417,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"ipsec"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|ipsecstat
