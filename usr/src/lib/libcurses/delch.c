@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delch.c	5.12 (Berkeley) %G%"
+literal|"@(#)delch.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,11 +114,14 @@ operator|<
 name|end
 condition|)
 block|{
-name|bcopy
+operator|(
+name|void
+operator|)
+name|memcpy
 argument_list|(
-name|temp2
-argument_list|,
 name|temp1
+argument_list|,
+name|temp2
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.32 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3072,13 +3072,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|bcopy
+name|memcpy
 argument_list|(
-name|buf
-argument_list|,
 name|clp
 operator|->
 name|line
+argument_list|,
+name|buf
 argument_list|,
 name|win
 operator|->

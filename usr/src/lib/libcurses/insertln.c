@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.14 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,15 +176,16 @@ literal|1
 index|]
 expr_stmt|;
 else|else
-name|bcopy
+operator|(
+name|void
+operator|)
+name|memcpy
 argument_list|(
 name|win
 operator|->
 name|lines
 index|[
 name|y
-operator|-
-literal|1
 index|]
 operator|->
 name|line
@@ -194,6 +195,8 @@ operator|->
 name|lines
 index|[
 name|y
+operator|-
+literal|1
 index|]
 operator|->
 name|line

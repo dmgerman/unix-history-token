@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overwrite.c	5.12 (Berkeley) %G%"
+literal|"@(#)overwrite.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,16 +219,19 @@ name|y
 operator|++
 control|)
 block|{
-name|bcopy
+operator|(
+name|void
+operator|)
+name|memcpy
 argument_list|(
 operator|&
-name|win1
+name|win2
 operator|->
 name|lines
 index|[
 name|y
 operator|-
-name|win1
+name|win2
 operator|->
 name|begy
 index|]
@@ -237,19 +240,19 @@ name|line
 index|[
 name|startx
 operator|-
-name|win1
+name|win2
 operator|->
 name|begx
 index|]
 argument_list|,
 operator|&
-name|win2
+name|win1
 operator|->
 name|lines
 index|[
 name|y
 operator|-
-name|win2
+name|win1
 operator|->
 name|begy
 index|]
@@ -258,7 +261,7 @@ name|line
 index|[
 name|startx
 operator|-
-name|win2
+name|win1
 operator|->
 name|begx
 index|]
