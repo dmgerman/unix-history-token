@@ -91,7 +91,7 @@ name|IS_CHANNEL_A
 parameter_list|(
 name|bas
 parameter_list|)
-value|(((bas)->bsh& 7) != 0)
+value|((uart_cpu_busaddr(bas)& 7) != 0)
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ name|IS_CHANNEL_B
 parameter_list|(
 name|bas
 parameter_list|)
-value|(((bas)->bsh& 7) == 0)
+value|((uart_cpu_busaddr(bas)& 7) == 0)
 end_define
 
 begin_comment
