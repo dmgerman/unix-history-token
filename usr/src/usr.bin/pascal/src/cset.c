@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 1.5 %G%"
+literal|"@(#)cset.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1964,7 +1964,8 @@ block|}
 block|}
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 ifdef|#

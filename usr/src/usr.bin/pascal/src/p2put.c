@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.5 %G%"
+literal|"@(#)p2put.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,8 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|p2word
@@ -230,7 +231,8 @@ name|ppbuffer
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|sprintf
@@ -633,7 +635,8 @@ begin_block
 block|{
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 switch|switch
@@ -888,7 +891,8 @@ name|printname
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 if|if
@@ -1063,7 +1067,8 @@ name|printname
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 if|if
@@ -1344,7 +1349,8 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|putprintf
@@ -1471,7 +1477,8 @@ name|others
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|putprintf
@@ -2121,7 +2128,8 @@ index|[]
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|p2word
@@ -2220,7 +2228,8 @@ index|[]
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
+operator|!
+name|CGENNING
 condition|)
 return|return;
 name|p2word

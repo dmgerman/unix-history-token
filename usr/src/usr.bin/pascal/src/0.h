@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.8 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.9 %G%"; */
 end_comment
 
 begin_define
@@ -1335,7 +1335,7 @@ comment|/*  * SEMANTIC DEFINITIONS  */
 end_comment
 
 begin_comment
-comment|/*  * NOCON and SAWCON are flags in the tree telling whether  * a constant set is part of an expression.  */
+comment|/*  * NOCON and SAWCON are flags in the tree telling whether  * a constant set is part of an expression.  *	these are no longer used,  *	since we now do constant sets at compile time.  */
 end_comment
 
 begin_define
@@ -1848,6 +1848,13 @@ directive|define
 name|codeoff
 parameter_list|()
 value|--cgenflg
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGENNING
+value|( cgenflg>= 0 )
 end_define
 
 begin_comment

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.12 %G%"
+literal|"@(#)put.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,9 +154,8 @@ name|lc
 expr_stmt|;
 if|if
 condition|(
-name|cgenflg
-operator|<
-literal|0
+operator|!
+name|CGENNING
 condition|)
 comment|/* 		 * code disabled - do nothing 		 */
 return|return
@@ -536,7 +535,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\tCON8\t%22.14e\n"
+literal|"%5d\tCON8\t%22.14e\n"
 argument_list|,
 name|lc
 operator|-
@@ -883,7 +882,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\tCASE1\t%d\n"
+literal|"%5d\tCASE1\t%d\n"
 argument_list|,
 name|lc
 operator|-
@@ -1007,7 +1006,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\tCASE2\t%d\n"
+literal|"%5d\tCASE2\t%d\n"
 argument_list|,
 name|lc
 operator|-
@@ -1345,7 +1344,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|")#%5d\t%s"
+literal|"%5d\t%s"
 argument_list|,
 name|lc
 operator|-
@@ -1527,7 +1526,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|")#%5d\t%s"
+literal|"%5d\t%s"
 argument_list|,
 name|lc
 operator|-
@@ -1721,9 +1720,8 @@ name|strptr
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
-operator|<
-literal|0
+operator|!
+name|CGENNING
 condition|)
 comment|/* code is off - do nothing */
 return|return
@@ -2287,13 +2285,11 @@ argument_list|(
 literal|'k'
 argument_list|)
 operator|&&
-name|cgenflg
-operator|>=
-literal|0
+name|CGENNING
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\t\t\"%s\"\n"
+literal|"%5d\t\t\"%s\"\n"
 argument_list|,
 name|lc
 operator|-
@@ -2350,9 +2346,8 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|cgenflg
-operator|<
-literal|0
+operator|!
+name|CGENNING
 condition|)
 comment|/* 		 * code disabled - do nothing 		 */
 return|return
@@ -2372,7 +2367,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\t.=.+%d\n"
+literal|"%5d\t.=.+%d\n"
 argument_list|,
 name|lc
 operator|-
@@ -2452,9 +2447,8 @@ name|padding
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
-operator|<
-literal|0
+operator|!
+name|CGENNING
 condition|)
 comment|/* 		 * code disabled - do nothing 		 */
 return|return
@@ -2474,7 +2468,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#%5d\t\t\"%s\"\n"
+literal|"%5d\t\t\"%s\"\n"
 argument_list|,
 name|lc
 operator|-
@@ -2932,9 +2926,8 @@ name|val
 decl_stmt|;
 if|if
 condition|(
-name|cgenflg
-operator|<
-literal|0
+operator|!
+name|CGENNING
 condition|)
 return|return;
 if|if
@@ -2963,7 +2956,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|")#\tpatch %u %D\n"
+literal|"\tpatch %u %D\n"
 argument_list|,
 name|loc
 operator|-
