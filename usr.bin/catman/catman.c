@@ -1945,7 +1945,7 @@ argument_list|,
 sizeof|sizeof
 name|cmd
 argument_list|,
-literal|"%scat %s | tbl | nroff -c -T%s -man | col | gzip -cn> %s.tmp"
+literal|"%scat %s | tbl | nroff -T%s -man | col | gzip -cn> %s.tmp"
 argument_list|,
 name|src_gzipped
 condition|?
