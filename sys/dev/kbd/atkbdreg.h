@@ -59,6 +59,17 @@ begin_comment
 comment|/* assume the XT type keyboard */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KB_CONF_NO_PROBE_TEST
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* don't test keyboard during probe */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
