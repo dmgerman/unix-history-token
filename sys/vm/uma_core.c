@@ -479,6 +479,8 @@ name|void
 name|cache_drain
 parameter_list|(
 name|uma_zone_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -498,9 +500,11 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|zone_drain
+name|zone_drain_common
 parameter_list|(
 name|uma_zone_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -745,6 +749,17 @@ name|zone
 parameter_list|,
 name|uma_slab_t
 name|slab
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|zone_drain
+parameter_list|(
+name|uma_zone_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1651,7 +1666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone  The zone to drain, must be unlocked.  *  * Returns:  *	Nothing  *  * This function returns with the zone locked so that the per cpu queues can  * not be filled until zone_drain is finished.  *  */
+comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone     The zone to drain, must be unlocked.  *	destroy  Whether or not to destroy the pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing  *  * This function returns with the zone locked so that the per cpu queues can  * not be filled until zone_drain is finished.  *  */
 end_comment
 
 begin_function
@@ -1661,6 +1676,9 @@ name|cache_drain
 parameter_list|(
 name|uma_zone_t
 name|zone
+parameter_list|,
+name|int
+name|destroy
 parameter_list|)
 block|{
 name|uma_bucket_t
@@ -1734,6 +1752,48 @@ operator|->
 name|uc_freebucket
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|destroy
+condition|)
+block|{
+name|uma_zfree_internal
+argument_list|(
+name|bucketzone
+argument_list|,
+name|cache
+operator|->
+name|uc_allocbucket
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zfree_internal
+argument_list|(
+name|bucketzone
+argument_list|,
+name|cache
+operator|->
+name|uc_freebucket
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cache
+operator|->
+name|uc_allocbucket
+operator|=
+name|cache
+operator|->
+name|uc_freebucket
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Drain the bucket queues and free the buckets, we just keep two per 	 * cpu (alloc/free). 	 */
 name|ZONE_LOCK
@@ -1864,16 +1924,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Frees pages from a zone back to the system.  This is done on demand from  * the pageout daemon.  *  * Arguments:  *	zone  The zone to free pages from  *	all   Should we drain all items?  *  * Returns:  *	Nothing.  */
+comment|/*  * Frees pages from a zone back to the system.  This is done on demand from  * the pageout daemon.  *  * Arguments:  *	zone  The zone to free pages from  *	 all  Should we drain all items?  *   destroy  Whether to destroy the zone and pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|zone_drain
+name|zone_drain_common
 parameter_list|(
 name|uma_zone_t
 name|zone
+parameter_list|,
+name|int
+name|destroy
 parameter_list|)
 block|{
 name|struct
@@ -1936,7 +1999,19 @@ condition|)
 name|cache_drain
 argument_list|(
 name|zone
+argument_list|,
+name|destroy
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|destroy
+condition|)
+name|zone
+operator|->
+name|uz_wssize
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2311,6 +2386,26 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|zone_drain
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+name|zone_drain_common
+argument_list|(
+name|zone
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3899,22 +3994,6 @@ name|uma_zone_t
 operator|)
 name|arg
 expr_stmt|;
-name|ZONE_LOCK
-argument_list|(
-name|zone
-argument_list|)
-expr_stmt|;
-name|zone
-operator|->
-name|uz_wssize
-operator|=
-literal|0
-expr_stmt|;
-name|ZONE_UNLOCK
-argument_list|(
-name|zone
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3928,9 +4007,11 @@ argument_list|,
 name|uz_link
 argument_list|)
 expr_stmt|;
-name|zone_drain
+name|zone_drain_common
 argument_list|(
 name|zone
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -5483,7 +5564,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 modifier|*
 name|uma_slab_alloc
