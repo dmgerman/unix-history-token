@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"mca.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1041,9 +1035,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"eisa"
 argument_list|,
@@ -1067,11 +1063,6 @@ name|child
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NMCA
-operator|>
-literal|0
 if|if
 condition|(
 operator|!
@@ -1088,9 +1079,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"mca"
 argument_list|,
@@ -1114,8 +1107,6 @@ name|child
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1132,9 +1123,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"isa"
 argument_list|,
