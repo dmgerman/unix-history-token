@@ -440,20 +440,6 @@ argument_list|)
 asm|__asm(".mcount");
 endif|#
 directive|endif
-decl|static
-name|void
-name|_mcount
-argument_list|(
-name|uintfptr_t
-name|frompc
-argument_list|,
-name|uintfptr_t
-name|selfpc
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|__END_DECLS
 endif|#
 directive|endif
@@ -462,7 +448,7 @@ ifdef|#
 directive|ifdef
 name|GUPROF
 comment|/* XXX doesn't quite work outside kernel yet. */
-specifier|extern
+decl|extern
 name|int
 name|cputime_bias
 decl_stmt|;
