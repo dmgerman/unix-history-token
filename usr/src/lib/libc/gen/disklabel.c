@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.14 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1103,7 +1103,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-name|EBADFORMAT
+name|EFTYPE
 argument_list|)
 expr_stmt|;
 break|break;

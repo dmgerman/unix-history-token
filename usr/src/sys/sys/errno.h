@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)errno.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)errno.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -996,12 +996,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EBADFORMAT
+name|EFTYPE
 value|79
 end_define
 
 begin_comment
-comment|/* Incorrect format */
+comment|/* Inappropriate file type or format */
 end_comment
 
 begin_ifdef

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.13 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +688,7 @@ end_comment
 begin_expr_stmt
 name|write
 argument_list|(
-name|EBADFORMAT
+name|EFTYPE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
