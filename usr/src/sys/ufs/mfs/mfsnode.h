@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|mfs_truncate
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t length, \ 		int flags))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t length, \ 		int flags, \ 		struct ucred *cred))) mfs_badop)
 end_define
 
 begin_define

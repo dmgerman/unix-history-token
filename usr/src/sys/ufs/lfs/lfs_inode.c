@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.61 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -823,6 +823,8 @@ parameter_list|,
 name|length
 parameter_list|,
 name|flags
+parameter_list|,
+name|cred
 parameter_list|)
 name|struct
 name|vnode
@@ -834,6 +836,11 @@ name|length
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 block|{
 specifier|register

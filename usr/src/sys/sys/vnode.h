@@ -1896,8 +1896,10 @@ parameter_list|,
 name|l
 parameter_list|,
 name|f
+parameter_list|,
+name|c
 parameter_list|)
-value|(*((v)->v_op->vop_truncate))(v,l,f)
+value|(*((v)->v_op->vop_truncate))(v,l,f,c)
 name|int
 argument_list|(
 argument|*vop_truncate
@@ -1915,6 +1917,11 @@ name|length
 operator|,
 name|int
 name|flags
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|)
 argument_list|)
 expr_stmt|;
