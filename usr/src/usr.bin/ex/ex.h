@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	4.3 %G%  */
+comment|/* sccs id:	@(#)ex.h	5.1 %G%  */
 end_comment
 
 begin_ifdef

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_addr.c	4.3 %G%"
+literal|"@(#)ex_addr.c	5.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

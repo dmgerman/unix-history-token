@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printf.c	4.3 %G%"
+literal|"@(#)printf.c	5.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

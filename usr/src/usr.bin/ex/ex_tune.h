@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tune.h	4.2 %G%  */
+comment|/* sccs id:	@(#)ex_tune.h	5.1 %G%  */
 end_comment
 
 begin_comment
@@ -25,14 +25,14 @@ begin_define
 define|#
 directive|define
 name|EXRECOVER
-value|libpath(ex3.4recover)
+value|libpath(ex3.5recover)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPRESERVE
-value|libpath(ex3.4preserve)
+value|libpath(ex3.5preserve)
 end_define
 
 begin_ifndef
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|EXSTRINGS
-value|libpath(ex3.4strings)
+value|libpath(ex3.5strings)
 end_define
 
 begin_endif
