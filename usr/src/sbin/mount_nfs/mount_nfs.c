@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.1 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,7 +504,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bsiTpMlqdckF:R:r:w:t:x:g:a:L:D:Km:"
+literal|"bsiTpMlqdckPF:R:r:w:t:x:g:a:L:D:Km:"
 argument_list|)
 operator|)
 operator|!=
@@ -626,6 +626,16 @@ operator|->
 name|flags
 operator||=
 name|NFSMNT_NQLOOKLEASE
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|nfsargsp
+operator|->
+name|flags
+operator||=
+name|NFSMNT_RESVPORT
 expr_stmt|;
 break|break;
 case|case
