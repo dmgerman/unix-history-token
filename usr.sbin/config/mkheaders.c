@@ -287,9 +287,11 @@ operator|&
 name|DEVDONE
 operator|)
 condition|)
-name|printf
+name|errx
 argument_list|(
-literal|"Warning: device \"%s\" is unknown\n"
+literal|1
+argument_list|,
+literal|"Error: device \"%s\" is unknown"
 argument_list|,
 name|dp
 operator|->

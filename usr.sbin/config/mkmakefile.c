@@ -856,7 +856,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"WARNING: version of config(8) does not match kernel!\n"
+literal|"ERROR: version of config(8) does not match kernel!\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -924,6 +924,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"conventions\n\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
