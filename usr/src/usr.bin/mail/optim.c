@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optim.c	5.7 (Berkeley) %G%"
+literal|"@(#)optim.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,14 +197,24 @@ name|cp
 operator|=
 literal|0
 expr_stmt|;
-name|strcat
-argument_list|(
-name|nbuf
-argument_list|,
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
 name|revarpa
 argument_list|(
 name|name
 argument_list|)
+operator|)
+operator|!=
+name|NOSTR
+condition|)
+name|strcat
+argument_list|(
+name|nbuf
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 name|optim
@@ -223,6 +233,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cp
+operator|&&
 operator|!
 name|icequal
 argument_list|(
