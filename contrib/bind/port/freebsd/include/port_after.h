@@ -56,7 +56,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|USE_LOG_CONS
+name|SETPWENT_VOID
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLIMIT_TYPE
+value|rlim_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLIMIT_LONGLONG
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLIMIT_FILE_INFINITY
 end_define
 
 begin_define
