@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3241,7 +3241,7 @@ expr_stmt|;
 comment|/* get calling address */
 name|pk_parse_facilities
 argument_list|(
-name|u
+name|facp
 argument_list|,
 name|sa
 argument_list|)
@@ -3266,7 +3266,7 @@ name|x25_udlen
 operator|=
 name|udlen
 expr_stmt|;
-comment|/* 	 * Now, loop through the  listen sockets looking for a match on the 	 * PID. That is  the first  four octets  of the user data field.  This 	 * is the closest thing to a port number for X.25 packets. What it 	 * does provide is away of  multiplexing  services at the user level.  	 */
+comment|/* 	 * Now, loop through the listen sockets looking for a match on the 	 * PID. That is the first few octets of the user data field. 	 * This is the closest thing to a port number for X.25 packets. 	 * It does provide a way of multiplexing services at the user level.  	 */
 for|for
 control|(
 name|l
