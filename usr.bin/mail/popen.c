@@ -1017,7 +1017,7 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 operator|)
 operator|<
