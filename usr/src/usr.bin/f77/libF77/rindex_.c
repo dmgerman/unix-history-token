@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rindex[] = "@(#)rindex_.c	1.1";  *  * find last occurrence of substring in string  *  * calling sequence:  *	character*(*) substr, string  *	indx = rindex (string, substr)  * where:  *	indx will be the index of the first character of the last occurence  *	of substr in string, or zero if not found.  */
+comment|/* char id_rindex[] = "@(#)rindex_.c	1.2";  *  * find last occurrence of substring in string  *  * calling sequence:  *	character*(*) substr, string  *	indx = rindex (string, substr)  * where:  *	indx will be the index of the first character of the last occurence  *	of substr in string, or zero if not found.  */
 end_comment
 
 begin_function
@@ -55,16 +55,15 @@ name|str
 condition|)
 if|if
 condition|(
-name|strncmp
+name|s_cmp
 argument_list|(
-name|p
-argument_list|,
 name|substr
 argument_list|,
-operator|(
-name|int
-operator|)
+name|p
+argument_list|,
 name|sublen
+argument_list|,
+name|slen
 argument_list|)
 operator|==
 literal|0
