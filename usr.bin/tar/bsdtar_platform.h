@@ -206,7 +206,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 end_ifdef
 
 begin_define

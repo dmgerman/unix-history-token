@@ -212,6 +212,7 @@ comment|/*  * Handle 'x' and 't' modes.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|read_archive
 parameter_list|(
@@ -950,10 +951,6 @@ name|st_nlink
 argument_list|)
 expr_stmt|;
 comment|/* Use uname if it's present, else uid. */
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|=
 name|archive_entry_uname
@@ -1031,10 +1028,6 @@ name|tmp
 argument_list|)
 expr_stmt|;
 comment|/* Use gname if it's present, else gid. */
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|=
 name|archive_entry_gname
@@ -1045,9 +1038,15 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 operator|&&
-operator|*
 name|p
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|fprintf
@@ -1060,7 +1059,7 @@ name|p
 argument_list|)
 expr_stmt|;
 name|w
-operator|+=
+operator|=
 name|strlen
 argument_list|(
 name|p
@@ -1081,7 +1080,7 @@ name|st_gid
 argument_list|)
 expr_stmt|;
 name|w
-operator|+=
+operator|=
 name|strlen
 argument_list|(
 name|tmp
@@ -1355,6 +1354,7 @@ comment|/*  * Check for a variety of security issues.  Fix what we can here,  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|security_problem
 parameter_list|(
@@ -1585,6 +1585,25 @@ name|security
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|security
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"No Memory"
+argument_list|)
+expr_stmt|;
 name|bsdtar
 operator|->
 name|security
@@ -1608,6 +1627,27 @@ operator|->
 name|security
 operator|->
 name|path_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|security
+operator|->
+name|path
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"No Memory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1808,6 +1848,8 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|bsdtar
@@ -1815,6 +1857,17 @@ operator|->
 name|security
 operator|->
 name|path
+argument_list|)
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Unlink failed"
 argument_list|)
 expr_stmt|;
 comment|/* Symlink gone.  No more problem! */
@@ -1833,6 +1886,8 @@ name|option_unlink_first
 condition|)
 block|{
 comment|/* User asked us to remove problems. */
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|bsdtar
@@ -1840,6 +1895,17 @@ operator|->
 name|security
 operator|->
 name|path
+argument_list|)
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Unlink failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1904,16 +1970,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|security
-operator|->
-name|path
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|bsdtar

@@ -127,7 +127,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 end_ifdef
 
 begin_include
@@ -1803,10 +1803,32 @@ name|arg
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pending_dir
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"No Memory"
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|pending_dir
 argument_list|,
+name|old_pending
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|old_pending
 argument_list|)
 expr_stmt|;
@@ -1853,6 +1875,23 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pending_dir
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"No Memory"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1860,6 +1899,8 @@ block|{
 if|if
 condition|(
 name|pending_dir
+operator|!=
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -2543,7 +2584,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 name|int
 name|fd
 decl_stmt|,
@@ -2793,7 +2834,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the dir and do an ioctl on it... 			 */
 if|if
 condition|(
@@ -3022,7 +3063,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the file and do an ioctl on it... 			 */
 if|if
 condition|(
@@ -3293,7 +3334,7 @@ name|fd
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 name|int
 name|r
 decl_stmt|;
@@ -3619,7 +3660,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 if|if
 condition|(
 operator|(

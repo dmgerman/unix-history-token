@@ -62,7 +62,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 end_ifdef
 
 begin_comment

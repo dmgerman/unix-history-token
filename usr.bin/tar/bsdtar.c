@@ -277,6 +277,7 @@ comment|/*  * The leading '+' here forces the GNU version of getopt() (as well a
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -351,6 +352,7 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|option
@@ -2609,66 +2611,39 @@ specifier|const
 name|char
 modifier|*
 name|long_help_msg
-index|[]
 init|=
-block|{
 literal|"First option must be a mode specifier:\n"
-block|,
 literal|"  -c Create  -r Add/Replace  -t List  -u Update  -x Extract\n"
-block|,
 literal|"Common Options:\n"
-block|,
 literal|"  -b #  Use # 512-byte records per I/O block\n"
-block|,
 literal|"  -f<filename>  Location of archive (default "
 name|_PATH_DEFTAPE
 literal|")\n"
-block|,
 literal|"  -v    Verbose\n"
-block|,
 literal|"  -w    Interactive\n"
-block|,
 literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | C=<dir> ]\n"
-block|,
 literal|"<file>,<dir>  add these items to archive\n"
-block|,
 literal|"  -z, -j  Compress archive with gzip/bzip2\n"
-block|,
 literal|"  -F {ustar|pax|cpio|shar}  Select archive format\n"
-block|,
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
 literal|"  --exclude<pattern>  Skip files that match pattern\n"
-block|,
 else|#
 directive|else
 literal|"  -W exclude=<pattern>  Skip files that match pattern\n"
-block|,
 endif|#
 directive|endif
 literal|"  C=<dir>  Change to<dir> before processing remaining files\n"
-block|,
 literal|"  @<archive>  Add entries from<archive> to output\n"
-block|,
 literal|"List: %p -t [options] [<patterns>]\n"
-block|,
 literal|"<patterns>  If specified, list only entries that match\n"
-block|,
 literal|"Extract: %p -x [options] [<patterns>]\n"
-block|,
 literal|"<patterns>  If specified, extract only entries that match\n"
-block|,
 literal|"  -k    Keep (don't overwrite) existing files\n"
-block|,
 literal|"  -m    Don't restore modification times\n"
-block|,
 literal|"  -O    Write entries to stdout, don't restore to disk\n"
-block|,
 literal|"  -p    Restore permissions (including ACLs, owner, file flags)\n"
-block|,
-name|NULL
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2697,12 +2672,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|msg
-decl_stmt|;
 name|prog
 operator|=
 name|bsdtar
@@ -2714,8 +2683,9 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|p
+operator|=
+operator|(
 name|strcmp
 argument_list|(
 name|prog
@@ -2724,14 +2694,10 @@ literal|"bsdtar"
 argument_list|)
 operator|!=
 literal|0
-condition|)
-name|p
-operator|=
+operator|)
+condition|?
 literal|"(bsdtar)"
-expr_stmt|;
-else|else
-name|p
-operator|=
+else|:
 literal|""
 expr_stmt|;
 name|fprintf
@@ -2747,43 +2713,19 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|msg
+name|p
 operator|=
 name|long_help_msg
 init|;
 operator|*
-name|msg
-operator|!=
-name|NULL
-condition|;
-name|msg
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|p
-operator|=
-operator|*
-name|msg
-init|;
 name|p
 operator|!=
-name|NULL
-condition|;
-name|p
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
 literal|'\0'
-condition|)
-break|break;
-elseif|else
+condition|;
+name|p
+operator|++
+control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -2828,7 +2770,16 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\n%s\n"
+argument_list|,
+name|archive_version
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|fflush
 argument_list|(
 name|stderr
