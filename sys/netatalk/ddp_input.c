@@ -1616,6 +1616,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
+name|SOCK_LOCK
+argument_list|(
+name|ddp
+operator|->
+name|ddp_socket
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mac_check_socket_deliver
@@ -1630,6 +1637,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|ddp
+operator|->
+name|ddp_socket
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1637,6 +1651,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|SOCK_UNLOCK
+argument_list|(
+name|ddp
+operator|->
+name|ddp_socket
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/*       * If we found one, deliver th epacket to the socket      */

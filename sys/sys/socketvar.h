@@ -323,13 +323,13 @@ name|label
 modifier|*
 name|so_label
 decl_stmt|;
-comment|/* MAC label for socket */
+comment|/* (b) MAC label for socket */
 name|struct
 name|label
 modifier|*
 name|so_peerlabel
 decl_stmt|;
-comment|/* cached MAC label for socket peer */
+comment|/* (b) cached MAC label for peer */
 comment|/* NB: generation count must not be first; easiest to make it last. */
 name|so_gen_t
 name|so_gencnt

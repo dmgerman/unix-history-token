@@ -939,6 +939,11 @@ return|;
 ifdef|#
 directive|ifdef
 name|MAC
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|mac_check_socket_send
@@ -947,6 +952,11 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
@@ -1538,6 +1548,11 @@ return|;
 ifdef|#
 directive|ifdef
 name|MAC
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|mac_check_socket_receive
@@ -1546,6 +1561,11 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
