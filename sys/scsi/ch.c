@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.17 1995/03/28 07:57:22 bde Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.18 1995/04/14 15:10:26 dufault Exp $  */
 end_comment
 
 begin_include
@@ -200,6 +200,32 @@ define|#
 directive|define
 name|CHRETRIES
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|((minor(DEV)&0xF0)>> 4)
+end_define
+
+begin_comment
+comment|/* 4 bit unit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|makedev(major(DEV), ((U)<< 4))
 end_define
 
 begin_define

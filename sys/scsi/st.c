@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.33 1995/04/23 22:07:54 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.34 1995/04/29 21:30:29 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -141,6 +141,32 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|((minor(DEV)&0xF0)>> 4)
+end_define
+
+begin_comment
+comment|/* 4 bit unit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|makedev(major(DEV), ((U)<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
 name|MODE
 parameter_list|(
 name|z
@@ -172,7 +198,7 @@ name|IS_CTLMODE
 parameter_list|(
 name|DEV
 parameter_list|)
-value|(MODE(DEV) == CTLMODE || SCSI_SUPER(DEV))
+value|(MODE(DEV) == CTLMODE)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.23 1995/04/23 07:47:12 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.24 1995/04/23 22:07:51 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -96,84 +96,6 @@ include|#
 directive|include
 file|<scsi/scsi_driver.h>
 end_include
-
-begin_comment
-comment|/* Minor number fields:  *  * NON-FIXED SCSI devices:  *  * ???? ???? ???? ???N MMMMMMMM mmmmmmmm  *  * ?: Don't know; those bits didn't use to exist, currently always 0.  * N: New style device: must be zero.  * M: Major device number.  * m: old style minor device number.  *  * FIXED SCSI devices:  *  * ???? SBBB LLLI IIIN MMMMMMMM mmmmmmmm  *  * ?: Not used yet.  * S: "Super" device; reserved for things like resetting the SCSI bus.  * B: Scsi bus  * L: Logical unit  * I: Scsi target  (XXX: Why 16?  Why that many in scsiconf.h?)  * N: New style device; must be one.  * M: Major device number  * m: Old style minor device number.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_SUPER
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(((DEV)& 0x08000000)>> 27)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_MKSUPER
-parameter_list|(
-name|DEV
-parameter_list|)
-value|((DEV) | 0x08000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_BUS
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(((DEV)& 0x07000000)>> 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_LUN
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(((DEV)& 0x00E00000)>> 21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_ID
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(((DEV)& 0x001E0000)>> 17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_FIXED
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(((DEV)& 0x00010000)>> 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_MKDEV
-parameter_list|(
-name|B
-parameter_list|,
-name|L
-parameter_list|,
-name|I
-parameter_list|)
-value|( \          ((B)<< 24) | \          ((L)<< 21) | \          ((I)<< 17) | \          ( 1<< 16) )
-end_define
 
 begin_comment
 comment|/*  * The following documentation tries to describe the relationship between the  * various structures defined in this file:  *  * each adapter type has a scsi_adapter struct. This describes the adapter and  *    identifies routines that can be called to use the adapter.  * each device type has a scsi_device struct. This describes the device and  *    identifies routines that can be called to use the device.  * each existing device position (scsibus + target + lun)  *    can be described by a scsi_link struct.  *    Only scsi positions that actually have devices, have a scsi_link  *    structure assigned. so in effect each device has scsi_link struct.  *    The scsi_link structure contains information identifying both the  *    device driver and the adapter driver for that position on that scsi bus,  *    and can be said to 'link' the two.  * each individual scsi bus has an array that points to all the scsi_link  *    structs associated with that scsi bus. Slots with no device have  *    a NULL pointer.  * each individual device also knows the address of it's own scsi_link  *    structure.  *  *				-------------  *  * The key to all this is the scsi_link structure which associates all the   * other structures with each other in the correct configuration.  The  * scsi_link is the connecting information that allows each part of the   * scsi system to find the associated other parts.  */
@@ -350,6 +272,12 @@ name|proc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  *  * XXX dufault@hda.com: Each adapter driver has a scsi_device structure  *     that I don't think should be there.  *     This structure should be rearranged and cleaned up once the  *     instance down in the adapter drivers is removed.  */
 end_comment
@@ -371,8 +299,8 @@ modifier|*
 name|xs
 parameter_list|)
 function_decl|;
-comment|/* return -1 to say 											* err processing complete */
-comment|/*	8*/
+comment|/* return -1 to say 							 * err processing complete */
+comment|/*  8*/
 name|void
 function_decl|(
 modifier|*
@@ -655,7 +583,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|errval NAME##attach(struct scsi_link *sc_link);	\ extern struct scsi_device NAME##_switch;	\ void NAME##init(void)	\ {	\ 	scsi_device_register(&NAME##_switch);	\ }	\ int NAME##open(dev_t dev, int flags, int fmt, struct proc *p)	\ {	\ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch);	\ }	\ int NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag, struct proc *p) \ {	\ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch);	\ }	\ int NAME##close(dev_t dev, int flag, int fmt, struct proc *p)	\ {	\ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch);	\ }	\ void NAME##minphys(struct buf *bp)	\ {	\ 	scsi_minphys(bp,&NAME##_switch);	\ } \ void NAME##strategy(struct buf *bp)	\ {	\ 	scsi_strategy(bp,&NAME##_switch);	\ }
+value|errval NAME##attach(struct scsi_link *sc_link); \ extern struct scsi_device NAME##_switch; \ void NAME##init(void) { \ 	scsi_device_register(&NAME##_switch); \ } \ int NAME##open(dev_t dev, int flags, int fmt, struct proc *p) { \ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch); \ } \ int NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag, struct proc *p) { \ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch); \ } \ int NAME##close(dev_t dev, int flag, int fmt, struct proc *p) { \ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch); \ } \ void NAME##minphys(struct buf *bp) { \ 	scsi_minphys(bp,&NAME##_switch); \ }  \ void NAME##strategy(struct buf *bp) { \ 	scsi_strategy(bp,&NAME##_switch); \ }
 end_define
 
 begin_ifdef
@@ -1095,7 +1023,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX-HA: dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  * XXX-HA And I added the "supports residuals properly" flag that ALSO goes  * in an adapter structure.  I figure I'll fix both at once.  */
+comment|/* XXX-HA: dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  * XXX-HA And I added the "supports residuals properly" flag that ALSO goes  * in an adapter structure.  I figure I'll fix both at once.  *  * XXX SDEV_OPEN is used for two things: To prevent more than one  * open and to make unit attentions errors be logged on the console.  * These should be split up; I'm adding SDEV_IS_OPEN to enforce one  * open only.  */
 end_comment
 
 begin_define
@@ -1195,6 +1123,17 @@ end_define
 
 begin_comment
 comment|/* XXX-HA: Supports target ops  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_IS_OPEN
+value|0x1000
+end_define
+
+begin_comment
+comment|/* at least 1 open session */
 end_comment
 
 begin_comment
@@ -1662,28 +1601,6 @@ name|ea
 parameter_list|,
 name|int
 name|index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|scsi_type_long_name
-parameter_list|(
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|scsi_type_name
-parameter_list|(
-name|int
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2432,6 +2349,10 @@ name|NEW_SCSICONF
 end_ifdef
 
 begin_comment
+comment|/* XXX This belongs in a tape file.  */
+end_comment
+
+begin_comment
 comment|/********************************************************************** 			from the scsi2 spec                 Value Tracks Density(bpi) Code Type  Reference     Note                 0x1     9       800       NRZI  R    X3.22-1983    2                 0x2     9      1600       PE    R    X3.39-1986    2                 0x3     9      6250       GCR   R    X3.54-1986    2                 0x5    4/9     8000       GCR   C    X3.136-1986   1                 0x6     9      3200       PE    R    X3.157-1987   2                 0x7     4      6400       IMFM  C    X3.116-1986   1                 0x8     4      8000       GCR   CS   X3.158-1986   1                 0x9    18     37871       GCR   C    X3B5/87-099   2                 0xA    22      6667       MFM   C    X3B5/86-199   1                 0xB     4      1600       PE    C    X3.56-1986    1                 0xC    24     12690       GCR   C    HI-TC1        1,5                 0xD    24     25380       GCR   C    HI-TC2        1,5                 0xF    15     10000       GCR   C    QIC-120       1,5                 0x10   18     10000       GCR   C    QIC-150       1,5                 0x11   26     16000       GCR   C    QIC-320(525?) 1,5                 0x12   30     51667       RLL   C    QIC-1350      1,5                 0x13    1     61000       DDS   CS    X3B5/88-185A 4                 0x14    1     43245       RLL   CS    X3.202-1991  4                 0x15    1     45434       RLL   CS    ECMA TC17    4                 0x16   48     10000       MFM   C     X3.193-1990  1                 0x17   48     42500       MFM   C     X3B5/91-174  1                  where Code means:                 NRZI Non Return to Zero, change on ones                 GCR  Group Code Recording                 PE   Phase Encoded                 IMFM Inverted Modified Frequency Modulation                 MFM  Modified Frequency Modulation                 DDS  Dat Data Storage                 RLL  Run Length Encoding                  where Type means:                 R    Real-to-Real                 C    Cartridge                 CS   cassette                  where Notes means:                 1    Serial Recorded                 2    Parallel Recorded                 3    Old format know as QIC-11                 4    Helical Scan                 5    Not ANSI standard, rather industry standard.  ********************************************************************/
 end_comment
 
@@ -2537,196 +2458,82 @@ comment|/* NEW_SCSICONF */
 end_comment
 
 begin_comment
-comment|/* Macros for getting and setting the unit numbers in the original  * (not fixed device name) device numbers.  */
+comment|/* XXX (dufault@hda.com) This is used only by "su" and "sctarg".  * The minor number field conflicts with the disk slice code,  * and so it is tough to access the disks through the "su" device.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SH0_UNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(minor(DEV)&0xFF)
-end_define
 
 begin_comment
-comment|/* 8 bit unit */
+comment|/* Device number fields:  *  * NON-FIXED SCSI devices:  *  * ?FC? ???? ???? ???? MMMMMMMM mmmmmmmm  *  * F: Fixed device (nexus in number): must be 0.  * C: Control device; only user mode ioctl is supported.  * ?: Don't know; those bits didn't use to exist, currently always 0.  * M: Major device number.  * m: Old style minor device number.  *  * FIXED SCSI devices:  *  * XXX Conflicts with the slice code.  Maybe the slice code can be  * changed to respect the F bit?  *  * ?FC? ?BBB TTTT ?LLL MMMMMMMM mmmmmmmm  *  * F: Fixed device (nexus in number); must be 1.  * C: Control device; only user mode ioctl is supported.  * B: SCSI bus  * T: SCSI target ID  * L: Logical unit  * M: Major device number  * m: Old style minor device number.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SH0SETUNIT
+name|SCSI_FIXED
 parameter_list|(
 name|DEV
+parameter_list|)
+value|(((DEV)& SCSI_FIXED_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_FIXED_MASK
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_CONTROL
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x20000000))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_BUS
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x07000000)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_ID
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x00F00000)>> 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_LUN
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x00070000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_MKFIXED
+parameter_list|(
+name|B
 parameter_list|,
-name|U
-parameter_list|)
-value|makedev(major(DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SH3_UNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|((minor(DEV)&0xF8)>> 3)
-end_define
-
-begin_comment
-comment|/* 5 bit unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SH3SETUNIT
-parameter_list|(
-name|DEV
+name|T
 parameter_list|,
-name|U
+name|L
 parameter_list|)
-value|makedev(major(DEV), ((U)<< 3))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SH4_UNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|((minor(DEV)&0xF0)>> 4)
-end_define
-
-begin_comment
-comment|/* 4 bit unit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SH4SETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|makedev(major(DEV), ((U)<< 4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDUNITSHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH3_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH3SETUNIT((DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH4_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH4SETUNIT((DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
-name|STUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH4_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH4SETUNIT((DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UKUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH0_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UKSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH0SETUNIT((DEV), (U))
-end_define
-
-begin_comment
-comment|/* Build an old style device number (unit encoded in the minor number)  * from a base old one (no flag bits) and a full new one  * (BUS, LUN, TARG in the minor number, and flag bits).  *  * OLDDEV has the major number and device unit only.  It was constructed  * at attach time and is stored in the scsi_link structure.  *  * NEWDEV can have whatever in it, but only the old control flags and the  * super bit are present.  IT CAN'T HAVE ANY UNIT INFORMATION or you'll  * wind up with the wrong unit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OLD_DEV
-parameter_list|(
-name|NEWDEV
-parameter_list|,
-name|OLDDEV
-parameter_list|)
-value|((OLDDEV) | ((NEWDEV)& 0x080000FF))
+value|( \          ((B)<< 24) | \          ((T)<< 20) | \          ((L)<< 16) | \          SCSI_FIXED_MASK )
 end_define
 
 begin_endif
