@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_swtch.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -514,19 +508,11 @@ name|allpmaps_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LAZY_SWITCH
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1317,17 +1303,9 @@ operator|&
 name|allpmaps
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LAZY_SWITCH
-argument_list|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -4829,12 +4807,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LAZY_SWITCH
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SMP
 end_ifdef
 
@@ -5213,15 +5185,6 @@ begin_comment
 comment|/* SMP */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LAZY_SWITCH */
-end_comment
-
 begin_comment
 comment|/*  * Release any resources held by the given physical map.  * Called when a pmap initialized by pmap_pinit is being released.  * Should only be called if the map contains no valid mappings.  */
 end_comment
@@ -5287,16 +5250,11 @@ name|resident_count
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LAZY_SWITCH
 name|pmap_lazyfix
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
