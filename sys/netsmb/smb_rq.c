@@ -1192,7 +1192,10 @@ name|rqp
 operator|->
 name|sr_bcount
 operator|=
+name|htoles
+argument_list|(
 name|bcnt
+argument_list|)
 expr_stmt|;
 block|}
 end_function

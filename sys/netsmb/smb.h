@@ -121,7 +121,7 @@ name|SMB_HDRMID
 parameter_list|(
 name|p
 parameter_list|)
-value|(*(u_short*)((u_char*)(p) + 30))
+value|(letohs(*(u_short*)((u_char*)(p) + 30)))
 end_define
 
 begin_define
