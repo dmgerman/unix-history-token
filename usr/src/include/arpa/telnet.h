@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -725,6 +725,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_XDISPLOC
+value|35
+end_define
+
+begin_comment
+comment|/* X Display Location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_ENVIRON
+value|36
+end_define
+
+begin_comment
+comment|/* Environment variables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_AUTHENTICATION
 value|45
 end_define
@@ -836,9 +858,9 @@ literal|"LFLOW"
 block|,
 literal|"LINEMODE"
 block|,
-literal|"UNKNOWN 35"
+literal|"XDISPLOC"
 block|,
-literal|"UNKNOWN 36"
+literal|"ENVIRON"
 block|,
 literal|"UNKNOWN 37"
 block|,
@@ -926,6 +948,17 @@ begin_comment
 comment|/* send option */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TELQUAL_INFO
+value|2
+end_define
+
+begin_comment
+comment|/* ENVIRON: informational version of IS */
+end_comment
+
 begin_comment
 comment|/*  * LINEMODE suboptions  */
 end_comment
@@ -975,8 +1008,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|MODE_SOFT_TAB
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODE_LIT_ECHO
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|MODE_MASK
-value|(MODE_EDIT|MODE_TRAPSIG|MODE_ACK)
+value|0x1f
 end_define
 
 begin_comment
@@ -1233,6 +1280,27 @@ define|#
 directive|define
 name|SLC_FLUSHOUT
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_VALUE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_VAR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_ESC
+value|2
 end_define
 
 begin_comment
