@@ -888,12 +888,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|gif_ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
