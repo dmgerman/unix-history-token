@@ -3626,7 +3626,7 @@ break|break;
 case|case
 name|ERESTART
 case|:
-comment|/*  		   * Reconstruct the pc to point at the swi. 		   */
+comment|/* 		 * Reconstruct the pc to point at the swi. 		 */
 name|frame
 operator|->
 name|tf_pc
