@@ -302,5 +302,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|set_user_credentials
+parameter_list|(
+name|struct
+name|portal_cred
+modifier|*
+name|user
+parameter_list|,
+name|struct
+name|portal_cred
+modifier|*
+name|save_area
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|restore_credentials
+parameter_list|(
+name|struct
+name|portal_cred
+modifier|*
+name|save_area
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

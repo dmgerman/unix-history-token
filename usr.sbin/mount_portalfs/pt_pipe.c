@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1005 Diomidis Spinellis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (C) 2005 Diomidis Spinellis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -205,18 +205,9 @@ decl_stmt|;
 name|int
 name|argc
 decl_stmt|;
-comment|/* Variables used to save the the caller's credentials. */
-name|uid_t
-name|old_uid
-decl_stmt|;
-name|int
-name|ngroups
-decl_stmt|;
-name|gid_t
-name|old_groups
-index|[
-name|NGROUPS_MAX
-index|]
+name|struct
+name|portal_cred
+name|save_area
 decl_stmt|;
 comment|/* Validate open mode, and assign roles. */
 if|if
@@ -352,58 +343,14 @@ name|ENOENT
 operator|)
 return|;
 comment|/* Swap priviledges. */
-name|old_uid
-operator|=
-name|geteuid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ngroups
-operator|=
-name|getgroups
+name|set_user_credentials
 argument_list|(
-name|NGROUPS_MAX
+name|pcr
 argument_list|,
-name|old_groups
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-if|if
-condition|(
-name|setgroups
-argument_list|(
-name|pcr
-operator|->
-name|pcr_ngroups
-argument_list|,
-name|pcr
-operator|->
-name|pcr_groups
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-if|if
-condition|(
-name|seteuid
-argument_list|(
-name|pcr
-operator|->
-name|pcr_uid
+operator|&
+name|save_area
 argument_list|)
 operator|<
 literal|0
@@ -643,50 +590,18 @@ label|:
 comment|/* Re-establish our priviledges. */
 if|if
 condition|(
-name|seteuid
+name|restore_credentials
 argument_list|(
-name|old_uid
+operator|&
+name|save_area
 argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|error
 operator|=
 name|errno
 expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"seteuid: %m"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|setgroups
-argument_list|(
-name|ngroups
-argument_list|,
-name|old_groups
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|errno
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"setgroups: %m"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set return fd value. */
 if|if
 condition|(
