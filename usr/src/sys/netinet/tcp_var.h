@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -224,25 +224,198 @@ parameter_list|)
 value|(intotcpcb(sotoinpcb(so)))
 end_define
 
+begin_comment
+comment|/*  * TCP statistics.  * Many of these should be kept per connection,  * but that's inconvenient at the moment.  */
+end_comment
+
 begin_struct
 struct|struct
 name|tcpstat
 block|{
-name|int
-name|tcps_badsum
+name|u_long
+name|tcps_connattempt
 decl_stmt|;
-name|int
-name|tcps_badoff
+comment|/* connections initiated */
+name|u_long
+name|tcps_accepts
 decl_stmt|;
-name|int
-name|tcps_hdrops
+comment|/* connections accepted */
+name|u_long
+name|tcps_connects
 decl_stmt|;
-name|int
-name|tcps_badsegs
+comment|/* connections established */
+name|u_long
+name|tcps_drops
 decl_stmt|;
-name|int
-name|tcps_unack
+comment|/* connections dropped */
+name|u_long
+name|tcps_conndrops
 decl_stmt|;
+comment|/* embryonic connections dropped */
+name|u_long
+name|tcps_closed
+decl_stmt|;
+comment|/* conn. closed (includes drops) */
+name|u_long
+name|tcps_segstimed
+decl_stmt|;
+comment|/* segs where we tried to get rtt */
+name|u_long
+name|tcps_rttupdated
+decl_stmt|;
+comment|/* times we succeeded */
+name|u_long
+name|tcps_delack
+decl_stmt|;
+comment|/* delayed acks sent */
+name|u_long
+name|tcps_timeoutdrop
+decl_stmt|;
+comment|/* conn. dropped in rxmt timeout */
+name|u_long
+name|tcps_rexmttimeo
+decl_stmt|;
+comment|/* retransmit timeouts */
+name|u_long
+name|tcps_persisttimeo
+decl_stmt|;
+comment|/* persist timeouts */
+name|u_long
+name|tcps_keeptimeo
+decl_stmt|;
+comment|/* keepalive timeouts */
+name|u_long
+name|tcps_keepprobe
+decl_stmt|;
+comment|/* keepalive probes sent */
+name|u_long
+name|tcps_keepdrops
+decl_stmt|;
+comment|/* connections dropped in keepalive */
+name|u_long
+name|tcps_sndtotal
+decl_stmt|;
+comment|/* total packets sent */
+name|u_long
+name|tcps_sndpack
+decl_stmt|;
+comment|/* data packets sent */
+name|u_long
+name|tcps_sndbyte
+decl_stmt|;
+comment|/* data bytes sent */
+name|u_long
+name|tcps_sndrexmitpack
+decl_stmt|;
+comment|/* data packets retransmitted */
+name|u_long
+name|tcps_sndrexmitbyte
+decl_stmt|;
+comment|/* data bytes retransmitted */
+name|u_long
+name|tcps_sndacks
+decl_stmt|;
+comment|/* ack-only packets sent */
+name|u_long
+name|tcps_sndprobe
+decl_stmt|;
+comment|/* window probes sent */
+name|u_long
+name|tcps_sndurg
+decl_stmt|;
+comment|/* packets sent with URG only */
+name|u_long
+name|tcps_sndwinup
+decl_stmt|;
+comment|/* window update-only packets sent */
+name|u_long
+name|tcps_sndctrl
+decl_stmt|;
+comment|/* control (SYN|FIN|RST) packets sent */
+name|u_long
+name|tcps_rcvtotal
+decl_stmt|;
+comment|/* total packets received */
+name|u_long
+name|tcps_rcvpack
+decl_stmt|;
+comment|/* packets received in sequence */
+name|u_long
+name|tcps_rcvbyte
+decl_stmt|;
+comment|/* bytes received in sequence */
+name|u_long
+name|tcps_rcvbadsum
+decl_stmt|;
+comment|/* packets received with ccksum errs */
+name|u_long
+name|tcps_rcvbadoff
+decl_stmt|;
+comment|/* packets received with bad offset */
+name|u_long
+name|tcps_rcvshort
+decl_stmt|;
+comment|/* packets received too short */
+name|u_long
+name|tcps_rcvduppack
+decl_stmt|;
+comment|/* duplicate-only packets received */
+name|u_long
+name|tcps_rcvdupbyte
+decl_stmt|;
+comment|/* duplicate-only bytes received */
+name|u_long
+name|tcps_rcvpartduppack
+decl_stmt|;
+comment|/* packets with some duplicate data */
+name|u_long
+name|tcps_rcvpartdupbyte
+decl_stmt|;
+comment|/* dup. bytes in part-dup. packets */
+name|u_long
+name|tcps_rcvoopack
+decl_stmt|;
+comment|/* out-of-order packets received */
+name|u_long
+name|tcps_rcvoobyte
+decl_stmt|;
+comment|/* out-of-order bytes received */
+name|u_long
+name|tcps_rcvpackafterwin
+decl_stmt|;
+comment|/* packets with data after window */
+name|u_long
+name|tcps_rcvbyteafterwin
+decl_stmt|;
+comment|/* bytes rcvd after window */
+name|u_long
+name|tcps_rcvafterclose
+decl_stmt|;
+comment|/* packets rcvd after "close" */
+name|u_long
+name|tcps_rcvwinprobe
+decl_stmt|;
+comment|/* rcvd window probe packets */
+name|u_long
+name|tcps_rcvdupack
+decl_stmt|;
+comment|/* rcvd duplicate acks */
+name|u_long
+name|tcps_rcvacktoomuch
+decl_stmt|;
+comment|/* rcvd acks for unsent data */
+name|u_long
+name|tcps_rcvackpack
+decl_stmt|;
+comment|/* rcvd ack packets */
+name|u_long
+name|tcps_rcvackbyte
+decl_stmt|;
+comment|/* bytes acked by rcvd acks */
+name|u_long
+name|tcps_rcvwinupd
+decl_stmt|;
+comment|/* rcvd window update packets */
 block|}
 struct|;
 end_struct
