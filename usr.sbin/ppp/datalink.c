@@ -2178,13 +2178,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|datalink_HangupDone
-argument_list|(
-name|dl
-argument_list|)
-expr_stmt|;
 return|return
 name|datalink_UpdateSet
 argument_list|(
@@ -2199,6 +2192,19 @@ argument_list|,
 name|n
 argument_list|)
 return|;
+block|}
+else|else
+block|{
+name|datalink_HangupDone
+argument_list|(
+name|dl
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* Maybe bundle_CleanDatalinks() has something to do */
+block|}
 block|}
 case|case
 name|DATALINK_HANGUP
