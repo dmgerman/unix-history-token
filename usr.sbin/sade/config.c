@@ -4378,7 +4378,7 @@ literal|"which of its Internet services will be available.  The default FreeBSD\
 literal|"inetd.conf(5) leaves all services disabled by default, so they must be\n"
 literal|"specifically enabled in the configuration file before they will\n"
 literal|"function, even once inetd(8) is enabled.  Note that services for\n"
-literal|"IPv6 must be seperately enabled from IPv4 services.\n\n"
+literal|"IPv6 must be separately enabled from IPv4 services.\n\n"
 literal|"Select [Yes] now to invoke an editor on /etc/inetd.conf, or [No] to\n"
 literal|"use the current settings.\n"
 argument_list|)

@@ -1098,7 +1098,7 @@ literal|"Anonymous FTP permits un-authenticated users to connect to the system\n
 literal|"FTP server, if FTP service is enabled.  Anonymous users are\n"
 literal|"restricted to a specific subset of the file system, and the default\n"
 literal|"configuration provides a drop-box incoming directory to which uploads\n"
-literal|"are permitted.  You must seperately enable both inetd(8), and enable\n"
+literal|"are permitted.  You must separately enable both inetd(8), and enable\n"
 literal|"ftpd(8) in inetd.conf(5) for FTP services to be available.  If you\n"
 literal|"did not do so earlier, you will have the opportunity to enable inetd(8)\n"
 literal|"again later.\n\n"
