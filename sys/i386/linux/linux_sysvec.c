@@ -1669,11 +1669,6 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Build the argument list for the signal handler. 	 */
 if|if
 condition|(
@@ -1798,11 +1793,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX ??? */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|frame
 operator|.
 name|sf_sc
