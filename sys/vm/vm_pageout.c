@@ -1815,7 +1815,7 @@ operator|)
 operator|)
 operator|||
 operator|!
-name|pmap_page_exists
+name|pmap_page_exists_quick
 argument_list|(
 name|vm_map_pmap
 argument_list|(
