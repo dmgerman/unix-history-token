@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
