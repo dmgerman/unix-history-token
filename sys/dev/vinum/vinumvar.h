@@ -611,6 +611,11 @@ init|=
 literal|0x80000
 block|,
 comment|/* the daemon has us open (only superdev) */
+name|VF_CREATED
+init|=
+literal|0x100000
+block|,
+comment|/* for volumes: freshly created, more then new */
 block|}
 enum|;
 end_enum
