@@ -10836,11 +10836,6 @@ operator|&
 name|carp_cloner
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"carp: attached\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
