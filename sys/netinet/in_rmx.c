@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.2 1994/11/03 01:05:34 wollman Exp $  */
+comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.4 1994/12/02 03:32:24 wollman Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * This code does two things necessary for the enhanced TCP metrics to  * function in a useful manner:  *  1) It marks all non-host routes as `cloning', thus ensuring that  *     every actual reference to such a route actually gets turned  *     into a reference to a host route to the specific destination  *     requested.  *  2) When such routes lose all their references, it arranges for them  *     to be deleted in some random collection of circumstances, so that  *     a large quantity of stale routing data is not kept in kernel memory  *     indefinitely.  See in_rtqtimo() below for the exact mechanism.  *  * At least initially, we think that this should have lower overhead than  * using the existing `expire' mechanism and walking the radix tree  * periodically, deleting things as we go.  That method would be relatively  * easy to implement within the framework used here, and in the future  * we made code both ways, so that folks with large routing tables can use  * the external queue, and the majority with small routing tables can do  * the tree-walk.  */
+comment|/*  * This code does two things necessary for the enhanced TCP metrics to  * function in a useful manner:  *  1) It marks all non-host routes as `cloning', thus ensuring that  *     every actual reference to such a route actually gets turned  *     into a reference to a host route to the specific destination  *     requested.  *  2) When such routes lose all their references, it arranges for them  *     to be deleted in some random collection of circumstances, so that  *     a large quantity of stale routing data is not kept in kernel memory  *     indefinitely.  See in_rtqtimo() below for the exact mechanism.  */
 end_comment
 
 begin_comment
