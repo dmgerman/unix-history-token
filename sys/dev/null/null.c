@@ -131,14 +131,14 @@ begin_define
 define|#
 directive|define
 name|NULL_MINOR
-value|0
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ZERO_MINOR
-value|1
+value|12
 end_define
 
 begin_decl_stmt
@@ -554,6 +554,16 @@ argument_list|,
 name|null_modevent
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|null
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
