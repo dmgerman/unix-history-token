@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -5880,6 +5886,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * WE ARE NOW COMMITTED TO TRANSMITTING THE PACKET. 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_bpf
+operator|!=
+name|NULL
+condition|)
+name|bpf_mtap
+argument_list|(
+name|ifp
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -5891,7 +5913,6 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * WE ARE NOW COMMITTED TO TRANSMITTING THE PACKET. 		 */
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
