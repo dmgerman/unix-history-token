@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.28 1994/01/11 23:28:21 ats Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.29 1994/01/25 22:52:06 ats Exp $  */
 end_comment
 
 begin_include
@@ -7112,6 +7112,50 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+break|break;
+case|case
+name|SIOCGIFADDR
+case|:
+block|{
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+decl_stmt|;
+name|sa
+operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|ifr
+operator|->
+name|ifr_data
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|sa
+operator|->
+name|sa_data
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
