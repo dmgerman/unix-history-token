@@ -742,7 +742,7 @@ name|auth_via_key
 argument_list|(
 name|pamh
 argument_list|,
-name|KEY_RSA
+name|KEY_RSA1
 argument_list|,
 name|SSH_CLIENT_IDENTITY
 argument_list|,
@@ -928,7 +928,7 @@ name|auth_via_key
 argument_list|(
 name|pamh
 argument_list|,
-name|KEY_DSA
+name|KEY_RSA
 argument_list|,
 name|dotdir_ent
 operator|->
@@ -1597,7 +1597,7 @@ name|env_value
 operator|==
 name|NULL
 condition|)
-block|{
+continue|continue;
 name|env_end
 operator|=
 name|strchr
@@ -1619,7 +1619,6 @@ name|env_end
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 comment|/* pass to the application ... */
 name|retval
 operator|=
@@ -1657,6 +1656,11 @@ name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 block|}
+name|putenv
+argument_list|(
+name|env_string
+argument_list|)
+expr_stmt|;
 name|PAM_LOG
 argument_list|(
 literal|"Put to environment: %s"
