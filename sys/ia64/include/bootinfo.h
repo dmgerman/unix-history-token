@@ -33,10 +33,14 @@ comment|/* version 1 */
 name|u_int64_t
 name|bi_spare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 comment|/* was: name of booted kernel */
+name|u_int64_t
+name|bi_fpswa
+decl_stmt|;
+comment|/* FPSWA interface */
 name|u_int64_t
 name|bi_boothowto
 decl_stmt|;
