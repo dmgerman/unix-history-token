@@ -4428,7 +4428,7 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld):%s(%d):%s:%s:%s"
+literal|"%s(%ld):%s(%ld):%s:%s:%s"
 argument_list|,
 name|pwd
 operator|->
