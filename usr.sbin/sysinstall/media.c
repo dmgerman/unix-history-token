@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.65 1996/11/07 14:17:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.66 1996/12/09 08:22:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1418,7 +1418,7 @@ name|ftpDevice
 operator|.
 name|close
 operator|=
-name|mediaCloseFTP
+name|NULL
 expr_stmt|;
 name|ftpDevice
 operator|.
@@ -1562,12 +1562,6 @@ operator|.
 name|get
 operator|=
 name|mediaGetUFS
-expr_stmt|;
-name|ufsDevice
-operator|.
-name|close
-operator|=
-name|dummyClose
 expr_stmt|;
 name|ufsDevice
 operator|.
@@ -1788,12 +1782,6 @@ operator|.
 name|get
 operator|=
 name|mediaGetNFS
-expr_stmt|;
-name|nfsDevice
-operator|.
-name|close
-operator|=
-name|dummyClose
 expr_stmt|;
 name|nfsDevice
 operator|.
@@ -2333,8 +2321,9 @@ name|char
 modifier|*
 name|dir
 parameter_list|,
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 parameter_list|)
 block|{
 name|int
@@ -2398,14 +2387,17 @@ literal|"/usr/bin/gunzip"
 decl_stmt|;
 name|dup2
 argument_list|(
-name|fd
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 name|dup2
@@ -2533,9 +2525,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 name|close
