@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_tune.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_tune.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -51,12 +51,35 @@ parameter_list|)
 value|"/usr/file"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|E_TERMCAP
 value|"/etc/termcap"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|E_TERMCAP
+value|"etc:termcap."
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -85,12 +108,23 @@ directive|ifndef
 name|VMUNIX
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|EXSTRINGS
 value|libpath(ex3.7strings)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -202,6 +236,38 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vms
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LBSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRSIZE
+value|1024
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -230,6 +296,11 @@ directive|define
 name|CRSIZE
 value|512
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -400,11 +471,22 @@ begin_comment
 comment|/*  * Except on VMUNIX, these are a ridiculously small due to the  * lousy arglist processing implementation which fixes core  * proportional to them.  Argv (and hence NARGS) is really unnecessary,  * and argument character space not needed except when  * arguments exist.  Argument lists should be saved before the "zero"  * of the incore line information and could then  * be reasonably large.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_undef
 undef|#
 directive|undef
 name|NCARGS
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

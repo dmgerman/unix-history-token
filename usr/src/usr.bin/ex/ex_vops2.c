@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vops2.c	6.8 (Berkeley) %G%"
+literal|"@(#)ex_vops2.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 do|do
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\\'
 operator||
@@ -280,7 +280,7 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
-name|setBUF
+name|ex_setBUF
 argument_list|(
 name|BUF
 argument_list|)
@@ -474,9 +474,14 @@ name|oldhold
 init|=
 name|hold
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 name|int
 name|oldmask
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Before a move in hardopen when the line is dirty 	 * or we are in the middle of the printed representation, 	 * we retype the line to the left of the cursor so the 	 * insert looks clean. 	 */
 if|if
 condition|(
@@ -703,6 +708,9 @@ name|gobblebl
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 name|oldmask
 operator|=
 name|sigblock
@@ -713,6 +721,8 @@ name|SIGWINCH
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Text gathering loop. 	 * New text goes into genbuf starting at gcursor. 	 * cursor preserves place in linebuf where text will eventually go. 	 */
 if|if
 condition|(
@@ -902,7 +912,7 @@ name|hold
 operator||=
 name|HOLDQIK
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1349,6 +1359,9 @@ expr_stmt|;
 name|vmove
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -1357,6 +1370,8 @@ argument_list|(
 name|oldmask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1590,7 +1605,7 @@ name|vglobp
 operator|==
 literal|0
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|==
 literal|0
 operator|&&
@@ -1926,7 +1941,7 @@ name|y
 operator|=
 name|destline
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\\'
 argument_list|)
@@ -2036,7 +2051,7 @@ name|y
 operator|=
 name|destline
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'^'
 argument_list|)
@@ -2456,6 +2471,8 @@ name|abno
 index|]
 operator|.
 name|mapto
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2774,10 +2791,7 @@ operator|!
 name|backsl
 condition|)
 block|{
-name|int
-name|cnt
-decl_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 name|c
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.9 (Berkeley) %G%"
+literal|"@(#)ex_put.c	7.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ begin_function_decl
 name|int
 function_decl|(
 modifier|*
-name|Putchar
+name|Put_char
 function_decl|)
 parameter_list|()
 init|=
@@ -118,9 +118,9 @@ name|t
 expr_stmt|;
 name|P
 operator|=
-name|Putchar
+name|Put_char
 expr_stmt|;
-name|Putchar
+name|Put_char
 operator|=
 name|t
 condition|?
@@ -402,7 +402,7 @@ name|c
 operator|==
 name|DELETE
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'^'
 argument_list|)
@@ -513,7 +513,7 @@ argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%6d  "
 argument_list|,
@@ -565,7 +565,7 @@ operator|*
 name|cp
 condition|;
 control|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|cp
@@ -577,7 +577,7 @@ condition|(
 operator|!
 name|inopen
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\n'
 operator||
@@ -620,7 +620,7 @@ literal|'\t'
 case|:
 if|if
 condition|(
-name|Putchar
+name|Put_char
 operator|==
 name|listchar
 condition|)
@@ -710,7 +710,7 @@ comment|/*  * Indirect to current definition of putchar.  */
 end_comment
 
 begin_macro
-name|putchar
+name|ex_putchar
 argument_list|(
 argument|c
 argument_list|)
@@ -726,7 +726,7 @@ begin_block
 block|{
 call|(
 modifier|*
-name|Putchar
+name|Put_char
 call|)
 argument_list|(
 name|c
@@ -2641,6 +2641,9 @@ operator|!=
 name|obuf
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|vms
 name|write
 argument_list|(
 literal|1
@@ -2652,6 +2655,21 @@ operator|-
 name|obuf
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|vms_write
+argument_list|(
+literal|1
+argument_list|,
+name|obuf
+argument_list|,
+name|obp
+operator|-
+name|obuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|obp
 operator|=
 name|obuf
@@ -2667,7 +2685,7 @@ end_macro
 
 begin_block
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -2676,7 +2694,7 @@ block|}
 end_block
 
 begin_macro
-name|putS
+name|ex_putS
 argument_list|(
 argument|cp
 argument_list|)
@@ -2834,7 +2852,7 @@ comment|/*  * Printf (temporarily) in list mode.  */
 end_comment
 
 begin_comment
-comment|/*VARARGS2*/
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
@@ -2873,14 +2891,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 name|cp
 argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
-name|Putchar
+name|Put_char
 operator|=
 name|P
 expr_stmt|;
@@ -2998,7 +3016,7 @@ name|ECHO
 expr_stmt|;
 endif|#
 directive|endif
-name|sTTY
+name|ex_sTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3068,7 +3086,7 @@ argument_list|(
 literal|"Open and visual must be used interactively"
 argument_list|)
 expr_stmt|;
-name|gTTY
+name|ex_gTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3183,7 +3201,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|sTTY
+name|ex_sTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3669,7 +3687,7 @@ operator|&=
 operator|~
 name|RAW
 expr_stmt|;
-name|sTTY
+name|ex_sTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3694,7 +3712,7 @@ name|sg_flags
 operator||=
 name|RAW
 expr_stmt|;
-name|sTTY
+name|ex_sTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3733,9 +3751,12 @@ operator|>
 literal|0
 condition|)
 block|{
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|f
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|normtty
@@ -3784,6 +3805,9 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|USG3TTY
+ifdef|#
+directive|ifdef
+name|TIOCGETC
 if|if
 condition|(
 name|f
@@ -3809,6 +3833,8 @@ else|else
 name|ttcharoff
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|tty
 operator|.
 name|sg_flags
@@ -3834,7 +3860,7 @@ name|f
 expr_stmt|;
 endif|#
 directive|endif
-name|sTTY
+name|ex_sTTY
 argument_list|(
 literal|1
 argument_list|)
@@ -3848,7 +3874,7 @@ block|}
 end_function
 
 begin_macro
-name|gTTY
+name|ex_gTTY
 argument_list|(
 argument|i
 argument_list|)
@@ -3885,6 +3911,10 @@ name|i
 argument_list|,
 name|TIOCGETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ottyc
 argument_list|)
@@ -3904,6 +3934,10 @@ name|i
 argument_list|,
 name|TIOCGLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|olttyc
 argument_list|)
@@ -3922,6 +3956,10 @@ name|i
 argument_list|,
 name|TCGETA
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tty
 argument_list|)
@@ -3932,11 +3970,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * sTTY: set the tty modes on file descriptor i to be what's  * currently in global "tty".  (Also use nttyc if needed.)  */
+comment|/*  * ex_sTTY: set the tty modes on file descriptor i to be what's  * currently in global "tty".  (Also use nttyc if needed.)  */
 end_comment
 
 begin_macro
-name|sTTY
+name|ex_sTTY
 argument_list|(
 argument|i
 argument_list|)
@@ -3986,6 +4024,10 @@ name|i
 argument_list|,
 name|TIOCSETN
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tty
 argument_list|)
@@ -4013,6 +4055,10 @@ name|i
 argument_list|,
 name|TIOCSETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|nttyc
 argument_list|)
@@ -4028,6 +4074,10 @@ name|i
 argument_list|,
 name|TIOCSLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|nlttyc
 argument_list|)
@@ -4043,6 +4093,10 @@ name|i
 argument_list|,
 name|TCSETAW
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tty
 argument_list|)
@@ -4063,7 +4117,7 @@ end_macro
 
 begin_block
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 name|Outchar
 operator|!=

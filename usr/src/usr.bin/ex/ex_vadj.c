@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	7.9 (Berkeley) %G%"
+literal|"@(#)ex_vadj.c	7.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,7 @@ literal|1
 operator|&&
 name|p
 operator|>
-name|ZERO
+name|ex_ZERO
 condition|)
 block|{
 name|cnt
@@ -277,11 +277,11 @@ if|if
 condition|(
 name|p
 operator|<
-name|ZERO
+name|ex_ZERO
 condition|)
 name|p
 operator|=
-name|ZERO
+name|ex_ZERO
 expr_stmt|;
 name|WTOP
 operator|=
@@ -474,11 +474,11 @@ operator|)
 return|;
 if|if
 condition|(
-name|Putchar
+name|Put_char
 operator|==
 name|listchar
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'$'
 argument_list|)
@@ -685,7 +685,7 @@ name|VISUAL
 operator|&&
 name|WTOP
 operator|-
-name|ZERO
+name|ex_ZERO
 operator|>=
 name|need
 operator|&&
@@ -986,7 +986,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'@'
 argument_list|)
@@ -1218,7 +1218,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'@'
 argument_list|)
@@ -1934,11 +1934,11 @@ for|for
 control|(
 name|to
 operator|=
-name|ZERO
+name|ex_ZERO
 operator|,
 name|from
 operator|=
-name|ZERO
+name|ex_ZERO
 operator|+
 name|cnt
 init|;
@@ -1968,7 +1968,7 @@ for|for
 control|(
 name|from
 operator|=
-name|ZERO
+name|ex_ZERO
 init|;
 name|to
 operator|<=
@@ -2089,7 +2089,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|>=
-name|ZERO
+name|ex_ZERO
 condition|)
 block|{
 name|WTOP
@@ -2284,9 +2284,12 @@ operator|=
 name|NOLINE
 expr_stmt|;
 comment|/* 	 * In open want to notify first. 	 */
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vscrap
@@ -2365,9 +2368,12 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2516,9 +2522,12 @@ name|WTOP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Notification on large change for visual 	 * has to be done last or we may lose 	 * the echo area with redisplay. 	 */
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally.  Move the cursor onto the current line. 	 */
@@ -2697,7 +2706,7 @@ name|l
 operator|<
 name|vcnt
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|;
@@ -2851,6 +2860,8 @@ operator|&=
 operator|~
 name|VDIRT
 expr_stmt|;
+name|ignore
+argument_list|(
 name|vreopen
 argument_list|(
 name|p
@@ -2861,6 +2872,7 @@ name|tp
 argument_list|)
 argument_list|,
 name|l
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -2916,7 +2928,7 @@ name|tp
 operator|<=
 name|dol
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|;
@@ -2973,7 +2985,7 @@ name|p
 operator|<=
 name|WBOT
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|;
@@ -3639,7 +3651,7 @@ name|p
 operator|<=
 name|WBOT
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|)
@@ -3771,6 +3783,8 @@ name|WBOT
 condition|)
 break|break;
 block|}
+name|ignore
+argument_list|(
 name|vreopen
 argument_list|(
 name|p
@@ -3785,6 +3799,7 @@ name|vcline
 operator|)
 argument_list|,
 name|l
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4465,7 +4480,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|,
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%6d  "
 argument_list|,

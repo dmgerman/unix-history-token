@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.7 (Berkeley) %G%"
+literal|"@(#)ex_vmain.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,7 @@ name|holdupd
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			if (LINE(0)< ZERO) { 				vclear(); 				vcnt = 0; 				i = 3; 			} */
+comment|/* 			if (LINE(0)< ex_ZERO) { 				vclear(); 				vcnt = 0; 				i = 3; 			} */
 if|if
 condition|(
 name|state
@@ -804,13 +804,13 @@ if|if
 condition|(
 name|hadcnt
 condition|)
-name|vSCROLL
+name|ex_vSCROLL
 operator|=
 name|cnt
 expr_stmt|;
 name|cnt
 operator|=
-name|vSCROLL
+name|ex_vSCROLL
 expr_stmt|;
 if|if
 condition|(
@@ -892,13 +892,13 @@ if|if
 condition|(
 name|hadcnt
 condition|)
-name|vSCROLL
+name|ex_vSCROLL
 operator|=
 name|cnt
 expr_stmt|;
 name|cnt
 operator|=
-name|vSCROLL
+name|ex_vSCROLL
 expr_stmt|;
 if|if
 condition|(
@@ -1672,7 +1672,7 @@ name|state
 operator|==
 name|HARDOPEN
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|cursor
@@ -2522,7 +2522,7 @@ name|Pline
 expr_stmt|;
 name|OPutchar
 operator|=
-name|Putchar
+name|Put_char
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -2590,7 +2590,7 @@ name|Pline
 operator|=
 name|OPline
 expr_stmt|;
-name|Putchar
+name|Put_char
 operator|=
 name|OPutchar
 expr_stmt|;
@@ -2614,7 +2614,7 @@ block|{
 name|fixzero
 argument_list|()
 expr_stmt|;
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 block|}
@@ -2632,11 +2632,14 @@ argument_list|(
 name|NUMBER
 argument_list|)
 condition|)
+name|ignorf
+argument_list|(
 name|setnumb
 argument_list|(
 name|value
 argument_list|(
 name|NUMBER
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2649,11 +2652,14 @@ argument_list|(
 name|LIST
 argument_list|)
 condition|)
+name|ignorf
+argument_list|(
 name|setlist
 argument_list|(
 name|value
 argument_list|(
 name|LIST
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2685,7 +2691,7 @@ name|vcnt
 operator|<
 literal|0
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|==
 literal|':'
 condition|)
@@ -3011,7 +3017,7 @@ comment|/* 		 * U		restore current line to initial state. 		 */
 case|case
 literal|'U'
 case|:
-name|vUndo
+name|ex_vUndo
 argument_list|()
 expr_stmt|;
 continue|continue;

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	7.10 (Berkeley) %G%"
+literal|"@(#)ex_tty.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,10 @@ literal|1
 argument_list|,
 name|TCGETA
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tty
 argument_list|)
@@ -863,8 +867,6 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|fnd
 decl_stmt|;
 name|ioctl
 argument_list|(
@@ -872,6 +874,10 @@ literal|0
 argument_list|,
 name|TIOCGETD
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ldisc
 argument_list|)
@@ -952,8 +958,16 @@ name|addmac
 argument_list|(
 name|sc
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 name|arrows
@@ -1177,6 +1191,9 @@ name|l
 decl_stmt|,
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCGWINSZ
 name|struct
 name|winsize
 name|win
@@ -1189,6 +1206,10 @@ literal|0
 argument_list|,
 name|TIOCGWINSZ
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|win
 argument_list|)
@@ -1196,6 +1217,8 @@ operator|<
 literal|0
 condition|)
 block|{
+endif|#
+directive|endif
 name|i
 operator|=
 name|LINES
@@ -1212,6 +1235,9 @@ argument_list|(
 literal|"co"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCGWINSZ
 block|}
 else|else
 block|{
@@ -1266,6 +1292,8 @@ literal|"co"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|LINES

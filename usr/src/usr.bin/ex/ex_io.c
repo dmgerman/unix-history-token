@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.12 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ name|i
 decl_stmt|;
 name|d
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -442,7 +442,7 @@ argument_list|(
 name|READONLY
 argument_list|)
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Read only]"
 argument_list|)
@@ -452,7 +452,7 @@ condition|(
 operator|!
 name|edited
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Not edited]"
 argument_list|)
@@ -461,7 +461,7 @@ if|if
 condition|(
 name|tchng
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Modified]"
 argument_list|)
@@ -472,7 +472,7 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|ex_printf
 argument_list|(
 literal|"No file "
 argument_list|)
@@ -497,7 +497,7 @@ condition|)
 name|i
 operator|++
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|" line %d of %d --%ld%%--"
 argument_list|,
@@ -579,7 +579,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -614,7 +614,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -685,7 +685,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -723,7 +723,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 comment|/* fall into... */
@@ -1010,7 +1010,7 @@ argument_list|)
 expr_stmt|;
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 expr_stmt|;
 name|io
@@ -1078,11 +1078,14 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* so errors don't mess up the screen */
+name|ignore
+argument_list|(
 name|open
 argument_list|(
 literal|"/dev/null"
 argument_list|,
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|execl
@@ -1290,6 +1293,9 @@ end_macro
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|vms
 specifier|register
 name|char
 modifier|*
@@ -1317,6 +1323,16 @@ argument_list|,
 literal|"~{[*?$`'\"\\"
 argument_list|)
 condition|)
+if|if
+condition|(
+name|any
+argument_list|(
+operator|*
+name|cp
+argument_list|,
+literal|"~{[*?$`'\"\\"
+argument_list|)
+condition|)
 return|return
 operator|(
 literal|1
@@ -1327,6 +1343,14 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+comment|/* Never have meta-characters in vms */
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1413,8 +1437,6 @@ argument_list|(
 literal|"Filename too long"
 argument_list|)
 expr_stmt|;
-name|samef
-label|:
 name|CP
 argument_list|(
 name|file
@@ -1502,7 +1524,7 @@ operator|!
 name|seenprompt
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [New file]"
 argument_list|)
@@ -1627,6 +1649,9 @@ name|magic
 argument_list|)
 condition|)
 break|break;
+ifndef|#
+directive|ifndef
+name|vms
 switch|switch
 condition|(
 name|magic
@@ -1706,6 +1731,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1786,7 +1813,7 @@ name|READONLY
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Read only]"
 argument_list|)
@@ -2649,7 +2676,7 @@ if|if
 condition|(
 name|nonexist
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [New file]"
 argument_list|)
@@ -2667,7 +2694,7 @@ argument_list|()
 operator|!=
 name|EDF
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Existing file]"
 argument_list|)
@@ -2724,6 +2751,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|vms
 operator|(
 name|void
 operator|)
@@ -2732,6 +2762,8 @@ argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ignore
 argument_list|(
 name|iostats
@@ -2766,7 +2798,7 @@ name|edited
 operator|=
 literal|1
 expr_stmt|;
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 block|}
@@ -2895,6 +2927,9 @@ name|io
 argument_list|,
 name|genbuf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bsize
 argument_list|)
 operator|-
@@ -2917,7 +2952,7 @@ block|{
 name|lp
 operator|++
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|" [Incomplete last line]"
 argument_list|)
@@ -3035,6 +3070,10 @@ end_block
 
 begin_comment
 comment|/*  * Write a range onto the io stream.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -3657,7 +3696,7 @@ argument_list|(
 name|TERSE
 argument_list|)
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" %d/%D"
 argument_list|,
@@ -3667,7 +3706,7 @@ name|cntch
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ex_printf
 argument_list|(
 literal|" %d line%s, %D character%s"
 argument_list|,
@@ -3696,7 +3735,7 @@ operator|||
 name|cntodd
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|" ("
 argument_list|)
@@ -3706,7 +3745,7 @@ condition|(
 name|cntnull
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%D null"
 argument_list|,
@@ -3717,7 +3756,7 @@ if|if
 condition|(
 name|cntodd
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|", "
 argument_list|)
@@ -3727,14 +3766,14 @@ if|if
 condition|(
 name|cntodd
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%D non-ASCII"
 argument_list|,
 name|cntodd
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|')'
 argument_list|)
@@ -3761,17 +3800,61 @@ return|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USG
-operator||
-name|USG3TTY
-end_if
+end_ifdef
 
-begin_comment
-comment|/* It's so wonderful how we all speak the same language... */
-end_comment
+begin_define
+define|#
+directive|define
+name|index
+value|strchr
+end_define
+
+begin_define
+define|#
+directive|define
+name|rindex
+value|strrchr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG3TTY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|index
+value|strchr
+end_define
+
+begin_define
+define|#
+directive|define
+name|rindex
+value|strrchr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vms
+end_ifdef
 
 begin_define
 define|#
@@ -3828,6 +3911,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|rindex
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strncpy
 argument_list|()
 decl_stmt|;
 name|beg

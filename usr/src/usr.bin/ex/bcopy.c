@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)bcopy.c	7.3 (Berkeley) %G%"
+literal|"@(#)bcopy.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	7.3 (Berkeley) %G%"
+literal|"@(#)bcopy.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,25 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|vms
 asm|asm("	movc3	12(ap),*4(ap),*8(ap)");
+comment|/* ARGSUSED */
+else|#
+directive|else
+name|lib$movc3
+argument_list|(
+operator|&
+name|count
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

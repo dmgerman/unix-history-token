@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds2.c	7.4 (Berkeley) %G%"
+literal|"@(#)ex_cmds2.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 return|return
@@ -229,22 +229,45 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|error
 argument_list|(
-name|str
+argument|str
 argument_list|,
-name|i
+argument|i
 argument_list|)
+end_macro
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXSTRINGS
+end_ifndef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|lint
-specifier|register
+end_ifdef
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -252,11 +275,15 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|register
 name|int
 name|str
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -339,7 +366,7 @@ operator|!
 name|hush
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 name|mesg
 argument_list|(
@@ -353,7 +380,7 @@ if|if
 condition|(
 name|inopen
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|' '
 argument_list|)
@@ -602,7 +629,7 @@ if|if
 condition|(
 name|die
 condition|)
-name|exit
+name|ex_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -906,7 +933,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -1093,7 +1120,7 @@ name|xchng
 operator|=
 literal|0
 expr_stmt|;
-name|error
+name|serror
 argument_list|(
 literal|"No write@since last change (:%s! overrides)"
 argument_list|,
@@ -1228,6 +1255,8 @@ condition|(
 name|inopen
 condition|)
 return|return;
+name|ignorf
+argument_list|(
 name|setnumb
 argument_list|(
 name|nflag
@@ -1237,7 +1266,10 @@ argument_list|(
 name|NUMBER
 argument_list|)
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|ignorf
+argument_list|(
 name|setlist
 argument_list|(
 name|listf
@@ -1245,6 +1277,7 @@ operator|||
 name|value
 argument_list|(
 name|LIST
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1473,7 +1506,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 operator|,
 name|comm
@@ -1553,7 +1586,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 operator|*
@@ -1760,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Peekkey
+name|Peek_key
 operator|!=
 literal|':'
 condition|)

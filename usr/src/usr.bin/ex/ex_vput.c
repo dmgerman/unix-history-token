@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vput.c	7.4 (Berkeley) %G%"
+literal|"@(#)ex_vput.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ operator|*
 operator|(
 name|WECHO
 operator|-
-name|ZERO
+name|ex_ZERO
 operator|+
 literal|1
 operator|)
@@ -216,7 +216,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 name|tp
 operator|>
@@ -447,7 +447,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|Peekkey
+name|Peek_key
 operator|==
 name|ATTN
 condition|)
@@ -1516,7 +1516,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ZERO
+name|ex_ZERO
 init|;
 name|i
 operator|<=

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops3.c	7.3 (Berkeley) %G%"
+literal|"@(#)ex_vops3.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,8 +531,11 @@ name|linebuf
 operator|)
 condition|)
 block|{
+name|ignore
+argument_list|(
 name|lnext
 argument_list|()
+argument_list|)
 expr_stmt|;
 goto|goto
 name|ret
@@ -749,6 +752,7 @@ operator|)
 return|;
 block|}
 comment|/*  * Is this the end of a sentence?  */
+comment|/* ARGSUSED */
 name|endsent
 argument_list|(
 argument|pastatom
@@ -766,8 +770,6 @@ name|wcursor
 decl_stmt|;
 specifier|register
 name|int
-name|c
-decl_stmt|,
 name|d
 decl_stmt|;
 comment|/* 	 * If this is the beginning of a line, then 	 * check for the end of a paragraph or section. 	 */
@@ -789,8 +791,6 @@ condition|(
 operator|!
 name|any
 argument_list|(
-name|c
-operator|=
 operator|*
 name|cp
 argument_list|,

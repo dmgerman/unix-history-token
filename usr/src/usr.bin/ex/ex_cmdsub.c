@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.7 (Berkeley) %G%"
+literal|"@(#)ex_cmdsub.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,7 +369,7 @@ name|ac
 operator|!=
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|' '
 operator||
@@ -386,7 +386,7 @@ name|argc0
 operator|-
 literal|1
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|"["
 argument_list|)
@@ -408,7 +408,7 @@ name|argc0
 operator|-
 literal|1
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|"]"
 argument_list|)
@@ -440,7 +440,7 @@ comment|/*  * Delete lines; two cases are if we are really deleting,  * more com
 end_comment
 
 begin_macro
-name|delete
+name|ex_delete
 argument_list|(
 argument|hush
 argument_list|)
@@ -1019,7 +1019,7 @@ argument_list|(
 name|genbuf
 argument_list|)
 expr_stmt|;
-name|delete
+name|ex_delete
 argument_list|(
 literal|0
 argument_list|)
@@ -2158,7 +2158,7 @@ operator|*
 name|lp
 operator|++
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 else|else
@@ -2205,7 +2205,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -2503,7 +2503,7 @@ goto|;
 ifdef|#
 directive|ifdef
 name|TDEBUG
-name|printf
+name|ex_printf
 argument_list|(
 literal|"tag: %o %o %o %s\n"
 argument_list|,
@@ -3073,7 +3073,7 @@ name|c
 operator|=
 name|op
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 condition|)
 block|{
@@ -3113,7 +3113,7 @@ literal|'.'
 case|:
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 break|break;
@@ -3153,7 +3153,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -3530,7 +3530,7 @@ operator|*
 name|addr1
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\r'
 operator||
@@ -3652,7 +3652,7 @@ condition|;
 name|l
 operator|--
 control|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'-'
 argument_list|)
@@ -3734,7 +3734,7 @@ if|if
 condition|(
 name|inopen
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\n'
 operator||
@@ -4519,7 +4519,7 @@ operator|.
 name|descr
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\t'
 argument_list|)
@@ -4536,7 +4536,7 @@ operator|.
 name|cap
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\t'
 argument_list|)
@@ -4576,7 +4576,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -4591,7 +4591,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -4696,7 +4696,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -4711,7 +4711,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}

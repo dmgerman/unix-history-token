@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.7.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -24,11 +24,44 @@ begin_comment
 comment|/*  * Ex version 3 (see exact version in ex_cmds.c, search for /Version/)  *  * Mark Horton, UC Berkeley  * Bill Joy, UC Berkeley  * November 1979  *  * This file contains most of the declarations common to a large number  * of routines.  The file ex_vis.h contains declarations  * which are used only inside the screen editor.  * The file ex_tune.h contains parameters which can be diddled per installation.  *  * The declarations relating to the argument list, regular expressions,  * the temporary file data structure used by the editor  * and the data describing terminals are each fairly substantial and  * are kept in the files ex_{argv,re,temp,tty}.h which  * we #include separately.  *  * If you are going to dig into ex, you should look at the outline of the  * distribution of the code into files at the beginning of ex.c and ex_v.c.  * Code which is similar to that of ed is lightly or undocumented in spots  * (e.g. the regular expression code).  Newer code (e.g. open and visual)  * is much more carefully documented, and still rough in spots.  *  * Please forward bug reports to  *  *	Mark Horton  *	Computer Science Division, EECS  *	EVANS HALL  *	U.C. Berkeley 94704  *	(415) 642-4948  *	(415) 642-1024 (dept. office)  *  * or to csvax.mark@berkeley on the ARPA-net.  I would particularly like to hear  * of additional terminal descriptions you add to the termcap data base.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAXBSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Maximum block size */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -54,11 +87,33 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -106,11 +161,33 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sgtty.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"vmstty.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -274,6 +351,42 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vms
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|st_blksize
+value|st_fab_mrs
+end_define
+
+begin_define
+define|#
+directive|define
+name|_exit
+parameter_list|(
+name|n
+parameter_list|)
+value|vms_exit(n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fork
+parameter_list|()
+value|vfork()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The editor does not normally use the standard i/o library.  Because  * we expect the editor to be a heavily used program and because it  * does a substantial amount of input/output processing it is appropriate  * for it to call low level read/write primitives directly.  In fact,  * when debugging the editor we use the standard i/o library.  In any  * case the editor needs a printf which prints through "putchar" ala the  * old version 6 printf.  Thus we normally steal a copy of the "printf.c"  * and "strout" code from the standard i/o library and mung it for our  * purposes to avoid dragging in the stdio library headers, etc if we  * are not debugging.  Such a modified printf exists in "printf.c" here.  */
 end_comment
@@ -321,18 +434,6 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|putchar
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|getchar
-end_undef
 
 begin_else
 else|#
@@ -429,11 +530,22 @@ name|TRIM
 value|0177
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_undef
 undef|#
 directive|undef
 name|CTRL
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -600,11 +712,11 @@ begin_comment
 comment|/* Last cmd mode command ended with \n */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXSTRINGS
+end_ifdef
 
 begin_decl_stmt
 name|var
@@ -1661,7 +1773,7 @@ specifier|extern
 name|int
 function_decl|(
 modifier|*
-name|Putchar
+name|Put_char
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -1761,6 +1873,25 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vms
+end_ifdef
+
+begin_function_decl
+name|char
+modifier|*
+name|getlog
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|line
@@ -1945,7 +2076,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|delete
+name|ex_delete
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_v.c	7.8 (Berkeley) %G%"
+literal|"@(#)ex_v.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,13 +121,8 @@ name|ttymode
 name|f
 decl_stmt|;
 comment|/* mjm: was register */
-name|int
-name|resize
-decl_stmt|;
 if|if
 condition|(
-name|resize
-operator|=
 name|setjmp
 argument_list|(
 name|venv
@@ -156,6 +151,9 @@ operator|=
 name|dot
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -166,6 +164,8 @@ argument_list|,
 name|winch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ovbeg
 argument_list|()
 expr_stmt|;
@@ -181,7 +181,7 @@ name|ignore
 argument_list|(
 name|compile
 argument_list|(
-name|getchar
+name|ex_getchar
 argument_list|()
 argument_list|,
 literal|1
@@ -383,6 +383,9 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -393,6 +396,8 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -551,9 +556,6 @@ name|ttymode
 name|f
 decl_stmt|;
 comment|/* mjm: was register */
-name|int
-name|resize
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -653,8 +655,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|resize
-operator|=
 name|setjmp
 argument_list|(
 name|venv
@@ -683,6 +683,9 @@ operator|=
 name|dot
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -693,6 +696,8 @@ argument_list|,
 name|winch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ovbeg
 argument_list|()
 expr_stmt|;
@@ -716,7 +721,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 name|pastwh
@@ -803,6 +808,9 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -813,6 +821,8 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -850,7 +860,7 @@ condition|(
 operator|!
 name|ochng
 condition|)
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 name|addr1
@@ -1030,7 +1040,7 @@ name|WECHO
 operator|=
 literal|0
 expr_stmt|;
-name|ZERO
+name|ex_ZERO
 operator|=
 literal|0
 expr_stmt|;
@@ -1051,7 +1061,7 @@ comment|/* fall into */
 case|case
 name|VISUAL
 case|:
-name|ZERO
+name|ex_ZERO
 operator|=
 name|LINES
 operator|-
@@ -1061,17 +1071,17 @@ name|WCOLS
 expr_stmt|;
 if|if
 condition|(
-name|ZERO
+name|ex_ZERO
 operator|<
 literal|0
 condition|)
-name|ZERO
+name|ex_ZERO
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ZERO
+name|ex_ZERO
 operator|>
 name|basWTOP
 condition|)
@@ -1172,7 +1182,7 @@ operator|*
 operator|(
 name|WECHO
 operator|-
-name|ZERO
+name|ex_ZERO
 operator|+
 literal|1
 operator|)
@@ -1197,7 +1207,7 @@ operator|*
 operator|(
 name|WECHO
 operator|-
-name|ZERO
+name|ex_ZERO
 operator|+
 literal|1
 operator|)
@@ -1211,7 +1221,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ZERO
+name|ex_ZERO
 condition|;
 name|i
 operator|++
@@ -1317,7 +1327,7 @@ name|holdupd
 operator|=
 literal|0
 expr_stmt|;
-name|Peekkey
+name|Peek_key
 operator|=
 literal|0
 expr_stmt|;
@@ -1329,11 +1339,11 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|vSCROLL
+name|ex_vSCROLL
 operator|==
 literal|0
 condition|)
-name|vSCROLL
+name|ex_vSCROLL
 operator|=
 operator|(
 name|value
@@ -1495,6 +1505,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGWINCH
+end_ifdef
+
 begin_macro
 name|winch
 argument_list|()
@@ -1505,9 +1521,12 @@ block|{
 name|vsave
 argument_list|()
 expr_stmt|;
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|normf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -1519,6 +1538,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	7.6 (Berkeley) %G%"
+literal|"@(#)ex_get.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_block
 block|{
 name|ignore
 argument_list|(
-name|getchar
+name|ex_getchar
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -73,7 +73,7 @@ block|}
 end_block
 
 begin_macro
-name|getchar
+name|ex_getchar
 argument_list|()
 end_macro
 
@@ -206,7 +206,7 @@ literal|0
 condition|)
 name|peekc
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 return|return
@@ -261,10 +261,6 @@ index|[
 name|BUFSIZ
 index|]
 expr_stmt|;
-name|struct
-name|stat
-name|statb
-decl_stmt|;
 name|c
 operator|=
 name|peekc
@@ -594,7 +590,7 @@ name|holdcm
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"  %4d  "
 argument_list|,
@@ -751,21 +747,21 @@ operator|!
 name|OS
 condition|)
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\b'
 operator||
 name|QUOTE
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|' '
 operator||
 name|QUOTE
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\b'
 operator||
@@ -784,7 +780,7 @@ literal|1
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -849,7 +845,7 @@ literal|0
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 while|while
@@ -888,7 +884,7 @@ name|c
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}

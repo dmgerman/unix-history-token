@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vwind.c	7.3 (Berkeley) %G%"
+literal|"@(#)ex_vwind.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,9 +137,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -163,9 +166,12 @@ argument_list|,
 name|NOLINE
 argument_list|)
 expr_stmt|;
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vnline
@@ -397,7 +403,7 @@ name|cnt
 operator|<=
 name|WTOP
 operator|-
-name|ZERO
+name|ex_ZERO
 operator|&&
 name|vfit
 argument_list|(
@@ -410,7 +416,7 @@ argument_list|)
 operator|<=
 name|WTOP
 operator|-
-name|ZERO
+name|ex_ZERO
 condition|)
 goto|goto
 name|okr
@@ -419,7 +425,7 @@ name|tot
 operator|=
 name|WECHO
 operator|-
-name|ZERO
+name|ex_ZERO
 expr_stmt|;
 if|if
 condition|(
@@ -682,7 +688,7 @@ name|tot
 operator|=
 name|WECHO
 operator|-
-name|ZERO
+name|ex_ZERO
 expr_stmt|;
 if|if
 condition|(
@@ -1513,7 +1519,7 @@ name|cnt
 operator|>
 literal|0
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|;
@@ -1589,12 +1595,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|bool
-name|fried
-init|=
-literal|0
-decl_stmt|;
 name|short
 name|oldhold
 init|=
@@ -1669,7 +1669,7 @@ name|cnt
 operator|>
 literal|0
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|;
@@ -1802,7 +1802,7 @@ operator|-
 literal|1
 operator|+
 operator|(
-name|Putchar
+name|Put_char
 operator|==
 name|listchar
 operator|)

@@ -46,7 +46,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|vUndo
+name|ex_vUndo
 argument_list|()
 end_macro
 
@@ -566,7 +566,7 @@ operator|*
 name|cp
 condition|;
 control|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|cp
@@ -681,18 +681,6 @@ name|nlines
 decl_stmt|,
 name|more
 decl_stmt|;
-specifier|register
-name|line
-modifier|*
-name|a1
-decl_stmt|,
-modifier|*
-name|a2
-decl_stmt|;
-name|char
-name|ch
-decl_stmt|;
-comment|/* DEBUG */
 name|int
 name|copyw
 argument_list|()
@@ -832,9 +820,39 @@ name|truedol
 operator|<
 name|nlines
 condition|)
+if|if
+condition|(
 name|morelines
 argument_list|()
+operator|<
+literal|0
+condition|)
+block|{
+name|dot
+operator|=
+name|savedot
 expr_stmt|;
+name|dol
+operator|=
+name|savedol
+expr_stmt|;
+name|cursor
+operator|=
+name|savecursor
+expr_stmt|;
+name|CP
+argument_list|(
+name|linebuf
+argument_list|,
+name|savelb
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Out of memory@- too many lines to undo"
+argument_list|)
+expr_stmt|;
+block|}
 name|copyw
 argument_list|(
 name|truedol
@@ -1182,6 +1200,8 @@ name|hold
 operator||=
 name|HOLDDOL
 expr_stmt|;
+name|ignore
+argument_list|(
 name|vreopen
 argument_list|(
 name|WTOP
@@ -1190,6 +1210,7 @@ name|lineDOT
 argument_list|()
 argument_list|,
 name|vcline
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hold
@@ -1238,7 +1259,7 @@ operator|++
 operator|&
 name|TRIM
 decl_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 name|c
 condition|?
@@ -1346,7 +1367,7 @@ name|vremote
 argument_list|(
 name|i
 argument_list|,
-name|delete
+name|ex_delete
 argument_list|,
 literal|0
 argument_list|)
@@ -1492,6 +1513,8 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|ignore
+argument_list|(
 name|vreopen
 argument_list|(
 name|LINE
@@ -1503,6 +1526,7 @@ name|lineDOT
 argument_list|()
 argument_list|,
 name|vcline
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vsyncCL
@@ -1788,7 +1812,7 @@ name|vremote
 argument_list|(
 name|cnt
 argument_list|,
-name|delete
+name|ex_delete
 argument_list|,
 literal|0
 argument_list|)
@@ -1841,9 +1865,12 @@ name|wdot
 operator|=
 name|NOLINE
 expr_stmt|;
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vcline
@@ -1958,9 +1985,12 @@ expr_stmt|;
 name|vsyncCL
 argument_list|()
 expr_stmt|;
+name|ignore
+argument_list|(
 name|noteit
 argument_list|(
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2100,7 +2130,7 @@ argument_list|(
 name|wcursor
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'$'
 argument_list|)
@@ -2216,9 +2246,14 @@ name|oldhold
 init|=
 name|hold
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 name|int
 name|oldmask
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|value
@@ -2239,6 +2274,9 @@ name|cnt
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 name|oldmask
 operator|=
 name|sigblock
@@ -2249,6 +2287,8 @@ name|SIGWINCH
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vsave
 argument_list|()
 expr_stmt|;
@@ -2374,11 +2414,11 @@ if|if
 condition|(
 name|c
 operator|<
-name|ZERO
+name|ex_ZERO
 condition|)
 name|c
 operator|=
-name|ZERO
+name|ex_ZERO
 expr_stmt|;
 name|i
 operator|=
@@ -2496,6 +2536,9 @@ argument_list|,
 name|ind
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGWINCH
 operator|(
 name|void
 operator|)
@@ -2504,6 +2547,8 @@ argument_list|(
 name|oldmask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

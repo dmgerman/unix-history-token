@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	7.4 (Berkeley) %G%"
+literal|"@(#)ex_voper.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,10 @@ name|cnt
 argument_list|,
 name|opf
 argument_list|,
+operator|(
+name|line
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -481,6 +485,10 @@ literal|1
 argument_list|,
 name|opf
 argument_list|,
+operator|(
+name|line
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -2184,6 +2192,9 @@ call|)
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+name|flusho
+argument_list|()
 expr_stmt|;
 name|wdot
 operator|=

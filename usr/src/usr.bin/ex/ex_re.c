@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_re.c	7.5 (Berkeley) %G%"
+literal|"@(#)ex_re.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 name|ignore
@@ -160,7 +160,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 operator|)
 operator|!=
@@ -187,7 +187,7 @@ literal|'\\'
 case|:
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -250,8 +250,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 name|newline
 argument_list|()
 expr_stmt|;
@@ -841,7 +839,7 @@ argument_list|)
 expr_stmt|;
 name|seof
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -967,7 +965,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -1090,7 +1088,7 @@ control|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -1110,7 +1108,7 @@ literal|'\\'
 case|:
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -1438,7 +1436,7 @@ if|if
 condition|(
 name|inopen
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\n'
 operator||
@@ -1511,7 +1509,7 @@ if|if
 condition|(
 name|inopen
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -1621,7 +1619,7 @@ operator|>
 literal|0
 condition|)
 do|do
-name|putchar
+name|ex_putchar
 argument_list|(
 name|with
 argument_list|)
@@ -2121,7 +2119,7 @@ name|total
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|ex_printf
 argument_list|(
 name|mesg
 argument_list|(
@@ -2141,7 +2139,7 @@ name|lines
 operator|!=
 name|total
 condition|)
-name|printf
+name|ex_printf
 argument_list|(
 literal|" on %d lines"
 argument_list|,
@@ -2231,7 +2229,7 @@ name|expbuf
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -2393,7 +2391,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 name|circfl
@@ -2432,7 +2430,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -2533,7 +2531,7 @@ literal|'\\'
 case|:
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -2814,7 +2812,7 @@ literal|1
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -2826,7 +2824,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 name|ep
@@ -2872,7 +2870,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 operator||
 name|QUOTE
@@ -2916,7 +2914,7 @@ name|complex
 goto|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -3181,6 +3179,10 @@ modifier|*
 name|locs
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* VARARGS1 */
+end_comment
 
 begin_expr_stmt
 name|execute
@@ -3456,16 +3458,6 @@ specifier|register
 name|char
 modifier|*
 name|curlp
-decl_stmt|;
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-modifier|*
-name|sp1
-decl_stmt|;
-name|int
-name|c
 decl_stmt|;
 for|for
 control|(

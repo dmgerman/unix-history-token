@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_tty.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_tty.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -931,6 +931,12 @@ begin_comment
 comment|/* Save COLUMNS for a hack in open mode */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIOCGWINSZ
+end_ifdef
+
 begin_decl_stmt
 name|var
 name|struct
@@ -942,6 +948,11 @@ end_decl_stmt
 begin_comment
 comment|/* Save window size for stopping comparisons */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|var
@@ -980,7 +991,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * There are several kinds of tty drivers to contend with.  These include:  * (1)	V6:		no CBREAK, no ioctl.  (Include PWB V1 here).  * (2)	V7 research:	has CBREAK, has ioctl, and has the tchars (TIOCSETC)  *			business to change start, stop, etc. chars.  * (3)	USG V2:		Basically like V6 but RAW mode is like V7 RAW.  *			(We treat it as V6.)  * (4)	USG V3:		equivalent to V7 but totally incompatible.  * (5)  Berkeley:	has ltchars in addition to all of V7.  *  * The following attempts to decide what we are on, and declare  * some variables in the appropriate format.  The wierd looking one (ttymode)  * is the thing we pass to sTTY and family to turn "RAW" mode on or off  * when we go into or out of visual mode.  In V7/V6 it's just the flags word  * to stty.  In USG V3 it's the whole tty structure.  */
+comment|/*  * There are several kinds of tty drivers to contend with.  These include:  * (1)	V6:		no CBREAK, no ioctl.  (Include PWB V1 here).  * (2)	V7 research:	has CBREAK, has ioctl, and has the tchars (TIOCSETC)  *			business to change start, stop, etc. chars.  * (3)	USG V2:		Basically like V6 but RAW mode is like V7 RAW.  *			(We treat it as V6.)  * (4)	USG V3:		equivalent to V7 but totally incompatible.  * (5)  Berkeley:	has ltchars in addition to all of V7.  *  * The following attempts to decide what we are on, and declare  * some variables in the appropriate format.  The wierd looking one (ttymode)  * is the thing we pass to ex_sTTY and family to turn "RAW" mode on or off  * when we go into or out of visual mode.  In V7/V6 it's just the flags word  * to stty.  In USG V3 it's the whole tty structure.  */
 end_comment
 
 begin_ifdef

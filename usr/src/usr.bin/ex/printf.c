@@ -15,15 +15,9 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printf.c	7.3 (Berkeley) %G%"
+literal|"@(#)printf.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
 
 begin_comment
 comment|/* The pwb version this is based on */
@@ -39,10 +33,16 @@ literal|"@(#) printf.c:2.2 6/5/79"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"varargs.h"
+file|<varargs.h>
 end_include
 
 begin_comment
@@ -112,8 +112,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* VARARGS */
+end_comment
+
 begin_macro
-name|printf
+name|ex_printf
 argument_list|(
 argument|va_alist
 argument_list|)
@@ -212,7 +216,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return;
-name|putchar
+name|ex_putchar
 argument_list|(
 name|fcode
 argument_list|)
@@ -738,12 +742,12 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'0'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 name|fcode
 argument_list|)
@@ -1242,7 +1246,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|s
@@ -1275,7 +1279,7 @@ name|npad
 operator|>=
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 name|cfill
 argument_list|)
@@ -1288,7 +1292,7 @@ name|alen
 operator|>=
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|s
@@ -1307,7 +1311,7 @@ name|npad
 operator|>=
 literal|0
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 name|cfill
 argument_list|)

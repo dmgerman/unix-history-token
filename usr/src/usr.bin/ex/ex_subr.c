@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.10 (Berkeley) %G%"
+literal|"@(#)ex_subr.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,7 +257,7 @@ do|do
 block|{
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -850,7 +850,7 @@ specifier|register
 name|int
 name|c
 init|=
-name|getchar
+name|ex_getchar
 argument_list|()
 decl_stmt|;
 if|if
@@ -1036,7 +1036,7 @@ name|cnt
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%d lines"
 argument_list|,
@@ -1053,7 +1053,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|" %c%s"
 argument_list|,
@@ -1083,12 +1083,12 @@ index|]
 operator|!=
 literal|'e'
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'e'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'d'
 argument_list|)
@@ -1407,11 +1407,11 @@ argument|i
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXSTRINGS
+end_ifndef
 
 begin_decl_stmt
 name|char
@@ -1521,7 +1521,7 @@ argument_list|(
 name|SO
 argument_list|)
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 name|mesg
 argument_list|(
@@ -1552,11 +1552,11 @@ argument|seekpt
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXSTRINGS
+end_ifndef
 
 begin_decl_stmt
 name|char
@@ -1606,9 +1606,9 @@ end_endif
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|VMUNIX
+ifndef|#
+directive|ifndef
+name|EXSTRINGS
 name|strcpy
 argument_list|(
 name|linebuf
@@ -1662,6 +1662,14 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|UNIX_SBRK
+name|char
+modifier|*
+name|sbrk
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -1695,6 +1703,15 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* 	 * We can never be guaranteed that we can get more memory 	 * beyond "endcore".  So we just punt every time. 	 */
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1872,7 +1889,7 @@ name|i
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|ex_printf
 argument_list|(
 name|mesg
 argument_list|(
@@ -2144,7 +2161,7 @@ condition|(
 operator|*
 name|gp
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|gp
@@ -2348,11 +2365,23 @@ argument_list|()
 operator|<
 literal|0
 condition|)
+ifdef|#
+directive|ifdef
+name|UNIX_SBRK
 name|error
 argument_list|(
 literal|"Out of memory@saving lines for undo - try using ed"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|error
+argument_list|(
+literal|"Out of memory@saving lines for undo - try increasing linelimit"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|more
@@ -2501,7 +2530,7 @@ block|}
 end_block
 
 begin_macro
-name|sync
+name|ex_sync
 argument_list|()
 end_macro
 
@@ -2736,6 +2765,9 @@ name|e
 init|=
 name|errno
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|vms
 specifier|extern
 name|int
 name|sys_nerr
@@ -2746,11 +2778,27 @@ modifier|*
 name|sys_errlist
 index|[]
 decl_stmt|;
+else|#
+directive|else
+specifier|extern
+name|noshare
+name|int
+name|sys_nerr
+decl_stmt|;
+specifier|extern
+name|noshare
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+endif|#
+directive|endif
 name|dirtcnt
 operator|=
 literal|0
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|' '
 argument_list|)
@@ -2773,7 +2821,33 @@ name|e
 index|]
 argument_list|)
 expr_stmt|;
+elseif|else
+ifdef|#
+directive|ifdef
+name|vms
+if|if
+condition|(
+name|e
+operator|==
+name|EVMSERR
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"VMS system error %d"
+argument_list|,
+name|vaxc$errno
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"vmserror"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"System error %d"
@@ -2919,7 +2993,7 @@ condition|;
 name|cp
 operator|++
 control|)
-name|putchar
+name|ex_putchar
 argument_list|(
 operator|*
 name|cp
@@ -3190,19 +3264,12 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|oovno
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGEMT
 argument_list|,
 name|onemt
 argument_list|)
-expr_stmt|;
-name|oovno
-operator|=
-name|_ovno
 expr_stmt|;
 comment|/* 2 and 3 are valid on 11/40 type vi, so */
 if|if
@@ -3265,7 +3332,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|ex_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3290,14 +3357,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|ex_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|exit
+name|ex_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -3472,7 +3539,7 @@ argument_list|()
 block|;
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 block|;
 if|if
@@ -3519,7 +3586,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|exit
+name|ex_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -3567,7 +3634,7 @@ name|V6
 end_ifndef
 
 begin_expr_stmt
-unit|exit
+unit|ex_exit
 operator|(
 name|i
 operator|)
@@ -3624,9 +3691,6 @@ begin_block
 block|{
 name|ttymode
 name|f
-decl_stmt|;
-name|int
-name|omask
 decl_stmt|;
 name|struct
 name|winsize
@@ -3685,9 +3749,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|f
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3697,11 +3764,18 @@ name|inopen
 condition|)
 name|error
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|TIOCGWINSZ
 if|if
 condition|(
 name|ioctl
@@ -3737,6 +3811,8 @@ condition|)
 name|winch
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vcnt

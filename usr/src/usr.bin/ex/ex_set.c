@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_set.c	7.4 (Berkeley) %G%"
+literal|"@(#)ex_set.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -230,7 +230,7 @@ name|dontset
 label|:
 name|ignore
 argument_list|(
-name|getchar
+name|ex_getchar
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -454,7 +454,7 @@ name|printone
 goto|;
 if|if
 condition|(
-name|getchar
+name|ex_getchar
 argument_list|()
 operator|!=
 literal|'='
@@ -609,7 +609,7 @@ operator|(
 operator|*
 name|cp
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 operator|)
 operator|==
@@ -625,7 +625,7 @@ condition|)
 operator|*
 name|cp
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 name|cp
@@ -934,7 +934,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|' '
 argument_list|)
@@ -985,7 +985,7 @@ block|{
 case|case
 name|ONOFF
 case|:
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%s%s"
 argument_list|,
@@ -1004,7 +1004,7 @@ break|break;
 case|case
 name|NUMERIC
 case|:
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%s=%d"
 argument_list|,
@@ -1022,7 +1022,7 @@ case|:
 case|case
 name|OTERM
 case|:
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%s=%s"
 argument_list|,

@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tagio.c	7.3 (Berkeley) %G%"
+literal|"@(#)ex_tagio.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vms
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<file.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

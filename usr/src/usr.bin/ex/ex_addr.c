@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_addr.c	7.3 (Berkeley) %G%"
+literal|"@(#)ex_addr.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,7 +226,7 @@ name|cnt
 operator|*
 literal|10
 operator|+
-name|getchar
+name|ex_getchar
 argument_list|()
 operator|-
 literal|'0'
@@ -804,7 +804,7 @@ name|c
 operator|=
 name|markreg
 argument_list|(
-name|getchar
+name|ex_getchar
 argument_list|()
 argument_list|)
 expr_stmt|;

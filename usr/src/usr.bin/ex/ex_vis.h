@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_vis.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_vis.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -663,7 +663,7 @@ end_comment
 begin_decl_stmt
 name|var
 name|short
-name|ZERO
+name|ex_ZERO
 decl_stmt|;
 end_decl_stmt
 
@@ -860,7 +860,7 @@ end_comment
 begin_decl_stmt
 name|var
 name|short
-name|Peekkey
+name|Peek_key
 decl_stmt|;
 end_decl_stmt
 
@@ -882,7 +882,7 @@ end_comment
 begin_decl_stmt
 name|var
 name|int
-name|vSCROLL
+name|ex_vSCROLL
 decl_stmt|;
 end_decl_stmt
 

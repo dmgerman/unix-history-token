@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	7.6 (Berkeley) %G%"
+literal|"@(#)ex_unix.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +110,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -154,7 +154,7 @@ argument_list|)
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 default|default:
@@ -349,7 +349,7 @@ break|break;
 block|}
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -432,7 +432,7 @@ expr_stmt|;
 name|vnfl
 argument_list|()
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 name|mesg
 argument_list|(
@@ -640,9 +640,12 @@ if|if
 condition|(
 name|inopen
 condition|)
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|f
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -809,9 +812,9 @@ argument_list|(
 name|tfile
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VMUNIX
+ifdef|#
+directive|ifdef
+name|EXSTRINGS
 name|close
 argument_list|(
 name|erfile
@@ -864,7 +867,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"No %s!\n"
 argument_list|,
@@ -970,9 +973,12 @@ if|if
 condition|(
 name|inopen
 condition|)
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|f
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|setrupt
@@ -990,7 +996,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|"!\n"
 argument_list|)
@@ -1144,7 +1150,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|ex_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1200,7 +1206,7 @@ operator|==
 literal|3
 condition|)
 block|{
-name|delete
+name|ex_delete
 argument_list|(
 literal|0
 argument_list|)

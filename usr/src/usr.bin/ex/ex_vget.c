@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.8 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,11 @@ begin_block
 block|{
 if|if
 condition|(
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 condition|)
-name|Peekkey
+name|Peek_key
 operator|=
 name|c
 expr_stmt|;
@@ -142,14 +142,14 @@ end_macro
 
 begin_block
 block|{
-name|Peekkey
+name|Peek_key
 operator|=
 name|getbr
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|Peekkey
+name|Peek_key
 operator|==
 literal|0
 operator|)
@@ -202,9 +202,6 @@ name|char
 modifier|*
 name|colp
 decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
 define|#
 directive|define
 name|BEEHIVE
@@ -227,14 +224,14 @@ name|getATTN
 label|:
 if|if
 condition|(
-name|Peekkey
+name|Peek_key
 condition|)
 block|{
 name|c
 operator|=
-name|Peekkey
+name|Peek_key
 expr_stmt|;
-name|Peekkey
+name|Peek_key
 operator|=
 literal|0
 expr_stmt|;
@@ -360,6 +357,9 @@ name|doingread
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|vms
 name|c
 operator|=
 name|read
@@ -378,6 +378,28 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+name|vms_read
+argument_list|(
+name|slevel
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|ttyindes
+argument_list|,
+operator|&
+name|ch
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|doingread
 operator|=
 literal|0
@@ -614,7 +636,7 @@ operator|!
 name|d
 condition|)
 block|{
-name|Peekkey
+name|Peek_key
 operator|=
 name|c
 expr_stmt|;
@@ -639,7 +661,7 @@ name|d
 expr_stmt|;
 else|else
 block|{
-name|Peekkey
+name|Peek_key
 operator|=
 name|c
 expr_stmt|;
@@ -806,14 +828,14 @@ end_macro
 
 begin_block
 block|{
-name|Peekkey
+name|Peek_key
 operator|=
 name|getkey
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|Peekkey
+name|Peek_key
 operator|)
 return|;
 block|}
@@ -885,7 +907,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -986,7 +1008,7 @@ name|Outchar
 operator|==
 name|termchar
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1000,15 +1022,15 @@ name|OP
 expr_stmt|;
 if|if
 condition|(
-name|Peekkey
+name|Peek_key
 operator|!=
 name|ATTN
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|QUIT
 operator|&&
-name|Peekkey
+name|Peek_key
 operator|!=
 name|CTRL
 argument_list|(
@@ -1033,7 +1055,7 @@ name|blewit
 label|:
 name|OPeek
 operator|=
-name|Peekkey
+name|Peek_key
 operator|==
 name|CTRL
 argument_list|(
@@ -1042,9 +1064,9 @@ argument_list|)
 condition|?
 literal|0
 else|:
-name|Peekkey
+name|Peek_key
 expr_stmt|;
-name|Peekkey
+name|Peek_key
 operator|=
 literal|0
 expr_stmt|;
@@ -1067,7 +1089,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|Peekkey
+name|Peek_key
 operator|=
 name|OPeek
 expr_stmt|;
@@ -1190,7 +1212,7 @@ end_macro
 
 begin_block
 block|{
-name|setBUF
+name|ex_setBUF
 argument_list|(
 name|DEL
 argument_list|)
@@ -1203,7 +1225,7 @@ comment|/*  * Put text from cursor upto wcursor in BUF.  */
 end_comment
 
 begin_expr_stmt
-name|setBUF
+name|ex_setBUF
 argument_list|(
 name|BUF
 argument_list|)
@@ -1405,7 +1427,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%d %sline"
 argument_list|,
@@ -1420,7 +1442,7 @@ name|notecnt
 operator|>
 literal|1
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'s'
 argument_list|)
@@ -1431,7 +1453,7 @@ operator|*
 name|notenam
 condition|)
 block|{
-name|printf
+name|ex_printf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -1452,12 +1474,12 @@ operator|)
 operator|!=
 literal|'e'
 condition|)
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'e'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|'d'
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.10 (Berkeley) %G%"
+literal|"@(#)ex_cmds.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ operator|&&
 name|endline
 condition|)
 block|{
-name|putchar
+name|ex_putchar
 argument_list|(
 literal|':'
 argument_list|)
@@ -300,6 +300,10 @@ name|addr
 operator|=
 name|address
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -397,7 +401,7 @@ literal|2
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 block|}
@@ -419,7 +423,7 @@ literal|':'
 condition|)
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Set command name for special character commands. 		 */
@@ -494,8 +498,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|choice
-label|:
 switch|switch
 condition|(
 name|c
@@ -830,7 +832,7 @@ argument_list|(
 name|addr1
 argument_list|)
 expr_stmt|;
-name|delete
+name|ex_delete
 argument_list|(
 literal|0
 argument_list|)
@@ -891,7 +893,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|delete
+name|ex_delete
 argument_list|(
 literal|0
 argument_list|)
@@ -971,7 +973,7 @@ expr_stmt|;
 name|laste
 operator|++
 expr_stmt|;
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 name|rop
@@ -991,7 +993,7 @@ name|laste
 operator|=
 literal|0
 expr_stmt|;
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 name|nochng
@@ -1179,7 +1181,7 @@ argument_list|()
 expr_stmt|;
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -1616,9 +1618,12 @@ block|}
 name|flush
 argument_list|()
 expr_stmt|;
+name|ignore
+argument_list|(
 name|setty
 argument_list|(
 name|normf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1627,7 +1632,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|ex_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1778,7 +1783,7 @@ expr_stmt|;
 name|laste
 operator|++
 expr_stmt|;
-name|sync
+name|ex_sync
 argument_list|()
 expr_stmt|;
 name|recover
@@ -2312,9 +2317,9 @@ expr_stmt|;
 name|setNAEOL
 argument_list|()
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
-literal|"@(#) Version 3.7, %G%."
+literal|"@(#) Version 3.7, 6/7/85."
 operator|+
 literal|5
 argument_list|)
@@ -2536,7 +2541,7 @@ literal|'@'
 case|:
 name|c
 operator|=
-name|getchar
+name|ex_getchar
 argument_list|()
 expr_stmt|;
 if|if
@@ -2796,7 +2801,7 @@ condition|)
 name|pofix
 argument_list|()
 expr_stmt|;
-name|printf
+name|ex_printf
 argument_list|(
 literal|"%d"
 argument_list|,
