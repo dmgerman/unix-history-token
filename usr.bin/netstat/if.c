@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if.c,v 1.23 1997/02/22 19:56:21 peter Exp $"
+literal|"$Id: if.c,v 1.25 1999/04/20 22:04:31 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,7 +918,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ipx:%-8s "
+literal|"ipx:%-8s  "
 argument_list|,
 name|netnum
 argument_list|)
