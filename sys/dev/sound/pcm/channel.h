@@ -91,6 +91,12 @@ decl_stmt|;
 name|int
 name|direction
 decl_stmt|;
+name|unsigned
+name|int
+name|interrupts
+decl_stmt|,
+name|xruns
+decl_stmt|;
 name|struct
 name|snd_dbuf
 modifier|*

@@ -765,6 +765,20 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sndbuf_getready
+argument_list|(
+name|bs
+argument_list|)
+operator|<
+name|amt
+condition|)
+name|c
+operator|->
+name|xruns
+operator|++
+expr_stmt|;
 name|ret
 operator|=
 operator|(
@@ -869,7 +883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * user write routine - uiomove data into secondary bufhard, trigger if necessary  * if blocking, sleep, rinse and repeat.  *  * called externally, so must handle locking  */
+comment|/*  * user write routine - uiomove data into secondary buffer, trigger if necessary  * if blocking, sleep, rinse and repeat.  *  * called externally, so must handle locking  */
 end_comment
 
 begin_function
@@ -1290,7 +1304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Feed new data from the read bufhard. Can be called in the bottom half.  * Hence must be called at spltty.  */
+comment|/*  * Feed new data from the read buffer. Can be called in the bottom half.  * Hence must be called at spltty.  */
 end_comment
 
 begin_function
@@ -1321,8 +1335,11 @@ name|c
 operator|->
 name|bufsoft
 decl_stmt|;
+name|unsigned
 name|int
 name|ret
+decl_stmt|,
+name|amt
 decl_stmt|;
 name|CHN_LOCKASSERT
 argument_list|(
@@ -1341,8 +1358,35 @@ argument|,
 literal|0x02
 argument|); 	}
 argument_list|)
+name|amt
+operator|=
+name|sndbuf_getready
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sndbuf_getfree
+argument_list|(
+name|bs
+argument_list|)
+operator|<
+name|amt
+condition|)
+name|c
+operator|->
+name|xruns
+operator|++
+expr_stmt|;
 name|ret
 operator|=
+operator|(
+name|amt
+operator|>
+literal|0
+operator|)
+condition|?
 name|sndbuf_feed
 argument_list|(
 name|b
@@ -1355,18 +1399,31 @@ name|c
 operator|->
 name|feeder
 argument_list|,
-name|sndbuf_getblksz
+name|amt
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+name|amt
+operator|-=
+name|sndbuf_getready
 argument_list|(
 name|b
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|==
+name|amt
+operator|>
 literal|0
 condition|)
+name|chn_rddump
+argument_list|(
+name|c
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
 name|chn_wakeup
 argument_list|(
 name|c
@@ -1477,15 +1534,6 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|struct
-name|snd_dbuf
-modifier|*
-name|b
-init|=
-name|c
-operator|->
-name|bufhard
-decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1494,7 +1542,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* tell the driver to update the primary bufhard if non-dma */
+comment|/* tell the driver to update the primary buffer if non-dma */
 name|chn_trigger
 argument_list|(
 name|c
@@ -1514,20 +1562,6 @@ operator|=
 name|chn_rdfeed
 argument_list|(
 name|c
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|chn_rddump
-argument_list|(
-name|c
-argument_list|,
-name|sndbuf_getblksz
-argument_list|(
-name|b
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1779,6 +1813,11 @@ name|CHN_LOCK
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|interrupts
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2685,6 +2724,18 @@ name|flags
 operator|&=
 name|CHN_F_RESET
 expr_stmt|;
+name|c
+operator|->
+name|interrupts
+operator|=
+literal|0
+expr_stmt|;
+name|c
+operator|->
+name|xruns
+operator|=
+literal|0
+expr_stmt|;
 name|CHANNEL_RESET
 argument_list|(
 name|c
@@ -2862,7 +2913,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the hardware and DMA bufhard first. */
 name|c
 operator|->
 name|feeder
