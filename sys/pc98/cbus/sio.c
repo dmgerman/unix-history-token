@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sio.c,v 1.92 1999/05/09 05:00:54 kato Exp $  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	from: i386/isa sio.c,v 1.234  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sio.c,v 1.93 1999/05/09 13:00:48 phk Exp $  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	from: i386/isa sio.c,v 1.234  */
 end_comment
 
 begin_include
@@ -27,9 +27,11 @@ directive|include
 file|"opt_devfs.h"
 end_include
 
-begin_comment
-comment|/* #include "opt_sio.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"opt_sio.h"
+end_include
 
 begin_include
 include|#
@@ -1532,11 +1534,6 @@ name|espattach
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|isa_device
-operator|*
-name|isdp
-operator|,
 expr|struct
 name|com_s
 operator|*
@@ -5002,15 +4999,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|com_addr
-argument_list|(
-name|com
-operator|->
-name|unit
-argument_list|)
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|com
@@ -7468,17 +7456,10 @@ specifier|static
 name|int
 name|espattach
 parameter_list|(
-name|isdp
-parameter_list|,
 name|com
 parameter_list|,
 name|esp_port
 parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|isdp
-decl_stmt|;
 name|struct
 name|com_s
 modifier|*
@@ -7789,12 +7770,6 @@ directive|endif
 name|Port_t
 name|iobase
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int		s;
-endif|#
-directive|endif
 name|int
 name|unit
 decl_stmt|;
@@ -7835,12 +7810,6 @@ decl_stmt|;
 name|u_long
 name|obufsize
 decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|isdp->id_ri_flags |= RI_FAST;
 endif|#
 directive|endif
 name|iobase
@@ -8918,8 +8887,6 @@ if|if
 condition|(
 name|espattach
 argument_list|(
-name|dev
-argument_list|,
 name|com
 argument_list|,
 operator|*
@@ -9507,12 +9474,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|s = spltty(); 	com_addr(unit) = com; 	splx(s);
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -11069,12 +11030,6 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|com_addr(com->unit) = NULL;
-endif|#
-directive|endif
 if|if
 condition|(
 name|com
@@ -11633,13 +11588,10 @@ block|{
 name|int
 name|mynor
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|struct
-name|tty
+name|com_s
 modifier|*
-name|tp
+name|com
 decl_stmt|;
 name|mynor
 operator|=
@@ -11659,19 +11611,19 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-name|unit
+name|com
 operator|=
+name|com_addr
+argument_list|(
 name|MINOR_TO_UNIT
 argument_list|(
 name|mynor
 argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|com_addr
-argument_list|(
-name|unit
-argument_list|)
+name|com
 operator|->
 name|gone
 condition|)
@@ -11680,21 +11632,14 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-name|tp
-operator|=
-name|com_addr
-argument_list|(
-name|unit
-argument_list|)
-operator|->
-name|tp
-expr_stmt|;
 return|return
 operator|(
 operator|(
 operator|*
 name|linesw
 index|[
+name|com
+operator|->
 name|tp
 operator|->
 name|t_line
@@ -11703,6 +11648,8 @@ operator|.
 name|l_read
 operator|)
 operator|(
+name|com
+operator|->
 name|tp
 operator|,
 name|uio
@@ -11738,9 +11685,9 @@ name|int
 name|mynor
 decl_stmt|;
 name|struct
-name|tty
+name|com_s
 modifier|*
-name|tp
+name|com
 decl_stmt|;
 name|int
 name|unit
@@ -11770,12 +11717,16 @@ argument_list|(
 name|mynor
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|com
+operator|=
 name|com_addr
 argument_list|(
 name|unit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|com
 operator|->
 name|gone
 condition|)
@@ -11784,15 +11735,6 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-name|tp
-operator|=
-name|com_addr
-argument_list|(
-name|unit
-argument_list|)
-operator|->
-name|tp
-expr_stmt|;
 comment|/* 	 * (XXX) We disallow virtual consoles if the physical console is 	 * a serial port.  This is in case there is a display attached that 	 * is not the console.  In that situation we don't need/want the X 	 * server taking over the console. 	 */
 if|if
 condition|(
@@ -11814,6 +11756,8 @@ operator|(
 operator|*
 name|linesw
 index|[
+name|com
+operator|->
 name|tp
 operator|->
 name|t_line
@@ -11822,6 +11766,8 @@ operator|.
 name|l_write
 operator|)
 operator|(
+name|com
+operator|->
 name|tp
 operator|,
 name|uio
@@ -12614,6 +12560,14 @@ directive|else
 comment|/* COM_MULTIPORT */
 name|bool_t
 name|possibly_more_intrs
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|com_s
+modifier|*
+name|com
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -19794,7 +19748,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-comment|/*  * XXX: sciocnget() and sciocnputc() are not declared static, as they are  * referred to from i386/i386/i386-gdbstub.c.  */
 specifier|static
 name|cn_probe_t
 name|siocnprobe
@@ -19807,9 +19760,11 @@ specifier|static
 name|cn_checkc_t
 name|siocncheckc
 decl_stmt|;
+specifier|static
 name|cn_getc_t
 name|siocngetc
 decl_stmt|;
+specifier|static
 name|cn_putc_t
 name|siocnputc
 decl_stmt|;
@@ -19828,18 +19783,17 @@ argument_list|,
 name|siocnputc
 argument_list|)
 expr_stmt|;
-comment|/*  * Routines to support GDB on an sio port.  */
-name|dev_t
-name|gdbdev
-decl_stmt|;
-name|cn_getc_t
-modifier|*
-name|gdb_getc
-decl_stmt|;
-name|cn_putc_t
-modifier|*
-name|gdb_putc
-decl_stmt|;
+comment|/* To get the GDB related variables */
+if|#
+directive|if
+name|DDB
+operator|>
+literal|0
+include|#
+directive|include
+file|<ddb/ddb.h>
+endif|#
+directive|endif
 endif|#
 directive|endif
 specifier|static
@@ -20637,6 +20591,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
+if|#
+directive|if
+name|DDB
+operator|>
+literal|0
 name|gdbdev
 operator|=
 name|makedev
@@ -20656,19 +20615,25 @@ name|siocnputc
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 block|}
 block|}
 block|}
 ifdef|#
 directive|ifdef
 name|__i386__
+if|#
+directive|if
+name|DDB
+operator|>
+literal|0
 comment|/* 	 * XXX Ugly Compatability. 	 * If no gdb port has been specified, set it to be the console 	 * as some configuration files don't specify the gdb port. 	 */
 if|if
 condition|(
 name|gdbdev
 operator|==
-operator|-
-literal|1
+name|NODEV
 operator|&&
 operator|(
 name|boothowto
@@ -20720,6 +20685,8 @@ operator|=
 name|siocnputc
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
