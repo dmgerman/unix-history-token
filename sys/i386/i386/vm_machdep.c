@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -120,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_ifdef
@@ -944,7 +944,7 @@ operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
-name|cpu_switch
+name|cpu_throw
 argument_list|()
 expr_stmt|;
 name|panic
