@@ -4693,6 +4693,83 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 4S RS232 */
+block|{
+literal|"Moxa Technologies, Smartio CP-104UL/PCI"
+block|,
+name|NULL
+block|,
+block|{
+literal|0x1393
+block|,
+literal|0x1041
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|,      }
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x10
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x18
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|, 		}
+block|, 	}
+block|,
 comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 4S RS232/422/485 */
 block|{
 literal|"Moxa Technologies, Industio CP-114"
