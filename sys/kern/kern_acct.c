@@ -592,14 +592,13 @@ goto|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If accounting was previously enabled, kill the old space-watcher, 	 * close the file, and (if no new file was specified, leave). 	 */
-comment|/* 	 * XXX arr: Should not hold lock over vnode operation. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
 name|acct_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If accounting was previously enabled, kill the old space-watcher, 	 * close the file, and (if no new file was specified, leave). 	 * 	 * XXX arr: should not hold lock over vnode operation. 	 */
 if|if
 condition|(
 name|acctp
@@ -783,22 +782,8 @@ name|td
 decl_stmt|;
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
 name|acct
 name|acct
-decl_stmt|;
-name|struct
-name|rusage
-modifier|*
-name|r
 decl_stmt|;
 name|struct
 name|timeval
@@ -808,21 +793,6 @@ name|st
 decl_stmt|,
 name|tmp
 decl_stmt|;
-name|int
-name|t
-decl_stmt|,
-name|ret
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|uc
-decl_stmt|;
 name|struct
 name|plimit
 modifier|*
@@ -830,6 +800,31 @@ name|newlim
 decl_stmt|,
 modifier|*
 name|oldlim
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|rusage
+modifier|*
+name|r
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|uc
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|int
+name|t
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -861,6 +856,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 comment|/* 	 * Get process accounting information. 	 */
 name|PROC_LOCK
 argument_list|(
@@ -1178,7 +1179,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write the accounting information to the file. 	 */
+comment|/* 	 * Finish doing things that require acct_mtx, and release acct_mtx. 	 */
 name|uc
 operator|=
 name|crhold
@@ -1248,6 +1249,7 @@ argument_list|(
 name|oldlim
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Write the accounting information to the file. 	 */
 name|VOP_LEASE
 argument_list|(
 name|vp
@@ -1501,7 +1503,7 @@ operator|&
 name|acct_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX arr: Need to fix the issue of holding acct_mtx over 	 * the below vnode operations. 	 */
+comment|/* 	 * XXX arr: need to fix the issue of holding acct_mtx over 	 * the below vnode operations. 	 */
 if|if
 condition|(
 name|savacctp
