@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c 1.1 %G%"
+literal|"@(#)lookup.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,19 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|nl
+modifier|*
+name|disptab
+index|[
+literal|077
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Lookup is called to  * find a symbol in the  * block structure symbol  * table and returns a pointer to  * its namelist entry.  */

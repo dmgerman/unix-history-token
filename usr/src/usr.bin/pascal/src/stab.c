@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.6 %G%"
+literal|"@(#)stab.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -663,7 +663,7 @@ name|stabfunc
 argument_list|(
 argument|name
 argument_list|,
-argument|class
+argument|typeclass
 argument_list|,
 argument|line
 argument_list|,
@@ -680,7 +680,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|class
+name|typeclass
 decl_stmt|;
 end_decl_stmt
 
@@ -720,7 +720,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|class
+name|typeclass
 operator|==
 name|FUNC
 condition|)
@@ -747,7 +747,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|class
+name|typeclass
 operator|==
 name|PROC
 condition|)
@@ -1254,7 +1254,7 @@ name|stabefunc
 argument_list|(
 argument|name
 argument_list|,
-argument|class
+argument|typeclass
 argument_list|,
 argument|line
 argument_list|)
@@ -1269,7 +1269,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|class
+name|typeclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,7 +1286,7 @@ name|type
 decl_stmt|;
 if|if
 condition|(
-name|class
+name|typeclass
 operator|==
 name|FUNC
 condition|)
@@ -1299,7 +1299,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|class
+name|typeclass
 operator|==
 name|PROC
 condition|)

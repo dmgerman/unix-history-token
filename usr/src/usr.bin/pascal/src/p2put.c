@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.9 %G%"
+literal|"@(#)p2put.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,7 +848,7 @@ argument|level
 argument_list|,
 argument|offset
 argument_list|,
-argument|extra_flags
+argument|other_flags
 argument_list|,
 argument|type
 argument_list|)
@@ -875,7 +875,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|extra_flags
+name|other_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -908,7 +908,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|extra_flags
+name|other_flags
 operator|&
 name|NREGVAR
 condition|)
@@ -957,7 +957,7 @@ name|level
 argument_list|,
 name|offset
 argument_list|,
-name|extra_flags
+name|other_flags
 argument_list|)
 operator|==
 name|GLOBALVAR
@@ -1033,7 +1033,7 @@ name|level
 argument_list|,
 name|offset
 argument_list|,
-name|extra_flags
+name|other_flags
 argument_list|,
 name|type
 argument_list|)
@@ -1061,7 +1061,7 @@ argument|level
 argument_list|,
 argument|offset
 argument_list|,
-argument|extra_flags
+argument|other_flags
 argument_list|,
 argument|type
 argument_list|)
@@ -1088,7 +1088,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|extra_flags
+name|other_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -1118,7 +1118,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|extra_flags
+name|other_flags
 operator|&
 name|NREGVAR
 condition|)
@@ -1137,7 +1137,7 @@ name|level
 argument_list|,
 name|offset
 argument_list|,
-name|extra_flags
+name|other_flags
 argument_list|)
 condition|)
 block|{
@@ -1385,13 +1385,13 @@ end_comment
 begin_macro
 name|putCON8
 argument_list|(
-argument|value
+argument|val
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|double
-name|value
+name|val
 decl_stmt|;
 end_decl_stmt
 
@@ -1442,7 +1442,7 @@ literal|"	.double 0d%.20e"
 argument_list|,
 literal|0
 argument_list|,
-name|value
+name|val
 argument_list|)
 expr_stmt|;
 name|putprintf
