@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.7 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,8 +59,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|short
+name|long
 name|tolimit
 init|=
 literal|0
@@ -170,9 +169,52 @@ name|unsigned
 name|long
 name|limit
 decl_stmt|;
+comment|/* 	 *	round lowpc and highpc to multiples of the density we're using 	 *	so the rest of the scaling (here and in gprof) stays in ints. 	 */
+name|lowpc
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ROUNDDOWN
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|lowpc
+argument_list|,
+name|HISTFRACTION
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HISTCOUNTER
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|s_lowpc
 operator|=
 name|lowpc
+expr_stmt|;
+name|highpc
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ROUNDUP
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|highpc
+argument_list|,
+name|HISTFRACTION
+operator|*
+sizeof|sizeof
+argument_list|(
+name|HISTCOUNTER
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|s_highpc
 operator|=
@@ -188,11 +230,9 @@ name|monsize
 operator|=
 operator|(
 name|s_textsize
-operator|+
-literal|1
-operator|)
 operator|/
-literal|2
+name|HISTFRACTION
+operator|)
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -280,7 +320,7 @@ name|limit
 operator|=
 name|s_textsize
 operator|*
-name|DENSITY
+name|ARCDENSITY
 operator|/
 literal|100
 expr_stmt|;
@@ -288,12 +328,12 @@ if|if
 condition|(
 name|limit
 operator|<
-name|MINCNT
+name|MINARCS
 condition|)
 block|{
 name|limit
 operator|=
-name|MINCNT
+name|MINARCS
 expr_stmt|;
 block|}
 elseif|else
@@ -362,6 +402,13 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|minsbrk
+operator|=
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|tos
 index|[
 literal|0
@@ -612,12 +659,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*      *	This routine is massaged so that it may be jsb'ed to      */
-end_comment
+begin_asm
+asm|asm(".text");
+end_asm
 
 begin_asm
-asm|asm("#define _mcount mcount");
+asm|asm("#the beginning of mcount()");
+end_asm
+
+begin_asm
+asm|asm(".data");
 end_asm
 
 begin_macro
@@ -632,31 +683,39 @@ name|char
 modifier|*
 name|selfpc
 decl_stmt|;
-comment|/* r11 */
+comment|/* r11 => r5 */
 specifier|register
 name|unsigned
 name|short
 modifier|*
 name|frompcindex
 decl_stmt|;
-comment|/* r10 */
+comment|/* r10 => r4 */
 specifier|register
 name|struct
 name|tostruct
 modifier|*
 name|top
 decl_stmt|;
-comment|/* r9 */
+comment|/* r9  => r3 */
+specifier|register
+name|struct
+name|tostruct
+modifier|*
+name|prevtop
+decl_stmt|;
+comment|/* r8  => r2 */
+specifier|register
+name|long
+name|toindex
+decl_stmt|;
+comment|/* r7  => r1 */
 specifier|static
 name|int
 name|profiling
 init|=
 literal|0
 decl_stmt|;
-asm|asm( "	forgot to run ex script on gcrt0.s" );
-asm|asm( "#define r11 r5" );
-asm|asm( "#define r10 r4" );
-asm|asm( "#define r9 r3" );
 ifdef|#
 directive|ifdef
 name|lint
@@ -676,6 +735,8 @@ else|#
 directive|else
 else|not lint
 comment|/* 	 *	find the return address for mcount, 	 *	and the return address for mcount's caller. 	 */
+asm|asm("	.text");
+comment|/* make sure we're in text space */
 asm|asm("	movl (sp), r11");
 comment|/* selfpc = ... (jsb frame) */
 asm|asm("	movl 16(fp), r10");
@@ -750,24 +811,42 @@ name|froms
 index|[
 operator|(
 operator|(
+operator|(
 name|long
 operator|)
 name|frompcindex
 operator|)
-operator|>>
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|froms
+argument_list|)
+operator|-
 literal|1
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|froms
+argument_list|)
 index|]
+expr_stmt|;
+name|toindex
+operator|=
+operator|*
+name|frompcindex
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|frompcindex
+name|toindex
 operator|==
 literal|0
 condition|)
 block|{
-operator|*
-name|frompcindex
+comment|/* 		 *	first time traversing this arc 		 */
+name|toindex
 operator|=
 operator|++
 name|tos
@@ -779,8 +858,7 @@ name|link
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|frompcindex
+name|toindex
 operator|>=
 name|tolimit
 condition|)
@@ -789,13 +867,17 @@ goto|goto
 name|overflow
 goto|;
 block|}
+operator|*
+name|frompcindex
+operator|=
+name|toindex
+expr_stmt|;
 name|top
 operator|=
 operator|&
 name|tos
 index|[
-operator|*
-name|frompcindex
+name|toindex
 index|]
 expr_stmt|;
 name|top
@@ -808,7 +890,7 @@ name|top
 operator|->
 name|count
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|top
 operator|->
@@ -816,35 +898,18 @@ name|link
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
-else|else
-block|{
 name|top
 operator|=
 operator|&
 name|tos
 index|[
-operator|*
-name|frompcindex
+name|toindex
 index|]
 expr_stmt|;
-block|}
-for|for
-control|(
-init|;
-comment|/* goto done */
-condition|;
-name|top
-operator|=
-operator|&
-name|tos
-index|[
-name|top
-operator|->
-name|link
-index|]
-control|)
-block|{
 if|if
 condition|(
 name|top
@@ -854,6 +919,7 @@ operator|==
 name|selfpc
 condition|)
 block|{
+comment|/* 		 *	arc at front of chain; usual case. 		 */
 name|top
 operator|->
 name|count
@@ -863,6 +929,14 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 	 *	have to go looking down chain for it. 	 *	top points to what we are looking at, 	 *	prevtop points to previous top. 	 *	we know it is not at the head of the chain. 	 */
+for|for
+control|(
+init|;
+comment|/* goto done */
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|top
@@ -872,9 +946,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|top
-operator|->
-name|link
+comment|/* 			 *	top is end of the chain and none of the chain 			 *	had top->selfpc == selfpc. 			 *	so we allocate a new tostruct 			 *	and link it to the head of the chain. 			 */
+name|toindex
 operator|=
 operator|++
 name|tos
@@ -886,23 +959,21 @@ name|link
 expr_stmt|;
 if|if
 condition|(
-name|top
-operator|->
-name|link
+name|toindex
 operator|>=
 name|tolimit
 condition|)
+block|{
 goto|goto
 name|overflow
 goto|;
+block|}
 name|top
 operator|=
 operator|&
 name|tos
 index|[
-name|top
-operator|->
-name|link
+name|toindex
 index|]
 expr_stmt|;
 name|top
@@ -921,7 +992,73 @@ name|top
 operator|->
 name|link
 operator|=
-literal|0
+operator|*
+name|frompcindex
+expr_stmt|;
+operator|*
+name|frompcindex
+operator|=
+name|toindex
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+comment|/* 		 *	otherwise, check the next arc on the chain. 		 */
+name|prevtop
+operator|=
+name|top
+expr_stmt|;
+name|top
+operator|=
+operator|&
+name|tos
+index|[
+name|top
+operator|->
+name|link
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|top
+operator|->
+name|selfpc
+operator|==
+name|selfpc
+condition|)
+block|{
+comment|/* 			 *	there it is. 			 *	increment its count 			 *	move it to the head of the chain. 			 */
+name|top
+operator|->
+name|count
+operator|++
+expr_stmt|;
+name|toindex
+operator|=
+name|prevtop
+operator|->
+name|link
+expr_stmt|;
+name|prevtop
+operator|->
+name|link
+operator|=
+name|top
+operator|->
+name|link
+expr_stmt|;
+name|top
+operator|->
+name|link
+operator|=
+operator|*
+name|frompcindex
+expr_stmt|;
+operator|*
+name|frompcindex
+operator|=
+name|toindex
 expr_stmt|;
 goto|goto
 name|done
@@ -937,11 +1074,7 @@ expr_stmt|;
 comment|/* and fall through */
 name|out
 label|:
-asm|asm( "	rsb" );
-asm|asm( "#undef r11" );
-asm|asm( "#undef r10" );
-asm|asm( "#undef r9" );
-asm|asm( "#undef _mcount");
+asm|asm("	rsb");
 name|overflow
 label|:
 name|tolimit
@@ -969,6 +1102,18 @@ name|out
 goto|;
 block|}
 end_block
+
+begin_asm
+asm|asm(".text");
+end_asm
+
+begin_asm
+asm|asm("#the end of mcount()");
+end_asm
+
+begin_asm
+asm|asm(".data");
+end_asm
 
 begin_comment
 comment|/*VARARGS1*/
@@ -1196,10 +1341,6 @@ end_block
 begin_comment
 comment|/*  * This is a stub for the "brk" system call, which we want to  * catch so that it will not deallocate our data space.  * (of which the program is not aware)  */
 end_comment
-
-begin_asm
-asm|asm("#define _curbrk curbrk");
-end_asm
 
 begin_decl_stmt
 specifier|extern
