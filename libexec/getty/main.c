@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.10 1996/05/07 16:42:26 ache Exp $"
+literal|"$Id: main.c,v 1.10.2.1 1996/11/16 21:07:03 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1549,6 +1549,16 @@ expr_stmt|;
 name|edithost
 argument_list|(
 name|HE
+argument_list|)
+expr_stmt|;
+comment|/* if a delay was specified then sleep for that  		   number of seconds before writing the initial prompt */
+if|if
+condition|(
+name|DE
+condition|)
+name|sleep
+argument_list|(
+name|DE
 argument_list|)
 expr_stmt|;
 if|if

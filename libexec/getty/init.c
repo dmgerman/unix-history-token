@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.3 1996/05/05 19:01:09 joerg Exp $"
+literal|"$Id: init.c,v 1.3.2.1 1996/11/16 21:07:02 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +486,11 @@ literal|"o2"
 block|}
 block|,
 comment|/* user mode o_flags */
+block|{
+literal|"de"
+block|}
+block|,
+comment|/* delay before sending 1st prompt */
 block|{
 literal|0
 block|}
