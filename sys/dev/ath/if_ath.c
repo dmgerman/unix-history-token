@@ -11289,6 +11289,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Extend 15-bit time stamp from rx descriptor to  * a full 64-bit TSF using the current h/w TSF.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ath_extend_tsf
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int32_t
+name|rstamp
+parameter_list|)
+block|{
+name|u_int64_t
+name|tsf
+decl_stmt|;
+name|tsf
+operator|=
+name|ath_hal_gettsf64
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tsf
+operator|&
+literal|0x7fff
+operator|)
+operator|<
+name|rstamp
+condition|)
+name|tsf
+operator|-=
+literal|0x8000
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|tsf
+operator|&
+operator|~
+literal|0x7fff
+operator|)
+operator||
+name|rstamp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Intercept management frames to collect beacon rssi data  * and to do ibss merges.  */
 end_comment
 
@@ -11393,25 +11451,19 @@ operator|==
 name|IEEE80211_S_RUN
 condition|)
 block|{
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-init|=
-name|sc
-operator|->
-name|sc_ah
-decl_stmt|;
-comment|/* XXX extend rstamp */
 name|u_int64_t
 name|tsf
 init|=
-name|ath_hal_gettsf64
+name|ath_extend_tsf
 argument_list|(
-name|ah
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|rstamp
 argument_list|)
 decl_stmt|;
-comment|/* 			 * Handle ibss merge as needed; check the tsf on the 			 * frame before attempting the merge.  The 802.11 spec 			 * says the station should change it's bssid to match 			 * the oldest station with the same ssid, where oldest 			 * is determined by the tsf.  Note that hardware 			 * reconfiguration happens through callback to 			 * ath_newstate as the state machine will be go 			 * from RUN -> RUN when this happens. 			 */
+comment|/* 			 * Handle ibss merge as needed; check the tsf on the 			 * frame before attempting the merge.  The 802.11 spec 			 * says the station should change it's bssid to match 			 * the oldest station with the same ssid, where oldest 			 * is determined by the tsf.  Note that hardware 			 * reconfiguration happens through callback to 			 * ath_newstate as the state machine will go from 			 * RUN -> RUN when this happens. 			 */
 if|if
 condition|(
 name|le64toh
@@ -11425,6 +11477,27 @@ argument_list|)
 operator|>=
 name|tsf
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_STATE
+argument_list|,
+literal|"ibss merge, rstamp %u tsf %llu "
+literal|"tstamp %llu\n"
+argument_list|,
+name|rstamp
+argument_list|,
+name|tsf
+argument_list|,
+name|ni
+operator|->
+name|ni_tstamp
+operator|.
+name|tsf
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -11435,6 +11508,7 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
