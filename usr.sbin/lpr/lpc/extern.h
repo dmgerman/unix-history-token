@@ -15,6 +15,32 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_comment
+comment|/*  * Options for setup_myprinter().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUMP_NOHEADER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Do not print a header line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUMP_CHDIR_SD
+value|0x0002
+end_define
+
+begin_comment
+comment|/* chdir into the spool directory */
+end_comment
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|void
@@ -24,6 +50,21 @@ name|struct
 name|printer
 modifier|*
 name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bottomq_cmd
+parameter_list|(
+name|int
+name|_argc
+parameter_list|,
+name|char
+modifier|*
+name|_argv
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -273,7 +314,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|topq
+name|topq_cmd
 parameter_list|(
 name|int
 name|_argc
@@ -294,6 +335,50 @@ name|struct
 name|printer
 modifier|*
 name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|topq
+parameter_list|(
+name|int
+name|_argc
+parameter_list|,
+name|char
+modifier|*
+name|_argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_comment
+comment|/* from lpc.c: */
+end_comment
+
+begin_function_decl
+name|struct
+name|printer
+modifier|*
+name|setup_myprinter
+parameter_list|(
+name|char
+modifier|*
+name|_pwanted
+parameter_list|,
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|,
+name|int
+name|_sump_opts
 parameter_list|)
 function_decl|;
 end_function_decl
