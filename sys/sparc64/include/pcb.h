@@ -28,6 +28,13 @@ name|MAXWIN
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCB_FEF
+value|(1<< 0)
+end_define
+
 begin_comment
 comment|/* NOTE: pcb_ufp must be aligned on a 64 byte boundary. */
 end_comment
@@ -47,6 +54,9 @@ name|pcb_sp
 decl_stmt|;
 name|u_long
 name|pcb_pc
+decl_stmt|;
+name|u_long
+name|pcb_flags
 decl_stmt|;
 name|u_long
 name|pcb_nsaved
