@@ -2121,9 +2121,6 @@ if|if
 condition|(
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|qcb
 argument_list|,
 name|PRIBIO

@@ -2745,9 +2745,6 @@ name|TAP_RWAIT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|tp
 argument_list|)
 expr_stmt|;
@@ -3529,9 +3526,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|tp
 argument_list|,
 name|PCATCH

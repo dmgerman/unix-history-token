@@ -564,9 +564,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nfssvc_sockhead
 argument_list|,
@@ -1354,9 +1351,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|nfsd
 argument_list|,
 name|PSOCK
@@ -2858,9 +2852,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|,
 name|PZERO
@@ -2947,9 +2938,6 @@ name|NFSRV_WANTSND
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|)
 expr_stmt|;
@@ -3096,9 +3084,6 @@ name|SLP_WANTINIT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nfssvc_sockhead
 argument_list|)

@@ -4227,9 +4227,6 @@ else|else
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -16612,9 +16609,6 @@ else|else
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -19037,9 +19031,6 @@ comment|/* Check every second for BlinkLed */
 comment|/* There is no PRICAM, but outwardly PRIBIO is functional */
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ccb
 argument_list|,
 name|PRIBIO

@@ -858,9 +858,6 @@ argument_list|)
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -899,9 +896,6 @@ name|i
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -1440,9 +1434,6 @@ expr_stmt|;
 comment|/* probably not needed */
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -2207,9 +2198,6 @@ name|SLEEPING
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|)
 expr_stmt|;
@@ -2685,9 +2673,6 @@ argument_list|)
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -2824,9 +2809,6 @@ expr_stmt|;
 comment|/* light off */
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -3318,9 +3300,6 @@ name|res
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI
@@ -3366,9 +3345,6 @@ name|FLAG_DEBUG
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|scu
 argument_list|,
 name|ASCPRI

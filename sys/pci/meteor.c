@@ -1813,9 +1813,6 @@ name|METEOR_SINGLE
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mtr
 argument_list|)
 expr_stmt|;
@@ -3754,9 +3751,6 @@ literal|0x0
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|m
 argument_list|,
 name|METPRI
@@ -3788,9 +3782,6 @@ literal|0x8040
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|m
 argument_list|,
 name|METPRI
@@ -4126,9 +4117,6 @@ condition|)
 comment|/* this should not happen, the read capture  				  should have completed or in the very least 				  recieved a signal before close is called. */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mtr
 argument_list|)
 expr_stmt|;
@@ -4556,9 +4544,6 @@ name|status
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mtr
 argument_list|,
 name|METPRI
@@ -6538,9 +6523,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mtr
 argument_list|,
 name|METPRI

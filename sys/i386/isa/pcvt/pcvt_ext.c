@@ -10480,9 +10480,6 @@ name|VT_WAIT_ACT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|old_vsp
 operator|->
@@ -10508,9 +10505,6 @@ name|VT_WAIT_ACT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vsp
 operator|->
@@ -11055,9 +11049,6 @@ name|VT_WAIT_ACT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|old_vsp
 operator|->
@@ -11083,9 +11074,6 @@ name|VT_WAIT_ACT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vsp
 operator|->
@@ -11402,9 +11390,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vs
 index|[

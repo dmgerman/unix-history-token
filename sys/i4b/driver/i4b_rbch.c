@@ -1035,9 +1035,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|rbch_softc
 index|[
@@ -1140,9 +1137,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isdn_linktab
 index|[
@@ -1454,9 +1448,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|rbch_softc
 index|[
@@ -1539,9 +1530,6 @@ return|;
 block|}
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|rbch_softc
 index|[
@@ -1605,9 +1593,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isdn_linktab
 index|[
@@ -2838,9 +2823,6 @@ name|cdp
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -3150,9 +3132,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isdn_linktab
 index|[
@@ -3235,9 +3214,6 @@ name|ST_WRWAITEMPTY
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isdn_linktab
 index|[

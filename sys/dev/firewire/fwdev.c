@@ -1615,9 +1615,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ir
 argument_list|,
 name|FWPRI
@@ -2376,9 +2373,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|it
 argument_list|,
 name|FWPRI
@@ -2682,9 +2676,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|it
 argument_list|,
 name|FWPRI
@@ -3029,9 +3020,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|xfer
 argument_list|,
 name|FWPRI
@@ -5031,9 +5019,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|xfer
 argument_list|,
 name|FWPRI

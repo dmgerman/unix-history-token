@@ -3393,9 +3393,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|np
 operator|->
@@ -3499,9 +3496,6 @@ name|NFLUSHWANT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|np
 operator|->
@@ -3560,9 +3554,6 @@ name|NFLUSHWANT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|np
 operator|->

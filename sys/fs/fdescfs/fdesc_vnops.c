@@ -453,9 +453,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|fdcache_lock
 argument_list|,
@@ -588,9 +585,6 @@ name|FDL_WANT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|fdcache_lock
 argument_list|)

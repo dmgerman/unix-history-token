@@ -6682,9 +6682,6 @@ decl_stmt|;
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|chan
 argument_list|)
 expr_stmt|;

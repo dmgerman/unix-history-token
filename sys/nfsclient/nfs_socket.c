@@ -996,9 +996,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|so
 operator|->
@@ -1623,9 +1620,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|lbolt
 argument_list|,
@@ -4495,9 +4489,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|lbolt
 argument_list|,
@@ -5709,9 +5700,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|,
 name|slpflag
@@ -5822,9 +5810,6 @@ name|NFSSTA_WANTSND
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|)
 expr_stmt|;
@@ -5918,9 +5903,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|,
 name|slpflag
@@ -6066,9 +6048,6 @@ name|NFSSTA_WANTRCV
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|statep
 argument_list|)
 expr_stmt|;

@@ -467,9 +467,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|,
 name|PZERO
@@ -674,9 +671,6 @@ name|RC_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|)
 expr_stmt|;
@@ -782,9 +776,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|,
 name|PZERO
@@ -1005,9 +996,6 @@ name|RC_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|)
 expr_stmt|;
@@ -1141,9 +1129,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|,
 name|PZERO
@@ -1307,9 +1292,6 @@ name|RC_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rp
 argument_list|)
 expr_stmt|;

@@ -4021,9 +4021,6 @@ name|ATA_WAIT_INTR
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ch
 argument_list|)
 expr_stmt|;
@@ -7302,9 +7299,6 @@ if|if
 condition|(
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|atadev
 operator|->
 name|channel

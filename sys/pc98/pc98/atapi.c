@@ -2250,9 +2250,6 @@ name|free
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ata
 argument_list|,
 name|PRIBIO
@@ -2315,9 +2312,6 @@ name|free
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ata
 argument_list|)
 expr_stmt|;
@@ -2490,9 +2484,6 @@ block|}
 else|else
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ac
 argument_list|)
 expr_stmt|;
@@ -5014,9 +5005,6 @@ name|ac
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ac
 argument_list|,
 name|PRIBIO

@@ -4359,9 +4359,6 @@ block|{
 comment|/* someone may be sleeping */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 operator|(
 name|vsp

@@ -754,9 +754,6 @@ name|ST_WAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|trace_queue
 index|[
@@ -1211,9 +1208,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|trace_queue
 index|[

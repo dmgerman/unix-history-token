@@ -2245,9 +2245,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|xfer
 argument_list|,
 name|PZERO
@@ -2487,9 +2484,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|xfer
 argument_list|,
 name|PZERO

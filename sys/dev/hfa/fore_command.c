@@ -878,9 +878,6 @@ comment|/* BYTE_ORDER == LITTLE_ENDIAN */
 comment|/* 			 * Poke whoever is waiting on the stats 			 */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|fup
 operator|->
@@ -1152,9 +1149,6 @@ name|EIO
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|fup
 operator|->

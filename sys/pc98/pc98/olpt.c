@@ -1954,9 +1954,6 @@ if|if
 condition|(
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|LPPRI
@@ -2306,9 +2303,6 @@ name|OBUSY
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -2460,9 +2454,6 @@ if|if
 condition|(
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|LPPRI
@@ -2667,9 +2658,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|LPPRI
@@ -2984,9 +2972,6 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|LPPRI

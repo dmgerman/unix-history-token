@@ -2468,9 +2468,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|LPTPRI

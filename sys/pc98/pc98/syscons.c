@@ -5911,9 +5911,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|scp
 operator|->
@@ -11332,9 +11329,6 @@ literal|0
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|scrn_blanked
 argument_list|)
@@ -11392,9 +11386,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|scrn_blanked
 argument_list|,
@@ -12206,9 +12197,6 @@ literal|0
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -12295,9 +12283,6 @@ literal|0
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -12402,9 +12387,6 @@ expr_stmt|;
 comment|/* sc->cur_scp == sc->new_scp */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->

@@ -6910,9 +6910,6 @@ expr_stmt|;
 comment|/* wakeup the waiting process */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ppc
 argument_list|)
 expr_stmt|;
@@ -7263,9 +7260,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ppc
 argument_list|,
 name|PPBPRI
@@ -7394,9 +7388,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ppc
 argument_list|,
 name|PPBPRI

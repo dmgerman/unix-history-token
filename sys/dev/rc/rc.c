@@ -5794,9 +5794,6 @@ name|RC_ACTOUT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|rc
 operator|->

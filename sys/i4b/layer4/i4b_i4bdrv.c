@@ -567,9 +567,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|i4b_rdqueue
 argument_list|,
@@ -3209,9 +3206,6 @@ literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|i4b_rdqueue
 argument_list|)
@@ -3342,9 +3336,6 @@ literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|i4b_rdqueue
 argument_list|)

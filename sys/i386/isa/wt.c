@@ -3255,9 +3255,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|t
 argument_list|)
 expr_stmt|;
@@ -3355,9 +3352,6 @@ expr_stmt|;
 comment|/* operation finished */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|t
 argument_list|)
 expr_stmt|;
@@ -3572,9 +3566,6 @@ expr_stmt|;
 comment|/* i/o error */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|t
 argument_list|)
 expr_stmt|;
@@ -3631,9 +3622,6 @@ name|dmatotal
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|t
 argument_list|)
 expr_stmt|;
@@ -3835,9 +3823,6 @@ parameter_list|)
 block|{
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|wtwritefm
 argument_list|,
 name|WTPRI
@@ -4062,9 +4047,6 @@ operator|)
 return|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|wtpoll
 argument_list|,
 name|WTPRI
@@ -4298,9 +4280,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|t
 argument_list|,
 name|WTPRI

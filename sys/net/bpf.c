@@ -1782,9 +1782,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|d
 argument_list|,
 operator|&
@@ -1973,9 +1970,6 @@ expr_stmt|;
 block|}
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|d
 argument_list|)
 expr_stmt|;

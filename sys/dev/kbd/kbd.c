@@ -2534,9 +2534,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|PZERO
@@ -3053,9 +3050,6 @@ name|KB_ASLEEP
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -3403,9 +3397,6 @@ name|KB_ASLEEP
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;

@@ -2688,9 +2688,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|pcic_event_thread
 argument_list|,
 name|PWAIT

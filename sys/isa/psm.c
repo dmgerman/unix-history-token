@@ -6776,9 +6776,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|,
 name|PZERO
@@ -11285,9 +11282,6 @@ name|PSM_ASLP
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -13148,9 +13142,6 @@ name|PSM_ASLP
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;

@@ -840,9 +840,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msgbufp
 argument_list|)
 expr_stmt|;

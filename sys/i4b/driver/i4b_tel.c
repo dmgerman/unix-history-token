@@ -983,9 +983,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -1031,9 +1028,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -1388,9 +1382,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -1696,9 +1687,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -2048,9 +2036,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -2369,9 +2354,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3028,9 +3010,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3609,9 +3588,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3688,9 +3664,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3718,9 +3691,6 @@ name|ST_WRWAITEMPTY
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3784,9 +3754,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3820,9 +3787,6 @@ name|ST_TONE
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -3925,9 +3889,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -4009,9 +3970,6 @@ name|ST_RDWAITDATA
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->
@@ -4076,9 +4034,6 @@ name|ST_WRWAITEMPTY
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sc
 operator|->

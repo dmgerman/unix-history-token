@@ -1852,9 +1852,6 @@ argument_list|)
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|minors
 index|[
@@ -2807,9 +2804,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|done
 operator|->
 name|home

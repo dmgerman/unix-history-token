@@ -4132,7 +4132,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|wakeup((caddr_t)&so->so_timeo); 	sorwakeup(so); 	sowwakeup(so);
+block|wakeup(&so->so_timeo); 	sorwakeup(so); 	sowwakeup(so);
 endif|#
 directive|endif
 block|}

@@ -487,9 +487,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|unvplock
 index|[
@@ -563,9 +560,6 @@ name|UNVP_WANT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|unvplock
 index|[

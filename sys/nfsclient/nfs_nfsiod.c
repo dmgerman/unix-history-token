@@ -570,9 +570,6 @@ index|]
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nfs_iodwant
 index|[
@@ -1074,9 +1071,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nfs_iodwant
 index|[

@@ -956,9 +956,6 @@ name|EINPROGRESS
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|request
 argument_list|,
 name|PRIBIO
@@ -2608,9 +2605,6 @@ condition|)
 break|break;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|error
 argument_list|,
@@ -3216,9 +3210,6 @@ block|}
 else|else
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|request
 argument_list|)
 expr_stmt|;
@@ -3371,9 +3362,6 @@ name|EIO
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|request
 argument_list|)
 expr_stmt|;

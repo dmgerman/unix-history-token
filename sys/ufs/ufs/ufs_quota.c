@@ -538,9 +538,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -722,9 +719,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -1219,9 +1213,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -1404,9 +1395,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -3029,9 +3017,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -3409,9 +3394,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -4571,9 +4553,6 @@ name|DQ_WANT
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|)
 expr_stmt|;
@@ -4984,9 +4963,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|,
 name|PINOD
@@ -5173,9 +5149,6 @@ name|DQ_WANT
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dq
 argument_list|)
 expr_stmt|;

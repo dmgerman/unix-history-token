@@ -3269,9 +3269,6 @@ name|slp
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|nd
 argument_list|)
 expr_stmt|;

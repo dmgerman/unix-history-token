@@ -4192,9 +4192,6 @@ name|FALSE
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|pp
 operator|->
@@ -6859,9 +6856,6 @@ expr_stmt|;
 comment|/* thunder away! */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|pp
 argument_list|)
 expr_stmt|;
