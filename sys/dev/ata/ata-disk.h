@@ -390,20 +390,16 @@ name|int32_t
 name|lun
 decl_stmt|;
 comment|/* logical unit number */
-name|u_int16_t
-name|cylinders
+name|u_int32_t
+name|total_secs
 decl_stmt|;
-comment|/* disk geometry (probed) */
+comment|/* total # of sectors (LBA) */
 name|u_int8_t
 name|heads
 decl_stmt|;
 name|u_int8_t
 name|sectors
 decl_stmt|;
-name|u_int32_t
-name|total_secs
-decl_stmt|;
-comment|/* total # of sectors (LBA) */
 name|u_int32_t
 name|transfersize
 decl_stmt|;
