@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.23	81/02/25	*/
+comment|/*	up.c	4.24	81/02/26	*/
 end_comment
 
 begin_include
@@ -2205,7 +2205,7 @@ comment|/*  * Handle a disk interrupt.  */
 end_comment
 
 begin_expr_stmt
-name|scintr
+name|upintr
 argument_list|(
 name|sc21
 argument_list|)

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.9	81/02/25	*/
+comment|/*	mba.c	4.10	81/02/26	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"mba.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Massbus driver; arbitrates massbusses through device driver routines  * and provides common functions.  */
@@ -1630,6 +1644,11 @@ operator|)
 return|;
 end_return
 
+begin_endif
 unit|}
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

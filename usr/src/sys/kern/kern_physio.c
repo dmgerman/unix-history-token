@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.12	%G%	*/
+comment|/*	kern_physio.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -242,11 +242,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UNFAST
+end_ifndef
 
 begin_define
 define|#
@@ -2182,11 +2182,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FASTVAX
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNFAST
+end_ifdef
 
 begin_comment
 comment|/*  * Unlink a buffer from the available list and mark it busy.  * (internal interface)  */

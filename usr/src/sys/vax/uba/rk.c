@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.12	%G%	*/
+comment|/*	rk.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -1790,7 +1790,7 @@ block|}
 end_block
 
 begin_macro
-name|hkintr
+name|rkintr
 argument_list|(
 argument|rk11
 argument_list|)
