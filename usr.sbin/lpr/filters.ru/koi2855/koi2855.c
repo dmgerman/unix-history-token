@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1999 by Andrey A. Chernov, Moscow, Russia.  * (C) 18
 end_comment
 
 begin_comment
-comment|/*  * KOI8-R -> CP855 conversion filter (Russian character sets)  *  * $FreeBSD$  */
+comment|/*  * KOI8-R -> CP855 conversion filter (Russian character sets)  */
 end_comment
 
 begin_include
