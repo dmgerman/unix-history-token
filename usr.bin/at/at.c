@@ -2215,7 +2215,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Date\t\t\tOwner\tQueue\tJob#\n"
+literal|"Date\t\t\t\tOwner\t\tQueue\tJob#\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -2234,7 +2234,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\t%s\t%c%s\t%ld\n"
+literal|"%s\t%-16s%c%s\t%ld\n"
 argument_list|,
 name|timestr
 argument_list|,
