@@ -483,6 +483,9 @@ case|:
 case|case
 literal|0x71998086
 case|:
+case|case
+literal|0x84ca8086
+case|:
 return|return
 literal|"Intel PIIX4 ATA33 controller"
 return|;
@@ -495,6 +498,9 @@ return|;
 case|case
 literal|0x24118086
 case|:
+case|case
+literal|0x76018086
+case|:
 return|return
 literal|"Intel ICH ATA66 controller"
 return|;
@@ -506,6 +512,15 @@ literal|0x244b8086
 case|:
 return|return
 literal|"Intel ICH2 ATA100 controller"
+return|;
+case|case
+literal|0x248a8086
+case|:
+case|case
+literal|0x248b8086
+case|:
+return|return
+literal|"Intel ICH3 ATA100 controller"
 return|;
 case|case
 literal|0x522910b9
