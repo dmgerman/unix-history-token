@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.14 1998/06/08 06:41:47 charnier Exp $"
+literal|"$Id: disklabel.c,v 1.15 1998/06/28 18:59:04 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6902,11 +6902,9 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\"auto\" requires the usage of a canonical disk name.\n"
+literal|"\"auto\" requires the usage of a canonical disk name"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6941,8 +6939,6 @@ argument_list|(
 name|namebuf
 argument_list|,
 name|O_RDONLY
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|==
@@ -6950,11 +6946,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|4
+literal|"cannot open %s"
 argument_list|,
-literal|"open()"
+name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6978,10 +6974,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|4
-argument_list|,
 literal|"ioctl DIOCGDINFO"
 argument_list|)
 expr_stmt|;
@@ -7000,6 +6994,18 @@ name|close
 argument_list|(
 name|f
 argument_list|)
+expr_stmt|;
+name|lab
+operator|.
+name|d_boot0
+operator|=
+name|NULL
+expr_stmt|;
+name|lab
+operator|.
+name|d_boot1
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
