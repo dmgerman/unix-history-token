@@ -1535,6 +1535,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX don't hang forever on output */
+name|tp
+operator|->
+name|t_timeout
+operator|=
+literal|5
+operator|*
+literal|60
+operator|*
+name|hz
+expr_stmt|;
 name|ttsetwater
 argument_list|(
 name|tp
