@@ -21,48 +21,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RX_TO_MBUF
-value|1
-end_define
-
-begin_comment
-comment|/* Eliminates need of copy received */
-end_comment
-
-begin_comment
-comment|/* packet to new allocated mbuf, */
-end_comment
-
-begin_comment
-comment|/* receive directly to mbuf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TX_FRAG_LIST
-value|1
-end_define
-
-begin_comment
-comment|/* Eliminites need of copy xmiting */
-end_comment
-
-begin_comment
-comment|/* packet to static buffer, xmit from */
-end_comment
-
-begin_comment
-comment|/* mbuf directly */
-end_comment
-
-begin_comment
-comment|/*#define	EPIC_DEBUG		1*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TX_RING_SIZE
 value|16
 end_define
@@ -1733,10 +1691,18 @@ name|tx_flist
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|struct
 name|ifmedia
 name|ifmedia
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|arpcom
 name|epic_ac

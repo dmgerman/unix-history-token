@@ -4,7 +4,53 @@ comment|/*-  * Copyright (c) 1997 Semen Ustimenko (semen@iclub.nsu.ru)  * All ri
 end_comment
 
 begin_comment
-comment|/*  * EtherPower II 10/100  Fast Ethernet (tx0)  * (aka SMC9432TX based on SMC83c170 EPIC chip)  *  * Written by Semen Ustimenko.  *  * TODO:  *	Implement FULL IFF_MULTICAST support  *	Calculate optimal RX and TX rings size  *	Test, test and test again:)  *	  */
+comment|/*  * EtherPower II 10/100  Fast Ethernet (tx0)  * (aka SMC9432TX based on SMC83c170 EPIC chip)  *  * Written by Semen Ustimenko.  *  * TODO:  *	Deal with TX threshold (probably we should calculate it depending  *	    on processor speed, as did the MS-DOS driver).  *	Deal with bus mastering, i.e. i realy don't know what to do with  *	    it and how it can improve performance.  *	Implement FULL IFF_MULTICAST support.  *	Calculate optimal RX and TX rings size.  *	Test, test and test again:-)  *	  */
+end_comment
+
+begin_comment
+comment|/* We should define compile time options before smc83c170.h included */
+end_comment
+
+begin_comment
+comment|/*#define	EPIC_NOIFMEDIA	1*/
+end_comment
+
+begin_comment
+comment|/*#define	EPIC_DEBUG	1*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_TO_MBUF
+value|1
+end_define
+
+begin_comment
+comment|/* Receive directly to mbuf enstead of */
+end_comment
+
+begin_comment
+comment|/* static allocated buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TX_FRAG_LIST
+value|1
+end_define
+
+begin_comment
+comment|/* Transmit directly from mbuf enstead */
+end_comment
+
+begin_comment
+comment|/* of collecting mbuf's frags to one */
+end_comment
+
+begin_comment
+comment|/* static allocated place */
 end_comment
 
 begin_include
@@ -69,11 +115,31 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIOCSIFMEDIA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EPIC_NOIFMEDIA
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<net/if_media.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -346,6 +412,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
+comment|/* Handle IFF_LINKx flags */
+name|epic_set_media_speed
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|SIOCADDMULTI
@@ -453,6 +534,12 @@ name|ifr_mtu
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 case|case
 name|SIOCSIFMEDIA
 case|:
@@ -476,6 +563,8 @@ name|command
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|error
 operator|=
@@ -3208,10 +3297,18 @@ argument_list|,
 name|DP83840_BMCR
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|media
 operator|=
 name|IFM_ETHER
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|i
@@ -3269,13 +3366,36 @@ argument_list|(
 literal|"FD"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|media
 operator||=
 name|IFM_AUTO
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_LINK0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|i
@@ -3288,10 +3408,26 @@ argument_list|(
 literal|"100Mbps "
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|media
 operator||=
 name|IFM_100_TX
 expr_stmt|;
+else|#
+directive|else
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_LINK2
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -3300,10 +3436,18 @@ argument_list|(
 literal|"10Mbps "
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|media
 operator||=
 name|IFM_10_T
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -3317,10 +3461,26 @@ argument_list|(
 literal|"FD"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|media
 operator||=
 name|IFM_FDX
 expr_stmt|;
+else|#
+directive|else
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_LINK1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|printf
@@ -3328,6 +3488,18 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIOCSIFMEDIA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EPIC_NOIFMEDIA
+argument_list|)
 comment|/* init ifmedia interface */
 name|ifmedia_init
 argument_list|(
@@ -3437,6 +3609,8 @@ argument_list|,
 name|media
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Read MBSR twice to update latched bits */
 name|epic_read_phy_register
 argument_list|(
@@ -3521,6 +3695,21 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIOCSIFMEDIA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EPIC_NOIFMEDIA
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -3698,19 +3887,27 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * IFINIT function  *   * splimp() invoked here  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|int
 name|epic_init
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|epic_softc_t
-modifier|*
+operator|*
 name|sc
-parameter_list|)
+operator|)
+argument_list|)
 block|{
 name|struct
 name|ifnet
@@ -4060,7 +4257,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * This function should set EPIC's registers according IFF_* flags  */
@@ -4156,7 +4353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function should set MII to mode specified by IFF_LINK* flags  */
+comment|/*  * This function should set MII to mode specified by IFF_LINK* flags or  * ifmedia structure.  */
 end_comment
 
 begin_decl_stmt
@@ -4172,6 +4369,12 @@ name|sc
 operator|)
 argument_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 name|u_int32_t
 name|tgtmedia
 init|=
@@ -4183,6 +4386,20 @@ name|ifm_cur
 operator|->
 name|ifm_media
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|epic_if
+decl_stmt|;
+endif|#
+directive|endif
 name|u_int16_t
 name|media
 decl_stmt|;
@@ -4254,6 +4471,12 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/* Set media speed */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NET_IF_MEDIA_H_
+argument_list|)
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -4303,8 +4526,11 @@ operator|.
 name|if_baudrate
 operator|=
 operator|(
+name|IFM_SUBTYPE
+argument_list|(
 name|tgtmedia
-operator|&
+argument_list|)
+operator|==
 name|IFM_100_TX
 operator|)
 condition|?
@@ -4332,8 +4558,12 @@ operator|+
 name|TXCON
 argument_list|,
 operator|(
+operator|(
 name|tgtmedia
 operator|&
+name|ITM_GMASK
+operator|)
+operator|==
 name|IFM_FDX
 operator|)
 condition|?
@@ -4345,6 +4575,101 @@ name|TXCON_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LINK0
+condition|)
+block|{
+comment|/* Set mode */
+name|media
+operator|=
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LINK2
+operator|)
+condition|?
+name|BMCR_100MBPS
+else|:
+literal|0
+expr_stmt|;
+name|media
+operator||=
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LINK1
+operator|)
+condition|?
+name|BMCR_FULL_DUPLEX
+else|:
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|epic_if
+operator|.
+name|if_baudrate
+operator|=
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LINK2
+operator|)
+condition|?
+literal|100000000
+else|:
+literal|10000000
+expr_stmt|;
+name|epic_write_phy_register
+argument_list|(
+name|sc
+operator|->
+name|iobase
+argument_list|,
+name|DP83840_BMCR
+argument_list|,
+name|media
+argument_list|)
+expr_stmt|;
+name|outl
+argument_list|(
+name|sc
+operator|->
+name|iobase
+operator|+
+name|TXCON
+argument_list|,
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LINK2
+operator|)
+condition|?
+name|TXCON_LOOPBACK_MODE_FULL_DUPLEX
+operator||
+name|TXCON_DEFAULT
+else|:
+name|TXCON_DEFAULT
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 else|else
 block|{
 comment|/* Init QS6612 to generate interrupt when AutoNeg complete */
