@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	5.4 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_comment
@@ -150,6 +162,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VLOG
+value|".vacation.log"
+end_define
+
+begin_comment
+comment|/* log action and errors */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMSG
 value|".vacation.msg"
 end_define
@@ -201,8 +224,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|debug
-init|=
-name|NO
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +271,10 @@ modifier|*
 name|getfrom
 argument_list|()
 decl_stmt|;
+name|uid_t
+name|getuid
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 operator|(
@@ -276,22 +301,23 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'d'
+literal|'i'
 case|:
-comment|/* debug */
-name|debug
+comment|/* init the database */
+case|case
+literal|'I'
+case|:
+comment|/* backward compatible */
+name|iflag
 operator|=
 name|YES
 expr_stmt|;
 break|break;
 case|case
-literal|'i'
+literal|'d'
 case|:
-case|case
-literal|'I'
-case|:
-comment|/* re-init the database */
-name|iflag
+comment|/* debugging */
+name|debug
 operator|=
 name|YES
 expr_stmt|;
@@ -312,16 +338,78 @@ name|argc
 operator|-=
 name|optind
 expr_stmt|;
+comment|/* find and move to user's home directory */
 if|if
 condition|(
 name|argc
 operator|!=
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|iflag
+condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* find and move to user's home directory */
+if|if
+condition|(
+operator|!
+operator|(
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|)
+operator|||
+name|chdir
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"vacation: no such user uid %u.\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: no such user uid %u.\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|argv
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -334,26 +422,7 @@ operator|*
 name|argv
 argument_list|)
 operator|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vacation: unknown user %s.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|||
 name|chdir
 argument_list|(
 name|pw
@@ -362,14 +431,29 @@ name|pw_dir
 argument_list|)
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"vacation: chdir"
+name|stderr
+argument_list|,
+literal|"vacation: no such user %s.\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: no such user %s.\n"
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -384,7 +468,89 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|time_t
+name|now
+decl_stmt|,
+name|time
+argument_list|()
+decl_stmt|;
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+operator|!
+name|freopen
+argument_list|(
+name|VLOG
+argument_list|,
+literal|"a"
+argument_list|,
+name|stderr
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"vacation: can't append ~%s/%s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|VLOG
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: can't append ~%s/%s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|VLOG
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_CANTCREAT
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"===== %s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -468,7 +634,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -539,7 +705,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -577,14 +743,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"vacation: address terminated From line '%s'"
+literal|"vacation: address terminated From line '%s'\n"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -629,7 +795,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -847,8 +1013,12 @@ decl_stmt|,
 modifier|*
 name|index
 argument_list|()
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
 decl_stmt|;
-comment|/* 	 * This is mildly amusing, and I'm not positive it's right; what 	 * we're trying to do is find the "real" name of the sender.  I'm 	 * assuming that addresses will be some variant of: 	 * 	 * From ADDRESS 	 * From ADDRESS@seismo.css.gov 	 * From ADDRESS%site.BITNET@seismo.css.gov 	 * From site1!site2!ADDRESS@seismo.css.gov 	 * 	 * Therefore, the following search order: 	 */
+comment|/* 	 * This is mildly amusing, and I'm not positive it's right; what 	 * we're trying to do is find the "real" name of the sender.  I'm 	 * assuming that addresses will be some variant of: 	 * 	 * From SENDER 	 * From SENDER@seismo.css.gov 	 * From SENDER%site.BITNET@seismo.css.gov 	 * From site1!site2!SENDER@seismo.css.gov 	 * 	 * Therefore, the following search order: 	 */
 if|if
 condition|(
 operator|!
@@ -877,20 +1047,21 @@ literal|'@'
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|p
 operator|=
-name|index
+name|rindex
 argument_list|(
 name|from
 argument_list|,
 literal|'!'
 argument_list|)
-operator|)
 condition|)
+operator|++
+name|p
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -904,13 +1075,12 @@ operator|++
 name|p
 control|)
 empty_stmt|;
+block|}
 name|len
 operator|=
 name|p
 operator|-
 name|from
-operator|+
-literal|1
 expr_stmt|;
 for|for
 control|(
@@ -951,11 +1121,30 @@ operator|->
 name|len
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"not sending to %s {%s}\n"
+argument_list|,
+name|from
+argument_list|,
+name|I
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|YES
 operator|)
 return|;
+block|}
 comment|/* read the header looking for a "Precedence:" line */
 while|while
 condition|(
@@ -1061,9 +1250,17 @@ literal|4
 argument_list|)
 condition|)
 block|{
-name|puts
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
 argument_list|(
-literal|"found junk or bulk"
+name|stderr
+argument_list|,
+literal|"not sending to %s {junk/bulk}\n"
+argument_list|,
+name|from
 argument_list|)
 expr_stmt|;
 return|return
@@ -1353,7 +1550,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * sendmessage --  *	exec sendmail to send the vacation file to the user "user".  */
+comment|/*  * sendmessage --  *	exec sendmail to send the vacation file to "user".  */
 end_comment
 
 begin_expr_stmt
@@ -1379,8 +1576,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|printf
+block|{
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"sending {%s} to {%s}\n"
 argument_list|,
 name|VMSG
@@ -1388,8 +1588,8 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -1403,16 +1603,31 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"vacation: no message to send.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"vacation: no ~%s/%s file.\n"
+argument_list|,
+name|myname
+argument_list|,
+name|VMSG
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: no ~%s/%s file.\n"
+argument_list|,
+name|myname
+argument_list|,
+name|VMSG
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,19 +1646,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fprintf
 argument_list|(
-literal|"vacation: cannot exec /usr/lib/sendmail\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"vacation: can't exec /usr/lib/sendmail.\n"
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: can't exec /usr/lib/sendmail.\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1456,6 +1677,16 @@ specifier|static
 name|initialize
 argument_list|()
 block|{
+specifier|extern
+name|int
+name|errno
+block|;
+specifier|extern
+name|char
+operator|*
+name|sys_errlist
+index|[]
+block|;
 name|FILE
 operator|*
 name|fp
@@ -1485,14 +1716,37 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"vacation: .vacation.dir"
+name|stderr
+argument_list|,
+literal|"vacation: %s: %s\n"
+argument_list|,
+name|VDIR
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: %s: %s\n"
+argument_list|,
+name|VDIR
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1529,14 +1783,37 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"vacation: .vacation.page"
+name|stderr
+argument_list|,
+literal|"vacation: %s: %s\n"
+argument_list|,
+name|VPAG
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: %s: %s\n"
+argument_list|,
+name|VPAG
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1579,6 +1856,10 @@ name|buf
 index|[
 name|MAXLINE
 index|]
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
 decl_stmt|;
 comment|/* VARARGS 1 */
 while|while
@@ -1646,16 +1927,30 @@ end_macro
 
 begin_block
 block|{
+name|uid_t
+name|getuid
+parameter_list|()
+function_decl|;
 name|fputs
 argument_list|(
-literal|"vacation [-i] username\n"
+literal|"usage: vacation [-i] login\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"uid %u: usage: vacation [-i] login\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
