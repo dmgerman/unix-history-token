@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.20 1995/04/26 06:56:05 jkh Exp $"
+literal|"$Id: perform.c,v 1.21 1995/04/26 07:43:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is seriously ugly code following.  Written very fast! */
+comment|/*  * This is seriously ugly code following.  Written very fast!  * [And subsequently made even worse..  Sigh!  This code was just born  * to be hacked, I guess.. :) -jkh]  */
 end_comment
 
 begin_function
@@ -220,6 +220,12 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|char
+modifier|*
+name|isTMP
+init|=
+name|NULL
+decl_stmt|;
 comment|/* Reset some state */
 if|if
 condition|(
@@ -240,6 +246,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* Are we coming in for a second pass, everything already extracted? */
 if|if
 condition|(
 name|AddMode
@@ -305,6 +312,7 @@ name|stdin
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Nope - do it now */
 else|else
 block|{
 if|if
@@ -322,6 +330,54 @@ argument_list|(
 literal|"getcwd"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isURL
+argument_list|(
+name|pkg
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|newname
+init|=
+name|fileGetURL
+argument_list|(
+name|pkg
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|newname
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Unable to fetch `%s' by URL."
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|strcpy
+argument_list|(
+name|pkg_fullname
+argument_list|,
+name|newname
+argument_list|)
+expr_stmt|;
+name|isTMP
+operator|=
+name|pkg_fullname
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|pkg
@@ -360,16 +416,40 @@ name|pkg_fullname
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|tmp
+init|=
+name|fileFindByPath
+argument_list|(
+name|pkg
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tmp
+condition|)
+block|{
 name|whinge
 argument_list|(
-literal|"Can't find package '%s'."
+literal|"Can't find package `%s'."
 argument_list|,
-name|pkg_fullname
+name|pkg
 argument_list|)
 expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+name|strcpy
+argument_list|(
+name|pkg_fullname
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|Home
 operator|=
@@ -576,12 +656,9 @@ argument_list|(
 literal|"chdir"
 argument_list|)
 expr_stmt|;
-name|leave_playpen
-argument_list|()
-expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|bomb
+goto|;
 block|}
 block|}
 name|where_to
@@ -600,12 +677,9 @@ argument_list|,
 name|pkg_fullname
 argument_list|)
 expr_stmt|;
-name|leave_playpen
-argument_list|()
-expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|bomb
+goto|;
 block|}
 block|}
 else|else
@@ -634,9 +708,9 @@ argument_list|,
 name|pkg_fullname
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|bomb
+goto|;
 block|}
 if|if
 condition|(
@@ -676,18 +750,6 @@ goto|goto
 name|bomb
 goto|;
 block|}
-comment|/* If this is a direct extract and we didn't want it, stop now */
-if|if
-condition|(
-name|where_to
-operator|!=
-name|PlayPen
-operator|&&
-name|Fake
-condition|)
-goto|goto
-name|success
-goto|;
 name|setenv
 argument_list|(
 name|PKG_PREFIX_VNAME
@@ -808,6 +870,13 @@ operator|->
 name|next
 control|)
 block|{
+name|char
+modifier|*
+name|isTMP
+init|=
+name|NULL
+decl_stmt|;
+comment|/* local copy for depends only */
 if|if
 condition|(
 name|p
@@ -848,20 +917,15 @@ argument_list|)
 condition|)
 block|{
 name|char
-modifier|*
-name|cp
-decl_stmt|,
-name|tmp
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|,
 name|path
 index|[
 name|FILENAME_MAX
-operator|*
-literal|2
 index|]
+decl_stmt|,
+modifier|*
+name|cp
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -872,61 +936,26 @@ argument_list|(
 literal|" which is not currently loaded"
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-name|getenv
-argument_list|(
-literal|"PKG_PATH"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cp
-condition|)
-name|cp
-operator|=
-name|Home
-expr_stmt|;
-name|strcpy
+name|isURL
 argument_list|(
-name|path
-argument_list|,
-name|cp
+name|p
+operator|->
+name|name
 argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-name|path
-expr_stmt|;
-while|while
-condition|(
-name|cp
 condition|)
 block|{
-name|char
-modifier|*
-name|cp2
-init|=
-name|strsep
+name|snprintf
 argument_list|(
-operator|&
-name|cp
+name|path
 argument_list|,
-literal|":"
-argument_list|)
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|tmp
+name|FILENAME_MAX
 argument_list|,
-literal|"%s/%s.tgz"
+literal|"%s/%s"
 argument_list|,
-name|cp2
-condition|?
-name|cp2
-else|:
-name|cp
+name|Home
 argument_list|,
 name|p
 operator|->
@@ -937,17 +966,43 @@ if|if
 condition|(
 name|fexists
 argument_list|(
-name|tmp
+name|path
 argument_list|)
 condition|)
-break|break;
+name|cp
+operator|=
+name|path
+expr_stmt|;
+else|else
+name|cp
+operator|=
+name|fileFindByPath
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cp
+operator|=
+name|fileGetURL
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|isTMP
+operator|=
+name|cp
+expr_stmt|;
 block|}
 if|if
 condition|(
-name|fexists
-argument_list|(
-name|tmp
-argument_list|)
+name|cp
 condition|)
 block|{
 if|if
@@ -961,17 +1016,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Fake
+operator|&&
 name|vsystem
 argument_list|(
 literal|"pkg_add %s"
 argument_list|,
-name|tmp
+name|cp
 argument_list|)
 condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Autoload of dependency package `%s' failed!%s"
+literal|"Autoload of dependency `%s' failed%s"
 argument_list|,
 name|p
 operator|->
@@ -981,7 +1039,7 @@ name|Force
 condition|?
 literal|" (proceeding anyway)"
 else|:
-literal|""
+literal|"!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,6 +1065,22 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Nuke the temporary URL copy */
+if|if
+condition|(
+name|isTMP
+condition|)
+block|{
+name|unlink
+argument_list|(
+name|isTMP
+argument_list|)
+expr_stmt|;
+name|isTMP
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1040,7 +1114,7 @@ name|Force
 condition|?
 literal|" (proceeding anyway)"
 else|:
-literal|""
+literal|"!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1064,6 +1138,18 @@ literal|" - already installed.\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If this is a direct extract and we didn't want it, stop now */
+if|if
+condition|(
+name|where_to
+operator|!=
+name|PlayPen
+operator|&&
+name|Fake
+condition|)
+goto|goto
+name|success
+goto|;
 comment|/* Finally unpack the whole mess */
 if|if
 condition|(
@@ -1379,6 +1465,7 @@ name|MTREE_FNAME
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Run the installation script one last time? */
 if|if
 condition|(
 operator|!
@@ -1440,6 +1527,7 @@ name|INSTALL_FNAME
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Time to record the deed? */
 if|if
 condition|(
 operator|!
@@ -1952,6 +2040,15 @@ label|:
 comment|/* delete the packing list contents */
 name|leave_playpen
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|isTMP
+condition|)
+name|unlink
+argument_list|(
+name|isTMP
+argument_list|)
 expr_stmt|;
 return|return
 name|code
