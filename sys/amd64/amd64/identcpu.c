@@ -2860,7 +2860,7 @@ end_asm
 
 begin_expr_stmt
 operator|(
-literal|" 	.text 	.p2align 2,0x90 	.type	"
+literal|"									\ 	.text;								\ 	.p2align 2,0x90;						\ 	.type	"
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2868,7 +2868,7 @@ argument_list|(
 name|bluetrap6
 argument_list|)
 argument_list|)
-literal|",@function "
+literal|",@function;		\ "
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2876,7 +2876,7 @@ argument_list|(
 name|bluetrap6
 argument_list|)
 argument_list|)
-literal|": 	ss 	movl	$0xa8c1d,"
+literal|":					\ 	ss;								\ 	movl	$0xa8c1d,"
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2884,7 +2884,7 @@ argument_list|(
 name|trap_by_rdmsr
 argument_list|)
 argument_list|)
-literal|" 	addl	$2, (%esp)		  # I know rdmsr is a 2-bytes instruction. 	iret "
+literal|";		\ 	addl	$2, (%esp);	/* rdmsr is a 2-byte instruction */	\ 	iret								\ "
 operator|)
 expr_stmt|;
 end_expr_stmt
@@ -2905,7 +2905,7 @@ end_asm
 
 begin_expr_stmt
 operator|(
-literal|" 	.text 	.p2align 2,0x90 	.type "
+literal|"									\ 	.text;								\ 	.p2align 2,0x90;						\ 	.type "
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2913,7 +2913,7 @@ argument_list|(
 name|bluetrap13
 argument_list|)
 argument_list|)
-literal|",@function "
+literal|",@function;		\ "
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2921,7 +2921,7 @@ argument_list|(
 name|bluetrap13
 argument_list|)
 argument_list|)
-literal|": 	ss 	movl	$0xa89c4,"
+literal|":					\ 	ss;								\ 	movl	$0xa89c4,"
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2929,7 +2929,7 @@ argument_list|(
 name|trap_by_rdmsr
 argument_list|)
 argument_list|)
-literal|" 	popl	%eax				# discard errorcode. 	addl	$2, (%esp)			# I know rdmsr is a 2-bytes instruction. 	iret "
+literal|";		\ 	popl	%eax;		/* discard errorcode. */		\ 	addl	$2, (%esp);	/* rdmsr is a 2-bytes instruction. */	\ 	iret;								\ "
 operator|)
 expr_stmt|;
 end_expr_stmt
