@@ -96,6 +96,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIA8233_REV_ID_8237
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEGS_PER_CHAN
 value|2
 end_define
@@ -3100,6 +3107,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"VIA VT8235"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|VIA8233_REV_ID_8237
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"VIA VT8237"
 argument_list|)
 expr_stmt|;
 return|return
