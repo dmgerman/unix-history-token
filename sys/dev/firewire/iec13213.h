@@ -1099,11 +1099,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_BOOT
+argument_list|)
+end_if
 
 begin_function_decl
 name|char
@@ -1137,6 +1147,11 @@ directive|if
 name|defined
 argument_list|(
 name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_BOOT
 argument_list|)
 operator|||
 name|defined
