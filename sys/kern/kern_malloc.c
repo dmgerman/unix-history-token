@@ -590,17 +590,14 @@ literal|0
 block|if (size == 0) 		Debugger("zero size malloc");
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
 if|if
 condition|(
+operator|!
+operator|(
 name|flags
-operator|==
-name|M_WAITOK
+operator|&
+name|M_NOWAIT
+operator|)
 condition|)
 name|KASSERT
 argument_list|(
@@ -615,8 +612,6 @@ literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|size
