@@ -699,6 +699,7 @@ decl_stmt|;
 name|int
 name|line
 decl_stmt|;
+comment|/* 	 * XXX should use specialized struct members instead of an array 	 * and these silly #defines. 	 */
 define|#
 directive|define
 name|MPROF_MAX
@@ -711,14 +712,10 @@ define|#
 directive|define
 name|MPROF_CNT
 value|2
-define|#
-directive|define
-name|MPROF_AVG
-value|3
 name|uintmax_t
 name|counter
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|struct
@@ -1043,6 +1040,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -1054,6 +1052,7 @@ argument_list|(
 literal|"No locking recorded"
 argument_list|)
 argument_list|)
+operator|)
 return|;
 name|sb
 operator|=
@@ -1072,7 +1071,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%12s %12s %12s %12s %s\n"
+literal|"%6s %12s %11s %5s %s\n"
 argument_list|,
 literal|"max"
 argument_list|,
@@ -1080,11 +1079,12 @@ literal|"total"
 argument_list|,
 literal|"count"
 argument_list|,
-literal|"average"
+literal|"avg"
 argument_list|,
 literal|"name"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX this spinlock seems to be by far the largest perpetrator 	 * of spinlock latency (1.6 msec on an Athlon1600 was recorded 	 * even before I pessimized it further by moving the average 	 * computation here). 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1108,7 +1108,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%12ju %12ju %12ju %12ju %s:%d (%s)\n"
+literal|"%6ju %12ju %11ju %5ju %s:%d (%s)\n"
 argument_list|,
 name|mprof_buf
 index|[
@@ -1151,10 +1151,39 @@ index|]
 operator|.
 name|counter
 index|[
-name|MPROF_AVG
+name|MPROF_CNT
+index|]
+operator|==
+literal|0
+condition|?
+operator|(
+name|uintmax_t
+operator|)
+literal|0
+else|:
+name|mprof_buf
+index|[
+name|i
+index|]
+operator|.
+name|counter
+index|[
+name|MPROF_TOT
 index|]
 operator|/
+operator|(
+name|mprof_buf
+index|[
+name|i
+index|]
+operator|.
+name|counter
+index|[
+name|MPROF_CNT
+index|]
+operator|*
 literal|1000
+operator|)
 argument_list|,
 name|mprof_buf
 index|[
@@ -1775,14 +1804,12 @@ operator|++
 name|mutex_prof_records
 expr_stmt|;
 block|}
-comment|/* 		 * Record if the mutex has been held longer now than ever 		 * before 		 */
+comment|/* 		 * Record if the mutex has been held longer now than ever 		 * before. 		 */
 if|if
 condition|(
-operator|(
 name|now
 operator|-
 name|acqtime
-operator|)
 operator|>
 name|mpp
 operator|->
@@ -1819,29 +1846,7 @@ name|counter
 index|[
 name|MPROF_CNT
 index|]
-operator|+=
-literal|1
-expr_stmt|;
-name|mpp
-operator|->
-name|counter
-index|[
-name|MPROF_AVG
-index|]
-operator|=
-name|mpp
-operator|->
-name|counter
-index|[
-name|MPROF_TOT
-index|]
-operator|/
-name|mpp
-operator|->
-name|counter
-index|[
-name|MPROF_CNT
-index|]
+operator|++
 expr_stmt|;
 name|unlock
 label|:
