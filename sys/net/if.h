@@ -216,7 +216,7 @@ name|ifi_xmitquota
 decl_stmt|;
 comment|/* polling quota for xmit intrs */
 name|u_char
-name|ifi_do_no_use
+name|ifi_do_not_use
 decl_stmt|;
 comment|/* pad for ifi_datalen's position */
 name|u_char
