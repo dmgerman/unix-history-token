@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vsnprintf.c,v 1.6 1997/12/24 12:31:32 ache Exp $"
+literal|"$Id: vsnprintf.c,v 1.7 1997/12/24 14:32:40 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_function
@@ -92,21 +98,27 @@ name|f
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|n
-operator|<
-literal|1
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|--
+name|n
+operator|>
+name|INT_MAX
 condition|)
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-name|n
-operator|--
-expr_stmt|;
 name|f
 operator|.
 name|_file
@@ -170,17 +182,6 @@ name|_p
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-name|EOF
-condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 return|return
 operator|(
 name|ret
