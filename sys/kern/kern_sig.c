@@ -7813,9 +7813,6 @@ comment|/* 		 * Decide whether the signal should be returned. 		 * Return the si
 switch|switch
 condition|(
 operator|(
-name|int
-operator|)
-operator|(
 name|intptr_t
 operator|)
 name|p
@@ -7833,7 +7830,7 @@ condition|)
 block|{
 case|case
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|SIG_DFL
 case|:
@@ -8048,7 +8045,7 @@ return|;
 comment|/*NOTREACHED*/
 case|case
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|SIG_IGN
 case|:
