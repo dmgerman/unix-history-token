@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	6.4	84/08/29	*/
+comment|/*	sys_generic.c	6.5	84/10/19	*/
 end_comment
 
 begin_include
@@ -2155,11 +2155,27 @@ operator|)
 operator|&
 name|selwait
 condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SSLEEP
+condition|)
 name|setrun
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+else|else
+name|unsleep
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
