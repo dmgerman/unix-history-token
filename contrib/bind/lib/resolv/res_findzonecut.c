@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 8.12 2000/11/22 01:20:44 marka Exp $"
+literal|"$Id: res_findzonecut.c,v 8.15 2001/11/01 05:21:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,7 +438,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|dprintf
+name|res_dprintf
 parameter_list|(
 specifier|const
 name|char
@@ -446,8 +446,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* Macros. */
@@ -460,7 +469,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do {\ 		int save_errno = errno; \ 		if ((statp->options& RES_DEBUG) != 0) dprintf x; \ 		errno = save_errno; \ 	} while (0)
+value|do {\ 		int save_errno = errno; \ 		if ((statp->options& RES_DEBUG) != 0) res_dprintf x; \ 		errno = save_errno; \ 	} while (0)
 end_define
 
 begin_comment
@@ -2719,6 +2728,10 @@ name|rr_a
 modifier|*
 name|arr
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -2752,15 +2765,18 @@ name|arr
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|DE_CONST
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|nsrr
 operator|->
 name|name
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 name|UNLINK
@@ -3121,7 +3137,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dprintf
+name|res_dprintf
 parameter_list|(
 specifier|const
 name|char

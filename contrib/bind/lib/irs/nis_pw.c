@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_pw.c,v 1.16 1999/01/30 00:53:16 vixie Exp $"
+literal|"$Id: nis_pw.c,v 1.17 2001/05/29 05:49:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -908,11 +908,22 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|nisfree
 argument_list|(
 name|pvt
 argument_list|,
 name|do_val
+argument_list|)
+expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|name
+argument_list|,
+name|tmp
 argument_list|)
 expr_stmt|;
 name|r
@@ -925,11 +936,11 @@ name|nis_domain
 argument_list|,
 name|passwd_byname
 argument_list|,
-name|name
+name|tmp
 argument_list|,
 name|strlen
 argument_list|(
-name|name
+name|tmp
 argument_list|)
 argument_list|,
 operator|&
@@ -1134,6 +1145,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1246,6 +1262,9 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+ifdef|#
+directive|ifdef
+name|HAS_PW_CLASS
 name|pvt
 operator|->
 name|passwd
@@ -1255,6 +1274,8 @@ operator|=
 name|cp
 expr_stmt|;
 comment|/* Needs to point at a \0. */
+endif|#
+directive|endif
 operator|*
 name|cp
 operator|++

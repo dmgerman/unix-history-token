@@ -106,6 +106,7 @@ name|MD5_CTX
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

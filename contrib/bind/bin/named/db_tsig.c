@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_tsig.c,v 8.6 2000/04/21 06:54:04 vixie Exp $"
+literal|"$Id: db_tsig.c,v 8.7 2001/06/18 14:42:59 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,7 @@ value|"hmac-md5"
 end_define
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|tsig_alg_name

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.11 1999/01/02 08:00:58 vixie Exp $  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.13 2001/09/24 02:20:25 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -284,6 +284,17 @@ operator|||
 name|defined
 argument_list|(
 name|__hp9000s700
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__hp3000s900
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MPE
 argument_list|)
 operator|||
 expr|\
@@ -1090,6 +1101,13 @@ define|#
 directive|define
 name|T_NAPTR
 value|ns_t_naptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_A6
+value|ns_t_a6
 end_define
 
 begin_define

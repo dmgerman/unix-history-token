@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_sv.c,v 1.14 1999/01/18 07:46:59 vixie Exp $"
+literal|"$Id: nis_sv.c,v 1.15 2001/05/29 05:49:19 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1110,6 +1110,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1320,6 +1325,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)

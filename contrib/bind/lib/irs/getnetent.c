@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetent.c,v 1.18 2000/12/23 08:14:53 vixie Exp $"
+literal|"$Id: getnetent.c,v 1.19 2001/05/29 05:48:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1349,19 +1349,31 @@ condition|(
 operator|!
 name|isascii
 argument_list|(
-name|name
-index|[
-literal|0
-index|]
-argument_list|)
-operator|||
-operator|!
-name|isdigit
+call|(
+name|unsigned
+name|char
+call|)
 argument_list|(
 name|name
 index|[
 literal|0
 index|]
+argument_list|)
+argument_list|)
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|name
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -1394,6 +1406,10 @@ operator|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)

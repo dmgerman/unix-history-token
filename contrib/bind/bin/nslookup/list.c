@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: list.c,v 8.25 2000/12/23 08:14:46 vixie Exp $"
+literal|"$Id: list.c,v 8.26 2001/06/18 14:43:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1757,6 +1757,9 @@ name|qtype
 operator|==
 name|T_ANY
 operator|||
+operator|(
+name|int
+operator|)
 name|ns_rr_type
 argument_list|(
 name|rr

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 8.145 2001/03/16 12:07:57 marka Exp $"
+literal|"$Id: ns_main.c,v 8.155 2001/11/16 05:37:27 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -983,6 +983,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|bad_p_option
 index|[]
@@ -993,6 +994,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|bad_directory
 index|[]
@@ -1015,11 +1017,6 @@ parameter_list|,
 name|char
 modifier|*
 name|argv
-index|[]
-parameter_list|,
-name|char
-modifier|*
-name|envp
 index|[]
 parameter_list|)
 block|{
@@ -1221,6 +1218,9 @@ name|conffile
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|freestr
 argument_list|(
 name|conffile
@@ -1546,6 +1546,9 @@ name|group_name
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|freestr
 argument_list|(
 name|group_name
@@ -1644,6 +1647,9 @@ name|conffile
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|freestr
 argument_list|(
 name|conffile
@@ -1807,14 +1813,12 @@ argument_list|,
 literal|"warning: chroot() not available\n"
 argument_list|)
 expr_stmt|;
+name|chroot_dir
+operator|=
 name|freestr
 argument_list|(
 name|chroot_dir
 argument_list|)
-expr_stmt|;
-name|chroot_dir
-operator|=
-name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -2524,9 +2528,10 @@ name|struct
 name|iovec
 name|iov
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|n
 decl_stmt|;
 specifier|const
@@ -2556,6 +2561,16 @@ decl_stmt|,
 modifier|*
 name|ra
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|lalen
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|ralen
+argument_list|)
+expr_stmt|;
 name|la
 operator|=
 operator|(
@@ -2886,6 +2901,7 @@ argument_list|,
 name|SO_SNDBUF
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2936,6 +2952,7 @@ argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2971,6 +2988,55 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|ifp
+operator|->
+name|dfd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|ns_info
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|"ioctl(rfd, FIONBIO): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|rfd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -3051,6 +3117,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * We don't like IP options.  Turn them off if the connection came in 	 * with any.  log this event since it usually indicates a security 	 * problem. 	 */
 if|#
 directive|if
@@ -3603,6 +3671,44 @@ name|SERVFAIL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|sp
+operator|->
+name|s_rfd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|sq_remove
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SERVFAIL
+operator|)
+return|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -3665,6 +3771,8 @@ name|SERVFAIL
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sq_openw
@@ -3911,6 +4019,31 @@ name|sp
 init|=
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|lev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|la
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|lalen
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|ra
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|ralen
+argument_list|)
+expr_stmt|;
 name|ns_debug
 argument_list|(
 name|ns_log_default
@@ -4212,6 +4345,11 @@ name|struct
 name|iovec
 name|iov
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|flags
@@ -4479,10 +4617,6 @@ literal|1
 argument_list|,
 literal|"evRead(fd %d): %s"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sp
 operator|->
 name|s_rfd
@@ -4528,6 +4662,16 @@ name|sp
 init|=
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|lev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|flags
@@ -4599,7 +4743,7 @@ name|ns_log_default
 argument_list|,
 literal|5
 argument_list|,
-literal|"sp %#x rfd %d size %d time %d next %#x"
+literal|"sp %p rfd %d size %d time %ld next %p"
 argument_list|,
 name|sp
 argument_list|,
@@ -4611,6 +4755,9 @@ name|sp
 operator|->
 name|s_size
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sp
 operator|->
 name|s_time
@@ -4812,7 +4959,7 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|from_len
 init|=
 sizeof|sizeof
@@ -4832,7 +4979,7 @@ comment|/* Force alignment of 'buf'. */
 name|u_char
 name|buf
 index|[
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 operator|+
 literal|1
 index|]
@@ -4840,6 +4987,16 @@ decl_stmt|;
 block|}
 name|u
 union|;
+name|UNUSED
+argument_list|(
+name|lev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|evmask
+argument_list|)
+expr_stmt|;
 name|tt
 operator|=
 name|evTimeVal
@@ -5000,7 +5157,7 @@ if|if
 condition|(
 name|n
 operator|>
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 condition|)
 block|{
 comment|/* 		 * The message is too big.  It's probably a response to 		 * one of our questions, so we truncate it and press on. 		 */
@@ -5012,9 +5169,9 @@ name|u
 operator|.
 name|buf
 argument_list|,
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 argument_list|,
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 argument_list|)
 expr_stmt|;
 name|ns_debug
@@ -5035,7 +5192,7 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 argument_list|,
 name|NULL
 argument_list|,
@@ -5087,6 +5244,16 @@ operator|*
 operator|)
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5110,7 +5277,7 @@ block|{
 name|u_char
 name|buf
 index|[
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 index|]
 decl_stmt|;
 name|memcpy
@@ -5659,8 +5826,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"memget(interface)"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|ifc
@@ -5719,6 +5884,10 @@ block|{
 comment|/* 			 * Some OS's just return what will fit rather 			 * than set EINVAL if the buffer is too small 			 * to fit all the interfaces in.  If  			 * ifc.ifc_len is too near to the end of the 			 * buffer we will grow it just in case and 			 * retry. 			 */
 if|if
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|ifc
 operator|.
 name|ifc_len
@@ -5728,6 +5897,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|ifreq
+argument_list|)
 argument_list|)
 operator|<
 name|bufsiz
@@ -6237,8 +6407,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"memget(interface)"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|memset
@@ -6810,13 +6978,11 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|m
-decl_stmt|,
-name|n
 decl_stmt|;
 name|int
-name|fd
+name|n
 decl_stmt|;
 name|memset
 argument_list|(
@@ -6927,6 +7093,62 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|ifp
+operator|->
+name|dfd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|ns_info
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|"ioctl(ifp->dfd, FIONBIO): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|ifp
+operator|->
+name|dfd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -7025,6 +7247,8 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fcntl
@@ -7098,6 +7322,7 @@ argument_list|,
 name|SO_REUSEADDR
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7191,6 +7416,7 @@ argument_list|,
 name|SO_RCVBUF
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7221,6 +7447,7 @@ argument_list|,
 name|SO_SNDBUF
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7472,7 +7699,7 @@ decl_stmt|;
 name|u_char
 name|buf
 index|[
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 operator|+
 literal|1
 index|]
@@ -7484,7 +7711,7 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|from_len
 init|=
 sizeof|sizeof
@@ -7546,7 +7773,7 @@ if|if
 condition|(
 name|n
 operator|>
-name|PACKETSZ
+name|EDNS_MESSAGE_SZ
 condition|)
 continue|continue;
 comment|/* Oversize message - EDNS0 needed. */
@@ -7879,9 +8106,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -8053,6 +8277,7 @@ argument_list|,
 name|SO_REUSEADDR
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -8282,9 +8507,10 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-name|int
+name|ISC_SOCKLEN_T
 name|n
-decl_stmt|,
+decl_stmt|;
+name|int
 name|need_close
 decl_stmt|;
 name|interface
@@ -8560,6 +8786,7 @@ argument_list|,
 name|SO_REUSEADDR
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -8771,10 +8998,6 @@ literal|1
 argument_list|,
 literal|"evSelectFD(fd %d): %s"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ds
 argument_list|,
 name|strerror
@@ -8840,6 +9063,18 @@ argument_list|,
 name|LOG_OPTION_LEVEL
 argument_list|,
 name|debug
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|old_debug
+operator|&&
+operator|!
+name|debug
+condition|)
+name|log_close_debug_channels
+argument_list|(
+name|log_ctx
 argument_list|)
 expr_stmt|;
 name|evSetDebug
@@ -9739,6 +9974,11 @@ name|qs
 init|=
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|evmask
@@ -10249,10 +10489,6 @@ literal|1
 argument_list|,
 literal|"evRead(fd %d): %s"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sp
 operator|->
 name|s_rfd
@@ -10865,6 +11101,8 @@ operator|>
 literal|0
 condition|)
 block|{
+name|nsid_hash_state
+operator|=
 name|HASHROTATE
 argument_list|(
 name|nsid_hash_state
@@ -13305,8 +13543,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"memget(nsid_vtable)"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -13386,8 +13622,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"memget(nsid_pool)"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -13622,6 +13856,12 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
+name|id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence compiler */
 name|ns_panic
 argument_list|(
 name|ns_log_default
@@ -13629,10 +13869,9 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"Unknown ID algorithm"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Now lets obfuscate ... */
 name|id
 operator|=
@@ -13859,6 +14098,30 @@ name|nsid_pool
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|nsid_vtable
+operator|!=
+name|NULL
+condition|)
+name|memput
+argument_list|(
+name|nsid_vtable
+argument_list|,
+name|NSID_SHUFFLE_TABLE_SIZE
+operator|*
+operator|(
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|nsid_vtable
+operator|=
+name|NULL
+expr_stmt|;
 name|irs_destroy
 argument_list|()
 expr_stmt|;
@@ -13883,6 +14146,14 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|memactive
+argument_list|()
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -14176,8 +14447,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"wild need"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -14459,8 +14728,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"ns_handle_needs: queued == 0"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -14498,6 +14765,11 @@ decl_stmt|;
 name|long
 name|syncdelay
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
 name|begin
 operator|=
 name|time

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_ng.c,v 8.2 1999/10/13 16:39:31 vixie Exp $"
+literal|"$Id: irp_ng.c,v 8.3 2001/05/29 05:49:00 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,14 +184,17 @@ name|struct
 name|irs_ng
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -585,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int ng_next(struct irs_ng *this, char **host, char **user, char **domain)  *  * Notes:  *  *	Get the next netgroup item from the cache.  *  */
+comment|/*  * int ng_next(struct irs_ng *this, const char **host, const char **user,  *	       const char **domain)  *  * Notes:  *  *	Get the next netgroup item from the cache.  *  */
 end_comment
 
 begin_function
@@ -598,16 +601,19 @@ name|irs_ng
 modifier|*
 name|this
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -850,6 +856,11 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|irs_irp_connection_setup

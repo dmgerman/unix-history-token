@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 8.14 2000/12/23 08:14:48 vixie Exp $"
+literal|"$Id: subr.c,v 8.15 2001/06/18 14:43:45 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,10 @@ end_comment
 begin_function
 name|SIG_FN
 name|IntrHandler
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 specifier|extern
 name|jmp_buf
@@ -206,6 +209,11 @@ argument_list|(
 name|void
 argument_list|)
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|SendRequest_close
 argument_list|()
 expr_stmt|;
@@ -569,6 +577,7 @@ name|FILE
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|title
@@ -1246,36 +1255,48 @@ block|{
 name|NOERROR
 block|,
 literal|"Success"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|FORMERR
 block|,
 literal|"Format error"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|SERVFAIL
 block|,
 literal|"Server failed"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NXDOMAIN
 block|,
 literal|"Non-existent host/domain"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NOTIMP
 block|,
 literal|"Not implemented"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|REFUSED
 block|,
 literal|"Query refused"
+block|,
+name|NULL
 block|}
 block|,
 ifdef|#
@@ -1285,6 +1306,8 @@ block|{
 name|NOCHANGE
 block|,
 literal|"No change"
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -1293,34 +1316,46 @@ block|{
 name|TIME_OUT
 block|,
 literal|"Timed out"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NO_INFO
 block|,
 literal|"No information"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|ERROR
 block|,
 literal|"Unspecified error"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NONAUTH
 block|,
 literal|"Non-authoritative answer"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NO_RESPONSE
 block|,
 literal|"No response from server"
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|}

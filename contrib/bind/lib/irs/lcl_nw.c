@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_nw.c,v 1.21 1999/10/15 19:49:10 vixie Exp $"
+literal|"$Id: lcl_nw.c,v 1.22 2001/05/29 05:49:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +427,11 @@ name|pvt
 modifier|*
 name|pvt
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

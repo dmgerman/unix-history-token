@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ndc.c,v 1.16.2.1 2001/04/26 02:56:10 marka Exp $"
+literal|"$Id: ndc.c,v 1.21 2001/12/19 23:16:23 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|channel
@@ -434,6 +435,7 @@ specifier|static
 name|void
 name|channel_loop
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -521,8 +523,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -578,6 +589,7 @@ specifier|static
 name|int
 name|get_sockaddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -625,8 +637,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -639,8 +660,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -653,8 +683,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -667,8 +706,17 @@ modifier|*
 parameter_list|,
 name|va_list
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -681,8 +729,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -761,11 +818,6 @@ parameter_list|,
 name|char
 modifier|*
 name|argv
-index|[]
-parameter_list|,
-name|char
-modifier|*
-name|envp
 index|[]
 parameter_list|)
 block|{
@@ -2205,6 +2257,7 @@ specifier|static
 name|void
 name|channel_loop
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cmdtext
@@ -2531,6 +2584,11 @@ name|a
 init|=
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ctl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msg
@@ -2685,6 +2743,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
@@ -2785,6 +2848,8 @@ block|{
 name|NULL
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|}
 struct|;
@@ -3323,7 +3388,7 @@ name|trace
 argument_list|(
 literal|"pidfile is \"%s\" (try #%d)"
 argument_list|,
-name|pidfile
+name|f
 argument_list|,
 name|try
 operator|+
@@ -3337,7 +3402,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|pidfile
+name|f
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3349,7 +3414,7 @@ name|trace
 argument_list|(
 literal|"pid file (%s) unavailable - %s"
 argument_list|,
-name|pidfile
+name|f
 argument_list|,
 name|strerror
 argument_list|(
@@ -3376,7 +3441,7 @@ name|trace
 argument_list|(
 literal|"pid file (%s) format is bad"
 argument_list|,
-name|pidfile
+name|f
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3409,7 +3474,7 @@ name|trace
 argument_list|(
 literal|"pid file (%s) contains unusable pid (%d) - %s"
 argument_list|,
-name|pidfile
+name|f
 argument_list|,
 operator|*
 name|pid
@@ -3463,6 +3528,7 @@ specifier|static
 name|int
 name|get_sockaddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3731,7 +3797,7 @@ if|if
 condition|(
 name|sa
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3779,6 +3845,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/*NOTREACHED*/
 block|}
 end_function
 

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.46 2001/02/08 02:05:51 marka Exp $"
+literal|"$Id: db_update.c,v 8.50 2001/10/24 23:53:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,6 +269,7 @@ argument_list|(
 name|name
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -545,7 +546,7 @@ name|ns_log_db
 argument_list|,
 literal|3
 argument_list|,
-literal|"db_update(%s, %#x, %#x, %#x, 0%o, %#x)%s"
+literal|"db_update(%s, %p, %p, %p, 0%o, %p)%s"
 argument_list|,
 name|name
 argument_list|,
@@ -788,13 +789,95 @@ operator|->
 name|d_clev
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+operator|!
+name|ISVALIDGLUE
+argument_list|(
+name|newdp
+argument_list|)
+operator|&&
+name|zones
+index|[
+name|newdp
+operator|->
+name|d_zone
+index|]
+operator|.
+name|z_type
+operator|==
+name|Z_PRIMARY
+operator|)
+operator|||
+operator|(
+name|newdp
+operator|->
+name|d_type
+operator|==
+name|T_NS
+operator|&&
+operator|!
+name|ns_samename
+argument_list|(
+name|name
+argument_list|,
+name|zones
+index|[
+name|zn
+index|]
+operator|.
+name|z_origin
+argument_list|)
+operator|)
+condition|)
+block|{
+name|ns_info
+argument_list|(
+name|ns_log_db
+argument_list|,
+literal|"domain %s %s record in zone %s should be in zone %s"
+argument_list|,
+name|name
+argument_list|,
+name|p_type
+argument_list|(
+name|newdp
+operator|->
+name|d_type
+argument_list|)
+argument_list|,
+name|zones
+index|[
+name|newdp
+operator|->
+name|d_zone
+index|]
+operator|.
+name|z_origin
+argument_list|,
+name|zones
+index|[
+name|zn
+index|]
+operator|.
+name|z_origin
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NONGLUE
+operator|)
+return|;
+block|}
+else|else
 name|ns_debug
 argument_list|(
 name|ns_log_db
 argument_list|,
 literal|5
 argument_list|,
-literal|"attempted update child zone %s, %s"
+literal|"attempted update child zone %s, %s %s"
 argument_list|,
 name|zones
 index|[
@@ -804,6 +887,13 @@ operator|.
 name|z_origin
 argument_list|,
 name|name
+argument_list|,
+name|p_type
+argument_list|(
+name|newdp
+operator|->
+name|d_type
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1060,24 +1150,23 @@ argument_list|)
 operator|!=
 name|OK
 condition|)
-block|{
 name|ns_debug
 argument_list|(
 name|ns_log_db
 argument_list|,
 literal|3
 argument_list|,
-literal|"db_update: hint %#x freed"
+literal|"db_update: hint %p freed"
 argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|dp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2733,7 +2822,7 @@ name|ns_log_db
 argument_list|,
 literal|3
 argument_list|,
-literal|"db_update: adding%s %#x"
+literal|"db_update: adding%s %p"
 argument_list|,
 operator|(
 name|newdp
@@ -3246,6 +3335,7 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3254,6 +3344,7 @@ operator|->
 name|d_data
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3319,6 +3410,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3334,6 +3426,7 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3344,6 +3437,7 @@ operator|+
 name|NS_SIG_SIGNER
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3394,6 +3488,7 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3402,6 +3497,7 @@ operator|->
 name|d_data
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3422,6 +3518,7 @@ operator|=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3500,6 +3597,7 @@ condition|(
 name|strncasecmp
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3507,6 +3605,7 @@ operator|++
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3555,6 +3654,7 @@ operator|(
 name|strncasecmp
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3562,6 +3662,7 @@ operator|++
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3586,6 +3687,7 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3594,6 +3696,7 @@ operator|->
 name|d_data
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3618,6 +3721,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3637,6 +3741,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3652,12 +3757,14 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3689,6 +3796,7 @@ operator|+=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3702,6 +3810,7 @@ operator|+=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3937,12 +4046,14 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4074,12 +4185,14 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4142,12 +4255,14 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4166,6 +4281,7 @@ operator|+=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4179,6 +4295,7 @@ operator|+=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4192,12 +4309,14 @@ condition|(
 name|ns_samename
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|cp1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

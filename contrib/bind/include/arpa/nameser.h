@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 8.41 2000/12/23 08:14:50 vixie Exp $  */
+comment|/*  *	$Id: nameser.h,v 8.46 2001/11/16 05:37:33 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -350,7 +350,7 @@ decl_stmt|;
 specifier|const
 name|u_char
 modifier|*
-name|_ptr
+name|_msg_ptr
 decl_stmt|;
 block|}
 name|ns_msg
@@ -697,7 +697,12 @@ name|ns_r_max
 init|=
 literal|11
 block|,
-comment|/* The following are TSIG extended errors */
+comment|/* The following are EDNS extended rcodes */
+name|ns_r_badvers
+init|=
+literal|16
+block|,
+comment|/* The following are TSIG errors */
 name|ns_r_badsig
 init|=
 literal|16
@@ -1903,6 +1908,17 @@ value|127
 end_define
 
 begin_comment
+comment|/*  * EDNS0 extended flags, host order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_OPT_DNSSEC_OK
+value|0x8000U
+end_define
+
+begin_comment
 comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  */
 end_comment
 
@@ -1915,7 +1931,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|do { \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += NS_INT16SZ; \ } while (0)
+value|do { \ 	register const u_char *t_cp = (const u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += NS_INT16SZ; \ } while (0)
 end_define
 
 begin_define
@@ -1927,7 +1943,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|do { \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += NS_INT32SZ; \ } while (0)
+value|do { \ 	register const u_char *t_cp = (const u_char *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += NS_INT32SZ; \ } while (0)
 end_define
 
 begin_define

@@ -186,6 +186,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -242,6 +246,10 @@ literal|16
 operator|&&
 name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -262,6 +270,10 @@ operator|-
 operator|(
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|?
@@ -340,6 +352,8 @@ name|isspace
 argument_list|(
 operator|*
 name|cp
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 return|return

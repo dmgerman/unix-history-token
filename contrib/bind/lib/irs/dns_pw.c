@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_pw.c,v 1.18 1999/09/04 22:06:14 vixie Exp $"
+literal|"$Id: dns_pw.c,v 1.19 2001/05/29 05:48:32 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,6 +684,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENODEV
@@ -707,6 +712,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -722,6 +732,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function

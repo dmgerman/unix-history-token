@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_gr.c,v 8.1 1999/01/18 07:46:53 vixie Exp $"
+literal|"$Id: irp_gr.c,v 8.3 2001/05/29 05:48:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,6 +1046,9 @@ name|gr_name
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|gid_t
+operator|)
 name|gr
 operator|->
 name|gr_gid
@@ -1440,6 +1443,19 @@ name|free
 argument_list|(
 operator|*
 name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gr
+operator|->
+name|gr_mem
+condition|)
+name|free
+argument_list|(
+name|gr
+operator|->
+name|gr_mem
 argument_list|)
 expr_stmt|;
 if|if

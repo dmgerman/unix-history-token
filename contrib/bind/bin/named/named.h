@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: named.h,v 8.28 2001/02/12 05:56:15 marka Exp $  */
+comment|/*  * $Id: named.h,v 8.31 2002/02/01 00:05:38 marka Exp $  */
 end_comment
 
 begin_comment
@@ -59,11 +59,11 @@ directive|define
 name|QRYLOG
 end_define
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|YPKLUDGE
-end_define
+end_undef
 
 begin_define
 define|#
@@ -160,6 +160,22 @@ undef|#
 directive|undef
 name|LOG_TSIG_BUG
 end_undef
+
+begin_define
+define|#
+directive|define
+name|NOADDITIONAL
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FORWARD_ALLOWS
+end_undef
+
+begin_comment
+comment|/* enable allow-query for forward zones. */
+end_comment
 
 begin_include
 include|#

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis.c,v 1.14 2000/02/28 07:52:16 vixie Exp $"
+literal|"$Id: nis.c,v 1.15 2001/05/29 05:49:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +237,11 @@ name|char
 modifier|*
 name|domain
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|yp_get_default_domain

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_ng.c,v 1.16 1999/01/18 07:46:58 vixie Exp $"
+literal|"$Id: nis_ng.c,v 1.17 2001/05/29 05:49:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,14 +310,17 @@ name|struct
 name|irs_ng
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -663,16 +666,19 @@ name|irs_ng
 modifier|*
 name|this
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -708,11 +714,6 @@ return|;
 operator|*
 name|host
 operator|=
-operator|(
-comment|/*const*/
-name|char
-operator|*
-operator|)
 name|pvt
 operator|->
 name|cur
@@ -722,11 +723,6 @@ expr_stmt|;
 operator|*
 name|user
 operator|=
-operator|(
-comment|/*const*/
-name|char
-operator|*
-operator|)
 name|pvt
 operator|->
 name|cur
@@ -736,11 +732,6 @@ expr_stmt|;
 operator|*
 name|domain
 operator|=
-operator|(
-comment|/*const*/
-name|char
-operator|*
-operator|)
 name|pvt
 operator|->
 name|cur
@@ -1042,6 +1033,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1089,6 +1085,10 @@ name|vlen
 decl_stmt|,
 name|r
 decl_stmt|;
+name|char
+modifier|*
+name|nametmp
+decl_stmt|;
 comment|/* Don't add the same group to the list more than once. */
 for|for
 control|(
@@ -1119,6 +1119,13 @@ name|name
 argument_list|)
 condition|)
 return|return;
+name|DE_CONST
+argument_list|(
+name|name
+argument_list|,
+name|nametmp
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|yp_match
@@ -1129,11 +1136,7 @@ name|nis_domain
 argument_list|,
 name|netgroup_map
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|name
+name|nametmp
 argument_list|,
 name|len
 argument_list|,

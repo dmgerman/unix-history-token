@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.56 2000/12/02 18:39:25 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.57 2001/11/12 21:22:26 marka Exp $  */
 end_comment
 
 begin_comment
@@ -1385,6 +1385,17 @@ name|qserials_running
 name|INIT
 argument_list|(
 literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|int
+name|initial_configuration
+name|INIT
+argument_list|(
+literal|1
 argument_list|)
 decl_stmt|;
 end_decl_stmt

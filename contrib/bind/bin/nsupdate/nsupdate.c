@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsupdate.c,v 8.26 2000/12/23 08:14:48 vixie Exp $"
+literal|"$Id: nsupdate.c,v 8.27 2001/06/18 14:43:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2005,8 +2005,10 @@ operator|==
 name|ADD
 operator|)
 condition|?
-operator|-
-literal|1
+operator|(
+operator|~
+literal|0U
+operator|)
 else|:
 literal|0
 expr_stmt|;
@@ -2492,8 +2494,8 @@ if|if
 condition|(
 name|r_ttl
 operator|==
-operator|-
-literal|1
+operator|~
+literal|0U
 condition|)
 block|{
 name|fprintf
