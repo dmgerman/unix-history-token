@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.7 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.8 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -2650,6 +2650,8 @@ name|ia_ifa
 operator|.
 name|ifa_addr
 expr_stmt|;
+name|error
+operator|=
 name|rtinit
 argument_list|(
 operator|&
@@ -2687,6 +2689,8 @@ name|siso_family
 operator|==
 name|AF_ISO
 condition|)
+name|error
+operator|=
 name|rtinit
 argument_list|(
 operator|&
@@ -2708,6 +2712,29 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|rt_maskedcopy
+argument_list|(
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_addr
+argument_list|,
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_dstaddr
+argument_list|,
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_netmask
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|rtinit
 argument_list|(
 operator|&
@@ -2739,7 +2766,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
