@@ -6886,7 +6886,7 @@ name|targetAddress
 operator|.
 name|s_addr
 operator|=
-name|INADDR_NONE
+name|INADDR_ANY
 expr_stmt|;
 name|icmpLinkCount
 operator|=
