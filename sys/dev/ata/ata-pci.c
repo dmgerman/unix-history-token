@@ -2193,6 +2193,8 @@ name|ch
 argument_list|,
 name|ATA_BMSTAT_PORT
 argument_list|)
+operator|&
+name|ATA_BMSTAT_MASK
 expr_stmt|;
 name|ATA_IDX_OUTB
 argument_list|(
