@@ -787,6 +787,16 @@ parameter_list|)
 value|(isupper(c) || (islower(c)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|isalnum
+parameter_list|(
+name|c
+parameter_list|)
+value|(isalpha(c) || isdigit(c))
+end_define
+
 begin_function
 specifier|static
 name|__inline
