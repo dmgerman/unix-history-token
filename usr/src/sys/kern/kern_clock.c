@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -92,7 +92,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers which run  * independently of each other. The main clock, running at hz  * times per second, is used to do scheduling and timeout calculations.  * The second timer does resource utilization estimation statistically  * based on the state of the machine phz times a second. Both functions  * can be performed by a single clock (ie hz == phz), however the   * statistics will be much more prone to errors. Ideally a machine  * would have separate clocks measuring time spent in user state, system  * state, interrupt state, and idle state. These clocks would allow a non-  * approximate measure of resource utilization.  */
+comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers which run  * independently of each other. The main clock, running at hz  * times per second, is used to do scheduling and timeout calculations.  * The second timer does resource utilization estimation statistically  * based on the state of the machine stathz times a second. Both functions  * can be performed by a single clock (ie hz == stathz), however the   * statistics will be much more prone to errors. Ideally a machine  * would have separate clocks measuring time spent in user state, system  * state, interrupt state, and idle state. These clocks would allow a non-  * approximate measure of resource utilization.  */
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|phz
+name|stathz
 decl_stmt|;
 end_decl_stmt
 
@@ -516,7 +516,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|phz
+name|stathz
 operator|==
 literal|0
 condition|)
@@ -1631,9 +1631,9 @@ name|hz
 expr_stmt|;
 name|clockinfo
 operator|.
-name|phz
+name|stathz
 operator|=
-name|phz
+name|stathz
 expr_stmt|;
 name|clockinfo
 operator|.
