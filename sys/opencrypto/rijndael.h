@@ -77,8 +77,9 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|decrypt
+name|enc_only
 decl_stmt|;
+comment|/* context contains only encrypt schedule */
 name|int
 name|Nr
 decl_stmt|;
@@ -123,8 +124,6 @@ modifier|*
 parameter_list|,
 name|u_char
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)
