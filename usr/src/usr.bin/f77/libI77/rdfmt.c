@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.4";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.5";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -352,15 +352,10 @@ name|p
 operator|->
 name|p1
 expr_stmt|;
+comment|/* tab = (p->op==TR); This voids '..,tl6,1x,..' sequences */
 name|tab
 operator|=
-operator|(
-name|p
-operator|->
-name|op
-operator|==
-name|TR
-operator|)
+name|YES
 expr_stmt|;
 return|return
 operator|(
@@ -481,6 +476,19 @@ modifier|*
 name|dotab
 call|)
 argument_list|()
+operator|)
+return|;
+if|if
+condition|(
+name|cursor
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|errno
+operator|=
+name|F_ERSEEK
 operator|)
 return|;
 while|while
