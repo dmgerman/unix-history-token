@@ -25,13 +25,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_DISKLABEL
-value|"/sbin/disklabel"
-end_define
-
-begin_define
-define|#
-directive|define
 name|PATH_NEWFS
 value|"/sbin/newfs"
 end_define

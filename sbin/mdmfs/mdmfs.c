@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Dima Dorfman.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * mdmfs (md/MFS) is a wrapper around mdconfig(8), disklabel(8),  * newfs(8), and mount(8) that mimics the command line option set of  * the deprecated mount_mfs(8).  */
+comment|/*  * mdmfs (md/MFS) is a wrapper around mdconfig(8),  * newfs(8), and mount(8) that mimics the command line option set of  * the deprecated mount_mfs(8).  */
 end_comment
 
 begin_ifndef
@@ -295,16 +295,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|do_disklabel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1212,9 +1202,6 @@ argument_list|,
 name|mdtype
 argument_list|)
 expr_stmt|;
-name|do_disklabel
-argument_list|()
-expr_stmt|;
 name|do_newfs
 argument_list|(
 name|newfs_arg
@@ -1433,52 +1420,6 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Label the memory disk.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|do_disklabel
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|rv
-decl_stmt|;
-name|rv
-operator|=
-name|run
-argument_list|(
-name|NULL
-argument_list|,
-literal|"%s -r -w %s%d auto"
-argument_list|,
-name|PATH_DISKLABEL
-argument_list|,
-name|mdname
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"disklabel exited with error code %d"
-argument_list|,
-name|rv
 argument_list|)
 expr_stmt|;
 block|}
@@ -1936,7 +1877,7 @@ name|run
 argument_list|(
 name|NULL
 argument_list|,
-literal|"%s%s /dev/%s%dc %s"
+literal|"%s%s /dev/%s%d %s"
 argument_list|,
 name|PATH_MOUNT
 argument_list|,
@@ -2168,7 +2109,7 @@ name|run
 argument_list|(
 name|NULL
 argument_list|,
-literal|"%s%s /dev/%s%dc"
+literal|"%s%s /dev/%s%d"
 argument_list|,
 name|PATH_NEWFS
 argument_list|,
