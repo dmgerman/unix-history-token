@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cfscores.c	4.1	(Berkeley)	%G%"
+literal|"@(#)cfscores.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,10 @@ return|return;
 block|}
 if|if
 condition|(
+name|i
+operator|==
+literal|0
+operator|||
 name|total
 operator|.
 name|hand
