@@ -206,7 +206,7 @@ block|,
 block|{
 name|USB_VENDOR_LINKSYS2
 block|,
-name|USB_PRODUCT_LINKSYS_USB200M
+name|USB_PRODUCT_LINKSYS2_USB200M
 block|}
 block|,
 block|{
