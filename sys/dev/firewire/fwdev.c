@@ -4860,18 +4860,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s:cannot find node\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"cannot find node\n"
 argument_list|)
 expr_stmt|;
 name|err
