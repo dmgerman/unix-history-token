@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.12	82/03/30	*/
+comment|/*	if.h	4.13	82/05/24	*/
 end_comment
 
 begin_comment
@@ -47,12 +47,30 @@ name|struct
 name|sockaddr
 name|if_addr
 decl_stmt|;
-comment|/* internet address of interface */
+comment|/* address of interface */
+union|union
+block|{
 name|struct
 name|sockaddr
-name|if_broadaddr
+name|ifu_broadaddr
 decl_stmt|;
-comment|/* broadcast address of interface */
+name|struct
+name|sockaddr
+name|ifu_dstaddr
+decl_stmt|;
+block|}
+name|if_ifu
+union|;
+define|#
+directive|define
+name|if_broadaddr
+value|if_ifu.ifu_broadaddr
+comment|/* broadcast address */
+define|#
+directive|define
+name|if_dstaddr
+value|if_ifu.ifu_dstaddr
+comment|/* other end of p-to-p link */
 struct|struct
 name|ifqueue
 block|{
@@ -176,7 +194,18 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* routine entry installed */
+comment|/* routing entry installed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_POINTOPOINT
+value|0x10
+end_define
+
+begin_comment
+comment|/* interface is point-to-point link */
 end_comment
 
 begin_comment
