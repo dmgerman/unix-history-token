@@ -81,9 +81,9 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|amp
+name|afp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -100,7 +100,7 @@ name|vm_offset_t
 modifier|*
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 parameter_list|)
 function_decl|;
@@ -108,11 +108,11 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|module_format
+name|file_format
 name|alpha_elf
 init|=
 block|{
-name|elf_loadmodule
+name|elf_loadfile
 block|,
 name|elf_exec
 block|}
@@ -133,9 +133,9 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|)
 block|{
 specifier|static
@@ -144,7 +144,7 @@ name|bootinfo_v1
 name|bootinfo_v1
 decl_stmt|;
 name|struct
-name|module_metadata
+name|file_metadata
 modifier|*
 name|md
 decl_stmt|;
@@ -163,9 +163,9 @@ condition|(
 operator|(
 name|md
 operator|=
-name|mod_findmetadata
+name|file_findmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_ELFHDR
 argument_list|)
@@ -214,7 +214,7 @@ argument_list|,
 operator|&
 name|ffp_save
 argument_list|,
-name|mp
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -233,9 +233,9 @@ name|bootinfo_v1
 operator|.
 name|booted_kernel
 argument_list|,
-name|mp
+name|fp
 operator|->
-name|m_name
+name|f_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -309,16 +309,16 @@ expr_stmt|;
 comment|/*      * Append the boot command flags.      */
 if|if
 condition|(
-name|mp
+name|fp
 operator|->
-name|m_args
+name|f_args
 operator|!=
 name|NULL
 operator|&&
 operator|*
-name|mp
+name|fp
 operator|->
-name|m_args
+name|f_args
 operator|!=
 literal|'\0'
 condition|)
@@ -328,9 +328,9 @@ name|char
 modifier|*
 name|p
 init|=
-name|mp
+name|fp
 operator|->
-name|m_args
+name|f_args
 decl_stmt|;
 do|do
 block|{
@@ -429,9 +429,9 @@ name|printf
 argument_list|(
 literal|"Entering %s at 0x%lx...\n"
 argument_list|,
-name|mp
+name|fp
 operator|->
-name|m_name
+name|f_name
 argument_list|,
 name|hdr
 operator|->

@@ -81,7 +81,7 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 name|amp
 parameter_list|)
@@ -100,7 +100,7 @@ name|vm_offset_t
 modifier|*
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 parameter_list|)
 function_decl|;
@@ -108,11 +108,11 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|module_format
+name|file_format
 name|alpha_elf
 init|=
 block|{
-name|elf_loadmodule
+name|elf_loadfile
 block|,
 name|elf_exec
 block|}
@@ -133,21 +133,21 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|)
 block|{
 if|#
 directive|if
 literal|0
-block|static struct bootinfo_v1	bootinfo_v1;     struct module_metadata	*md;     Elf_Ehdr			*hdr;     int				err;      if ((md = mod_findmetadata(mp, MODINFOMD_ELFHDR)) == NULL) 	return(EFTYPE);
+block|static struct bootinfo_v1	bootinfo_v1;     struct file_metadata	*md;     Elf_Ehdr			*hdr;     int				err;      if ((md = file_findmetadata(fp, MODINFOMD_ELFHDR)) == NULL) 	return(EFTYPE);
 comment|/* XXX actually EFUCKUP */
 block|hdr = (Elf_Ehdr *)&(md->md_data);
 comment|/* XXX ffp_save does not appear to be used in the kernel.. */
-block|bzero(&bootinfo_v1, sizeof(bootinfo_v1));     err = bi_load(&bootinfo_v1,&ffp_save, mp);     if (err) 	return(err);
+block|bzero(&bootinfo_v1, sizeof(bootinfo_v1));     err = bi_load(&bootinfo_v1,&ffp_save, fp);     if (err) 	return(err);
 comment|/*      * Fill in the bootinfo for the kernel.      */
-block|strncpy(bootinfo_v1.booted_kernel, mp->m_name, 	    sizeof(bootinfo_v1.booted_kernel));     prom_getenv(PROM_E_BOOTED_OSFLAGS, bootinfo_v1.boot_flags, 		sizeof(bootinfo_v1.boot_flags));     bootinfo_v1.hwrpb = (void *)HWRPB_ADDR;     bootinfo_v1.hwrpbsize = ((struct rpb *)HWRPB_ADDR)->rpb_size;     bootinfo_v1.cngetc = NULL;     bootinfo_v1.cnputc = NULL;     bootinfo_v1.cnpollc = NULL;      printf("Entering %s at 0x%lx...\n", mp->m_name, hdr->e_entry);     exit(0);     closeall();     alpha_pal_imb();     (*(void (*)())hdr->e_entry)(ffp_save, ptbr_save, 			       BOOTINFO_MAGIC,&bootinfo_v1, 1, 0);
+block|strncpy(bootinfo_v1.booted_kernel, fp->f_name, 	    sizeof(bootinfo_v1.booted_kernel));     prom_getenv(PROM_E_BOOTED_OSFLAGS, bootinfo_v1.boot_flags, 		sizeof(bootinfo_v1.boot_flags));     bootinfo_v1.hwrpb = (void *)HWRPB_ADDR;     bootinfo_v1.hwrpbsize = ((struct rpb *)HWRPB_ADDR)->rpb_size;     bootinfo_v1.cngetc = NULL;     bootinfo_v1.cnputc = NULL;     bootinfo_v1.cnpollc = NULL;      printf("Entering %s at 0x%lx...\n", fp->f_name, hdr->e_entry);     exit(0);     closeall();     alpha_pal_imb();     (*(void (*)())hdr->e_entry)(ffp_save, ptbr_save, 			       BOOTINFO_MAGIC,&bootinfo_v1, 1, 0);
 endif|#
 directive|endif
 block|}

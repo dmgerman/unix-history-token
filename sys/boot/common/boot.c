@@ -91,9 +91,9 @@ index|[]
 parameter_list|)
 block|{
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|km
+name|fp
 decl_stmt|;
 name|char
 modifier|*
@@ -130,7 +130,7 @@ block|{
 comment|/* XXX maybe we should discard everything and start again? */
 if|if
 condition|(
-name|mod_findmodule
+name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
@@ -193,7 +193,7 @@ block|}
 comment|/*      * See if there is a kernel module already loaded      */
 if|if
 condition|(
-name|mod_findmodule
+name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
@@ -265,9 +265,9 @@ comment|/*      * Loaded anything yet?      */
 if|if
 condition|(
 operator|(
-name|km
+name|fp
 operator|=
-name|mod_findmodule
+name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
@@ -298,22 +298,22 @@ condition|)
 block|{
 if|if
 condition|(
-name|km
+name|fp
 operator|->
-name|m_args
+name|f_args
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|km
+name|fp
 operator|->
-name|m_args
+name|f_args
 argument_list|)
 expr_stmt|;
-name|km
+name|fp
 operator|->
-name|m_args
+name|f_args
 operator|=
 name|unargv
 argument_list|(
@@ -382,16 +382,16 @@ operator|(
 operator|)
 expr_stmt|;
 comment|/* Call the exec handler from the loader matching the kernel */
-name|module_formats
+name|file_formats
 index|[
-name|km
+name|fp
 operator|->
-name|m_loader
+name|f_loader
 index|]
 operator|->
 name|l_exec
 argument_list|(
-name|km
+name|fp
 argument_list|)
 expr_stmt|;
 return|return

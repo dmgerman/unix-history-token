@@ -138,7 +138,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|module_format
+name|file_format
 name|i386_aout
 decl_stmt|;
 end_decl_stmt
@@ -146,16 +146,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|module_format
+name|file_format
 name|i386_elf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|module_format
+name|file_format
 modifier|*
-name|module_formats
+name|file_formats
 index|[]
 init|=
 block|{

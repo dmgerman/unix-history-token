@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mjs copyright  */
+comment|/*  * mjs copyright  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -368,7 +368,7 @@ comment|/* Already loaded? */
 end_comment
 
 begin_comment
-unit|if ((pi->pi_module != NULL)&& (mod_findmodule(pi->pi_module, NULL) == NULL)) { 		modfname = malloc(strlen(pi->pi_module) + 4); 		sprintf(modfname, "%s.ko", pi->pi_module);
+unit|if ((pi->pi_module != NULL)&& (file_findfile(pi->pi_module, NULL) == NULL)) { 		modfname = malloc(strlen(pi->pi_module) + 4); 		sprintf(modfname, "%s.ko", pi->pi_module);
 comment|/* XXX implicit knowledge of KLD module filenames */
 end_comment
 

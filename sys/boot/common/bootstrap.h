@@ -679,12 +679,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Module metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
+comment|/*  * Preloaded file metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
 end_comment
 
 begin_struct
 struct|struct
-name|module_metadata
+name|file_metadata
 block|{
 name|size_t
 name|md_size
@@ -693,7 +693,7 @@ name|u_int16_t
 name|md_type
 decl_stmt|;
 name|struct
-name|module_metadata
+name|file_metadata
 modifier|*
 name|md_next
 decl_stmt|;
@@ -708,60 +708,97 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Loaded module information.  *  * At least one module (the kernel) must be loaded in order to boot.  * The kernel is always loaded first.  *  * String fields (m_name, m_type) should be dynamically allocated.  */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|preloaded_file
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
-name|loaded_module
+name|kernel_module
 block|{
 name|char
 modifier|*
 name|m_name
 decl_stmt|;
 comment|/* module name */
-name|char
-modifier|*
-name|m_type
-decl_stmt|;
-comment|/* verbose module type, eg 'ELF kernel', 'pnptable', etc. */
-name|char
-modifier|*
-name|m_args
-decl_stmt|;
+comment|/*    char			*m_args;*/
 comment|/* arguments for the module */
 name|struct
-name|module_metadata
+name|preloaded_file
 modifier|*
-name|m_metadata
+name|m_fp
 decl_stmt|;
-comment|/* metadata that will be placed in the module directory */
-name|int
-name|m_loader
-decl_stmt|;
-comment|/* index of the loader that read the file */
-name|vm_offset_t
-name|m_addr
-decl_stmt|;
-comment|/* load address */
-name|size_t
-name|m_size
-decl_stmt|;
-comment|/* module size */
 name|struct
-name|loaded_module
+name|kernel_module
 modifier|*
 name|m_next
 decl_stmt|;
-comment|/* next module */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Preloaded file information. Depending on type, file can contain  * additional units called 'modules'.  *  * At least one file (the kernel) must be loaded in order to boot.  * The kernel is always loaded first.  *  * String fields (m_name, m_type) should be dynamically allocated.  */
+end_comment
+
+begin_struct
+struct|struct
+name|preloaded_file
+block|{
+name|char
+modifier|*
+name|f_name
+decl_stmt|;
+comment|/* file name */
+name|char
+modifier|*
+name|f_type
+decl_stmt|;
+comment|/* verbose file type, eg 'ELF kernel', 'pnptable', etc. */
+name|char
+modifier|*
+name|f_args
+decl_stmt|;
+comment|/* arguments for the file */
+name|struct
+name|file_metadata
+modifier|*
+name|f_metadata
+decl_stmt|;
+comment|/* metadata that will be placed in the module directory */
+name|int
+name|f_loader
+decl_stmt|;
+comment|/* index of the loader that read the file */
+name|vm_offset_t
+name|f_addr
+decl_stmt|;
+comment|/* load address */
+name|size_t
+name|f_size
+decl_stmt|;
+comment|/* file size */
+name|struct
+name|kernel_module
+modifier|*
+name|f_modules
+decl_stmt|;
+comment|/* list of modules if any */
+name|struct
+name|preloaded_file
+modifier|*
+name|f_next
+decl_stmt|;
+comment|/* next file */
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|module_format
+name|file_format
 block|{
 comment|/* Load function must return EFTYPE if it can't handle the module supplied */
 name|int
@@ -778,7 +815,7 @@ name|vm_offset_t
 name|dest
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 modifier|*
 name|result
@@ -792,7 +829,7 @@ name|l_exec
 function_decl|)
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 name|mp
 parameter_list|)
@@ -804,9 +841,9 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|module_format
+name|file_format
 modifier|*
-name|module_formats
+name|file_formats
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -818,9 +855,9 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|loaded_modules
+name|preloaded_files
 decl_stmt|;
 end_decl_stmt
 
@@ -861,11 +898,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mod_findmodule
+name|file_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|preloaded_file
+modifier|*
+name|file_findfile
 parameter_list|(
 name|char
 modifier|*
@@ -879,14 +926,42 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|mod_addmetadata
+name|struct
+name|file_metadata
+modifier|*
+name|file_findmetadata
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|file_discard
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|file_addmetadata
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|fp
 parameter_list|,
 name|int
 name|type
@@ -902,44 +977,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|struct
-name|module_metadata
-modifier|*
-name|mod_findmetadata
-parameter_list|(
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|,
 name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mod_discard
+name|file_addmodule
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+name|fp
+parameter_list|,
+name|char
+modifier|*
+name|modname
+parameter_list|,
 name|struct
-name|loaded_module
+name|kernel_module
 modifier|*
-name|mod_allocmodule
-parameter_list|(
-name|void
+modifier|*
+name|newmp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -951,7 +1005,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|int
-name|aout_loadmodule
+name|aout_loadfile
 parameter_list|(
 name|char
 modifier|*
@@ -961,7 +1015,7 @@ name|vm_offset_t
 name|dest
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 modifier|*
 name|result
@@ -979,9 +1033,9 @@ modifier|*
 name|name
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -989,7 +1043,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|elf_loadmodule
+name|elf_loadfile
 parameter_list|(
 name|char
 modifier|*
@@ -999,7 +1053,7 @@ name|vm_offset_t
 name|dest
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 modifier|*
 name|result

@@ -81,9 +81,9 @@ name|int
 name|aout_loadimage
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|,
 name|int
 name|fd
@@ -109,7 +109,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static vm_offset_t	aout_findkldident(struct loaded_module *mp, struct exec *ehdr); static int		aout_fixupkldmod(struct loaded_module *mp, struct exec *ehdr);
+unit|static vm_offset_t	aout_findkldident(struct preloaded_file *fp, struct exec *ehdr); static int		aout_fixupkldmod(struct preloaded_file *fp, struct exec *ehdr);
 endif|#
 directive|endif
 end_endif
@@ -138,7 +138,7 @@ end_comment
 
 begin_function
 name|int
-name|aout_loadmodule
+name|aout_loadfile
 parameter_list|(
 name|char
 modifier|*
@@ -148,19 +148,19 @@ name|vm_offset_t
 name|dest
 parameter_list|,
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 modifier|*
 name|result
 parameter_list|)
 block|{
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 decl_stmt|,
 modifier|*
-name|kmp
+name|kfp
 decl_stmt|;
 name|struct
 name|exec
@@ -184,7 +184,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|mp
+name|fp
 operator|=
 name|NULL
 expr_stmt|;
@@ -269,9 +269,9 @@ name|oerr
 goto|;
 block|}
 comment|/*      * Check to see what sort of module we are.      *      * XXX should check N_GETMID()      */
-name|kmp
+name|kfp
 operator|=
-name|mod_findmodule
+name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
@@ -293,14 +293,14 @@ block|{
 comment|/* Looks like a kld module */
 if|if
 condition|(
-name|kmp
+name|kfp
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aout_loadmodule: can't load module before kernel\n"
+literal|"aout_loadfile: can't load module before kernel\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -317,19 +317,19 @@ name|strcmp
 argument_list|(
 name|aout_kerneltype
 argument_list|,
-name|kmp
+name|kfp
 operator|->
-name|m_type
+name|f_type
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aout_loadmodule: can't load module with kernel type '%s'\n"
+literal|"aout_loadfile: can't load module with kernel type '%s'\n"
 argument_list|,
-name|kmp
+name|kfp
 operator|->
-name|m_type
+name|f_type
 argument_list|)
 expr_stmt|;
 name|err
@@ -360,14 +360,14 @@ block|{
 comment|/* Looks like a kernel */
 if|if
 condition|(
-name|kmp
+name|kfp
 operator|!=
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aout_loadmodule: kernel already loaded\n"
+literal|"aout_loadfile: kernel already loaded\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -396,7 +396,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aout_loadmodule: not a kernel (maybe static binary?)\n"
+literal|"aout_loadfile: not a kernel (maybe static binary?)\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -423,9 +423,9 @@ name|oerr
 goto|;
 block|}
 comment|/*       * Ok, we think we should handle this.      */
-name|mp
+name|fp
 operator|=
-name|mod_allocmodule
+name|file_alloc
 argument_list|()
 expr_stmt|;
 if|if
@@ -454,9 +454,9 @@ if|if
 condition|(
 name|s
 condition|)
-name|mp
+name|fp
 operator|->
-name|m_name
+name|f_name
 operator|=
 name|strdup
 argument_list|(
@@ -466,18 +466,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|mp
+name|fp
 operator|->
-name|m_name
+name|f_name
 operator|=
 name|strdup
 argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-name|mp
+name|fp
 operator|->
-name|m_type
+name|f_type
 operator|=
 name|strdup
 argument_list|(
@@ -520,9 +520,9 @@ operator|+=
 name|pad
 expr_stmt|;
 block|}
-name|mp
+name|fp
 operator|->
-name|m_addr
+name|f_addr
 operator|=
 name|addr
 expr_stmt|;
@@ -544,13 +544,13 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
-name|mp
+name|fp
 operator|->
-name|m_size
+name|f_size
 operator|=
 name|aout_loadimage
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|fd
 argument_list|,
@@ -564,9 +564,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mp
+name|fp
 operator|->
-name|m_size
+name|f_size
 operator|==
 literal|0
 condition|)
@@ -577,13 +577,13 @@ if|#
 directive|if
 literal|0
 comment|/* Handle KLD module data */
-block|if (!kernel&& ((err = aout_fixupkldmod(mp,&ehdr)) != 0)) 	goto oerr;
+block|if (!kernel&& ((err = aout_fixupkldmod(fp,&ehdr)) != 0)) 	goto oerr;
 endif|#
 directive|endif
 comment|/* save exec header as metadata */
-name|mod_addmetadata
+name|file_addmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_AOUTEXEC
 argument_list|,
@@ -601,12 +601,7 @@ comment|/* Load OK, return module pointer */
 operator|*
 name|result
 operator|=
-operator|(
-expr|struct
-name|loaded_module
-operator|*
-operator|)
-name|mp
+name|fp
 expr_stmt|;
 name|err
 operator|=
@@ -623,9 +618,9 @@ name|EIO
 expr_stmt|;
 name|oerr
 label|:
-name|mod_discard
+name|file_discard
 argument_list|(
-name|mp
+name|fp
 argument_list|)
 expr_stmt|;
 name|out
@@ -653,9 +648,9 @@ name|int
 name|aout_loadimage
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|,
 name|int
 name|fd
@@ -883,7 +878,7 @@ expr_stmt|;
 comment|/* symbol table */
 name|printf
 argument_list|(
-literal|"symbols=[0x%lx+0x%lx"
+literal|"symbols=[0x%x+0x%lx"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -972,7 +967,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"+0x%lx+0x%x]"
+literal|"+0x%x+0x%x]"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1010,9 +1005,9 @@ name|esym
 operator|=
 name|addr
 expr_stmt|;
-name|mod_addmetadata
+name|file_addmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_SSYM
 argument_list|,
@@ -1025,9 +1020,9 @@ operator|&
 name|ssym
 argument_list|)
 expr_stmt|;
-name|mod_addmetadata
+name|file_addmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_ESYM
 argument_list|,

@@ -75,7 +75,7 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
 name|amp
 parameter_list|)
@@ -84,11 +84,11 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|module_format
+name|file_format
 name|i386_elf
 init|=
 block|{
-name|elf_loadmodule
+name|elf_loadfile
 block|,
 name|elf_exec
 block|}
@@ -113,13 +113,13 @@ name|int
 name|elf_exec
 parameter_list|(
 name|struct
-name|loaded_module
+name|preloaded_file
 modifier|*
-name|mp
+name|fp
 parameter_list|)
 block|{
 name|struct
-name|module_metadata
+name|file_metadata
 modifier|*
 name|md
 decl_stmt|;
@@ -154,9 +154,9 @@ condition|(
 operator|(
 name|md
 operator|=
-name|mod_findmetadata
+name|file_findmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_ELFHDR
 argument_list|)
@@ -190,9 +190,9 @@ name|err
 operator|=
 name|bi_load
 argument_list|(
-name|mp
+name|fp
 operator|->
-name|m_args
+name|f_args
 argument_list|,
 operator|&
 name|boothowto
@@ -231,9 +231,9 @@ condition|(
 operator|(
 name|md
 operator|=
-name|mod_findmetadata
+name|file_findmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_SSYM
 argument_list|)
@@ -262,9 +262,9 @@ condition|(
 operator|(
 name|md
 operator|=
-name|mod_findmetadata
+name|file_findmetadata
 argument_list|(
-name|mp
+name|fp
 argument_list|,
 name|MODINFOMD_ESYM
 argument_list|)
