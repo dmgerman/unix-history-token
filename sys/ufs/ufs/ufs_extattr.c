@@ -999,7 +999,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EOPNOTSUPP
+name|EEXIST
 expr_stmt|;
 goto|goto
 name|free_exit
@@ -1150,7 +1150,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
 argument_list|,
 name|ump
 operator|->
@@ -2220,6 +2220,7 @@ expr|struct
 name|ufs_extattr_header
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Acquire locks. 	 */
 name|VOP_LEASE
 argument_list|(
 name|attribute
@@ -2233,6 +2234,15 @@ argument_list|,
 name|LEASE_READ
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't need to get a lock on the backing file if the getattr is 	 * being applied to the backing file, as the lock is already held. 	 */
+if|if
+condition|(
+name|attribute
+operator|->
+name|uele_backing_vnode
+operator|!=
+name|vp
+condition|)
 name|vn_lock
 argument_list|(
 name|attribute
@@ -2259,7 +2269,7 @@ argument_list|,
 operator|&
 name|local_aio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
 argument_list|,
 name|ump
 operator|->
@@ -2421,7 +2431,7 @@ name|uele_backing_vnode
 argument_list|,
 name|uio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
 argument_list|,
 name|ump
 operator|->
@@ -2434,23 +2444,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|uio
-operator|->
-name|uio_offset
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|vopunlock_exit
 goto|;
-block|}
-name|uio
-operator|->
-name|uio_offset
-operator|=
-literal|0
-expr_stmt|;
 name|uio
 operator|->
 name|uio_resid
@@ -2467,6 +2463,20 @@ operator|)
 expr_stmt|;
 name|vopunlock_exit
 label|:
+name|uio
+operator|->
+name|uio_offset
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|attribute
+operator|->
+name|uele_backing_vnode
+operator|!=
+name|vp
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|attribute
@@ -2539,6 +2549,8 @@ condition|(
 name|ap
 operator|->
 name|a_uio
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
@@ -2923,7 +2935,7 @@ expr|struct
 name|ufs_extattr_header
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Acquire locks 	 */
+comment|/* 	 * Acquire locks. 	 */
 name|VOP_LEASE
 argument_list|(
 name|attribute
@@ -2937,7 +2949,7 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't need to get a lock on the backing file if the setattr is 	 * being applied to the backing file, as the lock is already held 	 */
+comment|/* 	 * Don't need to get a lock on the backing file if the setattr is 	 * being applied to the backing file, as the lock is already held. 	 */
 if|if
 condition|(
 name|attribute
@@ -2972,7 +2984,9 @@ argument_list|,
 operator|&
 name|local_aio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
+operator||
+name|IO_SYNC
 argument_list|,
 name|ump
 operator|->
@@ -3028,6 +3042,8 @@ name|uele_backing_vnode
 argument_list|,
 name|uio
 argument_list|,
+name|IO_NODELOCKED
+operator||
 name|IO_SYNC
 argument_list|,
 name|ump
@@ -3272,7 +3288,7 @@ operator|.
 name|uef_size
 operator|)
 expr_stmt|;
-comment|/* 	 * Read in the data header to see if the data is defined 	 */
+comment|/* 	 * Check to see if currently defined. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3400,7 +3416,7 @@ argument_list|,
 operator|&
 name|local_aio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
 argument_list|,
 name|ump
 operator|->
@@ -3445,6 +3461,28 @@ name|ueh_flags
 operator|=
 literal|0
 expr_stmt|;
+name|local_aio
+operator|.
+name|uio_offset
+operator|=
+name|base_offset
+expr_stmt|;
+name|local_aio
+operator|.
+name|uio_resid
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ufs_extattr_header
+argument_list|)
+expr_stmt|;
+name|local_aio
+operator|.
+name|uio_rw
+operator|=
+name|UIO_WRITE
+expr_stmt|;
 name|error
 operator|=
 name|VOP_WRITE
@@ -3456,7 +3494,9 @@ argument_list|,
 operator|&
 name|local_aio
 argument_list|,
-literal|0
+name|IO_NODELOCKED
+operator||
+name|IO_SYNC
 argument_list|,
 name|ump
 operator|->
