@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	necf.c	1.2	81/05/28	*/
+comment|/*	necf.c	1.3	81/06/01	*/
 end_comment
 
 begin_include
@@ -152,11 +152,23 @@ argument_list|,
 name|_sobuf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SHEETFEEDER
 name|printf
 argument_list|(
 literal|"\033=\033\033\033O\f"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"\033="
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lnumber
 operator|=
 literal|0
@@ -178,6 +190,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SHEETFEEDER
 if|if
 condition|(
 name|lnumber
@@ -204,6 +219,8 @@ operator|>=
 literal|2
 condition|)
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -231,10 +248,15 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SHEETFEEDER
 block|}
 name|lnumber
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|fflush
 argument_list|(
