@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.4 (Berkeley) %G%"
+literal|"@(#)move.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"robots.h"
+file|<sys/ttydefaults.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"robots.h"
 end_include
 
 begin_define
@@ -616,7 +622,7 @@ goto|;
 case|case
 name|CTRL
 argument_list|(
-name|L
+literal|'L'
 argument_list|)
 case|:
 name|wrefresh
@@ -634,7 +640,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -965,7 +971,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 argument_list|)
 expr_stmt|;
