@@ -1288,12 +1288,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|alloca
-end_ifndef
-
 begin_comment
 comment|/*  * The alloca() function can't be implemented in C, and on some  * platforms it can't be implemented at all as a callable function.  * The GNU C compiler provides a built-in alloca() which we can use;  * in all other cases, provide a prototype, mainly to pacify various  * incarnations of lint.  On platforms where alloca() is not in libc,  * programs which use it will fail to link when compiled with non-GNU  * compilers.  */
 end_comment
@@ -1301,16 +1295,25 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__GNUC__
-argument_list|)
+operator|>=
+literal|2
 operator|||
 name|defined
 argument_list|(
 name|__INTEL_COMPILER
 argument_list|)
 end_if
+
+begin_undef
+undef|#
+directive|undef
+name|alloca
+end_undef
+
+begin_comment
+comment|/* some GNU bits try to get cute and define this on their own */
+end_comment
 
 begin_define
 define|#
@@ -1322,10 +1325,14 @@ parameter_list|)
 value|__builtin_alloca(sz)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_elif
 
 begin_function_decl
 name|void
@@ -1337,10 +1344,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_error
+error|#
+directive|error
+error|Please add alloca support on all FreeBSD architectures for this compiler.
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_endif
 endif|#
