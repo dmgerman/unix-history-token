@@ -1492,6 +1492,11 @@ comment|/* ATA errors */
 default|default:
 if|if
 condition|(
+operator|!
+name|request
+operator|->
+name|result
+operator|&&
 name|request
 operator|->
 name|status
