@@ -423,13 +423,6 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
-name|in_vm86call
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|vm86paddr
 decl_stmt|;
 end_decl_stmt

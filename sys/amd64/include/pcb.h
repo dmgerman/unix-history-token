@@ -95,6 +95,11 @@ directive|define
 name|PCB_NPXINITDONE
 value|0x08
 comment|/* fpu state is initialized */
+define|#
+directive|define
+name|PCB_VM86CALL
+value|0x10
+comment|/* in vm86 call */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;

@@ -1790,7 +1790,7 @@ literal|"vm86 lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1833,6 +1833,12 @@ operator|->
 name|pgtable_va
 operator|=
 name|vm86paddr
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|=
+name|PCB_VM86CALL
 expr_stmt|;
 name|pcb
 operator|->
@@ -2632,7 +2638,7 @@ name|vmf_trapno
 operator|=
 name|intnum
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|vm86_lock
@@ -2645,7 +2651,7 @@ argument_list|(
 name|vmf
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|vm86_lock
@@ -2707,7 +2713,7 @@ name|entry
 decl_stmt|,
 name|retval
 decl_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|vm86_lock
@@ -2867,7 +2873,7 @@ name|kva
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|vm86_lock

@@ -1101,6 +1101,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|PCB_VM86CALL
+argument_list|,
+name|PCB_VM86CALL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|TF_TRAPNO
 argument_list|,
 name|offsetof
