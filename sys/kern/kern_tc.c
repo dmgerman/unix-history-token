@@ -783,6 +783,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TC_STATS
+argument_list|(
+name|nsetclock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_undef
 undef|#
 directive|undef
@@ -1587,6 +1595,9 @@ name|struct
 name|timespec
 name|ts2
 decl_stmt|;
+name|nsetclock
+operator|++
+expr_stmt|;
 name|nanouptime
 argument_list|(
 operator|&
