@@ -4800,6 +4800,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|thread_unlink
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|thread_unsuspend
 parameter_list|(
 name|struct
