@@ -3586,6 +3586,12 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|!=
+name|kernel_pmap
+condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3651,6 +3657,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|pmap
+operator|!=
+name|kernel_pmap
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
