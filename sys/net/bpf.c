@@ -5083,6 +5083,17 @@ decl_stmt|,
 name|hdrlen
 decl_stmt|;
 block|{ }
+name|void
+name|bpfdetach
+parameter_list|(
+name|ifp
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+block|{ }
 name|u_int
 name|bpf_filter
 parameter_list|(
