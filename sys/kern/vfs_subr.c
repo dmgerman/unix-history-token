@@ -1091,10 +1091,12 @@ specifier|static
 name|void
 name|vfs_badlock
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1141,6 +1143,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1179,6 +1182,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1218,6 +1222,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1262,6 +1267,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1307,6 +1313,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1352,6 +1359,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1397,6 +1405,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

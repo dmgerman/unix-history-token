@@ -2012,6 +2012,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2028,6 +2029,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2044,6 +2046,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2060,6 +2063,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2076,6 +2080,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2092,6 +2097,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2108,6 +2114,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
