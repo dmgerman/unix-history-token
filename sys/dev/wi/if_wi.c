@@ -285,6 +285,16 @@ directive|include
 file|<dev/wi/if_wivar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* ALTQ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -320,6 +330,11 @@ name|m
 parameter_list|)
 value|IF_DEQUEUE((ifq), (m))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

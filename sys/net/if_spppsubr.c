@@ -4744,6 +4744,11 @@ expr_stmt|;
 block|}
 name|ifq
 operator|=
+operator|(
+expr|struct
+name|ifqueue
+operator|*
+operator|)
 operator|&
 name|ifp
 operator|->
@@ -5893,6 +5898,11 @@ name|ifp
 decl_stmt|;
 name|sppp_qflush
 argument_list|(
+operator|(
+expr|struct
+name|ifqueue
+operator|*
+operator|)
 operator|&
 name|sp
 operator|->

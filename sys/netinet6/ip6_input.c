@@ -1553,6 +1553,33 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|ALTQ
+if|if
+condition|(
+name|altq_input
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|altq_input
+call|)
+argument_list|(
+name|m
+argument_list|,
+name|AF_INET6
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* packet is dropped by traffic conditioner */
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * The following check is not documented in specs.  A malicious 	 * party may be able to use IPv4 mapped addr to confuse tcp/udp stack 	 * and bypass security checks (act as if it was from 127.0.0.1 by using 	 * IPv6 src ::ffff:127.0.0.1).  Be cautious. 	 * 	 * This check chokes if we are in an SIIT cloud.  As none of BSDs 	 * support IPv4-less kernel compilation, we cannot support SIIT 	 * environment at all.  So, it makes more sense for us to reject any 	 * malicious packets for non-SIIT environment, than try to do a 	 * partial support for SIIT environment. 	 */
 if|if
 condition|(

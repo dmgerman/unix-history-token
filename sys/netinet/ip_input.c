@@ -1934,6 +1934,31 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|ALTQ
+if|if
+condition|(
+name|altq_input
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|altq_input
+call|)
+argument_list|(
+name|m
+argument_list|,
+name|AF_INET
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* packet is dropped by traffic conditioner */
+return|return;
+endif|#
+directive|endif
 comment|/* 	 * Convert fields to host representation. 	 */
 name|ip
 operator|->

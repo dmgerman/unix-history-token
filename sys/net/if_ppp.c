@@ -4191,6 +4191,11 @@ name|sc
 operator|->
 name|sc_fastq
 else|:
+operator|(
+expr|struct
+name|ifqueue
+operator|*
+operator|)
 operator|&
 name|ifp
 operator|->
@@ -4439,6 +4444,11 @@ name|sc
 operator|->
 name|sc_fastq
 else|:
+operator|(
+expr|struct
+name|ifqueue
+operator|*
+operator|)
 operator|&
 name|sc
 operator|->

@@ -2352,6 +2352,11 @@ return|;
 block|}
 name|ifq
 operator|=
+operator|(
+expr|struct
+name|ifqueue
+operator|*
+operator|)
 operator|&
 name|sc
 operator|->

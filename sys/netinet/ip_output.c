@@ -1672,6 +1672,13 @@ block|}
 endif|#
 directive|endif
 comment|/* notdef */
+ifdef|#
+directive|ifdef
+name|ALTQ
+comment|/* 	 * disable packet drop hack. 	 * packetdrop should be done by queueing. 	 */
+else|#
+directive|else
+comment|/* !ALTQ */
 comment|/* 	 * Verify that we have any chance at all of being able to queue 	 *      the packet or packet fragments 	 */
 if|if
 condition|(
@@ -1713,6 +1720,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* !ALTQ */
 comment|/* 	 * Look for broadcast address and 	 * verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
