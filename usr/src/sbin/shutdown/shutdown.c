@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)shutdown.c	4.5 (Berkeley/Melbourne) 81/05/04	*/
+comment|/*	@(#)shutdown.c	4.6 (Berkeley/Melbourne) 81/05/10	*/
 end_comment
 
 begin_include
@@ -216,14 +216,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|reboot
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|noroot
 init|=
 literal|0
 decl_stmt|;
@@ -524,14 +516,6 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
-case|case
-literal|'y'
-case|:
-name|noroot
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
 default|default:
 name|fprintf
 argument_list|(
@@ -564,7 +548,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [-krdy] shutdowntime [nologmessage]\n"
+literal|"Usage: %s [ -krd ] shutdowntime [ message ]\n"
 argument_list|,
 name|argv
 index|[
@@ -578,19 +562,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|noroot
-operator|==
-literal|0
-operator|&&
 name|geteuid
 argument_list|()
-operator|!=
-literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Must specify -y flag to run as normal user.\n"
+name|stderr
+argument_list|,
+literal|"NOT super-user\n"
 argument_list|)
 expr_stmt|;
 name|finish
