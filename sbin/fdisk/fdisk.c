@@ -980,6 +980,12 @@ literal|"BSDI BSD/386 swap"
 block|}
 block|,
 block|{
+literal|0xBE
+block|,
+literal|"Solaris x86 boot"
+block|}
+block|,
+block|{
 literal|0xC1
 block|,
 literal|"DRDOS/sec with 12-bit FAT"
