@@ -1,18 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Serial Line interface  *  * Rick Adams  * Center for Seismic Studies  * 1300 N 17th Street, Suite 1450  * Arlington, Virginia 22209  * (703)276-7900  * rick@seismo.ARPA  * seismo!rick  *  * Pounded on heavily by Chris Torek (chris@mimsy.umd.edu, umcp-cs!chris).  * N.B.: this belongs in netinet, not net, the way it stands now.  * Should have a link-layer type designation, but wouldn't be  * backwards-compatible.  *  * Converted to 4.3BSD Beta by Chris Torek.  * Other changes made at Berkeley, based in part on code by Kirk Smith.  * W. Jolitz added slip abort.  *  * Hacked almost beyond recognition by Van Jacobson (van@helios.ee.lbl.gov).  * Added priority queuing for "interactive" traffic; hooks for TCP  * header compression; ICMP filtering (at 2400 baud, some cretin  * pinging you can use up all your bandwidth).  Made low clist behavior  * more robust and slightly less likely to hang serial line.  * Sped up a bunch of things.  *   * Note that splimp() is used throughout to block both (tty) input  * interrupts and network activity; thus, splimp must be>= spltty.  */
-end_comment
-
-begin_comment
-comment|/* $Header: /usr/src/sys/net/RCS/if_sl.c,v 1.1 91/08/30 11:14:57 william Exp Locker: william $ */
-end_comment
-
-begin_comment
-comment|/* from if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp */
 end_comment
 
 begin_include
@@ -198,7 +190,7 @@ directive|define
 name|CLISTRESERVE
 value|1024
 comment|/* Can't let clists get too low */
-comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	signals a "soft" exit from slip mode by usermode process  */
+comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	within window time signals a "soft" exit from slip mode by remote end  */
 define|#
 directive|define
 name|ABT_ESC
@@ -206,19 +198,22 @@ value|'\033'
 comment|/* can't be t_intr - distant host must know it*/
 define|#
 directive|define
-name|ABT_WAIT
+name|ABT_IDLE
 value|1
-comment|/* in seconds - idle before an escape& after */
+comment|/* in seconds - idle before an escape */
 define|#
 directive|define
-name|ABT_RECYCLE
-value|(5*2+2)
-comment|/* in seconds - time window processing abort */
-define|#
-directive|define
-name|ABT_SOFT
+name|ABT_COUNT
 value|3
-comment|/* count of escapes */
+comment|/* count of escapes for abort */
+define|#
+directive|define
+name|ABT_WINDOW
+value|(ABT_COUNT*2+2)
+comment|/* in seconds - time to count */
+ifdef|#
+directive|ifdef
+name|nomore
 comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set yet.  We want to put "interactive" traffic on a high  * priority queue.  To decide if traffic is interactive, we check that  * a) it is TCP and b) one of its ports is telnet, rlogin or ftp control.  */
 specifier|static
 name|u_short
@@ -256,6 +251,11 @@ name|p
 parameter_list|)
 value|(interactive_ports[(p)& 7] == (p))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -958,6 +958,9 @@ operator|.
 name|if_unit
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|notdef
 case|case
 name|SLIOCGFLAGS
 case|:
@@ -975,47 +978,88 @@ operator|.
 name|if_flags
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SLIOCSFLAGS
 case|:
-define|#
-directive|define
-name|LLC_MASK
-value|(IFF_LLC0|IFF_LLC1|IFF_LLC2)
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+comment|/* temp compat */
 name|sc
 operator|->
 name|sc_if
 operator|.
 name|if_flags
-operator|=
-operator|(
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_flags
-operator|&
+operator|&=
 operator|~
-name|LLC_MASK
-operator|)
+operator|(
+name|SC_COMPRESS
 operator||
-operator|(
-operator|(
+name|SC_NOICMP
+operator||
+name|SC_AUTOCOMP
+operator|)
+expr_stmt|;
+if|if
+condition|(
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 operator|&
-name|LLC_MASK
+literal|0x2
+condition|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator||=
+name|SC_COMPRESS
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
 operator|)
+name|data
+operator|&
+literal|0x4
+condition|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator||=
+name|SC_NOICMP
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|&
+literal|0x8
+condition|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator||=
+name|SC_AUTOCOMP
 expr_stmt|;
 name|splx
 argument_list|(
@@ -1140,6 +1184,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_noproto
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|EAFNOSUPPORT
@@ -1222,6 +1273,9 @@ operator|==
 name|IPPROTO_TCP
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|nomore
 specifier|register
 name|int
 name|p
@@ -1273,6 +1327,40 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
+else|#
+directive|else
+specifier|register
+name|int
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_tos
+operator|&
+name|IPTOS_LOWDELAY
+condition|)
+block|{
+name|ifq
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_fastq
+expr_stmt|;
+name|p
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|p
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -1339,9 +1427,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENETRESET
 operator|)
 return|;
+comment|/* XXX ? */
 block|}
 name|s
 operator|=
@@ -1555,9 +1644,16 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
-name|NULL
 condition|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_omcasts
+operator|++
+expr_stmt|;
+comment|/* XXX */
+else|else
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -1629,7 +1725,9 @@ block|{
 operator|++
 name|sc
 operator|->
-name|sc_bytessent
+name|sc_if
+operator|.
+name|if_obytes
 expr_stmt|;
 operator|(
 name|void
@@ -1749,7 +1847,9 @@ condition|)
 break|break;
 name|sc
 operator|->
-name|sc_bytessent
+name|sc_if
+operator|.
+name|if_obytes
 operator|+=
 name|cp
 operator|-
@@ -1813,7 +1913,9 @@ break|break;
 block|}
 name|sc
 operator|->
-name|sc_bytessent
+name|sc_if
+operator|.
+name|if_obytes
 operator|+=
 literal|2
 expr_stmt|;
@@ -1882,7 +1984,9 @@ block|{
 operator|++
 name|sc
 operator|->
-name|sc_bytessent
+name|sc_if
+operator|.
+name|if_obytes
 expr_stmt|;
 name|sc
 operator|->
@@ -1892,16 +1996,6 @@ name|if_opackets
 operator|++
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_obytes
-operator|=
-name|sc
-operator|->
-name|sc_bytessent
-expr_stmt|;
 block|}
 block|}
 end_block
@@ -2185,11 +2279,6 @@ return|return;
 operator|++
 name|sc
 operator|->
-name|sc_bytesrcvd
-expr_stmt|;
-operator|++
-name|sc
-operator|->
 name|sc_if
 operator|.
 name|if_ibytes
@@ -2202,14 +2291,50 @@ comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|ABT_ESC
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
 block|{
-comment|/* if we see an abort after "idle" time, count it */
 if|if
 condition|(
 name|c
 operator|==
 name|ABT_ESC
+condition|)
+block|{
+comment|/* 			 * If we have a previous abort, see whether 			 * this one is within the time limit. 			 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_abortcount
 operator|&&
+name|time
+operator|.
+name|tv_sec
+operator|>=
+name|sc
+operator|->
+name|sc_starttime
+operator|+
+name|ABT_WINDOW
+condition|)
+name|sc
+operator|->
+name|sc_abortcount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 			 * If we see an abort after "idle" time, count it; 			 * record when the first abort escape arrived. 			 */
+if|if
+condition|(
 name|time
 operator|.
 name|tv_sec
@@ -2218,17 +2343,12 @@ name|sc
 operator|->
 name|sc_lasttime
 operator|+
-name|ABT_WAIT
+name|ABT_IDLE
 condition|)
 block|{
-name|sc
-operator|->
-name|sc_abortcount
-operator|++
-expr_stmt|;
-comment|/* record when the first abort escape arrived */
 if|if
 condition|(
+operator|++
 name|sc
 operator|->
 name|sc_abortcount
@@ -2243,50 +2363,13 @@ name|time
 operator|.
 name|tv_sec
 expr_stmt|;
-block|}
-comment|/* 		 * if we have an abort, see that we have not run out of time, 		 * or that we have an "idle" time after the complete escape 		 * sequence 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_abortcount
-condition|)
-block|{
-if|if
-condition|(
-name|time
-operator|.
-name|tv_sec
-operator|>=
-name|sc
-operator|->
-name|sc_starttime
-operator|+
-name|ABT_RECYCLE
-condition|)
-name|sc
-operator|->
-name|sc_abortcount
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|sc_abortcount
 operator|>=
-name|ABT_SOFT
-operator|&&
-name|time
-operator|.
-name|tv_sec
-operator|>=
-name|sc
-operator|->
-name|sc_lasttime
-operator|+
-name|ABT_WAIT
+name|ABT_COUNT
 condition|)
 block|{
 name|slclose
@@ -2297,6 +2380,14 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+block|}
+else|else
+name|sc
+operator|->
+name|sc_abortcount
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|sc_lasttime
