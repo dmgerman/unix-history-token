@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcwd.c	5.11 (Berkeley) %G%"
+literal|"@(#)getcwd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,10 +194,6 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -213,14 +209,9 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|pt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|ptsize
@@ -230,13 +221,11 @@ operator|-
 literal|4
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -261,14 +250,9 @@ expr_stmt|;
 comment|/* 	 * Allocate bytes (1024 - malloc space) for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special * case the first stat, it's ".", not "..". 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|up
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|upsize
@@ -278,6 +262,8 @@ operator|-
 literal|4
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|err
@@ -436,14 +422,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|up
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|up
@@ -453,10 +434,16 @@ operator|*=
 literal|2
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|err
 goto|;
+name|bup
+operator|=
+name|up
+expr_stmt|;
 name|eup
 operator|=
 name|up
@@ -702,14 +689,9 @@ name|bpt
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|pt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|pt
@@ -719,6 +701,8 @@ operator|*=
 literal|2
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|err
@@ -836,10 +820,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
