@@ -374,7 +374,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|help_emitsummary
 parameter_list|(
 name|char
@@ -466,11 +466,14 @@ name|desc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|pager_output
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -661,6 +664,8 @@ name|doindex
 condition|)
 block|{
 comment|/* dink around formatting */
+if|if
+condition|(
 name|help_emitsummary
 argument_list|(
 name|t
@@ -669,7 +674,8 @@ name|s
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 elseif|else
 if|if
@@ -797,6 +803,8 @@ operator|)
 condition|)
 block|{
 comment|/* topic match, list subtopics */
+if|if
+condition|(
 name|help_emitsummary
 argument_list|(
 name|t
@@ -805,7 +813,8 @@ name|s
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 block|}
 name|free
