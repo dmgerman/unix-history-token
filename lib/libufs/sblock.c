@@ -230,12 +230,7 @@ name|fs
 operator|->
 name|fs_sblockloc
 operator|==
-name|numfrags
-argument_list|(
-name|fs
-argument_list|,
 name|superblock
-argument_list|)
 operator|)
 condition|)
 name|disk

@@ -2029,15 +2029,10 @@ name|fs
 operator|->
 name|fs_sblockloc
 operator|==
-name|numfrags
-argument_list|(
-name|fs
-argument_list|,
 name|sblock_try
 index|[
 name|i
 index|]
-argument_list|)
 operator|)
 operator|)
 operator|&&

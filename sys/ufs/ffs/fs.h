@@ -606,9 +606,9 @@ name|fs_ronly
 decl_stmt|;
 comment|/* mounted read-only flag */
 name|int8_t
-name|fs_flags
+name|fs_old_flags
 decl_stmt|;
-comment|/* see FS_ flags below */
+comment|/* old FS_ flags */
 name|u_char
 name|fs_fsmnt
 index|[
@@ -668,7 +668,7 @@ comment|/* old rotation block list head */
 name|int64_t
 name|fs_sblockloc
 decl_stmt|;
-comment|/* location of standard superblock */
+comment|/* byte offset of standard superblock */
 name|struct
 name|csum_total
 name|fs_cstotal
@@ -720,10 +720,14 @@ comment|/* save real cg size to use fs_bsize */
 name|int32_t
 name|fs_sparecon32
 index|[
-literal|27
+literal|26
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|int32_t
+name|fs_flags
+decl_stmt|;
+comment|/* see FS_ flags below */
 name|int32_t
 name|fs_contigsumsize
 decl_stmt|;
@@ -929,6 +933,17 @@ end_define
 
 begin_comment
 comment|/* file system is MAC multi-label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_FLAGS_UPDATED
+value|0x80
+end_define
+
+begin_comment
+comment|/* flags have been moved to new location */
 end_comment
 
 begin_comment

@@ -423,7 +423,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"offset\t%qd\tid\t[ %x %x ]\n"
+literal|"superblock location\t%qd\tid\t[ %x %x ]\n"
 argument_list|,
 name|afs
 operator|.
