@@ -1317,7 +1317,7 @@ name|_net_key
 argument_list|,
 name|KEYCTL_PREFERED_OLDSA
 argument_list|,
-name|prefered_oldsa
+name|preferred_oldsa
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,\
