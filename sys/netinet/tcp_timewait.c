@@ -3164,6 +3164,13 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TCPS_HAVERCVDSYN
@@ -6600,6 +6607,11 @@ argument_list|(
 name|inp
 argument_list|)
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -6655,6 +6667,11 @@ argument_list|(
 name|inp
 argument_list|)
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -6750,6 +6767,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
