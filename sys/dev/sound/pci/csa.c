@@ -519,7 +519,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -555,9 +555,9 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|4
-argument_list|,
 name|stcmd
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
