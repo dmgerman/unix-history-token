@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)listrefs.c	2.4	%G%"
+literal|"@(#)listrefs.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +228,27 @@ decl_stmt|,
 name|intr
 argument_list|()
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|BMACLIB
+argument_list|,
+name|N_BMACLIB
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|COMFILE
+argument_list|,
+name|N_COMFILE
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|DEFSTYLE
+argument_list|,
+name|N_DEFSTYLE
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT

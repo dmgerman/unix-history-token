@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.6	%G%"
+literal|"@(#)bib.c	2.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,8 +243,8 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|common
-index|[]
 init|=
 name|COMFILE
 decl_stmt|;
@@ -342,6 +342,27 @@ name|intr
 parameter_list|()
 function_decl|;
 comment|/* the file INDEX in the current directory is the default index,       if it is present */
+name|strcpy
+argument_list|(
+name|BMACLIB
+argument_list|,
+name|N_BMACLIB
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|COMFILE
+argument_list|,
+name|N_COMFILE
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|DEFSTYLE
+argument_list|,
+name|N_DEFSTYLE
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT

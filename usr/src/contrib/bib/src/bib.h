@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.4	%G%  */
+comment|/*  *	@(#)bib.h	2.5	%G%  */
 end_comment
 
 begin_comment
@@ -134,15 +134,11 @@ name|INVTEMPFILE
 value|"/tmp/invertXXXXXX"
 end_define
 
-begin_comment
-comment|/* common words */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|COMFILE
-value|"/usr/lib/bmac/common"
+name|SYSINDEX
+value|"/usr/dict/papers/INDEX"
 end_define
 
 begin_comment
@@ -152,8 +148,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYSINDEX
-value|"/usr/dict/papers/INDEX"
+name|N_BMACLIB
+value|"/usr/lib/bmac"
 end_define
 
 begin_comment
@@ -163,20 +159,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BMACLIB
-value|"/usr/lib/bmac"
+name|N_COMFILE
+value|"/usr/lib/bmac/common"
 end_define
 
 begin_comment
-comment|/* default style of references */
+comment|/* common words */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEFSTYLE
+name|N_DEFSTYLE
 value|"/usr/lib/bmac/bib.stdsn"
 end_define
+
+begin_comment
+comment|/* default style of refs */
+end_comment
+
+begin_decl_stmt
+name|char
+name|BMACLIB
+index|[
+literal|64
+index|]
+decl_stmt|,
+name|COMFILE
+index|[
+literal|64
+index|]
+decl_stmt|,
+name|DEFSTYLE
+index|[
+literal|64
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* size limits */
