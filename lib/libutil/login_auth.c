@@ -217,10 +217,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 name|auth_info
 operator|.
 name|reject
@@ -1257,6 +1253,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1347,6 +1346,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
