@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.2 83/08/12"
+literal|"@(#)cmd2.c	3.3 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,7 +841,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\r\n"
+literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tntouched\tnmiss\r\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -851,7 +851,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\t%d\r\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\r\n"
 argument_list|,
 name|nread
 argument_list|,
@@ -864,6 +864,10 @@ argument_list|,
 name|wwnwrite
 argument_list|,
 name|wwnwritec
+argument_list|,
+name|wwntouched
+argument_list|,
+name|wwnmiss
 argument_list|)
 expr_stmt|;
 name|waitnl
