@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.20 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2000,6 +2000,14 @@ comment|/* defined(SO_OOBINLINE) */
 name|signal
 argument_list|(
 name|SIGTSTP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Ignoring SIGTTOU keeps the kernel from blocking us 	 * in ttioctl() in /sys/tty.c. 	 */
+name|signal
+argument_list|(
+name|SIGTTOU
 argument_list|,
 name|SIG_IGN
 argument_list|)
