@@ -935,10 +935,6 @@ directive|endif
 case|case
 name|_SC_AIO_LISTIO_MAX
 case|:
-name|defaultresult
-operator|=
-name|_POSIX_AIO_LISTIO_MAX
-expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -953,16 +949,10 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_LISTIO_MAX
 expr_stmt|;
-goto|goto
-name|yesno
-goto|;
+goto|goto break;
 case|case
 name|_SC_AIO_MAX
 case|:
-name|defaultresult
-operator|=
-name|_POSIX_AIO_MAX
-expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -977,16 +967,10 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_MAX
 expr_stmt|;
-goto|goto
-name|yesno
-goto|;
+goto|goto break;
 case|case
 name|_SC_AIO_PRIO_DELTA_MAX
 case|:
-name|defaultresult
-operator|=
-literal|0
-expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -1001,9 +985,7 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_PRIO_DELTA_MAX
 expr_stmt|;
-goto|goto
-name|yesno
-goto|;
+goto|goto break;
 case|case
 name|_SC_DELAYTIMER_MAX
 case|:
