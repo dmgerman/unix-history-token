@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.9 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,12 +116,13 @@ begin_function
 name|long
 name|blockest
 parameter_list|(
-name|ip
+name|dp
 parameter_list|)
+specifier|register
 name|struct
 name|dinode
 modifier|*
-name|ip
+name|dp
 decl_stmt|;
 block|{
 name|long
@@ -129,14 +130,14 @@ name|blkest
 decl_stmt|,
 name|sizeest
 decl_stmt|;
-comment|/* 	 * ip->di_size is the size of the file in bytes. 	 * ip->di_blocks stores the number of sectors actually in the file. 	 * If there are more sectors than the size would indicate, this just 	 *	means that there are indirect blocks in the file or unused 	 *	sectors in the last file block; we can safely ignore these 	 *	(blkest = sizeest below). 	 * If the file is bigger than the number of sectors would indicate, 	 *	then the file has holes in it.	In this case we must use the 	 *	block count to estimate the number of data blocks used, but 	 *	we use the actual size for estimating the number of indirect 	 *	dump blocks (sizeest vs. blkest in the indirect block 	 *	calculation). 	 */
+comment|/* 	 * dp->di_size is the size of the file in bytes. 	 * dp->di_blocks stores the number of sectors actually in the file. 	 * If there are more sectors than the size would indicate, this just 	 *	means that there are indirect blocks in the file or unused 	 *	sectors in the last file block; we can safely ignore these 	 *	(blkest = sizeest below). 	 * If the file is bigger than the number of sectors would indicate, 	 *	then the file has holes in it.	In this case we must use the 	 *	block count to estimate the number of data blocks used, but 	 *	we use the actual size for estimating the number of indirect 	 *	dump blocks (sizeest vs. blkest in the indirect block 	 *	calculation). 	 */
 name|blkest
 operator|=
 name|howmany
 argument_list|(
 name|dbtob
 argument_list|(
-name|ip
+name|dp
 operator|->
 name|di_blocks
 argument_list|)
@@ -148,7 +149,7 @@ name|sizeest
 operator|=
 name|howmany
 argument_list|(
-name|ip
+name|dp
 operator|->
 name|di_size
 argument_list|,
@@ -167,7 +168,7 @@ name|sizeest
 expr_stmt|;
 if|if
 condition|(
-name|ip
+name|dp
 operator|->
 name|di_size
 operator|>
@@ -435,7 +436,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|,
-name|bits
+name|dirty
 decl_stmt|;
 specifier|register
 name|char
@@ -486,14 +487,14 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bits
+name|dirty
 operator|=
 operator|*
 name|map
 operator|++
 expr_stmt|;
 else|else
-name|bits
+name|dirty
 operator|>>=
 literal|1
 expr_stmt|;
@@ -503,7 +504,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bits
+name|dirty
 operator|&
 literal|1
 operator|)
@@ -1196,14 +1197,15 @@ begin_function
 name|void
 name|dumpino
 parameter_list|(
-name|ip
+name|dp
 parameter_list|,
 name|ino
 parameter_list|)
+specifier|register
 name|struct
 name|dinode
 modifier|*
-name|ip
+name|dp
 decl_stmt|;
 name|ino_t
 name|ino
@@ -1250,7 +1252,7 @@ operator|.
 name|c_dinode
 operator|=
 operator|*
-name|ip
+name|dp
 expr_stmt|;
 name|spcl
 operator|.
@@ -1271,7 +1273,7 @@ operator|(
 name|mode
 operator|=
 operator|(
-name|ip
+name|dp
 operator|->
 name|di_mode
 operator|&
@@ -1298,7 +1300,7 @@ operator|!=
 name|IFLNK
 operator|)
 operator|||
-name|ip
+name|dp
 operator|->
 name|di_size
 operator|==
@@ -1314,7 +1316,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|ip
+name|dp
 operator|->
 name|di_size
 operator|>
@@ -1337,7 +1339,7 @@ name|cnt
 operator|=
 name|howmany
 argument_list|(
-name|ip
+name|dp
 operator|->
 name|di_size
 argument_list|,
@@ -1349,7 +1351,7 @@ expr_stmt|;
 name|blksout
 argument_list|(
 operator|&
-name|ip
+name|dp
 operator|->
 name|di_db
 index|[
@@ -1366,7 +1368,7 @@ condition|(
 operator|(
 name|size
 operator|=
-name|ip
+name|dp
 operator|->
 name|di_size
 operator|-
@@ -1398,7 +1400,7 @@ name|dmpindir
 argument_list|(
 name|ino
 argument_list|,
-name|ip
+name|dp
 operator|->
 name|di_ib
 index|[

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,8 +280,8 @@ name|ino_t
 name|ino
 decl_stmt|;
 specifier|register
-name|long
-name|bits
+name|int
+name|dirty
 decl_stmt|;
 specifier|register
 name|struct
@@ -588,7 +588,7 @@ operator|++
 expr_stmt|;
 name|ntrec
 operator|=
-name|atol
+name|atoi
 argument_list|(
 operator|*
 name|argv
@@ -1823,14 +1823,14 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bits
+name|dirty
 operator|=
 operator|*
 name|map
 operator|++
 expr_stmt|;
 else|else
-name|bits
+name|dirty
 operator|>>=
 literal|1
 expr_stmt|;
@@ -1840,7 +1840,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bits
+name|dirty
 operator|&
 literal|1
 operator|)
@@ -1908,14 +1908,14 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bits
+name|dirty
 operator|=
 operator|*
 name|map
 operator|++
 expr_stmt|;
 else|else
-name|bits
+name|dirty
 operator|>>=
 literal|1
 expr_stmt|;
@@ -1925,7 +1925,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bits
+name|dirty
 operator|&
 literal|1
 operator|)
