@@ -29,7 +29,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.3  */
+comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.4  */
 end_comment
 
 begin_comment
@@ -790,7 +790,7 @@ block|}
 block|}
 block|}
 elseif|else
-comment|/* 	 * No home and no up means it's impossible, so we return an 	 * incredibly big number to make cursor motion win out. 	 */
+comment|/* 	 * No home and no up means it's impossible. 	 */
 if|if
 condition|(
 operator|!
@@ -801,9 +801,8 @@ operator|<
 name|outline
 condition|)
 return|return
-operator|(
-literal|500
-operator|)
+operator|-
+literal|1
 return|;
 if|if
 condition|(
@@ -1225,22 +1224,14 @@ else|else
 block|{
 name|i
 operator|=
-name|_win
+name|curscr
 operator|->
 name|_y
 index|[
 name|outline
-operator|-
-name|_win
-operator|->
-name|_begy
 index|]
 index|[
 name|outcol
-operator|-
-name|_win
-operator|->
-name|_begx
 index|]
 expr_stmt|;
 if|if

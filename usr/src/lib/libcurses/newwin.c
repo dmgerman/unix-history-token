@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * allocate space for and set up defaults for a new window  *  * %G% (Berkeley) %W  */
+comment|/*  * allocate space for and set up defaults for a new window  *  * %G% (Berkeley) @(#)newwin.c	1.5  */
 end_comment
 
 begin_include
@@ -417,9 +417,18 @@ name|orig
 operator|->
 name|_begx
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"returning ERR (1)\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|ERR
 return|;
+block|}
 if|if
 condition|(
 name|nl
@@ -475,9 +484,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"returning ERR (2)\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|ERR
 return|;
+block|}
 name|j
 operator|=
 name|by
