@@ -156,7 +156,8 @@ value|20
 define|#
 directive|define
 name|MAXHOSTNAME
-value|20
+value|18
+comment|/* in reality, hosts are not longer than 16 */
 operator|(
 name|void
 operator|)
@@ -172,7 +173,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"TTY  Idle  Login Time"
+literal|"TTY   Idle  Login Time"
 argument_list|,
 name|oflag
 condition|?
@@ -351,7 +352,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-2.2s "
+literal|"%-3.3s "
 argument_list|,
 operator|(
 name|strncmp
@@ -394,7 +395,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"   "
+literal|"    "
 argument_list|)
 expr_stmt|;
 if|if
@@ -592,7 +593,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-.15s"
+literal|" %-.13s"
 argument_list|,
 name|prphone
 argument_list|(
