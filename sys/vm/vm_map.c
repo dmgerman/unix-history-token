@@ -8911,11 +8911,6 @@ operator|==
 name|OBJ_ONEMAPPING
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|src_object
-argument_list|)
-expr_stmt|;
 name|vm_object_split
 argument_list|(
 name|src_entry
@@ -8928,11 +8923,6 @@ operator|->
 name|object
 operator|.
 name|vm_object
-expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|src_object
-argument_list|)
 expr_stmt|;
 block|}
 block|}
