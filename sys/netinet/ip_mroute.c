@@ -3479,8 +3479,7 @@ name|encap_attach_func
 argument_list|(
 name|AF_INET
 argument_list|,
-operator|-
-literal|1
+name|IPPROTO_IPV4
 argument_list|,
 name|mroute_encapcheck
 argument_list|,
