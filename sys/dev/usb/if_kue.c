@@ -278,6 +278,14 @@ literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
+name|USB_VENDOR_3COM
+block|,
+name|USB_PRODUCT_3COM_3C19250
+block|,
+literal|"KLSI USB ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
