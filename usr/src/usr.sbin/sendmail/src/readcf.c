@@ -175,6 +175,18 @@ operator|+
 name|MAXATOM
 index|]
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|null_list
+index|[
+literal|1
+index|]
+init|=
+block|{
+name|NULL
+block|}
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -951,11 +963,19 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|syserr
 argument_list|(
 literal|"R line: null LHS"
 argument_list|)
 expr_stmt|;
+name|rwp
+operator|->
+name|r_lhs
+operator|=
+name|null_list
+expr_stmt|;
+block|}
 comment|/* expand and save the RHS */
 while|while
 condition|(
@@ -1189,11 +1209,19 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|syserr
 argument_list|(
 literal|"R line: null RHS"
 argument_list|)
 expr_stmt|;
+name|rwp
+operator|->
+name|r_rhs
+operator|=
+name|null_list
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'S'
