@@ -191,6 +191,14 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x167110b9
+case|:
+return|return
+operator|(
+literal|"Ali M1671 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x154110b9
 case|:
 return|return
