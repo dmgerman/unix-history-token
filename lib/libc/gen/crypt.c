@@ -77,6 +77,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|des_setkey
@@ -112,6 +116,10 @@ literal|"WARNING!  des_cipher(3) not present in the system!"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|int
@@ -169,6 +177,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|setkey
@@ -204,6 +216,10 @@ literal|"WARNING!  encrypt(3) not present in the system!"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|int
