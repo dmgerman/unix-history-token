@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.0.2.29.2.4 1997/11/28 06:14:46 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.0.2.29.2.9 1998/05/23 14:29:45 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -469,6 +475,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|FILE
+modifier|*
+name|newlog
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|logfile
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|donehup
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -476,6 +511,19 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|handlehup
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -669,6 +717,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|logopts
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -763,6 +827,49 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|void
+name|handlehup
+parameter_list|()
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|handlehup
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logfile
+operator|&&
+operator|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|logfile
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+condition|)
+name|newlog
+operator|=
+name|fp
+expr_stmt|;
+name|donehup
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1127,7 +1234,7 @@ name|fputs
 argument_list|(
 name|line
 argument_list|,
-name|stdout
+name|log
 argument_list|)
 expr_stmt|;
 else|else
@@ -1384,12 +1491,12 @@ name|fputs
 argument_list|(
 name|line
 argument_list|,
-name|stdout
+name|log
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|log
 argument_list|)
 expr_stmt|;
 block|}
@@ -1457,6 +1564,10 @@ name|tm
 decl_stmt|;
 name|int
 name|res
+decl_stmt|,
+name|i
+decl_stmt|,
+name|len
 decl_stmt|;
 name|nl
 operator|=
@@ -1505,6 +1616,13 @@ operator|->
 name|ipl_sec
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1518,27 +1636,45 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strftime
 argument_list|(
 name|t
 argument_list|,
-literal|"%2d/%02d/%4d "
+name|len
+argument_list|,
+literal|"%d/%m/%Y "
 argument_list|,
 name|tm
-operator|->
-name|tm_mday
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|len
+operator|-=
+name|i
+expr_stmt|;
+name|t
+operator|+=
+name|i
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|strftime
+argument_list|(
+name|t
+argument_list|,
+name|len
+argument_list|,
+literal|"%T"
 argument_list|,
 name|tm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|tm
-operator|->
-name|tm_year
-operator|+
-literal|1900
 argument_list|)
 expr_stmt|;
 name|t
@@ -1548,7 +1684,6 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1556,19 +1691,7 @@ name|sprintf
 argument_list|(
 name|t
 argument_list|,
-literal|"%02d:%02d:%02d.%-.6ld @%hd "
-argument_list|,
-name|tm
-operator|->
-name|tm_hour
-argument_list|,
-name|tm
-operator|->
-name|tm_min
-argument_list|,
-name|tm
-operator|->
-name|tm_sec
+literal|".%-.6ld @%hd "
 argument_list|,
 name|ipl
 operator|->
@@ -1807,19 +1930,21 @@ argument|*proto
 argument_list|,
 argument|pname[
 literal|6
-argument|]; 	struct	tm	*tm; 	int	res;  	sl = (struct ipslog *)((char *)ipl + sizeof(*ipl)); 	res = (opts& OPT_RESOLVE) ?
+argument|]; 	struct	tm	*tm; 	int	res
+argument_list|,
+argument|i
+argument_list|,
+argument|len;  	sl = (struct ipslog *)((char *)ipl + sizeof(*ipl)); 	res = (opts& OPT_RESOLVE) ?
 literal|1
 argument|:
 literal|0
-argument|; 	tm = localtime((time_t *)&ipl->ipl_sec); 	if (!(opts& OPT_SYSLOG)) { 		(void) sprintf(t,
-literal|"%2d/%02d/%4d "
-argument|, 			tm->tm_mday, tm->tm_mon +
-literal|1
-argument|, tm->tm_year +
-literal|1900
-argument|); 		t += strlen(t); 	} 	(void) sprintf(t,
-literal|"%02d:%02d:%02d.%-.6ld "
-argument|, 		tm->tm_hour, tm->tm_min, tm->tm_sec, ipl->ipl_usec); 	t += strlen(t);  	if (sl->isl_type == ISL_NEW) 		strcpy(t,
+argument|; 	tm = localtime((time_t *)&ipl->ipl_sec); 	len = sizeof(line); 	if (!(opts& OPT_SYSLOG)) { 		(void) strftime(t, len,
+literal|"%d/%m/%Y "
+argument|, tm); 		i = strlen(t); 		len -= i; 		t += i; 	} 	(void) strftime(t, len,
+literal|"%T"
+argument|, tm); 	t += strlen(t); 	(void) sprintf(t,
+literal|".%-.6ld "
+argument|, ipl->ipl_usec); 	t += strlen(t);  	if (sl->isl_type == ISL_NEW) 		strcpy(t,
 literal|"STATE:NEW "
 argument|); 	else if (sl->isl_type == ISL_EXPIRE) 		strcpy(t,
 literal|"STATE:EXPIRE "
@@ -1857,11 +1982,13 @@ argument|; 	if (opts& OPT_SYSLOG) 		syslog(LOG_INFO,
 literal|"%s"
 argument|, line); 	else 		(void) fprintf(log,
 literal|"%s"
-argument|, line); }   static	void	print_log(logtype, log, buf, blen) FILE	*log; char	*buf; int	logtype, blen; { 	iplog_t	*ipl; 	int psize;  	while (blen>
+argument|, line); }   static	void	print_log(logtype, log, buf, blen) FILE	*log; char	*buf; int	logtype, blen; { 	iplog_t	*ipl; 	char *bp = NULL, *bpo = NULL; 	int psize;  	while (blen>
 literal|0
-argument|) { 		ipl = (iplog_t *)buf; 		if (ipl->ipl_magic != IPL_MAGIC) {
+argument|) { 		ipl = (iplog_t *)buf; 		if ((u_long)ipl& (sizeof(long)-
+literal|1
+argument|)) { 			if (bp) 				bpo = bp; 			bp = (char *)malloc(blen); 			bcopy((char *)ipl, bp, blen); 			if (bpo) { 				free(bpo); 				bpo = NULL; 			} 			buf = bp; 			continue; 		} 		if (ipl->ipl_magic != IPL_MAGIC) {
 comment|/* invalid data or out of sync */
-argument|return; 		} 		psize = ipl->ipl_dsize; 		switch (logtype) 		{ 		case IPL_LOGIPF : 			print_ipflog(log, buf, psize); 			break; 		case IPL_LOGNAT : 			print_natlog(log, buf, psize); 			break; 		case IPL_LOGSTATE : 			print_statelog(log, buf, psize); 			break; 		}  		blen -= psize; 		buf += psize; 	} }   static	void	print_ipflog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	protoent *pr; 	struct	tcphdr	*tp; 	struct	icmp	*ic; 	struct	tm	*tm; 	char	c[
+argument|break; 		} 		psize = ipl->ipl_dsize; 		switch (logtype) 		{ 		case IPL_LOGIPF : 			print_ipflog(log, buf, psize); 			break; 		case IPL_LOGNAT : 			print_natlog(log, buf, psize); 			break; 		case IPL_LOGSTATE : 			print_statelog(log, buf, psize); 			break; 		}  		blen -= psize; 		buf += psize; 	} 	if (bp) 		free(bp); 	return; }   static	void	print_ipflog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	protoent *pr; 	struct	tcphdr	*tp; 	struct	icmp	*ic; 	struct	tm	*tm; 	char	c[
 literal|3
 argument|], pname[
 literal|8
@@ -1880,15 +2007,13 @@ name|linux
 argument|ip->ip_len = ntohs(ip->ip_len);
 endif|#
 directive|endif
-argument|if (!(opts& OPT_SYSLOG)) { 		(void) sprintf(t,
-literal|"%2d/%02d/%4d "
-argument|, 			tm->tm_mday, tm->tm_mon +
-literal|1
-argument|, tm->tm_year +
-literal|1900
-argument|); 		t += strlen(t); 	} 	(void) sprintf(t,
-literal|"%02d:%02d:%02d.%-.6ld "
-argument|, tm->tm_hour, tm->tm_min, 		tm->tm_sec, ipl->ipl_usec); 	t += strlen(t); 	if (ipl->ipl_count>
+argument|len = sizeof(line); 	if (!(opts& OPT_SYSLOG)) { 		(void) strftime(t, len,
+literal|"%d/%m/%Y "
+argument|, tm); 		i = strlen(t); 		len -= i; 		t += i; 	} 	(void) strftime(t, len,
+literal|"%T"
+argument|, tm); 	t += strlen(t); 	(void) sprintf(t,
+literal|".%-.6ld "
+argument|, ipl->ipl_usec); 	t += strlen(t); 	if (ipl->ipl_count>
 literal|1
 argument|) { 		(void) sprintf(t,
 literal|"%dx "
@@ -2016,8 +2141,8 @@ literal|"%s PR %s len %hu %hu"
 argument|, 				hostname(res, ip->ip_dst), proto, 				hl, ip->ip_len); 		} 	} else if (p == IPPROTO_ICMP) { 		ic = (struct icmp *)((char *)ip + hl); 		(void) sprintf(t,
 literal|"%s -> "
 argument|, hostname(res, ip->ip_src)); 		t += strlen(t); 		(void) sprintf(t,
-literal|"%s PR icmp len %hu (%hu) icmp %d/%d"
-argument|, 			hostname(res, ip->ip_dst), hl, 			ntohs(ip->ip_len), ic->icmp_type, ic->icmp_code); 		if (ic->icmp_type == ICMP_UNREACH || 		    ic->icmp_type == ICMP_SOURCEQUENCH || 		    ic->icmp_type == ICMP_PARAMPROB || 		    ic->icmp_type == ICMP_REDIRECT || 		    ic->icmp_type == ICMP_TIMXCEED) { 			ipc =&ic->icmp_ip; 			tp = (struct tcphdr *)((char *)ipc + hl);  			p = (u_short)ipc->ip_p; 			pr = getprotobynumber((int)p); 			if (!pr) { 				proto = pname; 				(void) sprintf(proto,
+literal|"%s PR icmp len %hu %hu icmp %d/%d"
+argument|, 			hostname(res, ip->ip_dst), hl, ip->ip_len, 			ic->icmp_type, ic->icmp_code); 		if (ic->icmp_type == ICMP_UNREACH || 		    ic->icmp_type == ICMP_SOURCEQUENCH || 		    ic->icmp_type == ICMP_PARAMPROB || 		    ic->icmp_type == ICMP_REDIRECT || 		    ic->icmp_type == ICMP_TIMXCEED) { 			ipc =&ic->icmp_ip; 			tp = (struct tcphdr *)((char *)ipc + hl);  			p = (u_short)ipc->ip_p; 			pr = getprotobynumber((int)p); 			if (!pr) { 				proto = pname; 				(void) sprintf(proto,
 literal|"%d"
 argument|, (int)p); 			} else 				proto = pr->p_name;  			t += strlen(t); 			(void) sprintf(t,
 literal|" for %s,%s -"
@@ -2099,6 +2224,8 @@ argument|], c; 	int	fdt[
 literal|3
 argument|], devices =
 literal|0
+argument|, make_daemon =
+literal|0
 argument|; 	char	buf[
 literal|512
 argument|], *iplfile[
@@ -2126,12 +2253,16 @@ literal|1
 argument|] = IPNAT_NAME; 	iplfile[
 literal|2
 argument|] = IPSTATE_NAME;  	while ((c = getopt(argc, argv,
-literal|"?af:FhI:nN:o:O:sS:tvxX"
+literal|"?aDf:FhI:nN:o:O:sS:tvxX"
 argument|)) != -
 literal|1
 argument|) 		switch (c) 		{ 		case
 literal|'a'
 argument|: 			opts |= OPT_ALL; 			break; 		case
+literal|'D'
+argument|: 			make_daemon =
+literal|1
+argument|; 			break; 		case
 literal|'f'
 argument|: case
 literal|'I'
@@ -2239,7 +2370,7 @@ argument|) { 				(void) fprintf(stderr,
 literal|"%d: fstat: %s\n"
 argument|,fd[i], 					       STRERROR(errno)); 				exit(-
 literal|1
-argument|); 			} 			if (!(regular[i] = !S_ISCHR(sb.st_mode))) 				devices++; 		} 	}  	if (!(opts& OPT_SYSLOG)) { 		log = argv[optind] ? fopen(argv[optind],
+argument|); 			} 			if (!(regular[i] = !S_ISCHR(sb.st_mode))) 				devices++; 		} 	}  	if (!(opts& OPT_SYSLOG)) { 		logfile = argv[optind]; 		log = logfile ? fopen(logfile,
 literal|"a"
 argument|) : stdout; 		if (log == NULL) { 			 			(void) fprintf(stderr,
 literal|"%s: fopen: %s\n"
@@ -2247,7 +2378,17 @@ argument|, argv[optind], 				STRERROR(errno)); 			exit(-
 literal|1
 argument|); 		} 		setvbuf(log, NULL, _IONBF,
 literal|0
-argument|); 	}  	for (doread =
+argument|); 	}  	if (make_daemon&& (log != stdout)) { 		if (fork()>
+literal|0
+argument|) 			exit(
+literal|0
+argument|); 		close(
+literal|0
+argument|); 		close(
+literal|1
+argument|); 		close(
+literal|2
+argument|); 		setsid(); 	}  	signal(SIGHUP, handlehup);  	for (doread =
 literal|1
 argument|; doread; ) { 		nr =
 literal|0
@@ -2269,7 +2410,9 @@ argument|); 				} 			} else { 				tr = (lseek(fd[i],
 literal|0
 argument|, SEEK_CUR)< sb.st_size); 				if (!tr&& !(opts& OPT_TAIL)) 					doread =
 literal|0
-argument|; 			} 			if (!tr) 				continue; 			nr += tr;  			tr = read_log(fd[i],&n, buf, sizeof(buf), log); 			switch (tr) 			{ 			case -
+argument|; 			} 			if (!tr) 				continue; 			nr += tr;  			tr = read_log(fd[i],&n, buf, sizeof(buf), log); 			if (donehup) { 				donehup =
+literal|0
+argument|; 				if (newlog) { 					fclose(log); 					log = newlog; 					newlog = NULL; 				} 			}  			switch (tr) 			{ 			case -
 literal|1
 argument|: 				if (opts& OPT_SYSLOG) 					syslog(LOG_ERR,
 literal|"read: %m\n"
