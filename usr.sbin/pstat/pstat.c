@@ -5790,6 +5790,7 @@ operator|/
 name|div
 argument_list|)
 expr_stmt|;
+comment|/* The first dmmax is never allocated to avoid trashing of  		 * disklabels 		 */
 name|xsize
 operator|=
 name|sw
@@ -5798,6 +5799,8 @@ name|i
 index|]
 operator|.
 name|sw_nblks
+operator|-
+name|dmmax
 expr_stmt|;
 name|xfree
 operator|=
