@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdelchar.c	3.6 83/09/15"
+literal|"@(#)wwdelchar.c	3.7 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +291,17 @@ index|[
 name|col
 index|]
 expr_stmt|;
+name|smap
+operator|=
+operator|&
+name|wwsmap
+index|[
+name|row
+index|]
+index|[
+name|col
+index|]
+expr_stmt|;
 name|touched
 operator|=
 operator|&
@@ -308,27 +319,15 @@ operator|>=
 literal|0
 condition|;
 control|)
-block|{
 if|if
 condition|(
 operator|*
-name|win
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|win
-operator|&
-operator|(
-name|WWM_COV
-operator||
-name|WWM_GLS
-operator|)
-operator|)
+name|smap
+operator|++
 operator|!=
-literal|0
+name|w
+operator|->
+name|ww_index
 condition|)
 block|{
 name|ns
@@ -337,8 +336,16 @@ expr_stmt|;
 name|buf
 operator|++
 expr_stmt|;
+name|win
+operator|++
+expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|win
+condition|)
 block|{
 name|ns
 operator|++
@@ -362,14 +369,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-operator|*
-name|touched
-operator|=
-literal|1
-expr_stmt|;
 operator|*
 name|ns
 operator|++
@@ -384,7 +385,11 @@ expr_stmt|;
 name|nvis
 operator|++
 expr_stmt|;
-block|}
+operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Can/Should we use delete character? 	 */

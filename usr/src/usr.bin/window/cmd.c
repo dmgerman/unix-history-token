@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.14 83/11/02"
+literal|"@(#)cmd.c	3.15 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,25 +1104,14 @@ end_expr_stmt
 
 begin_block
 block|{
-name|char
-name|moved
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
+operator|!
 name|wwvisible
 argument_list|(
 name|w
 argument_list|)
-condition|)
-name|moved
-operator|=
-literal|1
-expr_stmt|;
-else|else
-while|while
-condition|(
+operator|&&
 name|w
 operator|->
 name|ww_back
@@ -1130,23 +1119,22 @@ operator|!=
 name|framewin
 condition|)
 block|{
-name|wwmoveup
+name|wwdelete
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-name|moved
-operator|=
-literal|1
+name|wwadd
+argument_list|(
+name|w
+argument_list|,
+name|framewin
+argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|moved
-condition|)
 name|reframe
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclose.c	3.5 83/09/15"
+literal|"@(#)wwclose.c	3.6 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,24 +114,6 @@ operator|)
 name|w
 operator|->
 name|ww_win
-argument_list|,
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
-argument_list|)
-expr_stmt|;
-name|wwfree
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|w
-operator|->
-name|ww_cov
 argument_list|,
 name|w
 operator|->

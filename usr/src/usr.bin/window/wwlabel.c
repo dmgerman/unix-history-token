@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.7 83/09/15"
+literal|"@(#)wwlabel.c	3.8 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,10 @@ specifier|register
 name|char
 modifier|*
 name|fmap
+decl_stmt|;
+name|char
+modifier|*
+name|smap
 decl_stmt|;
 name|char
 modifier|*
@@ -205,6 +209,17 @@ index|[
 name|j
 index|]
 expr_stmt|;
+name|smap
+operator|=
+operator|&
+name|wwsmap
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+expr_stmt|;
 name|touched
 operator|=
 operator|&
@@ -270,6 +285,7 @@ if|if
 condition|(
 operator|*
 name|win
+operator|++
 operator|&
 name|WWM_GLS
 condition|)
@@ -283,10 +299,10 @@ expr_stmt|;
 name|ns
 operator|++
 expr_stmt|;
-name|win
+name|fmap
 operator|++
 expr_stmt|;
-name|fmap
+name|smap
 operator|++
 expr_stmt|;
 block|}
@@ -294,9 +310,12 @@ elseif|else
 if|if
 condition|(
 operator|*
-name|win
-operator|&
-name|WWM_COV
+name|smap
+operator|++
+operator|!=
+name|f
+operator|->
+name|ww_index
 condition|)
 block|{
 name|buf

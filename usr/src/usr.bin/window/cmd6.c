@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd6.c	3.2 83/09/15"
+literal|"@(#)cmd6.c	3.3 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|void
 operator|)
 name|wwputs
 argument_list|(
-literal|"[m(smap), n(ns), o(os), v(nvis), w(win), c(cov)]? "
+literal|"[m(smap), n(ns), o(os), v(nvis), w(win)]? "
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -130,26 +130,6 @@ operator|!=
 literal|0
 condition|)
 name|wwdumpnvis
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-if|if
-condition|(
-operator|(
-name|w
-operator|=
-name|getwin
-argument_list|()
-operator|)
-operator|!=
-literal|0
-condition|)
-name|wwdumpcov
 argument_list|(
 name|w
 argument_list|)
