@@ -2490,7 +2490,7 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %lld-%lld\n\told:"
+literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
 argument_list|,
 name|ip
 operator|->
@@ -3656,7 +3656,7 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %lld-%lld\n\told:"
+literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
 argument_list|,
 name|ip
 operator|->
@@ -3793,7 +3793,7 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|" %lld,"
+literal|" %jd,"
 argument_list|,
 operator|(
 name|intmax_t
@@ -9363,7 +9363,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev=%s, bno = %lld, bsize = %ld, size = %ld, fs = %s\n"
+literal|"dev=%s, bno = %jd, bsize = %ld, size = %ld, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -10077,7 +10077,7 @@ name|fs_size
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_checkblk: bad block %lld"
+literal|"ffs_checkblk: bad block %jd"
 argument_list|,
 operator|(
 name|intmax_t
@@ -12589,7 +12589,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%s: free block %lld\n"
+literal|"%s: free block %jd\n"
 argument_list|,
 name|mp
 operator|->
@@ -12608,7 +12608,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s: free blocks %lld-%lld\n"
+literal|"%s: free blocks %jd-%jd\n"
 argument_list|,
 name|mp
 operator|->
