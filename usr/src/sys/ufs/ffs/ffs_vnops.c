@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.4	%G%	*/
+comment|/*	ffs_vnops.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -1173,6 +1173,10 @@ expr_stmt|;
 return|return;
 name|found
 label|:
+name|stillopen
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|ip
