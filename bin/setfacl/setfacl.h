@@ -82,6 +82,24 @@ comment|/* remove acl's (-xX) */
 end_comment
 
 begin_comment
+comment|/* ACL types for the acl array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACCESS_ACL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ACL
+value|1
+end_define
+
+begin_comment
 comment|/* TAILQ entry for acl operations */
 end_comment
 

@@ -232,7 +232,7 @@ argument_list|)
 expr_stmt|;
 name|acl
 index|[
-literal|0
+name|ACCESS_ACL
 index|]
 operator|=
 name|acl_get_file
@@ -246,7 +246,7 @@ if|if
 condition|(
 name|acl
 index|[
-literal|0
+name|ACCESS_ACL
 index|]
 operator|==
 name|NULL
@@ -270,7 +270,7 @@ condition|)
 block|{
 name|acl
 index|[
-literal|1
+name|DEFAULT_ACL
 index|]
 operator|=
 name|acl_get_file
@@ -284,7 +284,7 @@ if|if
 condition|(
 name|acl
 index|[
-literal|1
+name|DEFAULT_ACL
 index|]
 operator|==
 name|NULL
@@ -300,7 +300,7 @@ block|}
 else|else
 name|acl
 index|[
-literal|1
+name|DEFAULT_ACL
 index|]
 operator|=
 name|NULL
@@ -1043,7 +1043,7 @@ name|final_acl
 operator|=
 name|acl
 index|[
-literal|0
+name|ACCESS_ACL
 index|]
 expr_stmt|;
 else|else
@@ -1051,7 +1051,7 @@ name|final_acl
 operator|=
 name|acl
 index|[
-literal|1
+name|DEFAULT_ACL
 index|]
 expr_stmt|;
 if|if
@@ -1118,7 +1118,7 @@ name|acl_free
 argument_list|(
 name|acl
 index|[
-literal|0
+name|ACCESS_ACL
 index|]
 argument_list|)
 expr_stmt|;
@@ -1126,7 +1126,7 @@ name|acl_free
 argument_list|(
 name|acl
 index|[
-literal|1
+name|DEFAULT_ACL
 index|]
 argument_list|)
 expr_stmt|;
