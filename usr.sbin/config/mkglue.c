@@ -1905,10 +1905,6 @@ argument_list|,
 literal|"clk0 irqnn\\0\\\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STATCLOCK
-comment|/* 	 * XXX _all_ devices should be configured so that there is no need 	 * for kludges like this. 	 */
 name|fprintf
 argument_list|(
 name|fp
@@ -1920,14 +1916,6 @@ name|dev_id
 operator|=
 literal|2
 expr_stmt|;
-else|#
-directive|else
-name|dev_id
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|vector_devtab
 argument_list|(
 name|fp
