@@ -6,13 +6,23 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/ibcs2/ibcs2_errno.h>
 end_include
 
 begin_decl_stmt
 name|int
 name|bsd_to_ibcs2_errno
-index|[]
+index|[
+name|ELAST
+operator|+
+literal|1
+index|]
 init|=
 block|{
 literal|0
@@ -267,6 +277,15 @@ comment|/* 82 */
 name|IBCS2_ENOMSG
 block|,
 comment|/* 83 */
+name|IBCS2_EOVERFLOW
+block|,
+comment|/* 84 */
+literal|0
+block|,
+comment|/* 85 */
+name|IBCS2_EILSEQ
+block|,
+comment|/* 86 */
 block|}
 decl_stmt|;
 end_decl_stmt
