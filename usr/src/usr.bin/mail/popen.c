@@ -53,7 +53,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)popen.c	1.2 %G%"
+literal|"@(#)popen.c	1.2.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
