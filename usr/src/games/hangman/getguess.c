@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getguess.c	5.1 (Berkeley) %G%"
+literal|"@(#)getguess.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|D
+literal|'D'
 argument_list|)
 condition|)
 name|die
@@ -306,7 +306,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|L
+literal|'L'
 argument_list|)
 condition|)
 block|{
