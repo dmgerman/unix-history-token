@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.14 %G%"
+literal|"@(#)wwiomux.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/*  * Multiple window output handler.  * The idea is to copy window outputs to the terminal, via the  * display package.  We try to give the top most window highest  * priority.  The only return condition is when there is keyboard  * input, which is serviced asynchronously by wwrint().  * When there's nothing to do, we sleep in a select().  * This can be done better with interrupt driven io.  But that's  * not supported on ptys, yet.  * The history of this routine is interesting.  */
 end_comment
@@ -53,7 +59,7 @@ name|ww
 modifier|*
 name|w
 decl_stmt|;
-name|int
+name|fd_set
 name|imask
 decl_stmt|;
 specifier|register
@@ -89,9 +95,11 @@ name|wwinterrupt
 argument_list|()
 condition|)
 return|return;
+name|FD_ZERO
+argument_list|(
+operator|&
 name|imask
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|noblock
 operator|=
@@ -136,13 +144,15 @@ name|w
 operator|->
 name|ww_obe
 condition|)
-name|imask
-operator||=
-literal|1
-operator|<<
+name|FD_SET
+argument_list|(
 name|w
 operator|->
 name|ww_pty
+argument_list|,
+operator|&
+name|imask
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -225,13 +235,13 @@ operator|&
 name|imask
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 literal|0
@@ -301,17 +311,16 @@ name|ww_pty
 operator|<
 literal|0
 operator|||
-operator|(
-name|imask
-operator|&
-literal|1
-operator|<<
+operator|!
+name|FD_ISSET
+argument_list|(
 name|w
 operator|->
 name|ww_pty
-operator|)
-operator|==
-literal|0
+argument_list|,
+operator|&
+name|imask
+argument_list|)
 condition|)
 continue|continue;
 name|wwnwread
