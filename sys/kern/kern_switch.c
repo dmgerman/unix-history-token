@@ -960,7 +960,7 @@ if|if
 condition|(
 name|limitcount
 operator|<
-literal|100
+literal|1
 condition|)
 block|{
 name|limitcount
@@ -968,7 +968,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pid %d: bad slot count (%d)\n"
+literal|"pid %d: corrected slot count (%d->1)\n"
 argument_list|,
 name|td
 operator|->
