@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.1 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,11 +24,11 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"dprof.h"
+file|"gprof.h"
 end_include
 
 begin_macro
-name|printdprof
+name|printgprof
 argument_list|()
 end_macro
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dfn.c	1.1 (Berkeley) %G%"
+literal|"@(#)dfn.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dprof.h"
+file|"gprof.h"
 end_include
 
 begin_define

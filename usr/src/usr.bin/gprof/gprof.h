@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.1 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -78,15 +78,15 @@ end_define
 begin_decl_stmt
 name|char
 modifier|*
-name|dmonname
+name|gmonname
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|DMONNAME
-value|"dmon.out"
+name|GMONNAME
+value|"gmon.out"
 end_define
 
 begin_comment
@@ -193,7 +193,7 @@ comment|/* ticks in this routine */
 name|double
 name|childtime
 decl_stmt|;
-comment|/* cumulative ticks in dynamic childs */
+comment|/* cumulative ticks in children */
 name|long
 name|ncall
 decl_stmt|;
@@ -205,11 +205,11 @@ comment|/* how many calls to self */
 name|int
 name|index
 decl_stmt|;
-comment|/* index in the dynamic list */
+comment|/* index in the graph list */
 name|int
 name|toporder
 decl_stmt|;
-comment|/* dynamic call chain top-sort order */
+comment|/* graph call chain top-sort order */
 name|int
 name|cycleno
 decl_stmt|;
@@ -323,7 +323,7 @@ comment|/* number of cycles discovered */
 end_comment
 
 begin_comment
-comment|/*  * The header on the dmon.out file.  * dmon.out consists of one of these headers,  * and then an array of ncnt samples  * representing the discretized program counter values.  *	this should be a struct phdr, but since everything is done  *	as UNITs, this is in UNITs too.  */
+comment|/*  * The header on the gmon.out file.  * gmon.out consists of one of these headers,  * and then an array of ncnt samples  * representing the discretized program counter values.  *	this should be a struct phdr, but since everything is done  *	as UNITs, this is in UNITs too.  */
 end_comment
 
 begin_struct

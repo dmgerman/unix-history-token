@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.1 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"dprof.h"
+file|"gprof.h"
 end_include
 
 begin_macro
@@ -897,7 +897,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|printdprof
+name|printgprof
 argument_list|()
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.1 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"dprof.h"
+file|"gprof.h"
 end_include
 
 begin_function
@@ -164,7 +164,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|dmonname
+name|gmonname
 operator|=
 operator|*
 name|argv
@@ -175,9 +175,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dmonname
+name|gmonname
 operator|=
-name|DMONNAME
+name|GMONNAME
 expr_stmt|;
 block|}
 comment|/* 	 *	get information about a.out file. 	 */
@@ -187,7 +187,7 @@ expr_stmt|;
 comment|/* 	 *	get information about mon.out file(s). 	 */
 name|getpfile
 argument_list|(
-name|dmonname
+name|gmonname
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	assign samples to procedures 	 */
@@ -1292,7 +1292,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	information from a dmon.out file is in two parts:      *	an array of sampling hits within pc ranges,      *	and the arcs.      */
+comment|/*      *	information from a gmon.out file is in two parts:      *	an array of sampling hits within pc ranges,      *	and the arcs.      */
 end_comment
 
 begin_macro
