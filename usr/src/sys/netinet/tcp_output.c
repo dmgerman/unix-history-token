@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -337,34 +337,11 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1; transmit if acking, otherwise no need. 		 * Otherwise, window shrank after we sent into it. 		 * If window shrank to 0, cancel pending retransmit 		 * and pull snd_nxt back to (closed) window. 		 * We will enter persist state below. 		 * If the window didn't close completely, 		 * just wait for an ACK. 		 */
-if|if
-condition|(
-name|flags
-operator|&
-name|TH_FIN
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_ACKNOW
-condition|)
+comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1.  Otherwise, window shrank 		 * after we sent into it.  If window shrank to 0, 		 * cancel pending retransmit and pull snd_nxt 		 * back to (closed) window.  We will enter persist 		 * state below.  If the window didn't close completely, 		 * just wait for an ACK. 		 */
 name|len
 operator|=
 literal|0
 expr_stmt|;
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|win
@@ -389,17 +366,7 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-name|len
-operator|=
-literal|0
-expr_stmt|;
 block|}
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -609,7 +576,7 @@ goto|goto
 name|send
 goto|;
 block|}
-comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input.)  If the difference is 35% or more of the 	 * maximum possible window, then want to send a window update to peer. 	 */
+comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments or at least 35% of the maximum possible 	 * window, then want to send a window update to peer. 	 */
 if|if
 condition|(
 name|win
@@ -634,6 +601,27 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
+operator|==
+literal|0
+operator|&&
+name|adv
+operator|>=
+literal|2
+operator|*
+name|tp
+operator|->
+name|t_maxseg
+condition|)
+goto|goto
+name|send
+goto|;
+if|if
+condition|(
 literal|100
 operator|*
 name|adv
@@ -645,27 +633,6 @@ operator|.
 name|sb_hiwat
 operator|>=
 literal|35
-condition|)
-goto|goto
-name|send
-goto|;
-if|if
-condition|(
-name|adv
-operator|>=
-literal|2
-operator|*
-name|tp
-operator|->
-name|t_maxseg
-operator|&&
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_cc
-operator|==
-literal|0
 condition|)
 goto|goto
 name|send
