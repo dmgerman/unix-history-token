@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.19	%G%	*/
+comment|/*	machdep.c	3.20	%G%	*/
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.19) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.20) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,65 +332,8 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Start clock  */
+comment|/*  * Initialze the clock, based on the time base which is, e.g.  * from a filesystem.  Base provides the time to within six months,  * and the time of year clock provides the rest.  */
 end_comment
-
-begin_macro
-name|clkstart
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|mtpr
-argument_list|(
-name|NICR
-argument_list|,
-operator|-
-literal|16667
-argument_list|)
-expr_stmt|;
-comment|/* 16.667 milli-seconds */
-name|mtpr
-argument_list|(
-name|ICCS
-argument_list|,
-name|ICCS_RUN
-operator|+
-name|ICCS_IE
-operator|+
-name|ICCS_TRANS
-operator|+
-name|ICCS_INT
-operator|+
-name|ICCS_ERR
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|clkreld
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|mtpr
-argument_list|(
-name|ICCS
-argument_list|,
-name|ICCS_RUN
-operator|+
-name|ICCS_IE
-operator|+
-name|ICCS_INT
-operator|+
-name|ICCS_ERR
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_macro
 name|clkinit
@@ -407,21 +350,57 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|unsigned
+name|todr
+init|=
+name|mfpr
+argument_list|(
+name|TODR
+argument_list|)
+decl_stmt|;
 name|long
 name|deltat
 decl_stmt|;
+name|int
+name|year
+init|=
+name|YRREF
+decl_stmt|;
+comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 */
+if|if
+condition|(
+name|todr
+operator|<
+name|TODRZERO
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: todr too small (battery backup failed?)"
+argument_list|)
+expr_stmt|;
+name|time
+operator|=
+name|base
+expr_stmt|;
+comment|/* 		 * Believe the time in the file system for lack of 		 * anything better, resetting the TODR. 		 */
+name|clkset
+argument_list|()
+expr_stmt|;
+goto|goto
+name|check
+goto|;
+block|}
+comment|/* 	 * Sneak to within 6 month of the time in the filesystem, 	 * by starting with the time of the year suggested by the TODR, 	 * and advancing through succesive years.  Adding the number of 	 * seconds in the current year takes us to the end of the current year 	 * and then around into the next year to the same position. 	 */
 for|for
 control|(
 name|time
 operator|=
 operator|(
-operator|(
-name|unsigned
-operator|)
-name|mfpr
-argument_list|(
-name|TODR
-argument_list|)
+name|todr
+operator|-
+name|TODRZERO
 operator|)
 operator|/
 literal|100
@@ -438,10 +417,23 @@ name|time
 operator|+=
 name|SECYR
 control|)
-empty_stmt|;
-name|clkset
-argument_list|()
+block|{
+if|if
+condition|(
+name|LEAPYEAR
+argument_list|(
+name|year
+argument_list|)
+condition|)
+name|time
+operator|+=
+name|SECDAY
 expr_stmt|;
+name|year
+operator|++
+expr_stmt|;
+block|}
+comment|/* 	 * See if we gained/lost two or more days; 	 * if so, assume something is amiss. 	 */
 name|deltat
 operator|=
 name|time
@@ -462,14 +454,15 @@ expr_stmt|;
 if|if
 condition|(
 name|deltat
-operator|>=
+operator|<
 literal|2
 operator|*
 name|SECDAY
 condition|)
+return|return;
 name|printf
 argument_list|(
-literal|"warning: %s %d days; check the date\n"
+literal|"WARNING: clock %s %d days"
 argument_list|,
 name|time
 operator|<
@@ -484,8 +477,19 @@ operator|/
 name|SECDAY
 argument_list|)
 expr_stmt|;
+name|check
+label|:
+name|printf
+argument_list|(
+literal|" -- CHECK AND RESET THE DATE!\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Reset the TODR based on the time value; used when the TODR  * has a preposterous value and also when the time is reset  * by the stime system call.  Also called when the TODR goes past  * TODRZERO + 100*(SECYEAR+2*SECDAY) (e.g. on Jan 2 just after midnight)  * to wrap the TODR around.  */
+end_comment
 
 begin_macro
 name|clkset
@@ -494,18 +498,63 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|year
+init|=
+name|YRREF
+decl_stmt|;
+name|unsigned
+name|secyr
+decl_stmt|;
+name|unsigned
+name|yrtime
+init|=
+name|time
+decl_stmt|;
+comment|/* 	 * Whittle the time down to an offset in the current year, 	 * by subtracting off whole years as long as possible. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|secyr
+operator|=
+name|SECYR
+expr_stmt|;
+if|if
+condition|(
+name|LEAPYEAR
+argument_list|(
+name|year
+argument_list|)
+condition|)
+name|secyr
+operator|+=
+name|SECDAY
+expr_stmt|;
+if|if
+condition|(
+name|yrtime
+operator|<
+name|secyr
+condition|)
+break|break;
+name|yrtime
+operator|-=
+name|secyr
+expr_stmt|;
+name|year
+operator|++
+expr_stmt|;
+block|}
 name|mtpr
 argument_list|(
 name|TODR
 argument_list|,
-operator|(
-operator|(
-name|unsigned
-operator|)
-name|time
-operator|%
-name|SECYR
-operator|)
+name|TODRZERO
+operator|+
+name|yrtime
 operator|*
 literal|100
 argument_list|)
@@ -1307,7 +1356,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MEMERR: %X\n"
+literal|"MEMERR: mcra %X mcrb %X mcrc %X\n"
+argument_list|,
+name|mcr
+index|[
+literal|0
+index|]
+argument_list|,
+name|mcr
+index|[
+literal|1
+index|]
 argument_list|,
 name|c
 argument_list|)
