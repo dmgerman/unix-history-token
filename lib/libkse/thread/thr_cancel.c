@@ -87,18 +87,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|finish_cancellation
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|_pthread_cancel
@@ -152,6 +140,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Take the scheduling lock while we change the cancel flags. 		 */
+name|THR_THREAD_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 name|THR_SCHED_LOCK
 argument_list|(
 name|curthread
@@ -169,6 +164,13 @@ name|THR_FLAGS_EXITING
 condition|)
 block|{
 name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -401,7 +403,7 @@ name|pthread
 operator|->
 name|continuation
 operator|=
-name|finish_cancellation
+name|_thr_finish_cancellation
 expr_stmt|;
 break|break;
 case|case
@@ -459,6 +461,13 @@ expr_stmt|;
 block|}
 comment|/* 		 * Release the thread's scheduling lock and remove the 		 * reference: 		 */
 name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -576,7 +585,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Take the scheduling lock while fiddling with the thread's state: */
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -650,7 +659,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -733,7 +742,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Take the scheduling lock while fiddling with the state: */
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -795,7 +804,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -930,7 +939,7 @@ literal|0
 condition|)
 block|{
 comment|/* Unlock before exiting: */
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -969,7 +978,7 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -981,7 +990,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -1009,7 +1018,7 @@ argument_list|()
 condition|)
 return|return;
 comment|/* Look for a cancellation before we block: */
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|thread
 argument_list|,
@@ -1027,7 +1036,7 @@ name|cancelflags
 operator||=
 name|THR_AT_CANCEL_POINT
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|thread
 argument_list|,
@@ -1054,7 +1063,7 @@ name|_kse_isthreaded
 argument_list|()
 condition|)
 return|return;
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|thread
 argument_list|,
@@ -1074,7 +1083,7 @@ argument_list|(
 name|thread
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|thread
 argument_list|,
@@ -1085,9 +1094,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|finish_cancellation
+name|_thr_finish_cancellation
 parameter_list|(
 name|void
 modifier|*
@@ -1114,7 +1122,7 @@ name|interrupted
 operator|=
 literal|0
 expr_stmt|;
-name|THR_SCHED_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -1141,7 +1149,7 @@ operator|&=
 operator|~
 name|THR_CANCEL_NEEDED
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -1157,7 +1165,7 @@ name|PTHREAD_CANCELED
 argument_list|)
 expr_stmt|;
 block|}
-name|THR_SCHED_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
