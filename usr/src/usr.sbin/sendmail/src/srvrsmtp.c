@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -412,6 +412,14 @@ name|rcps
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|OutChannel
+operator|!=
+name|stdout
+condition|)
+block|{
+comment|/* arrange for debugging output to go to remote host */
 operator|(
 name|void
 operator|)
@@ -431,6 +439,7 @@ name|OutChannel
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|message
 argument_list|(
 literal|"220"
