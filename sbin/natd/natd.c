@@ -2436,7 +2436,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Routing message %X received.\n"
+literal|"Routing message %#x received.\n"
 argument_list|,
 name|ifMsg
 operator|.
@@ -2445,16 +2445,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ifMsg
 operator|.
 name|ifm_type
-operator|!=
+operator|==
 name|RTM_NEWADDR
-condition|)
-return|return;
-if|if
-condition|(
-name|verbose
+operator|||
+name|ifMsg
+operator|.
+name|ifm_type
+operator|==
+name|RTM_IFINFO
+operator|)
 operator|&&
 name|ifMsg
 operator|.
@@ -2462,23 +2465,21 @@ name|ifm_index
 operator|==
 name|ifIndex
 condition|)
-name|printf
-argument_list|(
-literal|"Interface address has changed.\n"
-argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
-name|ifMsg
-operator|.
-name|ifm_index
-operator|==
-name|ifIndex
+name|verbose
 condition|)
+name|printf
+argument_list|(
+literal|"Interface address/MTU has probably changed.\n"
+argument_list|)
+expr_stmt|;
 name|assignAliasAddr
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 end_function
 
