@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ftp.c,v 1.12 1997/12/16 08:22:37 ache Exp $	*/
+comment|/*	$Id: ftp.c,v 1.13 1998/06/09 04:30:51 imp Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.12 1997/12/16 08:22:37 ache Exp $"
+literal|"$Id: ftp.c,v 1.13 1998/06/09 04:30:51 imp Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1985,7 +1985,6 @@ name|mask
 parameter_list|,
 name|sec
 parameter_list|)
-name|struct
 name|fd_set
 modifier|*
 name|mask
@@ -2022,14 +2021,12 @@ argument_list|,
 name|mask
 argument_list|,
 operator|(
-expr|struct
 name|fd_set
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|(
-expr|struct
 name|fd_set
 operator|*
 operator|)
@@ -7659,7 +7656,6 @@ name|char
 modifier|*
 name|cmd2
 decl_stmt|;
-name|struct
 name|fd_set
 name|mask
 decl_stmt|;
@@ -8322,7 +8318,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|struct
 name|fd_set
 name|mask
 decl_stmt|;
@@ -8685,7 +8680,6 @@ decl_stmt|;
 name|int
 name|nfnd
 decl_stmt|;
-name|struct
 name|fd_set
 name|mask
 decl_stmt|;
