@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.8 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,7 +1562,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|3
+literal|8
 condition|)
 name|syslog
 argument_list|(
@@ -2794,8 +2794,8 @@ condition|(
 name|forwarding
 operator|&&
 name|LogLevel
-operator|>=
-literal|10
+operator|>
+literal|9
 condition|)
 name|syslog
 argument_list|(

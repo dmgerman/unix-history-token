@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.7 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.8 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.7 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.8 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,8 +869,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|1
 condition|)
 block|{
 name|syslog
@@ -1090,8 +1090,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|1
 condition|)
 block|{
 name|syslog
@@ -1279,8 +1279,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|1
 condition|)
 block|{
 name|syslog
@@ -1499,8 +1499,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|1
 condition|)
 block|{
 name|syslog
@@ -2103,7 +2103,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|0
+literal|1
 condition|)
 name|syslog
 argument_list|(

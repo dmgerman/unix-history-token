@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.4 (Berkeley) %G%"
+literal|"@(#)err.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,7 +410,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|1
+literal|3
 operator|&&
 name|LogUsrErrs
 condition|)

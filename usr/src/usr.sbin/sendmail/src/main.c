@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.15 (Berkeley) %G%"
+literal|"@(#)main.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2832,7 +2832,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"mailer %d (%s): P=%s S=%d R=%d M=%ld F="
+literal|"mailer %d (%s): P=%s S=%d/%d R=%d/%d M=%ld F="
 argument_list|,
 name|i
 argument_list|,
@@ -2846,11 +2846,19 @@ name|m_mailer
 argument_list|,
 name|m
 operator|->
-name|m_s_rwset
+name|m_se_rwset
 argument_list|,
 name|m
 operator|->
-name|m_r_rwset
+name|m_sh_rwset
+argument_list|,
+name|m
+operator|->
+name|m_re_rwset
+argument_list|,
+name|m
+operator|->
+name|m_rh_rwset
 argument_list|,
 name|m
 operator|->
@@ -3834,7 +3842,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|11
+literal|78
 condition|)
 name|syslog
 argument_list|(
@@ -5277,7 +5285,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|11
+literal|71
 condition|)
 name|syslog
 argument_list|(

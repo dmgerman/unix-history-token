@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.5 (Berkeley) %G%"
+literal|"@(#)headers.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1609,7 +1609,7 @@ name|queuejob
 operator|&&
 name|LogLevel
 operator|>
-literal|1
+literal|4
 condition|)
 block|{
 name|char
@@ -1720,7 +1720,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s, received from %s\n"
+literal|"%s: %s, received from %s"
 argument_list|,
 name|e
 operator|->
@@ -3314,6 +3314,8 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
+argument_list|,
+name|TRUE
 argument_list|,
 name|FALSE
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.6 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.7 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.6 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.7 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,8 +620,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|1
 condition|)
 name|syslog
 argument_list|(
@@ -1474,8 +1474,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|9
+operator|>
+literal|5
 condition|)
 name|syslog
 argument_list|(
@@ -1655,7 +1655,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"\"%s\" command from %s (%s)\n"
+literal|"\"%s\" command from %s (%s)"
 argument_list|,
 name|c
 operator|->

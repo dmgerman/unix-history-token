@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.7 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,7 +373,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|12
+literal|84
 condition|)
 name|syslog
 argument_list|(
@@ -668,8 +668,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|10
+operator|>
+literal|74
 condition|)
 name|syslog
 argument_list|(
@@ -1682,8 +1682,8 @@ operator|!=
 name|NULL
 operator|&&
 name|LogLevel
-operator|>=
-literal|1
+operator|>
+literal|2
 condition|)
 block|{
 name|char
@@ -2156,8 +2156,8 @@ name|LOG
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|1
+operator|>
+literal|2
 condition|)
 name|syslog
 argument_list|(

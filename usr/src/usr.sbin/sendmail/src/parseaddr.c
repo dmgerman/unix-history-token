@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.12 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6212,7 +6212,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		header -- set if this address is in the header, rather **			than an envelope header. **		canonical -- if set, strip out any comment information, **			etc. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -6225,6 +6225,8 @@ parameter_list|,
 name|m
 parameter_list|,
 name|senderaddress
+parameter_list|,
+name|header
 parameter_list|,
 name|canonical
 parameter_list|,
@@ -6240,6 +6242,9 @@ name|m
 decl_stmt|;
 name|bool
 name|senderaddress
+decl_stmt|;
+name|bool
+name|header
 decl_stmt|;
 name|bool
 name|canonical
@@ -6270,6 +6275,9 @@ literal|'g'
 argument_list|,
 name|e
 argument_list|)
+decl_stmt|;
+name|int
+name|rwset
 decl_stmt|;
 specifier|static
 name|char
@@ -6462,19 +6470,10 @@ if|if
 condition|(
 name|senderaddress
 condition|)
-block|{
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+elseif|else
 if|if
 condition|(
-name|m
-operator|->
-name|m_s_rwset
+name|rwset
 operator|>
 literal|0
 condition|)
@@ -6482,39 +6481,9 @@ name|rewrite
 argument_list|(
 name|pvp
 argument_list|,
-name|m
-operator|->
-name|m_s_rwset
+name|rwset
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_r_rwset
-operator|>
-literal|0
-condition|)
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-name|m
-operator|->
-name|m_r_rwset
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
 name|rewrite
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.15 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,7 +427,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|4
+literal|8
 condition|)
 name|logdelivery
 argument_list|(
@@ -467,6 +467,8 @@ argument_list|,
 name|m
 argument_list|,
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -508,6 +510,8 @@ argument_list|,
 name|m
 argument_list|,
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -4192,16 +4196,20 @@ operator|(
 operator|(
 name|stat
 operator|==
-literal|0
-operator|||
-name|stat
-operator|==
 name|EX_TEMPFAIL
 operator|)
 condition|?
-literal|3
+literal|8
 else|:
-literal|2
+operator|(
+name|stat
+operator|==
+name|EX_OK
+operator|)
+condition|?
+literal|7
+else|:
+literal|6
 operator|)
 condition|)
 name|logdelivery
@@ -5970,7 +5978,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|5
+literal|29
 condition|)
 name|syslog
 argument_list|(

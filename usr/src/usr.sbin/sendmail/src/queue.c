@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.10 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.11 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.10 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.11 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,7 +1066,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|4
+literal|8
 condition|)
 name|logdelivery
 argument_list|(
@@ -1132,11 +1132,19 @@ end_expr_stmt
 begin_expr_stmt
 name|nullmailer
 operator|.
-name|m_r_rwset
+name|m_re_rwset
 operator|=
 name|nullmailer
 operator|.
-name|m_s_rwset
+name|m_rh_rwset
+operator|=
+name|nullmailer
+operator|.
+name|m_se_rwset
+operator|=
+name|nullmailer
+operator|.
+name|m_sh_rwset
 operator|=
 operator|-
 literal|1
@@ -1526,7 +1534,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|15
+literal|79
 condition|)
 name|syslog
 argument_list|(
@@ -1873,7 +1881,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|11
+literal|69
 condition|)
 name|syslog
 argument_list|(
@@ -2321,6 +2329,105 @@ operator|!=
 literal|'f'
 condition|)
 continue|continue;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|)
+operator|!=
+literal|9
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"orderq: bogus qf name %s\n"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"orderq: bogus qf name %s"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|)
+operator|>=
+name|MAXNAME
+condition|)
+name|d
+operator|->
+name|d_name
+index|[
+name|MAXNAME
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|lbuf
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+name|lbuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'Q'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rename
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|,
+name|lbuf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* yes -- open control file (if not too many files) */
 if|if
 condition|(
@@ -2977,7 +3084,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|12
+literal|76
 condition|)
 name|syslog
 argument_list|(
@@ -3384,7 +3491,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|10
+literal|19
 condition|)
 name|syslog
 argument_list|(
@@ -3659,6 +3766,7 @@ name|e_dfp
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readqf: cannot open %s"
@@ -3668,6 +3776,15 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+name|e
+operator|->
+name|e_msgsize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|fstat
@@ -4783,7 +4900,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|16
+literal|93
 condition|)
 name|syslog
 argument_list|(
@@ -4904,7 +5021,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|19
+literal|87
 condition|)
 name|syslog
 argument_list|(

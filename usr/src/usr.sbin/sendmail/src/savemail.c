@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.4 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1480,8 +1480,8 @@ begin_if
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|3
+operator|>
+literal|5
 condition|)
 name|syslog
 argument_list|(

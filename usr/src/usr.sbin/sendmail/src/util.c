@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.4 (Berkeley) %G%"
+literal|"@(#)util.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1774,13 +1774,13 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|20
+literal|98
 condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: unlink %s\n"
+literal|"%s: unlink %s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -1810,7 +1810,7 @@ literal|0
 operator|&&
 name|LogLevel
 operator|>
-literal|21
+literal|97
 condition|)
 name|syslog
 argument_list|(
