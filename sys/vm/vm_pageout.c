@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -2658,11 +2664,20 @@ name|td
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
-comment|/* 	 * Do whatever cleanup that the pmap code can. 	 */
-name|vm_pageout_pmap_collect
+comment|/* 	 * Decrease registered cache sizes. 	 */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|vm_lowmem
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We do this explicitly after the caches have been drained above. 	 */
+name|uma_reclaim
 argument_list|()
 expr_stmt|;
-name|uma_reclaim
+comment|/* 	 * Do whatever cleanup that the pmap code can. 	 */
+name|vm_pageout_pmap_collect
 argument_list|()
 expr_stmt|;
 name|addl_page_shortage_init
