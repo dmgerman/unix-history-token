@@ -1529,6 +1529,15 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"cartridge serial number: %d(10)\n"
+argument_list|,
+name|oldbad
+operator|.
+name|bt_csn
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|oldbad
