@@ -179,9 +179,9 @@ struct|struct
 name|device
 block|{
 name|int
-name|d_type
+name|d_done
 decl_stmt|;
-comment|/* DEVICE, bus adaptor */
+comment|/* processed */
 name|char
 modifier|*
 name|d_name

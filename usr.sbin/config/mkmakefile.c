@@ -2367,12 +2367,6 @@ name|std
 operator|&&
 name|dp
 operator|->
-name|d_type
-operator|==
-name|DEVICE
-operator|&&
-name|dp
-operator|->
 name|d_count
 operator|<=
 literal|0
@@ -2434,12 +2428,6 @@ sizeof|sizeof
 expr|*
 name|dp
 argument_list|)
-expr_stmt|;
-name|dp
-operator|->
-name|d_type
-operator|=
-name|DEVICE
 expr_stmt|;
 name|dp
 operator|->
