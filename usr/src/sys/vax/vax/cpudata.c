@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpudata.c	4.4	81/04/09	*/
+comment|/*	cpudata.c	4.5	81/04/13	*/
 end_comment
 
 begin_include
@@ -212,6 +212,11 @@ name|NEX_ANY
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
