@@ -151,6 +151,11 @@ parameter_list|()
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
 name|__FreeBSD__
 operator|>=
 literal|3
