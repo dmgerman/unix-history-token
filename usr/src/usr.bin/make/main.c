@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,17 +173,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|printGraph
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -p flag */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|Boolean
 name|noBuiltins
 decl_stmt|;
@@ -233,16 +222,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -d flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|noWarnings
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -W flag */
 end_comment
 
 begin_decl_stmt
@@ -420,7 +399,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:I:J:L:PSWd:ef:iknp:qrstv"
+literal|"D:I:d:ef:ij:knqrstv"
 argument_list|)
 operator|)
 operator|!=
@@ -491,35 +470,9 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'J'
-case|:
-name|maxJobs
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-J"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-name|optarg
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
+ifdef|#
+directive|ifdef
+name|notdef
 case|case
 literal|'L'
 case|:
@@ -583,23 +536,8 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'W'
-case|:
-name|noWarnings
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-W"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
+endif|#
+directive|endif
 case|case
 literal|'d'
 case|:
@@ -610,12 +548,15 @@ name|modules
 init|=
 name|optarg
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|*
 name|modules
-condition|)
-block|{
+condition|;
+operator|++
+name|modules
+control|)
 switch|switch
 condition|(
 operator|*
@@ -623,7 +564,7 @@ name|modules
 condition|)
 block|{
 case|case
-literal|'*'
+literal|'A'
 case|:
 name|debug
 operator|=
@@ -656,6 +597,47 @@ name|DEBUG_DIR
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+if|if
+condition|(
+name|modules
+index|[
+literal|1
+index|]
+operator|==
+literal|'1'
+condition|)
+block|{
+name|debug
+operator||=
+name|DEBUG_GRAPH1
+expr_stmt|;
+operator|++
+name|modules
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|modules
+index|[
+literal|1
+index|]
+operator|==
+literal|'2'
+condition|)
+block|{
+name|debug
+operator||=
+name|DEBUG_GRAPH2
+expr_stmt|;
+operator|++
+name|modules
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'j'
 case|:
 name|debug
@@ -677,14 +659,6 @@ case|:
 name|debug
 operator||=
 name|DEBUG_PARSE
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-name|debug
-operator||=
-name|DEBUG_RMT
 expr_stmt|;
 break|break;
 case|case
@@ -711,10 +685,6 @@ operator||=
 name|DEBUG_VAR
 expr_stmt|;
 break|break;
-block|}
-operator|++
-name|modules
-expr_stmt|;
 block|}
 name|Var_Append
 argument_list|(
@@ -788,6 +758,35 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'j'
+case|:
+name|maxJobs
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+literal|"-J"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+name|optarg
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 name|keepgoing
@@ -818,17 +817,6 @@ argument_list|,
 literal|"-n"
 argument_list|,
 name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-name|printGraph
-operator|=
-name|atoi
-argument_list|(
-name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1264,11 +1252,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* No debug verbosity, please. */
-name|noWarnings
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Print warning messages */
 name|jobsRunning
 operator|=
 name|FALSE
@@ -1754,12 +1737,13 @@ comment|/* 	 * Now that all search paths have been read for suffixes et al, it's
 name|Suff_DoPaths
 argument_list|()
 expr_stmt|;
-comment|/* Print the initial graph, if the user requested it */
+comment|/* print the initial graph, if the user requested it */
 if|if
 condition|(
-name|printGraph
-operator|&
-literal|1
+name|DEBUG
+argument_list|(
+name|GRAPH1
+argument_list|)
 condition|)
 name|Targ_PrintGraph
 argument_list|(
@@ -1841,12 +1825,13 @@ argument_list|(
 name|targs
 argument_list|)
 expr_stmt|;
-comment|/* Print the graph now it's been processed if the user requested it */
+comment|/* print the graph now it's been processed if the user requested it */
 if|if
 condition|(
-name|printGraph
-operator|&
-literal|2
+name|DEBUG
+argument_list|(
+name|GRAPH2
+argument_list|)
 condition|)
 name|Targ_PrintGraph
 argument_list|(
@@ -2227,9 +2212,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|printGraph
-operator|&
-literal|2
+name|DEBUG
+argument_list|(
+name|GRAPH2
+argument_list|)
 condition|)
 name|Targ_PrintGraph
 argument_list|(
@@ -2342,9 +2328,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|printGraph
-operator|&
-literal|2
+name|DEBUG
+argument_list|(
+name|GRAPH2
+argument_list|)
 condition|)
 name|Targ_PrintGraph
 argument_list|(
@@ -2495,7 +2482,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: make [-PSWeiknqrstvh] [-D define] [-I include] [-J max_target] \n\t\ [-L max_local] [-d debug] [-f file] [-p #]\n"
+literal|"usage: make [-eiknqrstv] [-D variable] [-d flags] [-f makefile ]\n\t\ [-I directory] [-j max_jobs] [variable=value]\n"
 argument_list|)
 expr_stmt|;
 name|exit
