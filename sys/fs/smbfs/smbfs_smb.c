@@ -6319,7 +6319,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* real size (should use) */
-name|md_get_uint32
+name|md_get_uint32le
 argument_list|(
 name|mbp
 argument_list|,
