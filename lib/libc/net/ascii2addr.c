@@ -97,7 +97,7 @@ name|ina
 operator|=
 name|result
 expr_stmt|;
-name|strncat
+name|strncpy
 argument_list|(
 name|strbuf
 argument_list|,
