@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|16
+value|15
 end_define
 
 begin_ifdef
@@ -235,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|15
+value|13
 end_define
 
 begin_define
@@ -288,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|15
+value|13
 end_define
 
 begin_define
@@ -308,6 +308,23 @@ ifdef|#
 directive|ifdef
 name|__powerpc__
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|KI_NSPARE
+end_undef
+
+begin_comment
+comment|/* Fewer spare longs on this arch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_NSPARE
+value|14
+end_define
 
 begin_define
 define|#
@@ -791,6 +808,14 @@ modifier|*
 name|ki_udata
 decl_stmt|;
 comment|/* User convenience pointer */
+name|int
+name|ki_jid
+decl_stmt|;
+comment|/* Process jail ID */
+name|int
+name|ki_spare_int1
+decl_stmt|;
+comment|/* unused (just here for alignment) */
 name|long
 name|ki_spare
 index|[
