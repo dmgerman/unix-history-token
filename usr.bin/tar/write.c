@@ -3955,18 +3955,16 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes_written
-operator|==
+operator|<=
 literal|0
-operator|&&
-name|errno
 condition|)
-block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* Write failed; this is bad */
-block|}
 name|bytes_read
 operator|=
 name|read
