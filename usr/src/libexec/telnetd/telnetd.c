@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.25 (Berkeley) 83/07/06"
+literal|"@(#)telnetd.c	4.26 (Berkeley) 83/08/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -804,7 +804,7 @@ name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
-name|SIG_IGN
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 name|doit
