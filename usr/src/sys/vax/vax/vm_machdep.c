@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	6.3	84/08/28	*/
+comment|/*	vm_machdep.c	6.4	84/11/19	*/
 end_comment
 
 begin_include
@@ -709,9 +709,6 @@ name|c_mdev
 operator|!=
 name|MSWAPX
 condition|)
-ifdef|#
-directive|ifdef
-name|lint
 name|munhash
 argument_list|(
 name|mount
@@ -734,27 +731,6 @@ operator|->
 name|c_blkno
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* avoid C compiler sign-extension bug */
-name|munhash
-argument_list|(
-name|mount
-index|[
-name|c
-operator|->
-name|c_mdev
-index|]
-operator|.
-name|m_dev
-argument_list|,
-name|c
-operator|->
-name|c_blkno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 operator|*
 operator|(
