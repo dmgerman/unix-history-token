@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wait3.c	5.1 (Berkeley) %G%"
+literal|"@(#)wait3.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,8 @@ argument_list|,
 name|pstat
 argument_list|,
 name|options
+operator||
+name|WSIGRESTART
 argument_list|,
 name|rup
 argument_list|)
