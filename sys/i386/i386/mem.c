@@ -1780,7 +1780,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|ENODEV
+name|ENOTTY
 operator|)
 return|;
 comment|/* any chance we can handle this? */
@@ -2011,11 +2011,6 @@ name|M_MEMDESC
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2460,12 +2455,6 @@ operator|=
 name|interrupt_allowed
 expr_stmt|;
 break|break;
-default|default:
-return|return
-operator|(
-name|ENOTTY
-operator|)
-return|;
 block|}
 return|return
 operator|(
