@@ -51,6 +51,8 @@ name|INFINITE
 block|,
 name|NORMAL
 block|,
+name|RANGE
+block|,
 name|SEQUENCE
 block|,
 name|SET
