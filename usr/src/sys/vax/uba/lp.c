@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.23	82/04/14	*/
+comment|/*	lp.c	4.24	82/05/04	*/
 end_comment
 
 begin_include
@@ -123,12 +123,35 @@ name|LPHWAT
 value|800
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAD
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAXCOL
 value|132
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAXCOL
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.49	82/03/14	*/
+comment|/*	conf.c	4.50	82/05/04	*/
 end_comment
 
 begin_include
@@ -2048,55 +2048,83 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* #include "un.h" #if NUN> 0 int	unopen(), unclose(), unread(), unwrite(), unioctl(), unreset(); #else */
-end_comment
+begin_include
+include|#
+directive|include
+file|"gpib.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NGPIB
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|gpibopen
+argument_list|()
+decl_stmt|,
+name|gpibclose
+argument_list|()
+decl_stmt|,
+name|gpibread
+argument_list|()
+decl_stmt|,
+name|gpibwrite
+argument_list|()
+decl_stmt|,
+name|gpibioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|unopen
+name|gpibopen
 value|nodev
 end_define
 
 begin_define
 define|#
 directive|define
-name|unclose
+name|gpibclose
 value|nodev
 end_define
 
 begin_define
 define|#
 directive|define
-name|unread
+name|gpibread
 value|nodev
 end_define
 
 begin_define
 define|#
 directive|define
-name|unwrite
+name|gpibwrite
 value|nodev
 end_define
 
 begin_define
 define|#
 directive|define
-name|unioctl
+name|gpibioctl
 value|nodev
 end_define
 
-begin_define
-define|#
-directive|define
-name|unreset
-value|nulldev
-end_define
-
-begin_comment
-comment|/* #endif */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -2573,7 +2601,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-name|accreset
+name|nodev
 block|,
 literal|0
 block|,
@@ -2617,26 +2645,26 @@ literal|0
 block|,
 name|seltrue
 block|,
-name|unopen
+comment|/* 25-29 reserved to local sites */
+name|gpibopen
 block|,
-name|unclose
+name|gpibclose
 block|,
-name|unread
+name|gpibread
 block|,
-name|unwrite
+name|gpibwrite
 block|,
 comment|/*25*/
-name|unioctl
+name|gpibioctl
+block|,
+name|nulldev
 block|,
 name|nodev
-block|,
-name|unreset
 block|,
 literal|0
 block|,
 name|seltrue
 block|,
-comment|/* 25-29 reserved to local sites */
 literal|0
 block|,	 }
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.11	82/04/01	*/
+comment|/*	vp.c	4.12	82/05/04	*/
 end_comment
 
 begin_include
@@ -472,9 +472,11 @@ name|prcsr
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ERNIE
+operator|||
+name|CAD
 comment|/* UNTIL REWIRED, GET INTERRUPT AT 200 BUT WANT 174 */
 if|if
 condition|(
