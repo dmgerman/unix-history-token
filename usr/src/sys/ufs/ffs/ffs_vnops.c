@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.67 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.68 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -651,6 +651,8 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|,
+name|rasize
+decl_stmt|,
 name|diff
 decl_stmt|,
 name|error
@@ -860,9 +862,21 @@ name|ip
 operator|->
 name|i_size
 condition|)
+block|{
+name|rasize
+operator|=
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|rablock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
-name|breada
+name|breadn
 argument_list|(
 name|ITOV
 argument_list|(
@@ -873,16 +887,13 @@ name|lbn
 argument_list|,
 name|size
 argument_list|,
+operator|&
 name|rablock
 argument_list|,
-name|blksize
-argument_list|(
-name|fs
+operator|&
+name|rasize
 argument_list|,
-name|ip
-argument_list|,
-name|rablock
-argument_list|)
+literal|1
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -890,6 +901,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|error
 operator|=

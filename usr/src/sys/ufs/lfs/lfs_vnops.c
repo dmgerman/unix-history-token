@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.75 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.76 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -848,7 +848,7 @@ name|i_size
 condition|)
 name|error
 operator|=
-name|breada
+name|breadn
 argument_list|(
 name|ITOV
 argument_list|(
@@ -859,12 +859,13 @@ name|lbn
 argument_list|,
 name|size
 argument_list|,
+operator|&
 name|rablock
 argument_list|,
-name|blksize
-argument_list|(
-name|fs
-argument_list|)
+operator|&
+name|size
+argument_list|,
+literal|1
 argument_list|,
 name|NOCRED
 argument_list|,
