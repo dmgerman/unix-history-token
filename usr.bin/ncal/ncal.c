@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ncal.c,v 1.5 1998/01/07 07:46:33 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1920,7 +1920,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: cal [-jy] [month[year]]"
+literal|"usage: cal [-jy] [[month] year]"
 argument_list|,
 literal|"       ncal [-Jjpwy] [-s country_code] [[month] year]"
 argument_list|,
@@ -3693,7 +3693,7 @@ name|jan1
 operator|=
 name|firstday
 argument_list|(
-name|m
+name|y
 argument_list|,
 literal|1
 argument_list|)
