@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.26 1997/10/27 07:45:47 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1184,7 +1184,7 @@ expr_stmt|;
 comment|/* Success */
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|&
@@ -1262,6 +1262,13 @@ modifier|*
 name|fromsin
 decl_stmt|,
 name|bindsin
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|result
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -1422,7 +1429,7 @@ name|s_addr
 operator|=
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|argp
@@ -1460,7 +1467,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|result
 operator|)
 return|;
 block|}
@@ -4660,7 +4672,7 @@ name|YPBIND_SUCC_VAL
 expr_stmt|;
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|&
