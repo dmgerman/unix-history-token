@@ -13874,6 +13874,12 @@ comment|/* 	 * put back the have_state command as last opcode 	 */
 if|if
 condition|(
 name|have_state
+operator|&&
+name|have_state
+operator|->
+name|opcode
+operator|!=
+name|O_CHECK_STATE
 condition|)
 block|{
 name|i
