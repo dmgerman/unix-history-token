@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	Id: miidevs,v 1.3 1999/08/29 15:42:04 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.1 2000/04/27 14:42:26 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -140,6 +140,17 @@ begin_comment
 comment|/* Texas Instruments */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MII_OUI_XAQTI
+value|0x00e0ae
+end_define
+
+begin_comment
+comment|/* XaQti Corp. */
+end_comment
+
 begin_comment
 comment|/* in the 79c873, AMD uses another OUI (which matches Davicom!) */
 end_comment
@@ -157,6 +168,17 @@ end_comment
 
 begin_comment
 comment|/* some vendors have the bits swapped within bytes 	(ie, ordered as on the wire) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_xxBROADCOM
+value|0x000818
+end_define
+
+begin_comment
+comment|/* Broadcom Corporation */
 end_comment
 
 begin_define
@@ -201,6 +223,17 @@ end_define
 
 begin_comment
 comment|/* Texas Instruments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_xxXAQTI
+value|0x350700
+end_define
+
+begin_comment
+comment|/* XaQti Corp. */
 end_comment
 
 begin_comment
@@ -285,6 +318,20 @@ define|#
 directive|define
 name|MII_STR_BROADCOM_3c905Cphy
 value|"3c905C 10/100 internal PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxBROADCOM_BCM5400
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxBROADCOM_BCM5400
+value|"Broadcom 1000baseTX PHY"
 end_define
 
 begin_comment
@@ -489,6 +536,24 @@ define|#
 directive|define
 name|MII_STR_xxTI_100VGPMI
 value|"ThunderLAN 100VG-AnyLan media interface"
+end_define
+
+begin_comment
+comment|/* XaQti Corp. PHYs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_XAQTI_XMACII
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_XAQTI_XMACII
+value|"XaQti Corp. XMAC II gigabit interface"
 end_define
 
 end_unit
