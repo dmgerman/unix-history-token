@@ -2074,9 +2074,6 @@ argument_list|)
 case|case
 name|CPUCLASS_586
 case|:
-ifndef|#
-directive|ifndef
-name|SMP
 name|printf
 argument_list|(
 literal|"%d.%02d-MHz "
@@ -2102,8 +2099,6 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"586"
@@ -2121,9 +2116,6 @@ argument_list|)
 case|case
 name|CPUCLASS_686
 case|:
-ifndef|#
-directive|ifndef
-name|SMP
 name|printf
 argument_list|(
 literal|"%d.%02d-MHz "
@@ -2149,8 +2141,6 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"686"
