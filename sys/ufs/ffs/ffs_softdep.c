@@ -22154,16 +22154,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * If we are being fsync'ed as part of vgone'ing this vnode, 		 * then we will not be able to release and recover the 		 * vnode below, so we just have to give up on writing its 		 * directory entry out. It will eventually be written, just 		 * not now, but then the user was not asking to have it 		 * written, so we are not breaking any promises. 		 */
-name|mp_fixme
-argument_list|(
-literal|"This operation is not atomic wrt the rest of the code"
-argument_list|)
-expr_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -22172,20 +22162,7 @@ name|v_iflag
 operator|&
 name|VI_XLOCK
 condition|)
-block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
-else|else
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * We prevent deadlock by always fetching inodes from the 		 * root, moving down the directory tree. Thus, when fetching 		 * our parent directory, we first try to get the lock. If 		 * that fails, we must unlock ourselves before requesting 		 * the lock on our parent. See the comment in ufs_lookup 		 * for details on possible races. 		 */
 name|FREE_LOCK
 argument_list|(
