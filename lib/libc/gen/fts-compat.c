@@ -3211,11 +3211,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|len
-operator|==
+name|cp
+operator|-
+literal|1
+operator|>
 name|sp
 operator|->
-name|fts_pathlen
+name|fts_path
 condition|)
 operator|--
 name|cp
