@@ -67,12 +67,12 @@ name|_VARARGS_H
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+name|__gnuc_va_list
 name|va_list
-value|__gnuc_va_list
-end_define
+typedef|;
+end_typedef
 
 begin_define
 define|#

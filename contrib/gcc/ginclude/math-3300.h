@@ -939,9 +939,11 @@ name|y
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|&
 literal|1
+operator|)
 operator|==
 literal|0
 condition|)
