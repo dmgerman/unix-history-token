@@ -1295,17 +1295,6 @@ block|,
 literal|0
 block|, }
 block|,
-ifdef|#
-directive|ifdef
-name|EAI_ADDRFAMILY
-block|{
-literal|"Address family for hostname not supported"
-block|,
-name|EAI_ADDRFAMILY
-block|, }
-block|,
-endif|#
-directive|endif
 block|{
 literal|"Temporary failure in name resolution"
 block|,
@@ -1336,17 +1325,6 @@ block|,
 name|EAI_MEMORY
 block|, }
 block|,
-ifdef|#
-directive|ifdef
-name|EAI_NODATA
-block|{
-literal|"No address associated with hostname"
-block|,
-name|EAI_NODATA
-block|, }
-block|,
-endif|#
-directive|endif
 block|{
 literal|"hostname nor servname provided, or not known"
 block|,
@@ -2449,6 +2427,18 @@ name|good
 goto|;
 if|if
 condition|(
+name|hostname
+operator|==
+name|NULL
+condition|)
+name|ERR
+argument_list|(
+name|EAI_NONAME
+argument_list|)
+expr_stmt|;
+comment|/* used to be EAI_NODATA */
+if|if
+condition|(
 name|pai
 operator|->
 name|ai_flags
@@ -2458,17 +2448,6 @@ condition|)
 name|ERR
 argument_list|(
 name|EAI_NONAME
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hostname
-operator|==
-name|NULL
-condition|)
-name|ERR
-argument_list|(
-name|EAI_NODATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -2888,7 +2867,7 @@ name|NS_NOTFOUND
 case|:
 name|error
 operator|=
-name|EAI_NODATA
+name|EAI_NONAME
 expr_stmt|;
 goto|goto
 name|free
@@ -3817,7 +3796,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EAI_NODATA
+name|EAI_NONAME
 operator|)
 return|;
 comment|/* XXX: is return OK? */

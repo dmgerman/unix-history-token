@@ -11751,7 +11751,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|EAI_NODATA
+name|EAI_NONAME
 condition|)
 block|{
 name|hints
@@ -15434,7 +15434,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|EAI_NODATA
+name|EAI_NONAME
 condition|)
 block|{
 name|hints
