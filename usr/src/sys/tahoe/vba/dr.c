@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -816,6 +816,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1552,7 +1557,9 @@ name|dr_pulse
 operator|=
 name|IENB
 expr_stmt|;
-name|sleep
+name|error
+operator|=
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1563,6 +1570,12 @@ operator|->
 name|dr_cmd
 argument_list|,
 name|DRPRI
+operator||
+name|PCATCH
+argument_list|,
+name|devio
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2032,8 +2045,15 @@ name|REDY
 operator|)
 operator|==
 literal|0
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
-name|sleep
+comment|/* Wakeup by drtimo() */
+name|error
+operator|=
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2041,9 +2061,14 @@ operator|)
 name|dra
 argument_list|,
 name|DRPRI
+operator||
+name|PCATCH
+argument_list|,
+name|devio
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Wakeup by drtimo() */
 name|dra
 operator|->
 name|dr_istat
@@ -3692,7 +3717,10 @@ operator|&
 name|DR_ACTV
 condition|)
 comment|/* Device is active; should never be in here... */
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -3703,6 +3731,10 @@ operator|->
 name|dr_flags
 argument_list|,
 name|DRPRI
+argument_list|,
+name|devio
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dra
@@ -4012,7 +4044,10 @@ name|dr_flags
 operator|&
 name|DR_ACTV
 condition|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4020,6 +4055,10 @@ operator|)
 name|dr
 argument_list|,
 name|DRPRI
+argument_list|,
+name|devio
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
