@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardd.c,v 1.1 1998/02/27 08:19:25 hosokawa Exp $"
+literal|"$Id: pccardd.c,v 1.2 1998/03/09 05:18:58 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,14 @@ name|doverbose
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|delay
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -128,7 +136,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":dvf:"
+literal|":dvf:i:z"
 argument_list|)
 operator|)
 operator|!=
@@ -177,6 +185,59 @@ case|:
 name|config_file
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* supress specified irq */
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: -i number\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|pool_irq
+index|[
+name|i
+index|]
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|delay
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -243,6 +304,9 @@ if|if
 condition|(
 operator|!
 name|dodebug
+operator|&&
+operator|!
+name|delay
 condition|)
 if|if
 condition|(
@@ -272,6 +336,24 @@ condition|)
 name|die
 argument_list|(
 literal|"no PC-CARD slots"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|delay
+condition|)
+if|if
+condition|(
+name|daemon
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|die
+argument_list|(
+literal|"fork failed"
 argument_list|)
 expr_stmt|;
 name|logmsg

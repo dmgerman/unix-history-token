@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.15 1998/04/25 17:52:15 hosokawa Exp $"
+literal|"$Id: file.c,v 1.17 1999/06/17 21:07:58 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +462,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|irq_init
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|allocblk
 modifier|*
@@ -475,6 +480,33 @@ name|lineno
 operator|=
 literal|1
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|pool_irq
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|irq_init
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 init|;
@@ -585,6 +617,11 @@ argument_list|)
 operator|)
 operator|>
 literal|0
+condition|)
+if|if
+condition|(
+operator|!
+name|irq_init
 condition|)
 name|pool_irq
 index|[
