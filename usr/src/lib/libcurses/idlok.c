@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)idlok.c	5.5 (Berkeley) %G%"
+literal|"@(#)idlok.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,17 +60,17 @@ name|bf
 condition|)
 name|win
 operator|->
-name|_flags
+name|flags
 operator||=
-name|_IDLINE
+name|__IDLINE
 expr_stmt|;
 else|else
 name|win
 operator|->
-name|_flags
+name|flags
 operator|&=
 operator|~
-name|_IDLINE
+name|__IDLINE
 expr_stmt|;
 block|}
 end_function

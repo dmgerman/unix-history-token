@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erase.c	5.5 (Berkeley) %G%"
+literal|"@(#)erase.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,7 @@ name|y
 operator|<
 name|win
 operator|->
-name|_maxy
+name|maxy
 condition|;
 name|y
 operator|++
@@ -100,16 +100,19 @@ control|)
 block|{
 name|minx
 operator|=
-name|_NOCHANGE
+operator|-
+literal|1
 expr_stmt|;
 name|start
 operator|=
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
 expr_stmt|;
 name|end
 operator|=
@@ -118,7 +121,7 @@ name|start
 index|[
 name|win
 operator|->
-name|_maxx
+name|maxx
 index|]
 expr_stmt|;
 for|for
@@ -150,7 +153,8 @@ if|if
 condition|(
 name|minx
 operator|==
-name|_NOCHANGE
+operator|-
+literal|1
 condition|)
 name|minx
 operator|=
@@ -168,7 +172,8 @@ if|if
 condition|(
 name|minx
 operator|!=
-name|_NOCHANGE
+operator|-
+literal|1
 condition|)
 name|touchline
 argument_list|(
@@ -182,20 +187,22 @@ name|maxx
 operator|-
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
 argument_list|)
 expr_stmt|;
 block|}
 name|win
 operator|->
-name|_curx
+name|curx
 operator|=
 name|win
 operator|->
-name|_cury
+name|cury
 operator|=
 literal|0
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insch.c	5.5 (Berkeley) %G%"
+literal|"@(#)insch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,16 +71,18 @@ operator|=
 operator|&
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|win
 operator|->
-name|_cury
+name|cury
 index|]
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_curx
+name|curx
 index|]
 expr_stmt|;
 name|temp1
@@ -88,16 +90,18 @@ operator|=
 operator|&
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|win
 operator|->
-name|_cury
+name|cury
 index|]
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 index|]
@@ -133,15 +137,15 @@ name|win
 argument_list|,
 name|win
 operator|->
-name|_cury
+name|cury
 argument_list|,
 name|win
 operator|->
-name|_curx
+name|curx
 argument_list|,
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 argument_list|)
@@ -150,7 +154,7 @@ if|if
 condition|(
 name|win
 operator|->
-name|_cury
+name|cury
 operator|==
 name|LINES
 operator|-
@@ -158,12 +162,14 @@ literal|1
 operator|&&
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|LINES
 operator|-
 literal|1
 index|]
+operator|->
+name|line
 index|[
 name|COLS
 operator|-
@@ -176,7 +182,9 @@ if|if
 condition|(
 name|win
 operator|->
-name|_scroll
+name|flags
+operator|&
+name|__SCROLLOK
 condition|)
 block|{
 name|wrefresh
@@ -191,7 +199,7 @@ argument_list|)
 expr_stmt|;
 name|win
 operator|->
-name|_cury
+name|cury
 operator|--
 expr_stmt|;
 block|}

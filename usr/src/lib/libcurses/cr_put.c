@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.8 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1388,10 +1388,12 @@ name|i
 operator|=
 name|curscr
 operator|->
-name|_y
+name|lines
 index|[
 name|outline
 index|]
+operator|->
+name|line
 index|[
 name|outcol
 index|]
@@ -1401,15 +1403,15 @@ condition|(
 operator|(
 name|i
 operator|&
-name|_STANDOUT
+name|__STANDOUT
 operator|)
 operator|==
 operator|(
 name|curscr
 operator|->
-name|_flags
+name|flags
 operator|&
-name|_STANDOUT
+name|__STANDOUT
 operator|)
 condition|)
 name|putchar

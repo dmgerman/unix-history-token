@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -212,115 +212,164 @@ parameter_list|)
 value|__unctrllen[(ch)& 0x7f]
 end_define
 
+begin_comment
+comment|/*  * A window is a circular doubly linked list of LINEs who's first line is   * given by the topline pointer in the WINDOW structure.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|_win_st
+name|__line
+block|{
+name|struct
+name|__line
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+comment|/* Next line, previous line. */
+define|#
+directive|define
+name|__ISDIRTY
+value|0x01
+comment|/* Line is dirty. */
+name|u_int
+name|flags
+decl_stmt|;
+name|u_int
+name|hash
+decl_stmt|;
+comment|/* Hash value for the line. */
+name|size_t
+name|firstch
+decl_stmt|,
+name|lastch
+decl_stmt|;
+comment|/* First and last changed columns. */
+comment|/*   * XXX  * _STANDOUT is the 8th bit, characters themselves are encoded.  */
+define|#
+directive|define
+name|__STANDOUT
+value|0x080
+comment|/* Added characters are standout. */
+name|char
+modifier|*
+name|line
+decl_stmt|;
+comment|/* Pointer to line itself. */
+block|}
+name|LINE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__window
 block|{
 comment|/* Window structure. */
-name|short
-name|_cury
+name|struct
+name|__window
+modifier|*
+name|nextp
 decl_stmt|,
-name|_curx
+modifier|*
+name|orig
+decl_stmt|;
+comment|/* Subwindows list and parent. */
+name|size_t
+name|begy
+decl_stmt|,
+name|begx
+decl_stmt|;
+comment|/* Window home. */
+name|size_t
+name|cury
+decl_stmt|,
+name|curx
 decl_stmt|;
 comment|/* Current x, y coordinates. */
-name|short
-name|_maxy
+name|size_t
+name|maxy
 decl_stmt|,
-name|_maxx
+name|maxx
 decl_stmt|;
 comment|/* Maximum values for curx, cury. */
 name|short
-name|_begy
-decl_stmt|,
-name|_begx
+name|ch_off
 decl_stmt|;
-comment|/* Window home. */
+comment|/* x offset for firstch/lastch. */
+name|LINE
+modifier|*
+modifier|*
+name|lines
+decl_stmt|;
+comment|/* Array of pointers to the lines */
+name|LINE
+modifier|*
+name|topline
+decl_stmt|;
+comment|/* Pointer to first line in window */
+name|char
+modifier|*
+name|wspace
+decl_stmt|;
+comment|/* window space (for cleanup) */
 define|#
 directive|define
-name|_ENDLINE
+name|__ENDLINE
 value|0x001
 comment|/* End of screen. */
 define|#
 directive|define
-name|_FLUSH
+name|__FLUSH
 value|0x002
-comment|/* fflush(stdout) after refresh. */
+comment|/* Fflush(stdout) after refresh. */
 define|#
 directive|define
-name|_FULLLINE
+name|__FULLLINE
 value|0x004
 comment|/* Line width = terminal width. */
 define|#
 directive|define
-name|_FULLWIN
+name|__FULLWIN
 value|0x008
 comment|/* Window is a screen. */
 define|#
 directive|define
-name|_IDLINE
+name|__IDLINE
 value|0x010
 comment|/* Insert/delete sequences. */
 define|#
 directive|define
-name|_SCROLLWIN
+name|__SCROLLWIN
 value|0x020
 comment|/* Last char will scroll window. */
-comment|/*   * XXX  * _STANDOUT is the 8th bit, characters themselves are encoded.  */
 define|#
 directive|define
-name|_STANDOUT
+name|__SCROLLOK
+value|0x040
+comment|/* Scrolling ok. */
+define|#
+directive|define
+name|__CLEAROK
 value|0x080
-comment|/* Added characters are standout. */
-name|unsigned
-name|short
-name|_flags
-decl_stmt|;
-name|short
-name|_ch_off
-decl_stmt|;
-comment|/* x offset for firstch/lastch. */
-name|char
-name|_clear
-decl_stmt|;
-comment|/* If clear on next refresh. */
-name|char
-name|_leave
-decl_stmt|;
-comment|/* If cursor left. */
-name|char
-name|_scroll
-decl_stmt|;
-comment|/* If scrolling permitted. */
-name|char
-modifier|*
-modifier|*
-name|_y
-decl_stmt|;
-comment|/* Line describing the window. */
+comment|/* Clear on next refresh. */
 define|#
 directive|define
-name|_NOCHANGE
-value|-1
-comment|/* No change since last refresh. */
-name|short
-modifier|*
-name|_firstch
+name|__WSTANDOUT
+value|0x100
+comment|/* Standout window */
+define|#
+directive|define
+name|__LEAVEOK
+value|0x200
+comment|/* If curser left */
+name|u_int
+name|flags
 decl_stmt|;
-comment|/* First and last changed in line. */
-name|short
-modifier|*
-name|_lastch
-decl_stmt|;
-name|struct
-name|_win_st
-modifier|*
-name|_nextp
-decl_stmt|,
-modifier|*
-name|_orig
-decl_stmt|;
-comment|/* Subwindows list and parent. */
 block|}
 name|WINDOW
 typedef|;
@@ -1141,7 +1190,7 @@ name|win
 parameter_list|,
 name|bf
 parameter_list|)
-value|(win->_clear = (bf))
+value|((bf) ? (win->flags |= __CLEAROK) : \ 				  (win->flags&= ~__CLEAROK))
 end_define
 
 begin_define
@@ -1153,7 +1202,31 @@ name|win
 parameter_list|,
 name|bf
 parameter_list|)
-value|((bf) ? (win->_flags |= _FLUSH) : \ 				    (win->_flags&= ~_FLUSH))
+value|((bf) ? (win->flags |= __FLUSH) : \ 				  (win->flags&= ~__FLUSH))
+end_define
+
+begin_define
+define|#
+directive|define
+name|scrollok
+parameter_list|(
+name|win
+parameter_list|,
+name|bf
+parameter_list|)
+value|((bf) ? (win->flags |= __SCROLLOK) : \ 				  (win->flags&= ~__SCROLLOK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|leaveok
+parameter_list|(
+name|win
+parameter_list|,
+name|bf
+parameter_list|)
+value|((bf) ? (win->flags |= __LEAVEOK) : \ 				  (win->flags&= ~__LEAVEOK))
 end_define
 
 begin_define
@@ -1167,31 +1240,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|(y) = win->_cury, (x) = win->_curx
-end_define
-
-begin_define
-define|#
-directive|define
-name|leaveok
-parameter_list|(
-name|win
-parameter_list|,
-name|bf
-parameter_list|)
-value|(win->_leave = (bf))
-end_define
-
-begin_define
-define|#
-directive|define
-name|scrollok
-parameter_list|(
-name|win
-parameter_list|,
-name|bf
-parameter_list|)
-value|(win->_scroll = (bf))
+value|(y) = win->cury, (x) = win->curx
 end_define
 
 begin_define
@@ -1201,7 +1250,7 @@ name|winch
 parameter_list|(
 name|win
 parameter_list|)
-value|(win->_y[win->_cury][win->_curx]& 0177)
+value|(win->lines[win->cury]->line[win->curx]& 0177)
 end_define
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clear.c	5.5 (Berkeley) %G%"
+literal|"@(#)clear.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,9 +62,9 @@ condition|)
 block|{
 name|win
 operator|->
-name|_clear
-operator|=
-literal|1
+name|flags
+operator||=
+name|__CLEAROK
 expr_stmt|;
 return|return
 operator|(

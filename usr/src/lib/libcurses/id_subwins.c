@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id_subwins.c	5.6 (Berkeley) %G%"
+literal|"@(#)id_subwins.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * __id_subwins --  *	Re-sync the pointers to _y for all the subwindows.  */
+comment|/*  * __id_subwins --  *	Re-sync the pointers to lines for all the subwindows.  */
 end_comment
 
 begin_function
@@ -67,11 +67,11 @@ name|realy
 operator|=
 name|orig
 operator|->
-name|_begy
+name|begy
 operator|+
 name|orig
 operator|->
-name|_cury
+name|cury
 expr_stmt|;
 for|for
 control|(
@@ -79,7 +79,7 @@ name|win
 operator|=
 name|orig
 operator|->
-name|_nextp
+name|nextp
 init|;
 name|win
 operator|!=
@@ -89,7 +89,7 @@ name|win
 operator|=
 name|win
 operator|->
-name|_nextp
+name|nextp
 control|)
 block|{
 comment|/* 		 * If the window ends before our current position, don't need 		 * to do anything. 		 */
@@ -97,11 +97,11 @@ if|if
 condition|(
 name|win
 operator|->
-name|_begy
+name|begy
 operator|+
 name|win
 operator|->
-name|_maxy
+name|maxy
 operator|<=
 name|realy
 condition|)
@@ -110,7 +110,7 @@ name|oy
 operator|=
 name|orig
 operator|->
-name|_cury
+name|cury
 expr_stmt|;
 for|for
 control|(
@@ -120,13 +120,13 @@ name|realy
 operator|-
 name|win
 operator|->
-name|_begy
+name|begy
 init|;
 name|y
 operator|<
 name|win
 operator|->
-name|_maxy
+name|maxy
 condition|;
 name|y
 operator|++
@@ -136,22 +136,26 @@ operator|++
 control|)
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
 operator|=
 operator|&
 name|orig
 operator|->
-name|_y
+name|lines
 index|[
 name|oy
 index|]
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_ch_off
+name|ch_off
 index|]
 expr_stmt|;
 block|}

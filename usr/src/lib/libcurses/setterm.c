@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.9 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,6 +802,12 @@ modifier|*
 modifier|*
 name|fp
 decl_stmt|;
+name|char
+name|tmp
+index|[
+literal|3
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -812,6 +818,13 @@ name|cp
 decl_stmt|;
 endif|#
 directive|endif
+name|tmp
+index|[
+literal|2
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|namp
 operator|=
 literal|"ambsdadbeohchzinmimsncnsosulxbxnxtxsxx"
@@ -823,6 +836,26 @@ expr_stmt|;
 do|do
 block|{
 operator|*
+name|tmp
+operator|=
+operator|*
+name|namp
+expr_stmt|;
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|1
+operator|)
+operator|=
+operator|*
+operator|(
+name|namp
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+operator|*
 operator|(
 operator|*
 name|fp
@@ -831,7 +864,7 @@ operator|)
 operator|=
 name|tgetflag
 argument_list|(
-name|namp
+name|tmp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -879,6 +912,26 @@ expr_stmt|;
 do|do
 block|{
 operator|*
+name|tmp
+operator|=
+operator|*
+name|namp
+expr_stmt|;
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|1
+operator|)
+operator|=
+operator|*
+operator|(
+name|namp
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+operator|*
 operator|(
 operator|*
 name|sp
@@ -887,7 +940,7 @@ operator|)
 operator|=
 name|tgetstr
 argument_list|(
-name|namp
+name|tmp
 argument_list|,
 operator|&
 name|aoftspace

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.6 (Berkeley) %G%"
+literal|"@(#)move.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,13 +95,13 @@ name|x
 operator|>=
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|||
 name|y
 operator|>=
 name|win
 operator|->
-name|_maxy
+name|maxy
 condition|)
 return|return
 operator|(
@@ -110,13 +110,13 @@ operator|)
 return|;
 name|win
 operator|->
-name|_curx
+name|curx
 operator|=
 name|x
 expr_stmt|;
 name|win
 operator|->
-name|_cury
+name|cury
 operator|=
 name|y
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.6 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * winsertln --  *	Do an insert-line on the window, leaving (_cury,_curx) unchanged.  */
+comment|/*  * winsertln --  *	Do an insert-line on the window, leaving (cury, curx) unchanged.  */
 end_comment
 
 begin_function
@@ -64,7 +64,9 @@ specifier|register
 name|char
 modifier|*
 name|end
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|LINE
 modifier|*
 name|temp
 decl_stmt|;
@@ -84,7 +86,7 @@ if|if
 condition|(
 name|win
 operator|->
-name|_orig
+name|orig
 operator|==
 name|NULL
 condition|)
@@ -92,11 +94,11 @@ name|temp
 operator|=
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|win
 operator|->
-name|_maxy
+name|maxy
 operator|-
 literal|1
 index|]
@@ -107,7 +109,7 @@ name|y
 operator|=
 name|win
 operator|->
-name|_maxy
+name|maxy
 operator|-
 literal|1
 init|;
@@ -115,7 +117,7 @@ name|y
 operator|>
 name|win
 operator|->
-name|_cury
+name|cury
 condition|;
 operator|--
 name|y
@@ -125,20 +127,20 @@ if|if
 condition|(
 name|win
 operator|->
-name|_orig
+name|orig
 operator|==
 name|NULL
 condition|)
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
 operator|=
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 operator|-
@@ -150,23 +152,27 @@ name|bcopy
 argument_list|(
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 operator|-
 literal|1
 index|]
+operator|->
+name|line
 argument_list|,
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
 argument_list|,
 name|win
 operator|->
-name|_maxx
+name|maxx
 argument_list|)
 expr_stmt|;
 name|touchline
@@ -179,7 +185,7 @@ literal|0
 argument_list|,
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 argument_list|)
@@ -189,13 +195,13 @@ if|if
 condition|(
 name|win
 operator|->
-name|_orig
+name|orig
 operator|==
 name|NULL
 condition|)
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
@@ -207,33 +213,36 @@ name|temp
 operator|=
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
 expr_stmt|;
-for|for
-control|(
-name|end
-operator|=
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
+name|temp
+operator|->
+name|line
+argument_list|,
+literal|' '
+argument_list|,
 operator|&
 name|temp
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_maxx
+name|maxx
 index|]
-init|;
+operator|-
 name|temp
-operator|<
-name|end
-condition|;
-control|)
-operator|*
-name|temp
-operator|++
-operator|=
-literal|' '
+operator|->
+name|line
+argument_list|)
 expr_stmt|;
 name|touchline
 argument_list|(
@@ -245,7 +254,7 @@ literal|0
 argument_list|,
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 argument_list|)
@@ -254,7 +263,7 @@ if|if
 condition|(
 name|win
 operator|->
-name|_orig
+name|orig
 operator|==
 name|NULL
 condition|)

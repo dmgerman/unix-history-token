@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.7 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,10 +240,10 @@ argument_list|)
 expr_stmt|;
 name|curscr
 operator|->
-name|_flags
+name|flags
 operator|&=
 operator|~
-name|_FULLLINE
+name|__FULLLINE
 expr_stmt|;
 if|if
 condition|(

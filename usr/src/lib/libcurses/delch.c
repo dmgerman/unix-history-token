@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delch.c	5.6 (Berkeley) %G%"
+literal|"@(#)delch.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * wdelch --  *	Do an insert-char on the line, leaving (_cury, _curx) unchanged.  */
+comment|/*  * wdelch --  *	Do an insert-char on the line, leaving (cury, curx) unchanged.  */
 end_comment
 
 begin_function
@@ -66,16 +66,18 @@ operator|=
 operator|&
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|win
 operator|->
-name|_cury
+name|cury
 index|]
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 index|]
@@ -85,16 +87,18 @@ operator|=
 operator|&
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|win
 operator|->
-name|_cury
+name|cury
 index|]
+operator|->
+name|line
 index|[
 name|win
 operator|->
-name|_curx
+name|curx
 index|]
 expr_stmt|;
 name|temp2
@@ -128,15 +132,15 @@ name|win
 argument_list|,
 name|win
 operator|->
-name|_cury
+name|cury
 argument_list|,
 name|win
 operator|->
-name|_curx
+name|curx
 argument_list|,
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|-
 literal|1
 argument_list|)

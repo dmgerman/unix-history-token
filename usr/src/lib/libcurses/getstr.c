@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getstr.c	5.5 (Berkeley) %G%"
+literal|"@(#)getstr.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * wgetstr --  *	Get a string starting at (_cury,_curx).  */
+comment|/*  * wgetstr --  *	Get a string starting at (cury, curx).  */
 end_comment
 
 begin_function

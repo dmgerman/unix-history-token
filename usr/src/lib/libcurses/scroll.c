@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.6 (Berkeley) %G%"
+literal|"@(#)scroll.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,9 +77,13 @@ directive|endif
 if|if
 condition|(
 operator|!
+operator|(
 name|win
 operator|->
-name|_scroll
+name|flags
+operator|&
+name|__SCROLLOK
+operator|)
 condition|)
 return|return
 operator|(
@@ -140,7 +144,7 @@ name|ONLCR
 condition|)
 name|win
 operator|->
-name|_curx
+name|curx
 operator|=
 literal|0
 expr_stmt|;

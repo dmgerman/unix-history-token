@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.2 (Berkeley) %G%"
+literal|"@(#)tty.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,9 +605,9 @@ if|if
 condition|(
 name|curscr
 operator|->
-name|_flags
+name|flags
 operator|&
-name|_STANDOUT
+name|__WSTANDOUT
 condition|)
 block|{
 name|tputs
@@ -621,10 +621,10 @@ argument_list|)
 expr_stmt|;
 name|curscr
 operator|->
-name|_flags
+name|flags
 operator|&=
 operator|~
-name|_STANDOUT
+name|__WSTANDOUT
 expr_stmt|;
 block|}
 name|__endwin

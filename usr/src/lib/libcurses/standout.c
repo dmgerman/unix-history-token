@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)standout.c	5.5 (Berkeley) %G%"
+literal|"@(#)standout.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,9 +66,9 @@ operator|)
 return|;
 name|win
 operator|->
-name|_flags
+name|flags
 operator||=
-name|_STANDOUT
+name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(
@@ -114,10 +114,10 @@ operator|)
 return|;
 name|win
 operator|->
-name|_flags
+name|flags
 operator|&=
 operator|~
-name|_STANDOUT
+name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvwin.c	5.5 (Berkeley) %G%"
+literal|"@(#)mvwin.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,7 +77,7 @@ name|by
 operator|+
 name|win
 operator|->
-name|_maxy
+name|maxy
 operator|>
 name|LINES
 operator|||
@@ -85,7 +85,7 @@ name|bx
 operator|+
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|>
 name|COLS
 condition|)
@@ -100,7 +100,7 @@ name|by
 operator|-
 name|win
 operator|->
-name|_begy
+name|begy
 expr_stmt|;
 name|dx
 operator|=
@@ -108,13 +108,13 @@ name|bx
 operator|-
 name|win
 operator|->
-name|_begx
+name|begx
 expr_stmt|;
 name|orig
 operator|=
 name|win
 operator|->
-name|_orig
+name|orig
 expr_stmt|;
 if|if
 condition|(
@@ -131,13 +131,13 @@ do|do
 block|{
 name|win
 operator|->
-name|_begy
+name|begy
 operator|+=
 name|dy
 expr_stmt|;
 name|win
 operator|->
-name|_begx
+name|begx
 operator|+=
 name|dx
 expr_stmt|;
@@ -150,7 +150,7 @@ name|win
 operator|=
 name|win
 operator|->
-name|_nextp
+name|nextp
 expr_stmt|;
 block|}
 do|while
@@ -169,17 +169,17 @@ name|by
 operator|<
 name|orig
 operator|->
-name|_begy
+name|begy
 operator|||
 name|win
 operator|->
-name|_maxy
+name|maxy
 operator|+
 name|dy
 operator|>
 name|orig
 operator|->
-name|_maxy
+name|maxy
 condition|)
 return|return
 operator|(
@@ -192,17 +192,17 @@ name|bx
 operator|<
 name|orig
 operator|->
-name|_begx
+name|begx
 operator|||
 name|win
 operator|->
-name|_maxx
+name|maxx
 operator|+
 name|dx
 operator|>
 name|orig
 operator|->
-name|_maxx
+name|maxx
 condition|)
 return|return
 operator|(
@@ -211,13 +211,13 @@ operator|)
 return|;
 name|win
 operator|->
-name|_begy
+name|begy
 operator|=
 name|by
 expr_stmt|;
 name|win
 operator|->
-name|_begx
+name|begx
 operator|=
 name|bx
 expr_stmt|;
