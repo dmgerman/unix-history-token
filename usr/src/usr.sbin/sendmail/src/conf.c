@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -368,7 +368,7 @@ literal|24
 operator|*
 literal|60
 operator|*
-literal|60
+literal|60L
 decl_stmt|;
 end_decl_stmt
 
