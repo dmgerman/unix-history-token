@@ -179,7 +179,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }							\ struct __hack
 end_define
 
 begin_else
@@ -342,7 +342,7 @@ literal|"+a"
 operator|(
 name|res
 operator|)
-comment|/* 0 (result) %rax, XXX check */
+comment|/* 0 (result) */
 operator|:
 literal|"r"
 operator|(
@@ -413,7 +413,7 @@ value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p,
 comment|/* 0 */
 value|\ 	  "+r" (v)
 comment|/* 1 */
-value|\ 	: : "memory");				 	\ }
+value|\ 	: : "memory");				 	\ }							\ struct __hack
 end_define
 
 begin_else
@@ -1453,10 +1453,15 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+comment|/* 	 * The apparently-bogus cast to intptr_t in the following is to 	 * avoid a warning from "gcc -Wbad-function-cast". 	 */
 return|return
+operator|(
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|atomic_load_acq_long
 argument_list|(
@@ -1467,6 +1472,7 @@ operator|*
 operator|)
 name|p
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

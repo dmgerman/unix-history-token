@@ -236,7 +236,7 @@ name|FAKE_MCOUNT
 parameter_list|(
 name|caller
 parameter_list|)
-value|pushq caller ; call __mcount ; popl %ecx
+value|pushq caller ; call __mcount ; popq %rcx
 end_define
 
 begin_define

@@ -72,7 +72,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* hint map memory in a coherent way */
+comment|/* hint: map memory in a coherent way */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  *	bus_dma_tag_t  *  *	A machine-dependent opaque type describing the characteristics  *	of how to perform DMA mappings.  This structure encapsultes  *	information concerning address and alignment restrictions, number  *	of S/G	segments, amount of data per S/G segment, etc.  */
+comment|/*  *	bus_dma_tag_t  *  *	A machine-dependent opaque type describing the characteristics  *	of how to perform DMA mappings.  This structure encapsultes  *	information concerning address and alignment restrictions, number  *	of S/G segments, amount of data per S/G segment, etc.  */
 end_comment
 
 begin_typedef
@@ -239,7 +239,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * A function that performs driver-specific syncronization on behalf of  * busdma.  */
+comment|/*  * A function that performs driver-specific synchronization on behalf of  * busdma.  */
 end_comment
 
 begin_typedef
@@ -272,7 +272,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	alignment:	alignment for segments.  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	maxsize:	Maximum mapping size supported by this tag.  *	nsegments:	Number of discontinuities allowed in maps.  *	maxsegsz:	Maximum size of a segment in the map.  *	flags:		Bus DMA flags.  *	lockfunc:	An optional function to handle driver-defined lock  *			operations.  *	lockfuncarg:	An argument that will be passed to lockfunc in addition  *			to the lock operation.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
+comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	alignment:	Alignment for segments.  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	maxsize:	Maximum mapping size supported by this tag.  *	nsegments:	Number of discontinuities allowed in maps.  *	maxsegsz:	Maximum size of a segment in the map.  *	flags:		Bus DMA flags.  *	lockfunc:	An optional function to handle driver-defined lock  *			operations.  *	lockfuncarg:	An argument that will be passed to lockfunc in addition  *			to the lock operation.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
 end_comment
 
 begin_comment
@@ -365,7 +365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy  a handle for mapping from kva/uva/physical  * address space into bus device space.  */
+comment|/*  * Destroy a handle for mapping from kva/uva/physical  * address space into bus device space.  */
 end_comment
 
 begin_function_decl
@@ -382,7 +382,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate a piece of memory that can be efficiently mapped into  * bus device space based on the constraints lited in the dma tag.  * A dmamap to for use with dmamap_load is also allocated.  */
+comment|/*  * Allocate a piece of memory that can be efficiently mapped into  * bus device space based on the constraints listed in the dma tag.  * A dmamap to for use with dmamap_load is also allocated.  */
 end_comment
 
 begin_function_decl
@@ -408,7 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+comment|/*  * Free a piece of memory and its allocated dmamap, that was allocated  * via bus_dmamem_alloc.  */
 end_comment
 
 begin_function_decl
@@ -486,7 +486,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like bus_dmamap_callback but includes map size in bytes.  This is  * defined as a separate interface to maintain compatiiblity for users  * of bus_dmamap_callback_t--at some point these interfaces should be merged.  */
+comment|/*  * Like bus_dmamap_callback but includes map size in bytes.  This is  * defined as a separate interface to maintain compatibility for users  * of bus_dmamap_callback_t--at some point these interfaces should be merged.  */
 end_comment
 
 begin_typedef
@@ -576,7 +576,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Perform a syncronization operation on the given map.  */
+comment|/*  * Perform a synchronization operation on the given map.  */
 end_comment
 
 begin_function_decl

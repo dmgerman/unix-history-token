@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)limits.h	8.3 (Berkeley) 1/4/94  *	From: NetBSD: limits.h,v 1.3 1997/04/06 08:47:31 cgd Exp  * 	From: FreeBSD: src/sys/alpha/include/limits.h,v 1.8 2001/11/02  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)limits.h	8.3 (Berkeley) 1/4/94  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|__SCHAR_MIN
-value|(-0x7f-1)
+value|(-0x7f - 1)
 end_define
 
 begin_comment
@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|__SHRT_MIN
-value|(-0x7fff-1)
+value|(-0x7fff - 1)
 end_define
 
 begin_comment
@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|__INT_MIN
-value|(-0x7fffffff-1)
+value|(-0x7fffffff - 1)
 end_define
 
 begin_comment
@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|__LONG_MIN
-value|(-0x7fffffffffffffffL-1)
+value|(-0x7fffffffffffffffL - 1)
 end_define
 
 begin_comment
@@ -163,11 +163,7 @@ comment|/* min for a long */
 end_comment
 
 begin_comment
-comment|/* Long longs and longs are the same size on the alpha. */
-end_comment
-
-begin_comment
-comment|/* max for an unsigned long long */
+comment|/* max value for an unsigned long long */
 end_comment
 
 begin_define
@@ -185,14 +181,14 @@ value|0x7fffffffffffffffLL
 end_define
 
 begin_comment
-comment|/* max for a long long */
+comment|/* max value for a long long */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|__LLONG_MIN
-value|(-0x7fffffffffffffffLL-1)
+value|(-0x7fffffffffffffffLL - 1)
 end_define
 
 begin_comment
@@ -251,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|__UQUAD_MAX
-value|(__ULONG_MAX)
+value|__ULONG_MAX
 end_define
 
 begin_comment
@@ -262,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|__QUAD_MAX
-value|(__LONG_MAX)
+value|__LONG_MAX
 end_define
 
 begin_comment
@@ -273,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|__QUAD_MIN
-value|(__LONG_MIN)
+value|__LONG_MIN
 end_define
 
 begin_comment
