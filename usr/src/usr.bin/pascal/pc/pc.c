@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,27 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c	5.4 (Berkeley) %G%"
+literal|"@(#)pc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -67,7 +61,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -79,7 +91,7 @@ name|char
 modifier|*
 name|pc0
 init|=
-literal|"/usr/libexec/pc0"
+name|_PATH_PC0
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +100,7 @@ name|char
 modifier|*
 name|pc1
 init|=
-literal|"/usr/libexec/f1"
+name|_PATH_PC1
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +109,7 @@ name|char
 modifier|*
 name|pc2
 init|=
-literal|"/usr/libexec/pc2"
+name|_PATH_PC2
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +118,7 @@ name|char
 modifier|*
 name|c2
 init|=
-literal|"/usr/libexec/c2"
+name|_PATH_C2
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +127,7 @@ name|char
 modifier|*
 name|pc3
 init|=
-literal|"/usr/libexec/pc3"
+name|_PATH_PC3
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +136,7 @@ name|char
 modifier|*
 name|ld
 init|=
-literal|"/usr/bin/ld"
+name|_PATH_LD
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +145,7 @@ name|char
 modifier|*
 name|as
 init|=
-literal|"/usr/bin/as"
+name|_PATH_AS
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +163,7 @@ name|char
 modifier|*
 name|crt0
 init|=
-literal|"/usr/libexec/crt0.o"
+name|_PATH_CRT0
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +172,7 @@ name|char
 modifier|*
 name|mcrt0
 init|=
-literal|"/usr/libexec/mcrt0.o"
+name|_PATH_MCRT0
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +181,7 @@ name|char
 modifier|*
 name|gcrt0
 init|=
-literal|"/usr/libexec/gcrt0.o"
+name|_PATH_GCRT0
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +198,7 @@ name|char
 modifier|*
 name|tmpdir
 init|=
-literal|"/tmp"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +396,7 @@ comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
 end_comment
 
 begin_comment
-comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/lib/crt0.o", 0, }; */
+comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", _PATH_CRT0, 0, }; */
 end_comment
 
 begin_comment
@@ -573,11 +585,11 @@ condition|)
 block|{
 name|execl
 argument_list|(
-literal|"/bin/cat"
+name|_PATH_CAT
 argument_list|,
 literal|"cat"
 argument_list|,
-literal|"/usr/lib/how_pc"
+name|_PATH_HOWPC
 argument_list|)
 expr_stmt|;
 name|exit
@@ -946,7 +958,7 @@ literal|'0'
 case|:
 name|pc0
 operator|=
-literal|"/usr/src/ucb/pascal/pc0/a.out"
+name|_PATH_DPC0
 expr_stmt|;
 if|if
 condition|(
@@ -973,7 +985,7 @@ literal|'1'
 case|:
 name|pc1
 operator|=
-literal|"/usr/src/lib/pcc/fort"
+name|_PATH_DPC1
 expr_stmt|;
 if|if
 condition|(
@@ -1000,7 +1012,7 @@ literal|'2'
 case|:
 name|pc2
 operator|=
-literal|"/usr/src/ucb/pascal/utilities/pc2"
+name|_PATH_DPC2
 expr_stmt|;
 if|if
 condition|(
@@ -1027,7 +1039,7 @@ literal|'3'
 case|:
 name|pc3
 operator|=
-literal|"/usr/src/ucb/pascal/utilities/pc3"
+name|_PATH_DPC3
 expr_stmt|;
 if|if
 condition|(
@@ -1058,7 +1070,7 @@ literal|1
 expr_stmt|;
 name|lpc
 operator|=
-literal|"/usr/src/usr.lib/libpc/libpc"
+name|_PATH_DLPC
 expr_stmt|;
 if|if
 condition|(
@@ -1843,7 +1855,7 @@ name|pc3argx
 operator|++
 index|]
 operator|=
-literal|"/usr/lib/pcexterns.o"
+name|_PATH_PCEXTERN
 expr_stmt|;
 for|for
 control|(
@@ -1971,7 +1983,7 @@ name|errs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/lib/crt0.o", 0, }; */
+comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", _PATH_CRT0, 0, }; */
 name|ldargs
 index|[
 literal|0
