@@ -4556,7 +4556,7 @@ argument_list|()
 expr_stmt|;
 name|sc
 operator|->
-name|suspend
+name|suspended
 operator|=
 literal|1
 expr_stmt|;
