@@ -649,9 +649,6 @@ name|struct
 name|putchar_arg
 name|pca
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|struct
 name|session
 modifier|*
@@ -780,8 +777,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
 name|kvprintf
 argument_list|(
 name|fmt
@@ -932,9 +927,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|struct
 name|putchar_arg
 name|pca
@@ -968,8 +960,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
 name|kvprintf
 argument_list|(
 name|fmt
@@ -3132,7 +3122,6 @@ expr_stmt|;
 goto|goto
 name|reswitch
 goto|;
-break|break;
 case|case
 literal|'u'
 case|:
