@@ -67,11 +67,9 @@ operator|(
 name|c
 operator|)
 argument_list|,
-operator|(
 name|_A
 operator||
 name|_D
-operator|)
 argument_list|)
 operator|)
 return|;
