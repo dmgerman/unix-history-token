@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pac.c	5.1 (Berkeley) %G%"
+literal|"@(#)pac.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * Do Printer accounting summary.  * Currently, usage is  *	pac [-Pprinter] [-pprice] [-s] [-r] [-c] [user ...]  * to print the usage information for the named people.  */
+comment|/*  * Do Printer accounting summary.  * Currently, usage is  *	pac [-Pprinter] [-pprice] [-s] [-r] [-c] [-m] [user ...]  * to print the usage information for the named people.  */
 end_comment
 
 begin_include
@@ -164,6 +164,55 @@ name|int
 name|errs
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* disregard machine names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 if -p on cmd line */
+end_comment
+
+begin_decl_stmt
+name|int
+name|price100
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* per-page cost in 100th of a cent */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pgetnum
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Grossness follows:  *  Names to be accumulated are hashed into the following  *  table.  */
@@ -345,6 +394,10 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|pflag
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 case|case
 literal|'s'
@@ -363,6 +416,15 @@ operator|++
 expr_stmt|;
 continue|continue;
 case|case
+literal|'m'
+case|:
+comment|/* 				 * disregard machine names for each user 				 */
+name|mflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
 literal|'r'
 case|:
 comment|/* 				 * Reverse sorting order. 				 */
@@ -375,7 +437,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pac [-Pprinter] [-pprice] [-s] [-c] [-r] [user ...]\n"
+literal|"usage: pac [-Pprinter] [-pprice] [-s] [-c] [-r] [-m] [user ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -526,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the entire accounting file, accumulating statistics  * for the users that we have in the hash table.  If allflag  * is set, then just gather the facts on everyone.  * Note that we must accomodate both the active and summary file  * formats here.  */
+comment|/*  * Read the entire accounting file, accumulating statistics  * for the users that we have in the hash table.  If allflag  * is set, then just gather the facts on everyone.  * Note that we must accomodate both the active and summary file  * formats here.  * Host names are ignored if the -m flag is present.  */
 end_comment
 
 begin_expr_stmt
@@ -664,6 +726,28 @@ operator|*
 name|cp2
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|mflag
+operator|&&
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+name|cp
+operator|=
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|':'
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|hp
 operator|=
@@ -1672,6 +1756,28 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|pflag
+operator|&&
+operator|(
+name|price100
+operator|=
+name|pgetnum
+argument_list|(
+literal|"pc"
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+name|price
+operator|=
+name|price100
+operator|/
+literal|10000.0
+expr_stmt|;
 name|sumfile
 operator|=
 operator|(
