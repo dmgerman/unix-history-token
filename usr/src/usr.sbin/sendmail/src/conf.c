@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.59
+literal|3.60
 operator|%
 name|G
 operator|%
@@ -151,12 +151,16 @@ block|,
 literal|"bcc"
 block|,
 name|H_RCPT
+operator||
+name|H_ACHECK
 block|,
 literal|0
 block|,
 literal|"resent-bcc"
 block|,
 name|H_RCPT
+operator||
+name|H_ACHECK
 block|,
 literal|0
 block|,
