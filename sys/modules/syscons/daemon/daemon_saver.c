@@ -1188,7 +1188,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|set_border
+name|sc_set_border
 argument_list|(
 name|scp
 argument_list|,

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pc/display.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
@@ -409,6 +415,7 @@ name|lines
 operator|-
 name|min_lines
 expr_stmt|;
+comment|/* XXX error check? */
 name|sc_vtb_init
 argument_list|(
 name|history
@@ -426,6 +433,7 @@ argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;
+comment|/* FIXME: XXX no good? */
 name|sc_vtb_clear
 argument_list|(
 name|history
@@ -439,11 +447,9 @@ index|[
 literal|0x20
 index|]
 argument_list|,
-name|scp
-operator|->
-name|term
-operator|.
-name|cur_color
+name|SC_NORM_ATTR
+operator|<<
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
