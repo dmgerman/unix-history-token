@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vfsops.c	8.3 (Berkeley) 1/31/94  * $Id: cd9660_vfsops.c,v 1.6 1994/09/15 19:46:02 bde Exp $  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vfsops.c	8.3 (Berkeley) 1/31/94  * $Id: cd9660_vfsops.c,v 1.7 1994/09/21 03:46:34 wollman Exp $  */
 end_comment
 
 begin_include
@@ -216,12 +216,6 @@ name|iso_mnt
 modifier|*
 name|imp
 decl_stmt|;
-specifier|register
-name|struct
-name|fs
-modifier|*
-name|fs
-decl_stmt|;
 name|u_int
 name|size
 decl_stmt|;
@@ -313,6 +307,7 @@ name|ISOFSMNT_ROOT
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|iso_mountfs
@@ -326,6 +321,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|)
+operator|)
 condition|)
 block|{
 name|free
@@ -343,12 +339,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vfs_lock
 argument_list|(
 name|mp
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -591,6 +589,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -609,6 +608,7 @@ expr|struct
 name|iso_args
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -696,12 +696,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
 argument_list|(
 name|ndp
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -1010,26 +1012,10 @@ name|devvp
 operator|->
 name|v_rdev
 decl_stmt|;
-name|caddr_t
-name|base
-decl_stmt|,
-name|space
-decl_stmt|;
-name|int
-name|havepart
-init|=
-literal|0
-decl_stmt|,
-name|blks
-decl_stmt|;
 name|int
 name|error
 init|=
 name|EINVAL
-decl_stmt|,
-name|i
-decl_stmt|,
-name|size
 decl_stmt|;
 name|int
 name|needclose
@@ -1048,9 +1034,6 @@ name|MNT_RDONLY
 operator|)
 operator|!=
 literal|0
-decl_stmt|;
-name|int
-name|j
 decl_stmt|;
 name|int
 name|iso_bsize
@@ -1087,12 +1070,14 @@ return|;
 comment|/* 	 * Disallow multiple mounts of the same device. 	 * Disallow mounting of a device that is currently in use 	 * (except for root, which might share swap device for miniroot). 	 * Flush out any old buffers remaining from a previous use. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vfs_mountedon
 argument_list|(
 name|devvp
 argument_list|)
+operator|)
 condition|)
 return|return
 name|error
@@ -1115,6 +1100,7 @@ name|EBUSY
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vinvalbuf
@@ -1133,6 +1119,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -1141,6 +1128,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_OPEN
@@ -1159,6 +1147,7 @@ name|FSCRED
 argument_list|,
 name|p
 argument_list|)
+operator|)
 condition|)
 return|return
 name|error
@@ -1188,6 +1177,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -1208,6 +1198,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|out
@@ -1585,6 +1576,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -1621,6 +1613,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|out
@@ -1892,11 +1885,7 @@ modifier|*
 name|isomp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
-decl_stmt|,
-name|ronly
 decl_stmt|,
 name|flags
 init|=
@@ -1932,6 +1921,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vflush
@@ -1942,6 +1932,7 @@ name|NULLVP
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -2294,12 +2285,6 @@ name|struct
 name|iso_mnt
 modifier|*
 name|isomp
-decl_stmt|;
-specifier|register
-name|struct
-name|fs
-modifier|*
-name|fs
 decl_stmt|;
 name|isomp
 operator|=
@@ -2928,7 +2913,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fhtovp: file start miss %d vs %d\n"
+literal|"fhtovp: file start miss %d vs %ld\n"
 argument_list|,
 name|isonum_733
 argument_list|(
@@ -2994,6 +2979,7 @@ name|im_dev
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|iso_iget
@@ -3011,6 +2997,7 @@ name|nip
 argument_list|,
 name|dirp
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -3138,16 +3125,6 @@ name|struct
 name|ifid
 modifier|*
 name|ifhp
-decl_stmt|;
-specifier|register
-name|struct
-name|iso_mnt
-modifier|*
-name|mp
-init|=
-name|ip
-operator|->
-name|i_mnt
 decl_stmt|;
 name|ifhp
 operator|=
