@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.33 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.34 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.33 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.34 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,7 +1315,10 @@ name|infile
 operator|=
 name|fdopen
 argument_list|(
+name|dup
+argument_list|(
 name|s
+argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)

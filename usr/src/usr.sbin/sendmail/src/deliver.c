@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.32 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2114,6 +2114,20 @@ argument_list|(
 name|mfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rfile
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|rfile
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|endmailer
@@ -3418,6 +3432,11 @@ literal|"r"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|rfile
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|pmfile
 operator|=
