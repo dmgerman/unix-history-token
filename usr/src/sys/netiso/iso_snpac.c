@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.c	7.10 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.c	7.11 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -622,6 +628,8 @@ condition|)
 block|{
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: gateway route points to same type %x %x\n"
 argument_list|,
 name|recursing
@@ -767,6 +775,8 @@ name|sa_len
 condition|)
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: cloning address too small\n"
 argument_list|)
 expr_stmt|;
@@ -804,6 +814,8 @@ literal|0
 condition|)
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: can't find LL ifaddr for iface\n"
 argument_list|)
 expr_stmt|;
@@ -827,6 +839,8 @@ condition|)
 block|{
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: got non-link non-gateway route\n"
 argument_list|)
 expr_stmt|;
@@ -840,6 +854,8 @@ literal|0
 condition|)
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: losing old rt_llinfo\n"
 argument_list|)
 expr_stmt|;
@@ -876,6 +892,8 @@ condition|)
 block|{
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"llc_rtrequest: malloc failed\n"
 argument_list|)
 expr_stmt|;
@@ -1904,6 +1922,8 @@ condition|)
 block|{
 name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"snpac_add: cant make room for lladdr\n"
 argument_list|)
 expr_stmt|;
