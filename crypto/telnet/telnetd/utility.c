@@ -129,10 +129,6 @@ name|void
 name|ttloop
 parameter_list|()
 block|{
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 name|DIAG
 argument_list|(
 name|TD_REPORT
@@ -148,6 +144,8 @@ condition|(
 name|nfrontp
 operator|-
 name|nbackp
+operator|>
+literal|0
 condition|)
 block|{
 name|netflush
@@ -841,7 +839,7 @@ specifier|extern
 name|int
 name|not42
 decl_stmt|;
-if|if
+while|while
 condition|(
 operator|(
 name|n
@@ -854,15 +852,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|DIAG
-argument_list|(
-argument|TD_REPORT
-argument_list|,
-argument|{ 	    n += output_data(
-literal|"td: netflush %d chars\r\n"
-argument|, n); 	}
-argument_list|)
-empty_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX This causes output_data() to recurse and die */
+block|DIAG(TD_REPORT, { 	    n += output_data("td: netflush %d chars\r\n", n); 	});
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
@@ -996,12 +992,12 @@ expr_stmt|;
 comment|/* URGENT data */
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|n
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -1014,12 +1010,13 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-return|return;
+continue|continue;
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|nbackp
 operator|+=
@@ -1076,6 +1073,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ENCRYPTION */
+block|}
 block|}
 return|return;
 block|}
