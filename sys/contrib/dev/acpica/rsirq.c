@@ -762,6 +762,18 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
+comment|/* Check for the minimum length. */
+if|if
+condition|(
+name|Temp16
+operator|<
+literal|6
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+argument_list|)
+expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
@@ -860,6 +872,25 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
+comment|/* Minimum number of IRQs is one. */
+if|if
+condition|(
+name|Temp8
+operator|<
+literal|1
+condition|)
+block|{
+operator|*
+name|BytesConsumed
+operator|=
+literal|0
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+argument_list|)
+expr_stmt|;
+block|}
 name|OutputStruct
 operator|->
 name|Data
@@ -946,6 +977,8 @@ literal|4
 operator|)
 operator|+
 literal|5
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* Dereference the Index */
