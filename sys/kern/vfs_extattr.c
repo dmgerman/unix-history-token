@@ -8633,7 +8633,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 'vattr.va_size' is always>= 0 */
 if|if
 condition|(
 name|noneg

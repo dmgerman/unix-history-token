@@ -374,6 +374,8 @@ name|off_t
 name|start
 decl_stmt|,
 name|end
+decl_stmt|,
+name|oadd
 decl_stmt|;
 name|int
 name|error
@@ -403,7 +405,6 @@ break|break;
 case|case
 name|SEEK_END
 case|:
-comment|/* 'size' is always>= 0 */
 if|if
 condition|(
 operator|(
@@ -530,16 +531,14 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|off_t
 name|oadd
-init|=
+operator|=
 name|fl
 operator|->
 name|l_len
 operator|-
 literal|1
-decl_stmt|;
-comment|/* 'oadd' and 'start' are>= 0 */
+expr_stmt|;
 if|if
 condition|(
 name|oadd
