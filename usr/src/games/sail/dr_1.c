@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.1 83/10/31"
+literal|"@(#)dr_1.c	2.2 83/11/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,11 @@ init|;
 condition|;
 control|)
 block|{
+name|sleep
+argument_list|(
+literal|7
+argument_list|)
+expr_stmt|;
 name|Sync
 argument_list|()
 expr_stmt|;
@@ -331,7 +336,6 @@ expr_stmt|;
 name|moveall
 argument_list|()
 expr_stmt|;
-comment|/* 		readpos(); 		*/
 name|thinkofgrapples
 argument_list|()
 expr_stmt|;
@@ -341,7 +345,6 @@ expr_stmt|;
 name|compcombat
 argument_list|()
 expr_stmt|;
-comment|/* 		readpos(); 		*/
 name|resolve
 argument_list|()
 expr_stmt|;
@@ -353,11 +356,6 @@ argument_list|()
 expr_stmt|;
 name|Sync
 argument_list|()
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|7
-argument_list|)
 expr_stmt|;
 block|}
 block|}
