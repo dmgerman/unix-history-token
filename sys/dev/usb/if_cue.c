@@ -461,10 +461,12 @@ end_function_decl
 
 begin_function_decl
 name|Static
-name|u_int32_t
-name|cue_crc
+name|uint32_t
+name|cue_mchash
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1489,21 +1491,25 @@ end_define
 
 begin_function
 name|Static
-name|u_int32_t
-name|cue_crc
+name|uint32_t
+name|cue_mchash
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
+name|crc
+decl_stmt|;
+name|int
 name|idx
 decl_stmt|,
 name|bit
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|data
-decl_stmt|,
-name|crc
 decl_stmt|;
 comment|/* Compute CRC for the address value. */
 name|crc
@@ -1746,7 +1752,7 @@ condition|)
 continue|continue;
 name|h
 operator|=
-name|cue_crc
+name|cue_mchash
 argument_list|(
 name|LLADDR
 argument_list|(
@@ -1796,7 +1802,7 @@ operator|>=
 literal|500000
 name|h
 operator|=
-name|cue_crc
+name|cue_mchash
 argument_list|(
 name|ifp
 operator|->
@@ -1807,7 +1813,7 @@ else|#
 directive|else
 name|h
 operator|=
-name|cue_crc
+name|cue_mchash
 argument_list|(
 name|etherbroadcastaddr
 argument_list|)

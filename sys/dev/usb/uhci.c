@@ -3763,6 +3763,27 @@ name|sc_suspend
 operator|=
 name|why
 expr_stmt|;
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_INTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable interrupts */
+name|uhci_globalreset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* reset the controller */
+name|uhci_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cmd
