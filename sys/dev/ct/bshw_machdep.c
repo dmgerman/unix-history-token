@@ -231,7 +231,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/wd33c93.h>
+file|<dev/ic/wd33c93reg.h>
 end_include
 
 begin_include
