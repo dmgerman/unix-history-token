@@ -5413,12 +5413,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 					 * XXX: BINDV6ONLY should be integrated 					 * into V6ONLY. 					 */
-name|OPTSET
-argument_list|(
-name|IN6P_BINDV6ONLY
-argument_list|)
-expr_stmt|;
 name|OPTSET
 argument_list|(
 name|IN6P_IPV6_V6ONLY
@@ -6100,12 +6094,11 @@ break|break;
 case|case
 name|IPV6_V6ONLY
 case|:
-comment|/* XXX: see the setopt case. */
 name|optval
 operator|=
 name|OPTBIT
 argument_list|(
-name|IN6P_BINDV6ONLY
+name|IN6P_IPV6_V6ONLY
 argument_list|)
 expr_stmt|;
 break|break;
