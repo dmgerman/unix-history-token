@@ -2291,20 +2291,6 @@ name|p
 operator|->
 name|p_runtime
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-if|if
-condition|(
-name|p
-operator|->
-name|p_oncpu
-operator|!=
-literal|0xff
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|p
@@ -2312,8 +2298,6 @@ operator|==
 name|curproc
 condition|)
 block|{
-endif|#
-directive|endif
 comment|/* 		 * Adjust for the current time slice.  This is actually fairly 		 * important since the error here is on the order of a time 		 * quantum, which is much greater than the sampling error. 		 */
 name|microuptime
 argument_list|(
@@ -2712,9 +2696,15 @@ literal|1000000
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|_SYS_SYSPROTO_H_
+end_ifndef
+
+begin_struct
 struct|struct
 name|getrusage_args
 block|{
@@ -2728,9 +2718,18 @@ name|rusage
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 name|int
 name|getrusage
 parameter_list|(
@@ -2839,6 +2838,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ruadd
 parameter_list|(
@@ -2855,6 +2857,9 @@ decl_stmt|,
 decl|*
 name|ru2
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 specifier|register
 name|long
@@ -2956,7 +2961,13 @@ name|ip2
 operator|++
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Make a copy of the plimit structure.  * We share these structures copy-on-write after fork,  * and copy when a limit is changed.  */
+end_comment
+
+begin_function
 name|struct
 name|plimit
 modifier|*
