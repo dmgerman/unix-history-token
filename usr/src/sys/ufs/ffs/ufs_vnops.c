@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4597,6 +4597,13 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+name|vput
+argument_list|(
+name|ndp
+operator|->
+name|ni_dvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5159,9 +5166,46 @@ argument_list|,
 name|tndp
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|doingdirectory
+operator|&&
+name|newparent
+condition|)
+block|{
+name|dp
+operator|->
+name|i_nlink
+operator|--
+expr_stmt|;
+name|dp
+operator|->
+name|i_flag
+operator||=
+name|ICHG
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|iupdat
+argument_list|(
+name|dp
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
-name|out
+name|bad
 goto|;
+block|}
 block|}
 else|else
 block|{
@@ -6151,6 +6195,8 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
+if|if
+condition|(
 name|error
 operator|=
 name|iupdat
@@ -6165,7 +6211,10 @@ name|time
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|bad
+goto|;
 comment|/* 	 * Initialize directory with "." 	 * and ".." from static template. 	 */
 name|dirtemplate
 operator|=
@@ -6285,6 +6334,8 @@ name|ICHG
 expr_stmt|;
 block|}
 comment|/* 	 * Directory all set up, now 	 * install the entry for it in 	 * the parent directory. 	 */
+if|if
+condition|(
 name|error
 operator|=
 name|direnter
@@ -6293,14 +6344,6 @@ name|ip
 argument_list|,
 name|ndp
 argument_list|)
-expr_stmt|;
-name|dp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 block|{
 name|ndp
@@ -6320,6 +6363,8 @@ name|ni_nameiop
 operator||=
 name|LOOKUP
 operator||
+name|LOCKLEAF
+operator||
 name|NOCACHE
 expr_stmt|;
 name|error
@@ -6335,6 +6380,11 @@ operator|!
 name|error
 condition|)
 block|{
+name|iput
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 name|VTOI
@@ -6393,10 +6443,6 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dp
-condition|)
 name|iput
 argument_list|(
 name|dp
@@ -8605,15 +8651,14 @@ argument_list|,
 name|ndp
 argument_list|)
 condition|)
-block|{
-name|pdir
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
+name|iput
+argument_list|(
+name|pdir
+argument_list|)
+expr_stmt|;
 operator|*
 name|ipp
 operator|=
@@ -8627,10 +8672,6 @@ return|;
 name|bad
 label|:
 comment|/* 	 * Write error occurred trying to update the inode 	 * or the directory so must deallocate the inode. 	 */
-if|if
-condition|(
-name|pdir
-condition|)
 name|iput
 argument_list|(
 name|pdir
