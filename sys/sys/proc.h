@@ -796,6 +796,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_INTERRUPT
+value|0x002000
+end_define
+
+begin_comment
+comment|/* Thread is marked as interrupted. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_DEADLKTREAT
 value|0x800000
 end_define
