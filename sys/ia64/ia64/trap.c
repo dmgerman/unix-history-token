@@ -317,24 +317,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-specifier|extern
-name|int
-name|unaligned_fixup
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|framep
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|break_syscall
