@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_commondata.c,v 1.1 1994/08/07 18:36:01 wollman Exp $"
+literal|"$Id: rpc_commondata.c,v 1.2 1995/05/30 05:41:29 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,37 +54,20 @@ name|_null_auth
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FD_SETSIZE
-end_ifdef
-
 begin_decl_stmt
 name|fd_set
 name|svc_fdset
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
-name|svc_fds
+name|svc_maxfd
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* def FD_SETSIZE */
-end_comment
 
 begin_decl_stmt
 name|struct
