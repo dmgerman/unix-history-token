@@ -711,9 +711,17 @@ name|elf_cpu_load_file
 parameter_list|(
 name|linker_file_t
 name|lf
-name|__unused
 parameter_list|)
 block|{
+comment|/* Only sync the cache for non-kernel modules */
+if|if
+condition|(
+name|lf
+operator|->
+name|id
+operator|!=
+literal|1
+condition|)
 name|__syncicache
 argument_list|(
 name|lf
