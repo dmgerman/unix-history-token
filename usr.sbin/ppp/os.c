@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.3.4.2 1996/06/03 21:39:23 gpalmer Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.3.4.3 1996/11/04 14:47:09 scrappy Exp $  *  */
 end_comment
 
 begin_include
@@ -1319,9 +1319,14 @@ name|unit
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|devname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|devname
+argument_list|)
 argument_list|,
 literal|"/dev/tun%d"
 argument_list|,
@@ -1408,13 +1413,17 @@ operator|=
 name|unit
 expr_stmt|;
 comment|/*    * At first, name the interface.    */
-name|strcpy
+name|strncpy
 argument_list|(
 name|ifname
 argument_list|,
 name|devname
 operator|+
 literal|5
+argument_list|,
+name|IFNAMSIZ
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1456,6 +1465,8 @@ argument_list|,
 name|ifname
 argument_list|,
 name|IFNAMSIZ
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -1467,6 +1478,8 @@ argument_list|,
 name|ifname
 argument_list|,
 name|IFNAMSIZ
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|s
