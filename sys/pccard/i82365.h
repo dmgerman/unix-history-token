@@ -1018,7 +1018,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/*  * For the Address Window Enable Register (PCIC_ADDRWINE)  * The lower 6 bits contain enable bits for the memory  * windows (LSB = memory window 0).  */
+comment|/*  * For the Address Window Enable Register (PCIC_ADDRWINE)  * The lower 5 bits contain enable bits for the memory  * windows (LSB = memory window 0).  */
 end_comment
 
 begin_define
