@@ -515,7 +515,7 @@ if|if
 condition|(
 operator|(
 name|pt
-operator|==
+operator|=
 name|pfind
 argument_list|(
 name|uap
