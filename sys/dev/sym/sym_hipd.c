@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-0.9.0-19991024"
+value|"sym-0.10.0-19991111"
 end_define
 
 begin_include
@@ -319,7 +319,30 @@ file|<pci/sym_defs.h>
 end_include
 
 begin_comment
-comment|/*  *  On x86 architecture, write buffers management does not   *  reorder writes to memory. So, preventing compiler from    *  optimizing the code is enough to guarantee some ordering   *  when the CPU is writing data accessed by the PCI chip.  *  On Alpha architecture, explicit barriers are to be used.  *  By the way, the *BSD semantic associates the barrier   *  with some window on the BUS and the corresponding verbs   *  are for now unused. What a strangeness. The driver must   *  ensure that accesses from the CPU to the start and done   *  queues are not reordered by either the compiler or the   *  CPU and uses 'volatile' for this purpose.  *  -> Only x86 architecture is supported, for now.  */
+comment|/*  *  On x86 architecture, write buffers management does not   *  reorder writes to memory. So, preventing compiler from    *  optimizing the code is enough to guarantee some ordering   *  when the CPU is writing data accessed by the PCI chip.  *  On Alpha architecture, explicit barriers are to be used.  *  By the way, the *BSD semantic associates the barrier   *  with some window on the BUS and the corresponding verbs   *  are for now unused. What a strangeness. The driver must   *  ensure that accesses from the CPU to the start and done   *  queues are not reordered by either the compiler or the   *  CPU and uses 'volatile' for this purpose.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|alpha_mb()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*__i386__*/
 end_comment
 
 begin_define
@@ -329,6 +352,11 @@ name|MEMORY_BARRIER
 parameter_list|()
 value|do { ; } while(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  A la VMS/CAM-3 queue management.  */
@@ -1232,7 +1260,32 @@ value|(np->verbose)
 end_define
 
 begin_comment
-comment|/*  *  Virtual to bus address translation.  *  Only x86 supported.  */
+comment|/*  *  Virtual to bus address translation.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|vtobus
+parameter_list|(
+name|p
+parameter_list|)
+value|alpha_XXX_dmamap((vm_offset_t)(p))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*__i386__*/
 end_comment
 
 begin_define
@@ -1245,8 +1298,42 @@ parameter_list|)
 value|vtophys(p)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *  Copy from main memory to PCI memory space.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|memcpy_to_pci
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|memcpy_toio((u32)(d), (void *)(s), (n))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*__i386__*/
 end_comment
 
 begin_define
@@ -1262,6 +1349,11 @@ name|n
 parameter_list|)
 value|bcopy((s), (void *)(d), (n))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Insert a delay in micro-seconds and milli-seconds.  */
@@ -2348,7 +2440,7 @@ value|(dw)
 end_define
 
 begin_comment
-comment|/*  *  Access to the controller chip.  *  *  If SYMCONF_IOMAPPED is defined, the driver will use   *  normal IOs instead of the MEMORY MAPPED IO method    *  recommended by PCI specifications.  *  For now, we only support flat memory model that should   *  limited support to x86 architecture.  */
+comment|/*  *  Access to the controller chip.  *  *  If SYMCONF_IOMAPPED is defined, the driver will use   *  normal IOs instead of the MEMORY MAPPED IO method    *  recommended by PCI specifications.  */
 end_comment
 
 begin_comment
@@ -2421,6 +2513,87 @@ parameter_list|)
 value|outl((p), cpu_to_scr(v))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|mmio_read8
+parameter_list|(
+name|a
+parameter_list|)
+value|readb(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mmio_read16
+parameter_list|(
+name|a
+parameter_list|)
+value|readw(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mmio_read32
+parameter_list|(
+name|a
+parameter_list|)
+value|readl(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mmio_write8
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|writeb(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mmio_write16
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|writew(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mmio_write32
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|writel(a, b)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*__i386__*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2486,6 +2659,11 @@ name|b
 parameter_list|)
 value|(*(volatile unsigned int *) (a)) = cpu_to_scr(b)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Normal IO  */
@@ -2563,7 +2741,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|io_write32(np->base_io + (o), (v))
+value|io_write32(np->io_port + (o), (v))
 end_define
 
 begin_else
@@ -36699,6 +36877,7 @@ operator|&
 name|io_port
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s: failed to map IO window\n"
@@ -37460,9 +37639,6 @@ name|pm1_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYM_OPT_LED0
 comment|/* 	 *  Still some for LED support. 	 */
 if|if
 condition|(
@@ -37537,8 +37713,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 *  Load SCNTL4 on reselection for the C10. 	 */
 if|if
 condition|(
@@ -38064,13 +38238,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Free everything that have been allocated for this device.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sym_pci_free
@@ -38502,13 +38670,7 @@ literal|"HCB"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Allocate CAM resources and register a bus to CAM.  */
-end_comment
-
-begin_function
 name|int
 name|sym_cam_attach
 parameter_list|(
@@ -38741,6 +38903,56 @@ name|path
 operator|=
 name|path
 expr_stmt|;
+comment|/* 	 *  Hmmm... This should be useful, but I donnot want to  	 *  know about. 	 */
+ifdef|#
+directive|ifdef
+name|__alpha__
+ifdef|#
+directive|ifdef
+name|FreeBSD_4_Bus
+name|alpha_register_pci_scsi
+argument_list|(
+name|pci_get_bus
+argument_list|(
+name|np
+operator|->
+name|device
+argument_list|)
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|np
+operator|->
+name|device
+argument_list|)
+argument_list|,
+name|np
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/*__i386__*/
+name|alpha_register_pci_scsi
+argument_list|(
+name|pci_tag
+operator|->
+name|bus
+argument_list|,
+name|pci_tag
+operator|->
+name|slot
+argument_list|,
+name|np
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
@@ -38792,13 +39004,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Free everything that deals with CAM.  */
-end_comment
-
-begin_function
 name|void
 name|sym_cam_free
 parameter_list|(
@@ -38878,17 +39084,8 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*============ OPTIONNAL NVRAM SUPPORT =================*/
-end_comment
-
-begin_comment
 comment|/*  *  Get host setup from NVRAM.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sym_nvram_setup_host
@@ -38995,60 +39192,42 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Get target setup from NVRAM.  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYMCONF_NVRAM_SUPPORT
-end_ifdef
-
-begin_function_decl
 specifier|static
 name|void
 name|sym_Symbios_setup_target
-parameter_list|(
+argument_list|(
 name|hcb_p
 name|np
-parameter_list|,
+argument_list|,
 name|int
 name|target
-parameter_list|,
+argument_list|,
 name|Symbios_nvram
-modifier|*
+operator|*
 name|nvram
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|sym_Tekram_setup_target
-parameter_list|(
+argument_list|(
 name|hcb_p
 name|np
-parameter_list|,
+argument_list|,
 name|int
 name|target
-parameter_list|,
+argument_list|,
 name|Tekram_nvram
-modifier|*
+operator|*
 name|nvram
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|void
 name|sym_nvram_setup_target
@@ -39117,19 +39296,10 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYMCONF_NVRAM_SUPPORT
-end_ifdef
-
-begin_comment
 comment|/*  *  Get target set-up from Symbios format NVRAM.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sym_Symbios_setup_target
@@ -39279,13 +39449,7 @@ operator||=
 name|SYM_SCAN_LUNS_DISABLED
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Get target set-up from Tekram format NVRAM.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sym_Tekram_setup_target
@@ -39434,19 +39598,10 @@ literal|0x0a
 expr_stmt|;
 comment|/* SCSI parity checking disabled */
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYMCONF_DEBUG_NVRAM
-end_ifdef
-
-begin_comment
 comment|/*  *  Dump Symbios format NVRAM for debugging purpose.  */
-end_comment
-
-begin_function
 name|void
 name|sym_display_Symbios_nvram
 parameter_list|(
@@ -39642,13 +39797,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Dump TEKRAM format NVRAM for debugging purpose.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|u_char
 name|Tekram_boot_delay
@@ -39673,9 +39822,6 @@ block|,
 literal|120
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|sym_display_Tekram_nvram
 parameter_list|(
@@ -40021,72 +40167,42 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYMCONF_DEBUG_NVRAM */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYMCONF_NVRAM_SUPPORT */
-end_comment
-
-begin_comment
 comment|/*  *  Try reading Symbios or Tekram NVRAM  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYMCONF_NVRAM_SUPPORT
-end_ifdef
-
-begin_function_decl
 specifier|static
 name|int
 name|sym_read_Symbios_nvram
-parameter_list|(
+argument_list|(
 name|hcb_p
 name|np
-parameter_list|,
+argument_list|,
 name|Symbios_nvram
-modifier|*
+operator|*
 name|nvram
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int
 name|sym_read_Tekram_nvram
-parameter_list|(
+argument_list|(
 name|hcb_p
 name|np
-parameter_list|,
+argument_list|,
 name|Tekram_nvram
-modifier|*
+operator|*
 name|nvram
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_function
 name|int
 name|sym_read_nvram
 parameter_list|(
@@ -40173,51 +40289,27 @@ operator|->
 name|type
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYMCONF_NVRAM_SUPPORT
-end_ifdef
-
-begin_comment
 comment|/*  *  24C16 EEPROM reading.  *  *  GPOI0 - data in/data out  *  GPIO1 - clock  *  Symbios NVRAM wiring now also used by Tekram.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SET_BIT
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|CLR_BIT
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|SET_CLK
 value|2
-end_define
-
-begin_define
 define|#
 directive|define
 name|CLR_CLK
 value|3
-end_define
-
-begin_comment
 comment|/*  *  Set/clear data/clock bit in GPIO0  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_set_bit
@@ -40297,13 +40389,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Send START condition to NVRAM to wake it up.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_start
@@ -40361,13 +40447,7 @@ name|CLR_CLK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Send STOP condition to NVRAM - puts NVRAM to sleep... ZZzzzz!!  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_stop
@@ -40403,13 +40483,7 @@ name|SET_BIT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Read or write a bit to the NVRAM,  *  read if GPIO0 input else write if GPIO0 output  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_do_bit
@@ -40486,13 +40560,7 @@ name|CLR_BIT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Output an ACK to the NVRAM after reading,  *  change GPIO0 to output and when done back to an input  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_write_ack
@@ -40542,13 +40610,7 @@ name|gpcntl
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Input an ACK from NVRAM after writing,  *  change GPIO0 to input and when done back to an output  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_read_ack
@@ -40599,13 +40661,7 @@ name|gpcntl
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  WRITE a byte to the NVRAM and then get an ACK to see it was accepted OK,  *  GPIO0 must already be set as an output  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_write_byte
@@ -40678,13 +40734,7 @@ name|gpcntl
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  READ a byte from the NVRAM and then send an ACK to say we have got it,  *  GPIO0 must already be set as an input  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|S24C16_read_byte
@@ -40775,13 +40825,7 @@ name|gpcntl
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Read 'len' bytes starting at 'offset'.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sym_read_S24C16_nvram
@@ -41115,41 +41159,23 @@ return|return
 name|retv
 return|;
 block|}
-end_function
-
-begin_undef
 undef|#
 directive|undef
 name|SET_BIT
 name|0
-end_undef
-
-begin_undef
 undef|#
 directive|undef
 name|CLR_BIT
 name|1
-end_undef
-
-begin_undef
 undef|#
 directive|undef
 name|SET_CLK
 name|2
-end_undef
-
-begin_undef
 undef|#
 directive|undef
 name|CLR_CLK
 name|3
-end_undef
-
-begin_comment
 comment|/*  *  Try reading Symbios NVRAM.  *  Return 0 if OK.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sym_read_Symbios_nvram
@@ -41298,17 +41324,8 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  93C46 EEPROM reading.  *  *  GPOI0 - data in  *  GPIO1 - data out  *  GPIO2 - clock  *  GPIO4 - chip select  *  *  Used by Tekram.  */
-end_comment
-
-begin_comment
 comment|/*  *  Pulse clock bit in GPIO0  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Clk
@@ -41345,13 +41362,7 @@ name|gpreg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*   *  Read bit from NVRAM  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Read_Bit
@@ -41389,13 +41400,7 @@ name|nc_gpreg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Write bit to GPIO0  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Write_Bit
@@ -41454,13 +41459,7 @@ name|gpreg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Send STOP condition to NVRAM - puts NVRAM to sleep... ZZZzzz!!  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Stop
@@ -41499,13 +41498,7 @@ name|gpreg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Send read command and address to NVRAM  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Send_Command
@@ -41571,13 +41564,7 @@ name|nc_gpreg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  READ 2 bytes from the NVRAM  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|T93C46_Read_Word
@@ -41665,13 +41652,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Read Tekram NvRAM data.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|T93C46_Read_Data
@@ -41761,13 +41742,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Try reading 93C46 Tekram NVRAM.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sym_read_T93C46_nvram
@@ -41888,13 +41863,7 @@ return|return
 name|retv
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Try reading Tekram NVRAM.  *  Return 0 if OK.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sym_read_Tekram_nvram
