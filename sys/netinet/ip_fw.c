@@ -336,6 +336,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|u_int64_t
+name|counter
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* counter for ipfw_report(NULL...) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1644,10 +1655,6 @@ condition|(
 name|ip
 condition|)
 block|{
-specifier|static
-name|u_int64_t
-name|counter
-decl_stmt|;
 name|struct
 name|tcphdr
 modifier|*
@@ -5767,6 +5774,10 @@ name|s
 operator|=
 name|splnet
 argument_list|()
+expr_stmt|;
+name|counter
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
