@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.17 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -455,7 +461,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %lu:"
+literal|"bad size %qu:"
 argument_list|,
 name|dp
 operator|->
@@ -542,7 +548,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %lu ndb %d:"
+literal|"bad size %qu ndb %d:"
 argument_list|,
 name|dp
 operator|->

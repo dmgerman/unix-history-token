@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.20 (Berkeley) %G%"
+literal|"@(#)inode.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -465,6 +471,12 @@ name|daddr_t
 modifier|*
 name|aplim
 decl_stmt|;
+specifier|register
+name|struct
+name|bufarea
+modifier|*
+name|bp
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -477,14 +489,9 @@ argument_list|)
 argument_list|()
 decl_stmt|,
 name|nif
-decl_stmt|,
-name|sizepb
 decl_stmt|;
-specifier|register
-name|struct
-name|bufarea
-modifier|*
-name|bp
+name|quad_t
+name|sizepb
 decl_stmt|;
 name|char
 name|buf
@@ -2397,7 +2404,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SIZE=%lu "
+literal|"SIZE=%qu "
 argument_list|,
 name|dp
 operator|->
@@ -2412,6 +2419,8 @@ operator|&
 name|dp
 operator|->
 name|di_mtime
+operator|.
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2724,6 +2733,8 @@ operator|&
 name|dp
 operator|->
 name|di_atime
+operator|.
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|dp
