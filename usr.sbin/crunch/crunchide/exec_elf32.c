@@ -738,6 +738,19 @@ case|case
 name|EM_SPARCV9
 case|:
 break|break;
+ifndef|#
+directive|ifndef
+name|EM_X86_64
+define|#
+directive|define
+name|EM_X86_64
+value|62
+endif|#
+directive|endif
+case|case
+name|EM_X86_64
+case|:
+break|break;
 comment|/*        ELFDEFNNAME(MACHDEP_ID_CASES) */
 default|default:
 return|return
