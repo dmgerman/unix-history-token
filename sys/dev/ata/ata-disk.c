@@ -696,6 +696,14 @@ operator|->
 name|support
 operator|.
 name|address48
+operator|&&
+name|atadev
+operator|->
+name|param
+operator|->
+name|lba_size48
+operator|>
+literal|268435455
 condition|)
 name|adp
 operator|->
