@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.40 1999/01/21 08:29:04 dillon Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.41 1999/04/27 12:21:09 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2311,6 +2311,29 @@ return|return
 name|EAGAIN
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|shmflg
+operator|&
+operator|(
+name|IPC_CREAT
+operator||
+name|IPC_EXCL
+operator|)
+operator|)
+operator|==
+operator|(
+name|IPC_CREAT
+operator||
+name|IPC_EXCL
+operator|)
+condition|)
+return|return
+name|EEXIST
+return|;
 name|error
 operator|=
 name|ipcperm
@@ -2348,29 +2371,6 @@ name|shm_segsz
 condition|)
 return|return
 name|EINVAL
-return|;
-if|if
-condition|(
-operator|(
-name|uap
-operator|->
-name|shmflg
-operator|&
-operator|(
-name|IPC_CREAT
-operator||
-name|IPC_EXCL
-operator|)
-operator|)
-operator|==
-operator|(
-name|IPC_CREAT
-operator||
-name|IPC_EXCL
-operator|)
-condition|)
-return|return
-name|EEXIST
 return|;
 name|p
 operator|->
