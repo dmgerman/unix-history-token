@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -323,6 +323,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|TP_PM_MAX
+value|0xa
+end_define
+
+begin_comment
+comment|/* 10 decimal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IncStat
 parameter_list|(
 name|x
@@ -380,17 +391,6 @@ end_comment
 
 begin_comment
 comment|/* for perf measurement stuff: maximum window size it can handle */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TP_PM_MAX
-value|0xa
-end_define
-
-begin_comment
-comment|/* 10 decimal */
 end_comment
 
 begin_struct
@@ -529,6 +529,12 @@ else|#
 directive|else
 end_else
 
+begin_decl_stmt
+name|int
+name|PStat_Junk
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -538,11 +544,8 @@ name|tpcb
 parameter_list|,
 name|x
 parameter_list|)
+value|PStat_Junk
 end_define
-
-begin_comment
-comment|/* no-op */
-end_comment
 
 begin_define
 define|#
@@ -559,42 +562,41 @@ begin_comment
 comment|/* no-op */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STAR
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|STAR
-value|*
+name|tpmeas
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|)
+value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|STAR
-end_endif
 
 begin_define
 define|#
 directive|define
 name|IFPERF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (0) {
 end_define
-
-begin_comment
-comment|//*beginning of comment*/STAR
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ENDPERF
-value|STAR
-comment|/*end of comment*/
-value|/
+value|}
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_output.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_output.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -49,18 +49,6 @@ begin_include
 include|#
 directive|include
 file|"protosw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
 end_include
 
 begin_include
@@ -127,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"tp_trace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
 end_include
 
 begin_define
@@ -1693,21 +1687,23 @@ name|TPOPT_INTERCEPT
 case|:
 if|if
 condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
-name|suser
-argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
-operator|&
-name|u
-operator|.
-name|u_acflag
-argument_list|)
-condition|)
+name|EPERM
+expr_stmt|;
 break|break;
+block|}
 elseif|else
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -26,12 +26,6 @@ define|#
 directive|define
 name|__TP_TRACE__
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TPPT
-end_ifdef
 
 begin_define
 define|#
@@ -395,65 +389,23 @@ name|tpt_size
 value|tpt_stuff.tpt_Time.tptv_size
 end_define
 
-begin_define
-define|#
-directive|define
-name|TPTRACEN
-value|300
-end_define
-
-begin_decl_stmt
-name|int
-name|tp_Tracen
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tp_Trace
-name|tp_Trace
-index|[
-name|TPTRACEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 endif|defined(TP_TRACEFILE)||!defined(KERNEL)
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|tp_traceflags
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TPPT
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|IFTRACE
-parameter_list|(
-name|ascii
-parameter_list|)
-define|\
-value|if(tp_traceflags[ascii]) {
-end_define
-
-begin_comment
-comment|/*   * for some reason lint complains about tp_param being undefined no  * matter where or how many times I define it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENDTRACE
-value|}
+name|TPTRACEN
+value|300
 end_define
 
 begin_define
@@ -506,6 +458,53 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tp_Trace
+name|tp_Trace
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|tp_traceflags
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tp_Tracen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IFTRACE
+parameter_list|(
+name|ascii
+parameter_list|)
+define|\
+value|if(tp_traceflags[ascii]) {
+end_define
+
+begin_comment
+comment|/*   * for some reason lint complains about tp_param being undefined no  * matter where or how many times I define it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENDTRACE
+value|}
+end_define
+
 begin_else
 else|#
 directive|else
@@ -516,24 +515,52 @@ begin_comment
 comment|/***********************************************  * NO TPPT TRACE STUFF  **********************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STAR
-end_ifndef
+begin_define
+define|#
+directive|define
+name|TPTRACEN
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
-name|STAR
-value|*
+name|tptrace
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|C
+parameter_list|,
+name|D
+parameter_list|,
+name|E
+parameter_list|,
+name|F
+parameter_list|)
+value|0
 end_define
 
-begin_endif
-endif|#
-directive|endif
-endif|STAR
-end_endif
+begin_define
+define|#
+directive|define
+name|tptraceTPCB
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|C
+parameter_list|,
+name|D
+parameter_list|,
+name|E
+parameter_list|,
+name|F
+parameter_list|)
+value|0
+end_define
 
 begin_define
 define|#
@@ -542,19 +569,14 @@ name|IFTRACE
 parameter_list|(
 name|ascii
 parameter_list|)
+value|if (0) {
 end_define
-
-begin_comment
-comment|//*beginning of comment*/STAR
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ENDTRACE
-value|STAR
-comment|/*end of comment*/
-value|/
+value|}
 end_define
 
 begin_endif

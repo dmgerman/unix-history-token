@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2617,6 +2617,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+define|#
+directive|define
+name|Buf
+value|((u_char *)buf)
 name|printf
 argument_list|(
 literal|"Dump buf 0x%x len 0x%x\n"
@@ -2675,16 +2679,14 @@ name|printf
 argument_list|(
 literal|"%x/%d\t"
 argument_list|,
-name|buf
+name|Buf
 index|[
 name|i
 operator|+
 name|j
 index|]
-operator|&
-literal|0xff
 argument_list|,
-name|buf
+name|Buf
 index|[
 name|i
 operator|+
@@ -2729,7 +2731,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|buf
+name|Buf
 index|[
 name|i
 operator|+
@@ -2742,7 +2744,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|buf
+name|Buf
 index|[
 name|i
 operator|+
@@ -2757,14 +2759,12 @@ name|printf
 argument_list|(
 literal|"%c"
 argument_list|,
-name|buf
+name|Buf
 index|[
 name|i
 operator|+
 name|j
 index|]
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 else|else

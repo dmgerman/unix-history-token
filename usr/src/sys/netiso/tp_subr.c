@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1404,11 +1404,22 @@ name|struct
 name|timeval
 name|send_start_time
 decl_stmt|;
+name|IFPERF
+argument_list|(
+argument|tpcb
+argument_list|)
+name|GET_CUR_TIME
+argument_list|(
+operator|&
+name|send_start_time
+argument_list|)
+expr_stmt|;
+name|ENDPERF
 endif|#
 directive|endif
 endif|TP_PERF_MEAS
 name|lowsave
-operator|=
+init|=
 name|lowseq
 operator|=
 name|SEQ
@@ -1421,7 +1432,7 @@ name|tp_sndhiwat
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|tpcb
@@ -1584,24 +1595,7 @@ begin_comment
 comment|/* don't send, don't change hiwat, don't set timers */
 end_comment
 
-begin_macro
-name|IFPERF
-argument_list|(
-argument|tpcb
-argument_list|)
-end_macro
-
 begin_expr_stmt
-name|GET_CUR_TIME
-argument_list|(
-operator|&
-name|send_start_time
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|ENDPERF
 name|ASSERT
 argument_list|(
 name|SEQ_LEQ
@@ -1613,8 +1607,8 @@ argument_list|,
 name|highseq
 argument_list|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SEQ_DEC
@@ -2088,6 +2082,12 @@ name|done
 label|:
 end_label
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TP_PERF_MEAS
+end_ifdef
+
 begin_macro
 name|IFPERF
 argument_list|(
@@ -2277,6 +2277,9 @@ end_block
 
 begin_decl_stmt
 name|ENDPERF
+endif|#
+directive|endif
+endif|TP_PERF_MEAS
 name|tpcb
 operator|->
 name|tp_sndhiwat

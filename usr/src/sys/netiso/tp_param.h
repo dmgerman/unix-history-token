@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1177,6 +1177,45 @@ include|#
 directive|include
 file|"tp_events.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|ATTR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ATTR
+parameter_list|(
+name|X
+parameter_list|)
+value|ev_union.EV_ ## X
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__STDC__) || defined(__cplusplus) */
+end_comment
 
 begin_endif
 endif|#
