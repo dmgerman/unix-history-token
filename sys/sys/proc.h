@@ -561,33 +561,29 @@ name|thread
 modifier|*
 name|td_standin
 decl_stmt|;
-comment|/* (*) Use this for an upcall. */
-name|u_int
-name|td_prticks
-decl_stmt|;
-comment|/* (*) Profclock hits in sys for user */
+comment|/* (k + a) Use this for an upcall. */
 name|struct
 name|kse_upcall
 modifier|*
 name|td_upcall
 decl_stmt|;
-comment|/* (*) Upcall structure. */
+comment|/* (k + j) Upcall structure. */
 name|u_int64_t
 name|td_sticks
 decl_stmt|;
-comment|/* (j) Statclock hits in system mode. */
+comment|/* (k) Statclock hits in system mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
-comment|/* (*) Statclock in user, for UTS. */
+comment|/* (k) Statclock in user, for UTS. */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* (*) Statclock in kernel, for UTS. */
+comment|/* (k) Statclock in kernel, for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
-comment|/* (*) Return value of TDF_INTERRUPT. */
+comment|/* (j) Return value of TDF_INTERRUPT. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
@@ -1761,11 +1757,11 @@ comment|/* (c) Completed thread mboxes. */
 name|int
 name|kg_nextupcall
 decl_stmt|;
-comment|/* (*) Next upcall time. */
+comment|/* (n) Next upcall time. */
 name|int
 name|kg_upquantum
 decl_stmt|;
-comment|/* (*) Quantum to schedule an upcall. */
+comment|/* (n) Quantum to schedule an upcall. */
 define|#
 directive|define
 name|kg_endzero
