@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|PATH_SSH_AGENT
-value|"__PREFIX__/bin/ssh-agent"
+value|"/usr/bin/ssh-agent"
 end_define
 
 begin_function
