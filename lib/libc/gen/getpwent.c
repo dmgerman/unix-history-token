@@ -2695,7 +2695,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|_pw_breakout_yp
 parameter_list|(
 name|struct
@@ -2871,6 +2871,10 @@ operator|)
 operator|&
 name|shell
 expr_stmt|;
+comment|/* 	 * XXX Sanity check: make sure all fields are valid (no NULLs). 	 * If we find a badly formatted entry, we punt. 	 */
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -2880,7 +2884,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* name */
 if|if
 condition|(
@@ -2918,6 +2928,9 @@ operator||=
 name|_PWF_NAME
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -2927,7 +2940,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* password */
 if|if
 condition|(
@@ -2954,6 +2973,9 @@ operator||=
 name|_PWF_PASSWD
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -2963,7 +2985,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* uid */
 if|if
 condition|(
@@ -2993,6 +3021,9 @@ operator||=
 name|_PWF_UID
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3002,7 +3033,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* gid */
 if|if
 condition|(
@@ -3037,6 +3074,9 @@ condition|(
 name|master
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3046,7 +3086,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* class */
 if|if
 condition|(
@@ -3073,6 +3119,9 @@ operator||=
 name|_PWF_CLASS
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3082,7 +3131,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* change */
 if|if
 condition|(
@@ -3112,6 +3167,9 @@ operator||=
 name|_PWF_CHANGE
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3121,7 +3179,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* expire */
 if|if
 condition|(
@@ -3152,6 +3216,9 @@ name|_PWF_EXPIRE
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3161,7 +3228,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* gecos */
 if|if
 condition|(
@@ -3188,6 +3261,9 @@ operator||=
 name|_PWF_GECOS
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3197,7 +3273,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* dir */
 if|if
 condition|(
@@ -3224,6 +3306,9 @@ operator||=
 name|_PWF_DIR
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -3233,7 +3318,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* shell */
 if|if
 condition|(
@@ -3260,6 +3351,9 @@ operator||=
 name|_PWF_SHELL
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3735,6 +3829,8 @@ name|result
 operator|=
 name|resultbuf
 expr_stmt|;
+return|return
+operator|(
 name|_pw_breakout_yp
 argument_list|(
 name|pw
@@ -3743,9 +3839,7 @@ name|resultbuf
 argument_list|,
 name|gotmaster
 argument_list|)
-expr_stmt|;
-return|return
-literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4213,6 +4307,8 @@ name|result
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+operator|(
 name|_pw_breakout_yp
 argument_list|(
 name|pw
@@ -4221,11 +4317,9 @@ name|resultbuf
 argument_list|,
 name|gotmaster
 argument_list|)
-expr_stmt|;
-block|}
-return|return
-literal|1
+operator|)
 return|;
+block|}
 block|}
 end_function
 
