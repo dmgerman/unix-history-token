@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -931,6 +925,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_expr_stmt
+specifier|static
+name|orphanpg
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Adjust pgrp jobc counters when specified process changes process group.  * We count the number of processes in each process group that "qualify"  * the group for terminal job control (those with a parent in a different  * process group of the same session).  If that count reaches zero, the  * process group becomes orphaned.  Check both the specified process'  * process group and that of its children.  * entering == 0 => p is leaving specified group.  * entering == 1 => p is entering specified group.  */
