@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fclose.c	5.2 (Berkeley) %G%"
+literal|"@(#)fclose.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,18 @@ name|_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* release this FILE for reuse */
+comment|/* Release this FILE for reuse. */
+name|fp
+operator|->
+name|_r
+operator|=
+name|fp
+operator|->
+name|_w
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Mess up if reaccessed. */
 return|return
 operator|(
 name|r
