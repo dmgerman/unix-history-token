@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.18 1995/07/25 22:18:55 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.19 1995/08/16 16:12:35 bde Exp $  */
 end_comment
 
 begin_include
@@ -217,7 +217,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_zereg.h>
+file|<i386/isa/if_edreg.h>
 end_include
 
 begin_include
@@ -1410,9 +1410,9 @@ operator|->
 name|smem_start
 operator|+
 operator|(
-name|ZE_PAGE_SIZE
+name|ED_PAGE_SIZE
 operator|*
-name|ZE_TXBUF_SIZE
+name|ED_TXBUF_SIZE
 operator|)
 expr_stmt|;
 name|sc
@@ -1425,7 +1425,7 @@ name|sc
 operator|->
 name|rec_page_start
 operator|=
-name|ZE_TXBUF_SIZE
+name|ED_TXBUF_SIZE
 operator|+
 name|ZE_PAGE_OFFSET
 expr_stmt|;
@@ -1451,7 +1451,7 @@ name|rec_page_stop
 operator|=
 name|memsize
 operator|/
-name|ZE_PAGE_SIZE
+name|ED_PAGE_SIZE
 operator|+
 name|ZE_PAGE_OFFSET
 expr_stmt|;
@@ -2118,30 +2118,6 @@ name|if_watchdog
 operator|=
 name|ze_watchdog
 expr_stmt|;
-comment|/* 	 * Set default state for IIF_LINK0 flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
-if|if
-condition|(
-name|isa_dev
-operator|->
-name|id_flags
-operator|&
-name|ZE_FLAGS_DISABLE_TRANCEIVER
-condition|)
-name|ifp
-operator|->
-name|if_flags
-operator|=
-operator|(
-name|IFF_BROADCAST
-operator||
-name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
-operator||
-name|IFF_LINK0
-operator|)
-expr_stmt|;
-else|else
 name|ifp
 operator|->
 name|if_flags
@@ -2267,7 +2243,7 @@ block|}
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
 argument_list|(
-literal|"ze%d: address %s, type %s (%dbit)%s, MAU %s\n"
+literal|"ze%d: address %s, type %s (%dbit), MAU %s\n"
 argument_list|,
 name|isa_dev
 operator|->
@@ -2289,18 +2265,6 @@ argument_list|,
 name|sc
 operator|->
 name|memwidth
-argument_list|,
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LINK0
-condition|?
-literal|" [tranceiver disabled]"
-else|:
-literal|""
-operator|)
 argument_list|,
 name|sc
 operator|->
@@ -2520,11 +2484,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STP
+name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks 	 *	to 'n' (about 5ms). It shouldn't even take 5us on modern 	 *	DS8390's, but just in case it's an old one. 	 */
@@ -2538,10 +2502,10 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_ISR
+name|ED_P0_ISR
 argument_list|)
 operator|&
-name|ZE_ISR_RST
+name|ED_ISR_RST
 operator|)
 operator|==
 literal|0
@@ -2620,7 +2584,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
 operator|(
 name|inb
@@ -2629,13 +2593,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|)
 operator|&
 literal|0x3f
 operator|)
 operator||
-name|ZE_CR_PAGE_0
+name|ED_CR_PAGE_0
 argument_list|)
 expr_stmt|;
 comment|/* read interrupt status register */
@@ -2647,7 +2611,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_ISR
+name|ED_P0_ISR
 argument_list|)
 operator|&
 literal|0xff
@@ -2659,7 +2623,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
 operator|(
 name|inb
@@ -2668,13 +2632,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|)
 operator|&
 literal|0x3f
 operator|)
 operator||
-name|ZE_CR_PAGE_2
+name|ED_CR_PAGE_2
 argument_list|)
 expr_stmt|;
 comment|/* read interrupt mask register */
@@ -2686,7 +2650,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P2_IMR
+name|ED_P2_IMR
 argument_list|)
 operator|&
 literal|0xff
@@ -2893,11 +2857,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STP
+name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 if|if
@@ -2916,11 +2880,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_DCR
+name|ED_P0_DCR
 argument_list|,
-name|ZE_DCR_FT1
+name|ED_DCR_FT1
 operator||
-name|ZE_DCR_WTS
+name|ED_DCR_WTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2933,9 +2897,9 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_DCR
+name|ED_P0_DCR
 argument_list|,
-name|ZE_DCR_FT1
+name|ED_DCR_FT1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2946,7 +2910,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RBCR0
+name|ED_P0_RBCR0
 argument_list|,
 literal|0
 argument_list|)
@@ -2957,7 +2921,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RBCR1
+name|ED_P0_RBCR1
 argument_list|,
 literal|0
 argument_list|)
@@ -2969,9 +2933,9 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RCR
+name|ED_P0_RCR
 argument_list|,
-name|ZE_RCR_AB
+name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Place NIC in internal loopback mode 	 */
@@ -2981,9 +2945,9 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TCR
+name|ED_P0_TCR
 argument_list|,
-name|ZE_TCR_LB0
+name|ED_TCR_LB0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize transmit/receive (ring-buffer) Page Start 	 */
@@ -2993,7 +2957,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TPSR
+name|ED_P0_TPSR
 argument_list|,
 name|sc
 operator|->
@@ -3006,7 +2970,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_PSTART
+name|ED_P0_PSTART
 argument_list|,
 name|sc
 operator|->
@@ -3020,7 +2984,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_PSTOP
+name|ED_P0_PSTOP
 argument_list|,
 name|sc
 operator|->
@@ -3033,7 +2997,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_BNRY
+name|ED_P0_BNRY
 argument_list|,
 name|sc
 operator|->
@@ -3047,7 +3011,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_ISR
+name|ED_P0_ISR
 argument_list|,
 literal|0xff
 argument_list|)
@@ -3059,17 +3023,17 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_IMR
+name|ED_P0_IMR
 argument_list|,
-name|ZE_IMR_PRXE
+name|ED_IMR_PRXE
 operator||
-name|ZE_IMR_PTXE
+name|ED_IMR_PTXE
 operator||
-name|ZE_IMR_RXEE
+name|ED_IMR_RXEE
 operator||
-name|ZE_IMR_TXEE
+name|ED_IMR_TXEE
 operator||
-name|ZE_IMR_OVWE
+name|ED_IMR_OVWE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Program Command Register for page 1 	 */
@@ -3079,13 +3043,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_PAGE_1
+name|ED_CR_PAGE_1
 operator||
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STP
+name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy out our station address 	 */
@@ -3108,7 +3072,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P1_PAR0
+name|ED_P1_PAR0
 operator|+
 name|i
 argument_list|,
@@ -3147,7 +3111,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P1_MAR0
+name|ED_P1_MAR0
 operator|+
 name|i
 argument_list|,
@@ -3163,7 +3127,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P1_CURR
+name|ED_P1_CURR
 argument_list|,
 name|sc
 operator|->
@@ -3177,11 +3141,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P1_CR
+name|ED_P1_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Take interface out of loopback 	 */
@@ -3191,7 +3155,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TCR
+name|ED_P0_TCR
 argument_list|,
 literal|0
 argument_list|)
@@ -3272,11 +3236,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set TX buffer start page 	 */
@@ -3286,7 +3250,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TPSR
+name|ED_P0_TPSR
 argument_list|,
 name|sc
 operator|->
@@ -3296,7 +3260,7 @@ name|sc
 operator|->
 name|txb_next
 operator|*
-name|ZE_TXBUF_SIZE
+name|ED_TXBUF_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set TX length 	 */
@@ -3306,7 +3270,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TBCR0
+name|ED_P0_TBCR0
 argument_list|,
 name|len
 operator|&
@@ -3319,7 +3283,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TBCR1
+name|ED_P0_TBCR1
 argument_list|,
 name|len
 operator|>>
@@ -3333,13 +3297,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_TXP
+name|ED_CR_TXP
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3519,9 +3483,9 @@ name|sc
 operator|->
 name|txb_next
 operator|*
-name|ZE_TXBUF_SIZE
+name|ED_TXBUF_SIZE
 operator|*
-name|ZE_PAGE_SIZE
+name|ED_PAGE_SIZE
 operator|)
 expr_stmt|;
 name|len
@@ -3706,7 +3670,7 @@ name|u_short
 name|len
 decl_stmt|;
 name|struct
-name|ze_ring
+name|ed_ring
 modifier|*
 name|packet_ptr
 decl_stmt|;
@@ -3717,13 +3681,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_PAGE_1
+name|ED_CR_PAGE_1
 operator||
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 'sc->next_packet' is the logical beginning of the ring-buffer - i.e. 	 *	it points to where new data has been buffered. The 'CURR' 	 *	(current) register points to the logical end of the ring-buffer 	 *	- i.e. it points to where additional new data will be added. 	 *	We loop here until the logical beginning equals the logical 	 *	end (or in other words, until the ring-buffer is empty). 	 */
@@ -3739,7 +3703,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P1_CURR
+name|ED_P1_CURR
 argument_list|)
 condition|)
 block|{
@@ -3748,7 +3712,7 @@ name|packet_ptr
 operator|=
 operator|(
 expr|struct
-name|ze_ring
+name|ed_ring
 operator|*
 operator|)
 operator|(
@@ -3766,7 +3730,7 @@ operator|->
 name|rec_page_start
 operator|)
 operator|*
-name|ZE_PAGE_SIZE
+name|ED_PAGE_SIZE
 operator|)
 expr_stmt|;
 comment|/* 		 * The byte count includes the FCS - Frame Check Sequence (a 		 *	32 bit CRC). 		 */
@@ -3882,11 +3846,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 name|outb
@@ -3895,7 +3859,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_BNRY
+name|ED_P0_BNRY
 argument_list|,
 name|boundry
 argument_list|)
@@ -3907,13 +3871,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_PAGE_1
+name|ED_CR_PAGE_1
 operator||
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 block|}
@@ -3971,11 +3935,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * loop until there are no more new interrupts 	 */
@@ -3989,7 +3953,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_ISR
+name|ED_P0_ISR
 argument_list|)
 condition|)
 block|{
@@ -4000,7 +3964,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_ISR
+name|ED_P0_ISR
 argument_list|,
 name|isr
 argument_list|)
@@ -4010,7 +3974,7 @@ if|if
 condition|(
 name|isr
 operator|&
-name|ZE_ISR_TXE
+name|ED_ISR_TXE
 condition|)
 block|{
 name|u_char
@@ -4022,7 +3986,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TSR
+name|ED_P0_TSR
 argument_list|)
 decl_stmt|;
 name|u_char
@@ -4034,7 +3998,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_NCR
+name|ED_P0_NCR
 argument_list|)
 decl_stmt|;
 comment|/* 			 * Excessive collisions (16) 			 */
@@ -4043,7 +4007,7 @@ condition|(
 operator|(
 name|tsr
 operator|&
-name|ZE_TSR_ABT
+name|ED_TSR_ABT
 operator|)
 operator|&&
 operator|(
@@ -4121,7 +4085,7 @@ if|if
 condition|(
 name|isr
 operator|&
-name|ZE_ISR_RXE
+name|ED_ISR_RXE
 condition|)
 block|{
 operator|++
@@ -4148,7 +4112,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RSR
+name|ED_P0_RSR
 argument_list|)
 argument_list|,
 literal|"\20\8DEF\7REC DISAB\6PHY/MC\5MISSED\4OVR\3ALIGN\2FCS\1RCVD"
@@ -4162,7 +4126,7 @@ if|if
 condition|(
 name|isr
 operator|&
-name|ZE_ISR_OVW
+name|ED_ISR_OVW
 condition|)
 block|{
 operator|++
@@ -4186,7 +4150,7 @@ if|if
 condition|(
 name|isr
 operator|&
-name|ZE_ISR_PTX
+name|ED_ISR_PTX
 condition|)
 block|{
 comment|/* 			 * reset tx busy and output active flags 			 */
@@ -4243,7 +4207,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_TBCR0
+name|ED_P0_TBCR0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4253,9 +4217,9 @@ condition|(
 name|isr
 operator|&
 operator|(
-name|ZE_ISR_PRX
+name|ED_ISR_PRX
 operator||
-name|ZE_ISR_RXE
+name|ED_ISR_RXE
 operator|)
 condition|)
 block|{
@@ -4317,11 +4281,11 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CR
+name|ED_P0_CR
 argument_list|,
-name|ZE_CR_RD2
+name|ED_CR_RD2
 operator||
-name|ZE_CR_STA
+name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the Network Talley Counters overflow, read them to 		 *	reset them. It appears that old 8390's won't 		 *	clear the ISR flag otherwise - resulting in an 		 *	infinite loop. 		 */
@@ -4329,7 +4293,7 @@ if|if
 condition|(
 name|isr
 operator|&
-name|ZE_ISR_CNT
+name|ED_ISR_CNT
 condition|)
 block|{
 operator|(
@@ -4341,7 +4305,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CNTR0
+name|ED_P0_CNTR0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4353,7 +4317,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CNTR1
+name|ED_P0_CNTR1
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4365,7 +4329,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_CNTR2
+name|ED_P0_CNTR2
 argument_list|)
 expr_stmt|;
 block|}
@@ -4760,13 +4724,13 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RCR
+name|ED_P0_RCR
 argument_list|,
-name|ZE_RCR_PRO
+name|ED_RCR_PRO
 operator||
-name|ZE_RCR_AM
+name|ED_RCR_AM
 operator||
-name|ZE_RCR_AB
+name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
 block|}
@@ -4779,9 +4743,9 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ZE_P0_RCR
+name|ED_P0_RCR
 argument_list|,
-name|ZE_RCR_AB
+name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
 block|}
