@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	8.1 (Berkeley) %G%"
+literal|"@(#)job.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1376,6 +1376,21 @@ name|cmd
 operator|++
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|cmd
+argument_list|)
+condition|)
+name|cmd
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|shutUp
