@@ -731,7 +731,7 @@ begin_struct
 struct|struct
 name|em_dma_alloc
 block|{
-name|u_int32_t
+name|bus_addr_t
 name|dma_paddr
 decl_stmt|;
 name|caddr_t
