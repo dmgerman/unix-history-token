@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.31 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2374,10 +2374,14 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|mfile
+init|=
+name|NULL
 decl_stmt|;
 name|FILE
 modifier|*
 name|rfile
+init|=
+name|NULL
 decl_stmt|;
 specifier|extern
 name|FILE
@@ -4923,6 +4927,8 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|lockfp
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|queueup
