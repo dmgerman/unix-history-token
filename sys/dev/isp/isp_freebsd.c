@@ -19,6 +19,10 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_comment
+comment|/* for use by isp_prt below */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
