@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/kern/RCS/tty_pty.c,v 1.3 92/01/21 21:31:23 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty_pty.c,v 1.1.1.1 1993/06/12 14:57:31 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2761,10 +2761,6 @@ name|min
 argument_list|(
 name|cc
 argument_list|,
-name|TTYHOG
-operator|-
-literal|1
-operator|-
 name|RB_CONTIGPUT
 argument_list|(
 operator|&
