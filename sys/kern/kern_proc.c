@@ -1219,7 +1219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Locate a process by number  */
+comment|/*  * Locate a process by number; return only "live" processes -- i.e., neither  * zombies nor newly born but incompletely initialized processes.  By not  * returning processes in the PRS_NEW state, we allow callers to avoid  * testing for that condition to avoid dereferencing p_ucred, et al.  */
 end_comment
 
 begin_function
@@ -1264,6 +1264,21 @@ operator|==
 name|pid
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NEW
+condition|)
+block|{
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
 name|PROC_LOCK
 argument_list|(
 name|p
