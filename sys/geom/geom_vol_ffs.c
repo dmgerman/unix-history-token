@@ -242,6 +242,7 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+comment|/*  	 * XXX This is a really weak way to make sure we don't recurse. 	 * Probably ought to use BIO_GETATTR to check for this. 	 */
 if|if
 condition|(
 name|flags
@@ -460,6 +461,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* XXX We need to check for namespace conflicts. */
+comment|/* XXX How do you handle a mirror set? */
+comment|/* XXX We don't validate the volume name. */
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
