@@ -87,7 +87,7 @@ init|=
 block|{
 literal|"#ifndef lint"
 block|,
-literal|"static char yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";"
+literal|"static char const yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";"
 block|,
 literal|"#endif"
 block|,
@@ -102,6 +102,32 @@ block|,
 literal|"#define yyerrok (yyerrflag=0)"
 block|,
 literal|"#define YYRECOVERING (yyerrflag!=0)"
+block|,
+literal|"/* cfront 1.2 defines \"c_plusplus\" instead of \"__cplusplus\" */"
+block|,
+literal|"#ifdef c_plusplus"
+block|,
+literal|"#ifndef __cplusplus"
+block|,
+literal|"#define __cplusplus"
+block|,
+literal|"#endif"
+block|,
+literal|"#endif"
+block|,
+literal|"#ifdef __cplusplus"
+block|,
+literal|"extern \"C\" { char *getenv(const char *); }"
+block|,
+literal|"#else"
+block|,
+literal|"extern char *getenv();"
+block|,
+literal|"extern int yylex();"
+block|,
+literal|"extern int yyparse();"
+block|,
+literal|"#endif"
 block|,
 literal|0
 block|}
@@ -217,28 +243,6 @@ literal|"#define YYACCEPT goto yyaccept"
 block|,
 literal|"#define YYERROR goto yyerrlab"
 block|,
-literal|"/* cfront 1.2 defines \"c_plusplus\" instead of \"__cplusplus\" */"
-block|,
-literal|"#ifdef c_plusplus"
-block|,
-literal|"#ifndef __cplusplus"
-block|,
-literal|"#define __cplusplus"
-block|,
-literal|"#endif"
-block|,
-literal|"#endif"
-block|,
-literal|"#ifdef __cplusplus"
-block|,
-literal|"extern \"C\" { char *getenv(const char *); }"
-block|,
-literal|"#else"
-block|,
-literal|"extern char *getenv();"
-block|,
-literal|"#endif"
-block|,
 literal|""
 block|,
 literal|"int"
@@ -255,7 +259,7 @@ literal|"    register char *yys;"
 block|,
 literal|""
 block|,
-literal|"    if (yys = getenv(\"YYDEBUG\"))"
+literal|"    if ((yys = getenv(\"YYDEBUG\")))"
 block|,
 literal|"    {"
 block|,
@@ -369,7 +373,7 @@ literal|"    }"
 block|,
 literal|"    if (yyerrflag) goto yyinrecovery;"
 block|,
-literal|"#ifdef lint"
+literal|"#if defined(lint) || defined(__GNUC__)"
 block|,
 literal|"    goto yynewerror;"
 block|,
@@ -379,7 +383,7 @@ literal|"yynewerror:"
 block|,
 literal|"    yyerror(\"syntax error\");"
 block|,
-literal|"#ifdef lint"
+literal|"#if defined(lint) || defined(__GNUC__)"
 block|,
 literal|"    goto yyerrlab;"
 block|,
