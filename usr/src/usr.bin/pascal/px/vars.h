@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.4 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.5 %G%"; */
 end_comment
 
 begin_include
@@ -279,8 +279,22 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * stack routines  */
+comment|/*  * stack routines and structures  */
 end_comment
+
+begin_struct
+struct|struct
+name|sze8
+block|{
+name|char
+name|element
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 specifier|extern
@@ -302,6 +316,15 @@ begin_function_decl
 specifier|extern
 name|double
 name|pop8
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|sze8
+name|popsze8
 parameter_list|()
 function_decl|;
 end_function_decl
