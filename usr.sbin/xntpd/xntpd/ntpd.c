@@ -548,6 +548,11 @@ name|defined
 argument_list|(
 name|BSD19906
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_44BSD
+argument_list|)
 name|daemon
 argument_list|(
 literal|0

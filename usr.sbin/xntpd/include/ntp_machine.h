@@ -1260,6 +1260,23 @@ directive|ifdef
 name|SYS_FREEBSD
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNALED_IO
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SIGNALED_IO
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
