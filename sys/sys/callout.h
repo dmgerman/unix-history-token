@@ -286,6 +286,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|callout_stop
+parameter_list|(
+name|c
+parameter_list|)
+value|_callout_stop_safe(c, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_drain
+parameter_list|(
+name|c
+parameter_list|)
+value|_callout_stop_safe(c, 1)
+end_define
+
+begin_function_decl
+name|int
+name|_callout_stop_safe
+parameter_list|(
+name|struct
+name|callout
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
