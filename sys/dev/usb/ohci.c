@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.intel.com/design/usb/ohci11d.pdf  * USB spec: http://www.teleport.com/cgi-bin/mailmerge.cgi/~usb/cgiform.tpl  */
+comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: ftp://ftp.compaq.com/pub/supportinformation/papers/hcir1_0a.exe  * USB spec: http://www.usb.org/developers/data/usb11.pdf  */
 end_comment
 
 begin_include
@@ -98,11 +98,14 @@ directive|include
 file|<sys/select.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
