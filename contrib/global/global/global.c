@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regex.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -82,6 +100,7 @@ name|outfilter
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1368,6 +1387,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|locatestring
@@ -1378,6 +1398,9 @@ literal|":"
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|p
@@ -1580,7 +1603,9 @@ begin_function
 name|char
 modifier|*
 name|outfilter
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -2066,8 +2091,12 @@ name|buffer
 decl_stmt|;
 name|int
 name|line
+init|=
+literal|0
 decl_stmt|,
 name|tagline
+init|=
+literal|0
 decl_stmt|;
 name|FILE
 modifier|*
@@ -2203,6 +2232,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ip
 operator|=
 name|fopen
@@ -2211,6 +2241,9 @@ name|path
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|opened
@@ -2426,11 +2459,15 @@ name|c
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2497,9 +2534,6 @@ name|pattern
 decl_stmt|;
 block|{
 name|FILE
-modifier|*
-name|ip
-decl_stmt|,
 modifier|*
 name|op
 decl_stmt|,
@@ -2658,12 +2692,16 @@ control|(
 name|findopen
 argument_list|()
 init|;
+operator|(
 name|path
 operator|=
 name|findread
 argument_list|(
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 block|{
@@ -2694,6 +2732,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|buffer
 operator|=
 name|mgets
@@ -2704,6 +2743,9 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|linenum
@@ -3004,9 +3046,6 @@ name|char
 operator|*
 operator|)
 literal|0
-decl_stmt|;
-name|int
-name|presize
 decl_stmt|;
 if|if
 condition|(
@@ -3328,6 +3367,7 @@ name|buf
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
@@ -3337,6 +3377,9 @@ operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

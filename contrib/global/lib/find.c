@@ -149,13 +149,8 @@ name|path
 decl_stmt|;
 block|{
 name|char
-name|c
-decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|;
 if|if
 condition|(
@@ -253,7 +248,9 @@ end_function
 begin_function
 name|void
 name|findopen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|edit
@@ -676,7 +673,9 @@ end_function
 begin_function
 name|void
 name|findclose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pclose
 argument_list|(

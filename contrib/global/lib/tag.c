@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dbio.h"
 end_include
 
@@ -24,13 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tag.h"
+file|"locatestring.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"locatestring.h"
+file|"tab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tag.h"
 end_include
 
 begin_decl_stmt
@@ -223,7 +241,9 @@ end_function
 begin_function
 name|void
 name|tagclose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|db_close
 argument_list|(

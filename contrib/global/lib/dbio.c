@@ -6,13 +6,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -25,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"die.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"test.h"
 end_include
 
 begin_decl_stmt
