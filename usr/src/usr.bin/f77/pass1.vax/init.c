@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	5.2 (Berkeley) %G%"
+literal|"@(#)init.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ftnint
 name|lowbss
 init|=
 literal|0
@@ -602,7 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ftnint
 name|highbss
 init|=
 literal|0
