@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac.h	4.2	82/12/24	*/
+comment|/*	mac.h	4.3	87/10/26	*/
 end_comment
 
 begin_empty
@@ -316,18 +316,6 @@ define|#
 directive|define
 name|COLON
 value|':'
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)>(b)?(a):(b))
 end_define
 
 end_unit
