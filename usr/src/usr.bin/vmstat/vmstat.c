@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.7 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1026,7 +1026,7 @@ if|if
 condition|(
 name|nl
 index|[
-name|DK_NDRIVE
+name|X_DK_NDRIVE
 index|]
 operator|.
 name|n_value
