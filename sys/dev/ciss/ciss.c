@@ -13592,6 +13592,7 @@ comment|/* DDB hook */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ciss_print0
 parameter_list|(
