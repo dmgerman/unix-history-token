@@ -12660,7 +12660,7 @@ end_ifdef
 
 begin_decl_stmt
 name|void
-name|state_link
+name|state_polling
 name|PROTO
 argument_list|(
 operator|(

@@ -308,7 +308,7 @@ name|cur_time
 operator|+
 name|polling_interval
 argument_list|,
-name|state_link
+name|state_polling
 argument_list|,
 literal|0
 argument_list|,

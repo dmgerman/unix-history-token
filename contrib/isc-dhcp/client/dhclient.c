@@ -1474,7 +1474,7 @@ name|tmp
 operator|->
 name|linkstate
 operator|=
-literal|0
+name|HAVELINK
 expr_stmt|;
 name|tmp
 operator|->
@@ -2135,6 +2135,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
 name|ip
 operator|->
 name|forcediscover
@@ -2166,6 +2169,8 @@ name|havemedia
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|script_init
 argument_list|(
 name|ip
@@ -2353,8 +2358,10 @@ name|random
 argument_list|()
 operator|%
 literal|5
+operator|+
+literal|2
 argument_list|,
-name|state_link
+name|state_polling
 argument_list|,
 name|client
 argument_list|,
@@ -6660,18 +6667,6 @@ name|again
 goto|;
 block|}
 block|}
-if|if
-condition|(
-name|interface_active
-argument_list|(
-name|client
-operator|->
-name|interface
-argument_list|)
-operator|==
-name|NOLINK
-condition|)
-return|return;
 comment|/* If we're supposed to increase the interval, do so.  If it's 	   currently zero (i.e., we haven't sent any packets yet), set 	   it to one; otherwise, add to it a random number between 	   zero and two times itself.  On average, this means that it 	   will double with every transmission. */
 if|if
 condition|(
@@ -6993,12 +6988,11 @@ name|lp
 decl_stmt|;
 if|if
 condition|(
-name|interface_active
-argument_list|(
 name|client
 operator|->
 name|interface
-argument_list|)
+operator|->
+name|linkstate
 operator|==
 name|NOLINK
 condition|)
@@ -7156,7 +7150,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENABLE_POLLING_MODE
-comment|/* Enable polling for thsi interface */
+comment|/* Enable polling for this interface */
 name|client
 operator|->
 name|interface
@@ -14102,26 +14096,22 @@ name|S_STOPPED
 case|:
 break|break;
 block|}
+ifndef|#
+directive|ifndef
+name|ENABLE_POLLING_MODE
 name|client
 operator|->
 name|state
 operator|=
 name|S_INIT
 expr_stmt|;
-if|if
-condition|(
-name|interface_active
-argument_list|(
-name|ip
-argument_list|)
-operator|==
-name|HAVELINK
-condition|)
 name|state_reboot
 argument_list|(
 name|client
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -14887,16 +14877,6 @@ operator|=
 name|S_INIT
 expr_stmt|;
 comment|/* Set up a timeout to start the initialization 			   process. */
-if|if
-condition|(
-name|interface_active
-argument_list|(
-name|ip
-argument_list|)
-operator|==
-name|HAVELINK
-condition|)
-block|{
 name|add_timeout
 argument_list|(
 name|cur_time
@@ -14915,7 +14895,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -15139,20 +15118,16 @@ break|break;
 case|case
 name|server_awaken
 case|:
-if|if
-condition|(
-name|interface_active
-argument_list|(
-name|ip
-argument_list|)
-operator|==
-name|HAVELINK
-condition|)
+ifndef|#
+directive|ifndef
+name|ENABLE_POLLING_MODE
 name|state_reboot
 argument_list|(
 name|client
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -15990,26 +15965,6 @@ name|IFM_ACTIVE
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|havemedia
-operator|&&
-name|ip
-operator|->
-name|client
-operator|->
-name|state
-operator|!=
-name|S_BOUND
-condition|)
-name|ip
-operator|->
-name|forcediscover
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|HAVELINK
@@ -16019,7 +15974,6 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Media settings can also be possible for normal 			 * devices.  			 */
 if|if
 condition|(
 name|ifmr
@@ -16029,26 +15983,6 @@ operator|&
 name|IFM_ACTIVE
 condition|)
 block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|havemedia
-operator|&&
-name|ip
-operator|->
-name|client
-operator|->
-name|state
-operator|!=
-name|S_BOUND
-condition|)
-name|ip
-operator|->
-name|forcediscover
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|HAVELINK
@@ -16056,54 +15990,23 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * If dhclient.conf contains media settings, we cannot 		 * abort if the interface is not set to active mode. 		 */
-if|if
-condition|(
-name|ip
-operator|->
-name|havemedia
-operator|&&
-name|ip
-operator|->
-name|client
-operator|->
-name|state
-operator|!=
-name|S_BOUND
-condition|)
-return|return
-operator|(
-name|HAVELINK
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* 		 * IFM_AVALID is not set. We cannot check 		 * the link state. Assume HAVELINK. 		 */
-return|return
-operator|(
-name|HAVELINK
-operator|)
-return|;
-block|}
-comment|/* 	 * We really have no link. 	 */
+comment|/* 		 * We really have no link. 		 */
 return|return
 operator|(
 name|NOLINK
 operator|)
 return|;
-else|#
-directive|else
-comment|/* ifdef __FreeBSD__ */
+block|}
+comment|/* 	 * IFM_AVALID is not set. We cannot check 	 * the link state. Assume HAVELINK. 	 */
+endif|#
+directive|endif
+comment|/* Other OSs */
 comment|/* 	 * Always return a successful link if the OS 	 * is not supported. 	 */
 return|return
 operator|(
 name|HAVELINK
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* Other OSs */
 block|}
 end_function
 
@@ -16326,7 +16229,7 @@ end_comment
 
 begin_function
 name|void
-name|state_link
+name|state_polling
 parameter_list|(
 name|cpp
 parameter_list|)
@@ -16344,6 +16247,9 @@ name|struct
 name|client_state
 modifier|*
 name|client
+decl_stmt|;
+name|int
+name|result
 decl_stmt|;
 for|for
 control|(
@@ -16428,6 +16334,46 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|result
+operator|=
+name|interface_active
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If dhclient.conf contains media settings, we cannot 		 * abort if the interface is not set to active mode. 		 */
+if|if
+condition|(
+name|ip
+operator|->
+name|havemedia
+operator|&&
+name|ip
+operator|->
+name|client
+operator|->
+name|state
+operator|!=
+name|S_BOUND
+condition|)
+block|{
+if|if
+condition|(
+name|result
+operator|==
+name|HAVELINK
+condition|)
+name|ip
+operator|->
+name|forcediscover
+operator|=
+literal|1
+expr_stmt|;
+name|result
+operator|=
+name|HAVELINK
+expr_stmt|;
+block|}
 comment|/* 		 * The last status of the interface tells us 		 * the we've got no link ... 		 */
 if|if
 condition|(
@@ -16444,10 +16390,7 @@ block|{
 comment|/* 			 * ... but we have now link. Let's send 			 * requests. 			 */
 if|if
 condition|(
-name|interface_active
-argument_list|(
-name|ip
-argument_list|)
+name|result
 operator|==
 name|HAVELINK
 condition|)
@@ -16554,7 +16497,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"%s: No Link on interface\n"
+literal|"%s: No link on interface\n"
 argument_list|,
 name|ip
 operator|->
@@ -16600,7 +16543,7 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|state_link
+name|state_polling
 argument_list|,
 name|client
 argument_list|,
@@ -16665,10 +16608,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|interface_active
-argument_list|(
-name|ip
-argument_list|)
+name|result
 operator|==
 name|NOLINK
 condition|)
