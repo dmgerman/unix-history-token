@@ -201,15 +201,15 @@ argument_list|(
 literal|"Device data: #cylinders=%d, #tracks=%d, #sectors=%d\n"
 argument_list|,
 name|st
-operator|->
+operator|.
 name|ncyl
 argument_list|,
 name|st
-operator|->
+operator|.
 name|ntrak
 argument_list|,
 name|st
-operator|->
+operator|.
 name|nsect
 argument_list|)
 expr_stmt|;
