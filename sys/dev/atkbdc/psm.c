@@ -10624,14 +10624,10 @@ decl_stmt|;
 specifier|static
 name|int
 name|touchpad_buttons
-init|=
-literal|0
 decl_stmt|;
 specifier|static
 name|int
 name|guest_buttons
-init|=
-literal|0
 decl_stmt|;
 specifier|register
 name|struct
