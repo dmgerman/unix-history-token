@@ -465,7 +465,7 @@ operator|||
 name|dp
 operator|->
 name|i_diroff
-operator|>
+operator|>=
 name|dp
 operator|->
 name|i_size
@@ -1386,7 +1386,9 @@ expr_stmt|;
 comment|/* 	 * Check that directory length properly reflects presence 	 * of this entry. 	 */
 if|if
 condition|(
-name|entryoffsetinblock
+name|dp
+operator|->
+name|i_offset
 operator|+
 name|DIRSIZ
 argument_list|(
@@ -1418,7 +1420,9 @@ name|dp
 operator|->
 name|i_size
 operator|=
-name|entryoffsetinblock
+name|dp
+operator|->
+name|i_offset
 operator|+
 name|DIRSIZ
 argument_list|(
