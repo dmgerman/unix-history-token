@@ -481,6 +481,7 @@ decl_stmt|;
 name|int
 name|ke_pinned
 decl_stmt|;
+comment|/* (k) nested coult.. pinned to a cpu */
 name|int
 name|ke_slice
 decl_stmt|;
@@ -1688,7 +1689,7 @@ parameter_list|,
 name|class
 parameter_list|)
 define|\
-value|((ke)->ke_thread->td_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
+value|((ke)->ke_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_else
@@ -1710,7 +1711,7 @@ parameter_list|,
 name|class
 parameter_list|)
 define|\
-value|((class) != PRI_ITHD&& (ke)->ke_thread->td_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
+value|((class) != PRI_ITHD&& (ke)->ke_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_endif
@@ -8304,6 +8305,70 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function
+name|void
+name|sched_pin
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|curthread
+operator|->
+name|td_sched
+operator|->
+name|ke_pinned
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sched_unpin
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|curthread
+operator|->
+name|td_sched
+operator|->
+name|ke_pinned
+operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_function
+name|int
+name|sched_ispinned
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|curthread
+operator|->
+name|td_sched
+operator|->
+name|ke_pinned
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
