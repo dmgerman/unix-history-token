@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CAM SCSI device driver for the Adaptec 174X SCSI Host adapter  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * CAM SCSI device driver for the Adaptec 174X SCSI Host adapter  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahb.c,v 1.1 1998/09/15 07:10:00 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -908,7 +908,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ahb%d: adapter not taking commands\n"
+literal|"ahb%ld: adapter not taking commands\n"
 argument_list|,
 name|ahb
 operator|->
@@ -1859,7 +1859,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahb%d: cannot malloc!\n"
+literal|"ahb%ld: cannot malloc!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2473,7 +2473,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahb%d: %.8s %s SCSI Adapter, FW Rev. %.4s, ID=%d, %d ECBs\n"
+literal|"ahb%ld: %.8s %s SCSI Adapter, FW Rev. %.4s, ID=%d, %d ECBs\n"
 argument_list|,
 name|ahb
 operator|->
@@ -2757,8 +2757,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahb%d: Immediate Command complete with no "
+literal|"ahb%ld: Immediate Command complete with no "
 literal|" pending command\n"
+argument_list|,
+name|ahb
+operator|->
+name|unit
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3006,7 +3010,7 @@ name|NULL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahb%d: No longer in timeout\n"
+literal|"ahb%ld: No longer in timeout\n"
 argument_list|,
 name|ahb
 operator|->
@@ -3025,7 +3029,7 @@ name|scsi_id
 condition|)
 name|printf
 argument_list|(
-literal|"ahb%d: SCSI Bus Reset Delivered\n"
+literal|"ahb%ld: SCSI Bus Reset Delivered\n"
 argument_list|,
 name|ahb
 operator|->
@@ -3035,7 +3039,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"ahb%d:  Bus Device Reset Delibered to target %d\n"
+literal|"ahb%ld:  Bus Device Reset Delibered to target %d\n"
 argument_list|,
 name|ahb
 operator|->
@@ -3576,7 +3580,7 @@ name|HS_PROGRAM_CKSUM_ERROR
 case|:
 name|panic
 argument_list|(
-literal|"ahb%d: Can't happen host status %x occurred"
+literal|"ahb%ld: Can't happen host status %x occurred"
 argument_list|,
 name|ahb
 operator|->
@@ -3850,7 +3854,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahb%d: Command 0%x Failed %x:%x:%x\n"
+literal|"ahb%ld: Command 0%x Failed %x:%x:%x\n"
 argument_list|,
 name|ahb
 operator|->
@@ -4178,12 +4182,14 @@ name|EFBIG
 condition|)
 name|printf
 argument_list|(
-literal|"ahb%d: Unexepected error 0x%x returned from "
+literal|"ahb%ld: Unexepected error 0x%x returned from "
 literal|"bus_dmamap_load\n"
 argument_list|,
 name|ahb
 operator|->
 name|unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 if|if
@@ -5869,6 +5875,9 @@ name|printf
 argument_list|(
 literal|"ECB 0x%x - timed out\n"
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|ecb
 argument_list|)
 expr_stmt|;
@@ -5903,6 +5912,9 @@ name|printf
 argument_list|(
 literal|"ECB 0x%x - timed out ECB already completed\n"
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|ecb
 argument_list|)
 expr_stmt|;
@@ -6038,8 +6050,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Queuing BDR\n"
-argument_list|,
-name|ecb
 argument_list|)
 expr_stmt|;
 name|ecb
@@ -6117,8 +6127,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Attempting SCSI Bus reset\n"
-argument_list|,
-name|ecb
 argument_list|)
 expr_stmt|;
 name|ecb
