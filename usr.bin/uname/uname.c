@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uname.c,v 1.1 1993/10/08 00:40:50 jkh Exp $"
+literal|"$Id: uname.c,v 1.2 1994/01/24 02:14:26 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,7 @@ name|puts
 argument_list|(
 name|u
 operator|.
-name|nodename
+name|sysname
 argument_list|)
 expr_stmt|;
 block|}
