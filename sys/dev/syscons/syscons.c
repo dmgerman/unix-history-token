@@ -2251,7 +2251,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 operator|&
 name|sc
@@ -2292,7 +2292,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 name|MOUSE_TTY
 expr_stmt|;
@@ -2319,7 +2319,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 name|CONSOLE_TTY
 expr_stmt|;
@@ -2498,7 +2498,7 @@ return|return
 operator|(
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|)
 return|;
 block|}
@@ -2613,7 +2613,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 name|int
 name|unit
@@ -3105,7 +3105,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 name|struct
 name|scr_stat
@@ -3484,7 +3484,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 if|if
 condition|(
@@ -3547,7 +3547,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 if|if
 condition|(
@@ -4055,7 +4055,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 if|if
 condition|(
@@ -21666,7 +21666,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 if|if
 condition|(

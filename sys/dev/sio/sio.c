@@ -5314,7 +5314,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 name|com
 operator|->
@@ -11411,7 +11411,7 @@ return|return
 operator|(
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|)
 return|;
 block|}

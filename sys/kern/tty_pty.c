@@ -647,11 +647,11 @@ name|pt
 expr_stmt|;
 name|devs
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 name|devc
 operator|->
-name|si_tty_tty
+name|si_tty
 operator|=
 operator|&
 name|pt
@@ -792,7 +792,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 if|if
 condition|(
@@ -1026,7 +1026,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 name|err
 operator|=
@@ -1110,7 +1110,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 specifier|register
 name|struct
@@ -1440,7 +1440,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 if|if
 condition|(
@@ -1700,7 +1700,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 if|if
 condition|(
@@ -1816,7 +1816,7 @@ name|tp
 operator|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 expr_stmt|;
 call|(
 name|void
@@ -1921,7 +1921,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 name|struct
 name|pt_ioctl
@@ -2394,7 +2394,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 name|struct
 name|pt_ioctl
@@ -2724,7 +2724,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 specifier|register
 name|u_char
@@ -3304,7 +3304,7 @@ return|;
 return|return
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 return|;
 block|}
 end_function
@@ -3354,7 +3354,7 @@ name|tp
 init|=
 name|dev
 operator|->
-name|si_tty_tty
+name|si_tty
 decl_stmt|;
 specifier|register
 name|struct

@@ -149,7 +149,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|si_tty_tty
+name|si_tty
 value|__si_u.__si_tty.__sit_tty
 end_define
 
