@@ -1658,7 +1658,7 @@ name|split_timeout
 operator|.
 name|tv_sec
 operator|=
-literal|2
+literal|6
 expr_stmt|;
 name|split_timeout
 operator|.
@@ -1744,7 +1744,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"split transaction timeout dst=%d tl=%d\n"
+literal|"split transaction timeout dst=0x%x tl=0x%x\n"
 argument_list|,
 name|xfer
 operator|->
@@ -9494,7 +9494,7 @@ block|{
 name|printf
 argument_list|(
 literal|"fw_rcv: unknown response "
-literal|"tcode=%d src=0x%x tl=%x rt=%d data=0x%x\n"
+literal|"tcode=%d src=0x%x tl=0x%x rt=%d data=0x%x\n"
 argument_list|,
 name|fp
 operator|->
