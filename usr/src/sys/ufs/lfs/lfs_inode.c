@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.61 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.62 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -708,6 +714,8 @@ condition|)
 name|ip
 operator|->
 name|i_atime
+operator|.
+name|tv_sec
 operator|=
 name|ta
 operator|->
@@ -725,6 +733,8 @@ block|{
 name|ip
 operator|->
 name|i_mtime
+operator|.
+name|tv_sec
 operator|=
 name|tm
 operator|->
@@ -751,6 +761,8 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
+operator|.
+name|tv_sec
 operator|=
 name|time
 operator|.
@@ -942,6 +954,9 @@ name|vnode_pager_setsize
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|length
 argument_list|)
 expr_stmt|;
