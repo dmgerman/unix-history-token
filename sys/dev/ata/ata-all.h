@@ -1969,15 +1969,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|intr_config_hook
-modifier|*
-name|ata_delayed_attach
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|ata_wc
 decl_stmt|;
@@ -2264,29 +2255,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ata_request
-modifier|*
-name|ata_alloc_request
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_free_request
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-name|request
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ata_controlcmd
 parameter_list|(
@@ -2478,6 +2446,35 @@ name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* macros for alloc/free of ata_requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|ata_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ata_alloc_request
+parameter_list|()
+value|uma_zalloc(ata_zone, M_NOWAIT | M_ZERO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ata_free_request
+parameter_list|(
+name|request
+parameter_list|)
+value|uma_zfree(ata_zone, request)
+end_define
 
 begin_comment
 comment|/* macros for locking a channel */

@@ -86,19 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sema.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/sema.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -349,6 +355,12 @@ end_decl_stmt
 begin_decl_stmt
 name|devclass_t
 name|ata_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uma_zone_t
+name|ata_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -6115,7 +6127,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Register a handler to flush write caches on shutdown */
+comment|/* register handler to flush write caches on shutdown */
 if|if
 condition|(
 operator|(
@@ -6136,6 +6148,32 @@ condition|)
 name|printf
 argument_list|(
 literal|"ata: shutdown event registration failed!\n"
+argument_list|)
+expr_stmt|;
+comment|/* init our UMA zone for ATA requests */
+name|ata_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"ata_request"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ata_request
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

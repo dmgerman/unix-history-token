@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 

@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -135,114 +135,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* local vars */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ATA_REQ
-argument_list|,
-literal|"ATA request"
-argument_list|,
-literal|"ATA request"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * ATA request related functions  */
-end_comment
-
-begin_function
-name|struct
-name|ata_request
-modifier|*
-name|ata_alloc_request
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|ata_request
-modifier|*
-name|request
-decl_stmt|;
-name|request
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ata_request
-argument_list|)
-argument_list|,
-name|M_ATA_REQ
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|request
-condition|)
-name|printf
-argument_list|(
-literal|"FAILURE - malloc ATA request failed\n"
-argument_list|)
-expr_stmt|;
-name|sema_init
-argument_list|(
-operator|&
-name|request
-operator|->
-name|done
-argument_list|,
-literal|0
-argument_list|,
-literal|"ATA request done"
-argument_list|)
-expr_stmt|;
-return|return
-name|request
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|ata_free_request
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-name|request
-parameter_list|)
-block|{
-name|sema_destroy
-argument_list|(
-operator|&
-name|request
-operator|->
-name|done
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|request
-argument_list|,
-name|M_ATA_REQ
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|void
 name|ata_queue_request
@@ -253,7 +145,7 @@ modifier|*
 name|request
 parameter_list|)
 block|{
-comment|/* mark request as virgin (it might be a retry) */
+comment|/* mark request as virgin */
 name|request
 operator|->
 name|result
@@ -267,6 +159,25 @@ operator|->
 name|error
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|request
+operator|->
+name|callback
+condition|)
+name|sema_init
+argument_list|(
+operator|&
+name|request
+operator|->
+name|done
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATA request done"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -486,6 +397,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|request
+operator|->
+name|callback
+condition|)
+name|sema_destroy
+argument_list|(
+operator|&
+name|request
+operator|->
+name|done
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
