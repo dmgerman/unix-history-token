@@ -215,8 +215,6 @@ name|entry
 decl_stmt|;
 name|vm_pindex_t
 name|upindex
-decl_stmt|,
-name|kpindex
 decl_stmt|;
 name|vm_prot_t
 name|prot
@@ -429,12 +427,6 @@ literal|"vm_pgmoveco: renaming busy page"
 argument_list|)
 expr_stmt|;
 block|}
-name|kpindex
-operator|=
-name|kern_pg
-operator|->
-name|pindex
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|kern_pg
@@ -442,13 +434,6 @@ argument_list|,
 name|uobject
 argument_list|,
 name|upindex
-argument_list|)
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|kern_pg
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 name|kern_pg
