@@ -15,7 +15,7 @@ operator|)
 name|date_ab
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,6 +377,14 @@ name|m
 expr_stmt|;
 name|tim
 operator|=
+operator|+
+name|timeb
+operator|.
+name|timezone
+expr_stmt|;
+comment|/* GMT correction */
+name|tim
+operator|=
 operator|*
 literal|60
 expr_stmt|;
@@ -385,14 +393,6 @@ operator|=
 operator|+
 name|s
 expr_stmt|;
-name|tim
-operator|=
-operator|+
-name|timeb
-operator|.
-name|timezone
-expr_stmt|;
-comment|/* GMT correction */
 if|if
 condition|(
 name|localtime
