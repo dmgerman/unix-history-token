@@ -715,7 +715,7 @@ literal|"%s"
 argument_list|,
 name|p
 operator|->
-name|fts_accpath
+name|fts_path
 argument_list|)
 expr_stmt|;
 if|if
