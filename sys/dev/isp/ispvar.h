@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.12 1999/03/25 22:52:45 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.13 1999/04/04 01:26:08 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_4_3_99 */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|7
+value|8
 end_define
 
 begin_comment
@@ -385,7 +385,7 @@ value|((in == out)? (qlen - 1) : ((in> out)? \ 		((qlen - 1) - (in - out)) : (ou
 end_define
 
 begin_comment
-comment|/*  * SCSI Specific Host Adapter Parameters  */
+comment|/*  * SCSI Specific Host Adapter Parameters- per bus, per target  */
 end_comment
 
 begin_typedef
@@ -393,6 +393,10 @@ typedef|typedef
 struct|struct
 block|{
 name|u_int
+name|isp_gotdparms
+range|:
+literal|1
+decl_stmt|,
 name|isp_req_ack_active_neg
 range|:
 literal|1
@@ -425,7 +429,6 @@ name|isp_lvdmode
 range|:
 literal|1
 decl_stmt|,
-name|isp_fast_mttr
 range|:
 literal|1
 decl_stmt|,
@@ -442,9 +445,6 @@ name|isp_selection_timeout
 decl_stmt|;
 name|u_int16_t
 name|isp_max_queue_depth
-decl_stmt|;
-name|u_int16_t
-name|isp_clock
 decl_stmt|;
 name|u_int8_t
 name|isp_tag_aging
@@ -465,7 +465,7 @@ name|dev_enable
 range|:
 literal|1
 decl_stmt|,
-name|dev_announced
+comment|/* ignored */
 range|:
 literal|1
 decl_stmt|,
@@ -515,10 +515,6 @@ block|}
 name|sdparam
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* scsi device parameters */
-end_comment
 
 begin_comment
 comment|/*  * Device Flags  */
@@ -670,10 +666,12 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int64_t
-name|isp_wwn
+name|u_int8_t
+name|isp_gotdparms
 decl_stmt|;
-comment|/* WWN of adapter */
+name|u_int8_t
+name|isp_reserved
+decl_stmt|;
 name|u_int8_t
 name|isp_loopid
 decl_stmt|;
@@ -695,6 +693,10 @@ name|u_int8_t
 name|isp_fwstate
 decl_stmt|;
 comment|/* ISP F/W state */
+name|u_int64_t
+name|isp_wwn
+decl_stmt|;
+comment|/* WWN of adapter */
 name|u_int16_t
 name|isp_maxalloc
 decl_stmt|;
@@ -929,45 +931,44 @@ name|ispmdvec
 modifier|*
 name|isp_mdvec
 decl_stmt|;
-comment|/* 	 * Mostly nonvolatile state, debugging, etc.. 	 */
+comment|/* 	 * Mostly nonvolatile state. 	 */
 name|u_int
-label|:
+name|isp_clock
+range|:
 literal|8
-operator|,
+decl_stmt|,
 name|isp_confopts
-operator|:
+range|:
 literal|8
-operator|,
-name|isp_port
-operator|:
+decl_stmt|,
+name|isp_fast_mttr
+range|:
 literal|1
-operator|,
-comment|/* for dual ported impls */
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
 name|isp_used
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|isp_dblev
-operator|:
+range|:
 literal|3
-operator|,
-name|isp_gotdparms
-operator|:
-literal|1
-operator|,
+decl_stmt|,
 name|isp_dogactive
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|isp_bustype
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* BUS Implementation */
 name|isp_type
-operator|:
+range|:
 literal|8
-expr_stmt|;
+decl_stmt|;
 comment|/* HBA Type and Revision */
 name|u_int16_t
 name|isp_fwrev
@@ -991,25 +992,28 @@ comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int
 operator|:
-literal|19
+literal|13
 operator|,
 name|isp_state
 operator|:
 literal|3
 operator|,
+operator|:
+literal|2
+operator|,
 name|isp_sendmarker
 operator|:
-literal|1
+literal|2
 operator|,
 comment|/* send a marker entry */
 name|isp_update
 operator|:
-literal|1
+literal|2
 operator|,
 comment|/* update parameters */
 name|isp_nactive
 operator|:
-literal|9
+literal|10
 expr_stmt|;
 comment|/* how many commands active */
 comment|/* 	 * Result and Request Queue indices. 	 */
@@ -1189,7 +1193,7 @@ name|ISP_FW_REVX
 parameter_list|(
 name|xp
 parameter_list|)
-value|((xp[0 ]<< 24) | (xp[1]<< 16) | xp[2])
+value|((xp[0]<<24) | (xp[1]<< 16) | xp[2])
 end_define
 
 begin_comment
