@@ -5309,6 +5309,8 @@ operator|&
 name|RISA_SCMASK
 operator|)
 operator|&&
+name|tp
+operator|&&
 operator|(
 name|tp
 operator|->
