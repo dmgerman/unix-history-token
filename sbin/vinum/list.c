@@ -824,11 +824,15 @@ operator|*
 name|DEV_BSIZE
 operator|)
 operator|/
+operator|(
 name|drive
 operator|.
 name|label
 operator|.
 name|drive_size
+operator|-
+name|DATASTART
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4945,7 +4949,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%db "
+literal|"%ds "
 argument_list|,
 operator|(
 name|int
@@ -5055,7 +5059,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%ssd name %s drive %s plex %s len %qdb driveoffset %qdb plexoffset %qdb\n"
+literal|"%ssd name %s drive %s plex %s len %qds driveoffset %qds plexoffset %qds\n"
 argument_list|,
 name|comment
 argument_list|,
