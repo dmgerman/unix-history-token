@@ -5204,6 +5204,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* modules.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|moduleInitialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* mouse.c */
 end_comment
 

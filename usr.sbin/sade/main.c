@@ -274,6 +274,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* Initialize driver modules */
+name|moduleInitialize
+argument_list|()
+expr_stmt|;
 comment|/* Initialize PC-card */
 name|pccardInitialize
 argument_list|()
