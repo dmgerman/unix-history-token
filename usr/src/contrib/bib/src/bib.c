@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.9	%G%"
+literal|"@(#)bib.c	2.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,7 +230,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|tmpfile
+name|bibtmpfile
 index|[]
 init|=
 name|TMPTEXTFILE
@@ -401,7 +401,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|INCORE
-comment|/* open temporaries, reffile will contain references collected in       pass 1, and tmpfile will contain text.    */
+comment|/* open temporaries, reffile will contain references collected in       pass 1, and bibtmpfile will contain text.    */
 name|mktemp
 argument_list|(
 name|reffile
@@ -442,14 +442,14 @@ directive|endif
 endif|not INCORE
 name|mktemp
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 name|tfd
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|,
 literal|"w"
 argument_list|)
@@ -464,7 +464,7 @@ name|error
 argument_list|(
 literal|"can't open temporary output file, %s"
 argument_list|,
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 comment|/*        pass1 - read files, looking for citations                arguments are read by doargs (bibargs.c)     */
@@ -531,7 +531,7 @@ name|tfd
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|,
 literal|"r"
 argument_list|)
@@ -546,7 +546,7 @@ name|error
 argument_list|(
 literal|"can't open temporary output file %s for reading"
 argument_list|,
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 comment|/*    pass 2 - reread files, replacing references    */
@@ -623,7 +623,7 @@ directive|ifndef
 name|DEBUG
 name|unlink
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 endif|#

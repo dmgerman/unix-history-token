@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invert.c	2.5	%G%"
+literal|"@(#)invert.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|tmpfile
+name|bibtmpfile
 init|=
 comment|/*  name of temporary file                  */
 name|INVTEMPFILE
@@ -279,14 +279,14 @@ literal|1
 expr_stmt|;
 name|mktemp
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 name|output
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|,
 literal|"w"
 argument_list|)
@@ -489,9 +489,9 @@ name|sortcmd
 argument_list|,
 name|sort_it
 argument_list|,
-name|tmpfile
+name|bibtmpfile
 argument_list|,
-name|tmpfile
+name|bibtmpfile
 argument_list|)
 expr_stmt|;
 name|system
@@ -503,7 +503,7 @@ name|distinct
 operator|=
 name|shorten
 argument_list|(
-name|tmpfile
+name|bibtmpfile
 argument_list|,
 name|INDEX
 argument_list|)
