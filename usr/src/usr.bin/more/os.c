@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.3 (Berkeley) %G%"
+literal|"@(#)os.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,39 +428,30 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|GET_TIME
-end_if
-
 begin_function
 name|public
 name|long
 name|get_time
 parameter_list|()
 block|{
-name|long
-name|t
-decl_stmt|;
+name|time_t
 name|time
-argument_list|(
-operator|&
-name|t
-argument_list|)
-expr_stmt|;
+parameter_list|()
+function_decl|;
 return|return
 operator|(
-name|t
+name|time
+argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+name|NULL
+argument_list|)
 operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Expand a filename, substituting any environment variables, etc.  * The implementation of this is necessarily very operating system  * dependent.  This implementation is unabashedly only for Unix systems.  */
