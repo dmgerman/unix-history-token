@@ -140,22 +140,24 @@ comment|/* geom_dump.c */
 end_comment
 
 begin_function_decl
-name|struct
-name|sbuf
-modifier|*
-name|g_conf
+name|void
+name|g_confxml
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|g_conf_specific
+parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|g_conf_specific
-parameter_list|(
+name|sb
+parameter_list|,
 name|struct
 name|g_class
 modifier|*
@@ -180,12 +182,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|sbuf
-modifier|*
+name|void
 name|g_confdot
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
