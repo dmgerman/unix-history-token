@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.22 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4286,6 +4286,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'O'
+case|:
+comment|/* daemon options */
+name|setdaemonoptions
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 comment|/* assume old style headers */
@@ -4658,6 +4668,18 @@ argument_list|)
 expr_stmt|;
 name|setdefuser
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+comment|/* fallback MX host */
+name|FallBackMX
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
