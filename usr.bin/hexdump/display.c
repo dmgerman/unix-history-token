@@ -189,10 +189,12 @@ name|savebp
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|bp
 operator|=
 name|get
 argument_list|()
+operator|)
 condition|)
 for|for
 control|(
@@ -978,8 +980,8 @@ decl_stmt|;
 block|{
 specifier|static
 name|char
-modifier|*
 name|spec
+index|[]
 init|=
 literal|" -0+#"
 decl_stmt|;
@@ -1057,6 +1059,7 @@ control|)
 empty_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|p2
 operator|++
@@ -1064,6 +1067,7 @@ operator|=
 operator|*
 name|p1
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 block|}
@@ -1084,11 +1088,6 @@ modifier|*
 name|get
 parameter_list|()
 block|{
-specifier|extern
-name|enum
-name|_vflag
-name|vflag
-decl_stmt|;
 specifier|extern
 name|int
 name|length
@@ -1218,6 +1217,7 @@ condition|(
 operator|!
 name|length
 operator|||
+operator|(
 name|ateof
 operator|&&
 operator|!
@@ -1230,6 +1230,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -1656,6 +1657,7 @@ name|fname
 parameter_list|,
 name|statok
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname

@@ -268,12 +268,14 @@ name|add
 parameter_list|(
 name|fmt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
 block|{
 name|unsigned
+specifier|const
 name|char
 modifier|*
 name|p
@@ -699,8 +701,8 @@ end_function
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|spec
+index|[]
 init|=
 literal|".#-+ 0123456789"
 decl_stmt|;
@@ -2287,6 +2289,7 @@ name|badfmt
 parameter_list|(
 name|fmt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fmt
