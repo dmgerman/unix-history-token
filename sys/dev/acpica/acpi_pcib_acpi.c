@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -76,7 +76,7 @@ file|<dev/acpica/acpi_pcibvar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure. */
 end_comment
 
 begin_define
@@ -195,7 +195,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|acpi_pcib_read_config
 parameter_list|(
 name|device_t
@@ -239,7 +239,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|data
 parameter_list|,
 name|int
@@ -509,14 +509,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
-operator|)
 operator|&&
 operator|!
 name|acpi_disabled
@@ -534,16 +532,16 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|pci_cfgregopen
 argument_list|()
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Set device description  	 */
 name|device_set_desc
 argument_list|(
 name|dev
@@ -680,7 +678,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if it's not found, assume 0 */
+comment|/* If it's not found, assume 0. */
 name|sc
 operator|->
 name|ap_bus
@@ -768,7 +766,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not determine config space address\n"
+literal|"couldn't find _ADR\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -824,7 +822,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not read bus number from config space\n"
+literal|"couldn't read bus number from cfg space\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -872,10 +870,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Get our segment number by evaluating _SEG      * It's OK for this to not exist.      */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|acpi_GetInteger
@@ -891,6 +885,12 @@ name|sc
 operator|->
 name|ap_segment
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -919,7 +919,7 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if it's not found, assume 0 */
+comment|/* If it's not found, assume 0. */
 name|sc
 operator|->
 name|ap_segment
@@ -1124,7 +1124,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|acpi_pcib_read_config
 parameter_list|(
 name|device_t
@@ -1185,7 +1185,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|data
 parameter_list|,
 name|int
@@ -1230,7 +1230,7 @@ name|acpi_hpcib_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* find the bridge softc */
+comment|/* Find the bridge softc. */
 name|sc
 operator|=
 name|device_get_softc
@@ -1290,7 +1290,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/* 	 * If no memory preference is given, use upper 256MB slot most 	 * bioses use for their memory window.  Typically other bridges 	 * before us get in the way to assert their preferences on memory. 	 * Hardcoding like this sucks, so a more MD/MI way needs to be 	 * found to do it. 	 */
+comment|/*      * If no memory preference is given, use upper 256MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.      */
 if|if
 condition|(
 name|type
