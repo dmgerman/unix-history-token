@@ -1347,7 +1347,7 @@ name|atp
 operator|->
 name|unit
 argument_list|,
-literal|""
+literal|"Medium: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1364,7 +1364,7 @@ literal|0x00
 case|:
 name|printf
 argument_list|(
-literal|"Drive empty"
+literal|"none"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1373,7 +1373,7 @@ literal|0x17
 case|:
 name|printf
 argument_list|(
-literal|"Travan 1 (400 Mbyte) media"
+literal|"Travan 1 (400 Mbyte)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1382,7 +1382,7 @@ literal|0xb6
 case|:
 name|printf
 argument_list|(
-literal|"Travan 4 (4 Gbyte) media"
+literal|"Travan 4 (4 Gbyte)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1391,14 +1391,14 @@ literal|0xda
 case|:
 name|printf
 argument_list|(
-literal|"OnStream ADR (15Gyte) media"
+literal|"OnStream ADR (15Gyte)"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown media (0x%x)"
+literal|"unknown (0x%x)"
 argument_list|,
 name|stp
 operator|->

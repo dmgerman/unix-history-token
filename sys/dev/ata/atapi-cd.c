@@ -2790,7 +2790,7 @@ name|atp
 operator|->
 name|unit
 argument_list|,
-literal|"Audio:"
+literal|"Audio: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2825,12 +2825,12 @@ operator|.
 name|max_vol_levels
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|ata_printf
 argument_list|(
 name|cdp
@@ -2845,7 +2845,7 @@ name|atp
 operator|->
 name|unit
 argument_list|,
-literal|"Mechanism:"
+literal|"Mechanism: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2964,7 +2964,7 @@ name|atp
 operator|->
 name|unit
 argument_list|,
-literal|"Medium:"
+literal|"Medium: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3019,7 +3019,7 @@ name|MST_NO_DISC
 case|:
 name|printf
 argument_list|(
-literal|"no/blank disc inside"
+literal|"no/blank disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3064,7 +3064,7 @@ name|MST_DATA_120
 case|:
 name|printf
 argument_list|(
-literal|"120mm data disc loaded"
+literal|"120mm data disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3073,7 +3073,7 @@ name|MST_AUDIO_120
 case|:
 name|printf
 argument_list|(
-literal|"120mm audio disc loaded"
+literal|"120mm audio disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3082,7 +3082,7 @@ name|MST_COMB_120
 case|:
 name|printf
 argument_list|(
-literal|"120mm data/audio disc loaded"
+literal|"120mm data/audio disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3091,7 +3091,7 @@ name|MST_PHOTO_120
 case|:
 name|printf
 argument_list|(
-literal|"120mm photo disc loaded"
+literal|"120mm photo disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3100,7 +3100,7 @@ name|MST_DATA_80
 case|:
 name|printf
 argument_list|(
-literal|"80mm data disc loaded"
+literal|"80mm data disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3109,7 +3109,7 @@ name|MST_AUDIO_80
 case|:
 name|printf
 argument_list|(
-literal|"80mm audio disc loaded"
+literal|"80mm audio disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3118,7 +3118,7 @@ name|MST_COMB_80
 case|:
 name|printf
 argument_list|(
-literal|"80mm data/audio disc loaded"
+literal|"80mm data/audio disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3127,7 +3127,7 @@ name|MST_PHOTO_80
 case|:
 name|printf
 argument_list|(
-literal|"80mm photo disc loaded"
+literal|"80mm photo disc"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3150,7 +3150,7 @@ name|MST_CDROM
 case|:
 name|printf
 argument_list|(
-literal|"unknown medium"
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3162,7 +3162,7 @@ name|MST_CDRW
 case|:
 name|printf
 argument_list|(
-literal|"blank medium"
+literal|"blank"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3171,7 +3171,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown type=0x%x"
+literal|"unknown (0x%x)"
 argument_list|,
 name|cdp
 operator|->
