@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.12 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,12 +1090,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cannot open"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tunefs: %s: %s\n"
+argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1124,11 +1126,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad super block"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tunefs: %s: bad super block\n"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
@@ -1151,7 +1150,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: bad magic number\n"
+literal|"tunefs: %s: bad magic number\n"
 argument_list|,
 name|file
 argument_list|)
