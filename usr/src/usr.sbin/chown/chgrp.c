@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chgrp.c	4.5 83/04/28"
+literal|"@(#)chgrp.c	4.6 83/05/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -493,6 +493,9 @@ name|st_uid
 argument_list|,
 name|gid
 argument_list|)
+operator|&&
+operator|!
+name|fflag
 condition|)
 name|perror
 argument_list|(
