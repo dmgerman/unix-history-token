@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.34 (Berkeley) %G%"
+literal|"@(#)tape.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5324,6 +5324,16 @@ literal|0
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_size
+operator|=
+name|qcvt
+operator|.
+name|qval
 expr_stmt|;
 block|}
 switch|switch
