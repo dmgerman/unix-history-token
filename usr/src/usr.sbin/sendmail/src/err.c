@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.20 (Berkeley) %G%"
+literal|"@(#)err.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,9 +757,30 @@ name|OutChannel
 argument_list|)
 condition|)
 block|{
+name|int
+name|saveerrno
+init|=
+name|errno
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|freopen
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|"w"
+argument_list|,
+name|OutChannel
+argument_list|)
+expr_stmt|;
 name|HoldErrs
 operator|=
 name|TRUE
+expr_stmt|;
+name|errno
+operator|=
+name|saveerrno
 expr_stmt|;
 name|syserr
 argument_list|(
