@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.50	82/06/26	*/
+comment|/*	hp.c	4.50	82/06/27	*/
 end_comment
 
 begin_ifdef
@@ -1388,9 +1388,13 @@ name|HPHR_MAXTRAK
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|hpaddr
 operator|->
 name|hphr
+operator|&
+literal|0xffff
+operator|)
 operator|==
 literal|15
 condition|)
