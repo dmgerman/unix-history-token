@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.11	85/03/01	*/
+comment|/*	machdep.c	6.12	85/03/03	*/
 end_comment
 
 begin_include
@@ -638,18 +638,51 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory, with min of 16. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory for the first 2 Meg, 5% of the remaining 	 * memory. Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
 name|bufpages
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|physmem
+operator|<
+operator|(
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
 name|bufpages
 operator|=
 name|physmem
 operator|/
 literal|10
+operator|/
+name|CLSIZE
+expr_stmt|;
+else|else
+name|bufpages
+operator|=
+operator|(
+operator|(
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|)
+operator|/
+literal|5
+operator|+
+name|physmem
+operator|/
+literal|5
+operator|)
 operator|/
 name|CLSIZE
 expr_stmt|;
