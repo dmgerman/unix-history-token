@@ -63,6 +63,23 @@ define|\
 value|((((s[0] - '@')& 0x1f)<< 2)		\ 	 | (((s[1] - '@')& 0x18)>> 3)		\ 	 | (((s[1] - '@')& 0x07)<< 13)	\ 	 | (((s[2] - '@')& 0x1f)<< 8)		\ 	 | (PNP_HEXTONUM(s[4])<< 16)		\ 	 | (PNP_HEXTONUM(s[3])<< 20)		\ 	 | (PNP_HEXTONUM(s[6])<< 24)		\ 	 | (PNP_HEXTONUM(s[5])<< 28))
 end_define
 
+begin_function_decl
+name|void
+name|pnp_parse_resources
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_char
+modifier|*
+name|resources
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
