@@ -578,10 +578,6 @@ block|}
 comment|/* It's not an ininstalled package, try and find it among the installed */
 else|else
 block|{
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
 name|sprintf
 argument_list|(
 name|log_dir
