@@ -4889,27 +4889,6 @@ operator|->
 name|nm_deadthresh
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|40
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"not responding %d> %d"
-argument_list|,
-name|rep
-operator|->
-name|r_rexmit
-argument_list|,
-name|nmp
-operator|->
-name|nm_deadthresh
-argument_list|)
-expr_stmt|;
 name|nfs_msg
 argument_list|(
 name|rep
@@ -4924,8 +4903,7 @@ name|mnt_stat
 operator|.
 name|f_mntfromname
 argument_list|,
-name|buf
-comment|/* "not responding" */
+literal|"not responding"
 argument_list|)
 expr_stmt|;
 name|rep
