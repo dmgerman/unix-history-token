@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -166,50 +166,12 @@ name|u_code
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
 comment|/* 1.4 - descriptor management */
-name|struct
-name|file
-modifier|*
-name|u_ofile
+name|long
+name|u_pad2
 index|[
-name|NOFILE
+literal|82
 index|]
 decl_stmt|;
-comment|/* file structures for open files */
-name|char
-name|u_pofile
-index|[
-name|NOFILE
-index|]
-decl_stmt|;
-comment|/* per-process flags of open files */
-name|int
-name|u_lastfile
-decl_stmt|;
-comment|/* high-water mark of u_ofile */
-define|#
-directive|define
-name|UF_EXCLOSE
-value|0x1
-comment|/* auto-close on exec */
-define|#
-directive|define
-name|UF_MAPPED
-value|0x2
-comment|/* mapped from device */
-define|#
-directive|define
-name|u_cdir
-value|u_nd.ni_cdir
-comment|/* current directory */
-define|#
-directive|define
-name|u_rdir
-value|u_nd.ni_rdir
-comment|/* root directory of current process */
-name|short
-name|u_cmask
-decl_stmt|;
-comment|/* mask for file creation */
 comment|/* 1.5 - timing and statistics */
 name|struct
 name|rusage
