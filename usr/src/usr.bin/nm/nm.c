@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 4.2 %G%"
+literal|"@(#)nm.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_define
