@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.6 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2786,7 +2786,7 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
-name|ap
+name|rp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2796,7 +2796,7 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
-name|rp
+name|ap
 argument_list|)
 expr_stmt|;
 name|printf
