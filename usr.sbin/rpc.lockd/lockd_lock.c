@@ -8184,7 +8184,7 @@ argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_mon
+name|xdr_mon_id
 argument_list|,
 operator|&
 name|smon_id
@@ -8192,7 +8192,7 @@ argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_sm_stat_res
+name|xdr_sm_stat
 argument_list|,
 operator|&
 name|smstat
