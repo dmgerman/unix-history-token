@@ -7,27 +7,27 @@ begin_struct
 struct|struct
 name|ibcs2_ipc_perm
 block|{
-name|ushort
+name|u_short
 name|uid
 decl_stmt|;
 comment|/* user id */
-name|ushort
+name|u_short
 name|gid
 decl_stmt|;
 comment|/* group id */
-name|ushort
+name|u_short
 name|cuid
 decl_stmt|;
 comment|/* creator user id */
-name|ushort
+name|u_short
 name|cgid
 decl_stmt|;
 comment|/* creator group id */
-name|ushort
+name|u_short
 name|mode
 decl_stmt|;
 comment|/* r/w permission */
-name|ushort
+name|u_short
 name|seq
 decl_stmt|;
 comment|/* sequence # (to generate unique msg/sem/shm id) */

@@ -350,25 +350,25 @@ decl_stmt|;
 name|u_char
 name|rxwin
 decl_stmt|;
-name|ushort
+name|u_short
 name|fepiflag
 decl_stmt|;
-name|ushort
+name|u_short
 name|fepcflag
 decl_stmt|;
-name|ushort
+name|u_short
 name|fepoflag
 decl_stmt|;
-name|ushort
+name|u_short
 name|txbufhead
 decl_stmt|;
-name|ushort
+name|u_short
 name|txbufsize
 decl_stmt|;
-name|ushort
+name|u_short
 name|rxbufhead
 decl_stmt|;
-name|ushort
+name|u_short
 name|rxbufsize
 decl_stmt|;
 name|int
@@ -2601,7 +2601,7 @@ name|int
 name|nfails
 decl_stmt|;
 specifier|volatile
-name|ushort
+name|u_short
 modifier|*
 name|pstat
 decl_stmt|;
@@ -3444,7 +3444,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3458,7 +3458,7 @@ operator|==
 operator|*
 operator|(
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 literal|"GD"
@@ -3495,7 +3495,7 @@ argument_list|,
 operator|*
 operator|(
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3509,7 +3509,7 @@ argument_list|,
 operator|*
 operator|(
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 literal|"GD"
@@ -3782,7 +3782,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3794,7 +3794,7 @@ operator|)
 operator|==
 operator|*
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 literal|"GD"
@@ -3829,7 +3829,7 @@ name|id_unit
 argument_list|,
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3841,7 +3841,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3853,7 +3853,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3940,7 +3940,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3956,7 +3956,7 @@ literal|2
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3976,7 +3976,7 @@ name|FEPCODESEG
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -3992,7 +3992,7 @@ literal|0
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4008,7 +4008,7 @@ name|FEPCODESEG
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4024,7 +4024,7 @@ literal|0
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4067,7 +4067,7 @@ literal|0
 init|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4107,7 +4107,7 @@ name|unit
 argument_list|,
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4145,7 +4145,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4173,7 +4173,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4189,7 +4189,7 @@ literal|1
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4205,7 +4205,7 @@ name|FEPCODESEG
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4255,7 +4255,7 @@ literal|0
 init|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4267,7 +4267,7 @@ operator|)
 operator|!=
 operator|*
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 literal|"OS"
@@ -4325,7 +4325,7 @@ name|numports
 operator|=
 operator|*
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -4452,7 +4452,7 @@ expr_stmt|;
 name|pstat
 operator|=
 operator|(
-name|ushort
+name|u_short
 specifier|volatile
 operator|*
 operator|)
@@ -12170,7 +12170,7 @@ operator|*
 operator|(
 sizeof|sizeof
 argument_list|(
-name|ushort
+name|u_short
 argument_list|)
 operator|*
 literal|4
