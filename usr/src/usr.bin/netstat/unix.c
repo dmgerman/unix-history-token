@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.1 (Berkeley) %G%"
+literal|"@(#)unix.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,7 +538,7 @@ if|if
 condition|(
 name|unp
 operator|->
-name|unp_remaddr
+name|unp_addr
 condition|)
 block|{
 name|m
@@ -552,7 +552,7 @@ name|kmem
 argument_list|,
 name|unp
 operator|->
-name|unp_remaddr
+name|unp_addr
 argument_list|,
 name|L_SET
 argument_list|)
