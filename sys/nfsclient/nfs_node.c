@@ -156,6 +156,17 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|NFSNOHASH
+parameter_list|(
+name|fhsum
+parameter_list|)
+define|\
+value|(&nfsnodehashtbl[(fhsum)& nfsnodehash])
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRUE
 value|1
 end_define
