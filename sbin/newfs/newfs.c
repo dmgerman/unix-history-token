@@ -374,6 +374,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* regression test */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Uflag
 decl_stmt|;
 end_decl_stmt
@@ -911,7 +921,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"NOS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
+literal|"NORS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
 argument_list|)
 operator|)
 operator|!=
@@ -935,6 +945,14 @@ case|case
 literal|'O'
 case|:
 name|Oflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|Rflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2953,6 +2971,16 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-O create a 4.3BSD format filesystem\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-R regression test, supress random factors\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

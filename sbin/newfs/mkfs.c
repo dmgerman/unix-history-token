@@ -573,6 +573,15 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* XXX this will break in about 2,500 years */
+if|if
+condition|(
+name|Rflag
+condition|)
+name|utime
+operator|=
+literal|1000000000
+expr_stmt|;
+else|else
 name|time
 argument_list|(
 operator|&
@@ -581,6 +590,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Rflag
+operator|&&
 operator|!
 name|randinit
 condition|)
