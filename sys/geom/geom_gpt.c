@@ -797,6 +797,13 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+break|break;
 for|for
 control|(
 name|i
