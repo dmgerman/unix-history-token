@@ -644,7 +644,7 @@ operator|)
 condition|)
 name|err
 argument_list|(
-name|exit_val
+literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
