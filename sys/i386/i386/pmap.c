@@ -1490,12 +1490,7 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
+comment|/* !defined(SMP) || */
 name|defined
 argument_list|(
 name|ENABLE_PG_G
