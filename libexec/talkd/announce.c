@@ -633,8 +633,7 @@ operator|*
 name|bptr
 operator|++
 operator|=
-literal|'
-literal|'
+literal|'\007'
 expr_stmt|;
 comment|/* send something to wake them up */
 operator|*
