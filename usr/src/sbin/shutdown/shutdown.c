@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.18 (Berkeley) 83/06/02"
+literal|"@(#)shutdown.c	4.19 (Berkeley) 83/06/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,13 +1793,13 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"\007\007\t*** %sSystem shutdown message from %s!%s ***\r\n\n"
+literal|"\007\007\t*** %sSystem shutdown message from %s@%s ***\r\n\n"
 argument_list|,
 name|type
 argument_list|,
-name|hostname
-argument_list|,
 name|shutter
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 else|else

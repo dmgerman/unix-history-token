@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.14 %G%"
+literal|"@(#)fio.c	2.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1823,7 +1823,7 @@ name|fopen
 argument_list|(
 name|editfile
 argument_list|,
-literal|"w"
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
@@ -1844,6 +1844,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|trunc
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 literal|0
