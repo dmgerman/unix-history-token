@@ -5584,13 +5584,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_LOCK_ASSERT
-argument_list|(
-name|fdp
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Perform some sanity checks, then mark the file descriptor as 	 * used and return it to the caller. 	 */
 name|KASSERT
 argument_list|(
@@ -6284,6 +6277,11 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|newfdp
@@ -6303,6 +6301,11 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -6575,7 +6578,7 @@ argument_list|(
 name|newfdp
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|fdp
 operator|->
@@ -6585,6 +6588,12 @@ name|newfdp
 operator|->
 name|fd_nfiles
 condition|)
+block|{
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|fdgrowtable
 argument_list|(
 name|newfdp
@@ -6596,6 +6605,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
+block|}
 name|KASSERT
 argument_list|(
 name|newfdp
