@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	1.2 83/07/17"
+literal|"@(#)wwinit.c	1.3 83/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +216,11 @@ operator|.
 name|sg_flags
 operator|&=
 operator|~
+operator|(
 name|ECHO
+operator||
+name|CRMOD
+operator|)
 expr_stmt|;
 name|wwnewtty
 operator|.
@@ -256,10 +260,7 @@ if|if
 condition|(
 name|Winit
 argument_list|(
-operator|&
-name|wwnewtty
-operator|.
-name|ww_sgttyb
+literal|2
 argument_list|,
 literal|1
 argument_list|)

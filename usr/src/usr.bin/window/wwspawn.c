@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	1.2 83/07/17"
+literal|"@(#)wwspawn.c	1.3 83/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,20 @@ name|ww_state
 operator|=
 name|WW_HASPROC
 expr_stmt|;
+name|close
+argument_list|(
+name|wp
+operator|->
+name|ww_tty
+argument_list|)
+expr_stmt|;
+name|wp
+operator|->
+name|ww_tty
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|wp
 operator|->
@@ -103,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|TERMCAP
-value|"TERMCAP=WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%%+ %%+ :\ 	:co#%d:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:li#%d:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
+value|"TERMCAP=WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%%+ %%+ :\ 	:co#%d:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:li#%d:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
 end_define
 
 begin_decl_stmt
@@ -222,6 +236,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 	i = open("/dev/tty"); 	ioctl(i, TIOCNOTTY, 0); 	close(i); 	*/
 for|for
 control|(
 name|p
@@ -315,11 +330,11 @@ name|TERMCAP
 argument_list|,
 name|wp
 operator|->
-name|ww_ncol
+name|ww_incol
 argument_list|,
 name|wp
 operator|->
-name|ww_nrow
+name|ww_inrow
 argument_list|)
 expr_stmt|;
 name|environ

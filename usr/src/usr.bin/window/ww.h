@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.2 83/07/17		*/
+comment|/*	@(#)ww.h	1.3 83/07/18		*/
 end_comment
 
 begin_include
@@ -25,28 +25,33 @@ begin_struct
 struct|struct
 name|ww
 block|{
-name|int
+name|char
 name|ww_state
-range|:
-literal|4
 decl_stmt|;
-name|int
+comment|/* state of window creation */
+name|char
+name|ww_mode
+decl_stmt|;
+comment|/* mode used to open this window */
+name|char
 name|ww_wstate
-range|:
-literal|4
 decl_stmt|;
+comment|/* state for printing charcters */
 name|int
 name|ww_insert
 range|:
 literal|1
 decl_stmt|;
-comment|/* insert mode */
+comment|/* insert mode, for printing */
 name|int
 name|ww_refresh
 range|:
 literal|1
 decl_stmt|;
 comment|/* force refresh after \n and others */
+name|char
+name|ww_ident
+decl_stmt|;
 name|Win
 modifier|*
 name|ww_win
@@ -54,6 +59,7 @@ decl_stmt|;
 name|int
 name|ww_row
 decl_stmt|;
+comment|/* outside dimensions */
 name|int
 name|ww_col
 decl_stmt|;
@@ -64,18 +70,28 @@ name|int
 name|ww_ncol
 decl_stmt|;
 name|int
+name|ww_irow
+decl_stmt|;
+comment|/* inside dimensions */
+name|int
+name|ww_icol
+decl_stmt|;
+name|int
+name|ww_inrow
+decl_stmt|;
+name|int
+name|ww_incol
+decl_stmt|;
+name|int
 name|ww_pty
 decl_stmt|;
+comment|/* pty or socket pair */
 name|int
 name|ww_tty
 decl_stmt|;
 name|int
 name|ww_pid
 decl_stmt|;
-name|int
-name|ww_newrow
-decl_stmt|;
-comment|/* for cursor addressing */
 name|struct
 name|ww
 modifier|*
@@ -114,6 +130,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* ww_state values */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -142,6 +162,43 @@ name|WW_DEAD
 value|3
 end_define
 
+begin_comment
+comment|/* ww_mode values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WW_PTY
+value|0
+end_define
+
+begin_comment
+comment|/* has pty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WW_SOCKET
+value|1
+end_define
+
+begin_comment
+comment|/* has socket pair */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WW_NONE
+value|2
+end_define
+
+begin_comment
+comment|/* has nothing */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -162,15 +219,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|struct
-name|ww
-modifier|*
-name|wwopen
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -220,6 +268,51 @@ name|s
 parameter_list|)
 value|wwputs((s), curwin)
 end_define
+
+begin_define
+define|#
+directive|define
+name|wwsetcursor
+parameter_list|(
+name|r
+parameter_list|,
+name|c
+parameter_list|)
+value|(WRCurRow = (r), WRCurCol = (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwflush
+parameter_list|()
+value|Wrefresh(1)
+end_define
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|wwopen
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|wwfind
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wwchild
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

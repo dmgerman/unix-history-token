@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	1.2 83/07/17"
+literal|"@(#)wwiomux.c	1.3 83/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,14 @@ name|w
 operator|->
 name|ww_next
 control|)
+if|if
+condition|(
+name|w
+operator|->
+name|ww_pty
+operator|>=
+literal|0
+condition|)
 operator|*
 name|imask
 operator||=

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwmisc.c	1.2 83/07/17"
+literal|"@(#)wwmisc.c	1.3 83/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,13 @@ name|curwin
 operator|=
 name|wp
 expr_stmt|;
+name|Wfront
+argument_list|(
+name|wp
+operator|->
+name|ww_win
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -108,6 +115,54 @@ literal|1
 return|;
 return|return
 literal|0
+return|;
+block|}
+end_block
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|wwfind
+argument_list|(
+name|id
+argument_list|)
+decl|register
+name|id
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|;
+for|for
+control|(
+name|w
+operator|=
+name|wwhead
+init|;
+name|w
+operator|&&
+name|w
+operator|->
+name|ww_ident
+operator|!=
+name|id
+condition|;
+name|w
+operator|=
+name|w
+operator|->
+name|ww_next
+control|)
+empty_stmt|;
+return|return
+name|w
 return|;
 block|}
 end_block

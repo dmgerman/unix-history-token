@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwchild.c	1.2 83/07/17"
+literal|"@(#)wwchild.c	1.3 83/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,36 +103,11 @@ name|ww_state
 operator|=
 name|WW_DEAD
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|curwin
-argument_list|,
-literal|"\r\n%d: Died\r\n"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
+comment|/* 				wwprintf(curwin, 					"\r\n%d: Died\r\n", pid); 				*/
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|wp
-operator|==
-literal|0
-condition|)
-name|wwprintf
-argument_list|(
-name|curwin
-argument_list|,
-literal|"\r\n%d: No such child\r\n"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
+comment|/* 		if (wp == 0) 			wwprintf(curwin, "\r\n%d: No such child\r\n", pid); 		*/
 block|}
 block|}
 end_block
