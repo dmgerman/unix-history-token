@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_rintf.c,v 1.1.1.1 1994/08/19 09:39:58 jkh Exp $"
+literal|"$Id: s_rintf.c,v 1.2 1995/05/30 05:50:21 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,10 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/*  * TWO23 is double instead of float to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have float  * precision and doesn't clip them to float precision when they are  * assigned and returned.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -49,11 +53,11 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 specifier|const
-name|float
+name|double
 else|#
 directive|else
 specifier|static
-name|float
+name|double
 endif|#
 directive|endif
 name|TWO23
