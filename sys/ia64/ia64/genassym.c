@@ -232,14 +232,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|GD_CPUNO
+name|GD_CPUID
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|globaldata
 argument_list|,
-name|gd_cpuno
+name|gd_cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -67,7 +67,7 @@ name|int
 name|gd_switchticks
 decl_stmt|;
 name|u_int
-name|gd_cpuno
+name|gd_cpuid
 decl_stmt|;
 comment|/* this cpu number */
 name|u_int
@@ -157,7 +157,7 @@ modifier|*
 name|pcpu
 parameter_list|,
 name|int
-name|cpuno
+name|cpuid
 parameter_list|,
 name|size_t
 name|sz
@@ -172,7 +172,7 @@ modifier|*
 name|globaldata_find
 parameter_list|(
 name|int
-name|cpuno
+name|cpuid
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -267,7 +267,7 @@ specifier|static
 name|struct
 name|globaldata
 modifier|*
-name|cpuno_to_globaldata
+name|cpuid_to_globaldata
 index|[
 name|NCPUS
 index|]
@@ -422,7 +422,7 @@ modifier|*
 name|globaldata
 parameter_list|,
 name|int
-name|cpuno
+name|cpuid
 parameter_list|,
 name|size_t
 name|sz
@@ -437,9 +437,9 @@ argument_list|)
 expr_stmt|;
 name|globaldata
 operator|->
-name|gd_cpuno
+name|gd_cpuid
 operator|=
-name|cpuno
+name|cpuid
 expr_stmt|;
 name|globaldata
 operator|->
@@ -451,12 +451,12 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 operator|)
 expr_stmt|;
-name|cpuno_to_globaldata
+name|cpuid_to_globaldata
 index|[
-name|cpuno
+name|cpuid
 index|]
 operator|=
 name|globaldata
@@ -471,13 +471,13 @@ modifier|*
 name|globaldata_find
 parameter_list|(
 name|int
-name|cpuno
+name|cpuid
 parameter_list|)
 block|{
 return|return
-name|cpuno_to_globaldata
+name|cpuid_to_globaldata
 index|[
-name|cpuno
+name|cpuid
 index|]
 return|;
 block|}
@@ -2396,7 +2396,7 @@ name|cpus
 condition|)
 block|{
 name|int
-name|cpuno
+name|cpuid
 init|=
 name|ffs
 argument_list|(
@@ -2411,14 +2411,14 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 operator|)
 expr_stmt|;
 name|globaldata
 operator|=
-name|cpuno_to_globaldata
+name|cpuid_to_globaldata
 index|[
-name|cpuno
+name|cpuid
 index|]
 expr_stmt|;
 if|if
@@ -2442,7 +2442,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|CTR1(KTR_SMP, "calling alpha_pal_wripir(%d)", cpuno); 			alpha_pal_wripir(cpuno);
+block|CTR1(KTR_SMP, "calling alpha_pal_wripir(%d)", cpuid); 			alpha_pal_wripir(cpuid);
 endif|#
 directive|endif
 block|}
@@ -2515,7 +2515,7 @@ literal|1
 operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuno
+name|cpuid
 argument_list|)
 argument_list|,
 name|ipi
@@ -2545,11 +2545,11 @@ name|u_int64_t
 name|ipi
 decl_stmt|;
 name|int
-name|cpuno
+name|cpuid
 init|=
 name|PCPU_GET
 argument_list|(
-name|cpuno
+name|cpuid
 argument_list|)
 decl_stmt|;
 do|do
@@ -2643,7 +2643,7 @@ name|checkstate_need_ast
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 name|atomic_set_int
@@ -2653,7 +2653,7 @@ name|checkstate_pending_ast
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2699,7 +2699,7 @@ name|IA64_PSR_CPL_USER
 condition|)
 name|checkstate_cpustate
 index|[
-name|cpuno
+name|cpuid
 index|]
 operator|=
 name|CHECKSTATE_USER
@@ -2715,7 +2715,7 @@ literal|1
 condition|)
 name|checkstate_cpustate
 index|[
-name|cpuno
+name|cpuid
 index|]
 operator|=
 name|CHECKSTATE_SYS
@@ -2723,14 +2723,14 @@ expr_stmt|;
 else|else
 name|checkstate_cpustate
 index|[
-name|cpuno
+name|cpuid
 index|]
 operator|=
 name|CHECKSTATE_INTR
 expr_stmt|;
 name|checkstate_curproc
 index|[
-name|cpuno
+name|cpuid
 index|]
 operator|=
 name|PCPU_GET
@@ -2745,7 +2745,7 @@ name|checkstate_probed_cpus
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2766,7 +2766,7 @@ name|stopped_cpus
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 while|while
@@ -2777,7 +2777,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 operator|)
 operator|)
 operator|==
@@ -2793,7 +2793,7 @@ name|started_cpus
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 name|atomic_clear_int
@@ -2803,7 +2803,7 @@ name|stopped_cpus
 argument_list|,
 literal|1
 operator|<<
-name|cpuno
+name|cpuid
 argument_list|)
 expr_stmt|;
 break|break;
