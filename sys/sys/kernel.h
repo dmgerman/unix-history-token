@@ -332,6 +332,11 @@ init|=
 literal|0x2480000
 block|,
 comment|/* ktrace */
+name|SI_SUB_AUDIT
+init|=
+literal|0x24C0000
+block|,
+comment|/* audit */
 name|SI_SUB_CREATE_INIT
 init|=
 literal|0x2500000
