@@ -16,8 +16,7 @@ name|_LINUX_MIB_H_
 end_define
 
 begin_decl_stmt
-name|char
-modifier|*
+name|void
 name|linux_get_osname
 name|__P
 argument_list|(
@@ -26,6 +25,10 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|,
+name|char
+operator|*
+name|dst
 operator|)
 argument_list|)
 decl_stmt|;
@@ -51,8 +54,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|void
 name|linux_get_osrelease
 name|__P
 argument_list|(
@@ -61,6 +63,10 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|,
+name|char
+operator|*
+name|dst
 operator|)
 argument_list|)
 decl_stmt|;

@@ -66,6 +66,18 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -86,8 +98,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * XXX: Note: this structure needs a mutex to protect the reference count  * and other mutable fields (pr_host, pr_linux).  */
+comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (p) locked by pr_mutex  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -96,28 +114,37 @@ block|{
 name|int
 name|pr_ref
 decl_stmt|;
+comment|/* (p) refcount */
 name|char
 name|pr_host
 index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+comment|/* (p) jail hostname */
 name|u_int32_t
 name|pr_ip
 decl_stmt|;
+comment|/* (c) ip addr host */
 name|void
 modifier|*
 name|pr_linux
 decl_stmt|;
+comment|/* (p) linux abi */
 name|int
 name|pr_securelevel
+decl_stmt|;
+comment|/* (p) securelevel */
+name|struct
+name|mtx
+name|pr_mtx
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Sysctl-set variables that determine global jail policy  */
+comment|/*  * Sysctl-set variables that determine global jail policy  *  * XXX MIB entries will need to be protected by a mutex.  */
 end_comment
 
 begin_decl_stmt
@@ -202,6 +229,21 @@ expr|struct
 name|prison
 operator|*
 name|pr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|prison_getip
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|)
 argument_list|)
 decl_stmt|;

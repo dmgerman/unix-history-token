@@ -24,25 +24,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/jail.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -886,6 +886,19 @@ operator|->
 name|p_ucred
 argument_list|)
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_prison
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 name|ps
 operator|+=
 name|snprintf
@@ -912,7 +925,21 @@ operator|->
 name|pr_host
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_prison
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|ps
 operator|+=
 name|snprintf
@@ -931,6 +958,7 @@ argument_list|,
 literal|" -"
 argument_list|)
 expr_stmt|;
+block|}
 name|DOCHECK
 argument_list|()
 expr_stmt|;
