@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* session.c -- The user windowing interface to Info. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* session.c -- The user windowing interface to Info.    $Id: session.c,v 1.13 1998/02/22 22:38:30 karl Exp $     Copyright (C) 1993, 96, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -13,40 +9,10 @@ directive|include
 file|"info.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FILE_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_FILE_H */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_if
@@ -123,15 +89,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		     Running an Info Session			    */
+comment|/*                   Running an Info Session                        */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -148,10 +114,6 @@ name|FILE
 modifier|*
 name|info_input_stream
 init|=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -165,10 +127,6 @@ name|VFunction
 modifier|*
 name|info_last_executed_command
 init|=
-operator|(
-name|VFunction
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -195,11 +153,6 @@ modifier|*
 modifier|*
 name|info_windows
 init|=
-operator|(
-name|INFO_WINDOW
-operator|*
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -218,7 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of slots allocated to INFO_WINDOWS. */
+comment|/* Number of slots allocated to `info_windows'. */
 end_comment
 
 begin_decl_stmt
@@ -340,6 +293,8 @@ block|{
 name|initialize_info_session
 argument_list|(
 name|node
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|window
@@ -349,7 +304,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Find the largest window in WINDOWS, and make that be the active 	     one.  Then split it and add our window and node to the list 	     of remembered windows and nodes.  Then tile the windows. */
+comment|/* Find the largest window in WINDOWS, and make that be the active              one.  Then split it and add our window and node to the list              of remembered windows and nodes.  Then tile the windows. */
 specifier|register
 name|WINDOW
 modifier|*
@@ -516,6 +471,8 @@ block|{
 name|initialize_info_session
 argument_list|(
 name|initial_node
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|info_error
@@ -555,6 +512,8 @@ block|{
 name|initialize_info_session
 argument_list|(
 name|initial_node
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|display_startup_message_and_start
@@ -576,7 +535,10 @@ name|format
 operator|=
 name|replace_in_documentation
 argument_list|(
+name|_
+argument_list|(
 literal|"Welcome to Info version %s. \"\\[get-help-window]\" for help, \"\\[menu-item]\" for menu item."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
@@ -602,9 +564,6 @@ name|void
 name|info_session
 parameter_list|()
 block|{
-name|terminal_prep_terminal
-argument_list|()
-expr_stmt|;
 name|display_update_display
 argument_list|(
 name|windows
@@ -612,10 +571,6 @@ argument_list|)
 expr_stmt|;
 name|info_last_executed_command
 operator|=
-operator|(
-name|VFunction
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|info_read_and_dispatch
@@ -680,7 +635,7 @@ block|{
 name|int
 name|lk
 decl_stmt|;
-comment|/* If we haven't just gone up or down a line, there is no 	 goal column for this window. */
+comment|/* If we haven't just gone up or down a line, there is no          goal column for this window. */
 if|if
 condition|(
 operator|(
@@ -742,7 +697,7 @@ operator|=
 name|info_get_input_char
 argument_list|()
 expr_stmt|;
-comment|/* No errors yet.  We just read a character, that's all.  Only clear 	 the echo_area if it is not currently active. */
+comment|/* No errors yet.  We just read a character, that's all.  Only clear          the echo_area if it is not currently active. */
 if|if
 condition|(
 operator|!
@@ -770,7 +725,7 @@ condition|(
 name|echo_area_is_active
 condition|)
 block|{
-comment|/* Echo area commands that do killing increment the value of 	     ECHO_AREA_LAST_COMMAND_WAS_KILL.  Thus, if there is no 	     change in the value of this variable, the last command 	     executed was not a kill command. */
+comment|/* Echo area commands that do killing increment the value of              ECHO_AREA_LAST_COMMAND_WAS_KILL.  Thus, if there is no              change in the value of this variable, the last command              executed was not a kill command. */
 if|if
 condition|(
 name|lk
@@ -842,7 +797,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Initialize the first info session by starting the terminal, window,    and display systems. */
+comment|/* Initialize the first info session by starting the terminal, window,    and display systems.  If CLEAR_SCREEN is 0, don't clear the screen.  */
 end_comment
 
 begin_function
@@ -850,27 +805,26 @@ name|void
 name|initialize_info_session
 parameter_list|(
 name|node
+parameter_list|,
+name|clear_screen
 parameter_list|)
 name|NODE
 modifier|*
 name|node
 decl_stmt|;
+name|int
+name|clear_screen
+decl_stmt|;
 block|{
 name|char
 modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
 name|term_name
-decl_stmt|;
-name|term_name
-operator|=
+init|=
 name|getenv
 argument_list|(
 literal|"TERM"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|terminal_initialize_terminal
 argument_list|(
 name|term_name
@@ -903,9 +857,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|clear_screen
+condition|)
+block|{
+name|terminal_prep_terminal
+argument_list|()
+expr_stmt|;
 name|terminal_clear_screen
 argument_list|()
 expr_stmt|;
+block|}
 name|initialize_info_keymaps
 argument_list|()
 expr_stmt|;
@@ -938,16 +901,25 @@ name|window_deletion_notifier
 operator|=
 name|forget_window_and_nodes
 expr_stmt|;
-comment|/* If input has not been redirected yet, make it come from STDIN. */
+comment|/* If input has not been redirected yet, make it come from unbuffered      standard input. */
 if|if
 condition|(
 operator|!
 name|info_input_stream
 condition|)
+block|{
+name|setbuf
+argument_list|(
+name|stdin
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|info_input_stream
 operator|=
 name|stdin
 expr_stmt|;
+block|}
 name|info_windows_initialized_p
 operator|=
 literal|1
@@ -1198,18 +1170,16 @@ modifier|*
 name|node
 decl_stmt|;
 block|{
+comment|/* See if we already have this window in our list. */
 name|INFO_WINDOW
 modifier|*
 name|info_win
-decl_stmt|;
-comment|/* See if we already have this window in our list. */
-name|info_win
-operator|=
+init|=
 name|get_info_window_of_window
 argument_list|(
 name|window
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* If the window wasn't already on our list, then make a new entry. */
 if|if
 condition|(
@@ -1303,32 +1273,26 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If this node, the current pagetop, and the current point are the      same as the last saved node and pagetop, don't really add this to      the list of history nodes. */
-block|{
-name|int
-name|ni
-init|=
-name|info_win
-operator|->
-name|nodes_index
-operator|-
-literal|1
-decl_stmt|;
+comment|/* If this node, the current pagetop, and the current point are the      same as the current saved node and pagetop, don't really add this to      the list of history nodes.  This may happen only at the very      beginning of the program, I'm not sure.  --karl  */
 if|if
 condition|(
-operator|(
-name|ni
-operator|!=
-operator|-
-literal|1
-operator|)
+name|info_win
+operator|->
+name|nodes
 operator|&&
-operator|(
+name|info_win
+operator|->
+name|current
+operator|>=
+literal|0
+operator|&&
 name|info_win
 operator|->
 name|nodes
 index|[
-name|ni
+name|info_win
+operator|->
+name|current
 index|]
 operator|->
 name|contents
@@ -1336,36 +1300,34 @@ operator|==
 name|node
 operator|->
 name|contents
-operator|)
 operator|&&
-operator|(
 name|info_win
 operator|->
 name|pagetops
 index|[
-name|ni
+name|info_win
+operator|->
+name|current
 index|]
 operator|==
 name|window
 operator|->
 name|pagetop
-operator|)
 operator|&&
-operator|(
 name|info_win
 operator|->
 name|points
 index|[
-name|ni
+name|info_win
+operator|->
+name|current
 index|]
 operator|==
 name|window
 operator|->
 name|point
-operator|)
 condition|)
 return|return;
-block|}
 comment|/* Remember this node, the currently displayed pagetop, and the current      location of point in this window.  Because we are updating pagetops      and points as well as nodes, it is more efficient to avoid the      add_pointer_to_array macro here. */
 if|if
 condition|(
@@ -1382,6 +1344,12 @@ condition|)
 block|{
 name|info_win
 operator|->
+name|nodes_slots
+operator|+=
+literal|20
+expr_stmt|;
+name|info_win
+operator|->
 name|nodes
 operator|=
 operator|(
@@ -1395,13 +1363,9 @@ name|info_win
 operator|->
 name|nodes
 argument_list|,
-operator|(
 name|info_win
 operator|->
 name|nodes_slots
-operator|+=
-literal|20
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1514,10 +1478,6 @@ operator|->
 name|nodes_index
 index|]
 operator|=
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|info_win
@@ -1569,10 +1529,6 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|INFO_WINDOW
-modifier|*
-name|info_win
 decl_stmt|;
 for|for
 control|(
@@ -1747,7 +1703,7 @@ operator|->
 name|nodes
 condition|)
 block|{
-comment|/* Free the node structures which held onto internal node contents 	     here.  This doesn't free the contents; we have a garbage collector 	     which does that. */
+comment|/* Free the node structures which held onto internal node contents              here.  This doesn't free the contents; we have a garbage collector              which does that. */
 for|for
 control|(
 name|i
@@ -1887,15 +1843,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		       Info Movement Commands			    */
+comment|/*                     Info Movement Commands                       */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -2394,7 +2350,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_next_line
 argument_list|,
+argument|_(
 literal|"Move down to the next line"
+argument|)
 argument_list|)
 end_macro
 
@@ -2458,7 +2416,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_prev_line
 argument_list|,
+argument|_(
 literal|"Move up to the previous line"
+argument|)
 argument_list|)
 end_macro
 
@@ -2522,7 +2482,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_end_of_line
 argument_list|,
+argument|_(
 literal|"Move to the end of the line"
+argument|)
 argument_list|)
 end_macro
 
@@ -2615,7 +2577,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_beginning_of_line
 argument_list|,
+argument|_(
 literal|"Move to the start of the line"
+argument|)
 argument_list|)
 end_macro
 
@@ -2700,7 +2664,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_forward_char
 argument_list|,
+argument|_(
 literal|"Move forward a character"
+argument|)
 argument_list|)
 end_macro
 
@@ -2772,7 +2738,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_backward_char
 argument_list|,
+argument|_(
 literal|"Move backward a character"
+argument|)
 argument_list|)
 end_macro
 
@@ -2844,7 +2812,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_forward_word
 argument_list|,
+argument|_(
 literal|"Move forward a word"
+argument|)
 argument_list|)
 end_macro
 
@@ -2917,7 +2887,7 @@ operator|>=
 name|end
 condition|)
 return|return;
-comment|/* If we are not in a word, move forward until we are in one. 	 Then, move forward until we hit a non-alphabetic character. */
+comment|/* If we are not in a word, move forward until we are in one.          Then, move forward until we hit a non-alphabetic character. */
 name|c
 operator|=
 name|buffer
@@ -3014,7 +2984,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_backward_word
 argument_list|,
+argument|_(
 literal|"Move backward a word"
+argument|)
 argument_list|)
 end_macro
 
@@ -3075,7 +3047,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* Like info_forward_word (), except that we look at the 	 characters just before point. */
+comment|/* Like info_forward_word (), except that we look at the          characters just before point. */
 name|c
 operator|=
 name|buffer
@@ -3284,7 +3256,10 @@ name|count
 operator|>
 literal|2
 condition|?
+name|_
+argument_list|(
 literal|" times"
+argument_list|)
 else|:
 literal|""
 argument_list|)
@@ -3294,7 +3269,10 @@ name|sprintf
 argument_list|(
 name|td_buffer
 argument_list|,
+name|_
+argument_list|(
 literal|"%d times"
+argument_list|)
 argument_list|,
 name|count
 argument_list|)
@@ -3308,7 +3286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Variable controlling the behaviour of default scrolling when you are    already at the bottom of a node.  Possible values are defined in session.h.    The meanings are:     IS_Continuous	Try to get first menu item, or failing that, the 			"Next:" pointer, or failing that, the "Up:" and 			"Next:" of the up.    IS_NextOnly		Try to get "Next:" menu item.    IS_PageOnly		Simply give up at the bottom of a node. */
+comment|/* Variable controlling the behaviour of default scrolling when you are    already at the bottom of a node.  Possible values are defined in session.h.    The meanings are:     IS_Continuous        Try to get first menu item, or failing that, the                         "Next:" pointer, or failing that, the "Up:" and                         "Next:" of the up.    IS_NextOnly          Try to get "Next:" menu item.    IS_PageOnly          Simply give up at the bottom of a node. */
 end_comment
 
 begin_decl_stmt
@@ -3400,19 +3378,28 @@ name|info_parsed_filename
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No \"Next\" pointer for this node."
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Following \"Next\" node..."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Next"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -3423,7 +3410,7 @@ case|case
 name|IS_Continuous
 case|:
 block|{
-comment|/* First things first.  If this node contains a menu, move down 	   into the menu. */
+comment|/* First things first.  If this node contains a menu, move down            into the menu. */
 block|{
 name|REFERENCE
 modifier|*
@@ -3451,7 +3438,10 @@ argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Selecting first menu item..."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_menu_digit
@@ -3466,7 +3456,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* Okay, this node does not contain a menu.  If it contains a 	   "Next:" pointer, use that. */
+comment|/* Okay, this node does not contain a menu.  If it contains a            "Next:" pointer, use that. */
 name|info_next_label_of_node
 argument_list|(
 name|window
@@ -3481,19 +3471,25 @@ condition|)
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Selecting \"Next\" node..."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Next"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Okay, there wasn't a "Next:" for this node.  Move "Up:" until we 	   can move "Next:".  If that isn't possible, complain that there 	   are no more nodes. */
+comment|/* Okay, there wasn't a "Next:" for this node.  Move "Up:" until we            can move "Next:".  If that isn't possible, complain that there            are no more nodes. */
 block|{
 name|int
 name|up_counter
@@ -3518,7 +3514,7 @@ name|info_win
 operator|->
 name|current
 expr_stmt|;
-comment|/* Back up through the "Up:" pointers until we have found a "Next:" 	     that isn't the same as the first menu item found in that node. */
+comment|/* Back up through the "Up:" pointers until we have found a "Next:"              that isn't the same as the first menu item found in that node. */
 name|up_counter
 operator|=
 literal|0
@@ -3543,7 +3539,10 @@ condition|)
 block|{
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Up"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -3570,7 +3569,7 @@ operator|!
 name|info_label_was_found
 condition|)
 continue|continue;
-comment|/* If this node's first menu item is the same as this node's 		     Next pointer, keep backing up. */
+comment|/* If this node's first menu item is the same as this node's                      Next pointer, keep backing up. */
 if|if
 condition|(
 operator|!
@@ -3586,10 +3585,10 @@ name|char
 modifier|*
 name|next_nodename
 decl_stmt|;
-comment|/* Remember the name of the Next node, since reading 			 the menu can overwrite the contents of the 			 info_parsed_xxx strings. */
+comment|/* Remember the name of the Next node, since reading                          the menu can overwrite the contents of the                          info_parsed_xxx strings. */
 name|next_nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_nodename
 argument_list|)
@@ -3638,7 +3637,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* Restore the world to where it was before 			     reading the menu contents. */
+comment|/* Restore the world to where it was before                              reading the menu contents. */
 name|info_free_references
 argument_list|(
 name|menu
@@ -3658,7 +3657,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* This node has a "Next" pointer, and it is not the 		     same as the first menu item found in this node. */
+comment|/* This node has a "Next" pointer, and it is not the                      same as the first menu item found in this node. */
 name|window_message_in_echo_area
 argument_list|(
 literal|"Moving \"Up\" %s, then \"Next\"."
@@ -3671,7 +3670,10 @@ argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Next"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -3680,7 +3682,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* No more "Up" pointers.  Print an error, and call it 		     quits. */
+comment|/* No more "Up" pointers.  Print an error, and call it                      quits. */
 specifier|register
 name|int
 name|i
@@ -3784,7 +3786,10 @@ name|W_UpdateWindow
 expr_stmt|;
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No more nodes."
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3851,19 +3856,28 @@ name|info_parsed_filename
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No \"Prev\" for this node."
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Moving \"Prev\" in this window."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Prev"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -3906,19 +3920,28 @@ name|info_parsed_filename
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No \"Prev\" or \"Up\" for this node."
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Moving \"Up\" in this window."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Up"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -3937,7 +3960,7 @@ name|inhibit_menu_traversing
 init|=
 literal|0
 decl_stmt|;
-comment|/* Watch out!  If this node's Prev is the same as the Up, then 	     move Up.  Otherwise, we could move Prev, and then to the last 	     menu item in the Prev.  This would cause the user to loop 	     through a subsection of the info file. */
+comment|/* Watch out!  If this node's Prev is the same as the Up, then              move Up.  Otherwise, we could move Prev, and then to the last              menu item in the Prev.  This would cause the user to loop              through a subsection of the info file. */
 if|if
 condition|(
 operator|!
@@ -3952,7 +3975,7 @@ name|pnode
 decl_stmt|;
 name|pnode
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_nodename
 argument_list|)
@@ -3981,7 +4004,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The nodes are the same.  Inhibit moving to the last 		     menu item. */
+comment|/* The nodes are the same.  Inhibit moving to the last                      menu item. */
 name|free
 argument_list|(
 name|pnode
@@ -4008,15 +4031,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Move to the previous node.  If this node now contains a menu, 	     and we have not inhibited movement to it, move to the node 	     corresponding to the last menu item. */
+comment|/* Move to the previous node.  If this node now contains a menu,              and we have not inhibited movement to it, move to the node              corresponding to the last menu item. */
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Moving \"Prev\" in this window."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Prev"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -4051,7 +4080,10 @@ argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Moving to \"Prev\"'s last menu item."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_menu_digit
@@ -4080,7 +4112,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_global_next_node
 argument_list|,
+argument|_(
 literal|"Move forwards or down through node structure"
+argument|)
 argument_list|)
 end_macro
 
@@ -4136,7 +4170,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_global_prev_node
 argument_list|,
+argument|_(
 literal|"Move backwards or up through node structure"
+argument|)
 argument_list|)
 end_macro
 
@@ -4192,7 +4228,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_scroll_forward
 argument_list|,
+argument|_(
 literal|"Scroll forward in this window"
+argument|)
 argument_list|)
 end_macro
 
@@ -4219,7 +4257,7 @@ block|{
 name|int
 name|desired_top
 decl_stmt|;
-comment|/* Without an explicit numeric argument, scroll the bottom two 	 lines to the top of this window,  Or, if at bottom of window, 	 and the user wishes to scroll through nodes get the "Next" node 	 for this window. */
+comment|/* Without an explicit numeric argument, scroll the bottom two          lines to the top of this window,  Or, if at bottom of window,          and the user wishes to scroll through nodes get the "Next" node          for this window. */
 if|if
 condition|(
 operator|!
@@ -4244,7 +4282,7 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
-comment|/* If there are no more lines to scroll here, error, or get 	     another node, depending on INFO_SCROLL_BEHAVIOUR. */
+comment|/* If there are no more lines to scroll here, error, or get              another node, depending on INFO_SCROLL_BEHAVIOUR. */
 if|if
 condition|(
 name|desired_top
@@ -4259,7 +4297,7 @@ name|behaviour
 init|=
 name|info_scroll_behaviour
 decl_stmt|;
-comment|/* Here is a hack.  If the key being used is not SPC, do the 		 PageOnly behaviour. */
+comment|/* Here is a hack.  If the key being used is not SPC, do the                  PageOnly behaviour. */
 if|if
 condition|(
 name|key
@@ -4339,7 +4377,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_scroll_backward
 argument_list|,
+argument|_(
 literal|"Scroll backward in this window"
+argument|)
 argument_list|)
 end_macro
 
@@ -4366,7 +4406,7 @@ block|{
 name|int
 name|desired_top
 decl_stmt|;
-comment|/* Without an explicit numeric argument, scroll the top two lines 	 to the bottom of this window, or move to the previous, or Up'th 	 node. */
+comment|/* Without an explicit numeric argument, scroll the top two lines          to the bottom of this window, or move to the previous, or Up'th          node. */
 if|if
 condition|(
 operator|!
@@ -4413,7 +4453,7 @@ name|behaviour
 init|=
 name|info_scroll_behaviour
 decl_stmt|;
-comment|/* Same kind of hack as in info_scroll_forward.  If the key 		 used to invoke this command is not DEL, do only the PageOnly 		 behaviour. */
+comment|/* Same kind of hack as in info_scroll_forward.  If the key                  used to invoke this command is not DEL, do only the PageOnly                  behaviour. */
 if|if
 condition|(
 name|key
@@ -4477,7 +4517,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_beginning_of_node
 argument_list|,
+argument|_(
 literal|"Move to the start of this node"
+argument|)
 argument_list|)
 end_macro
 
@@ -4511,7 +4553,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_end_of_node
 argument_list|,
+argument|_(
 literal|"Move to the end of this node"
+argument|)
 argument_list|)
 end_macro
 
@@ -4545,15 +4589,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		   Commands for Manipulating Windows		    */
+comment|/*                 Commands for Manipulating Windows                */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -4569,7 +4613,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_next_window
 argument_list|,
+argument|_(
 literal|"Select the next window"
+argument|)
 argument_list|)
 end_macro
 
@@ -4692,7 +4738,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_prev_window
 argument_list|,
+argument|_(
 literal|"Select the previous window"
+argument|)
 argument_list|)
 end_macro
 
@@ -4742,7 +4790,7 @@ name|count
 operator|--
 condition|)
 block|{
-comment|/* If we are in the echo area, or if the echo area isn't active and we 	 are in the first window, find the last window in the chain. */
+comment|/* If we are in the echo area, or if the echo area isn't active and we          are in the first window, find the last window in the chain. */
 if|if
 condition|(
 name|window
@@ -4850,7 +4898,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_split_window
 argument_list|,
+argument|_(
 literal|"Split the current window"
+argument|)
 argument_list|)
 end_macro
 
@@ -4976,7 +5026,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !SPLIT_BEFORE_ACTIVE */
-comment|/* If the window just split was one internal to Info, try to display 	 something else in it. */
+comment|/* If the window just split was one internal to Info, try to display          something else in it. */
 if|if
 condition|(
 name|internal_info_node_p
@@ -5017,12 +5067,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|iw
 operator|=
 name|info_windows
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -5175,7 +5227,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_delete_window
 argument_list|,
+argument|_(
 literal|"Delete the current window"
+argument|)
 argument_list|)
 end_macro
 
@@ -5207,7 +5261,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Cannot delete a permanent window"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5274,7 +5331,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* We not only delete the window from the display, we forget it from 	 our list of remembered windows. */
+comment|/* We not only delete the window from the display, we forget it from          our list of remembered windows. */
 name|forget_window_and_nodes
 argument_list|(
 name|window
@@ -5307,7 +5364,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_keep_one_window
 argument_list|,
+argument|_(
 literal|"Delete all other windows"
+argument|)
 argument_list|)
 end_macro
 
@@ -5358,7 +5417,7 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-comment|/* Find an eligible window and delete it.  If no eligible windows 	 are found, we are done.  A window is eligible for deletion if 	 is it not permanent, and it is not WINDOW. */
+comment|/* Find an eligible window and delete it.  If no eligible windows          are found, we are done.  A window is eligible for deletion if          is it not permanent, and it is not WINDOW. */
 for|for
 control|(
 name|win
@@ -5464,7 +5523,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_scroll_other_window
 argument_list|,
+argument|_(
 literal|"Scroll the other window"
+argument|)
 argument_list|)
 end_macro
 
@@ -5528,7 +5589,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_grow_window
 argument_list|,
+argument|_(
 literal|"Grow (or shrink) this window"
+argument|)
 argument_list|)
 end_macro
 
@@ -5565,7 +5628,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_tile_windows
 argument_list|,
+argument|_(
 literal|"Divide the available screen space among the visible windows"
+argument|)
 argument_list|)
 end_macro
 
@@ -5588,7 +5653,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_toggle_wrap
 argument_list|,
+argument|_(
 literal|"Toggle the state of line wrapping in the current window"
+argument|)
 argument_list|)
 end_macro
 
@@ -5610,15 +5677,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			Info Node Commands			    */
+comment|/*                      Info Node Commands                          */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -5706,7 +5773,7 @@ name|filename
 condition|)
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|filename
 argument_list|)
@@ -5719,7 +5786,7 @@ name|nodename
 condition|)
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|entry
 operator|->
@@ -5729,7 +5796,7 @@ expr_stmt|;
 else|else
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 literal|"Top"
 argument_list|)
@@ -5756,7 +5823,7 @@ name|info_recent_file_error
 condition|)
 name|file_system_error
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_recent_file_error
 argument_list|)
@@ -5809,7 +5876,7 @@ argument_list|)
 expr_stmt|;
 name|file_system_error
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_recent_file_error
 argument_list|)
@@ -5994,7 +6061,7 @@ name|info_parsed_filename
 condition|)
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_filename
 argument_list|)
@@ -6011,7 +6078,7 @@ name|parent
 condition|)
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|window
 operator|->
@@ -6031,7 +6098,7 @@ name|filename
 condition|)
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|window
 operator|->
@@ -6047,7 +6114,7 @@ name|info_parsed_nodename
 condition|)
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_nodename
 argument_list|)
@@ -6055,7 +6122,7 @@ expr_stmt|;
 else|else
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 literal|"Top"
 argument_list|)
@@ -6185,7 +6252,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_next_node
 argument_list|,
+argument|_(
 literal|"Select the `Next' node"
+argument|)
 argument_list|)
 end_macro
 
@@ -6200,7 +6269,10 @@ argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Next"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -6217,7 +6289,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_prev_node
 argument_list|,
+argument|_(
 literal|"Select the `Prev' node"
+argument|)
 argument_list|)
 end_macro
 
@@ -6232,7 +6306,10 @@ argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Prev"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -6249,7 +6326,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_up_node
 argument_list|,
+argument|_(
 literal|"Select the `Up' node"
+argument|)
 argument_list|)
 end_macro
 
@@ -6264,7 +6343,10 @@ argument_list|)
 expr_stmt|;
 name|info_handle_pointer
 argument_list|(
+name|_
+argument_list|(
 literal|"Up"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -6281,7 +6363,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_last_node
 argument_list|,
+argument|_(
 literal|"Select the last node in this file"
+argument|)
 argument_list|)
 end_macro
 
@@ -6364,7 +6448,10 @@ name|node
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"This window has no additional nodes"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -6394,7 +6481,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_first_node
 argument_list|,
+argument|_(
 literal|"Select the first node in this file"
+argument|)
 argument_list|)
 end_macro
 
@@ -6452,7 +6541,10 @@ name|node
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"This window has no additional nodes"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -6474,155 +6566,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* Make WINDOW display the previous node displayed in this window. */
-end_comment
-
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|info_history_node
-argument_list|,
-literal|"Select the most recently selected node"
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|INFO_WINDOW
-modifier|*
-name|info_win
-decl_stmt|;
-comment|/* Find the INFO_WINDOW which contains WINDOW. */
-name|info_win
-operator|=
-name|get_info_window_of_window
-argument_list|(
-name|window
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|info_win
-condition|)
-block|{
-name|info_error
-argument_list|(
-literal|"Requested window is not present!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|set_remembered_pagetop_and_point
-argument_list|(
-name|window
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|info_win
-operator|->
-name|current
-condition|)
-block|{
-if|if
-condition|(
-name|info_win
-operator|->
-name|nodes_index
-operator|>
-literal|1
-condition|)
-block|{
-name|window_message_in_echo_area
-argument_list|(
-literal|"Now wrapped around to beginning of history."
-argument_list|)
-expr_stmt|;
-name|info_win
-operator|->
-name|current
-operator|=
-name|info_win
-operator|->
-name|nodes_index
-expr_stmt|;
-block|}
-else|else
-block|{
-name|info_error
-argument_list|(
-literal|"No earlier nodes in this window."
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-name|info_win
-operator|->
-name|current
-operator|--
-expr_stmt|;
-name|window_set_node_of_window
-argument_list|(
-name|window
-argument_list|,
-name|info_win
-operator|->
-name|nodes
-index|[
-name|info_win
-operator|->
-name|current
-index|]
-argument_list|)
-expr_stmt|;
-name|window
-operator|->
-name|pagetop
-operator|=
-name|info_win
-operator|->
-name|pagetops
-index|[
-name|info_win
-operator|->
-name|current
-index|]
-expr_stmt|;
-name|window
-operator|->
-name|point
-operator|=
-name|info_win
-operator|->
-name|points
-index|[
-name|info_win
-operator|->
-name|current
-index|]
-expr_stmt|;
-name|window
-operator|->
-name|flags
-operator||=
-name|W_UpdateWindow
-expr_stmt|;
-if|if
-condition|(
-name|auto_footnotes_p
-condition|)
-name|info_get_or_remove_footnotes
-argument_list|(
-name|window
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/* Select the last menu item in WINDOW->node. */
 end_comment
 
@@ -6631,7 +6574,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_last_menu_item
 argument_list|,
+argument|_(
 literal|"Select the last item in this node's menu"
+argument|)
 argument_list|)
 end_macro
 
@@ -6658,7 +6603,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_menu_digit
 argument_list|,
+argument|_(
 literal|"Select this menu item"
+argument|)
 argument_list|)
 end_macro
 
@@ -6740,12 +6687,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|entry
 operator|=
 name|menu
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -6780,7 +6729,10 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"There aren't %d items in this menu."
+argument_list|)
 argument_list|,
 name|item
 argument_list|)
@@ -7225,7 +7177,7 @@ name|defentry
 operator|->
 name|label
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|refs
 index|[
@@ -7267,7 +7219,7 @@ name|defentry
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|defentry
 operator|->
@@ -7284,7 +7236,7 @@ name|defentry
 operator|->
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|defentry
 operator|->
@@ -7360,7 +7312,10 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
+name|_
+argument_list|(
 literal|"Menu item (%s): "
+argument_list|)
 argument_list|,
 name|defentry
 operator|->
@@ -7372,7 +7327,10 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
+name|_
+argument_list|(
 literal|"Menu item: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7386,7 +7344,10 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
+name|_
+argument_list|(
 literal|"Follow xref (%s): "
+argument_list|)
 argument_list|,
 name|defentry
 operator|->
@@ -7398,7 +7359,10 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
+name|_
+argument_list|(
 literal|"Follow xref: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7469,7 +7433,7 @@ name|defentry
 condition|)
 name|line
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|defentry
 operator|->
@@ -7489,7 +7453,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Not going to ask any questions.  If we have a default entry, use 	 that, otherwise return. */
+comment|/* Not going to ask any questions.  If we have a default entry, use          that, otherwise return. */
 if|if
 condition|(
 operator|!
@@ -7499,7 +7463,7 @@ return|return;
 else|else
 name|line
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|defentry
 operator|->
@@ -7531,7 +7495,10 @@ name|defentry
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"The reference disappeared! (%s)."
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -7706,7 +7673,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_menu_item
 argument_list|,
+argument|_(
 literal|"Read a menu item and select its node"
+argument|)
 argument_list|)
 end_macro
 
@@ -7737,7 +7706,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_xref_item
 argument_list|,
+argument|_(
 literal|"Read a footnote or cross reference and select its node"
+argument|)
 argument_list|)
 end_macro
 
@@ -7768,7 +7739,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_find_menu
 argument_list|,
+argument|_(
 literal|"Move to the start of this node's menu"
+argument|)
 argument_list|)
 end_macro
 
@@ -7868,7 +7841,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_visit_menu
 argument_list|,
+argument|_(
 literal|"Visit as many menu items at once as possible"
+argument|)
 argument_list|)
 end_macro
 
@@ -7984,7 +7959,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_goto_node
 argument_list|,
+argument|_(
 literal|"Read a node name and select it"
+argument|)
 argument_list|)
 end_macro
 
@@ -7993,10 +7970,6 @@ block|{
 name|char
 modifier|*
 name|line
-decl_stmt|;
-name|NODE
-modifier|*
-name|node
 decl_stmt|;
 define|#
 directive|define
@@ -8345,7 +8318,7 @@ name|entry
 operator|->
 name|label
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|fb
 operator|->
@@ -8383,7 +8356,10 @@ name|info_read_maybe_completing
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Goto Node: "
+argument_list|)
 argument_list|,
 name|items
 argument_list|)
@@ -8403,7 +8379,10 @@ name|info_read_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Goto Node: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8474,7 +8453,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_man
 argument_list|,
+argument|_(
 literal|"Read a manpage reference and select it"
+argument|)
 argument_list|)
 end_macro
 
@@ -8484,17 +8465,16 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|NODE
-modifier|*
-name|node
-decl_stmt|;
 name|line
 operator|=
 name|info_read_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Get Manpage: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8608,7 +8588,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_top_node
 argument_list|,
+argument|_(
 literal|"Select the node `Top' in this file"
+argument|)
 argument_list|)
 end_macro
 
@@ -8616,7 +8598,10 @@ begin_block
 block|{
 name|info_parse_and_select
 argument_list|(
+name|_
+argument_list|(
 literal|"Top"
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -8633,7 +8618,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_dir_node
 argument_list|,
+argument|_(
 literal|"Select the node `(dir)'"
+argument|)
 argument_list|)
 end_macro
 
@@ -8649,64 +8636,42 @@ expr_stmt|;
 block|}
 end_block
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* Try to delete the current node appearing in this window, showing the most    recently selected node in this window. */
+comment|/* Read the name of a node to kill.  The list of available nodes comes    from the nodes appearing in the current window configuration. */
 end_comment
 
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|info_kill_node
-argument_list|,
-literal|"Kill this node"
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|char
+modifier|*
+name|read_nodename_to_kill
+parameter_list|(
+name|window
+parameter_list|)
+name|WINDOW
+modifier|*
+name|window
+decl_stmt|;
 block|{
-specifier|register
 name|int
 name|iw
-decl_stmt|,
-name|i
-decl_stmt|;
-specifier|register
-name|INFO_WINDOW
-modifier|*
-name|info_win
 decl_stmt|;
 name|char
 modifier|*
 name|nodename
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 decl_stmt|;
-name|NODE
+name|INFO_WINDOW
 modifier|*
-name|temp
-init|=
-operator|(
-name|NODE
-operator|*
-operator|)
-name|NULL
+name|info_win
 decl_stmt|;
-comment|/* Read the name of a node to kill.  The list of available nodes comes      from the nodes appearing in the current window configuration. */
-block|{
 name|REFERENCE
 modifier|*
 modifier|*
 name|menu
 init|=
-operator|(
-name|REFERENCE
-operator|*
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|int
@@ -8721,22 +8686,56 @@ decl_stmt|;
 name|char
 modifier|*
 name|default_nodename
-decl_stmt|,
+init|=
+name|xstrdup
+argument_list|(
+name|active_window
+operator|->
+name|node
+operator|->
+name|nodename
+argument_list|)
+decl_stmt|;
+name|char
 modifier|*
 name|prompt
+init|=
+name|xmalloc
+argument_list|(
+literal|40
+operator|+
+name|strlen
+argument_list|(
+name|default_nodename
+argument_list|)
+argument_list|)
 decl_stmt|;
+name|sprintf
+argument_list|(
+name|prompt
+argument_list|,
+name|_
+argument_list|(
+literal|"Kill node (%s): "
+argument_list|)
+argument_list|,
+name|default_nodename
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|iw
 operator|=
 literal|0
 init|;
+operator|(
 name|info_win
 operator|=
 name|info_windows
 index|[
 name|iw
 index|]
+operator|)
 condition|;
 name|iw
 operator|++
@@ -8745,9 +8744,7 @@ block|{
 name|REFERENCE
 modifier|*
 name|entry
-decl_stmt|;
-name|entry
-operator|=
+init|=
 operator|(
 name|REFERENCE
 operator|*
@@ -8759,12 +8756,12 @@ argument_list|(
 name|REFERENCE
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|entry
 operator|->
 name|label
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_win
 operator|->
@@ -8806,42 +8803,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-name|default_nodename
-operator|=
-name|strdup
-argument_list|(
-name|active_window
-operator|->
-name|node
-operator|->
-name|nodename
-argument_list|)
-expr_stmt|;
-name|prompt
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-literal|40
-operator|+
-name|strlen
-argument_list|(
-name|default_nodename
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|prompt
-argument_list|,
-literal|"Kill node (%s): "
-argument_list|,
-name|default_nodename
-argument_list|)
-expr_stmt|;
 name|nodename
 operator|=
 name|info_read_completing_in_echo_area
@@ -8888,7 +8849,47 @@ argument_list|(
 name|default_nodename
 argument_list|)
 expr_stmt|;
+return|return
+name|nodename
+return|;
 block|}
+end_function
+
+begin_comment
+comment|/* Delete NODENAME from this window, showing the most    recently selected node in this window. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|kill_node
+parameter_list|(
+name|window
+parameter_list|,
+name|nodename
+parameter_list|)
+name|WINDOW
+modifier|*
+name|window
+decl_stmt|;
+name|char
+modifier|*
+name|nodename
+decl_stmt|;
+block|{
+name|int
+name|iw
+decl_stmt|,
+name|i
+decl_stmt|;
+name|INFO_WINDOW
+modifier|*
+name|info_win
+decl_stmt|;
+name|NODE
+modifier|*
+name|temp
+decl_stmt|;
 comment|/* If there is no nodename to kill, quit now. */
 if|if
 condition|(
@@ -8914,12 +8915,14 @@ name|iw
 operator|=
 literal|0
 init|;
+operator|(
 name|info_win
 operator|=
 name|info_windows
 index|[
 name|iw
 index|]
+operator|)
 condition|;
 name|iw
 operator|++
@@ -8958,7 +8961,10 @@ name|nodename
 condition|)
 name|info_error
 argument_list|(
-literal|"Cannot kill the node `%s'"
+name|_
+argument_list|(
+literal|"Cannot kill node `%s'"
+argument_list|)
 argument_list|,
 name|nodename
 argument_list|)
@@ -8988,12 +8994,15 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Cannot kill the last node"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* INFO_WIN contains the node that the user wants to stop viewing.      Delete this node from the list of nodes previously shown in this      window. */
+comment|/* INFO_WIN contains the node that the user wants to stop viewing.  Delete      this node from the list of nodes previously shown in this window. */
 for|for
 control|(
 name|i
@@ -9091,7 +9100,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* If the node being displayed in the next window is not the most 	 recently loaded one, get the most recently loaded one. */
+comment|/* If the node being displayed in the next window is not the most          recently loaded one, get the most recently loaded one. */
 if|if
 condition|(
 operator|(
@@ -9114,7 +9123,7 @@ name|nodes_index
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Else, if there is another node behind the stealers current node, 	 use that one. */
+comment|/* Else, if there is another node behind the stealers current node,          use that one. */
 elseif|else
 if|if
 condition|(
@@ -9145,6 +9154,14 @@ block|{
 name|NODE
 modifier|*
 name|copy
+init|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|)
 decl_stmt|;
 name|temp
 operator|=
@@ -9172,20 +9189,6 @@ name|pagetops
 index|[
 name|which
 index|]
-expr_stmt|;
-name|copy
-operator|=
-operator|(
-name|NODE
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|NODE
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|copy
 operator|->
@@ -9302,8 +9305,87 @@ condition|)
 name|window_clear_echo_area
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|auto_footnotes_p
+condition|)
+name|info_get_or_remove_footnotes
+argument_list|(
+name|window
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Kill current node, thus going back one in the node history.  I (karl)    do not think this is completely correct yet, because of the    window-changing stuff in kill_node, but it's a lot better than the    previous implementation, which did not account for nodes being    visited twice at all.  */
+end_comment
+
+begin_macro
+name|DECLARE_INFO_COMMAND
+argument_list|(
+argument|info_history_node
+argument_list|,
+argument|_(
+literal|"Select the most recently selected node"
+argument|)
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|kill_node
+argument_list|(
+name|window
+argument_list|,
+name|active_window
+operator|->
+name|node
+operator|->
+name|nodename
+argument_list|)
+expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* Kill named node.  */
+end_comment
+
+begin_macro
+name|DECLARE_INFO_COMMAND
+argument_list|(
+argument|info_kill_node
+argument_list|,
+argument|_(
+literal|"Kill this node"
+argument|)
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|char
+modifier|*
+name|nodename
+init|=
+name|read_nodename_to_kill
+argument_list|(
+name|window
+argument_list|)
+decl_stmt|;
+name|kill_node
+argument_list|(
+name|window
+argument_list|,
+name|nodename
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Read the name of a file and select the entire file. */
@@ -9314,7 +9396,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_view_file
 argument_list|,
+argument|_(
 literal|"Read the name of a file and select it"
+argument|)
 argument_list|)
 end_macro
 
@@ -9330,7 +9414,10 @@ name|info_read_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Find file: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9387,7 +9474,10 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Cannot find \"%s\"."
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -9433,15 +9523,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		   Dumping and Printing Nodes			    */
+comment|/*                 Dumping and Printing Nodes                       */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -9553,7 +9643,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Could not create output file \"%s\"."
+argument_list|)
 argument_list|,
 name|output_filename
 argument_list|)
@@ -9611,7 +9704,10 @@ name|VERBOSE_NODE_DUMPING
 argument_list|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Done."
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9849,7 +9945,10 @@ name|filename
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Writing node \"(%s)%s\"..."
+argument_list|)
 argument_list|,
 name|filename_non_directory
 argument_list|(
@@ -9866,7 +9965,10 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Writing node \"%s\"..."
+argument_list|)
 argument_list|,
 name|node
 operator|->
@@ -9943,7 +10045,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* We don't dump Info files which are different than the 		 current one. */
+comment|/* We don't dump Info files which are different than the                  current one. */
 if|if
 condition|(
 operator|!
@@ -10054,7 +10156,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Could not create output file \"%s\"."
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -10115,7 +10220,10 @@ name|VERBOSE_NODE_DUMPING
 argument_list|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Done."
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10155,7 +10263,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_print_node
 argument_list|,
+argument|_(
 literal|"Pipe the contents of this node through INFO_PRINT_COMMAND"
+argument|)
 argument_list|)
 end_macro
 
@@ -10186,25 +10296,19 @@ modifier|*
 name|node
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|print_command
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|;
 name|FILE
 modifier|*
 name|printer_pipe
 decl_stmt|;
+name|char
+modifier|*
 name|print_command
-operator|=
+init|=
 name|getenv
 argument_list|(
 literal|"INFO_PRINT_COMMAND"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -10235,7 +10339,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Cannot open pipe to \"%s\"."
+argument_list|)
 argument_list|,
 name|print_command
 argument_list|)
@@ -10257,7 +10364,10 @@ name|filename
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Printing node \"(%s)%s\"..."
+argument_list|)
 argument_list|,
 name|filename_non_directory
 argument_list|(
@@ -10274,7 +10384,10 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Printing node \"%s\"..."
+argument_list|)
 argument_list|,
 name|node
 operator|->
@@ -10304,7 +10417,10 @@ name|VERBOSE_NODE_DUMPING
 argument_list|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Done."
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10357,15 +10473,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		      Info Searching Commands			    */
+comment|/*                    Info Searching Commands                       */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -10733,7 +10849,7 @@ name|target
 decl_stmt|;
 name|target
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|string
 argument_list|)
@@ -10979,7 +11095,7 @@ argument_list|)
 expr_stmt|;
 name|last_searched_for_string
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|string
 argument_list|)
@@ -11131,7 +11247,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Search through subsequent nodes, wrapping around to the top 	 of the info file until we find the string or return to this 	 window's node and point. */
+comment|/* Search through subsequent nodes, wrapping around to the top          of the info file until we find the string or return to this          window's node and point. */
 while|while
 condition|(
 literal|1
@@ -11200,7 +11316,10 @@ condition|)
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Searching subfile \"%s\"..."
+argument_list|)
 argument_list|,
 name|filename_non_directory
 argument_list|(
@@ -11335,7 +11454,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* No.  Free this node, and make sure that we haven't passed 	     our starting point. */
+comment|/* No.  Free this node, and make sure that we haven't passed              our starting point. */
 name|free
 argument_list|(
 name|node
@@ -11376,7 +11495,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_search
 argument_list|,
+argument|_(
 literal|"Read a string and search for it"
+argument|)
 argument_list|)
 end_macro
 
@@ -11461,15 +11582,24 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
+name|_
+argument_list|(
 literal|"%s for string [%s]: "
+argument_list|)
 argument_list|,
 name|direction
 operator|<
 literal|0
 condition|?
+name|_
+argument_list|(
 literal|"Search backward"
+argument_list|)
 else|:
+name|_
+argument_list|(
 literal|"Search"
+argument_list|)
 argument_list|,
 name|search_string
 argument_list|)
@@ -11586,7 +11716,10 @@ name|info_error_was_printed
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Search failed."
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -11643,15 +11776,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			Incremental Searching			    */
+comment|/*                      Incremental Searching                       */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -11671,7 +11804,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|isearch_forward
 argument_list|,
+argument|_(
 literal|"Search interactively for a string as you type it"
+argument|)
 argument_list|)
 end_macro
 
@@ -11694,7 +11829,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|isearch_backward
 argument_list|,
+argument|_(
 literal|"Search interactively for a string as you type it"
+argument|)
 argument_list|)
 end_macro
 
@@ -12151,12 +12288,18 @@ literal|0
 condition|)
 name|prefix
 operator|=
+name|_
+argument_list|(
 literal|"I-search backward: "
+argument_list|)
 expr_stmt|;
 else|else
 name|prefix
 operator|=
+name|_
+argument_list|(
 literal|"I-search: "
+argument_list|)
 expr_stmt|;
 name|p_rep_index
 operator|=
@@ -12312,7 +12455,10 @@ literal|"%s%s%s"
 argument_list|,
 name|failing_p
 condition|?
+name|_
+argument_list|(
 literal|"Failing "
+argument_list|)
 else|:
 literal|""
 argument_list|,
@@ -12482,7 +12628,7 @@ name|quoted
 init|=
 literal|0
 decl_stmt|;
-comment|/* If a recent display was interrupted, then do the redisplay now if 	 it is convenient. */
+comment|/* If a recent display was interrupted, then do the redisplay now if          it is convenient. */
 if|if
 condition|(
 operator|!
@@ -12641,7 +12787,7 @@ index|]
 operator|.
 name|function
 expr_stmt|;
-comment|/* If this key invokes an incremental search, then this means that 	     we will either search again in the same direction, search 	     again in the reverse direction, or insert the last search 	     string that was accepted through incremental searching. */
+comment|/* If this key invokes an incremental search, then this means that              we will either search again in the same direction, search              again in the reverse direction, or insert the last search              string that was accepted through incremental searching. */
 if|if
 condition|(
 name|func
@@ -12676,7 +12822,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* If the user has typed no characters, then insert the 		     last successful search into the current search string. */
+comment|/* If the user has typed no characters, then insert the                      last successful search into the current search string. */
 if|if
 condition|(
 name|isearch_string_index
@@ -12744,7 +12890,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* Search again in the same direction.  This means start 			 from a new place if the last search was successful. */
+comment|/* Search again in the same direction.  This means start                          from a new place if the last search was successful. */
 if|if
 condition|(
 name|search_result
@@ -12838,7 +12984,7 @@ operator|==
 name|info_abort_key
 condition|)
 block|{
-comment|/* If C-g pressed, and the search is failing, pop the search 		 stack back to the last unfailed search. */
+comment|/* If C-g pressed, and the search is failing, pop the search                  stack back to the last unfailed search. */
 if|if
 condition|(
 name|isearch_states_index
@@ -12909,7 +13055,7 @@ else|else
 block|{
 name|exit_search
 label|:
-comment|/* The character is not printable, or it has a function which is 	     non-null.  Exit the search, remembering the search string.  If 	     the key is not the same as the isearch_terminate_search_key, 	     then push it into pending input. */
+comment|/* The character is not printable, or it has a function which is              non-null.  Exit the search, remembering the search string.  If              the key is not the same as the isearch_terminate_search_key,              then push it into pending input. */
 if|if
 condition|(
 name|isearch_string_index
@@ -12926,7 +13072,7 @@ argument_list|)
 expr_stmt|;
 name|last_isearch_accepted
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|isearch_string
 argument_list|)
@@ -13005,7 +13151,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Check to see if the current search string is right here.  If 	     we are looking at it, then don't bother calling the search 	     function. */
+comment|/* Check to see if the current search string is right here.  If              we are looking at it, then don't bother calling the search              function. */
 if|if
 condition|(
 operator|(
@@ -13112,7 +13258,7 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If this search failed, and we didn't already have a failed search, 	 then ring the terminal bell. */
+comment|/* If this search failed, and we didn't already have a failed search,          then ring the terminal bell. */
 if|if
 condition|(
 name|search_result
@@ -13266,12 +13412,14 @@ name|fb_index
 operator|=
 literal|0
 init|;
+operator|(
 name|fb
 operator|=
 name|info_loaded_files
 index|[
 name|fb_index
 index|]
+operator|)
 condition|;
 name|fb_index
 operator|++
@@ -13291,7 +13439,7 @@ operator|->
 name|contents
 condition|)
 continue|continue;
-comment|/* If this file had to be uncompressed, check to see if we should 	 gc it.  This means that the user-variable "gc-compressed-files" 	 is non-zero. */
+comment|/* If this file had to be uncompressed, check to see if we should          gc it.  This means that the user-variable "gc-compressed-files"          is non-zero. */
 if|if
 condition|(
 operator|(
@@ -13316,19 +13464,21 @@ operator|&
 name|N_CannotGC
 condition|)
 continue|continue;
-comment|/* Check each INFO_WINDOW to see if it has any nodes which reference 	 this file. */
+comment|/* Check each INFO_WINDOW to see if it has any nodes which reference          this file. */
 for|for
 control|(
 name|iw_index
 operator|=
 literal|0
 init|;
+operator|(
 name|iw
 operator|=
 name|info_windows
 index|[
 name|iw_index
 index|]
+operator|)
 condition|;
 name|iw_index
 operator|++
@@ -13443,15 +13593,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		  Traversing and Selecting References		    */
+comment|/*                Traversing and Selecting References               */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -13681,7 +13831,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No cross references in this node."
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14031,7 +14184,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_move_to_prev_xref
 argument_list|,
+argument|_(
 literal|"Move to the previous cross reference"
+argument|)
 argument_list|)
 end_macro
 
@@ -14074,7 +14229,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_move_to_next_xref
 argument_list|,
+argument|_(
 literal|"Move to the next cross reference"
+argument|)
 argument_list|)
 end_macro
 
@@ -14120,7 +14277,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_select_reference_this_line
 argument_list|,
+argument|_(
 literal|"Select reference or menu item appearing on this line"
+argument|)
 argument_list|)
 end_macro
 
@@ -14204,15 +14363,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		    Miscellaneous Info Commands			    */
+comment|/*                  Miscellaneous Info Commands                     */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -14228,7 +14387,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_abort_key
 argument_list|,
+argument|_(
 literal|"Cancel current operation"
+argument|)
 argument_list|)
 end_macro
 
@@ -14245,7 +14406,10 @@ argument_list|()
 expr_stmt|;
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Quit"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_initialize_numeric_arg
@@ -14274,7 +14438,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_move_to_window_line
 argument_list|,
+argument|_(
 literal|"Move to the cursor to a specific line of the window"
+argument|)
 argument_list|)
 end_macro
 
@@ -14431,7 +14597,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_redraw_display
 argument_list|,
+argument|_(
 literal|"Redraw the display"
+argument|)
 argument_list|)
 end_macro
 
@@ -14577,7 +14745,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_quit
 argument_list|,
+argument|_(
 literal|"Quit using Info"
+argument|)
 argument_list|)
 end_macro
 
@@ -14593,15 +14763,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		 Reading Keys and Dispatching on Them		    */
+comment|/*               Reading Keys and Dispatching on Them               */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -14655,7 +14825,10 @@ name|echo_area_is_active
 condition|)
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Unknown command (%s)."
+argument_list|)
 argument_list|,
 name|rep
 argument_list|)
@@ -14683,7 +14856,10 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
+name|_
+argument_list|(
 literal|"\"\" is invalid"
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14691,7 +14867,10 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
+name|_
+argument_list|(
 literal|"\"%s\" is invalid"
+argument_list|)
 argument_list|,
 name|rep
 argument_list|)
@@ -15001,14 +15180,23 @@ block|{
 name|int
 name|ready
 init|=
-literal|0
+operator|!
+name|info_keyseq_displayed_p
 decl_stmt|;
+comment|/* ready if new and pending key */
 comment|/* If there isn't any input currently available, then wait a      moment looking for input.  If we don't get it fast enough,      prompt a little bit with the current key sequence. */
 if|if
 condition|(
 operator|!
 name|info_keyseq_displayed_p
-operator|&&
+condition|)
+block|{
+name|ready
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|info_any_buffered_input_p
 argument_list|()
@@ -15064,6 +15252,11 @@ name|ready
 operator|=
 name|select
 argument_list|(
+name|fileno
+argument_list|(
+name|info_input_stream
+argument_list|)
+operator|+
 literal|1
 argument_list|,
 operator|&
@@ -15085,9 +15278,16 @@ operator|&
 name|timer
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ready
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* FD_SET */
+block|}
 block|}
 if|if
 condition|(
@@ -15304,7 +15504,7 @@ operator|,
 name|key
 operator|)
 expr_stmt|;
-comment|/* If we have input pending, then the last command was a prefix 		 command.  Don't change the value of the last function vars. 		 Otherwise, remember the last command executed in the var 		 appropriate to the window in which it was executed. */
+comment|/* If we have input pending, then the last command was a prefix                  command.  Don't change the value of the last function vars.                  Otherwise, remember the last command executed in the var                  appropriate to the window in which it was executed. */
 if|if
 condition|(
 operator|!
@@ -15427,15 +15627,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			Numeric Arguments			    */
+comment|/*                      Numeric Arguments                           */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -15491,7 +15691,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_add_digit_to_numeric_arg
 argument_list|,
+argument|_(
 literal|"Add this digit to the current numeric argument"
+argument|)
 argument_list|)
 end_macro
 
@@ -15518,7 +15720,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_universal_argument
 argument_list|,
+argument|_(
 literal|"Start (or multiply by 4) the current numeric argument"
+argument|)
 argument_list|)
 end_macro
 
@@ -15567,7 +15771,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_numeric_arg_digit_loop
 argument_list|,
+argument|_(
 literal|"Internally used by \\[universal-argument]"
+argument|)
 argument_list|)
 end_macro
 
@@ -15789,15 +15995,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			Input Character Buffering       	    */
+comment|/*                      Input Character Buffering                   */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -16095,67 +16301,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Push KEY into the *front* of the input buffer.  Returns non-zero if    successful, zero if there is no space left in the buffer. */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|info_replace_key_to_typeahead
-parameter_list|(
-name|key
-parameter_list|)
-name|unsigned
-name|char
-name|key
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|info_input_buffer_space_available
-argument_list|()
-condition|)
-block|{
-name|pop_index
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|pop_index
-operator|<
-literal|0
-condition|)
-name|pop_index
-operator|=
-sizeof|sizeof
-argument_list|(
-name|info_input_buffer
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
-name|info_input_buffer
-index|[
-name|pop_index
-index|]
-operator|=
-name|key
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* If characters are available to be read, then read them and stuff them into    info_input_buffer.  Otherwise, do nothing. */
 end_comment
 
@@ -16233,6 +16378,8 @@ if|if
 condition|(
 name|chars_avail
 condition|)
+name|chars_avail
+operator|=
 name|read
 argument_list|(
 name|tty
@@ -16394,13 +16541,87 @@ block|{
 name|int
 name|rawkey
 decl_stmt|;
-name|rawkey
-operator|=
-name|getc
+name|unsigned
+name|char
+name|c
+decl_stmt|;
+name|int
+name|tty
+init|=
+name|fileno
 argument_list|(
 name|info_input_stream
 argument_list|)
+decl_stmt|;
+comment|/* Using stream I/O causes FIONREAD etc to fail to work          so unless someone can find a portable way of finding          out how many characters are currently buffered, we          should stay with away from stream I/O.          --Egil Kvaleberg<egilk@sn.no>, January 1997.  */
+ifdef|#
+directive|ifdef
+name|EINTR
+comment|/* Keep reading if we got EINTR, so that we don't just exit.          --Andreas Schwab<schwab@issan.informatik.uni-dortmund.de>,          22 Dec 1997.  */
+block|{
+name|int
+name|n
+decl_stmt|;
+do|do
+name|n
+operator|=
+name|read
+argument_list|(
+name|tty
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+do|while
+condition|(
+name|n
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
+name|rawkey
+operator|=
+name|n
+operator|==
+literal|1
+condition|?
+name|c
+else|:
+name|EOF
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|rawkey
+operator|=
+operator|(
+name|read
+argument_list|(
+name|tty
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|1
+operator|)
+condition|?
+name|c
+else|:
+name|EOF
+expr_stmt|;
+endif|#
+directive|endif
 name|keystroke
 operator|=
 name|rawkey
@@ -16444,10 +16665,23 @@ argument_list|)
 expr_stmt|;
 name|rawkey
 operator|=
-name|getc
+operator|(
+name|read
 argument_list|(
-name|info_input_stream
+name|tty
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
 argument_list|)
+operator|==
+literal|1
+operator|)
+condition|?
+name|c
+else|:
+name|EOF
 expr_stmt|;
 name|keystroke
 operator|=
@@ -16485,9 +16719,7 @@ name|keystroke
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|keystroke
-operator|)
 return|;
 block|}
 end_function

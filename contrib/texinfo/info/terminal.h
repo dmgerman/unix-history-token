@@ -4,7 +4,7 @@ comment|/* terminal.h -- The external interface to terminal I/O. */
 end_comment
 
 begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 96, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_if
@@ -13,60 +13,21 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|_TERMINAL_H_
+name|TERMINAL_H
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|_TERMINAL_H_
+name|TERMINAL_H
 end_define
 
-begin_comment
-comment|/* We use the following data type to talk about pointers to functions. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FUNCTION_DEF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__FUNCTION_DEF
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FUNCTION_DEF */
-end_comment
+begin_include
+include|#
+directive|include
+file|"info.h"
+end_include
 
 begin_comment
 comment|/* For almost every function externally visible from terminal.c, there is    a corresponding "hook" function which can be bound in order to replace    the functionality of the one found in terminal.c.  This is how we go    about implemented X window display. */
@@ -467,13 +428,24 @@ name|term_kl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|term_kP
+decl_stmt|,
+modifier|*
+name|term_kN
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_TERMINAL_H_ */
+comment|/* !TERMINAL_H */
 end_comment
 
 end_unit

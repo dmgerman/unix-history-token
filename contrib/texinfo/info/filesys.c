@@ -1,64 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filesys.c -- File system specific functions for hacking this system. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* filesys.c -- File system specific functions for hacking this system.    $Id: filesys.c,v 1.6 1998/02/21 22:52:46 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FILE_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_FILE_H */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"general.h"
+file|"info.h"
 end_include
 
 begin_include
@@ -72,148 +20,6 @@ include|#
 directive|include
 file|"filesys.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|O_RDONLY
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FCNTL_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !O_RDONLY */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|errno
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !errno */
-end_comment
-
-begin_comment
-comment|/* Found in info-utils.c. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|filename_non_directory
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BUILDING_LIBRARY
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Found in session.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_windows_initialized_p
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Found in window.c. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|message_in_echo_area
-argument_list|()
-decl_stmt|,
-name|unmessage_in_echo_area
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !BUILDING_LIBRARY */
-end_comment
 
 begin_comment
 comment|/* Local to this file. */
@@ -242,32 +48,6 @@ name|maybe_initialize_infopath
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NULL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0x0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NULL */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -299,6 +79,8 @@ block|,
 literal|".info"
 block|,
 literal|"-info"
+block|,
+literal|"/index"
 block|,
 operator|(
 name|char
@@ -468,7 +250,7 @@ operator|(
 name|expansion
 operator|)
 return|;
-comment|/* If we have the full path to this file, we still may have to add 	 various extensions to it.  I guess we have to stat this file 	 after all. */
+comment|/* If we have the full path to this file, we still may have to add          various extensions to it.  I guess we have to stat this file          after all. */
 if|if
 condition|(
 name|initial_character
@@ -775,6 +557,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|temp_dirname
 operator|=
 name|extract_colon_unit
@@ -784,6 +567,7 @@ argument_list|,
 operator|&
 name|dirname_index
 argument_list|)
+operator|)
 condition|)
 block|{
 specifier|register
@@ -937,7 +721,7 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/* If we have found a regular file, then use that.  Else, if we 	     have found a directory, look in that directory for this file. */
+comment|/* If we have found a regular file, then use that.  Else, if we              have found a directory, look in that directory for this file. */
 if|if
 condition|(
 name|statable
@@ -982,7 +766,7 @@ name|newtemp
 decl_stmt|;
 name|newpath
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|temp
 argument_list|)
@@ -1028,7 +812,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Add various compression suffixes to the name to see if 		 the file is present in compressed format. */
+comment|/* Add various compression suffixes to the name to see if                  the file is present in compressed format. */
 specifier|register
 name|int
 name|j
@@ -1519,7 +1303,7 @@ name|new
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|filename
 argument_list|)
@@ -1530,7 +1314,7 @@ name|expansion
 operator|=
 name|expansion
 condition|?
-name|strdup
+name|xstrdup
 argument_list|(
 name|expansion
 argument_list|)
@@ -1752,7 +1536,7 @@ name|char
 modifier|*
 name|temp
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|infopath
 argument_list|)

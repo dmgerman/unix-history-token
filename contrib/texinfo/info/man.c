@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  man.c: How to read and format man files. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1995 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox Thu May  4 09:17:52 1995 (bfox@ai.mit.edu). */
+comment|/*  man.c: How to read and format man files.     $Id: man.c,v 1.6 1997/07/31 23:49:59 karl Exp $     Copyright (C) 1995, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox Thu May  4 09:17:52 1995 (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -17,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -456,22 +446,15 @@ block|{
 name|FILE_BUFFER
 modifier|*
 name|file_buffer
-decl_stmt|;
-name|struct
-name|stat
-modifier|*
-name|finfo
-decl_stmt|;
-name|file_buffer
-operator|=
+init|=
 name|make_file_buffer
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|file_buffer
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|MANPAGE_FILE_BUFFER_NAME
 argument_list|)
@@ -480,7 +463,7 @@ name|file_buffer
 operator|->
 name|fullpath
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|MANPAGE_FILE_BUFFER_NAME
 argument_list|)
@@ -573,6 +556,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|temp_dirname
 operator|=
 name|extract_colon_unit
@@ -582,12 +566,9 @@ argument_list|,
 operator|&
 name|dirname_index
 argument_list|)
+operator|)
 condition|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|temp
@@ -1011,7 +992,6 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-name|unsigned
 name|int
 name|status
 decl_stmt|;
@@ -1065,16 +1045,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|formatted_page
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|section
 init|=
 operator|(
 name|char
@@ -1213,7 +1183,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* In the parent, close the writing end of the pipe, and read from 	 the exec'd child. */
+comment|/* In the parent, close the writing end of the pipe, and read from          the exec'd child. */
 name|close
 argument_list|(
 name|pipes
@@ -1243,7 +1213,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* In the child, close the read end of the pipe, make the write end 	 of the pipe be stdout, and execute the man page formatter. */
+comment|/* In the child, close the read end of the pipe, make the write end          of the pipe be stdout, and execute the man page formatter. */
 name|close
 argument_list|(
 name|pipes
@@ -1292,7 +1262,7 @@ argument_list|,
 name|formatter_args
 argument_list|)
 expr_stmt|;
-comment|/* If we get here, we couldn't exec, so close out the pipe and 	 exit. */
+comment|/* If we get here, we couldn't exec, so close out the pipe and          exit. */
 name|close
 argument_list|(
 name|pipes
@@ -1378,6 +1348,7 @@ name|j
 operator|=
 literal|0
 init|;
+operator|(
 name|newpage
 index|[
 name|j
@@ -1387,6 +1358,7 @@ name|manpage
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -1526,6 +1498,7 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|tag
 operator|=
 name|file_buffer
@@ -1534,6 +1507,7 @@ name|tags
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -2405,7 +2379,7 @@ name|entry
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|node
 operator|->
@@ -2416,7 +2390,7 @@ name|entry
 operator|->
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|entry
 operator|->
@@ -2490,12 +2464,6 @@ name|int
 name|dir
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|count
-decl_stmt|;
 name|REFERENCE
 modifier|*
 modifier|*
@@ -2561,12 +2529,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|entry
 operator|=
 name|refs
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -2769,12 +2739,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|entry
 operator|=
 name|all_refs
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++

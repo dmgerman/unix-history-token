@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infodoc.c -- Functions which build documentation nodes. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.4 1997/07/25 21:08:40 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -26,15 +22,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*			  Info Help Windows			    */
+comment|/*                        Info Help Windows                         */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -103,13 +99,20 @@ name|info_internal_help_text
 index|[]
 init|=
 block|{
+name|N_
+argument_list|(
 literal|"Basic Commands in Info Windows"
+argument_list|)
 block|,
 literal|"******************************"
 block|,
 literal|""
 block|,
-literal|"  h   Invoke the Info tutorial."
+literal|"  h          Invoke the Info tutorial."
+block|,
+literal|"  CTRL-x 0   Quit this help."
+block|,
+literal|"  q          Quit Info altogether."
 block|,
 literal|""
 block|,
@@ -149,11 +152,9 @@ literal|"  e   Go to the end of this node."
 block|,
 literal|""
 block|,
-literal|"\"Advanced\" commands:"
+literal|"Other commands:"
 block|,
 literal|"--------------------"
-block|,
-literal|"  q   Quit Info."
 block|,
 literal|"  1   Pick first item in node's menu."
 block|,
@@ -169,10 +170,6 @@ literal|"  s   Search through this Info file for a specified string,"
 block|,
 literal|"      and select the node in which the next occurrence is found."
 block|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 block|}
 decl_stmt|;
@@ -364,7 +361,7 @@ operator|*
 name|doc
 condition|)
 continue|continue;
-comment|/* Find out if there is a series of identical functions, as in 	     ea_insert (). */
+comment|/* Find out if there is a series of identical functions, as in              ea_insert (). */
 for|for
 control|(
 name|last
@@ -471,7 +468,7 @@ name|defined
 argument_list|(
 name|NAMED_FUNCTIONS
 argument_list|)
-comment|/* Print the name of the function, and some padding before the 	     documentation string is printed. */
+comment|/* Print the name of the function, and some padding before the              documentation string is printed. */
 block|{
 name|int
 name|length_so_far
@@ -761,7 +758,10 @@ argument_list|)
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+name|_
+argument_list|(
 literal|"The following commands can only be invoked via M-x:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printed_one_mx
@@ -811,7 +811,10 @@ literal|"%s"
 argument_list|,
 name|replace_in_documentation
 argument_list|(
+name|_
+argument_list|(
 literal|"--- Use `\\[history-node]' or `\\[kill-node]' to exit ---\n"
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1030,7 +1033,7 @@ operator|!
 name|help_window
 condition|)
 block|{
-comment|/* Split the largest window into 2 windows, and show the help text 	 in that window. */
+comment|/* Split the largest window into 2 windows, and show the help text          in that window. */
 if|if
 condition|(
 name|eligible
@@ -1074,7 +1077,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Case where help node always gets regenerated, and we have an 	 existing window in which to place the node. */
+comment|/* Case where help node always gets regenerated, and we have an          existing window in which to place the node. */
 if|if
 condition|(
 name|active_window
@@ -1126,7 +1129,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_get_help_window
 argument_list|,
+argument|_(
 literal|"Display help message"
+argument|)
 argument_list|)
 end_macro
 
@@ -1177,7 +1182,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_get_info_help_node
 argument_list|,
+argument|_(
 literal|"Visit Info node `(info)Help'"
+argument|)
 argument_list|)
 end_macro
 
@@ -1339,7 +1346,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If the current window is very large (greater than 45 lines), 	 then split it and show the help node in another window. 	 Otherwise, use the current window. */
+comment|/* If the current window is very large (greater than 45 lines),          then split it and show the help node in another window.          Otherwise, use the current window. */
 if|if
 condition|(
 name|active_window
@@ -1389,15 +1396,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		     Groveling Info Keymaps and Docs		    */
+comment|/*                   Groveling Info Keymaps and Docs                */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -1674,7 +1681,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|describe_key
 argument_list|,
+argument|_(
 literal|"Print documentation for KEY"
+argument|)
 argument_list|)
 end_macro
 
@@ -1722,7 +1731,10 @@ condition|)
 block|{
 name|message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Describe key: %s"
+argument_list|)
 argument_list|,
 name|keyname
 argument_list|)
@@ -1766,7 +1778,10 @@ condition|)
 block|{
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"ESC %s is undefined."
+argument_list|)
 argument_list|,
 name|pretty_keyname
 argument_list|(
@@ -1857,7 +1872,10 @@ condition|)
 block|{
 name|message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"%s is undefined."
+argument_list|)
 argument_list|,
 name|keyname
 argument_list|)
@@ -2003,7 +2021,10 @@ name|sprintf
 argument_list|(
 name|message
 argument_list|,
+name|_
+argument_list|(
 literal|"%s is defined to %s."
+argument_list|)
 argument_list|,
 name|keyname
 argument_list|,
@@ -2434,7 +2455,7 @@ argument_list|(
 name|fun_name
 argument_list|)
 expr_stmt|;
-comment|/* If the internal documentation string fails, there is a  	     serious problem with the associated command's documentation. 	     We croak so that it can be fixed immediately. */
+comment|/* If the internal documentation string fails, there is a               serious problem with the associated command's documentation.              We croak so that it can be fixed immediately. */
 if|if
 condition|(
 operator|!
@@ -2848,7 +2869,10 @@ name|command_name
 operator|=
 name|read_function_name
 argument_list|(
+name|_
+argument_list|(
 literal|"Where is command: "
+argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -2915,7 +2939,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"`%s' is not on any keys"
+argument_list|)
 argument_list|,
 name|command_name
 argument_list|)
@@ -2938,7 +2965,10 @@ literal|0
 condition|)
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"%s can only be invoked via %s."
+argument_list|)
 argument_list|,
 name|command_name
 argument_list|,
@@ -2948,7 +2978,10 @@ expr_stmt|;
 else|else
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"%s can be invoked via %s."
+argument_list|)
 argument_list|,
 name|command_name
 argument_list|,
@@ -2960,7 +2993,10 @@ block|}
 else|else
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"There is no function named `%s'"
+argument_list|)
 argument_list|,
 name|command_name
 argument_list|)

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makedoc.c -- Make DOC.C and FUNS.H from input files. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makedoc.c -- Make doc.c and funs.h from input files.    $Id: makedoc.c,v 1.4 1997/07/15 18:35:59 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_comment
@@ -14,127 +10,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"info.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FILE_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_FILE_H */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"general.h"
-end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|O_RDONLY
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FCNTL_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !O_RDONLY */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -516,7 +393,10 @@ name|fprintf
 argument_list|(
 name|doc_stream
 argument_list|,
+name|_
+argument_list|(
 literal|"   Source files groveled to make this file include:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -782,7 +662,7 @@ name|sprintf
 argument_list|(
 name|digits
 argument_list|,
-literal|"%d,%d"
+literal|"%d,%ld"
 argument_list|,
 name|etag
 operator|->
@@ -806,7 +686,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\f\n%s,%d\n"
+literal|"\f\n%s,%ld\n"
 argument_list|,
 name|block
 operator|->
@@ -845,7 +725,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"%s,\177%d,%d\n"
+literal|"%s,\177%d,%ld\n"
 argument_list|,
 name|etag
 operator|->
@@ -904,7 +784,7 @@ name|block
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|filename
 argument_list|)
@@ -1543,7 +1423,7 @@ literal|5
 expr_stmt|;
 name|func_name
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|name_start
 argument_list|)
@@ -1926,7 +1806,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Couldn't manipulate the file %s.\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
