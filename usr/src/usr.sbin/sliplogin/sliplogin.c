@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sliplogin.c	5.4 (Berkeley) %G%"
+literal|"@(#)sliplogin.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1807,7 +1807,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (SLIOCGUNIT) (2): %m"
+literal|"ioctl (SLIOCGUNIT): %m"
 argument_list|)
 expr_stmt|;
 name|exit
