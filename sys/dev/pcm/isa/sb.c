@@ -6917,6 +6917,10 @@ literal|0x42008c0e
 case|:
 comment|/* CTL0042 */
 case|case
+literal|0x44008c0e
+case|:
+comment|/* CTL0044 */
+case|case
 literal|0x45008c0e
 case|:
 comment|/* CTL0045 */
