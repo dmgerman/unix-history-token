@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.h	3.1	%H%	*/
+comment|/*	cons.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -104,6 +104,28 @@ end_define
 
 begin_comment
 comment|/* channel id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TXDB_AUTOR
+value|0xf03
+end_define
+
+begin_comment
+comment|/* auto-restart command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TXDB_BOOT
+value|0xf04
+end_define
+
+begin_comment
+comment|/* boot command */
 end_comment
 
 end_unit
