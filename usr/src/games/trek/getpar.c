@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpar.c	4.1	(Berkeley)	%G%"
+literal|"@(#)getpar.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +20,12 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -200,7 +206,7 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"invalid input; please enter a float\n"
+literal|"invalid input; please enter a double\n"
 argument_list|)
 expr_stmt|;
 name|skiptonl
@@ -216,32 +222,47 @@ begin_comment
 comment|/**  **	get yes/no parameter  **/
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|cvntab
 name|Yntab
 index|[]
+init|=
 block|{
 literal|"y"
-operator|,
+block|,
 literal|"es"
-operator|,
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 literal|1
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|"n"
-operator|,
+block|,
 literal|"o"
-operator|,
+block|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|getynpar
@@ -346,8 +367,7 @@ literal|1
 condition|)
 block|{
 name|flag
-operator|=
-operator||
+operator||=
 operator|(
 name|f
 operator|=
@@ -691,11 +711,8 @@ name|t
 operator|=
 literal|" \t\n;"
 expr_stmt|;
-name|printf
+name|sprintf
 argument_list|(
-operator|-
-literal|1
-argument_list|,
 name|format
 argument_list|,
 literal|"%%%d[^%s]"
@@ -850,7 +867,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 return|return
@@ -863,7 +880,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 return|return
@@ -916,7 +933,7 @@ name|ungetc
 argument_list|(
 literal|'\n'
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 return|return;
@@ -980,7 +997,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 return|return
@@ -1046,7 +1063,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 break|break;

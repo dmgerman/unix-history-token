@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)damage.c	4.2	(Berkeley)	%G%"
+literal|"@(#)damage.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ comment|/*  device index */
 end_comment
 
 begin_decl_stmt
-name|float
+name|double
 name|dam
 decl_stmt|;
 end_decl_stmt

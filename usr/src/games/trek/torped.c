@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)torped.c	4.2	(Berkeley)	%G%"
+literal|"@(#)torped.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +20,12 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -182,7 +188,7 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-literal|0
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	4.2	(Berkeley)	%G%"
+literal|"@(#)move.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ comment|/* **  Move Under Warp or Impulse Power ** **	`Ramflag' is set if we are
 end_comment
 
 begin_function
-name|float
+name|double
 name|move
 parameter_list|(
 name|ramflag
@@ -49,17 +49,17 @@ decl_stmt|;
 name|int
 name|course
 decl_stmt|;
-name|float
+name|double
 name|time
 decl_stmt|;
-name|float
+name|double
 name|speed
 decl_stmt|;
 block|{
 name|double
 name|angle
 decl_stmt|;
-name|float
+name|double
 name|x
 decl_stmt|,
 name|y
@@ -84,16 +84,16 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|float
+name|double
 name|dist
 decl_stmt|;
-name|float
+name|double
 name|sectsize
 decl_stmt|;
 name|double
 name|xn
 decl_stmt|;
-name|float
+name|double
 name|evtime
 decl_stmt|;
 ifdef|#

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	4.1	(Berkeley)	%G%"
+literal|"@(#)kill.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,8 +73,7 @@ comment|/* remove the scoundrel */
 name|Now
 operator|.
 name|klings
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|Sect
@@ -100,8 +99,7 @@ name|quady
 index|]
 operator|.
 name|klings
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 comment|/* %%% IS THIS SAFE???? %%% */
@@ -118,15 +116,13 @@ name|quady
 index|]
 operator|.
 name|scanned
-operator|=
-operator|-
+operator|-=
 literal|100
 expr_stmt|;
 name|Game
 operator|.
 name|killk
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 comment|/* find the Klingon in the Klingon list */
@@ -174,8 +170,7 @@ comment|/* purge him from the list */
 name|Etc
 operator|.
 name|nkling
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 for|for
@@ -325,8 +320,7 @@ condition|)
 name|q
 operator|->
 name|scanned
-operator|=
-operator|-
+operator|-=
 literal|10
 expr_stmt|;
 elseif|else
@@ -354,8 +348,7 @@ expr_stmt|;
 name|Now
 operator|.
 name|bases
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 for|for
@@ -568,6 +561,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|char
+modifier|*
+name|systemname
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|f
@@ -633,8 +631,7 @@ condition|)
 name|Game
 operator|.
 name|killinhab
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 block|}
@@ -657,7 +654,7 @@ if|if
 condition|(
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|&
 name|Q_DISTRESSED
 condition|)
@@ -670,7 +667,7 @@ name|Event
 index|[
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|&
 name|Q_SYSTEM
 index|]
@@ -695,15 +692,14 @@ expr_stmt|;
 block|}
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|=
 literal|0
 expr_stmt|;
 name|q
 operator|->
 name|stars
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 block|}
@@ -872,7 +868,7 @@ argument_list|)
 expr_stmt|;
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|=
 name|e
 operator|->
@@ -889,8 +885,7 @@ block|{
 name|e
 operator|->
 name|evcode
-operator|=
-operator||
+operator||=
 name|E_GHOST
 expr_stmt|;
 block|}

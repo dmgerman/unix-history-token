@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)schedule.c	4.1	(Berkeley)	%G%"
+literal|"@(#)schedule.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-name|float
+name|double
 name|offset
 decl_stmt|;
 name|char
@@ -72,7 +72,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|float
+name|double
 name|date
 decl_stmt|;
 name|date
@@ -222,14 +222,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|float
+name|double
 name|offset
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|float
+name|double
 name|date
 decl_stmt|;
 specifier|register

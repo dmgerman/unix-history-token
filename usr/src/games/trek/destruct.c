@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)destruct.c	4.2	(Berkeley)	%G%"
+literal|"@(#)destruct.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|float
+name|double
 name|zap
 decl_stmt|;
 if|if

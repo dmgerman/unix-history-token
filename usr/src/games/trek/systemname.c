@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)systemname.c	4.1	(Berkeley)	%G%"
+literal|"@(#)systemname.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ name|i
 operator|=
 name|q
 operator|->
-name|systemname
+name|qsystemname
 expr_stmt|;
 if|if
 condition|(
@@ -82,8 +82,7 @@ operator|.
 name|systemname
 expr_stmt|;
 name|i
-operator|=
-operator|&
+operator|&=
 name|Q_SYSTEM
 expr_stmt|;
 if|if

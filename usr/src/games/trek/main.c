@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.1	(Berkeley)	%G%"
+literal|"@(#)main.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,20 +27,33 @@ directive|include
 file|"trek.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|PRIO
-value|10
+value|00
 end_define
 
 begin_comment
 comment|/* default priority */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|Mother
+init|=
 literal|51
 operator|+
 operator|(
@@ -48,11 +61,11 @@ literal|51
 operator|<<
 literal|8
 operator|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* **	 ####  #####    #    ####          #####  ####   #####  #   # **	#        #     # #   #   #           #    #   #  #      #  # **	 ###     #    #####  ####            #    ####   ###    ### **	    #    #    #   #  #  #            #    #  #   #      #  # **	####     #    #   #  #   #           #    #   #  #####  #   # ** **	C version by Eric P. Allman 5/76 (U.C. Berkeley) with help **		from Jeff Poskanzer and Pete Rubinstein. ** **	I also want to thank everyone here at Berkeley who **	where crazy enough to play the undebugged game.  I want to **	particularly thank Nick Whyte, who made considerable **	suggestions regarding the content of the game.  Why, I'll **	never forget the time he suggested the name for the **	"capture" command. ** **	Please send comments, questions, and suggestions about this **		game to: **			Eric P. Allman **			Project INGRES **			Electronics Research Laboratory **			Cory Hall **			University of California **			Berkeley, California  94720 ** **	If you make ANY changes in the game, I sure would like to **	know about them.  It is sort of an ongoing project for me, **	and I very much want to put in any bug fixes and improvements **	that you might come up with. ** **	FORTRASH version by Kay R. Fisher (DEC) "and countless others". **	That was adapted from the "original BASIC program" (ha!) by **		Mike Mayfield (Centerline Engineering). ** **	Additional inspiration taken from FORTRAN version by **		David Matuszek and Paul Reynolds which runs on the CDC **		7600 at Lawrence Berkeley Lab, maintained there by **		Andy Davidson.  This version is also available at LLL **		and at LMSC.  In all fairness, this version was the **		major inspiration for this version of the game (trans- **		lation:  I ripped off a whole lot of code). ** **	Minor other input from the "Battelle Version 7A" by Joe Miller **		(Graphics Systems Group, Battelle-Columbus Labs) and **		Ross Pavlac (Systems Programmer, Battelle Memorial **		Institute).  That version was written in December '74 **		and extensively modified June '75.  It was adapted **		from the FTN version by Ron Williams of CDC Sunnyvale, **		which was adapted from the Basic version distributed **		by DEC.  It also had "neat stuff swiped" from T. T. **		Terry and Jim Korp (University of Texas), Hicks (Penn **		U.), and Rick Maus (Georgia Tech).  Unfortunately, it **		was not as readable as it could have been and so the **		translation effort was severely hampered.  None the **		less, I got the idea of inhabited starsystems from this **		version. ** **	Permission is given for use, copying, and modification of **		all or part of this program and related documentation, **		provided that all reference to the authors are maintained. ** ** ********************************************************************** ** **  NOTES TO THE MAINTAINER: ** **	There is a compilation option xTRACE which must be set for any **	trace information to be generated.  It is probably defined in **	the version that you get.  It can be removed, however, if you **	have trouble finding room in core. ** **	Many things in trek are not as clear as they might be, but are **	done to reduce space.  I compile with the -f and -O flags.  I **	am constrained to running with non-seperated I/D space, since **	we don't have floating point hardware here; even if we did, I **	would like trek to be available to the large number of people **	who either have an 11/40 or do not have FP hardware.  I also **	found it desirable to make the code run reentrant, so this **	added even more space constraints. ** **	I use the portable C library to do my I/O.  This is done be- **	cause I wanted the game easily transportable to other C **	implementations, and because I was too lazy to do the floating **	point input myself.  Little did I know.  The portable C library **	released by Bell Labs has more bugs than you would believe, so **	I ended up rewriting the whole blessed thing.  Trek excercises **	many of the bugs in it, as well as bugs in some of the section **	III UNIX routines.  We have fixed them here.  One main problem **	was a bug in alloc() that caused it to always ask for a large **	hunk of memory, which worked fine unless you were almost out, **	which I inevitably was.  If you want the code for all of this **	stuff, it is also available through me. ** *********************************************************************** */
+comment|/* **	 ####  #####    #    ####          #####  ####   #####  #   # **	#        #     # #   #   #           #    #   #  #      #  # **	 ###     #    #####  ####            #    ####   ###    ### **	    #    #    #   #  #  #            #    #  #   #      #  # **	####     #    #   #  #   #           #    #   #  #####  #   # ** **	C version by Eric P. Allman 5/76 (U.C. Berkeley) with help **		from Jeff Poskanzer and Pete Rubinstein. ** **	I also want to thank everyone here at Berkeley who **	where crazy enough to play the undebugged game.  I want to **	particularly thank Nick Whyte, who made considerable **	suggestions regarding the content of the game.  Why, I'll **	never forget the time he suggested the name for the **	"capture" command. ** **	Please send comments, questions, and suggestions about this **		game to: **			Eric P. Allman **			Project INGRES **			Electronics Research Laboratory **			Cory Hall **			University of California **			Berkeley, California  94720 ** **	If you make ANY changes in the game, I sure would like to **	know about them.  It is sort of an ongoing project for me, **	and I very much want to put in any bug fixes and improvements **	that you might come up with. ** **	FORTRASH version by Kay R. Fisher (DEC) "and countless others". **	That was adapted from the "original BASIC program" (ha!) by **		Mike Mayfield (Centerline Engineering). ** **	Additional inspiration taken from FORTRAN version by **		David Matuszek and Paul Reynolds which runs on the CDC **		7600 at Lawrence Berkeley Lab, maintained there by **		Andy Davidson.  This version is also available at LLL **		and at LMSC.  In all fairness, this version was the **		major inspiration for this version of the game (trans- **		lation:  I ripped off a whole lot of code). ** **	Minor other input from the "Battelle Version 7A" by Joe Miller **		(Graphics Systems Group, Battelle-Columbus Labs) and **		Ross Pavlac (Systems Programmer, Battelle Memorial **		Institute).  That version was written in December '74 **		and extensively modified June '75.  It was adapted **		from the FTN version by Ron Williams of CDC Sunnyvale, **		which was adapted from the Basic version distributed **		by DEC.  It also had "neat stuff swiped" from T. T. **		Terry and Jim Korp (University of Texas), Hicks (Penn **		U.), and Rick Maus (Georgia Tech).  Unfortunately, it **		was not as readable as it could have been and so the **		translation effort was severely hampered.  None the **		less, I got the idea of inhabited starsystems from this **		version. ** **	Permission is given for use, copying, and modification of **		all or part of this program and related documentation, **		provided that all reference to the authors are maintained. ** ** ********************************************************************** ** **  NOTES TO THE MAINTAINER: ** **	There is a compilation option xTRACE which must be set for any **	trace information to be generated.  It is probably defined in **	the version that you get.  It can be removed, however, if you **	have trouble finding room in core. ** **	Many things in trek are not as clear as they might be, but are **	done to reduce space.  I compile with the -f and -O flags.  I **	am constrained to running with non-seperated I/D space, since **	we don't have doubleing point hardware here; even if we did, I **	would like trek to be available to the large number of people **	who either have an 11/40 or do not have FP hardware.  I also **	found it desirable to make the code run reentrant, so this **	added even more space constraints. ** **	I use the portable C library to do my I/O.  This is done be- **	cause I wanted the game easily transportable to other C **	implementations, and because I was too lazy to do the doubleing **	point input myself.  Little did I know.  The portable C library **	released by Bell Labs has more bugs than you would believe, so **	I ended up rewriting the whole blessed thing.  Trek excercises **	many of the bugs in it, as well as bugs in some of the section **	III UNIX routines.  We have fixed them here.  One main problem **	was a bug in alloc() that caused it to always ask for a large **	hunk of memory, which worked fine unless you were almost out, **	which I inevitably was.  If you want the code for all of this **	stuff, it is also available through me. ** *********************************************************************** */
 end_comment
 
 begin_function
@@ -71,16 +84,10 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
+name|long
 name|vect
-index|[
-literal|3
-index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|f_log
-decl_stmt|;
+comment|/* extern FILE		*f_log; */
 specifier|register
 name|char
 name|opencode
@@ -98,6 +105,15 @@ modifier|*
 modifier|*
 name|av
 decl_stmt|;
+name|struct
+name|sgttyb
+name|argp
+decl_stmt|;
+name|int
+name|been_here
+init|=
+literal|0
+decl_stmt|;
 name|av
 operator|=
 name|argv
@@ -111,15 +127,13 @@ operator|++
 expr_stmt|;
 name|time
 argument_list|(
+operator|&
 name|vect
 argument_list|)
 expr_stmt|;
 name|srand
 argument_list|(
 name|vect
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|opencode
@@ -136,7 +150,8 @@ name|gtty
 argument_list|(
 literal|1
 argument_list|,
-name|vect
+operator|&
+name|argp
 argument_list|)
 operator|==
 literal|0
@@ -145,15 +160,12 @@ block|{
 if|if
 condition|(
 operator|(
-name|vect
-index|[
-literal|0
-index|]
-operator|&
-literal|0377
+name|argp
+operator|.
+name|sg_ispeed
 operator|)
-operator|>
-literal|8
+operator|<
+name|B1200
 condition|)
 name|Etc
 operator|.
@@ -315,59 +327,53 @@ argument_list|,
 literal|"arg count"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ac
-operator|>
-literal|1
-condition|)
-name|f_log
-operator|=
-name|copen
-argument_list|(
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|opencode
-argument_list|)
-expr_stmt|;
+comment|/* 	if (ac> 1) 		f_log = fopen(av[0], opencode); 		*/
 name|printf
 argument_list|(
 literal|"\n   * * *   S T A R   T R E K   * * *\n\n"
+argument_list|)
+expr_stmt|;
+name|play_with
+argument_list|(
+name|stdin
 argument_list|)
 expr_stmt|;
 name|ungetc
 argument_list|(
 literal|'\n'
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* prime the standard input */
-name|ungetc
-argument_list|(
-literal|'y'
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|nice
-argument_list|(
-name|prio
+name|stdin
 argument_list|)
 expr_stmt|;
 name|setexit
 argument_list|()
 expr_stmt|;
-while|while
+if|if
 condition|(
+name|been_here
+operator|==
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|getynpar
 argument_list|(
 literal|"Another game"
 argument_list|)
 condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|been_here
+operator|=
+literal|1
+expr_stmt|;
+do|do
 block|{
 name|setup
 argument_list|()
@@ -376,11 +382,69 @@ name|play
 argument_list|()
 expr_stmt|;
 block|}
-name|flush
-argument_list|()
+do|while
+condition|(
+name|getynpar
+argument_list|(
+literal|"Another game"
+argument_list|)
+condition|)
+do|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|play_with
+argument_list|(
+name|iop
+argument_list|)
+specifier|register
+name|FILE
+operator|*
+name|iop
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|extern
+name|char
+name|_sibuf
+index|[]
+decl_stmt|;
+name|iop
+operator|->
+name|_cnt
+operator|=
+literal|0
+expr_stmt|;
+name|iop
+operator|->
+name|_base
+operator|=
+name|_sibuf
+expr_stmt|;
+name|iop
+operator|->
+name|_ptr
+operator|=
+name|iop
+operator|->
+name|_base
+expr_stmt|;
+name|iop
+operator|->
+name|_bufsiz
+operator|=
+name|BUFSIZ
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srscan.c	4.1	(Berkeley)	%G%"
+literal|"@(#)srscan.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,20 +44,18 @@ name|Color
 index|[
 literal|4
 index|]
+init|=
 block|{
 literal|"GREEN"
-operator|,
+block|,
 literal|"DOCKED"
-operator|,
+block|,
 literal|"YELLOW"
-operator|,
+block|,
 literal|"RED"
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 name|srscan
@@ -692,7 +690,7 @@ if|if
 condition|(
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|&
 name|Q_DISTRESSED
 condition|)
@@ -705,7 +703,7 @@ if|if
 condition|(
 name|q
 operator|->
-name|systemname
+name|qsystemname
 condition|)
 name|printf
 argument_list|(

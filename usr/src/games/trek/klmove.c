@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klmove.c	4.1	(Berkeley)	%G%"
+literal|"@(#)klmove.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,8 +190,7 @@ operator|-
 literal|25
 expr_stmt|;
 name|motion
-operator|=
-operator|*
+operator|*=
 name|k
 operator|->
 name|avgdist
@@ -388,8 +387,7 @@ operator|<
 literal|0
 condition|)
 name|qx
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 elseif|else
@@ -400,8 +398,7 @@ operator|>=
 name|NSECTS
 condition|)
 name|qx
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 if|if
@@ -411,8 +408,7 @@ operator|<
 literal|0
 condition|)
 name|qy
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 elseif|else
@@ -423,8 +419,7 @@ operator|>=
 name|NSECTS
 condition|)
 name|qy
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 if|if
@@ -529,8 +524,7 @@ name|qy
 index|]
 operator|.
 name|scanned
-operator|=
-operator|+
+operator|+=
 literal|100
 expr_stmt|;
 name|motion
@@ -572,8 +566,7 @@ name|quady
 index|]
 operator|.
 name|scanned
-operator|=
-operator|-
+operator|-=
 literal|100
 expr_stmt|;
 block|}
@@ -600,15 +593,13 @@ name|qy
 index|]
 operator|.
 name|klings
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 name|Etc
 operator|.
 name|nkling
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|bmove
@@ -643,8 +634,7 @@ name|quady
 index|]
 operator|.
 name|klings
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|k

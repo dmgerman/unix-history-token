@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compkl.c	4.1	(Berkeley)	%G%"
+literal|"@(#)compkl.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +353,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)capture.c	4.2	(Berkeley)	%G%"
+literal|"@(#)capture.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|kling
 modifier|*
 name|k
 decl_stmt|;
-name|float
+name|double
 name|x
 decl_stmt|;
 specifier|extern
@@ -212,6 +212,12 @@ operator|.
 name|klingcrew
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"%d klingons commit suicide rather than be taken captive\n"

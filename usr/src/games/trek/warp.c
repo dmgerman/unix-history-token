@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)warp.c	4.1	(Berkeley)	%G%"
+literal|"@(#)warp.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,16 +61,16 @@ block|{
 name|int
 name|course
 decl_stmt|;
-name|float
+name|double
 name|power
 decl_stmt|;
-name|float
+name|double
 name|dist
 decl_stmt|;
-name|float
+name|double
 name|time
 decl_stmt|;
-name|float
+name|double
 name|speed
 decl_stmt|;
 name|double
@@ -85,7 +85,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|extern
-name|float
+name|double
 name|move
 parameter_list|()
 function_decl|;
@@ -291,13 +291,11 @@ name|franf
 argument_list|()
 expr_stmt|;
 name|dist
-operator|=
-operator|*
+operator|*=
 name|frac
 expr_stmt|;
 name|time
-operator|=
-operator|*
+operator|*=
 name|frac
 expr_stmt|;
 name|damage
@@ -353,8 +351,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|dist
 operator|*
 name|Ship
@@ -481,8 +478,7 @@ expr_stmt|;
 name|Now
 operator|.
 name|date
-operator|=
-operator|+
+operator|+=
 name|time
 expr_stmt|;
 name|printf
@@ -533,8 +529,7 @@ name|i
 index|]
 operator|.
 name|date
-operator|=
-operator|+
+operator|+=
 name|time
 expr_stmt|;
 block|}
@@ -549,6 +544,9 @@ name|date
 expr_stmt|;
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|Etc
 operator|.
 name|snapshot
@@ -557,7 +555,6 @@ name|bmove
 argument_list|(
 name|i
 argument_list|,
-operator|&
 name|Quad
 argument_list|,
 sizeof|sizeof
@@ -567,12 +564,10 @@ expr_stmt|;
 name|bmove
 argument_list|(
 name|i
-operator|=
-operator|+
+operator|+=
 sizeof|sizeof
 name|Quad
 argument_list|,
-operator|&
 name|Event
 argument_list|,
 sizeof|sizeof
@@ -582,8 +577,7 @@ expr_stmt|;
 name|bmove
 argument_list|(
 name|i
-operator|=
-operator|+
+operator|+=
 sizeof|sizeof
 name|Event
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)autover.c	4.1	(Berkeley)	%G%"
+literal|"@(#)autover.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ end_macro
 
 begin_block
 block|{
-name|float
+name|double
 name|dist
 decl_stmt|;
 specifier|register

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)impulse.c	4.2	(Berkeley)	%G%"
+literal|"@(#)impulse.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,7 +45,7 @@ specifier|register
 name|int
 name|power
 decl_stmt|;
-name|float
+name|double
 name|dist
 decl_stmt|,
 name|time
@@ -55,7 +55,7 @@ name|int
 name|percent
 decl_stmt|;
 specifier|extern
-name|float
+name|double
 name|move
 parameter_list|()
 function_decl|;

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initquad.c	4.2	(Berkeley)	%G%"
+literal|"@(#)initquad.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ if|if
 condition|(
 name|q
 operator|->
-name|systemname
+name|qsystemname
 operator|!=
 literal|0
 condition|)

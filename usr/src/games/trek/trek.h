@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)trek.h	4.1	(Berkeley)	83/03/23	*/
+comment|/*	@(#)trek.h	4.2	(Berkeley)	83/05/27	*/
 end_comment
 
 begin_empty
@@ -181,7 +181,7 @@ name|stars
 decl_stmt|;
 comment|/* number of stars in this quadrant */
 name|char
-name|systemname
+name|qsystemname
 decl_stmt|;
 comment|/* starsystem name (see below) */
 block|}
@@ -687,7 +687,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 comment|/* coordinates */
-name|float
+name|double
 name|date
 decl_stmt|;
 comment|/* trap stardate */
@@ -750,11 +750,11 @@ name|int
 name|power
 decl_stmt|;
 comment|/* power left */
-name|float
+name|double
 name|dist
 decl_stmt|;
 comment|/* distance to Enterprise */
-name|float
+name|double
 name|avgdist
 decl_stmt|;
 comment|/* average over this move */
@@ -883,15 +883,15 @@ end_comment
 begin_struct
 struct|struct
 block|{
-name|float
+name|double
 name|warp
 decl_stmt|;
 comment|/* warp factor */
-name|float
+name|double
 name|warp2
 decl_stmt|;
 comment|/* warp factor squared */
-name|float
+name|double
 name|warp3
 decl_stmt|;
 comment|/* warp factor cubed */
@@ -911,7 +911,7 @@ name|int
 name|shield
 decl_stmt|;
 comment|/* energy in shields */
-name|float
+name|double
 name|reserves
 decl_stmt|;
 comment|/* life support reserves */
@@ -964,6 +964,9 @@ name|char
 name|ship
 decl_stmt|;
 comment|/* current starship */
+name|int
+name|distressed
+comment|/* number of distress calls */
 block|}
 name|Ship
 struct|;
@@ -1071,7 +1074,7 @@ name|char
 name|resting
 decl_stmt|;
 comment|/* set if this move is a rest */
-name|float
+name|double
 name|time
 decl_stmt|;
 comment|/* time used this move */
@@ -1095,15 +1098,15 @@ name|char
 name|klings
 decl_stmt|;
 comment|/* number of klingons */
-name|float
+name|double
 name|date
 decl_stmt|;
 comment|/* stardate */
-name|float
+name|double
 name|time
 decl_stmt|;
 comment|/* time left */
-name|float
+name|double
 name|resource
 decl_stmt|;
 comment|/* Federation resources */
@@ -1115,7 +1118,7 @@ name|int
 name|shield
 decl_stmt|;
 comment|/* energy in shields */
-name|float
+name|double
 name|reserves
 decl_stmt|;
 comment|/* life support reserves */
@@ -1131,18 +1134,18 @@ name|char
 name|torped
 decl_stmt|;
 comment|/* photon torpedos */
-name|float
+name|double
 name|damfac
 index|[
 name|NDEV
 index|]
 decl_stmt|;
 comment|/* damage factor */
-name|float
+name|double
 name|dockfac
 decl_stmt|;
 comment|/* docked repair time factor */
-name|float
+name|double
 name|regenfac
 decl_stmt|;
 comment|/* regeneration factor */
@@ -1162,7 +1165,7 @@ name|int
 name|warptime
 decl_stmt|;
 comment|/* time chewer multiplier */
-name|float
+name|double
 name|phasfac
 decl_stmt|;
 comment|/* Klingon phaser power eater factor */
@@ -1173,21 +1176,21 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* probability that a Klingon moves */
-name|float
+name|double
 name|movefac
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* Klingon move distance multiplier */
-name|float
+name|double
 name|eventdly
 index|[
 name|NEVENTS
 index|]
 decl_stmt|;
 comment|/* event time multipliers */
-name|float
+name|double
 name|navigcrud
 index|[
 literal|2
@@ -1198,14 +1201,14 @@ name|int
 name|cloakenergy
 decl_stmt|;
 comment|/* cloaking device energy per stardate */
-name|float
+name|double
 name|damprob
 index|[
 name|NDEV
 index|]
 decl_stmt|;
 comment|/* damage probability */
-name|float
+name|double
 name|hitfac
 decl_stmt|;
 comment|/* Klingon attack factor */
@@ -1213,7 +1216,7 @@ name|int
 name|klingcrew
 decl_stmt|;
 comment|/* number of Klingons in a crew */
-name|float
+name|double
 name|srndrprob
 decl_stmt|;
 comment|/* surrender probability */
@@ -1245,15 +1248,15 @@ name|char
 name|klings
 decl_stmt|;
 comment|/* number of klingons */
-name|float
+name|double
 name|date
 decl_stmt|;
 comment|/* stardate */
-name|float
+name|double
 name|time
 decl_stmt|;
 comment|/* time left */
-name|float
+name|double
 name|resource
 decl_stmt|;
 comment|/* Federation resources */

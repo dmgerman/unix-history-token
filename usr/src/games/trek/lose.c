@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lose.c	4.1	(Berkeley)	%G%"
+literal|"@(#)lose.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,41 +36,38 @@ name|char
 modifier|*
 name|Losemsg
 index|[]
+init|=
 block|{
 literal|"You ran out of time"
-operator|,
+block|,
 literal|"You ran out of energy"
-operator|,
+block|,
 literal|"You have been destroyed"
-operator|,
+block|,
 literal|"You ran into the negative energy barrier"
-operator|,
+block|,
 literal|"You destroyed yourself by nova'ing that star"
-operator|,
+block|,
 literal|"You have been caught in a supernova"
-operator|,
+block|,
 literal|"You just suffocated in outer space"
-operator|,
+block|,
 literal|"You could not be rematerialized"
-operator|,
+block|,
 literal|"\n\032\014 ***
 literal|Ship's hull has imploded
 literal|***"
-operator|,
+block|,
 literal|"You have burned up in a star"
-operator|,
+block|,
 literal|"Well, you destroyed yourself, but it didn't do any good"
-operator|,
+block|,
 literal|"You have been captured by Klingons and mercilessly tortured"
-operator|,
+block|,
 literal|"Your last crew member died"
-operator|,
-block|}
+block|, }
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 name|lose
