@@ -6756,37 +6756,7 @@ parameter_list|,
 name|vm_offset_t
 name|eva
 parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_remove_pages: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
-name|pmap_remove
-argument_list|(
-name|pm
-argument_list|,
-name|sva
-argument_list|,
-name|eva
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
