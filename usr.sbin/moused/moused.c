@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.10 1997/09/25 06:44:39 charnier Exp $"
+literal|"$Id: moused.c,v 1.11 1997/12/07 08:11:16 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1156,7 +1156,17 @@ name|HUPCL
 operator|)
 block|,
 comment|/* Thinking Mouse */
-literal|0
+operator|(
+name|CS8
+operator||
+name|CSTOPB
+operator||
+name|CREAD
+operator||
+name|CLOCAL
+operator||
+name|HUPCL
+operator|)
 block|,
 comment|/* sysmouse */
 if|#
@@ -5252,6 +5262,36 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|MOUSE_PROTO_SYSMOUSE
+case|:
+if|if
+condition|(
+name|rodent
+operator|.
+name|hw
+operator|.
+name|iftype
+operator|==
+name|MOUSE_IF_SYSMOUSE
+condition|)
+name|setmousespeed
+argument_list|(
+literal|1200
+argument_list|,
+name|rodent
+operator|.
+name|baudrate
+argument_list|,
+name|rodentcflags
+index|[
+name|rodent
+operator|.
+name|rtype
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
+case|case
 name|MOUSE_PROTO_BUS
 case|:
 case|case
@@ -5259,9 +5299,6 @@ name|MOUSE_PROTO_INPORT
 case|:
 case|case
 name|MOUSE_PROTO_PS2
-case|:
-case|case
-name|MOUSE_PROTO_SYSMOUSE
 case|:
 if|if
 condition|(
