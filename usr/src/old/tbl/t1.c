@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t1.c	4.2 %G%"
+literal|"@(#)t1.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -65,56 +71,6 @@ name|_f
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unix
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MACROS
-value|"/usr/lib/tmac.s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PYMACS
-value|"/usr/lib/tmac.m"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|gcos
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MACROS
-value|"cc/troff/smac"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PYMACS
-value|"cc/troff/mmac"
-end_define
 
 begin_endif
 endif|#
@@ -380,7 +336,7 @@ block|{
 operator|*
 name|sargv
 operator|=
-name|MACROS
+name|_PATH_MACROS
 expr_stmt|;
 break|break;
 block|}
@@ -398,7 +354,7 @@ block|{
 operator|*
 name|sargv
 operator|=
-name|PYMACS
+name|_PATH_PYMACS
 expr_stmt|;
 break|break;
 block|}
