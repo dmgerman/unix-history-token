@@ -1567,6 +1567,7 @@ operator|&&
 operator|!
 name|mfs
 operator|&&
+operator|!
 name|S_ISCHR
 argument_list|(
 name|st
