@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.10 (Berkeley) 81/06/12"
+literal|"@(#)shutdown.c	4.11 (Berkeley) 82/02/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
 end_include
 
 begin_comment
@@ -1604,7 +1610,9 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"\007\007*** System shutdown message from %s ***\n"
+literal|"\007\007*** System shutdown message from %s!%s ***\n"
+argument_list|,
+name|sysname
 argument_list|,
 name|shutter
 argument_list|)
@@ -2065,7 +2073,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" (by %s)"
+literal|" (by %s!%s)"
+argument_list|,
+name|sysname
 argument_list|,
 name|shutter
 argument_list|)
