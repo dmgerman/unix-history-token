@@ -373,6 +373,18 @@ name|nsfbufs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nsfbufspeak
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nsfbufsused
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Sizes of objects per bucket.  There are this size's worth of mbufs  * or clusters in each bucket.  Please keep these a power-of-2.  */
 end_comment
@@ -945,6 +957,48 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum number of sendfile(2) sf_bufs available"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nsfbufspeak
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nsfbufspeak
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of sendfile(2) sf_bufs at peak usage"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nsfbufsused
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nsfbufsused
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of sendfile(2) sf_bufs in use"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

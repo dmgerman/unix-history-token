@@ -227,6 +227,15 @@ name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsfbufspeak
+decl_stmt|,
+name|nsfbufsused
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|cpu_thread_exit
@@ -1629,6 +1638,18 @@ name|m
 operator|=
 name|m
 expr_stmt|;
+name|nsfbufsused
+operator|++
+expr_stmt|;
+name|nsfbufspeak
+operator|=
+name|max
+argument_list|(
+name|nsfbufspeak
+argument_list|,
+name|nsfbufsused
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -1741,6 +1762,9 @@ name|sf
 argument_list|,
 name|free_list
 argument_list|)
+expr_stmt|;
+name|nsfbufsused
+operator|--
 expr_stmt|;
 if|if
 condition|(
