@@ -774,7 +774,7 @@ operator||
 name|XFR_DEGRADED_WRITE
 operator|)
 operator|)
-comment|/* RAID 5 group write operation  */
+comment|/* RAID 4/5 group write operation  */
 operator|&&
 operator|(
 name|rqg
@@ -1344,7 +1344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start the second phase of a RAID5 group write operation. */
+comment|/* Start the second phase of a RAID-4 or RAID-5 group write operation. */
 end_comment
 
 begin_function
@@ -2147,16 +2147,6 @@ name|active
 operator|++
 expr_stmt|;
 comment|/* another active request */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 name|drive
 operator|=
 operator|&
@@ -2295,31 +2285,6 @@ operator|->
 name|b
 operator|.
 name|b_bcount
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  raid5.2 sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
 argument_list|)
 expr_stmt|;
 if|if
@@ -2453,16 +2418,6 @@ name|active
 operator|++
 expr_stmt|;
 comment|/* another active request */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 name|drive
 operator|=
 operator|&
@@ -2601,31 +2556,6 @@ operator|->
 name|b
 operator|.
 name|b_bcount
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  raid5.3 sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
 argument_list|)
 expr_stmt|;
 if|if
