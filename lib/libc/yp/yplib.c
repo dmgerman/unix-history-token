@@ -1709,6 +1709,39 @@ name|YPERR_YPBIND
 operator|)
 return|;
 block|}
+comment|/* 		 * Check the port number -- should be< IPPORT_RESERVED. 		 * If not, it's possible someone has registered a bogus 		 * ypbind with the portmapper and is trying to trick us. 		 */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|clnt_sin
+operator|.
+name|sin_port
+argument_list|)
+operator|>=
+name|IPPORT_RESERVED
+condition|)
+block|{
+name|clnt_destroy
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new
+condition|)
+name|free
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|YPERR_YPBIND
+operator|)
+return|;
+block|}
 name|tv
 operator|.
 name|tv_sec
@@ -1913,6 +1946,7 @@ name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_addr
 expr_stmt|;
+comment|/* 		 * We could do a reserved port check here too, but this 		 * could pose compatibility problems. The local ypbind is 		 * supposed to decide whether or not to trust yp servers 		 * on insecure ports. For now, we trust its judgement. 		 */
 name|ysd
 operator|->
 name|dom_server_port
