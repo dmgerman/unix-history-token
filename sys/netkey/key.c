@@ -2959,7 +2959,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_allocsp: NULL pointer is passed.\n"
+literal|"key_allocsp: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* check direction */
@@ -2978,7 +2978,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"key_allocsp: Invalid direction is passed.\n"
+literal|"key_allocsp: Invalid direction is passed."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3563,7 +3563,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_checkrequest: NULL pointer is passed.\n"
+literal|"key_checkrequest: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* check mode */
@@ -3587,7 +3587,7 @@ case|:
 default|default:
 name|panic
 argument_list|(
-literal|"key_checkrequest: Invalid policy defined.\n"
+literal|"key_checkrequest: Invalid policy defined."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3603,7 +3603,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * We do allocate new SA only if the state of SA in the holder is 	 * SADB_SASTATE_DEAD.  The SA for outbound must be the oldest. 	 */
-block|if (isr->sav != NULL) { 		if (isr->sav->sah == NULL) 			panic("key_checkrequest: sah is null.\n"); 		if (isr->sav == (struct secasvar *)LIST_FIRST(&isr->sav->sah->savtree[SADB_SASTATE_DEAD])) { 			KEYDEBUG(KEYDEBUG_IPSEC_STAMP, 				printf("DP checkrequest calls free SA:%p\n", 					isr->sav)); 			key_freesav(isr->sav); 			isr->sav = NULL; 		} 	}
+block|if (isr->sav != NULL) { 		if (isr->sav->sah == NULL) 			panic("key_checkrequest: sah is null."); 		if (isr->sav == (struct secasvar *)LIST_FIRST(&isr->sav->sah->savtree[SADB_SASTATE_DEAD])) { 			KEYDEBUG(KEYDEBUG_IPSEC_STAMP, 				printf("DP checkrequest calls free SA:%p\n", 					isr->sav)); 			key_freesav(isr->sav); 			isr->sav = NULL; 		} 	}
 else|#
 directive|else
 comment|/* 	 * we free any SA stashed in the IPsec request because a different 	 * SA may be involved each time this request is checked, either 	 * because new SAs are being configured, or this request is 	 * associated with an unconnected datagram socket, or this request 	 * is associated with a system default policy. 	 * 	 * The operation may have negative impact to performance.  We may 	 * want to check cached SA carefully, rather than picking new SA 	 * every time. 	 */
@@ -3992,7 +3992,7 @@ condition|)
 name|panic
 argument_list|(
 literal|"key_do_allocsa_policy: "
-literal|"lifetime_current is NULL.\n"
+literal|"lifetime_current is NULL."
 argument_list|)
 expr_stmt|;
 comment|/* What the best method is to compare ? */
@@ -4471,7 +4471,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_allocsa: NULL pointer is passed.\n"
+literal|"key_allocsa: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * when both systems employ similar strategy to use a SA. 	 * the search order is important even in the inbound case. 	 */
@@ -4917,7 +4917,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_freesp: NULL pointer is passed.\n"
+literal|"key_freesp: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|sp
@@ -4983,7 +4983,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_freeso: NULL pointer is passed.\n"
+literal|"key_freeso: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5193,7 +5193,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_freesp_so: sp == NULL\n"
+literal|"key_freesp_so: sp == NULL"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5284,7 +5284,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_freesav: NULL pointer is passed.\n"
+literal|"key_freesav: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|sav
@@ -5368,7 +5368,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_delsp: NULL pointer is passed.\n"
+literal|"key_delsp: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|sp
@@ -5529,7 +5529,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_getsp: NULL pointer is passed.\n"
+literal|"key_getsp: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5769,7 +5769,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_msg2sp: NULL pointer was passed.\n"
+literal|"key_msg2sp: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -5784,7 +5784,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"key_msg2sp: invalid length.\n"
+literal|"key_msg2sp: invalid length."
 argument_list|)
 expr_stmt|;
 if|if
@@ -6749,7 +6749,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_sp2msg: NULL pointer was passed.\n"
+literal|"key_sp2msg: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7626,7 +7626,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdadd: NULL pointer is passed.\n"
+literal|"key_spdadd: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -9003,7 +9003,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spddelete: NULL pointer is passed.\n"
+literal|"key_spddelete: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -9444,7 +9444,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spddelete2: NULL pointer is passed.\n"
+literal|"key_spddelete2: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -9933,7 +9933,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdget: NULL pointer is passed.\n"
+literal|"key_spdget: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -10133,7 +10133,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdacquire: NULL pointer is passed.\n"
+literal|"key_spdacquire: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -10146,7 +10146,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdacquire: called but there is request.\n"
+literal|"key_spdacquire: called but there is request."
 argument_list|)
 expr_stmt|;
 if|if
@@ -10159,7 +10159,7 @@ name|IPSEC_POLICY_IPSEC
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdacquire: policy mismathed. IPsec is expected.\n"
+literal|"key_spdacquire: policy mismathed. IPsec is expected."
 argument_list|)
 expr_stmt|;
 comment|/* Get an entry to check whether sent message or not. */
@@ -10427,7 +10427,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdflush: NULL pointer is passed.\n"
+literal|"key_spdflush: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -10676,7 +10676,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spddump: NULL pointer is passed.\n"
+literal|"key_spddump: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* search SPD entry and get buffer size. */
@@ -11268,7 +11268,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_spdexpire: NULL pointer is passed.\n"
+literal|"key_spdexpire: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* set msg header */
@@ -11819,7 +11819,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_newsaidx: NULL pointer is passed.\n"
+literal|"key_newsaidx: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|newsah
@@ -11925,7 +11925,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_delsah: NULL pointer is passed.\n"
+literal|"key_delsah: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|s
@@ -12190,7 +12190,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_newsa: NULL pointer is passed.\n"
+literal|"key_newsa: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|KMALLOC
@@ -12540,7 +12540,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_delsav: NULL pointer is passed.\n"
+literal|"key_delsav: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -13173,7 +13173,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_setsaval: NULL pointer is passed.\n"
+literal|"key_setsaval: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* initialization */
@@ -16907,7 +16907,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_ismyaddr: NULL pointer is passed.\n"
+literal|"key_ismyaddr: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -19863,7 +19863,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_getspi: NULL pointer is passed.\n"
+literal|"key_getspi: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -21344,7 +21344,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_update: NULL pointer is passed.\n"
+literal|"key_update: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -22354,7 +22354,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_add: NULL pointer is passed.\n"
+literal|"key_add: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -23021,7 +23021,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_setident: NULL pointer is passed.\n"
+literal|"key_setident: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* don't make buffer if not there */
@@ -23366,7 +23366,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_getmsgbuf_x1: NULL pointer is passed.\n"
+literal|"key_getmsgbuf_x1: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* create new sadb_msg to reply. */
@@ -23594,7 +23594,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_delete: NULL pointer is passed.\n"
+literal|"key_delete: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -24593,7 +24593,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_get: NULL pointer is passed.\n"
+literal|"key_get: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -26169,7 +26169,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_acquire: NULL pointer is passed.\n"
+literal|"key_acquire: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -26189,7 +26189,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_acquire: invalid proto is passed.\n"
+literal|"key_acquire: invalid proto is passed."
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -27147,7 +27147,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_acquire2: NULL pointer is passed.\n"
+literal|"key_acquire2: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Error message from KMd. 	 * We assume that if error was occured in IKEd, the length of PFKEY 	 * message is equal to the size of sadb_msg structure. 	 * We do not raise error even if error occured in this function. 	 */
@@ -27659,7 +27659,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_register: NULL pointer is passed.\n"
+literal|"key_register: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* check for invalid register message */
@@ -28534,7 +28534,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_freereg: NULL pointer is passed.\n"
+literal|"key_freereg: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * check whether existing or not. 	 * check all type of SA, because there is a potential that 	 * one socket is registered to multiple type of SA. 	 */
@@ -28658,7 +28658,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_expire: NULL pointer is passed.\n"
+literal|"key_expire: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -28671,7 +28671,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_expire: Why was SA index in SA NULL.\n"
+literal|"key_expire: Why was SA index in SA NULL."
 argument_list|)
 expr_stmt|;
 if|if
@@ -28695,7 +28695,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_expire: invalid proto is passed.\n"
+literal|"key_expire: invalid proto is passed."
 argument_list|)
 expr_stmt|;
 comment|/* set msg header */
@@ -29322,7 +29322,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_flush: NULL pointer is passed.\n"
+literal|"key_flush: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -29706,7 +29706,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_dump: NULL pointer is passed.\n"
+literal|"key_dump: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -30057,7 +30057,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_promisc: NULL pointer is passed.\n"
+literal|"key_promisc: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 name|olen
@@ -30405,7 +30405,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_parse: NULL pointer is passed.\n"
+literal|"key_parse: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|#
@@ -31577,7 +31577,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_align: NULL pointer is passed.\n"
+literal|"key_align: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if

@@ -303,7 +303,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_output: NULL pointer was passed.\n"
+literal|"key_output: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|pfkeystat
@@ -795,7 +795,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_sendup: NULL pointer was passed.\n"
+literal|"key_sendup: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -1137,7 +1137,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"key_sendup_mbuf: NULL pointer was passed.\n"
+literal|"key_sendup_mbuf: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1152,7 +1152,7 @@ name|KEY_SENDUP_ONE
 condition|)
 name|panic
 argument_list|(
-literal|"key_sendup_mbuf: NULL pointer was passed.\n"
+literal|"key_sendup_mbuf: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|pfkeystat

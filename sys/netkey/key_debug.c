@@ -339,7 +339,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb: NULL pointer was passed.\n"
+literal|"kdebug_sadb: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -679,7 +679,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_prop: NULL pointer was passed.\n"
+literal|"kdebug_sadb_prop: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|len
@@ -895,7 +895,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_identity: NULL pointer was passed.\n"
+literal|"kdebug_sadb_identity: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|len
@@ -1113,7 +1113,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_supported: NULL pointer was passed.\n"
+literal|"kdebug_sadb_supported: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|len
@@ -1307,7 +1307,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_sa: NULL pointer was passed.\n"
+literal|"kdebug_sadb_sa: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1388,7 +1388,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_address: NULL pointer was passed.\n"
+literal|"kdebug_sadb_address: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1491,7 +1491,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_key: NULL pointer was passed.\n"
+literal|"kdebug_sadb_key: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1630,7 +1630,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_x_sa2: NULL pointer was passed.\n"
+literal|"kdebug_sadb_x_sa2: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1705,7 +1705,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_x_policy: NULL pointer was passed.\n"
+literal|"kdebug_sadb_x_policy: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1929,7 +1929,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sadb_x_policy: wrong policy struct.\n"
+literal|"kdebug_sadb_x_policy: wrong policy struct."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1968,7 +1968,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_secpolicy: NULL pointer was passed.\n"
+literal|"kdebug_secpolicy: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2144,7 +2144,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_secpolicyindex: NULL pointer was passed.\n"
+literal|"kdebug_secpolicyindex: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2253,7 +2253,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_secpolicyindex: NULL pointer was passed.\n"
+literal|"kdebug_secpolicyindex: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2354,7 +2354,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_secasv: NULL pointer was passed.\n"
+literal|"kdebug_secasv: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2601,7 +2601,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_secreplay: NULL pointer was passed.\n"
+literal|"kdebug_secreplay: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3002,7 +3002,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"kdebug_sockaddr: NULL pointer was passed.\n"
+literal|"kdebug_sockaddr: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: We deal with port number as host byte order. */
