@@ -5903,11 +5903,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bootverbose
-operator|)
 operator|&&
-operator|(
 name|path
 operator|->
 name|device
@@ -5915,7 +5912,6 @@ operator|->
 name|serial_num_len
 operator|>
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* Don't wrap the screen  - print only the first 60 chars */
@@ -6128,22 +6124,30 @@ name|struct
 name|ccb_trans_settings_fc
 modifier|*
 name|fc
-decl_stmt|;
-name|fc
-operator|=
+init|=
 operator|&
 name|cts
 operator|.
 name|xport_specific
 operator|.
 name|fc
-expr_stmt|;
+decl_stmt|;
+if|if
+condition|(
+name|fc
+operator|->
+name|valid
+operator|&
+name|CTS_FC_VALID_SPEED
+condition|)
+block|{
 name|speed
 operator|=
 name|fc
 operator|->
 name|bitrate
 expr_stmt|;
+block|}
 block|}
 name|mb
 operator|=
@@ -6369,14 +6373,17 @@ if|if
 condition|(
 name|fc
 operator|->
-name|wwnn
+name|valid
+operator|&
+name|CTS_FC_VALID_WWNN
 condition|)
 name|printf
 argument_list|(
-literal|" WWNN %q"
+literal|" WWNN 0x%llx"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|fc
 operator|->
@@ -6387,14 +6394,17 @@ if|if
 condition|(
 name|fc
 operator|->
-name|wwpn
+name|valid
+operator|&
+name|CTS_FC_VALID_WWPN
 condition|)
 name|printf
 argument_list|(
-literal|" WWPN %q"
+literal|" WWPN 0x%llx"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|fc
 operator|->
@@ -6405,11 +6415,13 @@ if|if
 condition|(
 name|fc
 operator|->
-name|port
+name|valid
+operator|&
+name|CTS_FC_VALID_PORT
 condition|)
 name|printf
 argument_list|(
-literal|" PortID %u"
+literal|" PortID 0x%x"
 argument_list|,
 name|fc
 operator|->
@@ -26865,7 +26877,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|cts
+name|cur_spi
 operator|->
 name|sync_offset
 operator|==
@@ -26873,7 +26885,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|cts
+name|cur_spi
 operator|->
 name|sync_period
 operator|==
