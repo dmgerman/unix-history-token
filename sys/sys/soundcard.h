@@ -323,7 +323,7 @@ comment|/* sets blocksize */
 end_comment
 
 begin_comment
-comment|/*  * The following constants define supported audio formats. The  * encoding follows voxware conventions, i.e. 1 bit for each supported  * format. We extend it by using bit 31 (RO) to indicate full-duplex  * capability, and bit 29 (RO) to indicate that the card supports/  * needs different formats on capture& playback channels.  * Bit 29 (RW) is used to indicate/ask stereo.  */
+comment|/*  * The following constants define supported audio formats. The  * encoding follows voxware conventions, i.e. 1 bit for each supported  * format. We extend it by using bit 31 (RO) to indicate full-duplex  * capability, and bit 29 (RO) to indicate that the card supports/  * needs different formats on capture& playback channels.  * Bit 29 (RW) is used to indicate/ask stereo.  *  * The number of bits required to store the sample is:  *  o  4 bits for the IDA ADPCM format,  *  o  8 bits for 8-bit formats, mu-law and A-law,  *  o  16 bits for the 16-bit formats, and  *  o  32 bits for the 24/32-bit formats.  *  o  undefined for the MPEG audio format.  */
 end_comment
 
 begin_define
@@ -334,7 +334,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/* Return current fmt */
+comment|/* Return current format */
 end_comment
 
 begin_define
@@ -344,12 +344,20 @@ name|AFMT_MU_LAW
 value|0x00000001
 end_define
 
+begin_comment
+comment|/* Logarithmic mu-law */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AFMT_A_LAW
 value|0x00000002
 end_define
+
+begin_comment
+comment|/* Logarithmic A-law */
+end_comment
 
 begin_define
 define|#
@@ -358,12 +366,20 @@ name|AFMT_IMA_ADPCM
 value|0x00000004
 end_define
 
+begin_comment
+comment|/* A 4:1 compressed format where 16-bit 					 * squence represented using the 					 * the average 4 bits per sample */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AFMT_U8
 value|0x00000008
 end_define
+
+begin_comment
+comment|/* Unsigned 8-bit */
+end_comment
 
 begin_define
 define|#
@@ -373,7 +389,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* Little endian signed 16*/
+comment|/* Little endian signed 16-bit */
 end_comment
 
 begin_define
@@ -384,7 +400,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Big endian signed 16 */
+comment|/* Big endian signed 16-bit */
 end_comment
 
 begin_define
@@ -394,6 +410,10 @@ name|AFMT_S8
 value|0x00000040
 end_define
 
+begin_comment
+comment|/* Signed 8-bit */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -402,7 +422,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* Little endian U16 */
+comment|/* Little endian unsigned 16-bit */
 end_comment
 
 begin_define
@@ -413,7 +433,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Big endian U16 */
+comment|/* Big endian unsigned 16-bit */
 end_comment
 
 begin_define
@@ -424,7 +444,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* MPEG (2) audio */
+comment|/* MPEG MP2/MP3 audio */
 end_comment
 
 begin_define
@@ -439,7 +459,7 @@ comment|/* Dolby Digital AC3 */
 end_comment
 
 begin_comment
-comment|/*  * may not have all bits significant:  */
+comment|/*  * 32-bit formats below used for 24-bit audio data where the data is stored  * in the 24 most significant bits and the least significant bits are not used  * (should be set to 0).  */
 end_comment
 
 begin_define
@@ -450,7 +470,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* Little endian signed 32 */
+comment|/* Little endian signed 32-bit */
 end_comment
 
 begin_define
@@ -461,7 +481,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* big endian signed 32 */
+comment|/* Big endian signed 32-bit */
 end_comment
 
 begin_define
@@ -472,7 +492,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* Little endian unsigned 32 */
+comment|/* Little endian unsigned 32-bit */
 end_comment
 
 begin_define
@@ -483,7 +503,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* big endian unsigned 32 */
+comment|/* Big endian unsigned 32-bit */
 end_comment
 
 begin_define
@@ -2990,12 +3010,20 @@ name|SOUND_MIXER_VOLUME
 value|0
 end_define
 
+begin_comment
+comment|/* Master output level */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SOUND_MIXER_BASS
 value|1
 end_define
+
+begin_comment
+comment|/* Treble level of all output channels */
+end_comment
 
 begin_define
 define|#
@@ -3004,12 +3032,20 @@ name|SOUND_MIXER_TREBLE
 value|2
 end_define
 
+begin_comment
+comment|/* Bass level of all output channels */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SOUND_MIXER_SYNTH
 value|3
 end_define
+
+begin_comment
+comment|/* Volume of synthesier input */
+end_comment
 
 begin_define
 define|#
@@ -3018,12 +3054,20 @@ name|SOUND_MIXER_PCM
 value|4
 end_define
 
+begin_comment
+comment|/* Output level for the audio device */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SOUND_MIXER_SPEAKER
 value|5
 end_define
+
+begin_comment
+comment|/* Output level for the PC speaker 					 * signals */
+end_comment
 
 begin_define
 define|#
@@ -3032,6 +3076,10 @@ name|SOUND_MIXER_LINE
 value|6
 end_define
 
+begin_comment
+comment|/* Volume level for the line in jack */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3039,12 +3087,20 @@ name|SOUND_MIXER_MIC
 value|7
 end_define
 
+begin_comment
+comment|/* Volume for the signal coming from 					 * the microphone jack */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SOUND_MIXER_CD
 value|8
 end_define
+
+begin_comment
+comment|/* Volume level for the input signal 					 * connected to the CD audio input */
+end_comment
 
 begin_define
 define|#
@@ -3054,7 +3110,7 @@ value|9
 end_define
 
 begin_comment
-comment|/*  Recording monitor  */
+comment|/* Recording monitor. It controls the 					 * output volume of the selected 					 * recording sources while recording */
 end_comment
 
 begin_define
@@ -3064,6 +3120,10 @@ name|SOUND_MIXER_ALTPCM
 value|10
 end_define
 
+begin_comment
+comment|/* Volume of the alternative codec 					 * device */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3072,7 +3132,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* Recording level */
+comment|/* Global recording level */
 end_comment
 
 begin_define
