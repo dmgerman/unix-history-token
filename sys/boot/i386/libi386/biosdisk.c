@@ -756,7 +756,7 @@ operator|>=
 operator|*
 operator|(
 name|unsigned
-name|short
+name|char
 operator|*
 operator|)
 name|PTOV
