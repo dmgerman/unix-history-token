@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.108 2002/07/23 16:13:22 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.114 2004/02/21 20:34:25 christos Exp $ */
 end_comment
 
 begin_comment
@@ -466,11 +466,6 @@ name|defined
 argument_list|(
 name|WINNT_NATIVE
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
 end_if
 
 begin_define
@@ -481,6 +476,25 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p)[0] == '/' || \     (Isalpha((p)[0])&& (p)[1] == ':'))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ABSOLUTEP
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)[0] == '/' || \     (Isalpha((p)[0])&& (p)[1] == ':'&& \      ((p)[2] == '\0' || (p)[2] == '/')))
 end_define
 
 begin_else
@@ -1970,6 +1984,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_LARGEFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_LARGEFILE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2523,7 +2555,10 @@ begin_if
 if|#
 directive|if
 operator|!
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 end_if
 
 begin_define
@@ -3874,36 +3909,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if $?0 should return true... */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FILEC
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TIOCSTI
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|filec
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FILEC&& TIOCSTI */
 end_comment
 
 begin_decl_stmt
@@ -5827,6 +5832,27 @@ begin_comment
 comment|/* Maximum number of char in a variable name */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CYGWIN__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MAXPATHLEN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CYGWIN__ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -6282,6 +6308,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|Strcasecmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strcasecmp(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|Strspl
 parameter_list|(
 name|a
@@ -6478,6 +6516,18 @@ parameter_list|,
 name|c
 parameter_list|)
 value|s_strncmp(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcasecmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strcasecmp(a, b)
 end_define
 
 begin_define
@@ -7141,6 +7191,31 @@ end_endif
 
 begin_comment
 comment|/* WINNT_NATIVE */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FILEC
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|filec
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FILEC */
 end_comment
 
 begin_comment

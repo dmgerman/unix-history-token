@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.c,v 3.105 2002/07/05 16:28:16 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.c,v 3.109 2004/02/21 20:34:24 christos Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: sh.c,v 3.105 2002/07/05 16:28:16 christos Exp $"
+literal|"$Id: sh.c,v 3.109 2004/02/21 20:34:24 christos Exp $"
 argument_list|)
 end_macro
 
@@ -789,6 +789,12 @@ modifier|*
 modifier|*
 name|tempv
 decl_stmt|;
+name|int
+name|osetintr
+decl_stmt|;
+name|signalfun_t
+name|oparintr
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BSDSIGS
@@ -873,6 +879,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_LARGEFILE
 argument_list|,
 literal|0666
 argument_list|)
@@ -977,6 +985,8 @@ argument_list|(
 name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_LARGEFILE
 argument_list|)
 operator|)
 operator|==
@@ -991,6 +1001,8 @@ argument_list|(
 literal|"/"
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_LARGEFILE
 argument_list|)
 operator|)
 operator|==
@@ -1018,6 +1030,18 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|O_TEXT
+name|setmode
+argument_list|(
+literal|0
+argument_list|,
+name|O_TEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|osinit
 argument_list|()
 expr_stmt|;
@@ -1662,6 +1686,8 @@ argument_list|(
 name|ttyn
 argument_list|,
 name|O_RDWR
+operator||
+name|O_LARGEFILE
 argument_list|)
 expr_stmt|;
 name|shpgrp
@@ -3898,6 +3924,8 @@ literal|0
 index|]
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_LARGEFILE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3929,6 +3957,18 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|O_TEXT
+name|setmode
+argument_list|(
+name|nofile
+argument_list|,
+name|O_TEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ffile
@@ -4975,6 +5015,14 @@ expr_stmt|;
 comment|/* Get the tty state, and set defaults */
 comment|/* Only alter the tty state if editing */
 comment|/*      * Set an exit here in case of an interrupt or error reading the shell      * start-up scripts.      */
+name|osetintr
+operator|=
+name|setintr
+expr_stmt|;
+name|oparintr
+operator|=
+name|parintr
+expr_stmt|;
 name|reenter
 operator|=
 name|setexit
@@ -5001,16 +5049,6 @@ condition|)
 block|{
 comment|/* Will have varval(STRhome) here because set fast if don't */
 block|{
-name|int
-name|osetintr
-init|=
-name|setintr
-decl_stmt|;
-name|signalfun_t
-name|oparintr
-init|=
-name|parintr
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BSDSIGS
@@ -5288,6 +5326,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Reset interrupt flag */
+name|setintr
+operator|=
+name|osetintr
+expr_stmt|;
+name|parintr
+operator|=
+name|oparintr
+expr_stmt|;
 comment|/* Initing AFTER .cshrc is the Right Way */
 if|if
 condition|(
@@ -5862,6 +5909,8 @@ argument_list|(
 name|f
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_LARGEFILE
 argument_list|)
 operator|)
 operator|==
@@ -5871,6 +5920,18 @@ condition|)
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|O_TEXT
+name|setmode
+argument_list|(
+name|unit
+argument_list|,
+name|O_TEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|unit
 operator|=
 name|dmove
@@ -8550,6 +8611,56 @@ operator|)
 name|f
 argument_list|)
 expr_stmt|;
+name|gflag
+operator|=
+literal|0
+operator|,
+name|tglob
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gflag
+condition|)
+block|{
+name|t
+operator|=
+name|globall
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+literal|0
+condition|)
+name|stderror
+argument_list|(
+name|ERR_NAME
+operator||
+name|ERR_NOMATCH
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|t
+operator|=
+name|saveblk
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|trim
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
