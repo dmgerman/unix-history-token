@@ -5113,6 +5113,19 @@ name|MSDOS
 comment|/* Manage to fully drain a pipe we might be reading, so to not break it on      the producer after the EOF block.  FIXME: one of these days, GNU tar      might become clever enough to just stop working, once there is no more      work to do, we might have to revise this area in such time.  */
 if|if
 condition|(
+name|fast_read_option
+operator|&&
+name|namelist_freed
+condition|)
+name|kill
+argument_list|(
+name|child_pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|access_mode
 operator|==
 name|ACCESS_READ
@@ -5220,6 +5233,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|fast_read_option
+operator|||
+operator|!
+name|namelist_freed
+condition|)
 if|if
 condition|(
 name|WIFSIGNALED
