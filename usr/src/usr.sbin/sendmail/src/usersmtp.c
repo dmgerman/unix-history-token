@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -417,6 +417,8 @@ argument_list|,
 name|canonname
 argument_list|(
 name|buf
+argument_list|,
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -534,6 +536,8 @@ argument_list|(
 name|to
 operator|->
 name|q_user
+argument_list|,
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;

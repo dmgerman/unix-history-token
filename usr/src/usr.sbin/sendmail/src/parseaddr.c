@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -3300,12 +3300,12 @@ endif|#
 directive|endif
 endif|DEBUG
 argument|return (buf); }
-comment|/* **  CANONNAME -- make name canonical ** **	This is used for SMTP and misc. printing.  Given a print **	address, it strips out comments, etc. ** **	Parameters: **		name -- the name to make canonical. ** **	Returns: **		pointer to canonical name. ** **	Side Effects: **		none. ** **	Warning: **		result is saved in static buf; future calls will trash it. */
-argument|char * canonname(name) 	char *name; { 	static char nbuf[MAXNAME]; 	register char **pvp;  	pvp = prescan(name,
+comment|/* **  CANONNAME -- make name canonical ** **	This is used for SMTP and misc. printing.  Given a print **	address, it strips out comments, etc. ** **	Parameters: **		name -- the name to make canonical. **		ruleset -- the canonicalizing ruleset. ** **	Returns: **		pointer to canonical name. ** **	Side Effects: **		none. ** **	Warning: **		result is saved in static buf; future calls will trash it. */
+argument|char * canonname(name, ruleset) 	char *name; 	int ruleset; { 	static char nbuf[MAXNAME]; 	register char **pvp;  	pvp = prescan(name,
 literal|'\0'
 argument|); 	rewrite(pvp,
 literal|3
-argument|); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
+argument|); 	rewrite(pvp, ruleset); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
 end_block
 
 end_unit
