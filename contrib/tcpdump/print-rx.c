@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  *  */
+comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1867,6 +1867,8 @@ parameter_list|(
 name|u_char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|)
@@ -3343,6 +3345,11 @@ operator|*
 operator|)
 name|a
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -3765,6 +3772,11 @@ operator|*
 operator|)
 name|a
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -3855,6 +3867,9 @@ name|u_char
 modifier|*
 name|s
 parameter_list|,
+name|int
+name|maxsize
+parameter_list|,
 name|u_char
 modifier|*
 name|end
@@ -3873,11 +3888,27 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|char
+modifier|*
 name|user
-index|[
-literal|128
-index|]
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|user
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|maxsize
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|sscanf
@@ -3902,7 +3933,9 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 name|s
 operator|+=
 name|n
@@ -3913,7 +3946,9 @@ name|s
 operator|>
 name|end
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 comment|/* 	 * This wacky order preserves the order used by the "fs" command 	 */
 define|#
 directive|define
@@ -3960,7 +3995,9 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 name|s
 operator|+=
 name|n
@@ -3988,7 +4025,9 @@ name|s
 operator|>
 name|end
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 block|}
 for|for
 control|(
@@ -4027,7 +4066,9 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 name|s
 operator|+=
 name|n
@@ -4055,8 +4096,18 @@ name|s
 operator|>
 name|end
 condition|)
-return|return;
+goto|goto
+name|finish
+goto|;
 block|}
+name|finish
+label|:
+name|free
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

@@ -3,6 +3,10 @@ begin_comment
 comment|/*     Copyright (C) Andrew Tridgell 1995-1999     This software may be distributed either under the terms of the    BSD-style license that accompanies tcpdump or the GNU GPL version 2    or later */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3870,9 +3874,14 @@ operator|.
 name|code
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ret
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret
+argument_list|)
 argument_list|,
 literal|"%s - %s (%s)"
 argument_list|,
@@ -3903,9 +3912,14 @@ name|ret
 return|;
 block|}
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|ret
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret
+argument_list|)
 argument_list|,
 literal|"%s - %d"
 argument_list|,
@@ -3923,9 +3937,14 @@ return|return
 name|ret
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|ret
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret
+argument_list|)
 argument_list|,
 literal|"ERROR: Unknown error (%d,%d)"
 argument_list|,

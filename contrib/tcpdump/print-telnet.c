@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998 The NetBSD Foundation, Inc.  * All right
 end_comment
 
 begin_comment
-comment|/*  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *        *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code   *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice   *      are preserved in all copies.  */
+comment|/*  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *        *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code   *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice   *      are preserved in all copies.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -405,9 +405,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tnet
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tnet
+argument_list|)
 argument_list|,
 literal|"%s %s"
 argument_list|,
@@ -428,9 +433,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tnet
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tnet
+argument_list|)
 argument_list|,
 literal|"%s %#x"
 argument_list|,
