@@ -410,24 +410,16 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
+comment|/* 		 * Do not support unloading yet. we don't keep track of refcounts 		 * and unloading an accept filter callback and then having it called 		 * is a bad thing.  A simple fix would be to track the refcount 		 * in the struct accept_filter. 		 */
+if|#
+directive|if
+literal|0
+block|s = splnet(); 		error = accept_filt_del(accfp->accf_name); 		splx(s);
+endif|#
+directive|endif
 name|error
 operator|=
-name|accept_filt_del
-argument_list|(
-name|accfp
-operator|->
-name|accf_name
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 case|case
