@@ -1598,7 +1598,7 @@ name|codec
 argument_list|,
 name|AC97_REG_POWER
 argument_list|,
-literal|0
+literal|0x8000
 argument_list|)
 expr_stmt|;
 name|wrcd
@@ -1613,6 +1613,15 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100000
+argument_list|)
+expr_stmt|;
+name|wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_REG_POWER
+argument_list|,
+literal|0x8000
 argument_list|)
 expr_stmt|;
 name|i
