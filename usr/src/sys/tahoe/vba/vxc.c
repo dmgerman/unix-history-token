@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxc.c	1.4	86/01/12	*/
+comment|/*	vxc.c	1.5	86/01/12	*/
 end_comment
 
 begin_include
@@ -18,8 +18,25 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  *  VIOC driver  */
+comment|/*  * VIOC driver  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VXPERF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DOSCOPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -81,23 +98,11 @@ directive|include
 file|"../tahoesna/snadebug.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VXPERF
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"../tahoevba/scope.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|VXPERF
-end_endif
 
 begin_define
 define|#
@@ -516,17 +521,11 @@ decl_stmt|;
 specifier|register
 name|s
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 if|if
 condition|(
 name|vxtype
@@ -917,17 +916,11 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|6
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 if|if
 condition|(
 name|vxtype
@@ -1188,17 +1181,11 @@ decl_stmt|;
 specifier|register
 name|s
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 if|if
 condition|(
 name|vxtype
@@ -1635,17 +1622,11 @@ operator|=
 name|item
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 break|break ;
 case|case
 name|RSPquals
@@ -1656,17 +1637,11 @@ name|intr
 operator|=
 name|item
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|7
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 break|break ;
 case|case
 name|UNSquals
@@ -1683,17 +1658,11 @@ name|intr
 operator|=
 name|item
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 break|break ;
 block|}
 block|}

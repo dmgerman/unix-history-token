@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.4	86/01/12	*/
+comment|/*	vx.c	1.5	86/01/12	*/
 end_comment
 
 begin_include
@@ -21,6 +21,23 @@ begin_comment
 comment|/*  * VIOC-X driver  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VXPERF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DOSCOPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -30,73 +47,73 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
@@ -111,23 +128,11 @@ directive|include
 file|"../tahoevba/vioc.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VXPERF
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"../tahoevba/scope.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|VXPERF
-end_endif
 
 begin_include
 include|#
@@ -3223,17 +3228,11 @@ literal|0
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|VXPERF
 name|scope_out
 argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VXPERF
 if|if
 condition|(
 operator|!

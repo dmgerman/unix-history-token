@@ -1,10 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scope.h	1.2	86/01/05	*/
+comment|/*	scope.h	1.3	86/01/12	*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DOSCOPE
+end_ifdef
+
 begin_comment
-comment|/*  Some I/O addresses used to generate pulses for scopes */
+comment|/*  some i/o addresses used to generate pulses for scopes */
 end_comment
 
 begin_define
@@ -75,8 +81,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|iospace_mapped
+name|cold
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +94,7 @@ name|scope_out
 parameter_list|(
 name|x
 parameter_list|)
-value|if(iospace_mapped) movob(IOaddr(OUT
+value|if (!cold) movob(IOaddr(OUT
 comment|/**/
 value|x),0)
 end_define
@@ -99,10 +106,38 @@ name|scope_in
 parameter_list|(
 name|x
 parameter_list|)
-value|if(iospace_mapped) dummy =  *IOaddr(IN
+value|if( !cold) dummy =  *IOaddr(IN
 comment|/**/
 value|x)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|scope_out
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|scope_in
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

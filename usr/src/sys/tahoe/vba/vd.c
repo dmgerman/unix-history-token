@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.4	86/01/12	*/
+comment|/*	vd.c	1.5	86/01/12	*/
 end_comment
 
 begin_include
@@ -20,6 +20,23 @@ end_if
 begin_comment
 comment|/*  * VDDC - Versabus SMD/ESMD driver.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VDDCPERF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DOSCOPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -128,6 +145,12 @@ undef|#
 directive|undef
 name|VDGENDATA
 end_undef
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/scope.h"
+end_include
 
 begin_define
 define|#
@@ -3693,16 +3716,11 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VDDCPERF
 name|scope_out
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|VDDC_ATTENTION
 argument_list|(
 operator|(
@@ -3947,16 +3965,11 @@ operator|)
 name|ctlr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VDDCPERF
 name|scope_out
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ci
 operator|=
 operator|&
@@ -4387,16 +4400,11 @@ operator|->
 name|b_active
 operator|--
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VDDCPERF
 name|scope_out
 argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bp
