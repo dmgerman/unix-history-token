@@ -21,12 +21,6 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -42,6 +36,12 @@ argument_list|(
 name|_POSIX_SOURCE
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/types.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -896,18 +896,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|arc4random_stir
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|arc4random_addrandom
 name|__P
 argument_list|(
@@ -919,6 +907,18 @@ name|dat
 operator|,
 name|int
 name|datlen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|arc4random_stir
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
