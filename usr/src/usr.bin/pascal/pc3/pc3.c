@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.1 %G%"
+literal|"@(#)pc3.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2895,9 +2895,6 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
-name|int
-name|file
-decl_stmt|;
 name|struct
 name|stat
 name|filestat
@@ -2917,21 +2914,17 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-name|file
-operator|=
-name|open
+if|if
+condition|(
+name|stat
 argument_list|(
 name|filename
 argument_list|,
-literal|0
+operator|&
+name|filestat
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|error
@@ -2955,14 +2948,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|fstat
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|filestat
-argument_list|)
-expr_stmt|;
 return|return
 name|filestat
 operator|.
