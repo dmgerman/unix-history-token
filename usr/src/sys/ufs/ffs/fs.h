@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.5	%G%	*/
+comment|/*	fs.h	1.6	%G%	*/
 end_comment
 
 begin_comment
@@ -62,22 +62,22 @@ begin_struct
 struct|struct
 name|csum
 block|{
-name|short
+name|long
 name|cs_ndir
 decl_stmt|;
 comment|/* number of directories */
-name|short
+name|long
 name|cs_nbfree
 decl_stmt|;
 comment|/* number of free blocks */
-name|short
+name|long
 name|cs_nifree
 decl_stmt|;
 comment|/* number of free inodes */
-name|short
-name|cs_xx
+name|long
+name|cs_nffree
 decl_stmt|;
-comment|/* for later use... */
+comment|/* number of free frags */
 block|}
 struct|;
 end_struct
@@ -181,20 +181,24 @@ name|time_t
 name|fs_time
 decl_stmt|;
 comment|/* last time written */
-name|daddr_t
+name|long
 name|fs_size
 decl_stmt|;
 comment|/* number of blocks in fs */
-name|short
+name|long
+name|fs_dsize
+decl_stmt|;
+comment|/* number of data blocks in fs */
+name|long
 name|fs_ncg
 decl_stmt|;
 comment|/* number of cylinder groups */
 comment|/* sizes determined by number of cylinder groups and their sizes */
-name|short
+name|long
 name|fs_cssize
 decl_stmt|;
 comment|/* size of cyl grp summary area */
-name|short
+name|long
 name|fs_cgsize
 decl_stmt|;
 comment|/* cylinder group size */
@@ -207,12 +211,12 @@ name|short
 name|fs_nsect
 decl_stmt|;
 comment|/* sectors per track */
-name|short
+name|long
 name|fs_spc
 decl_stmt|;
 comment|/* sectors per cylinder */
 comment|/* this comes from the disk driver partitioning */
-name|short
+name|long
 name|fs_ncyl
 decl_stmt|;
 comment|/* cylinders in file system */
@@ -222,26 +226,19 @@ name|fs_cpg
 decl_stmt|;
 comment|/* cylinders per group */
 name|short
-name|fs_fpg
-decl_stmt|;
-comment|/* blocks per group*FRAG */
-name|short
 name|fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
-comment|/* these fields must be re-computed after crashes */
-name|daddr_t
-name|fs_nffree
+name|long
+name|fs_fpg
 decl_stmt|;
-comment|/* total free fragments */
-name|daddr_t
-name|fs_nbfree
+comment|/* blocks per group*FRAG */
+comment|/* this data must be re-computed after crashes */
+name|struct
+name|csum
+name|fs_cstotal
 decl_stmt|;
-comment|/* free data blocks */
-name|ino_t
-name|fs_nifree
-decl_stmt|;
-comment|/* total free inodes */
+comment|/* cylinder summary information */
 comment|/* these fields are cleared at mount time */
 name|char
 name|fs_fmod
@@ -254,12 +251,12 @@ comment|/* mounted read-only flag */
 name|char
 name|fs_fsmnt
 index|[
-literal|32
+literal|34
 index|]
 decl_stmt|;
 comment|/* name mounted on */
 comment|/* these fields retain the current block allocation info */
-name|short
+name|long
 name|fs_cgrotor
 decl_stmt|;
 comment|/* last cg searched */
@@ -515,7 +512,7 @@ name|time_t
 name|cg_time
 decl_stmt|;
 comment|/* time last written */
-name|short
+name|long
 name|cg_cgx
 decl_stmt|;
 comment|/* we are the cgx'th cylinder group */
@@ -527,39 +524,28 @@ name|short
 name|cg_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|short
+name|long
 name|cg_ndblk
 decl_stmt|;
 comment|/* number of data blocks this cg */
-name|short
-name|cg_nifree
+name|struct
+name|csum
+name|cg_cs
 decl_stmt|;
-comment|/* free inodes */
-name|short
-name|cg_ndir
-decl_stmt|;
-comment|/* allocated directories */
-name|short
-name|cg_nffree
-decl_stmt|;
-comment|/* free block fragments */
-name|short
-name|cg_nbfree
-decl_stmt|;
-comment|/* free blocks */
-name|short
+comment|/* cylinder summary information */
+name|long
 name|cg_rotor
 decl_stmt|;
 comment|/* position of last used block */
-name|short
-name|cg_irotor
-decl_stmt|;
-comment|/* position of last used inode */
-name|short
+name|long
 name|cg_frotor
 decl_stmt|;
 comment|/* position of last used frag */
-name|short
+name|long
+name|cg_irotor
+decl_stmt|;
+comment|/* position of last used inode */
+name|long
 name|cg_frsum
 index|[
 name|FRAG
