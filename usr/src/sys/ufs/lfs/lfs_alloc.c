@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5553,6 +5553,14 @@ operator|->
 name|fs_fsmnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_ronly
+operator|==
+literal|0
+condition|)
 name|panic
 argument_list|(
 literal|"ifree: freeing free inode"
