@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.22 1996/06/20 18:33:51 jkh Exp $"
+literal|"$Id: file.c,v 1.23 1996/08/01 12:13:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,6 +830,13 @@ argument_list|,
 name|spec
 argument_list|)
 expr_stmt|;
+name|strcat
+argument_list|(
+name|cp
+argument_list|,
+literal|".tgz"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 return|return
@@ -1141,6 +1148,11 @@ argument_list|(
 literal|"Error: Unable to construct a new playpen for FTP!\n"
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|ftp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|printf
@@ -1148,11 +1160,6 @@ argument_list|(
 literal|"Error: FTP Unable to get %s\n"
 argument_list|,
 name|fname
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|ftp
 argument_list|)
 expr_stmt|;
 return|return
