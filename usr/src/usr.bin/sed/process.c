@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.15 (Berkeley) %G%"
+literal|"@(#)process.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,7 +592,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|strnchr
+name|memchr
 argument_list|(
 name|ps
 argument_list|,
@@ -835,7 +835,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|strnchr
+name|memchr
 argument_list|(
 name|ps
 argument_list|,
