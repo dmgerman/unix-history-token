@@ -1,5 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1993 by Chris Torek at Lawrence Berkeley Laboratory.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)sparc.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
 comment|/* sparc.c -- Assemble for the SPARC    Copyright (C) 1989 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
@@ -548,17 +577,18 @@ directive|ifdef
 name|__STDC__
 end_ifdef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void print_insn(struct sparc_it *insn);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|static
+name|void
+name|print_insn
+parameter_list|(
+name|struct
+name|sparc_it
+modifier|*
+name|insn
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -577,17 +607,13 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void print_insn();
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|static
+name|void
+name|print_insn
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1683,6 +1709,45 @@ operator|==
 name|RELOC_HI22
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|the_insn
+operator|.
+name|exp
+operator|.
+name|X_seg
+operator|==
+name|SEG_ABSOLUTE
+operator|&&
+name|the_insn
+operator|.
+name|exp
+operator|.
+name|X_add_symbol
+operator|==
+literal|0
+operator|&&
+name|the_insn
+operator|.
+name|exp
+operator|.
+name|X_subtract_symbol
+operator|==
+literal|0
+operator|&&
+operator|(
+name|the_insn
+operator|.
+name|exp
+operator|.
+name|X_add_number
+operator|&
+literal|0x3ff
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|toP
 operator|=
 name|frag_more
@@ -2253,6 +2318,9 @@ literal|'r'
 case|:
 comment|/* next operand must be a register */
 case|case
+literal|'R'
+case|:
+case|case
 literal|'1'
 case|:
 case|case
@@ -2600,6 +2668,20 @@ name|mask
 operator|<<
 literal|14
 operator|)
+expr_stmt|;
+continue|continue;
+case|case
+literal|'R'
+case|:
+name|opcode
+operator||=
+operator|(
+name|mask
+operator|<<
+literal|25
+operator|)
+operator||
+name|mask
 expr_stmt|;
 continue|continue;
 block|}
@@ -3781,20 +3863,11 @@ name|int
 name|seg_type
 decl_stmt|;
 block|{
-comment|/* if (seg_type != N_TEXT || fixP->fx_r_type == NO_RELOC) { */
 if|if
 condition|(
-operator|(
 name|seg_type
 operator|!=
 name|N_TEXT
-operator|&&
-name|fixP
-operator|->
-name|fx_r_type
-operator|>
-name|RELOC_DISP32
-operator|)
 operator|||
 name|fixP
 operator|->
@@ -3803,7 +3876,6 @@ operator|==
 name|NO_RELOC
 condition|)
 block|{
-comment|/* should never get here for current relocs ... */
 switch|switch
 condition|(
 name|n
@@ -3941,33 +4013,35 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+name|val
+operator|>>
+literal|24
 expr_stmt|;
-comment|/* val>> 24; */
 name|buf
 index|[
 literal|1
 index|]
 operator|=
-literal|0
+name|val
+operator|>>
+literal|16
 expr_stmt|;
-comment|/* val>> 16; */
 name|buf
 index|[
 literal|2
 index|]
 operator|=
-literal|0
+name|val
+operator|>>
+literal|8
 expr_stmt|;
-comment|/* val>> 8; */
 name|buf
 index|[
 literal|3
 index|]
 operator|=
-literal|0
+name|val
 expr_stmt|;
-comment|/* val; */
 break|break;
 if|#
 directive|if
