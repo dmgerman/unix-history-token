@@ -2419,7 +2419,7 @@ comment|/* !defined(NO_SWAPPING) */
 end_comment
 
 begin_comment
-comment|/*  * Don't try to be fancy - being fancy can lead to VOP_LOCK's and therefore  * to vnode deadlocks.  We only do it for OBJT_DEFAULT and OBJT_SWAP objects  * which we know can be trivially freed.  */
+comment|/*  * Warning! The page queue lock is released and reacquired.  */
 end_comment
 
 begin_function
@@ -2438,13 +2438,6 @@ name|m
 operator|->
 name|object
 decl_stmt|;
-name|int
-name|type
-init|=
-name|object
-operator|->
-name|type
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2453,25 +2446,22 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|OBJT_SWAP
-operator|||
-name|type
-operator|==
-name|OBJT_DEFAULT
-condition|)
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Avoid a lock order reversal.  The page must be busy. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_remove_all
 argument_list|(
@@ -2483,25 +2473,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|.
 name|v_dfree
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|OBJT_SWAP
-operator|||
-name|type
-operator|==
-name|OBJT_DEFAULT
-condition|)
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
 expr_stmt|;
 block|}
 end_function
