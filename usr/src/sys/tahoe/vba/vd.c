@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.10	86/10/28	*/
+comment|/*	vd.c	1.11	86/11/03	*/
 end_comment
 
 begin_include
@@ -37,18 +37,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/pte.h"
-end_include
 
 begin_include
 include|#
@@ -120,6 +108,24 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
