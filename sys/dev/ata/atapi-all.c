@@ -766,7 +766,12 @@ name|driver
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX SOS safetybelt */
+name|atadev
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

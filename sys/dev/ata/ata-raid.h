@@ -126,6 +126,8 @@ name|ar_disk
 name|disks
 index|[
 name|MAX_DISKS
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* ptr to each disk in array */
@@ -250,11 +252,11 @@ name|order
 decl_stmt|;
 define|#
 directive|define
-name|HPT_O_RAID0
+name|HPT_O_DOWN
 value|0x00
 define|#
 directive|define
-name|HPT_O_RAID1
+name|HPT_O_RAID01DEGRADED
 value|0x01
 define|#
 directive|define
@@ -266,11 +268,7 @@ name|HPT_O_RAID01SRC
 value|0x03
 define|#
 directive|define
-name|HPT_O_RAIDMASK
-value|0x03
-define|#
-directive|define
-name|HPT_O_OK
+name|HPT_O_READY
 value|0x04
 name|u_int8_t
 name|array_width
@@ -415,12 +413,16 @@ value|"Promise Technology, Inc."
 name|u_int32_t
 name|dummy_0
 decl_stmt|;
-name|u_int8_t
+name|u_int64_t
 name|magic_0
-index|[
-literal|8
-index|]
 decl_stmt|;
+define|#
+directive|define
+name|PR_MAGIC0
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int64_t)x.device->channel->unit<< 48) | \ 			((u_int64_t)(x.device->unit != 0)<< 56)
 name|u_int16_t
 name|magic_1
 decl_stmt|;
@@ -487,11 +489,8 @@ decl_stmt|;
 name|u_int8_t
 name|device
 decl_stmt|;
-name|u_int8_t
+name|u_int64_t
 name|magic_0
-index|[
-literal|8
-index|]
 decl_stmt|;
 name|u_int32_t
 name|disk_offset
@@ -501,7 +500,7 @@ name|u_int32_t
 name|disk_sectors
 decl_stmt|;
 name|u_int32_t
-name|dummy_1
+name|rebuild_lba
 decl_stmt|;
 name|u_int16_t
 name|generation
@@ -533,6 +532,10 @@ define|#
 directive|define
 name|PR_S_MARKED
 value|0x20
+define|#
+directive|define
+name|PR_S_FUNCTIONAL
+value|0x80
 name|u_int8_t
 name|type
 decl_stmt|;
@@ -581,11 +584,8 @@ decl_stmt|;
 name|u_int8_t
 name|sectors
 decl_stmt|;
-name|int8_t
+name|int64_t
 name|magic_1
-index|[
-literal|8
-index|]
 decl_stmt|;
 struct|struct
 block|{
@@ -602,11 +602,8 @@ decl_stmt|;
 name|u_int8_t
 name|device
 decl_stmt|;
-name|u_int8_t
+name|u_int64_t
 name|magic_0
-index|[
-literal|8
-index|]
 decl_stmt|;
 block|}
 name|disk
@@ -638,7 +635,7 @@ end_struct
 
 begin_function_decl
 name|int
-name|ar_probe
+name|ata_raid_probe
 parameter_list|(
 name|struct
 name|ad_softc
@@ -649,7 +646,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|atar_attach
+name|ata_raid_attach
 parameter_list|(
 name|void
 parameter_list|)

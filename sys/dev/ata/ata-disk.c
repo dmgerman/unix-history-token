@@ -1199,11 +1199,17 @@ name|driver
 operator|=
 name|adp
 expr_stmt|;
+name|atadev
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 comment|/* if this disk belongs to an ATA RAID dont print the probe */
 if|if
 condition|(
 operator|!
-name|ar_probe
+name|ata_raid_probe
 argument_list|(
 name|adp
 argument_list|)
@@ -1435,6 +1441,12 @@ operator|->
 name|driver
 operator|=
 name|NULL
+expr_stmt|;
+name|atadev
+operator|->
+name|flags
+operator|=
+literal|0
 expr_stmt|;
 name|free
 argument_list|(
