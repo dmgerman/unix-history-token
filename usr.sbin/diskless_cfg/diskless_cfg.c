@@ -30,6 +30,24 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|fhandle_t
+value|char
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|sun
 end_ifdef
 
