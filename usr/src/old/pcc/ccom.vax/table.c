@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.31 (Berkeley) %G%"
+literal|"@(#)table.c	1.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1330,7 +1330,7 @@ name|TUSHORT
 block|,
 name|NAREG
 operator||
-name|NASL
+name|NASR
 block|,
 name|RLEFT
 operator||
