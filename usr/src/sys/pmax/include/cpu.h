@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -293,13 +293,20 @@ begin_define
 define|#
 directive|define
 name|MIPS_R2000
-value|0x02
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_R3000
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R6000
 value|0x03
 end_define
 
@@ -310,6 +317,13 @@ name|MIPS_R4000
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_R6000A
+value|0x06
+end_define
+
 begin_comment
 comment|/*  * MIPS FPU types  */
 end_comment
@@ -318,13 +332,20 @@ begin_define
 define|#
 directive|define
 name|MIPS_R2010
-value|0x03
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_R3010
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R6010
 value|0x04
 end_define
 
@@ -334,26 +355,6 @@ directive|define
 name|MIPS_R4010
 value|0x05
 end_define
-
-begin_struct
-struct|struct
-name|intr_tab
-block|{
-name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* pointer to interrupt routine */
-name|int
-name|unit
-decl_stmt|;
-comment|/* logical unit number */
-block|}
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#
