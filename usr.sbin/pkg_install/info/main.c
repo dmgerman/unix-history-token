@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fhiIkl:LmpqrRt:v"
+literal|"acdDe:fhiIkl:LmpqrRst:v"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,14 @@ case|:
 name|Flags
 operator||=
 name|SHOW_MTREE
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|Flags
+operator||=
+name|SHOW_SIZE
 expr_stmt|;
 break|break;
 case|case

@@ -139,6 +139,13 @@ name|SHOW_MTREE
 value|0x0800
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOW_SIZE
+value|0x1000
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -237,6 +244,20 @@ name|char
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|show_size
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|Package
 modifier|*
 parameter_list|)
 function_decl|;

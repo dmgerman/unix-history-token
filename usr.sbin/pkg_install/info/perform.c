@@ -995,6 +995,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_SIZE
+operator|)
+operator|&&
+name|installed
+condition|)
+name|show_size
+argument_list|(
+literal|"Package Size:\n"
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|Quiet
 condition|)
