@@ -527,6 +527,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|ipldevsw
@@ -985,6 +986,7 @@ name|DEVFS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|ipf_devfs
@@ -1076,6 +1078,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ipl_major
 init|=

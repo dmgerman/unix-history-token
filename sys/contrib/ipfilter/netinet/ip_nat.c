@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 1.3 1998/06/20 18:37:50 peter Exp $"
+literal|"@(#)$Id: ip_nat.c,v 1.4 1998/08/15 21:51:53 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +626,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ipnat_t
 modifier|*
 name|nat_list
@@ -652,6 +653,7 @@ comment|/* 3 seconds */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|natstat_t
 name|nat_stats
 decl_stmt|;

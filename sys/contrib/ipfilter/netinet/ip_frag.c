@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 1.1.1.5 1997/11/16 05:55:34 peter Exp $"
+literal|"@(#)$Id: ip_frag.c,v 1.2 1998/03/21 11:34:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,7 @@ file|"netinet/ip_auth.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|ipfr_t
 modifier|*
 name|ipfr_heads
@@ -478,6 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ipfr_t
 modifier|*
 name|ipfr_nattab
@@ -488,17 +490,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ipfrstat_t
 name|ipfr_stats
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ipfr_inuse
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|fr_ipfrttl
 init|=
 literal|120

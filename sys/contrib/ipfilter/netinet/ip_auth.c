@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 1.4 1998/06/20 18:37:50 peter Exp $"
+literal|"@(#)$Id: ip_auth.c,v 1.5 1998/08/15 21:51:53 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,6 +767,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|frauth_t
 name|fr_auth
 index|[
@@ -786,6 +787,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fr_authstart
 init|=
@@ -802,6 +804,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|frauthent_t
 modifier|*
 name|fae_list
