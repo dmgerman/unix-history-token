@@ -1058,7 +1058,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"failed to open a log file(%s): %s"
 argument_list|,
@@ -1244,7 +1244,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"select: %s"
 argument_list|,
@@ -1337,7 +1337,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"failed to get link layer information for %s"
 argument_list|,
@@ -1365,7 +1365,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"interface %s was already configured"
 argument_list|,
@@ -1406,7 +1406,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"memory allocation failed"
 argument_list|)
@@ -1713,7 +1713,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"link-layer address option has null length"
 literal|" on %s. Treat as not included."
@@ -1753,7 +1753,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"memory allocation failed for %s"
 argument_list|,
@@ -1920,7 +1920,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"timer expiration on %s, "
 literal|"state = %d"
@@ -2028,7 +2028,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"%s status is changed"
 literal|" from %d to %d"
@@ -2151,7 +2151,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"No answer "
 literal|"after sending %d RSs"
@@ -2214,7 +2214,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"there is no timer"
 argument_list|)
@@ -2269,7 +2269,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"New timer is %ld:%08ld"
 argument_list|,
@@ -2503,7 +2503,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"illegal interface state(%d) on %s"
 argument_list|,
@@ -2541,7 +2541,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"stop timer for %s"
 argument_list|,
@@ -2587,7 +2587,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"set timer for %s to %d:%d"
 argument_list|,

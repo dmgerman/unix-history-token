@@ -400,7 +400,7 @@ name|warnmsg
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFFLAGS): %s"
 argument_list|,
@@ -457,7 +457,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCSIFFLAGS): %s"
 argument_list|,
@@ -479,7 +479,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"checking if %s is ready..."
 argument_list|,
@@ -504,7 +504,7 @@ name|warnmsg
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"get_llflag() failed, anyway I'll try"
 argument_list|)
@@ -527,7 +527,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"%s is ready"
 argument_list|,
@@ -553,7 +553,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"%s is tentative"
 argument_list|,
@@ -574,7 +574,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"%s is duplicated"
 argument_list|,
@@ -664,7 +664,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFFLAGS) on %s: %s"
 argument_list|,
@@ -778,7 +778,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFMEDIA) on %s: %s"
 argument_list|,
@@ -1038,7 +1038,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"unsupported link type(%d)"
 argument_list|,
@@ -1558,7 +1558,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket(SOCK_DGRAM): %s"
 argument_list|,
@@ -1589,7 +1589,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"etifaddrs: %s"
 argument_list|,
@@ -1742,7 +1742,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFAFLAG_IN6): %s"
 argument_list|,
@@ -1858,7 +1858,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"not enough core"
 argument_list|)
@@ -1891,7 +1891,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket(SOCK_DGRAM): %s"
 argument_list|,
@@ -1954,7 +1954,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFCONF): %s"
 argument_list|,
@@ -2148,7 +2148,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGIFAFLAG_IN6): %s"
 argument_list|,

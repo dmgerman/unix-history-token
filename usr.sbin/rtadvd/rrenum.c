@@ -296,7 +296,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> rpm_len %d is not 4N * 3"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rpm
 operator|->
@@ -332,7 +332,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> unknown rpm_code %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rpm
 operator|->
@@ -359,7 +359,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> rpm_matchlen %d is over 128"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rpm
 operator|->
@@ -439,7 +439,7 @@ argument_list|,
 literal|"<%s> sum of rpu_uselen %d and"
 literal|" rpu_keeplen %d is %d(over 128)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rpu
 operator|->
@@ -665,7 +665,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> ioctl: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -913,7 +913,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> ioctl: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1204,7 +1204,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1367,7 +1367,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> if_indextoname: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1488,7 +1488,7 @@ argument_list|,
 literal|"<%s> pkt too short. left len = %d. "
 literal|"gabage at end of pkt?"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|len
 argument_list|)
@@ -1532,7 +1532,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> invalid PCO"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1617,7 +1617,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> rr_command len %d is too short"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|len
 argument_list|)
@@ -1653,7 +1653,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> dst mcast addr %s is illegal"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -1689,7 +1689,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> rcvd old seqnum %d from %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|u_int32_t
@@ -1767,7 +1767,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> rcvd duped segnum %d from %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rr
 operator|->
@@ -1928,7 +1928,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> received RR was invalid"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1983,7 +1983,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> RR received from %s to %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -2045,7 +2045,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"<%s>: RR short message (size %d) from %s to %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|len
 argument_list|,
@@ -2124,7 +2124,7 @@ argument_list|,
 literal|"<%s>: RR message with invalid destination (%s) "
 literal|"from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -2219,7 +2219,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> received unknown code %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rr
 operator|->

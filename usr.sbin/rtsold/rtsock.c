@@ -411,7 +411,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"rtmsg type %d, len=%lu"
 argument_list|,
@@ -475,7 +475,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"rtmsg type %d too short!"
 argument_list|,
@@ -600,7 +600,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"interface %s inserted"
 argument_list|,
@@ -617,7 +617,7 @@ name|warnmsg
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"interface %s removed"
 argument_list|,
@@ -651,7 +651,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"bring interface %s to DOWN state"
 argument_list|,

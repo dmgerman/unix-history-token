@@ -1174,7 +1174,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> failed to open a log file(%s), run anyway."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|pidfilename
 argument_list|)
@@ -1330,7 +1330,7 @@ argument_list|,
 literal|"<%s> set timer to %ld:%ld. waiting for "
 literal|"inputs or timeout"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|long
@@ -1358,7 +1358,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> there's no timer. waiting for inputs"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1400,7 +1400,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> select: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1523,7 +1523,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> cease to be an advertising router\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1689,7 +1689,7 @@ argument_list|,
 literal|"<%s> received a routing message "
 literal|"(type = %d, len = %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rtmsg_type
 argument_list|(
@@ -1725,7 +1725,7 @@ literal|"<%s> received data length is larger than "
 literal|"1st routing message len. multiple messages? "
 literal|"read %d bytes, but 1st msg len = %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|n
 argument_list|,
@@ -1879,7 +1879,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s:%d> unknown rtmsg %d on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|__LINE__
 argument_list|,
@@ -1924,7 +1924,7 @@ argument_list|,
 literal|"<%s> route changed on "
 literal|"non advertising interface(%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -2014,7 +2014,7 @@ argument_list|,
 literal|"<%s> new interface route's"
 literal|"plen %d is invalid for a prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|plen
 argument_list|)
@@ -2067,7 +2067,7 @@ literal|"<%s> new prefix(%s/%d) "
 literal|"added on %s, "
 literal|"but it was already in list"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -2168,7 +2168,7 @@ argument_list|,
 literal|"<%s> deleted interface route's "
 literal|"plen %d is invalid for a prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|plen
 argument_list|)
@@ -2208,7 +2208,7 @@ literal|"<%s> prefix(%s/%d) was "
 literal|"deleted on %s, "
 literal|"but it was not in list"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -2299,7 +2299,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s:%d> unknown rtmsg %d on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|__LINE__
 argument_list|,
@@ -2348,7 +2348,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> interface %s becomes down. stop timer."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -2396,7 +2396,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> interface %s becomes up. restart timer."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -2697,7 +2697,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> failed to get receiving interface"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2715,7 +2715,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> failed to get receiving hop limit"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2745,7 +2745,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> received data on a disabled interface (%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -2785,7 +2785,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> packet size(%d) is too short"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|i
 argument_list|)
@@ -2841,7 +2841,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> packet size(%d) is too short"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|i
 argument_list|)
@@ -2892,7 +2892,7 @@ argument_list|,
 literal|"<%s> RS with invalid hop limit(%d) "
 literal|"received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|*
 name|hlimp
@@ -2937,7 +2937,7 @@ argument_list|,
 literal|"<%s> RS with invalid ICMP6 code(%d) "
 literal|"received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|icp
 operator|->
@@ -2987,7 +2987,7 @@ argument_list|,
 literal|"<%s> RS from %s on %s does not have enough "
 literal|"length (len = %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3054,7 +3054,7 @@ argument_list|,
 literal|"<%s> RA with invalid hop limit(%d) "
 literal|"received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|*
 name|hlimp
@@ -3099,7 +3099,7 @@ argument_list|,
 literal|"<%s> RA with invalid ICMP6 code(%d) "
 literal|"received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|icp
 operator|->
@@ -3149,7 +3149,7 @@ argument_list|,
 literal|"<%s> RA from %s on %s does not have enough "
 literal|"length (len = %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3214,7 +3214,7 @@ argument_list|,
 literal|"<%s> received a router renumbering "
 literal|"message, but not allowed to be accepted"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3248,7 +3248,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid icmp type(%d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|icp
 operator|->
@@ -3311,7 +3311,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> RS received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3387,7 +3387,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> ND option check failed for an RS from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3438,7 +3438,7 @@ argument_list|,
 literal|"<%s> RS from unspecified src on %s has a link-layer"
 literal|" address option"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -3496,7 +3496,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> RS received on non advertising interface(%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -3655,7 +3655,7 @@ argument_list|,
 literal|"<%s> random delay is larger than "
 literal|"the rest of normal timer"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|interval
@@ -3833,7 +3833,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> RA received from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3913,7 +3913,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> ND option check failed for an RA from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3965,7 +3965,7 @@ argument_list|,
 literal|"<%s> received RA from %s on non-advertising"
 literal|" interface(%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4028,7 +4028,7 @@ argument_list|,
 literal|"<%s> CurHopLimit inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4084,7 +4084,7 @@ argument_list|,
 literal|"<%s> M flag inconsistent on %s:"
 literal|" %s from %s, %s from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4147,7 +4147,7 @@ argument_list|,
 literal|"<%s> O flag inconsistent on %s:"
 literal|" %s from %s, %s from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4219,7 +4219,7 @@ argument_list|,
 literal|"<%s> ReachableTime inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4282,7 +4282,7 @@ argument_list|,
 literal|"<%s> RetranceTimer inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4354,7 +4354,7 @@ argument_list|,
 literal|"<%s> MTU option value inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -4557,7 +4557,7 @@ argument_list|,
 literal|"<%s> link-local prefix %s/%d is advertised "
 literal|"from %s on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4626,7 +4626,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> prefix %s/%d from %s on %s is not in our list"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4730,7 +4730,7 @@ literal|"<%s> prefeerred lifetime for %s/%d"
 literal|" (decr. in real time) inconsistent on %s:"
 literal|" %d from %s, %ld from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4798,7 +4798,7 @@ literal|"<%s> prefeerred lifetime for %s/%d"
 literal|" inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4902,7 +4902,7 @@ literal|"<%s> valid lifetime for %s/%d"
 literal|" (decr. in real time) inconsistent on %s:"
 literal|" %d from %s, %ld from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -4970,7 +4970,7 @@ literal|"<%s> valid lifetime for %s/%d"
 literal|" inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -5343,7 +5343,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> short option header"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5381,7 +5381,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> bad ND option length(0) (type = %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|hdr
 operator|->
@@ -5413,7 +5413,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> short option"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5435,7 +5435,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> unknown ND option(type %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|hdr
 operator|->
@@ -5466,7 +5466,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> unexpected ND option(type %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|hdr
 operator|->
@@ -5521,7 +5521,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> invalid option length"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5565,7 +5565,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> duplicated ND option (type = %d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|hdr
 operator|->
@@ -5640,7 +5640,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5816,7 +5816,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> not enough core"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5868,7 +5868,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> not enough core"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5901,7 +5901,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -5951,7 +5951,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_RECVPKTINFO: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -5996,7 +5996,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_PKTINFO: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -6048,7 +6048,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_RECVHOPLIMIT: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -6093,7 +6093,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_HOPLIMIT: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -6171,7 +6171,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IICMP6_FILTER: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -6211,7 +6211,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed(library bug?)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6261,7 +6261,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_JOIN_GROUP(link) on %s: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ra
 operator|->
@@ -6313,7 +6313,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed(library bug?)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6355,7 +6355,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid interface: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mcastif
 argument_list|)
@@ -6404,7 +6404,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_JOIN_GROUP(site) on %s: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mcastif
 condition|?
@@ -6574,7 +6574,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -6704,7 +6704,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> %s is not up, skip sending RA"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rainfo
 operator|->
@@ -6894,7 +6894,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> send RA on %s, # of waitings = %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rainfo
 operator|->
@@ -6943,7 +6943,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> sendmsg on %s: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rainfo
 operator|->
@@ -6982,7 +6982,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|sndmhdr.msg_name = (caddr_t)&sol->addr; 		i = sendmsg(sock,&sndmhdr, 0); 		if (i< 0 || i != rainfo->ra_datalen)  { 			if (i< 0) { 				syslog(LOG_ERR, 				    "<%s> unicast sendmsg on %s: %s", 				    __FUNCTION__, rainfo->ifname, 				    strerror(errno)); 			} 		}
+block|sndmhdr.msg_name = (caddr_t)&sol->addr; 		i = sendmsg(sock,&sndmhdr, 0); 		if (i< 0 || i != rainfo->ra_datalen)  { 			if (i< 0) { 				syslog(LOG_ERR, 				    "<%s> unicast sendmsg on %s: %s", 				    __func__, rainfo->ifname, 				    strerror(errno)); 			} 		}
 endif|#
 directive|endif
 name|sol
@@ -7082,7 +7082,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> RA timer on %s is expired"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->
@@ -7194,7 +7194,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> RA timer on %s is set to %ld:%ld"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rai
 operator|->

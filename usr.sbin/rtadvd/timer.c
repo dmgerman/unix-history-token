@@ -226,7 +226,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -261,7 +261,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> timeout function unspecfied"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -694,7 +694,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> a timer must be expired, but not yet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|returnval

@@ -246,7 +246,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"malloc failed"
 argument_list|)
@@ -280,7 +280,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -312,7 +312,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"shutdown: %s"
 argument_list|,
@@ -424,7 +424,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -479,7 +479,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGDRLST_IN6): %s"
 argument_list|,
@@ -554,7 +554,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"default router list contains a "
 literal|"non-linklocal address(%s)"
@@ -854,7 +854,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"probe a router %s on %s"
 argument_list|,
@@ -893,7 +893,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"sendmsg on %s: %s"
 argument_list|,

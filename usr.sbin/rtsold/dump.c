@@ -437,7 +437,7 @@ name|warnmsg
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"open a dump file(%s): %s"
 argument_list|,

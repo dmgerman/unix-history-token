@@ -447,7 +447,7 @@ literal|"<%s> %s isn't defined in the configuration file"
 literal|" or the configuration file doesn't exist."
 literal|" Treat it as default"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -593,7 +593,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get information of %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -669,7 +669,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> can't get interface mtu of %s. Treat as %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|,
@@ -704,7 +704,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> maxinterval must be between %e and %u"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MIN_MAXINTERVAL
 argument_list|,
@@ -764,7 +764,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mininterval must be between %e and %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MIN_MININTERVAL
 argument_list|,
@@ -891,7 +891,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid router preference on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -939,7 +939,7 @@ argument_list|,
 literal|"<%s> router lifetime on %s must be 0 or"
 literal|" between %d and %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|,
@@ -973,7 +973,7 @@ argument_list|,
 literal|"<%s> non zero router lifetime is specified for %s, "
 literal|"which must not be allowed for hosts."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -1014,7 +1014,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> reachable time must be no greater than %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MAXREACHABLETIME
 argument_list|)
@@ -1060,7 +1060,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> retrans time out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1106,7 +1106,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mobile-ip6 configuration not supported"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1149,7 +1149,7 @@ argument_list|,
 literal|"<%s> mobile-ip6 configuration without "
 literal|"proper command line option"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1235,7 +1235,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> home agent lifetime must be greater than 0"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1306,7 +1306,7 @@ argument_list|,
 literal|"<%s> conflicting prefix configuration for %s: "
 literal|"automatic and manual config at the same time"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -1394,7 +1394,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate enough memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1481,7 +1481,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> prefixlen out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1628,7 +1628,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> vltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1737,7 +1737,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> pltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1848,7 +1848,7 @@ argument_list|,
 literal|"<%s> need %s as a prefix for "
 literal|"interface %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|entbuf
 argument_list|,
@@ -1884,7 +1884,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed for %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|)
@@ -1913,7 +1913,7 @@ argument_list|,
 literal|"<%s> multicast prefix(%s) must "
 literal|"not be advertised (IF=%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|,
@@ -1943,7 +1943,7 @@ argument_list|,
 literal|"<%s> link-local prefix(%s) will be"
 literal|" advertised on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|,
@@ -1978,7 +1978,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mtu out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2070,7 +2070,7 @@ argument_list|,
 literal|"<%s> advertised link mtu must be between"
 literal|" least MTU and physical link MTU"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2106,7 +2106,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> number of route information improper"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2188,7 +2188,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate enough memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2263,7 +2263,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> prefixlen out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2329,7 +2329,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid route preference"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2381,7 +2381,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> rtrltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2443,7 +2443,7 @@ argument_list|,
 literal|"<%s> need %s as a route for "
 literal|"interface %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|entbuf
 argument_list|,
@@ -2479,7 +2479,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed for %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|)
@@ -2494,7 +2494,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * XXX: currently there's no restriction in route information 		 * prefix according to draft-draves-route-selection-01.txt, 		 * however I think the similar restriction be necessary. 		 */
-block|MAYHAVE(val64, entbuf, DEF_ADVVALIDLIFETIME); 		if (IN6_IS_ADDR_MULTICAST(&rti->prefix)) { 			syslog(LOG_ERR, 			       "<%s> multicast route (%s) must " 			       "not be advertised (IF=%s)", 			       __FUNCTION__, addr, intface); 			exit(1); 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rti->prefix)) { 			syslog(LOG_NOTICE, 			       "<%s> link-local route (%s) must " 			       "not be advertised on %s", 			       __FUNCTION__, addr, intface); 			exit(1); 		}
+block|MAYHAVE(val64, entbuf, DEF_ADVVALIDLIFETIME); 		if (IN6_IS_ADDR_MULTICAST(&rti->prefix)) { 			syslog(LOG_ERR, 			       "<%s> multicast route (%s) must " 			       "not be advertised (IF=%s)", 			       __func__, addr, intface); 			exit(1); 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rti->prefix)) { 			syslog(LOG_NOTICE, 			       "<%s> link-local route (%s) must " 			       "not be advertised on %s", 			       __func__, addr, intface); 			exit(1); 		}
 endif|#
 directive|endif
 block|}
@@ -2629,7 +2629,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get interface addresses"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2773,7 +2773,7 @@ argument_list|,
 literal|"<%s> failed to get prefixlen "
 literal|"or prefix is invalid"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2822,7 +2822,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get allocate buffer for prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2946,7 +2946,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_ntop failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2961,7 +2961,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> add %s/%d to prefix list on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ntopbuf
 argument_list|,
@@ -3179,7 +3179,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> memory allocation failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3276,7 +3276,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> new prefix %s/%d was added on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3408,7 +3408,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> prefix %s/%d was deleted on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3503,7 +3503,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> assumption failure: timer already exists"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3519,7 +3519,7 @@ argument_list|,
 literal|"<%s> prefix %s/%d was invalidated on %s, "
 literal|"will expire in %ld seconds"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3581,7 +3581,7 @@ argument_list|,
 literal|"<%s> failed to add a timer for a prefix. "
 literal|"remove the prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|delete_prefix
@@ -3693,7 +3693,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> assumption failure: timer does not exist"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3708,7 +3708,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> prefix %s/%d was re-enabled on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3763,9 +3763,9 @@ block|{
 if|#
 directive|if
 literal|0
-block|int s;  	if ((s = socket(AF_INET6, SOCK_DGRAM, 0))< 0) { 		syslog(LOG_ERR, "<%s> socket: %s", __FUNCTION__, 		       strerror(errno)); 		exit(1); 	}  	if (ioctl(s, SIOCGIFPREFIX_IN6, (caddr_t)ipr)< 0) { 		syslog(LOG_INFO, "<%s> ioctl:SIOCGIFPREFIX %s", __FUNCTION__, 		       strerror(errno));  		ipr->ipr_vltime = DEF_ADVVALIDLIFETIME; 		ipr->ipr_pltime = DEF_ADVPREFERREDLIFETIME; 		ipr->ipr_raf_onlink = 1; 		ipr->ipr_raf_auto = 1;
+block|int s;  	if ((s = socket(AF_INET6, SOCK_DGRAM, 0))< 0) { 		syslog(LOG_ERR, "<%s> socket: %s", __func__, 		       strerror(errno)); 		exit(1); 	}  	if (ioctl(s, SIOCGIFPREFIX_IN6, (caddr_t)ipr)< 0) { 		syslog(LOG_INFO, "<%s> ioctl:SIOCGIFPREFIX %s", __func__, 		       strerror(errno));  		ipr->ipr_vltime = DEF_ADVVALIDLIFETIME; 		ipr->ipr_pltime = DEF_ADVPREFERREDLIFETIME; 		ipr->ipr_raf_onlink = 1; 		ipr->ipr_raf_auto = 1;
 comment|/* omit other field initialization */
-block|} 	else if (ipr->ipr_origin< PR_ORIG_RR) { 		u_char ntopbuf[INET6_ADDRSTRLEN];  		syslog(LOG_WARNING, "<%s> Added prefix(%s)'s origin %d is" 		       "lower than PR_ORIG_RR(router renumbering)." 		       "This should not happen if I am router", __FUNCTION__, 		       inet_ntop(AF_INET6,&ipr->ipr_prefix.sin6_addr, ntopbuf, 				 sizeof(ntopbuf)), ipr->ipr_origin); 		close(s); 		return 1; 	}  	close(s); 	return 0;
+block|} 	else if (ipr->ipr_origin< PR_ORIG_RR) { 		u_char ntopbuf[INET6_ADDRSTRLEN];  		syslog(LOG_WARNING, "<%s> Added prefix(%s)'s origin %d is" 		       "lower than PR_ORIG_RR(router renumbering)." 		       "This should not happen if I am router", __func__, 		       inet_ntop(AF_INET6,&ipr->ipr_prefix.sin6_addr, ntopbuf, 				 sizeof(ntopbuf)), ipr->ipr_origin); 		close(s); 		return 1; 	}  	close(s); 	return 0;
 else|#
 directive|else
 name|ipr
@@ -3859,7 +3859,7 @@ argument_list|,
 literal|"<%s> Prefix added interface No.%d doesn't"
 literal|"exist. This should not happen! %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifindex
 argument_list|,
@@ -4038,7 +4038,7 @@ literal|"<%s> link-layer address option has"
 literal|" null length on %s."
 literal|" Treat as not included."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rainfo
 operator|->
@@ -4197,7 +4197,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get enough memory for an RA packet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5087,7 +5087,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s>: failed to get ip6 sysctl(%d): %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|code
 argument_list|,

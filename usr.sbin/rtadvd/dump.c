@@ -1162,7 +1162,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> open a dump file(%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dumpfile
 argument_list|)

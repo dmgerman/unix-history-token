@@ -503,7 +503,7 @@ name|LOG_INFO
 argument_list|,
 literal|"<%s> open: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(

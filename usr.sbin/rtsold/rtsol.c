@@ -294,7 +294,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"malloc for receive msghdr failed"
 argument_list|)
@@ -328,7 +328,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"malloc for send msghdr failed"
 argument_list|)
@@ -392,7 +392,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"inet_pton failed for %s"
 argument_list|,
@@ -428,7 +428,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -479,7 +479,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"IPV6_RECVPKTINFO: %s"
 argument_list|,
@@ -524,7 +524,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"IPV6_PKTINFO: %s"
 argument_list|,
@@ -576,7 +576,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"IPV6_RECVHOPLIMIT: %s"
 argument_list|,
@@ -621,7 +621,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"IPV6_HOPLIMIT: %s"
 argument_list|,
@@ -681,7 +681,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"setsockopt(ICMP6_FILTER): %s"
 argument_list|,
@@ -1013,7 +1013,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"send RS on %s, whose state is %d"
 argument_list|,
@@ -1066,7 +1066,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"sendmsg on %s: %s"
 argument_list|,
@@ -1171,7 +1171,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"recvmsg: %s"
 argument_list|,
@@ -1315,7 +1315,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"failed to get receiving interface"
 argument_list|)
@@ -1333,7 +1333,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"failed to get receiving hop limit"
 argument_list|)
@@ -1355,7 +1355,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"packet size(%d) is too short"
 argument_list|,
@@ -1393,7 +1393,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"invalid icmp type(%d) from %s on %s"
 argument_list|,
@@ -1440,7 +1440,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"invalid icmp code(%d) from %s on %s"
 argument_list|,
@@ -1486,7 +1486,7 @@ name|warnmsg
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"invalid RA with hop limit(%d) from %s on %s"
 argument_list|,
@@ -1537,7 +1537,7 @@ name|warnmsg
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"invalid RA with non link-local source from %s on %s"
 argument_list|,
@@ -1588,7 +1588,7 @@ name|warnmsg
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"received RA from %s on an unexpeced IF(%s)"
 argument_list|,
@@ -1622,7 +1622,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"received RA from %s on %s, state is %d"
 argument_list|,
