@@ -2604,7 +2604,7 @@ for|for
 control|(
 name|cp
 operator|=
-literal|"pqrstuvwxyzPQRST"
+literal|"pqrsPQRS"
 init|;
 operator|*
 name|cp
@@ -2650,7 +2650,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+literal|32
 condition|;
 name|i
 operator|++
@@ -2659,7 +2659,7 @@ block|{
 operator|*
 name|p2
 operator|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuv"
 index|[
 name|i
 index|]

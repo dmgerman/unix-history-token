@@ -211,7 +211,7 @@ for|for
 control|(
 name|cp1
 operator|=
-literal|"pqrs"
+literal|"pqrsPQRS"
 init|;
 operator|*
 name|cp1
@@ -232,7 +232,7 @@ for|for
 control|(
 name|cp2
 operator|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuv"
 init|;
 operator|*
 name|cp2
