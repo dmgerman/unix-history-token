@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_txvar.h,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*      $Id: if_txvar.h,v 1.3 1998/10/10 04:30:09 jason Exp $ */
+comment|/*      $Id: if_txvar.h,v 1.2 1999/03/14 08:30:23 semenu Exp $ */
 end_comment
 
 begin_comment
@@ -1184,6 +1184,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIICFG_SMI_ENABLE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEST1_CLOCK_TEST
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|TXCON_DEFAULT
 value|(TXCON_SLOT_TIME | TXCON_EARLY_TRANSMIT_ENABLE)
 end_define
@@ -1329,6 +1343,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BMCR_LOOPBACK
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BMCR_100MBPS
 value|0x2000
 end_define
@@ -1351,6 +1372,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BMCR_POWERDOWN
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMCR_ISOLATE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|BMCR_RESTART_AUTONEG
 value|0x0200
 end_define
@@ -1360,6 +1395,13 @@ define|#
 directive|define
 name|BMCR_FULL_DUPLEX
 value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMCR_COL_TEST
+value|0x0080
 end_define
 
 begin_define
@@ -1501,6 +1543,13 @@ define|#
 directive|define
 name|QS6612_INTMASK
 value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|QS6612_BPCR
+value|31
 end_define
 
 begin_define
@@ -2068,7 +2117,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((*(u_int8_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int8_t)(val))
+value|((*(volatile u_int8_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int8_t)(val))
 end_define
 
 begin_define
@@ -2083,7 +2132,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((*(u_int16_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int16_t)(val))
+value|((*(volatile u_int16_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int16_t)(val))
 end_define
 
 begin_define
@@ -2098,7 +2147,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((*(u_int32_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int32_t)(val))
+value|((*(volatile u_int32_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int32_t)(val))
 end_define
 
 begin_define
@@ -2111,7 +2160,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(*(u_int8_t*)((sc)->csr + (u_int32_t)(reg)))
+value|(*(volatile u_int8_t*)((sc)->csr + (u_int32_t)(reg)))
 end_define
 
 begin_define
@@ -2124,7 +2173,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(*(u_int16_t*)((sc)->csr + (u_int32_t)(reg)))
+value|(*(volatile u_int16_t*)((sc)->csr + (u_int32_t)(reg)))
 end_define
 
 begin_define
@@ -2137,7 +2186,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(*(u_int32_t*)((sc)->csr + (u_int32_t)(reg)))
+value|(*(volatile u_int32_t*)((sc)->csr + (u_int32_t)(reg)))
 end_define
 
 begin_endif
