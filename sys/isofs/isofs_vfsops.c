@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vfsops.c,v 1.5 1993/07/19 13:40:09 cgd Exp $  */
+comment|/*  *	$Id: isofs_vfsops.c,v 1.2 1993/07/20 03:27:36 jkh Exp $  */
 end_comment
 
 begin_include
@@ -855,7 +855,7 @@ name|args
 operator|.
 name|exflags
 operator|&
-name|ISOFSMNT_NORRIP
+name|MNT_NORRIP
 condition|)
 block|{
 name|imp
@@ -868,7 +868,7 @@ name|mp
 operator|->
 name|mnt_flag
 operator||=
-name|ISOFSMNT_NORRIP
+name|MNT_NORRIP
 expr_stmt|;
 block|}
 else|else
@@ -884,7 +884,7 @@ operator|->
 name|mnt_flag
 operator|&=
 operator|~
-name|ISOFSMNT_NORRIP
+name|MNT_NORRIP
 expr_stmt|;
 block|}
 operator|(
