@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.16 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3091,7 +3091,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ${INLINE} locore.o emulate.o"
+literal|" ${INLINECMD} locore.o emulate.o"
 argument_list|)
 expr_stmt|;
 elseif|else
