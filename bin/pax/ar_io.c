@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"options.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -717,6 +723,32 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|chdname
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|chdname
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Failed chdir to %s"
+argument_list|,
+name|chdname
+argument_list|)
+expr_stmt|;
 comment|/* 	 * set up is based on device type 	 */
 if|if
 condition|(
@@ -1167,10 +1199,6 @@ argument_list|()
 endif|#
 directive|endif
 block|{
-name|FILE
-modifier|*
-name|outf
-decl_stmt|;
 if|if
 condition|(
 name|arfd
@@ -1188,21 +1216,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|act
-operator|==
-name|LIST
-condition|)
-name|outf
-operator|=
-name|stdout
-expr_stmt|;
-else|else
-name|outf
-operator|=
-name|stderr
-expr_stmt|;
 comment|/* 	 * Close archive file. This may take a LONG while on tapes (we may be 	 * forced to wait for the rewind to complete) so tell the user what is 	 * going on (this avoids the user hitting control-c thinking pax is 	 * broken). 	 */
 if|if
 condition|(
@@ -1226,7 +1239,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|outf
+name|listf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1234,7 +1247,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|outf
+name|listf
 argument_list|,
 literal|"%s: Waiting for tape drive close to complete..."
 argument_list|,
@@ -1246,7 +1259,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|outf
+name|listf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1365,7 +1378,7 @@ name|fputs
 argument_list|(
 literal|"done.\n"
 argument_list|,
-name|outf
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1377,7 +1390,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|outf
+name|listf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1442,7 +1455,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|outf
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1466,20 +1479,28 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-argument|outf
+argument|listf
 argument_list|,
 literal|"%s: unknown format, %lu bytes skipped.\n"
 argument_list|,
 else|#
 directive|else
-argument|(void)fprintf(outf,
+argument|(void)fprintf(listf,
 literal|"%s: unknown format, %qu bytes skipped.\n"
 argument|,
 endif|#
 directive|endif
-argument|argv0, rdcnt); 		(void)fflush(outf); 		flcnt =
+argument|argv0, rdcnt); 		(void)fflush(listf); 		flcnt =
 literal|0
-argument|; 		return; 	}  	(void)fprintf(outf,
+argument|; 		return; 	}  	if (strcmp(NM_CPIO, argv0) ==
+literal|0
+argument|) 		(void)fprintf(listf,
+literal|"%qu blocks\n"
+argument|, (rdcnt ? rdcnt : wrcnt) /
+literal|5120
+argument|); 	else if (strcmp(NM_TAR, argv0) !=
+literal|0
+argument|) 		(void)fprintf(listf,
 ifdef|#
 directive|ifdef
 name|NET2_STAT
@@ -1493,7 +1514,7 @@ endif|#
 directive|endif
 argument|argv0, frmt->name, arvol-
 literal|1
-argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(outf); 	flcnt =
+argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(listf); 	flcnt =
 literal|0
 argument|; }
 comment|/*  * ar_drain()  *	drain any archive format independent padding from an archive read  *	from a socket or a pipe. This is to prevent the process on the  *	other side of the pipe from getting a SIGPIPE (pax will stop  *	reading an archive once a format dependent trailer is detected).  */
@@ -2085,7 +2106,9 @@ argument|) 		syswarn(
 literal|0
 argument|, errno,
 literal|"Unable to restore signal mask"
-argument|);  	if (done || !wr_trail) 		return(-
+argument|);  	if (done || !wr_trail || strcmp(NM_TAR, argv0) ==
+literal|0
+argument|) 		return(-
 literal|1
 argument|);  	tty_prnt(
 literal|"\nATTENTION! %s archive volume change required.\n"

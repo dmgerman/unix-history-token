@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|MAXBLK
-value|32256
+value|64512
 end_define
 
 begin_comment
@@ -24,6 +24,17 @@ end_comment
 
 begin_comment
 comment|/* will violate posix spec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBLK_POSIX
+value|32256
+end_define
+
+begin_comment
+comment|/* MAX blocksize supported as per POSIX */
 end_comment
 
 begin_define
@@ -410,6 +421,11 @@ modifier|*
 name|pend
 decl_stmt|;
 comment|/* end of a prefix match */
+name|char
+modifier|*
+name|chdname
+decl_stmt|;
+comment|/* the dir to change to if not NULL.  */
 name|int
 name|plen
 decl_stmt|;

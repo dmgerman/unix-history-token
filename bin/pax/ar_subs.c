@@ -382,6 +382,8 @@ argument_list|(
 name|arcn
 argument_list|,
 name|now
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -483,6 +485,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|arcn
 operator|=
 operator|&
@@ -543,6 +548,13 @@ literal|0
 operator|)
 condition|)
 return|return;
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * step through each entry on the archive until the format read routine 	 * says it is done 	 */
 while|while
 condition|(
@@ -952,6 +964,23 @@ condition|(
 name|vflag
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|ls_list
+argument_list|(
+name|arcn
+argument_list|,
+name|now
+argument_list|,
+name|listf
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -961,7 +990,7 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -969,6 +998,56 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+comment|/* 		 * if required, chdir around. 		 */
+if|if
+condition|(
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+operator|!=
+name|NULL
+operator|)
+condition|)
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Cannot chdir to %s"
+argument_list|,
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+argument_list|)
+expr_stmt|;
 comment|/* 		 * all ok, extract this member based on type 		 */
 if|if
 condition|(
@@ -1062,7 +1141,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1147,7 +1226,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1170,6 +1249,45 @@ operator|+
 name|arcn
 operator|->
 name|pad
+argument_list|)
+expr_stmt|;
+comment|/* 		 * if required, chdir around. 		 */
+if|if
+condition|(
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+operator|!=
+name|NULL
+operator|)
+condition|)
+if|if
+condition|(
+name|fchdir
+argument_list|(
+name|cwdfd
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't fchdir to starting directory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1291,6 +1409,9 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 comment|/* 	 * if this format supports hard link storage, start up the database 	 * that detects them. 	 */
 if|if
 condition|(
@@ -1360,6 +1481,13 @@ comment|/* 	 * if this not append, and there are no files, we do no write a trai
 name|wr_one
 operator|=
 name|is_app
+expr_stmt|;
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * while there are files to archive, process them one at at time 	 */
 while|while
@@ -1581,6 +1709,23 @@ condition|(
 name|vflag
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|ls_list
+argument_list|(
+name|arcn
+argument_list|,
+name|now
+argument_list|,
+name|listf
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -1590,13 +1735,14 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|++
 name|flcnt
@@ -1655,7 +1801,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1713,7 +1859,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1985,7 +2131,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|listf
 argument_list|,
 literal|"%s: Reading archive to position at the end..."
 argument_list|,
@@ -2156,7 +2302,7 @@ name|fputs
 argument_list|(
 literal|"done.\n"
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2840,7 +2986,7 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2892,7 +3038,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2981,7 +3127,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -3100,7 +3246,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -3211,6 +3357,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* counter for trailer function */
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+comment|/* on 1st read, EOF isn't premature. */
 comment|/* 	 * set up initial conditions, we want a whole frmt->hsz block as we 	 * have no data yet. 	 */
 name|res
 operator|=
@@ -3259,6 +3411,25 @@ operator|==
 name|res
 condition|)
 break|break;
+comment|/* 			 * If we read 0 bytes (EOF) from an archive when we 			 * expect to find a header, we have stepped upon 			 * an archive without the customary block of zeroes 			 * end marker.  It's just stupid to error out on 			 * them, so exit gracefully. 			 */
+if|if
+condition|(
+name|first
+operator|&&
+name|ret
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 			 * some kind of archive read problem, try to resync the 			 * storage device, better give the user the bad news. 			 */
 if|if
 condition|(

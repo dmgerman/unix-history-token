@@ -21,6 +21,10 @@ name|int
 name|refcnt
 decl_stmt|;
 comment|/* has tree had a selected file? */
+name|int
+name|chflg
+decl_stmt|;
+comment|/* change directory flag */
 name|struct
 name|ftree
 modifier|*

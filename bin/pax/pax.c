@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -205,6 +211,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* match all EXCEPT pattern/file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cwdfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* starting cwd */
 end_comment
 
 begin_decl_stmt
@@ -383,6 +399,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|nodirs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do not create directories as needed */
+end_comment
+
+begin_decl_stmt
+name|int
 name|pmode
 decl_stmt|;
 end_decl_stmt
@@ -399,6 +425,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* preserve file uid/gid */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmleadslash
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remove leading '/' from pathnames */
 end_comment
 
 begin_decl_stmt
@@ -444,6 +482,29 @@ comment|/* root of argv[0] */
 end_comment
 
 begin_decl_stmt
+name|sigset_t
+name|s_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* signal mask for cleanup critical sect */
+end_comment
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|listf
+init|=
+name|stderr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file pointer to print file list to */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|tempfile
@@ -463,16 +524,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* basename of tempfile to use for mkstemp(3) */
-end_comment
-
-begin_decl_stmt
-name|sigset_t
-name|s_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* signal mask for cleanup critical sect */
 end_comment
 
 begin_comment
@@ -537,6 +588,38 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Keep a reference to cwd, so we can always come back home. 	 */
+name|cwdfd
+operator|=
+name|open
+argument_list|(
+literal|"."
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cwdfd
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't open current working directory."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|exit_val
+operator|)
+return|;
+block|}
 comment|/* 	 * Where should we put temporary files? 	 */
 if|if
 condition|(
@@ -1101,6 +1184,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|n_hand
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|n_hand
+argument_list|)
+expr_stmt|;
 name|n_hand
 operator|.
 name|sa_mask

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -332,6 +338,31 @@ argument_list|,
 name|wrblksz
 argument_list|,
 name|BLKMULT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|wrblksz
+operator|>
+name|MAXBLK_POSIX
+condition|)
+block|{
+name|paxwarn
+argument_list|(
+literal|0
+argument_list|,
+literal|"Write block size of %d larger than POSIX max %d, archive may not be portable"
+argument_list|,
+name|wrblksz
+argument_list|,
+name|MAXBLK_POSIX
 argument_list|)
 expr_stmt|;
 return|return

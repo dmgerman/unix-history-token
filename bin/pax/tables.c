@@ -539,8 +539,13 @@ name|pt
 operator|->
 name|name
 argument_list|,
-name|PAXPATHLEN
-operator|+
+sizeof|sizeof
+argument_list|(
+name|arcn
+operator|->
+name|ln_name
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -548,7 +553,9 @@ name|arcn
 operator|->
 name|ln_name
 index|[
-name|PAXPATHLEN
+name|arcn
+operator|->
+name|ln_nlen
 index|]
 operator|=
 literal|'\0'
@@ -2123,6 +2130,9 @@ argument_list|,
 name|int
 operator|*
 name|onamelen
+argument_list|,
+name|size_t
+name|onamesize
 argument_list|)
 else|#
 directive|else
@@ -2132,6 +2142,8 @@ argument_list|(
 name|oname
 argument_list|,
 name|onamelen
+argument_list|,
+name|onamesize
 argument_list|)
 decl|register
 name|char
@@ -2144,6 +2156,12 @@ begin_decl_stmt
 name|int
 modifier|*
 name|onamelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|onamesize
 decl_stmt|;
 end_decl_stmt
 
@@ -2231,14 +2249,15 @@ name|pt
 operator|->
 name|nname
 argument_list|,
-name|PAXPATHLEN
-operator|+
+name|onamesize
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
 name|oname
 index|[
-name|PAXPATHLEN
+operator|*
+name|onamelen
 index|]
 operator|=
 literal|'\0'

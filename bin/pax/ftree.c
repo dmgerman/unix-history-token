@@ -407,6 +407,9 @@ specifier|register
 name|char
 operator|*
 name|str
+argument_list|,
+name|int
+name|chflg
 argument_list|)
 else|#
 directive|else
@@ -414,11 +417,19 @@ name|int
 name|ftree_add
 argument_list|(
 name|str
+argument_list|,
+name|chflg
 argument_list|)
 decl|register
 name|char
 modifier|*
 name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|chflg
 decl_stmt|;
 end_decl_stmt
 
@@ -549,6 +560,12 @@ operator|->
 name|refcnt
 operator|=
 literal|0
+expr_stmt|;
+name|ft
+operator|->
+name|chflg
+operator|=
+name|chflg
 expr_stmt|;
 name|ft
 operator|->
@@ -753,11 +770,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ft
 operator|->
 name|refcnt
 operator|>
 literal|0
+operator|)
+operator|||
+name|ft
+operator|->
+name|chflg
 condition|)
 continue|continue;
 if|if
@@ -943,6 +966,75 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|ftcur
+operator|->
+name|chflg
+condition|)
+block|{
+comment|/* First fchdir() back... */
+if|if
+condition|(
+name|fchdir
+argument_list|(
+name|cwdfd
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't fchdir to starting directory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|ftcur
+operator|->
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't chdir to %s"
+argument_list|,
+name|ftcur
+operator|->
+name|fname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+continue|continue;
+block|}
+else|else
 name|farray
 index|[
 literal|0
@@ -1313,7 +1405,7 @@ argument|; 			arcn->ln_nlen = cnt; 			break; 		case S_IFSOCK:
 comment|/* 			 * under BSD storing a socket is senseless but we will 			 * let the format specific write function make the 			 * decision of what to do with it. 			 */
 argument|arcn->type = PAX_SCK; 			break; 		case S_IFIFO: 			arcn->type = PAX_FIF; 			break; 		} 		break; 	}
 comment|/* 	 * copy file name, set file name length 	 */
-argument|arcn->nlen = l_strncpy(arcn->name, ftent->fts_path, PAXPATHLEN+
+argument|arcn->nlen = l_strncpy(arcn->name, ftent->fts_path, sizeof(arcn->name) -
 literal|1
 argument|); 	arcn->name[arcn->nlen] =
 literal|'\0'

@@ -1077,6 +1077,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|set_lids
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|uid_t
+operator|,
+name|gid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|set_pmode
 name|__P
@@ -1197,6 +1214,8 @@ operator|(
 specifier|register
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1257,6 +1276,9 @@ name|ARCHD
 operator|*
 operator|,
 name|time_t
+operator|,
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1271,26 +1293,6 @@ operator|(
 specifier|register
 name|ARCHD
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|zf_strncpy
-name|__P
-argument_list|(
-operator|(
-specifier|register
-name|char
-operator|*
-operator|,
-specifier|register
-name|char
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1410,6 +1412,29 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * getoldopt.c  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|getoldopt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * options.c  */
 end_comment
 
@@ -1486,6 +1511,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|chdname
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * pat_rep.c  */
 end_comment
@@ -1510,6 +1542,9 @@ name|pat_add
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 name|char
 operator|*
 operator|)
@@ -1613,6 +1648,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|cflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cwdfd
 decl_stmt|;
 end_decl_stmt
 
@@ -1738,6 +1780,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|nodirs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|pmode
 decl_stmt|;
 end_decl_stmt
@@ -1746,6 +1795,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pids
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rmleadslash
 decl_stmt|;
 end_decl_stmt
 
@@ -1776,6 +1832,14 @@ specifier|extern
 name|char
 modifier|*
 name|argv0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|listf
 decl_stmt|;
 end_decl_stmt
 
@@ -2008,6 +2072,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
