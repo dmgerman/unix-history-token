@@ -4522,6 +4522,8 @@ literal|"sd"
 block|,
 literal|"st"
 block|,
+literal|"od"
+block|,
 literal|"uk"
 block|}
 decl_stmt|;
