@@ -1596,7 +1596,9 @@ begin_function
 specifier|static
 name|void
 name|macro
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|token
@@ -2654,7 +2656,9 @@ begin_function
 specifier|static
 name|void
 name|initkwds
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|i
@@ -3030,7 +3034,9 @@ begin_function
 specifier|static
 name|void
 name|enlarge_stack
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|STACKMAX
 operator|*=

@@ -509,7 +509,9 @@ end_function
 begin_function
 name|void
 name|initspaces
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -584,7 +586,9 @@ end_function
 begin_function
 name|void
 name|enlarge_strspace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -700,7 +704,9 @@ end_function
 begin_function
 name|void
 name|enlarge_bufspace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -951,7 +957,9 @@ end_comment
 begin_function
 name|void
 name|killdiv
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|n
@@ -1150,7 +1158,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1363,7 +1373,9 @@ end_comment
 begin_function
 name|size_t
 name|buffer_mark
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|bp

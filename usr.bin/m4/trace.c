@@ -745,7 +745,9 @@ begin_function
 specifier|static
 name|int
 name|frame_level
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|level

@@ -325,7 +325,9 @@ begin_function
 specifier|static
 name|void
 name|ensure_m4path
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -1104,7 +1106,9 @@ specifier|static
 name|char
 modifier|*
 name|getstring
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|addchar
 argument_list|(
