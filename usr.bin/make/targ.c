@@ -1231,7 +1231,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%k:%M:%S %b %d, %Y"
+literal|"%H:%M:%S %b %d, %Y"
 argument_list|,
 name|parts
 argument_list|)
