@@ -2242,6 +2242,7 @@ name|SETRATE
 undef|#
 directive|undef
 name|INCRATE
+comment|/* 		 * The Microsoft API has no support for getting/setting 		 * channels, so we lie like a rug here. If you wan to 		 * select a channel, use the sysctl/registry interface. 		 */
 for|for
 control|(
 name|i
@@ -2332,7 +2333,32 @@ argument_list|,
 name|ieee80211_media_status
 argument_list|)
 expr_stmt|;
-comment|/*ic->ic_bss->ni_rates = ic->ic_sup_rates[IEEE80211_MODE_11G];*/
+name|ic
+operator|->
+name|ic_ibss_chan
+operator|=
+operator|&
+name|ic
+operator|->
+name|ic_channels
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_chan
+operator|=
+operator|&
+name|ic
+operator|->
+name|ic_channels
+index|[
+literal|1
+index|]
+expr_stmt|;
 block|}
 else|else
 block|{

@@ -39,6 +39,54 @@ define|\
 value|((uint32_t)((((uintptr_t)(ptr)& (PAGE_SIZE -1)) +	\ 	(len) + (PAGE_SIZE - 1))>> PAGE_SHIFT))
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAGE_ALIGN
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|((void *)((uintptr_t)(ptr)& ~(PAGE_SIZE - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTE_OFFSET
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|((uint32_t)((uintptr_t)(ptr)& (PAGE_SIZE - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDL_INIT
+parameter_list|(
+name|b
+parameter_list|,
+name|baseva
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|(b)->nb_next = NULL;						\ 	(b)->nb_size = (uint16_t)(sizeof(struct ndis_buffer) +		\ 		(sizeof(uint32_t) * SPAN_PAGES((baseva), (len))));	\ 	(b)->nb_flags = 0;						\ 	(b)->nb_startva = (void *)PAGE_ALIGN((baseva));			\ 	(b)->nb_byteoffset = BYTE_OFFSET((baseva));			\ 	(b)->nb_bytecount = (uint32_t)(len);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDL_VA
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|((void *)((char *)((b)->nb_startva) + (b)->nb_byteoffset))
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint32_t
