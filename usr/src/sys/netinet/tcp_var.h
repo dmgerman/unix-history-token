@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.14	82/01/17	*/
+comment|/*	tcp_var.h	4.15	82/01/17	*/
 end_comment
 
 begin_comment
@@ -76,19 +76,24 @@ value|0x02
 comment|/* ack, but try to delay it */
 define|#
 directive|define
-name|TF_PUSH
-value|0x04
-comment|/* push mode */
-define|#
-directive|define
-name|TF_URG
-value|0x08
-comment|/* urgent mode */
-define|#
-directive|define
 name|TF_DONTKEEP
-value|0x10
+value|0x04
 comment|/* don't use keep-alives */
+define|#
+directive|define
+name|TF_NOOPT
+value|0x08
+comment|/* don't use tcp options */
+ifdef|#
+directive|ifdef
+name|TCPTRUEOOB
+define|#
+directive|define
+name|TF_DOOOB
+value|0x10
+comment|/* do use out of band data */
+endif|#
+directive|endif
 name|struct
 name|tcpiphdr
 modifier|*
@@ -176,15 +181,44 @@ name|float
 name|t_srtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
-comment|/* out-of-band data; treat char before urgent pointer as out-of-band */
+comment|/* out-of-band data */
 name|char
-name|t_haveoob
+name|t_oobflags
 decl_stmt|;
 comment|/* have some */
+define|#
+directive|define
+name|TCPOOB_HAVEDATA
+value|0x01
+ifdef|#
+directive|ifdef
+name|TCPTRUEOOB
+define|#
+directive|define
+name|TCPOOB_OWEACK
+value|0x02
+define|#
+directive|define
+name|TCPOOB_NEEDACK
+value|0x04
+name|char
+name|t_iobc
+decl_stmt|;
+comment|/* input character */
+name|u_char
+name|t_iobseq
+decl_stmt|;
+comment|/* input receive sequence number */
 name|char
 name|t_oobc
 decl_stmt|;
-comment|/* the character */
+comment|/* output character */
+name|u_char
+name|t_oobseq
+decl_stmt|;
+comment|/* output transmit sequence number */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

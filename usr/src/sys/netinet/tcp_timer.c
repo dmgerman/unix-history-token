@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.11 82/01/13 */
+comment|/* tcp_timer.c 4.12 82/01/17 */
 end_comment
 
 begin_include
@@ -119,7 +119,7 @@ end_include
 
 begin_decl_stmt
 name|int
-name|tcpdelack
+name|tcpnodelack
 init|=
 literal|0
 decl_stmt|;
@@ -751,6 +751,53 @@ operator|=
 name|TCPTV_KEEP
 expr_stmt|;
 return|return;
+ifdef|#
+directive|ifdef
+name|TCPTRUEOOB
+comment|/* 	 * Out-of-band data retransmit timer. 	 */
+case|case
+name|TCPT_OOBREXMT
+case|:
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_NOOPT
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|tcp_output
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+name|TCPT_RANGESET
+argument_list|(
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_OOBREXMT
+index|]
+argument_list|,
+literal|2
+operator|*
+name|tp
+operator|->
+name|t_srtt
+argument_list|,
+name|TCPTV_MIN
+argument_list|,
+name|TCPTV_MAX
+argument_list|)
+expr_stmt|;
+return|return;
+endif|#
+directive|endif
 block|}
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.19 81/11/26 */
+comment|/* tcp.h 1.20 82/01/17 */
 end_comment
 
 begin_typedef
@@ -87,6 +87,75 @@ comment|/* urgent pointer */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_EOL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_NOP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_MAXSEG
+value|2
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPTRUEOOB
+end_ifdef
+
+begin_comment
+comment|/*  * True out-of-band as value added option.  * Advertise willingness with TCPOPT_WILOOB in  * initial segment.  If peer is willing, will receive  * such also.  Then can send TCPOPT_OOBDATA whenever oob data  * exists; peer should ack with TCPOPT_OOBACK in segment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_WILLOOB
+value|64
+end_define
+
+begin_comment
+comment|/* bytes: 64, 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_OOBDATA
+value|65
+end_define
+
+begin_comment
+comment|/* bytes: 65, 4, seq#, data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_OOBACK
+value|66
+end_define
+
+begin_comment
+comment|/* bytes: 66, 3, ack# */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

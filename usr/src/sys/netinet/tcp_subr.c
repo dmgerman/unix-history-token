@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.12	82/01/13	*/
+comment|/*	tcp_subr.c	4.13	82/01/17	*/
 end_comment
 
 begin_include
@@ -886,6 +886,13 @@ name|t_maxseg
 operator|=
 literal|1024
 expr_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator|=
+name|TF_NOOPT
+expr_stmt|;
+comment|/* until all TCP's take options */
 name|tp
 operator|->
 name|t_inpcb
