@@ -4457,6 +4457,43 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* NetMos 0S1P PCI: 0S, 1P */
+block|{
+literal|"NetMos NM9805 1284 Printer port"
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9805
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_LPT
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|, 		}
+block|, 	}
+block|,
 comment|/* 	 * This is the Middle Digital, Inc. PCI-Weasel, which 	 * uses a PCI interface implemented in FPGA. 	 */
 block|{
 literal|"Middle Digital, Inc. Weasel serial port"
