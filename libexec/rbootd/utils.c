@@ -128,6 +128,7 @@ name|direct
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|char
 name|BootFmt
 index|[]
@@ -135,6 +136,7 @@ init|=
 literal|"\t\tRetCode:%u SeqNo:%lx SessID:%x Vers:%u"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|ReadFmt
 index|[]
