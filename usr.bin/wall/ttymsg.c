@@ -194,9 +194,16 @@ operator|(
 literal|"too many iov's (change code in wall/ttymsg.c)"
 operator|)
 return|;
-name|strlcat
+name|strlcpy
 argument_list|(
 name|device
+operator|+
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|line
 argument_list|,
