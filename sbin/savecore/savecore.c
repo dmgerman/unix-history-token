@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -3048,7 +3042,7 @@ expr_stmt|;
 define|#
 directive|define
 name|LEEWAY
-value|(7 * SECSPERDAY)
+value|(7 * 86400)
 if|if
 condition|(
 name|dumptime
