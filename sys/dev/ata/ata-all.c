@@ -264,7 +264,7 @@ name|ATA_MASTERDEV
 parameter_list|(
 name|dev
 parameter_list|)
-value|((pci_get_progif(dev)& 0x8f) == 0x8a)
+value|((pci_get_progif(dev)& 0x80)&& \ 				 (pci_get_progif(dev)& 0x05) != 0x05)
 end_define
 
 begin_comment
