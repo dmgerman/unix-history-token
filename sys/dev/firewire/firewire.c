@@ -1288,7 +1288,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|EIO
+name|EAGAIN
 return|;
 name|fp
 operator|->
@@ -9462,6 +9462,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|firewire_debug
+operator|>
+literal|1
+condition|)
 name|printf
 argument_list|(
 literal|"fw_get_tlabel: no free tlabel\n"
