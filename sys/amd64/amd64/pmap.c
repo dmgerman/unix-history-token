@@ -3755,23 +3755,12 @@ argument_list|(
 literal|"pmap_new_thread: kstack allocation failed"
 argument_list|)
 expr_stmt|;
-name|ks
-operator|+=
-name|PAGE_SIZE
-expr_stmt|;
-name|td
-operator|->
-name|td_kstack
-operator|=
-name|ks
-expr_stmt|;
+comment|/*  	 * Set the first page to be the unmapped guard page. 	 */
 name|ptek
 operator|=
 name|vtopte
 argument_list|(
 name|ks
-operator|-
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|oldpte
@@ -3801,13 +3790,22 @@ directive|else
 name|invlpg
 argument_list|(
 name|ks
-operator|-
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* 	 * move to the next page, which is where the real stack starts. 	 */
+name|ks
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+name|td
+operator|->
+name|td_kstack
+operator|=
+name|ks
+expr_stmt|;
 name|ptek
 operator|++
 expr_stmt|;
@@ -3851,6 +3849,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*  	 * For the length of the stack, link in a real page of ram for each 	 * page of stack. 	 */
 for|for
 control|(
 name|i
@@ -3890,22 +3889,18 @@ operator|.
 name|v_wire_count
 operator|++
 expr_stmt|;
+comment|/* 		 * Enter the page into the kernel address space. 		 */
 name|oldpte
 operator|=
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
+index|]
 expr_stmt|;
-comment|/* 		 * Enter the page into the kernel address space. 		 */
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
+index|]
 operator|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -3936,9 +3931,11 @@ name|invlpg
 argument_list|(
 name|ks
 operator|+
+operator|(
 name|i
 operator|*
 name|PAGE_SIZE
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
