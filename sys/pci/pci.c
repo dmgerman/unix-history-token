@@ -3879,6 +3879,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\tbus=%d, slot=%d, func=%d\n"
+argument_list|,
+name|cfg
+operator|->
+name|bus
+argument_list|,
+name|cfg
+operator|->
+name|slot
+argument_list|,
+name|cfg
+operator|->
+name|func
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\tclass=%02x-%02x-%02x, hdrtype=0x%02x, mfdev=%d\n"
 argument_list|,
 name|cfg
