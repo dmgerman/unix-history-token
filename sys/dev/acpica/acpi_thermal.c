@@ -415,18 +415,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void	acpi_tz_all_off(struct acpi_tz_softc *sc);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -859,6 +847,18 @@ operator|->
 name|tz_requested
 operator|=
 name|TZ_ACTIVE_NONE
+expr_stmt|;
+name|sc
+operator|->
+name|tz_active
+operator|=
+name|TZ_ACTIVE_NONE
+expr_stmt|;
+name|sc
+operator|->
+name|tz_thflags
+operator|=
+name|TZ_THFLAG_NONE
 expr_stmt|;
 comment|/*      * Parse the current state of the thermal zone and build control      * structures.  We don't need to worry about interference with the      * control thread since we haven't fully attached this device yet.      */
 if|if
@@ -2588,32 +2588,6 @@ name|return_VOID
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Turn off all the cooling devices.  */
-end_comment
-
-begin_comment
-unit|static void acpi_tz_all_off(struct acpi_tz_softc *sc) {     int		i;      ACPI_FUNCTION_TRACE((char *)(uintptr_t)__func__);
-comment|/* Scan all the _ALx objects and turn them all off. */
-end_comment
-
-begin_comment
-unit|for (i = 0; i< TZ_NUMLEVELS; i++) { 	if (sc->tz_zone.al[i].Pointer == NULL) 	    continue; 	acpi_ForeachPackageObject((ACPI_OBJECT *)sc->tz_zone.al[i].Pointer, 				  acpi_tz_switch_cooler_off, sc);     }
-comment|/*      * XXX revert any passive-cooling options.      */
-end_comment
-
-begin_endif
-unit|sc->tz_active = TZ_ACTIVE_NONE;     sc->tz_thflags = TZ_THFLAG_NONE;      return_VOID; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Given an object, verify that it's a reference to a device of some sort,   * and try to switch it off.  */
