@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -500,7 +500,7 @@ argument_list|(
 name|_USE_CTYPE_INLINE_
 argument_list|)
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|__istype
 parameter_list|(
@@ -548,7 +548,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|__isctype
 parameter_list|(
@@ -607,7 +607,7 @@ end_if
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|_BSD_RUNE_T_
 name|toupper
 parameter_list|(
@@ -641,7 +641,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|_BSD_RUNE_T_
 name|tolower
 parameter_list|(
