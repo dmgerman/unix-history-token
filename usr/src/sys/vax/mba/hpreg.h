@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.11	82/05/20	*/
+comment|/*	hpreg.h	4.12	83/01/27	*/
 end_comment
 
 begin_struct
@@ -824,7 +824,7 @@ define|#
 directive|define
 name|HPER2_BITS
 define|\
-value|"\10\20BSE\17SKI\16OPE\15IVC\14LSC\13LBC\10DVC\5SSE\4DPE"
+value|"\10\20BSE\17SKI\16OPE\15IVC\14LSC\13LBC\10DVC\6SSE\4DPE"
 end_define
 
 begin_define
