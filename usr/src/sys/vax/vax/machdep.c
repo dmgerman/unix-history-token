@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.9	84/09/05	*/
+comment|/*	machdep.c	6.10	84/12/20	*/
 end_comment
 
 begin_include
@@ -2590,28 +2590,11 @@ case|case
 name|M730
 case|:
 block|{
-specifier|register
-name|int
-name|mcreg
-init|=
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|1
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|mcreg
-operator|&
-name|M730_CRD
-condition|)
-block|{
 name|struct
 name|mcr
 name|amcr
 decl_stmt|;
+comment|/* 			 * Must be careful on the 730 not to use invalid 			 * instructions in I/O space, so make a copy; 			 */
 name|amcr
 operator|.
 name|mc_reg
@@ -2626,11 +2609,54 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|amcr
+operator|.
+name|mc_reg
+index|[
+literal|1
+index|]
+operator|=
+name|mcr
+operator|->
+name|mc_reg
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|M730_ERR
+argument_list|(
+operator|&
+name|amcr
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"mcr%d: soft ecc addr %x syn %x\n"
+literal|"mcr%d: %s"
 argument_list|,
 name|m
+argument_list|,
+operator|(
+name|amcr
+operator|.
+name|mc_reg
+index|[
+literal|1
+index|]
+operator|&
+name|M730_UNCORR
+operator|)
+condition|?
+literal|"hard error"
+else|:
+literal|"soft ecc"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" addr %x syn %x\n"
 argument_list|,
 name|M730_ADDR
 argument_list|(
@@ -3300,16 +3326,6 @@ expr_stmt|;
 name|update
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|DELAY
-argument_list|(
-literal|10000000
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 block|{
 specifier|register
 name|struct
@@ -3389,10 +3405,15 @@ argument_list|,
 name|nbusy
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40000
+operator|*
+name|iter
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"done\n"
@@ -3732,9 +3753,24 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|MC750_TBERR
+value|2
+end_define
+
+begin_comment
+comment|/* type code of cp tbuf par */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC750_TBPAR
 value|4
 end_define
+
+begin_comment
+comment|/* tbuf par bit in mcesr */
+end_comment
 
 begin_endif
 endif|#
@@ -4214,6 +4250,28 @@ operator|*
 operator|)
 name|cmcf
 decl_stmt|;
+name|int
+name|mcsr
+init|=
+name|mfpr
+argument_list|(
+name|MCSR
+argument_list|)
+decl_stmt|;
+name|mtpr
+argument_list|(
+name|TBIA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|MCESR
+argument_list|,
+literal|0xf
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tva %x errpc %x mdr %x smr %x rdtimo %x tbgpar %x cacherr %x\n"
@@ -4267,27 +4325,21 @@ name|mcf
 operator|->
 name|mc5_psl
 argument_list|,
-name|mfpr
-argument_list|(
-name|MCSR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mtpr
-argument_list|(
-name|MCESR
-argument_list|,
-literal|0xf
+name|mcsr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|MC750_TBERR
+operator|&&
 operator|(
 name|mcf
 operator|->
 name|mc5_mcesr
 operator|&
-literal|0xf
+literal|0xe
 operator|)
 operator|==
 name|MC750_TBPAR
@@ -4296,13 +4348,6 @@ block|{
 name|printf
 argument_list|(
 literal|"tbuf par: flushing and returning\n"
-argument_list|)
-expr_stmt|;
-name|mtpr
-argument_list|(
-name|TBIA
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
