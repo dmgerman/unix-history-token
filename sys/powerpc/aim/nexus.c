@@ -1027,9 +1027,6 @@ name|which
 condition|)
 block|{
 case|case
-name|NEXUS_IVAR_NODE
-case|:
-case|case
 name|NEXUS_IVAR_NAME
 case|:
 return|return
@@ -1037,7 +1034,20 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Identified devices will want to set this */
+comment|/* Identified devices may want to set these */
+case|case
+name|NEXUS_IVAR_NODE
+case|:
+name|dinfo
+operator|->
+name|ndi_node
+operator|=
+operator|(
+name|phandle_t
+operator|)
+name|value
+expr_stmt|;
+break|break;
 case|case
 name|NEXUS_IVAR_DEVICE_TYPE
 case|:
