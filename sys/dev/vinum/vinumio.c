@@ -912,6 +912,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|partinfo
@@ -920,10 +921,24 @@ name|part
 operator|->
 name|p_fstype
 operator|!=
-literal|0
+name|FS_UNUSED
+operator|)
+comment|/* not plain */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|partinfo
+operator|.
+name|part
+operator|->
+name|p_fstype
+operator|!=
+name|FS_VINUM
+operator|)
 condition|)
 block|{
-comment|/* not plain */
+comment|/* and not Vinum */
 name|drive
 operator|->
 name|lasterror
@@ -2333,6 +2348,7 @@ name|result
 operator|=
 name|DL_DELETED_LABEL
 expr_stmt|;
+comment|/* and return the info */
 else|else
 name|result
 operator|=
@@ -4959,6 +4975,31 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"vinum: updating configuration from %s\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|)
+expr_stmt|;
+comment|/* XXX Transition until we can get things changed */
+if|if
+condition|(
+name|drive
+operator|->
+name|partinfo
+operator|.
+name|part
+operator|->
+name|p_fstype
+operator|==
+name|FS_UNUSED
+condition|)
+comment|/* still set to unused */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum: %s partition type is 'unused', should be 'vinum'\n"
 argument_list|,
 name|drive
 operator|->
