@@ -340,6 +340,12 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
