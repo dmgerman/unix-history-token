@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_unix.c,v 1.1 1993/10/27 05:40:11 paul Exp $"
+literal|"$Id: auth_unix.c,v 1.1 1994/08/07 18:35:39 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -198,6 +204,34 @@ name|marshal_new_auth
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * This goop is here because some servers refuse to accept a  * credential with more than some number (usually 8) supplementary  * groups.  Blargh!  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|authunix_maxgrouplist
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|set_rpc_maxgrouplist
+parameter_list|(
+name|int
+name|num
+parameter_list|)
+block|{
+name|authunix_maxgrouplist
+operator|=
+name|num
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Create a unix style authenticator.  * Returns an auth handle with the given stuff in it.  */
@@ -428,6 +462,33 @@ name|aup_gid
 operator|=
 name|gid
 expr_stmt|;
+comment|/* GW: continuation of max group list hack */
+if|if
+condition|(
+name|authunix_maxgrouplist
+operator|!=
+literal|0
+condition|)
+block|{
+name|aup
+operator|.
+name|aup_len
+operator|=
+operator|(
+operator|(
+name|len
+operator|>
+name|authunix_maxgrouplist
+operator|)
+condition|?
+name|len
+else|:
+name|authunix_maxgrouplist
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|aup
 operator|.
 name|aup_len
@@ -437,6 +498,7 @@ name|u_int
 operator|)
 name|len
 expr_stmt|;
+block|}
 name|aup
 operator|.
 name|aup_gids
@@ -625,6 +687,15 @@ index|[
 name|NGRPS
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|gid_t
+name|real_gids
+index|[
+name|NGROUPS
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|gethostname
@@ -664,9 +735,9 @@ name|len
 operator|=
 name|getgroups
 argument_list|(
-name|NGRPS
+name|NGROUPS
 argument_list|,
-name|gids
+name|real_gids
 argument_list|)
 operator|)
 operator|<
@@ -675,6 +746,42 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|NGRPS
+condition|)
+name|len
+operator|=
+name|NGRPS
+expr_stmt|;
+comment|/* GW: turn `gid_t's into `int's */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|gids
+index|[
+name|i
+index|]
+operator|=
+name|real_gids
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|authunix_create
