@@ -1094,10 +1094,17 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NPX
-name|npxexit
-argument_list|(
+if|if
+condition|(
 name|td
+operator|==
+name|PCPU_GET
+argument_list|(
+name|fpcurthread
 argument_list|)
+condition|)
+name|npxdrop
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1348,6 +1355,17 @@ operator|*
 name|pcb2
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+operator|(
+name|PCB_NPXTRAP
+operator||
+name|PCB_NPXINITDONE
+operator|)
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 * The -16 is so we can expand the trapframe if we go to vm86. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
 name|bcopy
