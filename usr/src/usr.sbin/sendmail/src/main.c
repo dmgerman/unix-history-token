@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.132 (Berkeley) %G%"
+literal|"@(#)main.c	8.133 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6360,6 +6360,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|releasesignal
+argument_list|(
+name|SIGHUP
+argument_list|)
+expr_stmt|;
 name|execv
 argument_list|(
 name|SaveArgv
