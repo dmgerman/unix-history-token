@@ -1976,9 +1976,11 @@ directive|endif
 comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
 name|next_hop
 operator|=
-name|ip_claim_next_hop
+name|m_claim_next_hop
 argument_list|(
 name|m
+argument_list|,
+name|PACKET_TAG_IPFORWARD
 argument_list|)
 expr_stmt|;
 ifdef|#
