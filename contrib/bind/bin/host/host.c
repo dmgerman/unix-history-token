@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.43.2.1 2001/04/26 02:56:07 marka Exp $"
+literal|"$Id: host.c,v 8.43.2.2 2001/08/09 14:04:45 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3658,6 +3658,8 @@ name|length
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pref
 argument_list|)
 expr_stmt|;
@@ -3694,6 +3696,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pref
 argument_list|)
 expr_stmt|;
