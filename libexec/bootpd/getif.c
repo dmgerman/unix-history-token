@@ -465,8 +465,16 @@ name|m
 operator|=
 name|nmatch
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|addrp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 operator|(
 name|sip
