@@ -615,6 +615,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* append one for the blank and use 8 for the out_line */
 name|int
 name|j
 init|=
@@ -627,14 +628,7 @@ argument_list|)
 operator|+
 literal|1
 operator|+
-name|strlen
-argument_list|(
-name|mp
-operator|->
-name|myutmp
-operator|.
-name|out_line
-argument_list|)
+literal|8
 decl_stmt|;
 if|if
 condition|(
@@ -681,7 +675,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s:%-8.8s"
+literal|"%s:%-.8s"
 argument_list|,
 name|mp
 operator|->
