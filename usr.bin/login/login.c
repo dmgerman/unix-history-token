@@ -2844,7 +2844,7 @@ condition|(
 name|pid
 condition|)
 block|{
-comment|/* parent - wait for child to finish, then cleanup session */
+comment|/* parent - wait for child to finish, then cleanup 			   session */
 name|wait
 argument_list|(
 name|NULL
