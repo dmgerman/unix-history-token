@@ -1059,7 +1059,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * this gets rid of garbage at the end of a page that is now 		 * only partially backed by the vnode... 		 */
+comment|/* 		 * this gets rid of garbage at the end of a page that is now 		 * only partially backed by the vnode. 		 * 		 * XXX for some reason (I don't know yet), if we take a 		 * completely invalid page and mark it partially valid 		 * it can screw up NFS reads, so we don't allow the case. 		 */
 if|if
 condition|(
 name|nsize
@@ -1088,6 +1088,10 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|&&
+name|m
+operator|->
+name|valid
 condition|)
 block|{
 name|int
@@ -1132,7 +1136,15 @@ argument_list|(
 name|kva
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Clear out partial-page dirty bits.  This 				 * has the side effect of setting the valid 				 * bits, but that is ok.  There are a bunch 				 * of places in the VM system where we expected 				 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 				 * case is one of them.  If the page is still 				 * partially dirty, make it fully dirty. 				 */
+comment|/* 				 * XXX work around SMP data integrity race 				 * by unmapping the page from user processes. 				 * The garbage we just cleared may be mapped 				 * to a user process running on another cpu 				 * and this code is not running through normal 				 * I/O channels which handle SMP issues for 				 * us, so unmap page to synchronize all cpus. 				 * 				 * XXX should vm_pager_unmap_page() have 				 * dealt with this? 				 */
+name|vm_page_protect
+argument_list|(
+name|m
+argument_list|,
+name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Clear out partial-page dirty bits.  This 				 * has the side effect of setting the valid 				 * bits, but that is ok.  There are a bunch 				 * of places in the VM system where we expected 				 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 				 * case is one of them.  If the page is still 				 * partially dirty, make it fully dirty. 				 * 				 * note that we do not clear out the valid 				 * bits.  This would prevent bogus_page 				 * replacement from working properly. 				 */
 name|vm_page_set_validclean
 argument_list|(
 name|m
@@ -3696,7 +3708,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page-aligned write is larger then the actual file we 	 * have to invalidate pages occuring beyond the file EOF.  However, 	 * there is an edge case where a file may not be page-aligned where 	 * the last page is partially invalid.  In this case the filesystem 	 * may not properly clear the dirty bits for the entire page (which 	 * could be VM_PAGE_BITS_ALL due to the page having been mmap()d). 	 * With the page locked we are free to fix-up the dirty bits here. 	 */
+comment|/* 	 * If the page-aligned write is larger then the actual file we 	 * have to invalidate pages occuring beyond the file EOF.  However, 	 * there is an edge case where a file may not be page-aligned where 	 * the last page is partially invalid.  In this case the filesystem 	 * may not properly clear the dirty bits for the entire page (which 	 * could be VM_PAGE_BITS_ALL due to the page having been mmap()d). 	 * With the page locked we are free to fix-up the dirty bits here. 	 * 	 * We do not under any circumstances truncate the valid bits, as 	 * this will screw up bogus page replacement. 	 */
 if|if
 condition|(
 name|maxsize
