@@ -11767,6 +11767,7 @@ modifier|*
 name|ses
 init|=
 name|NULL
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -11777,7 +11778,7 @@ operator|(
 literal|"hifn_newsession: null softc"
 operator|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sidp
