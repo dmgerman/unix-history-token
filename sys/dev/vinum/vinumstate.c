@@ -182,6 +182,25 @@ comment|/* which changes the state again */
 if|if
 condition|(
 name|newstate
+operator|<
+name|drive_up
+condition|)
+comment|/* drive going down, */
+name|queue_daemon_request
+argument_list|(
+name|daemonrq_closedrive
+argument_list|,
+comment|/* get the daemon to close it */
+operator|(
+expr|union
+name|daemoninfo
+operator|)
+name|drive
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newstate
 operator|!=
 name|oldstate
 condition|)
