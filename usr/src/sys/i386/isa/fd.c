@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -497,7 +497,7 @@ end_block
 
 begin_function
 name|int
-name|fdsize
+name|Fdsize
 parameter_list|(
 name|dev
 parameter_list|)
@@ -526,7 +526,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_expr_stmt
-name|fdstrategy
+name|Fdstrategy
 argument_list|(
 name|bp
 argument_list|)
@@ -1488,7 +1488,7 @@ block|}
 end_block
 
 begin_macro
-name|fdclose
+name|Fdclose
 argument_list|(
 argument|dev
 argument_list|,
@@ -1523,7 +1523,7 @@ comment|/*  * Routines to do raw IO for a unit.  */
 end_comment
 
 begin_macro
-name|fdread
+name|Fdread
 argument_list|(
 argument|dev
 argument_list|,
@@ -1577,7 +1577,7 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|fdstrategy
+name|Fdstrategy
 argument_list|,
 operator|&
 name|fd_unit
@@ -1601,7 +1601,7 @@ block|}
 end_block
 
 begin_macro
-name|fdwrite
+name|Fdwrite
 argument_list|(
 argument|dev
 argument_list|,
@@ -1655,7 +1655,7 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|fdstrategy
+name|Fdstrategy
 argument_list|,
 operator|&
 name|fd_unit
@@ -3178,6 +3178,24 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+end_block
+
+begin_macro
+name|Fdioctl
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_macro
+name|Fddump
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 begin_endif
