@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.8 1997/03/03 13:23:54 bde Exp $"
+literal|"$Id: mount_msdos.c,v 1.9 1997/03/29 03:32:25 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,12 @@ index|[]
 init|=
 block|{
 name|MOPT_STDOPTS
+block|,
+name|MOPT_FORCE
+block|,
+name|MOPT_SYNC
+block|,
+name|MOPT_UPDATE
 block|,
 block|{
 name|NULL
