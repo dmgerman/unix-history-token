@@ -1922,8 +1922,10 @@ operator|*
 name|m
 expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
-name|THR_LOCK_SWITCH
+name|THR_SCHED_LOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -1932,6 +1934,13 @@ argument_list|(
 name|curthread
 argument_list|,
 name|PS_MUTEX_WAIT
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
@@ -1950,11 +1959,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -2160,8 +2164,10 @@ operator|*
 name|m
 argument_list|)
 expr_stmt|;
-name|THR_LOCK_SWITCH
+name|THR_SCHED_LOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -2170,6 +2176,13 @@ argument_list|(
 name|curthread
 argument_list|,
 name|PS_MUTEX_WAIT
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
@@ -2188,11 +2201,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -2418,8 +2426,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
-name|THR_LOCK_SWITCH
+name|THR_SCHED_LOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -2428,6 +2438,13 @@ argument_list|(
 name|curthread
 argument_list|,
 name|PS_MUTEX_WAIT
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
@@ -2446,11 +2463,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -3024,8 +3036,10 @@ case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
 comment|/* 		 * What SS2 define as a 'normal' mutex.  Intentionally 		 * deadlock on attempts to get a lock you already own. 		 */
-name|THR_LOCK_SWITCH
+name|THR_SCHED_LOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -3034,6 +3048,13 @@ argument_list|(
 name|curthread
 argument_list|,
 name|PS_DEADLOCK
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
@@ -3049,11 +3070,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

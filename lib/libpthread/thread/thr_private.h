@@ -1732,6 +1732,9 @@ name|int
 name|check_pending
 decl_stmt|;
 name|int
+name|have_signals
+decl_stmt|;
+name|int
 name|refcount
 decl_stmt|;
 comment|/* Thread state: */
@@ -1739,6 +1742,7 @@ name|enum
 name|pthread_state
 name|state
 decl_stmt|;
+specifier|volatile
 name|int
 name|lock_switch
 decl_stmt|;
@@ -1933,7 +1937,7 @@ parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|do {								\ 	if (((thrd)->critical_yield != 0)&&			\ 	    !(THR_IN_CRITICAL(thrd))) {				\ 		THR_LOCK_SWITCH(thrd);				\ 		_thr_sched_switch(thrd);			\ 		THR_UNLOCK_SWITCH(thrd);			\ 	}							\ 	else if (((thrd)->check_pending != 0)&&		\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sig_check_pending(thrd);			\ } while (0)
+value|do {								\ 	if (((thrd)->critical_yield != 0)&&			\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sched_switch(thrd);			\ 	else if (((thrd)->check_pending != 0)&&		\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sig_check_pending(thrd);			\ } while (0)
 end_define
 
 begin_define
@@ -1946,7 +1950,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {								\ 	if ((thrd)->locklevel>= MAX_THR_LOCKLEVEL)		\ 		PANIC("Exceeded maximum lock level");		\ 	else {							\ 		(thrd)->locklevel++;				\ 		_lock_acquire((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1],	\ 		    (thrd)->active_priority);			\ 	}							\ } while (0)
+value|do {								\ 	if ((thrd)->locklevel>= MAX_THR_LOCKLEVEL)		\ 		PANIC("Exceeded maximum lock level");		\ 	else {							\ 		THR_DEACTIVATE_LAST_LOCK(thrd);			\ 		(thrd)->locklevel++;				\ 		_lock_acquire((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1],	\ 		    (thrd)->active_priority);			\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1959,29 +1963,29 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {								\ 	if ((thrd)->locklevel> 0) {				\ 		_lock_release((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1]);	\ 		(thrd)->locklevel--;				\ 		if ((thrd)->lock_switch)			\ 			;					\ 		else {						\ 			THR_YIELD_CHECK(thrd);			\ 		}						\ 	}							\ } while (0)
+value|do {								\ 	if ((thrd)->locklevel> 0) {				\ 		_lock_release((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1]);	\ 		(thrd)->locklevel--;				\ 		THR_ACTIVATE_LAST_LOCK(thrd);			\ 		if ((thrd)->locklevel == 0)			\ 			THR_YIELD_CHECK(thrd);			\ 	}							\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_LOCK_SWITCH
+name|THR_ACTIVATE_LAST_LOCK
 parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|do {									\ 	THR_ASSERT(!(thrd)->lock_switch, "context switch locked");	\ 	_kse_critical_enter();						\ 	KSE_SCHED_LOCK((thrd)->kse, (thrd)->kseg);			\ 	(thrd)->lock_switch = 1;					\ } while (0)
+value|do {									\ 	if ((thrd)->locklevel> 0)					\ 		_lockuser_setactive(					\&(thrd)->lockusers[(thrd)->locklevel - 1], 1);	\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_UNLOCK_SWITCH
+name|THR_DEACTIVATE_LAST_LOCK
 parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|do {									\ 	THR_ASSERT((thrd)->lock_switch, "context switch not locked");	\ 	THR_ASSERT(_kse_in_critical(), "Er,not in critical region");	\ 	(thrd)->lock_switch = 0;					\ 	KSE_SCHED_UNLOCK((thrd)->kse, (thrd)->kseg);			\ 	_kse_critical_leave(&thrd->tmbx);				\ } while (0)
+value|do {									\ 	if ((thrd)->locklevel> 0)					\ 		_lockuser_setactive(					\&(thrd)->lockusers[(thrd)->locklevel - 1], 0);	\ } while (0)
 end_define
 
 begin_comment
@@ -2158,6 +2162,20 @@ parameter_list|)
 value|do {		\ 	KSE_SCHED_UNLOCK((curthr)->kse, (thr)->kseg);	\ 	(curthr)->locklevel--;				\ 	_kse_critical_leave((curthr)->critical[(curthr)->locklevel]); \ } while (0)
 end_define
 
+begin_comment
+comment|/* Take the scheduling lock with the intent to call the scheduler. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THR_LOCK_SWITCH
+parameter_list|(
+name|curthr
+parameter_list|)
+value|do {			\ 	(void)_kse_critical_enter();			\ 	KSE_SCHED_LOCK((curthr)->kse, (curthr)->kseg);	\ } while (0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2175,7 +2193,7 @@ name|THR_CRITICAL_LEAVE
 parameter_list|(
 name|thr
 parameter_list|)
-value|do {		\ 	(thr)->critical_count--;		\ 	if (((thr)->critical_yield != 0)&&	\ 	    ((thr)->critical_count == 0)) {	\ 		(thr)->critical_yield = 0;	\ 		THR_LOCK_SWITCH(thr);		\ 		_thr_sched_switch(thr);		\ 		THR_UNLOCK_SWITCH(thr);		\ 	}					\ } while (0)
+value|do {		\ 	(thr)->critical_count--;		\ 	if (((thr)->critical_yield != 0)&&	\ 	    ((thr)->critical_count == 0)) {	\ 		(thr)->critical_yield = 0;	\ 		_thr_sched_switch(thr);		\ 	}					\ } while (0)
 end_define
 
 begin_define
@@ -3391,9 +3409,6 @@ name|int
 parameter_list|,
 name|siginfo_t
 modifier|*
-parameter_list|,
-name|ucontext_t
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3533,6 +3548,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|_thr_sched_switch
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_sched_switch_unlocked
 parameter_list|(
 name|struct
 name|pthread

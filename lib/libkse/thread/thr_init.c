@@ -227,6 +227,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_thread_init_hack
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|init_private
@@ -410,6 +419,9 @@ name|_socket
 block|,
 operator|&
 name|_socketpair
+block|,
+operator|&
+name|_thread_init_hack
 block|,
 operator|&
 name|_wait4

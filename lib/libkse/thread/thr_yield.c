@@ -59,17 +59,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
-name|THR_LOCK_SWITCH
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -111,17 +101,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
-name|THR_LOCK_SWITCH
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

@@ -426,12 +426,7 @@ argument_list|,
 name|PS_SIGWAIT
 argument_list|)
 expr_stmt|;
-name|_thr_sched_switch
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THR_UNLOCK_SWITCH
+name|_thr_sched_switch_unlocked
 argument_list|(
 name|curthread
 argument_list|)

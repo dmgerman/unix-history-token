@@ -88,25 +88,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|thr_sig_add
-parameter_list|(
-name|struct
-name|pthread
-modifier|*
-name|pthread
-parameter_list|,
-name|int
-name|sig
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* static void	thr_sig_add(struct pthread *pthread, int sig, siginfo_t *info); */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -364,7 +348,7 @@ operator|->
 name|kseg
 argument_list|)
 expr_stmt|;
-name|thr_sig_add
+name|_thr_sig_add
 argument_list|(
 name|thread
 argument_list|,
@@ -2027,9 +2011,8 @@ comment|/*  * Perform thread specific actions in response to a signal.  * This f
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|thr_sig_add
+name|_thr_sig_add
 parameter_list|(
 name|struct
 name|pthread
@@ -2052,89 +2035,16 @@ name|suppress_handler
 init|=
 literal|0
 decl_stmt|;
-name|restart
-operator|=
-name|_thread_sigact
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_flags
-operator|&
-name|SA_RESTART
-expr_stmt|;
-comment|/* Make sure this signal isn't still in the pending set: */
-name|sigdelset
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|sigpend
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Process according to thread state: 	 */
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|state
-condition|)
-block|{
-comment|/* 	 * States which do not change when a signal is trapped: 	 */
-case|case
-name|PS_DEAD
-case|:
-case|case
-name|PS_DEADLOCK
-case|:
-case|case
-name|PS_LOCKWAIT
-case|:
-case|case
-name|PS_SUSPENDED
-case|:
-case|case
-name|PS_STATE_MAX
-case|:
-comment|/* 		 * You can't call a signal handler for threads in these 		 * states. 		 */
-name|suppress_handler
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-comment|/* 	 * States which do not need any cleanup handling when signals 	 * occur: 	 */
-case|case
-name|PS_RUNNING
-case|:
-comment|/* 		 * Remove the thread from the queue before changing its 		 * priority: 		 */
 if|if
 condition|(
-operator|(
 name|pthread
 operator|->
-name|flags
-operator|&
-name|THR_FLAGS_IN_RUNQ
-operator|)
-operator|!=
-literal|0
+name|curframe
+operator|==
+name|NULL
 condition|)
-name|THR_RUNQ_REMOVE
-argument_list|(
-name|pthread
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-comment|/* 			 * This thread is active; add the signal to the 			 * pending set and mark it as having pending 			 * signals. 			 */
-name|suppress_handler
-operator|=
-literal|1
-expr_stmt|;
+comment|/* 		 * This thread is active.  Just add it to the 		 * thread's pending set. 		 */
 name|sigaddset
 argument_list|(
 operator|&
@@ -2145,6 +2055,18 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+name|pthread
+operator|->
+name|check_pending
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|==
+name|NULL
+condition|)
 name|build_siginfo
 argument_list|(
 operator|&
@@ -2158,11 +2080,37 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|info
+operator|!=
+operator|&
 name|pthread
 operator|->
-name|check_pending
-operator|=
-literal|1
+name|siginfo
+index|[
+name|sig
+index|]
+condition|)
+name|memcpy
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|siginfo
+index|[
+name|sig
+index|]
+argument_list|,
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|info
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2190,15 +2138,93 @@ comment|/* XXX - restart?!?! */
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|restart
+operator|=
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_flags
+operator|&
+name|SA_RESTART
+expr_stmt|;
+comment|/* Make sure this signal isn't still in the pending set: */
+name|sigdelset
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigpend
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Process according to thread state: 		 */
+switch|switch
+condition|(
+name|pthread
+operator|->
+name|state
+condition|)
+block|{
+comment|/* 		 * States which do not change when a signal is trapped: 		 */
+case|case
+name|PS_DEAD
+case|:
+case|case
+name|PS_DEADLOCK
+case|:
+case|case
+name|PS_LOCKWAIT
+case|:
+case|case
+name|PS_SUSPENDED
+case|:
+case|case
+name|PS_STATE_MAX
+case|:
+comment|/* 			 * You can't call a signal handler for threads in these 			 * states. 			 */
+name|suppress_handler
+operator|=
+literal|1
+expr_stmt|;
 break|break;
-comment|/* 	 * States which cannot be interrupted but still require the 	 * signal handler to run: 	 */
+comment|/* 		 * States which do not need any cleanup handling when signals 		 * occur: 		 */
+case|case
+name|PS_RUNNING
+case|:
+comment|/* 			 * Remove the thread from the queue before changing its 			 * priority: 			 */
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|THR_FLAGS_IN_RUNQ
+operator|)
+operator|!=
+literal|0
+condition|)
+name|THR_RUNQ_REMOVE
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 		 * States which cannot be interrupted but still require the 		 * signal handler to run: 		 */
 case|case
 name|PS_COND_WAIT
 case|:
 case|case
 name|PS_MUTEX_WAIT
 case|:
-comment|/* 		 * Remove the thread from the wait queue.  It will 		 * be added back to the wait queue once all signal 		 * handlers have been invoked. 		 */
+comment|/* 			 * Remove the thread from the wait queue.  It will 			 * be added back to the wait queue once all signal 			 * handlers have been invoked. 			 */
 name|KSE_WAITQ_REMOVE
 argument_list|(
 name|pthread
@@ -2212,7 +2238,7 @@ break|break;
 case|case
 name|PS_SLEEP_WAIT
 case|:
-comment|/* 		 * Unmasked signals always cause sleep to terminate early, 		 * regardless of SA_RESTART: 		 */
+comment|/* 			 * Unmasked signals always cause sleep to terminate 			 * early regardless of SA_RESTART: 			 */
 name|pthread
 operator|->
 name|interrupted
@@ -2262,7 +2288,7 @@ break|break;
 case|case
 name|PS_SIGWAIT
 case|:
-comment|/* The signal handler is not called for threads in SIGWAIT. */
+comment|/* 			 * The signal handler is not called for threads in 			 * SIGWAIT. 			 */
 name|suppress_handler
 operator|=
 literal|1
@@ -2317,74 +2343,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|pthread
-operator|->
-name|curframe
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 			 * This thread is active.  Just add it to the 			 * thread's pending set. 			 */
-name|sigaddset
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|sigpend
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-name|pthread
-operator|->
-name|check_pending
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|info
-operator|==
-name|NULL
-condition|)
-name|build_siginfo
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|siginfo
-index|[
-name|sig
-index|]
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-else|else
-name|memcpy
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|siginfo
-index|[
-name|sig
-index|]
-argument_list|,
-name|info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* 			 * Setup a signal frame and save the current threads 			 * state: 			 */
 name|thr_sigframe_add
 argument_list|(
@@ -2395,7 +2353,6 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pthread
@@ -2411,7 +2368,7 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The thread should be removed from all scheduling 		 * queues at this point.  Raise the priority and 		 * place the thread in the run queue.  It is also 		 * possible for a signal to be sent to a suspended 		 * thread, mostly via pthread_kill().  If a thread 		 * is suspended, don't insert it into the priority 		 * queue; just set its state to suspended and it 		 * will run the signal handler when it is resumed. 		 */
+comment|/* 			 * The thread should be removed from all scheduling 			 * queues at this point.  Raise the priority and 			 * place the thread in the run queue.  It is also 			 * possible for a signal to be sent to a suspended 			 * thread, mostly via pthread_kill().  If a thread 			 * is suspended, don't insert it into the priority 			 * queue; just set its state to suspended and it 			 * will run the signal handler when it is resumed. 			 */
 name|pthread
 operator|->
 name|active_priority
@@ -2435,6 +2392,7 @@ argument_list|(
 name|pthread
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -2825,7 +2783,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * Perform any state changes due to signal 			 * arrival: 			 */
-name|thr_sig_add
+name|_thr_sig_add
 argument_list|(
 name|pthread
 argument_list|,
@@ -2881,7 +2839,7 @@ if|if
 condition|(
 name|thread
 operator|->
-name|check_pending
+name|have_signals
 operator|==
 literal|0
 condition|)
@@ -2898,7 +2856,7 @@ argument_list|)
 expr_stmt|;
 name|thread
 operator|->
-name|check_pending
+name|have_signals
 operator|=
 literal|1
 expr_stmt|;
@@ -2924,8 +2882,34 @@ expr_stmt|;
 if|if
 condition|(
 name|info
-operator|!=
+operator|==
 name|NULL
+condition|)
+name|build_siginfo
+argument_list|(
+operator|&
+name|thread
+operator|->
+name|siginfo
+index|[
+name|sig
+index|]
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|info
+operator|!=
+operator|&
+name|thread
+operator|->
+name|siginfo
+index|[
+name|sig
+index|]
 condition|)
 name|memcpy
 argument_list|(
@@ -2944,20 +2928,6 @@ argument_list|(
 operator|*
 name|info
 argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|build_siginfo
-argument_list|(
-operator|&
-name|thread
-operator|->
-name|siginfo
-index|[
-name|sig
-index|]
-argument_list|,
-name|sig
 argument_list|)
 expr_stmt|;
 comment|/* Setup the new signal mask. */

@@ -133,10 +133,10 @@ name|lr_waiting
 decl_stmt|;
 comment|/* non-zero when wakeup needed */
 specifier|volatile
-name|long
-name|lr_handshake
+name|int
+name|lr_active
 decl_stmt|;
-comment|/* non-zero when wakeup in progress */
+comment|/* non-zero if the lock is last lock for thread */
 block|}
 struct|;
 end_struct
@@ -204,6 +204,16 @@ parameter_list|(
 name|lu
 parameter_list|)
 value|((lu)->lu_watchreq->lr_locked != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LCK_ACTIVE
+parameter_list|(
+name|lu
+parameter_list|)
+value|((lu)->lu_watchreq->lr_active != 0)
 end_define
 
 begin_define
@@ -321,6 +331,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_lockuser_setactive
+parameter_list|(
+name|struct
+name|lockuser
+modifier|*
+name|lu
+parameter_list|,
+name|int
+name|active
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_lock_acquire
 parameter_list|(
 name|struct
@@ -339,6 +364,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|_lock_release
+parameter_list|(
+name|struct
+name|lock
+modifier|*
+parameter_list|,
+name|struct
+name|lockuser
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_lock_grant
 parameter_list|(
 name|struct
 name|lock
