@@ -860,6 +860,8 @@ parameter_list|()
 block|{
 name|int
 name|n
+decl_stmt|,
+name|n2
 decl_stmt|;
 comment|/* 	 * Number of in-transit swap bp operations.  Don't 	 * exhaust the pbufs completely.  Make sure we 	 * initialize workable values (0 will work for hysteresis 	 * but it isn't very efficient). 	 * 	 * The nsw_cluster_max is constrained by the bp->b_pages[] 	 * array (MAXPHYS/PAGE_SIZE) and our locally defined 	 * MAX_PAGEOUT_CLUSTER.   Also be aware that swap ops are 	 * constrained by the swap device interleave stripe size. 	 * 	 * Currently we hardwire nsw_wcount_async to 4.  This limit is  	 * designed to prevent other I/O from having high latencies due to 	 * our pageout I/O.  The value 4 works well for one or two active swap 	 * devices but is probably a little low if you have more.  Even so, 	 * a higher value would probably generate only a limited improvement 	 * with three or four active swap devices since the system does not 	 * typically have to pageout at extreme bandwidths.   We will want 	 * at least 2 per swap devices, and 4 is a pretty good value if you 	 * have one NFS swap device due to the command/ack latency over NFS. 	 * So it all works out pretty well. 	 */
 name|nsw_cluster_max
@@ -934,6 +936,12 @@ expr|struct
 name|swblock
 argument_list|)
 expr_stmt|;
+name|n2
+operator|=
+name|n
+expr_stmt|;
+do|do
+block|{
 name|swap_zone
 operator|=
 name|zinit
@@ -956,6 +964,34 @@ expr_stmt|;
 if|if
 condition|(
 name|swap_zone
+operator|!=
+name|NULL
+condition|)
+break|break;
+comment|/* 		 * if the allocation failed, try a zone two thirds the 		 * size of the previous attempt. 		 */
+name|n
+operator|-=
+operator|(
+operator|(
+name|n
+operator|+
+literal|2
+operator|)
+operator|/
+literal|3
+operator|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+name|swap_zone
 operator|==
 name|NULL
 condition|)
@@ -963,6 +999,25 @@ name|panic
 argument_list|(
 literal|"swap_pager_swap_init: swap_zone == NULL"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n2
+operator|!=
+name|n
+condition|)
+name|printf
+argument_list|(
+literal|"Swap zone entries reduced from %d to %d.\n"
+argument_list|,
+name|n2
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|n2
+operator|=
+name|n
 expr_stmt|;
 comment|/* 	 * Initialize our meta-data hash table.  The swapper does not need to 	 * be quite as efficient as the VM system, so we do not use an  	 * oversized hash table. 	 * 	 * 	n: 		size of hash table, must be power of 2 	 *	swhash_mask:	hash table index mask 	 */
 for|for
@@ -973,15 +1028,13 @@ literal|1
 init|;
 name|n
 operator|<
-name|cnt
-operator|.
-name|v_page_count
+name|n2
 operator|/
-literal|4
+literal|8
 condition|;
 name|n
-operator|<<=
-literal|1
+operator|*=
+literal|2
 control|)
 empty_stmt|;
 name|swhash
