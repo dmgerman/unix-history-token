@@ -1889,10 +1889,20 @@ name|retn
 goto|;
 block|}
 comment|/* 		 * Dereference the reference we just created.  This assumes 		 * that the object is associated with the vp. 		 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|object
 operator|->
 name|ref_count
 operator|--
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
