@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compact.c	4.7 (Berkeley) %G%"
+literal|"@(#)compact.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,7 +777,7 @@ operator|>=
 name|ucsize
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
