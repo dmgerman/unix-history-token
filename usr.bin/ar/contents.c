@@ -20,6 +20,17 @@ literal|"@(#)contents.c	8.3 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -127,7 +138,7 @@ name|file
 decl_stmt|,
 name|buf
 index|[
-literal|25
+literal|80
 index|]
 decl_stmt|;
 name|afd
