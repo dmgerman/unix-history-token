@@ -74,6 +74,22 @@ decl_stmt|;
 name|int
 name|mddc_flags
 decl_stmt|;
+comment|/* 	 * The user doesn't need to see this, but it's useful in the kernel code. 	 */
+union|union
+block|{
+name|struct
+name|isa_device
+modifier|*
+name|mddcu_isa
+decl_stmt|;
+name|struct
+name|scsi_link
+modifier|*
+name|mddcu_scsi
+decl_stmt|;
+block|}
+name|mddc_un
+union|;
 block|}
 struct|;
 end_struct
@@ -97,6 +113,20 @@ define|#
 directive|define
 name|dc_flags
 value|dc_md.mddc_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|kdc_isa
+value|kdc_md.mddc_un.mddcu_isa
+end_define
+
+begin_define
+define|#
+directive|define
+name|kdc_scsi
+value|kdc_md.mddc_un.mddcu_scsi
 end_define
 
 begin_include

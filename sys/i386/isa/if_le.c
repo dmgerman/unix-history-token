@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.9 1994/08/16 20:40:56 thomas Exp $  *  * $Log: if_le.c,v $  * Revision 1.9  1994/08/16  20:40:56  thomas  * New README files (one per driver)  * Minor updates to drivers (DEPCA support and add pass to attach  * output)  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.7 1994/10/12 11:39:37 se Exp $  *  * $Log: if_le.c,v $  * Revision 1.7  1994/10/12  11:39:37  se  * Submitted by:	Matt Thomas<thomas@lkg.dec.com>  * #ifdef MULTICAST removed.  *  * Revision 1.9  1994/08/16  20:40:56  thomas  * New README files (one per driver)  * Minor updates to drivers (DEPCA support and add pass to attach  * output)  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
 end_comment
 
 begin_comment
@@ -24,79 +24,91 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioccom.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/sockio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_types.h"
+file|<sys/devconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_dl.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/route.h"
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
@@ -114,31 +126,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -155,13 +167,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netns/ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_endif
@@ -172,25 +184,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa.h"
+file|<i386/isa/isa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_if
@@ -204,13 +216,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/bpfdesc.h"
+file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -1292,6 +1304,116 @@ end_define
 begin_escape
 end_escape
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_le
+index|[
+name|NLE
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"le"
+block|,
+literal|0
+block|,
+block|{
+literal|"isa0"
+block|,
+name|MDDT_ISA
+block|,
+literal|0
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|le_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|id
+operator|->
+name|id_unit
+condition|)
+name|kdc_le
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|=
+name|kdc_le
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_le
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc_le
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_isa
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_le
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -1640,6 +1762,11 @@ directive|endif
 name|if_attach
 argument_list|(
 name|ifp
+argument_list|)
+expr_stmt|;
+name|le_registerdev
+argument_list|(
+name|dvp
 argument_list|)
 expr_stmt|;
 while|while

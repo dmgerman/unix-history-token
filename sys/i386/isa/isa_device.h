@@ -195,6 +195,26 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ISA_EXTERNALLEN
+value|(sizeof(struct isa_device))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EISA_EXTERNALLEN
+value|(sizeof(struct isa_device) + sizeof(int))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -645,20 +665,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ISA_EXTERNALLEN
-value|(sizeof(struct isa_device))
-end_define
-
-begin_define
-define|#
-directive|define
-name|EISA_EXTERNALLEN
-value|(sizeof(struct isa_device) + sizeof(int))
-end_define
-
 begin_function_decl
 specifier|extern
 name|int
@@ -715,6 +721,63 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kern_devconf
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isa_generic_externalize
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|kern_devconf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|eisa_generic_externalize
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|kern_devconf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#

@@ -201,7 +201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NB: the device must do a dev_detach inside its goaway routine, if it  * succeeds.  */
+comment|/*  * NB: the device must do a dev_detach inside its goaway routine, if it  * succeeds.  If no routine is specified, we assume no special treatment is  * required.  */
 end_comment
 
 begin_function
@@ -229,6 +229,25 @@ condition|(
 name|kdc
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|kdc
+operator|->
+name|kdc_goaway
+condition|)
+block|{
+name|dev_detach
+argument_list|(
+name|kdc
+argument_list|)
+expr_stmt|;
+name|kdc
+operator|=
+name|dc_list
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|kdc

@@ -242,27 +242,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|fdc_externalize
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|struct
-name|kern_devconf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Templates for the kern_devconf structures used when we attach.  */
 end_comment
@@ -330,7 +309,7 @@ block|,
 literal|0
 block|}
 block|,
-name|fdc_externalize
+name|isa_generic_externalize
 block|,
 literal|0
 block|,
@@ -2058,6 +2037,12 @@ operator|->
 name|kdc_unit
 operator|=
 name|fdcu
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_isa
+operator|=
+name|dev
 expr_stmt|;
 name|dev_attach
 argument_list|(
