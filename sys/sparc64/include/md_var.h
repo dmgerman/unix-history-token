@@ -110,8 +110,14 @@ begin_function_decl
 name|void
 name|cpu_identify
 parameter_list|(
+name|u_long
+name|vers
+parameter_list|,
 name|u_int
 name|clock
+parameter_list|,
+name|u_int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl

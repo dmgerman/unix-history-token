@@ -722,7 +722,17 @@ argument_list|)
 expr_stmt|;
 name|cpu_identify
 argument_list|(
+name|rdpr
+argument_list|(
+name|ver
+argument_list|)
+argument_list|,
 name|clock
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cache_init

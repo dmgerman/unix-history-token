@@ -115,9 +115,14 @@ begin_function
 name|void
 name|cpu_identify
 parameter_list|(
-name|unsigned
-name|int
+name|u_long
+name|vers
+parameter_list|,
+name|u_int
 name|freq
+parameter_list|,
+name|u_int
+name|id
 parameter_list|)
 block|{
 specifier|const
@@ -130,10 +135,6 @@ name|char
 modifier|*
 name|impls
 decl_stmt|;
-name|unsigned
-name|long
-name|vers
-decl_stmt|;
 name|manus
 operator|=
 name|NULL
@@ -141,13 +142,6 @@ expr_stmt|;
 name|impls
 operator|=
 name|NULL
-expr_stmt|;
-name|vers
-operator|=
-name|rdpr
-argument_list|(
-name|ver
-argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -275,7 +269,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CPU: %s %s Processor (%d.%02d MHZ CPU)\n"
+literal|"cpu%d: %s %s Processor (%d.%02d MHZ CPU)\n"
+argument_list|,
+name|id
 argument_list|,
 name|manus
 argument_list|,
