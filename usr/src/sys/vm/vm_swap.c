@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.5	82/03/12	*/
+comment|/*	vm_swap.c	4.6	82/06/25	*/
 end_comment
 
 begin_include
@@ -335,8 +335,6 @@ name|dev_t
 operator|)
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 expr_stmt|;
 name|iput
