@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.2 1995/02/20 00:48:50 phk Exp $  *  * Derived from:  */
+comment|/*  * $Id: md5.c,v 1.3 1995/02/26 01:55:31 phk Exp $  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -653,11 +653,18 @@ name|stdout
 argument_list|)
 operator|)
 condition|)
+block|{
 name|perror
 argument_list|(
-name|stdout
+literal|"stdout"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|MD5Update
 argument_list|(
 operator|&
