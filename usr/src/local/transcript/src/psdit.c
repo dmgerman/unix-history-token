@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)psdit.c	1.5 %G%	*/
+comment|/*	@(#)psdit.c	1.6 %G%	*/
 end_comment
 
 begin_ifndef
@@ -1587,7 +1587,7 @@ index|]
 decl_stmt|,
 name|buf
 index|[
-literal|300
+literal|1024
 index|]
 decl_stmt|;
 while|while
@@ -6289,7 +6289,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"(\%3o)cb\n"
+literal|"(%3o)cb\n"
 argument_list|,
 name|c
 argument_list|)
@@ -7130,16 +7130,6 @@ literal|"%d Dc\n"
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
-name|hpos
-operator|+=
-name|d
-expr_stmt|;
-name|PSx
-operator|=
-name|hpos
-operator|*
-name|PSmag
 expr_stmt|;
 block|}
 end_block
