@@ -237,6 +237,8 @@ operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE
+operator||
+name|DFLAG_SEEKABLE
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -415,6 +415,17 @@ begin_comment
 comment|/* may be passed via unix sockets. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DFLAG_SEEKABLE
+value|0x02
+end_define
+
+begin_comment
+comment|/* seekable / nonsequential */
+end_comment
+
 begin_comment
 comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * none	not locked  */
 end_comment
