@@ -9625,6 +9625,10 @@ name|int
 name|error
 decl_stmt|,
 name|defer_action
+decl_stmt|,
+name|no_actual_error
+init|=
+name|FALSE
 decl_stmt|;
 name|periph
 operator|=
@@ -10230,6 +10234,13 @@ operator||=
 name|SA_FLAG_EOF_PENDING
 expr_stmt|;
 block|}
+else|else
+block|{
+name|no_actual_error
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* 			 * Unconditionally, if we detected a filemark on a read, 			 * mark that we've run moved a file ahead. 			 */
 if|if
 condition|(
@@ -10359,6 +10370,13 @@ operator|=
 name|EIO
 expr_stmt|;
 block|}
+else|else
+block|{
+name|no_actual_error
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* 			 * Bump the block number if we hadn't seen a filemark. 			 * Do this independent of errors (we've moved anyway). 			 */
 if|if
 condition|(
@@ -10408,6 +10426,9 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+operator|!
+name|no_actual_error
 condition|)
 return|return
 operator|(
@@ -10426,6 +10447,52 @@ name|saved_ccb
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|no_actual_error
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_DEV_QFRZN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|cam_release_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+comment|/* relsim_flags */
+literal|0
+argument_list|,
+comment|/* openings */
+literal|0
+argument_list|,
+comment|/* timeout */
+literal|0
+argument_list|,
+comment|/* getcount_only */
+name|FALSE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|error
