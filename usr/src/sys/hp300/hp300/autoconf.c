@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.35 92/01/22$  *  *	@(#)autoconf.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.36 92/12/20$  *  *	@(#)autoconf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -125,12 +125,12 @@ begin_decl_stmt
 name|int
 name|cpuspeed
 init|=
-name|MHZ_8
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* relative cpu speed */
+comment|/* relative cpu speed -- can be patched */
 end_comment
 
 begin_decl_stmt
