@@ -244,19 +244,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|grow
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|grow_stack
 parameter_list|(
 name|struct
