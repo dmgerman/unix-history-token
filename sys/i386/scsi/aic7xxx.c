@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.29.2.20 1996/06/05 19:49:08 nate Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.29.2.21 1996/06/08 07:10:46 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -6596,6 +6596,98 @@ argument_list|(
 literal|"ahc_intr: Immediate complete for "
 literal|"unknown operation."
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|DATA_OVERRUN
+case|:
+block|{
+comment|/* 			 * When the sequencer detects an overrun, it 			 * sets STCNT to 0x00ffffff and allows the 			 * target to complete its transfer in 			 * BITBUCKET mode. 			 */
+name|u_char
+name|scbindex
+init|=
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|SCB_TAG
+argument_list|)
+decl_stmt|;
+name|u_int32_t
+name|overrun
+decl_stmt|;
+name|scb
+operator|=
+name|ahc
+operator|->
+name|scbarray
+index|[
+name|scbindex
+index|]
+expr_stmt|;
+name|overrun
+operator|=
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|STCNT0
+argument_list|)
+operator||
+operator|(
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|STCNT1
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|STCNT2
+argument_list|)
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+name|overrun
+operator|=
+literal|0x00ffffff
+operator|-
+name|overrun
+expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"data overrun of %d bytes detected."
+literal|"  Forcing a retry.\n"
+argument_list|,
+name|overrun
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Set this and it will take affect when the 			 * target does a command complete. 			 */
+name|scb
+operator|->
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
 expr_stmt|;
 break|break;
 block|}
