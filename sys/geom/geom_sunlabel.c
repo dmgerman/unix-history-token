@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|SUNLABEL_CLASS_NAME
-value|"SUNLABEL-class"
+value|"SUN"
 end_define
 
 begin_struct

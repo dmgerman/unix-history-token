@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|BSD_CLASS_NAME
-value|"BSD-class"
+value|"BSD"
 end_define
 
 begin_struct

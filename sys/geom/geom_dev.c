@@ -209,7 +209,7 @@ name|g_class
 name|g_dev_class
 init|=
 block|{
-literal|"DEV-class"
+literal|"DEV"
 block|,
 name|g_dev_taste
 block|,
@@ -1337,7 +1337,7 @@ name|gp
 operator|=
 name|g_create_geomf
 argument_list|(
-literal|"BSD-class"
+literal|"BSD"
 argument_list|,
 name|cp
 operator|->

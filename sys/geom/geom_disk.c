@@ -106,7 +106,7 @@ name|g_class
 name|g_disk_class
 init|=
 block|{
-literal|"DISK-class"
+literal|"DISK"
 block|,
 name|NULL
 block|,

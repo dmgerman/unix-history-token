@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|PC98_CLASS_NAME
-value|"PC98-class"
+value|"PC98"
 end_define
 
 begin_struct

@@ -131,14 +131,14 @@ begin_define
 define|#
 directive|define
 name|MBR_CLASS_NAME
-value|"MBR-class"
+value|"MBR"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBREXT_CLASS_NAME
-value|"MBREXT-class"
+value|"MBREXT"
 end_define
 
 begin_function
