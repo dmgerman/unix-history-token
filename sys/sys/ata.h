@@ -59,12 +59,12 @@ define|#
 directive|define
 name|ATAPI_DRQT_MPROC
 value|0
-comment|/* cpu    3 ms delay */
+comment|/* cpu	  3 ms delay */
 define|#
 directive|define
 name|ATAPI_DRQT_INTR
 value|1
-comment|/* intr  10 ms delay */
+comment|/* intr	 10 ms delay */
 define|#
 directive|define
 name|ATAPI_DRQT_ACCEL
@@ -655,6 +655,9 @@ name|int
 name|channel
 decl_stmt|;
 name|int
+name|device
+decl_stmt|;
+name|int
 name|cmd
 decl_stmt|;
 define|#
@@ -681,6 +684,10 @@ define|#
 directive|define
 name|ATADETACH
 value|6
+define|#
+directive|define
+name|ATAPICMD
+value|7
 union|union
 block|{
 struct|struct
@@ -720,6 +727,50 @@ index|]
 decl_stmt|;
 block|}
 name|param
+struct|;
+struct|struct
+block|{
+name|char
+name|ccb
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|caddr_t
+name|data
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ATAPI_CMD_CTRL
+value|0x00
+define|#
+directive|define
+name|ATAPI_CMD_READ
+value|0x01
+define|#
+directive|define
+name|ATAPI_CMD_WRITE
+value|0x02
+name|int
+name|timeout
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|char
+name|sense_data
+index|[
+literal|18
+index|]
+decl_stmt|;
+block|}
+name|atapi
 struct|;
 block|}
 name|u
