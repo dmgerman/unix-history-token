@@ -321,6 +321,10 @@ if|if
 condition|(
 name|bsp
 operator|>=
+operator|(
+name|u_int64_t
+operator|*
+operator|)
 name|IA64_RR_BASE
 argument_list|(
 literal|5
