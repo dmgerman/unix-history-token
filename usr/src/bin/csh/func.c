@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.37 (Berkeley) %G%"
+literal|"@(#)func.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5507,7 +5507,7 @@ literal|1
 block|,
 literal|""
 block|,
-name|RLIMIT_OFILE
+name|RLIMIT_NOFILE
 block|,
 literal|"openfiles"
 block|,

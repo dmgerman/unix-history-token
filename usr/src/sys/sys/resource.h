@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -249,7 +249,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIMIT_OFILE
+name|RLIMIT_NOFILE
 value|8
 end_define
 
