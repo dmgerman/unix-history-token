@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.h	4.3	82/03/13	*/
+comment|/*	pup.h	4.4	82/03/13	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ value|pup_dport.pp_net
 define|#
 directive|define
 name|pup_dhost
-value|pup_dport.pp_dhost
+value|pup_dport.pp_host
 define|#
 directive|define
 name|pup_dsocket

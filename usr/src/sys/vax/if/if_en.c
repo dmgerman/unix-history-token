@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.38	82/03/13	*/
+comment|/*	if_en.c	4.39	82/03/13	*/
 end_comment
 
 begin_include
@@ -2026,6 +2026,10 @@ name|int
 name|type
 decl_stmt|,
 name|dest
+decl_stmt|,
+name|s
+decl_stmt|,
+name|off
 decl_stmt|;
 specifier|register
 name|struct
@@ -2040,9 +2044,6 @@ name|struct
 name|en_header
 modifier|*
 name|en
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -2075,9 +2076,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-decl_stmt|;
-name|int
-name|off
 decl_stmt|;
 ifndef|#
 directive|ifndef
