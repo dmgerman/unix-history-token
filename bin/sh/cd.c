@@ -1374,13 +1374,11 @@ name|pwdcmd
 parameter_list|(
 name|int
 name|argc
-name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-name|__unused
 parameter_list|)
 block|{
 name|char
