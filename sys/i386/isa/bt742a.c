@@ -1492,6 +1492,63 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Determin 32bit address/Data firmware functionality from Bus type  * Note: bt742a/747[s|d]/757/946/445s will return 'E'  *       bt542b/545s/545d will be return 'A'  *				94/05/18 amurai@spec.co.jp  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_BUS_TYPE_24bit
+value|'A'
+end_define
+
+begin_comment
+comment|/* PC/AT 24 bit address bus type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_BUS_TYPE_32bit
+value|'E'
+end_define
+
+begin_comment
+comment|/* EISA/VLB/PCI 32 bit address bus type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_BUS_TYPE_MCA
+value|'M'
+end_define
+
+begin_comment
+comment|/* Micro chanel is ? forget it right now */
+end_comment
+
+begin_struct
+struct|struct
+name|bt_ext_info
+block|{
+name|u_char
+name|bus_type
+decl_stmt|;
+comment|/* Host adapter bus type */
+name|u_char
+name|bios_addr
+decl_stmt|;
+comment|/* Bios Address-Not use*/
+name|u_short
+name|max_seg
+decl_stmt|;
+comment|/* Max segment List */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -4278,6 +4335,10 @@ name|struct
 name|bt_config
 name|conf
 decl_stmt|;
+name|struct
+name|bt_ext_info
+name|info
+decl_stmt|;
 comment|/* 	 * reset board, If it doesn't respond, assume  	 * that it's not there.. good for the probe 	 */
 name|outb
 argument_list|(
@@ -4346,6 +4407,119 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
+comment|/*          * Make sure board has a capability of 32bit addressing.          *   and Firmware also need a capability of 32bit addressing pointer          *   in Extended mailbox and ccb structure.          *                                   94/05/18 amurai@spec.co.jp          */
+name|bt_cmd
+argument_list|(
+name|unit
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|info
+argument_list|,
+name|BT_INQUIRE_EXTENDED
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|info
+operator|.
+name|bus_type
+condition|)
+block|{
+case|case
+name|BT_BUS_TYPE_24bit
+case|:
+comment|/* PC/AT 24 bit address bus */
+name|printf
+argument_list|(
+literal|"bt%d: bt54x-ISA(24bit) bus detected.."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Try aha1542 driver instead! "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[giving up]\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+break|break;
+case|case
+name|BT_BUS_TYPE_32bit
+case|:
+comment|/* EISA/VLB/PCI 32 bit bus */
+name|printf
+argument_list|(
+literal|"bt%d: PCI/EISA/VLB(32bit) bus detected\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BT_BUS_TYPE_MCA
+case|:
+comment|/* forget it right now */
+name|printf
+argument_list|(
+literal|"bt%d: MCA bus architecture detected.."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[giving up]\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"bt%d: Unknown state detected..."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[giving up]\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+break|break;
 block|}
 comment|/* 	 * Assume we have a board at this stage 	 * setup dma channel from jumpers and save int 	 * level 	 */
 name|printf
