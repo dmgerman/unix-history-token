@@ -369,7 +369,7 @@ name|setenv
 argument_list|(
 literal|"interpret"
 argument_list|,
-literal|"ok"
+literal|"OK"
 argument_list|,
 literal|1
 argument_list|)

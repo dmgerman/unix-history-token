@@ -898,7 +898,7 @@ name|state
 condition|?
 literal|""
 else|:
-literal|"ok"
+literal|"OK"
 argument_list|,
 literal|1
 argument_list|)
