@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.12	82/11/14	*/
+comment|/*	defs.h	4.13	82/12/24	*/
 end_comment
 
 begin_comment
@@ -668,32 +668,6 @@ define|#
 directive|define
 name|LOOPBACKNET
 value|0177
-end_define
-
-begin_comment
-comment|/* casts to keep lint happy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|insque
-parameter_list|(
-name|q
-parameter_list|,
-name|p
-parameter_list|)
-value|_insque((caddr_t)q,(caddr_t)p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|remque
-parameter_list|(
-name|q
-parameter_list|)
-value|_remque((caddr_t)q)
 end_define
 
 begin_define
