@@ -226,7 +226,7 @@ begin_struct
 struct|struct
 name|sockaddr_in6
 block|{
-name|sa_family_t
+name|uint8_t
 name|sin6_len
 decl_stmt|;
 comment|/* length of this struct */
