@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_pcb.c 4.12 81/12/03 */
+comment|/* in_pcb.c 4.13 81/12/11 */
 end_comment
 
 begin_include
@@ -73,6 +73,13 @@ begin_comment
 comment|/*  * Routines to manage internet protocol control blocks.  *  * At PRU_ATTACH time a protocol control block is allocated in  * in_pcballoc() and inserted on a doubly-linked list of such blocks  * for the protocol.  A port address is either requested (and verified  * to not be in use) or assigned at this time.  We also allocate  * space in the socket sockbuf structures here, although this is  * not a clearly correct place to put this function.  *  * A connectionless protocol will have its protocol control block  * removed at PRU_DETACH time, when the socket will be freed (freeing  * the space reserved) and the block will be removed from the list of  * blocks for its protocol.  *  * A connection-based protocol may be connected to a remote peer at  * PRU_CONNECT time through the routine in_pcbconnect().  In the normal  * case a PRU_DISCONNECT occurs causing a in_pcbdisconnect().  * It is also possible that higher-level routines will opt out of the  * relationship with the connection before the connection shut down  * is complete.  This often occurs in protocols like TCP where we must  * hold on to the protocol control block for a unreasonably long time  * after the connection is used up to avoid races in later connection  * establishment.  To handle this we allow higher-level routines to  * disassociate themselves from the socket, marking it SS_USERGONE while  * the disconnect is in progress.  We notice that this has happened  * when the disconnect is complete, and perform the PRU_DETACH operation,  * freeing the socket.  *  * TODO:  *	use hashing  */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|in_addr
+name|zeroin_addr
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Allocate a protocol control block, space  * for send and receive data, and local host information.  * Return error.  If no error make socket point at pcb.  */
 end_comment
@@ -136,16 +143,13 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|,
-modifier|*
-name|xp
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
+name|u_short
 name|lport
 decl_stmt|;
 name|COUNT
@@ -205,15 +209,13 @@ name|in_pcblookup
 argument_list|(
 name|head
 argument_list|,
-literal|0
+name|zeroin_addr
 argument_list|,
 literal|0
 argument_list|,
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|,
 name|lport
 argument_list|)
@@ -356,7 +358,7 @@ name|in_pcblookup
 argument_list|(
 name|head
 argument_list|,
-literal|0
+name|zeroin_addr
 argument_list|,
 literal|0
 argument_list|,
@@ -564,6 +566,8 @@ condition|(
 name|xp
 operator|->
 name|inp_faddr
+operator|.
+name|s_addr
 condition|)
 return|return
 operator|(
