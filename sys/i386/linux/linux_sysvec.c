@@ -286,6 +286,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Allow the sendsig functions to use the ldebug() facility  * even though they are not syscalls themselves. Map them  * to syscall 0. This is slightly less bogus than using  * ldebug(sigreturn).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SYS_linux_rt_sendsig
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SYS_linux_sendsig
+value|0
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
