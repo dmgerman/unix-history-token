@@ -2070,8 +2070,10 @@ operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|io
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -2278,7 +2280,9 @@ comment|/* find our own address, bind, and listen */
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sa
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2746,7 +2750,9 @@ comment|/* construct sockaddr for data socket */
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sa
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3150,7 +3156,9 @@ operator|&
 name|arg
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|arg
+argument_list|)
 argument_list|)
 operator|==
 operator|-
@@ -4050,7 +4058,9 @@ operator|+
 name|len
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pbuf
+argument_list|)
 operator|-
 name|len
 argument_list|)
@@ -4619,8 +4629,10 @@ argument_list|,
 name|url
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|url
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

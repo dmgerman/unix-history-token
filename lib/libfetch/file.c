@@ -511,7 +511,9 @@ operator|->
 name|doc
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fn
+argument_list|)
 operator|-
 literal|2
 argument_list|)
@@ -519,7 +521,9 @@ expr_stmt|;
 name|fn
 index|[
 sizeof|sizeof
+argument_list|(
 name|fn
+argument_list|)
 operator|-
 literal|2
 index|]
@@ -545,7 +549,9 @@ expr_stmt|;
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|fn
+argument_list|)
 operator|-
 name|strlen
 argument_list|(

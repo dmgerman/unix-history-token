@@ -1225,8 +1225,10 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|u
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -1282,7 +1284,7 @@ name|seturl
 parameter_list|(
 name|x
 parameter_list|)
-value|snprintf(u->x, sizeof u->x, "%s", x)
+value|snprintf(u->x, sizeof(u->x), "%s", x)
 name|seturl
 argument_list|(
 name|scheme
@@ -1367,8 +1369,10 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|u
+argument_list|)
 argument_list|)
 operator|)
 operator|==

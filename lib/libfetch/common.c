@@ -663,8 +663,10 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|conn
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -2379,7 +2381,9 @@ operator|.
 name|iov_len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|ENDL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2572,9 +2576,11 @@ literal|1
 operator|)
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 operator|*
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2647,8 +2653,10 @@ operator|->
 name|stat
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|us
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
