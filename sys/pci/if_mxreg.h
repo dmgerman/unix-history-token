@@ -2435,6 +2435,9 @@ decl_stmt|;
 name|u_int8_t
 name|mx_cachesize
 decl_stmt|;
+name|u_int8_t
+name|mx_link
+decl_stmt|;
 name|int
 name|mx_if_flags
 decl_stmt|;
