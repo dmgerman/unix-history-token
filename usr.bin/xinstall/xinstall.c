@@ -3603,6 +3603,10 @@ operator|||
 name|status
 condition|)
 block|{
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3611,9 +3615,13 @@ argument_list|(
 name|to_name
 argument_list|)
 expr_stmt|;
-name|exit
+name|errc
 argument_list|(
 name|EX_SOFTWARE
+argument_list|,
+name|serrno
+argument_list|,
+literal|"wait"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
