@@ -242,19 +242,39 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%b %e %H:%M %Y"
+literal|"%c"
 argument_list|,
 name|tp
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|16
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|buf
+index|[
+literal|24
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %s\n"
+literal|"%s %s %s\n"
 argument_list|,
 name|buf
+operator|+
+literal|4
+argument_list|,
+name|buf
+operator|+
+literal|20
 argument_list|,
 name|file
 argument_list|)
