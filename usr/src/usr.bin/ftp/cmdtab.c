@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.6 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,12 +102,21 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|disconnect
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|restart
+argument_list|()
+decl_stmt|,
+name|reget
+argument_list|()
+decl_stmt|,
+name|syst
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -235,6 +244,22 @@ name|macdef
 argument_list|()
 decl_stmt|,
 name|domacro
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sizecmd
+argument_list|()
+decl_stmt|,
+name|modtime
+argument_list|()
+decl_stmt|,
+name|newer
+argument_list|()
+decl_stmt|,
+name|rmtstatus
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -424,7 +449,7 @@ name|char
 name|lshelp
 index|[]
 init|=
-literal|"nlist contents of remote directory"
+literal|"list contents of remote directory"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,7 +503,16 @@ name|char
 name|mlshelp
 index|[]
 init|=
-literal|"nlist contents of multiple remote directories"
+literal|"list contents of multiple remote directories"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|modtimehelp
+index|[]
+init|=
+literal|"show last modification time of remote file"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +531,24 @@ name|mputhelp
 index|[]
 init|=
 literal|"send multiple files"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|newerhelp
+index|[]
+init|=
+literal|"get file if remote file is newer than local file "
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|nlisthelp
+index|[]
+init|=
+literal|"nlist contents of remote directory"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,6 +635,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|regethelp
+index|[]
+init|=
+literal|"get file restarting at end of local file"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|remotehelp
 index|[]
 init|=
@@ -601,10 +662,28 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|restarthelp
+index|[]
+init|=
+literal|"restart file transfer at bytecount"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|rmdirhelp
 index|[]
 init|=
 literal|"remove directory on the remote machine"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|rmtstatushelp
+index|[]
+init|=
+literal|"show status of remote machine"
 decl_stmt|;
 end_decl_stmt
 
@@ -646,6 +725,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|sizecmdhelp
+index|[]
+init|=
+literal|"show size of remote file"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|statushelp
 index|[]
 init|=
@@ -668,6 +756,15 @@ name|suniquehelp
 index|[]
 init|=
 literal|"toggle store unique on remote machine"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|systemhelp
+index|[]
+init|=
+literal|"show remote system type"
 decl_stmt|;
 end_decl_stmt
 
@@ -1172,6 +1269,20 @@ name|setmode
 block|}
 block|,
 block|{
+literal|"modtime"
+block|,
+name|modtimehelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|modtime
+block|}
+block|,
+block|{
 literal|"mput"
 block|,
 name|mputhelp
@@ -1186,6 +1297,20 @@ name|mput
 block|}
 block|,
 block|{
+literal|"newer"
+block|,
+name|newerhelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|newer
+block|}
+block|,
+block|{
 literal|"nmap"
 block|,
 name|nmaphelp
@@ -1197,6 +1322,20 @@ block|,
 literal|1
 block|,
 name|setnmap
+block|}
+block|,
+block|{
+literal|"nlist"
+block|,
+name|nlisthelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|ls
 block|}
 block|,
 block|{
@@ -1340,6 +1479,34 @@ name|get
 block|}
 block|,
 block|{
+literal|"reget"
+block|,
+name|regethelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|reget
+block|}
+block|,
+block|{
+literal|"remotestatus"
+block|,
+name|rmtstatushelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|rmtstatus
+block|}
+block|,
+block|{
 literal|"remotehelp"
 block|,
 name|remotehelp
@@ -1379,6 +1546,20 @@ block|,
 literal|1
 block|,
 name|reset
+block|}
+block|,
+block|{
+literal|"restart"
+block|,
+name|restarthelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|restart
 block|}
 block|,
 block|{
@@ -1424,6 +1605,20 @@ name|put
 block|}
 block|,
 block|{
+literal|"size"
+block|,
+name|sizecmdhelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|sizecmd
+block|}
+block|,
+block|{
 literal|"status"
 block|,
 name|statushelp
@@ -1449,6 +1644,20 @@ block|,
 literal|1
 block|,
 name|setstruct
+block|}
+block|,
+block|{
+literal|"system"
+block|,
+name|systemhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|syst
 block|}
 block|,
 block|{
