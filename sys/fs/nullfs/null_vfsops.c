@@ -710,7 +710,12 @@ operator|&
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
+comment|/* 	 * Make sure the node alias worked 	 */
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -720,12 +725,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure the node alias worked 	 */
-if|if
-condition|(
-name|error
-condition|)
-block|{
 name|vrele
 argument_list|(
 name|lowerrootvp
@@ -746,11 +745,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Keep a held reference to the root vnode. 	 * It is vrele'd in nullfs_unmount. 	 */
-name|mp_fixme
-argument_list|(
-literal|"Unlocked vflag access"
-argument_list|)
-expr_stmt|;
 name|nullm_rootvp
 operator|=
 name|vp
@@ -766,6 +760,16 @@ operator|->
 name|nullm_rootvp
 operator|=
 name|nullm_rootvp
+expr_stmt|;
+comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
