@@ -2225,7 +2225,7 @@ condition|)
 block|{
 name|perror_with_name
 argument_list|(
-literal|"could not open output file"
+name|out
 argument_list|)
 expr_stmt|;
 return|return
@@ -8006,7 +8006,7 @@ name|size_t
 name|size
 decl_stmt|;
 block|{
-name|size_t
+name|ssize_t
 name|result
 init|=
 name|read
@@ -8031,6 +8031,9 @@ literal|"read failed"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|size_t
+operator|)
 name|result
 return|;
 block|}
