@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.24.1.1 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,11 @@ name|struct
 name|servent
 modifier|*
 name|sp
+decl_stmt|;
+name|struct
+name|hostent
+modifier|*
+name|hp
 decl_stmt|;
 name|long
 name|omask
@@ -753,6 +758,54 @@ condition|(
 name|use_kerberos
 condition|)
 block|{
+comment|/* fully qualify hostname (needed for krb_realmofhost) */
+name|hp
+operator|=
+name|gethostbyname
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|(
+name|host
+operator|=
+name|strdup
+argument_list|(
+name|hp
+operator|->
+name|h_name
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rsh: %s.\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|ENOMEM
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|rem
 operator|=
 name|KSUCCESS
