@@ -9172,16 +9172,13 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return
-operator|(
 name|ciss_cam_rescan_target
 argument_list|(
 name|sc
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -11273,6 +11270,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ciss_name_device
 parameter_list|(
@@ -13375,7 +13373,7 @@ name|ciss_notify
 modifier|*
 name|cn
 parameter_list|)
-block|{      }
+block|{   }
 end_function
 
 begin_comment
@@ -14286,6 +14284,7 @@ comment|/* DDB hook */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ciss_print0
 parameter_list|(
