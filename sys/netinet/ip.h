@@ -15,6 +15,12 @@ directive|define
 name|_NETINET_IP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/*  * Definitions for internet protocol version 4.  * Per RFC 791, September 1981.  */
 end_comment
@@ -126,12 +132,7 @@ name|ip_dst
 decl_stmt|;
 comment|/* source and dest address */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
