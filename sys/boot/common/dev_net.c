@@ -347,6 +347,9 @@ operator|)
 return|;
 block|}
 block|}
+name|netdev_opens
+operator|++
+expr_stmt|;
 block|}
 name|netdev_opens
 operator|++
