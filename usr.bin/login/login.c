@@ -2410,7 +2410,7 @@ expr_stmt|;
 define|#
 directive|define
 name|DEFAULT_WARN
-value|(2L * 7L& 86400L)
+value|(2L * 7L * 86400L)
 comment|/* Two weeks */
 ifdef|#
 directive|ifdef
