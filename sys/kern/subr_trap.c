@@ -584,24 +584,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* 		 * As a diagnostic tool we make sure that td->td_ucred 		 * is NULL while we are in user space. This is 		 * because theoreticaly this field is only defined 		 * while the thread is in the kernel. Making it NULL 		 * will immediatly trap invalid usage of this field. 		 * In practice however we keep the reference to the ucred 		 * because it's almost always going to be the same cred we will 		 * need at the next syscall, and it can be expensive 		 * to keep dropping and reacquiring the reference. 		 * We thus stash it away elsewhere until we return 		 * to the kernel, where we bring it back. If  		 * DIAGNOSTIC is not defined we don't bother with 		 * making it NULL, and just leave it in place. 		 * (don't remove this comment without removing the pointers 		 * to it in sys/proc.h, */
-operator|*
-operator|/
-name|trap
-operator|.
-name|c
-operator|,
-name|kern
-operator|/
-name|kern_fork
-operator|.
-name|c
-name|and
-name|here
-operator|.
-expr|)
-operator|*
-operator|/
+comment|/* 		 * As a diagnostic tool we make sure that td->td_ucred 		 * is NULL while we are in user space. This is 		 * because theoreticaly this field is only defined 		 * while the thread is in the kernel. Making it NULL 		 * will immediatly trap invalid usage of this field. 		 * In practice however we keep the reference to the ucred 		 * because it's almost always going to be the same cred we will 		 * need at the next syscall, and it can be expensive 		 * to keep dropping and reacquiring the reference. 		 * We thus stash it away elsewhere until we return 		 * to the kernel, where we bring it back. If  		 * DIAGNOSTIC is not defined we don't bother with 		 * making it NULL, and just leave it in place. 		 * (don't remove this comment without removing the pointers 		 * to it in sys/proc.h, trap.c, kern/kern_fork.c and here.) 		 */
 if|if
 condition|(
 name|td
