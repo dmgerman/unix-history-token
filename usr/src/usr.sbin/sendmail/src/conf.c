@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.93 (Berkeley) %G%"
+literal|"@(#)conf.c	8.94 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7393,18 +7393,36 @@ directive|else
 ifdef|#
 directive|ifdef
 name|_PC_CHOWN_RESTRICTED
-return|return
+name|int
+name|rval
+decl_stmt|;
+comment|/* 	**  Some systems (e.g., SunOS) seem to have the call and the 	**  #define _PC_CHOWN_RESTRICTED, but don't actually implement 	**  the call.  This heuristic checks for that. 	*/
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|rval
+operator|=
 name|fpathconf
 argument_list|(
 name|fd
 argument_list|,
 name|_PC_CHOWN_RESTRICTED
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+condition|)
+return|return
+name|rval
 operator|>
 literal|0
 return|;
-else|#
-directive|else
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|BSD
@@ -7416,8 +7434,6 @@ directive|else
 return|return
 name|FALSE
 return|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 endif|#
