@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1246,6 +1246,9 @@ name|iob
 modifier|*
 name|io
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|ptr
@@ -1269,6 +1272,9 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+endif|SMALL
 name|fdesc
 operator|-=
 literal|3
@@ -1706,10 +1712,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* does this port? getw(fdesc) 	int fdesc; { 	register w,i; 	register char *cp; 	int val;  	for (i = 0, val = 0, cp =&val; i< sizeof(val); i++) { 		w = getc(fdesc); 		if (w< 0) { 			if (i == 0) 				return (-1); 			else 				return (val); 		} 		*cp++ = w; 	} 	return (val); } */
-end_comment
-
 begin_decl_stmt
 name|int
 name|errno
@@ -1882,6 +1884,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 operator|(
@@ -1954,6 +1959,9 @@ name|i
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+endif|SMALL
 if|if
 condition|(
 name|file
@@ -2181,6 +2189,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_macro
 name|write
 argument_list|(
@@ -2383,6 +2397,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|SMALL
+end_endif
 
 begin_decl_stmt
 name|int
@@ -3320,6 +3340,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|how
@@ -3349,6 +3372,9 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+endif|SMALL
 if|if
 condition|(
 name|openi
@@ -3503,6 +3529,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_macro
 name|ioctl
 argument_list|(
@@ -3642,48 +3674,6 @@ operator|~
 name|F_NBSF
 expr_stmt|;
 break|break;
-case|case
-name|SAIOECCLIM
-case|:
-name|file
-operator|->
-name|i_flgs
-operator||=
-name|F_ECCLM
-expr_stmt|;
-break|break;
-case|case
-name|SAIOECCUNL
-case|:
-name|file
-operator|->
-name|i_flgs
-operator|&=
-operator|~
-name|F_ECCLM
-expr_stmt|;
-break|break;
-case|case
-name|SAIOSEVRE
-case|:
-name|file
-operator|->
-name|i_flgs
-operator||=
-name|F_SEVRE
-expr_stmt|;
-break|break;
-case|case
-name|SAIONSEVRE
-case|:
-name|file
-operator|->
-name|i_flgs
-operator|&=
-operator|~
-name|F_SEVRE
-expr_stmt|;
-break|break;
 default|default:
 name|error
 operator|=
@@ -3717,6 +3707,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|SMALL
+end_endif
 
 begin_macro
 name|exit
@@ -3791,37 +3787,6 @@ expr_stmt|;
 name|_rtt
 argument_list|()
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|trap
-argument_list|(
-argument|ps
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|ps
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"Trap %o\n"
-argument_list|,
-name|ps
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-empty_stmt|;
 block|}
 end_block
 

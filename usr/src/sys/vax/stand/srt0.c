@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|"../vax/cpu.h"
 end_include
 
 begin_comment
-comment|/*  * Startup code for standalone system  * Non-relocating version -- for programs which are loaded by boot  */
+comment|/*  * Startup code for standalone system  * Non-relocating version -- for programs which are loaded by boot  * Relocating version for boot*  */
 end_comment
 
 begin_expr_stmt
@@ -210,8 +210,16 @@ operator|:
 operator|.
 name|word
 literal|0x0
+ifdef|#
+directive|ifdef
+name|REL
+name|halt
+else|#
+directive|else
 name|jmp
 name|start
+endif|#
+directive|endif
 operator|.
 name|globl
 name|_badloc
