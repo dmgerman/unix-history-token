@@ -3819,6 +3819,7 @@ operator|!
 name|quoteflag
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -3829,11 +3830,6 @@ for|for
 control|(
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|parsekwd
 init|;
 operator|*
