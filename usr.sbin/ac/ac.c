@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -1535,6 +1541,31 @@ name|secs
 operator|-
 literal|1
 decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1547,7 +1578,11 @@ argument_list|(
 name|date
 argument_list|)
 argument_list|,
-literal|"%Ef  total"
+name|d_first
+condition|?
+literal|"%e %b  total"
+else|:
+literal|"%b %e  total"
 argument_list|,
 name|localtime
 argument_list|(
