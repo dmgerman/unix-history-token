@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.4	%G%	*/
+comment|/*	saio.h	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -47,12 +47,34 @@ decl_stmt|;
 name|char
 name|i_buf
 index|[
-name|BSIZE
+name|MAXBSIZE
+index|]
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|fs
+name|ui_fs
+decl_stmt|;
+name|char
+name|dummy
+index|[
+name|SBSIZE
 index|]
 decl_stmt|;
 block|}
+name|i_un
+union|;
+block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|i_fs
+value|i_un.ui_fs
+end_define
 
 begin_define
 define|#
@@ -159,7 +181,7 @@ index|[
 name|NBUFS
 index|]
 index|[
-name|BSIZE
+name|MAXBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
