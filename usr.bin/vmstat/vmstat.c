@@ -2927,7 +2927,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u zero fill pages created\n"
+literal|"%9u zero fill pages allocated\n"
 argument_list|,
 name|sum
 operator|.
@@ -2939,7 +2939,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u zero fill page faults\n"
+literal|"%9u zero fill pages zeroed\n"
 argument_list|,
 name|sum
 operator|.
