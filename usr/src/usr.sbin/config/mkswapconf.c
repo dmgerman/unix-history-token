@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkswapconf.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkswapconf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,8 +658,6 @@ operator|=
 name|devtable
 init|;
 name|dp
-operator|->
-name|dev_next
 condition|;
 name|dp
 operator|=
@@ -763,8 +761,6 @@ operator|=
 name|devtable
 init|;
 name|dp
-operator|->
-name|dev_next
 condition|;
 name|dp
 operator|=
