@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.14 (Berkeley) %G%"
+literal|"@(#)itime.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,13 +1159,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-name|time_t
-name|unctime
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
