@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -841,7 +847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The spinlock implementation in Windows differs from that of FreeBSD.  * The basic operation of spinlocks involves two steps: 1) spin in a  * tight loop while trying to acquire a lock, 2) after obtaining the  * lock, disable preemption. (Note that on uniprocessor systems, you're  * allowed to skip the first step and just lock out pre-emption, since  * it's not possible for you to be in contention with another running  * thread.) Later, you release the lock then re-enable preemption.  * The difference between Windows and FreeBSD lies in how preemption  * is disabled. In FreeBSD, it's done using critical_enter(), which on  * the x86 arch translates to a cli instruction. This masks off all  * interrupts, and effectively stops the scheduler from ever running  * so _nothing_ can execute except the current thread. In Windows,  * preemption is disabled by raising the processor IRQL to DISPATCH_LEVEL.  * This stops other threads from running, but does _not_ block device  * interrupts. This means ISRs can still run, and they can make other  * threads runable, but those other threads won't be able to execute  * until the current thread lowers the IRQL to something less than  * DISPATCH_LEVEL.  *  * In FreeBSD, ISRs run in interrupt threads, so to duplicate the  * Windows notion of IRQLs, we use the following rules:  *  * PASSIVE_LEVEL == normal kernel thread priority  * DISPATCH_LEVEL == lowest interrupt thread priotity (PI_SOFT)  * DEVICE_LEVEL == highest interrupt thread priority  (PI_REALTIME)  * HIGH_LEVEL == interrupts disabled (critical_enter())  *  * Be aware that, at least on the x86 arch, the Windows spinlock  * functions are divided up in peculiar ways. The actual spinlock  * functions are KfAcquireSpinLock() and KfReleaseSpinLock(), and  * they live in HAL.dll. Meanwhile, KeInitializeSpinLock(),  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * live in ntoskrnl.exe. Most Windows source code will call  * KeAcquireSpinLock() and KeReleaseSpinLock(), but these are just  * macros that call KfAcquireSpinLock() and KfReleaseSpinLock().  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * perform the lock aquisition/release functions without doing the  * IRQL manipulation, and are used when one is already running at  * DISPATCH_LEVEL. Make sense? Good.  *  * According to the Microsoft documentation, any thread that calls  * KeAcquireSpinLock() must be running at IRQL<= DISPATCH_LEVEL. If  * we detect someone trying to acquire a spinlock from DEVICE_LEVEL  * or HIGH_LEVEL, we panic.  */
+comment|/*  * The spinlock implementation in Windows differs from that of FreeBSD.  * The basic operation of spinlocks involves two steps: 1) spin in a  * tight loop while trying to acquire a lock, 2) after obtaining the  * lock, disable preemption. (Note that on uniprocessor systems, you're  * allowed to skip the first step and just lock out pre-emption, since  * it's not possible for you to be in contention with another running  * thread.) Later, you release the lock then re-enable preemption.  * The difference between Windows and FreeBSD lies in how preemption  * is disabled. In FreeBSD, it's done using critical_enter(), which on  * the x86 arch translates to a cli instruction. This masks off all  * interrupts, and effectively stops the scheduler from ever running  * so _nothing_ can execute except the current thread. In Windows,  * preemption is disabled by raising the processor IRQL to DISPATCH_LEVEL.  * This stops other threads from running, but does _not_ block device  * interrupts. This means ISRs can still run, and they can make other  * threads runable, but those other threads won't be able to execute  * until the current thread lowers the IRQL to something less than  * DISPATCH_LEVEL.  *  * There's another commonly used IRQL in Windows, which is APC_LEVEL.  * An APC is an Asynchronous Procedure Call, which differs from a DPC  * (Defered Procedure Call) in that a DPC is queued up to run in  * another thread, while an APC runs in the thread that scheduled  * it (similar to a signal handler in a UNIX process). We don't  * actually support the notion of APCs in FreeBSD, so for now, the  * only IRQLs we're interested in are DISPATCH_LEVEL and PASSIVE_LEVEL.  *  * To simulate DISPATCH_LEVEL, we raise the current thread's priority  * to PI_REALTIME, which is the highest we can give it. This should,  * if I understand things correctly, prevent anything except for an  * interrupt thread from preempting us. PASSIVE_LEVEL is basically  * everything else.  *  * Be aware that, at least on the x86 arch, the Windows spinlock  * functions are divided up in peculiar ways. The actual spinlock  * functions are KfAcquireSpinLock() and KfReleaseSpinLock(), and  * they live in HAL.dll. Meanwhile, KeInitializeSpinLock(),  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * live in ntoskrnl.exe. Most Windows source code will call  * KeAcquireSpinLock() and KeReleaseSpinLock(), but these are just  * macros that call KfAcquireSpinLock() and KfReleaseSpinLock().  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * perform the lock aquisition/release functions without doing the  * IRQL manipulation, and are used when one is already running at  * DISPATCH_LEVEL. Make sense? Good.  *  * According to the Microsoft documentation, any thread that calls  * KeAcquireSpinLock() must be running at IRQL<= DISPATCH_LEVEL. If  * we detect someone trying to acquire a spinlock from DEVICE_LEVEL  * or HIGH_LEVEL, we panic.  */
 end_comment
 
 begin_decl_stmt
@@ -1048,6 +1054,19 @@ argument_list|,
 name|PI_REALTIME
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600000
+name|curthread
+operator|->
+name|td_base_pri
+operator|=
+name|PI_REALTIME
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1098,6 +1117,19 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600000
+name|curthread
+operator|->
+name|td_base_pri
+operator|=
+name|oldirql
+expr_stmt|;
+endif|#
+directive|endif
 name|sched_prio
 argument_list|(
 name|curthread

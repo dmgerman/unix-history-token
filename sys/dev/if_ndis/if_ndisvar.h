@@ -117,7 +117,7 @@ name|NDIS_INITIALIZED
 parameter_list|(
 name|sc
 parameter_list|)
-value|(sc->ndis_block.nmb_miniportadapterctx != NULL)
+value|(sc->ndis_block->nmb_miniportadapterctx != NULL)
 end_define
 
 begin_define
@@ -249,9 +249,11 @@ name|int
 name|ndis_unit
 decl_stmt|;
 name|ndis_miniport_block
+modifier|*
 name|ndis_block
 decl_stmt|;
 name|ndis_miniport_characteristics
+modifier|*
 name|ndis_chars
 decl_stmt|;
 name|interface_type
@@ -354,6 +356,10 @@ name|ndis_tmaps
 decl_stmt|;
 name|int
 name|ndis_mmapcnt
+decl_stmt|;
+name|device_object
+modifier|*
+name|ndis_pdo
 decl_stmt|;
 block|}
 struct|;

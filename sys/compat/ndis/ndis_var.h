@@ -3487,6 +3487,12 @@ name|ndis_ansi_string
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * nus_buf is really a wchar_t *, but it's inconvenient to include  * all the necessary header goop needed to define it, and it's a  * pointer anyway, so for now, just make it a uint16_t *.  */
 end_comment
@@ -3513,6 +3519,18 @@ begin_typedef
 typedef|typedef
 name|struct
 name|ndis_unicode_string
+name|ndis_unicode_string
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|unicode_string
 name|ndis_unicode_string
 typedef|;
 end_typedef
@@ -5613,23 +5631,26 @@ name|uint32_t
 name|nmb_busnum
 decl_stmt|;
 name|uint32_t
-name|nmb_bustye
+name|nmb_bustype
 decl_stmt|;
 name|uint32_t
 name|nmb_adaptertype
 decl_stmt|;
-name|void
+name|device_object
 modifier|*
 name|nmb_deviceobj
 decl_stmt|;
-name|void
+comment|/* Functional device */
+name|device_object
 modifier|*
 name|nmb_physdeviceobj
 decl_stmt|;
-name|void
+comment|/* Physical device */
+name|device_object
 modifier|*
 name|nmb_nextdeviceobj
 decl_stmt|;
+comment|/* Next dev in stack */
 name|void
 modifier|*
 name|nmb_mapreg
@@ -6104,7 +6125,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|ndis_unicode_string
+name|unicode_string
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6671,6 +6692,21 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|uint32_t
+name|NdisAddDevice
+parameter_list|(
+name|driver_object
+modifier|*
+parameter_list|,
+name|device_object
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

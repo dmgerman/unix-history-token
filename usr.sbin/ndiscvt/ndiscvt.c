@@ -1556,6 +1556,13 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
+literal|"__asm__(\".globl  drv_data\");\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
 literal|"__asm__(\".type   drv_data, @object\");\n"
 argument_list|)
 expr_stmt|;
