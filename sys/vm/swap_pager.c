@@ -642,6 +642,27 @@ begin_comment
 comment|/* in pages, swap_pager_almost_full warn */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dmmax
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|dmmax
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum size of a swap block"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|__inline
