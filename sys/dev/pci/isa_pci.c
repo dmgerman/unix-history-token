@@ -282,7 +282,7 @@ comment|/* Intel 82371AB */
 case|case
 literal|0x71988086
 case|:
-comment|/* Intel 82371MX */
+comment|/* Intel 82443MX */
 case|case
 literal|0x24108086
 case|:

@@ -138,6 +138,12 @@ block|,
 literal|"Intel 82371AB Power management controller"
 block|}
 block|,
+block|{
+literal|0x719b8086
+block|,
+literal|"Intel 82443MX Power management controller"
+block|}
+block|,
 if|#
 directive|if
 literal|0
