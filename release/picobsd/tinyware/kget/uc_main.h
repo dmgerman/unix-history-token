@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************  * file: userconfig/uc_main.h  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: uc_main.h,v 1.1.1.1 1998/07/14 07:30:54 abial Exp $  */
+comment|/***************************************************  * file: userconfig/uc_main.h  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: uc_main.h,v 1.5 1998/10/06 07:41:49 msmith Exp $  */
 end_comment
 
 begin_define
@@ -27,78 +27,85 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISA_NULLTAB
+name|ISA_CAMTAB
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_WDCTAB
+name|ISA_NULLTAB
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_FDCTAB
+name|ISA_WDCTAB
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|EISA_SET
+name|ISA_FDCTAB
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|EISA_LIST
+name|EISA_SET
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCI_SET
+name|EISA_LIST
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI_LIST
+name|PCI_SET
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI_BUSSES
+name|SCSI_LIST
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI_CINIT
+name|SCSI_BUSSES
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI_DINIT
+name|SCSI_CINIT
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI_TINIT
+name|SCSI_DINIT
 value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_TINIT
+value|14
 end_define
 
 begin_comment
@@ -109,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|NSYMBOLS
-value|15
+value|16
 end_define
 
 begin_struct
