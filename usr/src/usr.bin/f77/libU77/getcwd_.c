@@ -492,7 +492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.1";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
+comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.2";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
 end_comment
 
 begin_decl_stmt
@@ -514,7 +514,7 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|int
+name|long
 name|len
 decl_stmt|;
 block|{
