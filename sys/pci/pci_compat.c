@@ -105,23 +105,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|PCI_COMPAT
 end_ifdef
 
