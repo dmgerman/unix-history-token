@@ -805,6 +805,13 @@ modifier|*
 name|pm_ptphint
 decl_stmt|;
 comment|/* pmap ptp hint */
+name|LIST_ENTRY
+argument_list|(
+argument|pmap
+argument_list|)
+name|pm_list
+expr_stmt|;
+comment|/* List of all pmaps */
 block|}
 struct|;
 end_struct
