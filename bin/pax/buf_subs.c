@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: buf_subs.c,v 1.4 1995/10/23 21:23:00 ache Exp $  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: buf_subs.c,v 1.4.2.1 1997/08/25 08:36:52 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -304,7 +304,7 @@ operator|>
 name|MAXBLK
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -329,7 +329,7 @@ operator|%
 name|BLKMULT
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -453,7 +453,7 @@ operator|>
 name|MAXBLK
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -478,7 +478,7 @@ operator|%
 name|BLKMULT
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -630,7 +630,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -853,7 +853,7 @@ operator|)
 return|;
 name|out
 label|:
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -923,7 +923,7 @@ operator|==
 name|APPND
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -1024,7 +1024,7 @@ operator|>
 name|maxflt
 operator|)
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -1799,7 +1799,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an	open  *	file descriptor to the file an the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
+comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an	open  *	file descriptor to the file an the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and pax_warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
 end_comment
 
 begin_if
@@ -1962,7 +1962,7 @@ name|res
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -1982,7 +1982,7 @@ name|size
 operator|!=
 literal|0L
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2006,7 +2006,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2032,7 +2032,7 @@ name|sb
 operator|.
 name|st_mtime
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2191,7 +2191,7 @@ name|st_blksize
 expr_stmt|;
 block|}
 else|else
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -2391,7 +2391,7 @@ operator|!=
 name|crc
 operator|)
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2562,7 +2562,7 @@ name|st_blksize
 expr_stmt|;
 block|}
 else|else
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -2658,7 +2658,7 @@ name|res
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2686,7 +2686,7 @@ name|sb
 operator|.
 name|st_size
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2714,7 +2714,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2740,7 +2740,7 @@ name|sb
 operator|.
 name|st_mtime
 condition|)
-name|warn
+name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
@@ -2986,7 +2986,7 @@ name|wrlimit
 operator|)
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -3140,7 +3140,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * Oh drat we got a partial write! 			 * if format doesnt care about alignment let it go, 			 * we warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
+comment|/* 			 * Oh drat we got a partial write! 			 * if format doesnt care about alignment let it go, 			 * we pax_warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
 name|totcnt
 operator|+=
 name|cnt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: date.c,v 1.7.2.1 1997/06/06 16:04:18 charnier Exp $  */
+comment|/*  * Copyright (c) 1985, 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: date.c,v 1.7.2.2 1997/08/17 20:31:59 brian Exp $  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|copyright
 index|[]
 init|=
@@ -37,10 +38,11 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)date.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +127,12 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vary.h"
+end_include
+
 begin_decl_stmt
 name|time_t
 name|tval
@@ -146,6 +154,11 @@ name|setthetime
 name|__P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -245,10 +258,36 @@ decl_stmt|;
 name|char
 modifier|*
 name|endptr
+decl_stmt|,
+modifier|*
+name|fmt
 decl_stmt|;
 name|int
 name|set_timezone
 decl_stmt|;
+name|struct
+name|vary
+modifier|*
+name|v
+decl_stmt|;
+specifier|const
+name|struct
+name|vary
+modifier|*
+name|badv
+decl_stmt|;
+name|struct
+name|tm
+name|lt
+decl_stmt|;
+name|v
+operator|=
+name|NULL
+expr_stmt|;
+name|fmt
+operator|=
+name|NULL
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -288,11 +327,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:nr:ut:"
+literal|"d:f:nr:t:uv:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -344,6 +384,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|fmt
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 comment|/* don't set network */
@@ -365,23 +413,6 @@ operator|=
 name|atol
 argument_list|(
 name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'u'
-case|:
-comment|/* do everything in GMT */
-operator|(
-name|void
-operator|)
-name|setenv
-argument_list|(
-literal|"TZ"
-argument_list|,
-literal|"GMT0"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -423,6 +454,36 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'u'
+case|:
+comment|/* do everything in GMT */
+operator|(
+name|void
+operator|)
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+literal|"GMT0"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|v
+operator|=
+name|vary_append
+argument_list|(
+name|v
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -436,7 +497,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* 	 * If -d or -t, set the timezone or daylight savings time; this 	 * doesn't belong here, there kernel should not know about either. 	 */
+comment|/* 	 * If -d or -t, set the timezone or daylight savings time; this 	 * doesn't belong here; the kernel should not know about either. 	 */
 if|if
 condition|(
 name|set_timezone
@@ -518,6 +579,8 @@ condition|)
 block|{
 name|setthetime
 argument_list|(
+name|fmt
+argument_list|,
 operator|*
 name|argv
 argument_list|)
@@ -526,6 +589,16 @@ operator|++
 name|argv
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -544,6 +617,55 @@ name|argv
 operator|+
 literal|1
 expr_stmt|;
+name|lt
+operator|=
+operator|*
+name|localtime
+argument_list|(
+operator|&
+name|tval
+argument_list|)
+expr_stmt|;
+name|badv
+operator|=
+name|vary_apply
+argument_list|(
+name|v
+argument_list|,
+operator|&
+name|lt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|badv
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Cannot apply date adjustment\n"
+argument_list|,
+name|badv
+operator|->
+name|arg
+argument_list|)
+expr_stmt|;
+name|vary_destroy
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+name|vary_destroy
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -558,11 +680,8 @@ argument_list|)
 argument_list|,
 name|format
 argument_list|,
-name|localtime
-argument_list|(
 operator|&
-name|tval
-argument_list|)
+name|lt
 argument_list|)
 expr_stmt|;
 operator|(
@@ -597,9 +716,17 @@ begin_function
 name|void
 name|setthetime
 parameter_list|(
+name|fmt
+parameter_list|,
 name|p
 parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -615,6 +742,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dot
@@ -622,6 +750,87 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
+block|{
+name|lt
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|tval
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|strptime
+argument_list|(
+name|p
+argument_list|,
+name|fmt
+argument_list|,
+name|lt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Failed conversion of ``%s''"
+literal|" using format ``%s''\n"
+argument_list|,
+name|p
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|lt
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|tval
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|t
+operator|!=
+literal|'\0'
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: Ignoring %d extraneous"
+literal|" characters in date string (%s)\n"
+argument_list|,
+name|strlen
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|t
@@ -686,12 +895,10 @@ name|NULL
 condition|)
 block|{
 comment|/* .ss */
-operator|*
 name|dot
 operator|++
-operator|=
-literal|'\0'
 expr_stmt|;
+comment|/* *dot++ = '\0'; */
 if|if
 condition|(
 name|strlen
@@ -828,7 +1035,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
-comment|/* hh */
+comment|/* HH */
 name|lt
 operator|->
 name|tm_hour
@@ -853,7 +1060,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
-comment|/* mm */
+comment|/* MM */
 name|lt
 operator|->
 name|tm_min
@@ -879,6 +1086,7 @@ default|default:
 name|badformat
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 comment|/* convert broken-down time to GMT clock time */
 if|if
@@ -1029,7 +1237,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: date [-nu] [-d dst] [-r seconds] [-t west] [+format]"
 argument_list|,
-literal|"            [[[[yy]mm]dd]HH]MM[.ss]]"
+literal|"            [-v [+|-]val[ymwdHM]] ... [-f fmt date | [[[[yy]mm]dd]HH]MM[.ss]]"
 argument_list|)
 expr_stmt|;
 name|exit

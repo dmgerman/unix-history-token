@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ar_io.c,v 1.4 1995/10/23 21:22:56 ache Exp $  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ar_io.c,v 1.4.2.1 1997/08/25 08:36:50 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -475,7 +475,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -524,7 +524,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -578,7 +578,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -634,7 +634,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syswarn
+name|sys_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -679,7 +679,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|warn
+name|pax_warn
 argument_list|(
 literal|0
 argument_list|,
@@ -1403,7 +1403,7 @@ argument|, SEEK_CUR))<
 literal|0
 argument|) || 	    (ftruncate(arfd, cpos)<
 literal|0
-argument|)) { 		syswarn(
+argument|)) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to truncate archive file"
@@ -1422,7 +1422,7 @@ directive|else
 argument|int ar_app_ok()
 endif|#
 directive|endif
-argument|{ 	if (artyp == ISPIPE) { 		warn(
+argument|{ 	if (artyp == ISPIPE) { 		pax_warn(
 literal|1
 argument|,
 literal|"Cannot append to an archive obtained from a pipe."
@@ -1430,7 +1430,7 @@ argument|); 		return(-
 literal|1
 argument|); 	}  	if (!invld_rec) 		return(
 literal|0
-argument|); 	warn(
+argument|); 	pax_warn(
 literal|1
 argument|,
 literal|"Cannot append, device record size %d does not support %s spec"
@@ -1475,11 +1475,11 @@ argument|; 			return(res); 		} 		break; 	}
 comment|/* 	 * We are in trouble at this point, something is broken... 	 */
 argument|lstrval = res; 	if (res<
 literal|0
-argument|) 		syswarn(
+argument|) 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Failed read on archive volume %d"
-argument|, arvol); 	else 		warn(
+argument|, arvol); 	else 		pax_warn(
 literal|0
 argument|,
 literal|"End of archive volume %d reached"
@@ -1528,7 +1528,7 @@ argument|if ((errno == ENOSPC) || (errno == EFBIG) || (errno == EDQUOT)) 			res 
 literal|0
 argument|; 		break; 	case ISTAPE: 	case ISCHR: 	case ISBLK: 		if (res>=
 literal|0
-argument|) 			break; 		if (errno == EACCES) { 			warn(
+argument|) 			break; 		if (errno == EACCES) { 			pax_warn(
 literal|0
 argument|,
 literal|"Write failed, archive is write protected."
@@ -1556,29 +1556,29 @@ argument|; 	}
 comment|/* 	 * If we were trying to rewrite the trailer and it didn't work, we 	 * must quit right away. 	 */
 argument|if (!wr_trail&& (res<=
 literal|0
-argument|)) { 		warn(
+argument|)) { 		pax_warn(
 literal|1
 argument|,
 literal|"Unable to append, trailer re-write failed. Quitting."
 argument|); 		return(res); 	}  	if (res ==
 literal|0
-argument|) 		warn(
+argument|) 		pax_warn(
 literal|0
 argument|,
 literal|"End of archive volume %d reached"
 argument|, arvol); 	else if (res<
 literal|0
-argument|) 		syswarn(
+argument|) 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Failed write to archive volume: %d"
 argument|, arvol); 	else if (!frmt->blkalgn || ((res % frmt->blkalgn) ==
 literal|0
-argument|)) 		warn(
+argument|)) 		pax_warn(
 literal|0
 argument|,
 literal|"WARNING: partial archive write. Archive MAY BE FLAWED"
-argument|); 	else 		warn(
+argument|); 	else 		pax_warn(
 literal|1
 argument|,
 literal|"WARNING: partial archive write. Archive IS FLAWED"
@@ -1601,7 +1601,7 @@ argument|) || (lstrval ==
 literal|0
 argument|)) 		return(-
 literal|1
-argument|);  	if ((act == APPND) || (act == ARCHIVE)) { 		warn(
+argument|);  	if ((act == APPND) || (act == ARCHIVE)) { 		pax_warn(
 literal|1
 argument|,
 literal|"Cannot allow updates to an archive with flaws."
@@ -1641,13 +1641,13 @@ argument|io_ok =
 literal|0
 argument|; 		break; 	} 	if (lstrval<=
 literal|0
-argument|) { 		warn(
+argument|) { 		pax_warn(
 literal|1
 argument|,
 literal|"Unable to recover from an archive read failure."
 argument|); 		return(-
 literal|1
-argument|); 	} 	warn(
+argument|); 	} 	pax_warn(
 literal|0
 argument|,
 literal|"Attempting to recover from an archive read failure."
@@ -1690,7 +1690,7 @@ argument|if ((mpos = cpos + sksz)> arsb.st_size) { 			*skipped = arsb.st_size - 
 literal|0
 argument|) 			return(
 literal|0
-argument|); 	} 	syswarn(
+argument|); 	} 	sys_warn(
 literal|1
 argument|, errno,
 literal|"Foward positioning operation on archive failed"
@@ -1717,7 +1717,7 @@ argument|) 		return(lstrval);  	switch(artyp) { 	case ISPIPE: 		if (sksz<=
 literal|0
 argument|) 			break;
 comment|/* 		 * cannot go backwards on these critters 		 */
-argument|warn(
+argument|pax_warn(
 literal|1
 argument|,
 literal|"Reverse positioning on pipes is not supported."
@@ -1733,7 +1733,7 @@ argument|if ((cpos = lseek(arfd, (off_t)
 literal|0L
 argument|, SEEK_CUR))<
 literal|0
-argument|) { 			syswarn(
+argument|) { 			sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to obtain current archive byte offset"
@@ -1749,7 +1749,7 @@ argument|) { 			if (arvol>
 literal|1
 argument|) {
 comment|/* 				 * this should never happen 				 */
-argument|warn(
+argument|pax_warn(
 literal|1
 argument|,
 literal|"Reverse position on previous volume."
@@ -1761,7 +1761,7 @@ argument|); 			} 			cpos = (off_t)
 literal|0L
 argument|; 		} 		if (lseek(arfd, cpos, SEEK_SET)<
 literal|0
-argument|) { 			syswarn(
+argument|) { 			sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to seek archive backwards"
@@ -1785,7 +1785,7 @@ argument|if (sksz<=
 literal|0
 argument|) 			break;
 comment|/* 		 * ok we have to move. Make sure the tape drive can do it. 		 */
-argument|if (sksz % phyblk) { 			warn(
+argument|if (sksz % phyblk) { 			pax_warn(
 literal|1
 argument|,
 literal|"Tape drive unable to backspace requested amount"
@@ -1797,7 +1797,7 @@ argument|); 		}
 comment|/* 		 * move backwards the requested number of bytes 		 */
 argument|mb.mt_op = MTBSR; 		mb.mt_count = sksz/phyblk; 		if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) { 			syswarn(
+argument|) { 			sys_warn(
 literal|1
 argument|,errno,
 literal|"Unable to backspace tape %d blocks."
@@ -1832,7 +1832,7 @@ argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
 literal|0
 argument|) 			padsz += res; 		if (res<
 literal|0
-argument|) { 			syswarn(
+argument|) { 			sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to locate tape filemark."
@@ -1844,7 +1844,7 @@ argument|mb.mt_op = MTBSF; 	mb.mt_count =
 literal|1
 argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to backspace over tape filemark."
@@ -1856,7 +1856,7 @@ argument|mb.mt_op = MTBSR; 	mb.mt_count =
 literal|1
 argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to backspace over last tape block."
@@ -1864,7 +1864,7 @@ argument|); 		return(-
 literal|1
 argument|); 	} 	if ((phyblk = read(arfd, scbuf, sizeof(scbuf)))<=
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Cannot determine archive tape blocksize."
@@ -1876,7 +1876,7 @@ argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
 literal|0
 argument|) 		; 	if (res<
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to locate tape filemark."
@@ -1886,7 +1886,7 @@ argument|); 	} 	mb.mt_op = MTBSF; 	mb.mt_count =
 literal|1
 argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to backspace over tape filemark."
@@ -1902,7 +1902,7 @@ argument|if (padsz ==
 literal|0
 argument|) 		return(phyblk);
 comment|/* 	 * make sure we can move backwards over the padding. (this should 	 * never fail). 	 */
-argument|if (padsz % phyblk) { 		warn(
+argument|if (padsz % phyblk) { 		pax_warn(
 literal|1
 argument|,
 literal|"Tape drive unable to backspace requested amount"
@@ -1912,7 +1912,7 @@ argument|); 	}
 comment|/* 	 * move backwards over the padding so the head is where it was when 	 * we were first called (if required). 	 */
 argument|mb.mt_op = MTBSR; 	mb.mt_count = padsz/phyblk; 	if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) { 		syswarn(
+argument|) { 		sys_warn(
 literal|1
 argument|,errno,
 literal|"Unable to backspace tape over %d pad blocks"
@@ -1937,13 +1937,13 @@ argument|; 	sigset_t o_mask;
 comment|/* 	 * WE MUST CLOSE THE DEVICE. A lot of devices must see last close, (so 	 * things like writing EOF etc will be done) (Watch out ar_close() can 	 * also be called via a signal handler, so we must prevent a race. 	 */
 argument|if (sigprocmask(SIG_BLOCK,&s_mask,&o_mask)<
 literal|0
-argument|) 		syswarn(
+argument|) 		sys_warn(
 literal|0
 argument|, errno,
 literal|"Unable to set signal mask"
 argument|); 	ar_close(); 	if (sigprocmask(SIG_SETMASK,&o_mask, (sigset_t *)NULL)<
 literal|0
-argument|) 		syswarn(
+argument|) 		sys_warn(
 literal|0
 argument|, errno,
 literal|"Unable to restore signal mask"
@@ -2065,7 +2065,7 @@ argument|; 			} 			if ((arcname = strdup(buf)) == NULL) { 				done =
 literal|1
 argument|; 				lstrval = -
 literal|1
-argument|; 				warn(
+argument|; 				pax_warn(
 literal|0
 argument|,
 literal|"Cannot save archive name."
