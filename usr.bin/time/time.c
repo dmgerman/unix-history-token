@@ -467,10 +467,6 @@ case|case
 literal|0
 case|:
 comment|/* child */
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|execvp
 argument_list|(
 operator|*
@@ -479,33 +475,22 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|warn
+name|err
 argument_list|(
+name|errno
+operator|==
+name|ENOENT
+condition|?
+literal|127
+else|:
+literal|126
+argument_list|,
 literal|"%s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-name|_exit
-argument_list|(
-literal|127
-argument_list|)
-expr_stmt|;
-comment|/* POSIX: utility could not be found */
-else|else
-name|_exit
-argument_list|(
-literal|126
-argument_list|)
-expr_stmt|;
-comment|/* POSIX: utility could not be invoked */
 comment|/* NOTREACHED */
 block|}
 comment|/* parent */
