@@ -2684,23 +2684,12 @@ begin_comment
 comment|/* The name of the dynamic interpreter.  This is put in the .interp    section.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ELF_DYNAMIC_INTERPRETER
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|ELF_DYNAMIC_INTERPRETER
 value|"/usr/lib/libc.so.1"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The size in bytes of an entry in the procedure linkage table.  */
@@ -11204,9 +11193,28 @@ expr_stmt|;
 if|if
 condition|(
 name|val
-operator|!=
+operator|==
 literal|0xa1
 condition|)
+block|{
+comment|/* movl foo, %eax.  */
+name|bfd_put_8
+argument_list|(
+name|output_bfd
+argument_list|,
+literal|0xb8
+argument_list|,
+name|contents
+operator|+
+name|rel
+operator|->
+name|r_offset
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|BFD_ASSERT
 argument_list|(
@@ -11232,39 +11240,14 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|val
-operator|==
-literal|0xa1
-condition|)
-block|{
-comment|/* movl foo, %eax.  */
-name|bfd_put_8
-argument_list|(
-name|output_bfd
-argument_list|,
-literal|0xb8
-argument_list|,
-name|contents
-operator|+
-name|rel
-operator|->
-name|r_offset
-operator|-
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
+switch|switch
 condition|(
 name|type
-operator|==
-literal|0x8b
 condition|)
 block|{
+case|case
+literal|0x8b
+case|:
 comment|/* movl */
 name|BFD_ASSERT
 argument_list|(
@@ -11317,15 +11300,10 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
+break|break;
+case|case
 literal|0x03
-condition|)
-block|{
+case|:
 comment|/* addl */
 name|BFD_ASSERT
 argument_list|(
@@ -11378,11 +11356,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+break|break;
+default|default:
 name|BFD_FAIL
 argument_list|()
 expr_stmt|;
+break|break;
+block|}
+block|}
 name|bfd_put_32
 argument_list|(
 name|output_bfd
@@ -15066,22 +15047,11 @@ name|elf_backend_size_dynamic_sections
 value|elf_i386_size_dynamic_sections
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ELF32_I386_C_INCLUDED
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|"elf32-target.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
