@@ -272,19 +272,7 @@ block|,
 operator|&
 name|ripx_usrreqs
 block|}
-block|,
-ifdef|#
-directive|ifdef
-name|IPTUNNEL
-if|#
-directive|if
-literal|0
-block|{ SOCK_RAW,&ipxdomain,	IPPROTO_IPX,	PR_ATOMIC|PR_ADDR,   iptun_input,	rip_output,	iptun_ctlinput,	0,   0,   0,		0,		0,		0,&rip_usrreqs },
-endif|#
-directive|endif
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

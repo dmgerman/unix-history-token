@@ -1764,17 +1764,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* IPXIP */
-ifdef|#
-directive|ifdef
-name|IPTUNNEL
-if|#
-directive|if
-literal|0
-block|case SO_IPXTUNNEL_ROUTE: 			error = ipxtun_route(so, sopt); 			break;
-endif|#
-directive|endif
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
