@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -207,12 +207,25 @@ name|state
 decl_stmt|;
 name|u_short
 modifier|*
+name|kcount
+decl_stmt|;
+name|u_long
+name|kcountsize
+decl_stmt|;
+name|u_short
+modifier|*
 name|froms
+decl_stmt|;
+name|u_long
+name|fromssize
 decl_stmt|;
 name|struct
 name|tostruct
 modifier|*
 name|tos
+decl_stmt|;
+name|u_long
+name|tossize
 decl_stmt|;
 name|long
 name|tolimit
@@ -269,6 +282,54 @@ directive|define
 name|GMON_PROF_OFF
 value|3
 end_define
+
+begin_comment
+comment|/*  * Sysctl definitions for extracting profiling information from the kernel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPROF_STATE
+value|0
+end_define
+
+begin_comment
+comment|/* profiling enabling variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPROF_COUNT
+value|1
+end_define
+
+begin_comment
+comment|/* profile tick count buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPROF_FROMS
+value|2
+end_define
+
+begin_comment
+comment|/* from location hash bucket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPROF_TOS
+value|3
+end_define
+
+begin_comment
+comment|/* destination/count structure */
+end_comment
 
 begin_endif
 endif|#
