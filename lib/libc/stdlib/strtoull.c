@@ -248,6 +248,10 @@ condition|(
 name|base
 operator|<
 literal|2
+operator|||
+name|base
+operator|>
+literal|35
 condition|)
 goto|goto
 name|noconv
