@@ -1895,7 +1895,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s: %s %d, limits (soft = %d, hard = %d)\n"
+literal|"%s: %s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 name|qup
 operator|->
@@ -1903,6 +1903,11 @@ name|fsname
 argument_list|,
 literal|"blocks in use:"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1913,7 +1918,13 @@ name|dqb_curblocks
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1924,7 +1935,13 @@ name|dqb_bsoftlimit
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1936,12 +1953,13 @@ argument_list|)
 operator|/
 literal|1024
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %d, limits (soft = %d, hard = %d)\n"
+literal|"%s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 literal|"\tinodes in use:"
 argument_list|,
@@ -2203,7 +2221,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" blocks in use: %d, limits (soft = %d, hard = %d)"
+literal|" blocks in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
 name|dqblk
@@ -2323,7 +2341,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"\tinodes in use: %d, limits (soft = %d, hard = %d)"
+literal|"\tinodes in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
 name|dqblk
@@ -3071,7 +3089,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" block grace period: %d %s file grace period: %d %s"
+literal|" block grace period: %ld %s file grace period: %ld %s"
 argument_list|,
 operator|&
 name|btime
@@ -3311,7 +3329,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d day%s"
+literal|"%ld day%s"
 argument_list|,
 name|time
 argument_list|,
@@ -3349,7 +3367,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d hour%s"
+literal|"%ld hour%s"
 argument_list|,
 name|time
 argument_list|,
@@ -3381,7 +3399,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d minute%s"
+literal|"%ld minute%s"
 argument_list|,
 name|time
 argument_list|,
@@ -3400,7 +3418,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d second%s"
+literal|"%ld second%s"
 argument_list|,
 name|time
 argument_list|,
