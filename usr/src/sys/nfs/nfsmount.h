@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989 The Regents of the University of California.  *
 end_comment
 
 begin_comment
-comment|/*  * Mount structure.  * One allocated on every nfs mount.  * Holds nfs specific info for mount (sockets...)  */
+comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
 end_comment
 
 begin_struct
@@ -20,31 +20,47 @@ name|mount
 modifier|*
 name|nm_mountp
 decl_stmt|;
-comment|/* vfs structure for this filesystem */
+comment|/* Vfs structure for this filesystem */
 name|nfsv2fh_t
 name|nm_fh
 decl_stmt|;
 comment|/* File handle of root dir */
 name|struct
-name|mbuf
-modifier|*
-name|nm_sockaddr
-decl_stmt|;
-comment|/* Address of server */
-name|struct
 name|socket
 modifier|*
 name|nm_so
 decl_stmt|;
-comment|/* rpc socket */
-name|int
-name|nm_timeo
+comment|/* Rpc socket */
+name|struct
+name|nfshost
+modifier|*
+name|nm_hostinfo
 decl_stmt|;
-comment|/* Timeout interval */
-name|int
-name|nm_retrans
+comment|/* Host and congestion information */
+name|short
+name|nm_retry
 decl_stmt|;
-comment|/* # of retransmits */
+comment|/* Max retry count */
+name|short
+name|nm_rexmit
+decl_stmt|;
+comment|/* Rexmit on previous request */
+name|short
+name|nm_rtt
+decl_stmt|;
+comment|/* Round trip timer ticks @ NFS_HZ */
+name|short
+name|nm_rto
+decl_stmt|;
+comment|/* Current timeout */
+name|short
+name|nm_srtt
+decl_stmt|;
+comment|/* Smoothed round trip time */
+name|short
+name|nm_rttvar
+decl_stmt|;
+comment|/* RTT variance */
 name|int
 name|nm_rsize
 decl_stmt|;
@@ -54,19 +70,77 @@ name|nm_wsize
 decl_stmt|;
 comment|/* Max size of write rpc */
 name|char
-name|nm_path
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* Path mounted on */
-name|char
 name|nm_host
 index|[
 name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* Remote host name */
+name|char
+name|nm_path
+index|[
+name|MNAMELEN
+index|]
+decl_stmt|;
+comment|/* Path mounted on */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Hostinfo/congestion structure.  * One allocated per NFS server.  * Holds host address, congestion limits, request count, etc.  * Reference count is of nfsmounts which point to it.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfshost
+block|{
+name|struct
+name|nfshost
+modifier|*
+name|nh_next
+decl_stmt|,
+modifier|*
+name|nh_prev
+decl_stmt|;
+name|short
+name|nh_refcnt
+decl_stmt|;
+comment|/* Reference count */
+name|short
+name|nh_currto
+decl_stmt|;
+comment|/* Current rto of any nfsmount */
+name|short
+name|nh_currexmit
+decl_stmt|;
+comment|/* Max rexmit count of nfsmounts */
+name|short
+name|nh_sent
+decl_stmt|;
+comment|/* Request send count */
+name|short
+name|nh_window
+decl_stmt|;
+comment|/* Request send window (max) */
+name|short
+name|nh_winext
+decl_stmt|;
+comment|/* Window incremental value */
+name|short
+name|nh_ssthresh
+decl_stmt|;
+comment|/* Slowstart threshold */
+name|short
+name|nh_salen
+decl_stmt|;
+comment|/* Actual length of nh_sockaddr */
+name|struct
+name|mbuf
+modifier|*
+name|nh_sockaddr
+decl_stmt|;
+comment|/* Address of server */
 block|}
 struct|;
 end_struct
