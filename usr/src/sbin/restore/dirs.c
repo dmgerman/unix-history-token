@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.11	(Berkeley)	83/05/19"
+literal|"@(#)dirs.c	3.12	(Berkeley)	83/06/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -2490,13 +2490,9 @@ condition|(
 operator|(
 name|ofile
 operator|=
-name|open
+name|creat
 argument_list|(
 name|name
-argument_list|,
-name|FWRONLY
-operator||
-name|FCREATE
 argument_list|,
 literal|0666
 argument_list|)
