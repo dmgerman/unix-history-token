@@ -9508,15 +9508,13 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+comment|/* 	 * Create and modify a temporary credential instead of one that 	 * is potentially shared.  This could also mess up socket 	 * buffer accounting which can run in an interrupt context. 	 * 	 * XXX - Depending on how "threads" are finally implemented, it 	 * may be better to explicitly pass the credential to namei() 	 * rather than to modify the potentially shared process structure. 	 */
 name|cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
-comment|/* 	 * Create and modify a temporary credential instead of one that 	 * is potentially shared.  This could also mess up socket 	 * buffer accounting which can run in an interrupt context. 	 * 	 * XXX - Depending on how "threads" are finally implemented, it 	 * may be better to explicitly pass the credential to namei() 	 * rather than to modify the potentially shared process structure. 	 */
 name|tmpcred
 operator|=
 name|crdup
@@ -9545,9 +9543,7 @@ name|cr_rgid
 expr_stmt|;
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|=
 name|tmpcred
 expr_stmt|;
@@ -9634,9 +9630,7 @@ name|out1
 label|:
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|=
 name|cred
 expr_stmt|;

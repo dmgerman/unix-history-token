@@ -239,9 +239,7 @@ name|ni_cnd
 operator|.
 name|cn_thread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 name|KASSERT
 argument_list|(
