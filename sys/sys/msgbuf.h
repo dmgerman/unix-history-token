@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|MSGBUF_SIZE
-value|32768
+value|(32768 * bootverbose ? 2 : 1)
 end_define
 
 begin_endif
