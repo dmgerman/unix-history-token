@@ -456,7 +456,7 @@ literal|1
 expr_stmt|;
 name|type
 operator|=
-name|ofw_isa_map_iorange
+name|ofw_isa_range_map
 argument_list|(
 name|range
 operator|.
@@ -477,6 +477,8 @@ name|phys
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

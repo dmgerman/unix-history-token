@@ -99,6 +99,17 @@ parameter_list|)
 value|(((r)->phys_hi>> 24)& 0x03)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISA_RANGE_PHYS
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|((((u_int64_t)(r)->phys_mid)<< 32) | ((u_int64_t)(r)->phys_lo))
+end_define
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -154,13 +165,24 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|int
+name|ofw_isa_range_restype
+parameter_list|(
+name|struct
+name|isa_ranges
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Map an IO range. Returns the resource type of the range. */
 end_comment
 
 begin_function_decl
 name|int
-name|ofw_isa_map_iorange
+name|ofw_isa_range_map
 parameter_list|(
 name|struct
 name|isa_ranges
@@ -172,6 +194,9 @@ name|u_long
 modifier|*
 parameter_list|,
 name|u_long
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
