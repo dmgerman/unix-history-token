@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	1.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	1.3 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -136,6 +136,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Currently reading variant file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|shudann
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print headers when possible */
 end_comment
 
 begin_decl_stmt
