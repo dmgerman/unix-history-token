@@ -8663,8 +8663,10 @@ block|,
 literal|"There are three options for invoking sendmail at startup.\n"
 literal|"Please select Yes if you want to use sendmail as your mail transfer\n"
 literal|"agent.  Selecting No disables sendmail's network socket for incoming\n"
-literal|"email, but still enables sendmail for outbound mail.  None disables\n"
-literal|"sendmail completely at startup."
+literal|"email, but still enables sendmail for local and outbound mail.\n"
+literal|"None disables sendmail completely at startup and disables inbound,\n"
+literal|"outbound, and local mail.  See /etc/mail/README for more\n"
+literal|"information.\n"
 block|,
 name|NULL
 block|,
