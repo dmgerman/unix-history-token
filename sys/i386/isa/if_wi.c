@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_wi.c,v 1.53 1999/05/07 03:14:21 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_wi.c,v 1.54 1999/05/20 04:10:40 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Lucent WaveLAN/IEEE 802.11 PCMCIA driver for FreeBSD.  *  * Writte
 end_comment
 
 begin_comment
-comment|/*  * The WaveLAN IEEE adapter is the second generation of the WaveLAN  * from Lucent. Unlike the older cards, the new ones are programmed  * entirely via a firmware-driven controller called the Hermes.  * Unfortunately, Lucent will not release the Hermes programming manual  * without an NDA (if at all). What they do release is an API library  * called the HCF (Hardware Control Functions) which is supposed to  * do the device-specific operations of a device driver for you. The  * publically available version of the HCF library (the 'HCF Light') is   * a) extremely gross, b) lacks certain fearures, particularly support  * for 802.11 frames, and c) is contaminated by the GNU Public License.  *  * This driver does not use the HCF or HCF Light at all. Instead, it  * programs the Hermes controller directly, using information gleaned  * from the HCF Light code and corresponding documentation.  *  * This driver supports both the PCMCIA and ISA versions of the  * WaveLAN/IEEE cards. Note however that the ISA card isn't really  * anything of the sort: it's actually a PCMCIA bridge adapter  * that fits into an ISA slot, into which a PCMCIA WaveLAN card is  * inserted. Consequently, you need to use the pccard support for  * both the ISA and PCMCIA adapters.  */
+comment|/*  * The WaveLAN/IEEE adapter is the second generation of the WaveLAN  * from Lucent. Unlike the older cards, the new ones are programmed  * entirely via a firmware-driven controller called the Hermes.  * Unfortunately, Lucent will not release the Hermes programming manual  * without an NDA (if at all). What they do release is an API library  * called the HCF (Hardware Control Functions) which is supposed to  * do the device-specific operations of a device driver for you. The  * publically available version of the HCF library (the 'HCF Light') is   * a) extremely gross, b) lacks certain features, particularly support  * for 802.11 frames, and c) is contaminated by the GNU Public License.  *  * This driver does not use the HCF or HCF Light at all. Instead, it  * programs the Hermes controller directly, using information gleaned  * from the HCF Light code and corresponding documentation.  *  * This driver supports both the PCMCIA and ISA versions of the  * WaveLAN/IEEE cards. Note however that the ISA card isn't really  * anything of the sort: it's actually a PCMCIA bridge adapter  * that fits into an ISA slot, into which a PCMCIA WaveLAN card is  * inserted. Consequently, you need to use the pccard support for  * both the ISA and PCMCIA adapters.  */
 end_comment
 
 begin_define
@@ -283,7 +283,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_wi.c,v 1.53 1999/05/07 03:14:21 wpaul Exp $"
+literal|"$Id: if_wi.c,v 1.54 1999/05/20 04:10:40 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +318,7 @@ literal|6
 index|]
 init|=
 block|{
-literal|0x00
+literal|0x01
 block|,
 literal|0x60
 block|,
@@ -1232,7 +1232,7 @@ modifier|*
 name|isa_dev
 decl_stmt|;
 block|{
-comment|/* 	 * The ISA WaveLAN/IEEE card is actually not an ISA card: 	 * it's a PCMCIA card plugged into a PCMCIA expander card 	 * that fits into an ISA slot. Consequently, we will always 	 * be using the pccard support to probe and attach these 	 * devices, so we can never actually probe one from here. 	 */
+comment|/* 	 * The ISA WaveLAN/IEEE card is actually not an ISA card: 	 * it's a PCMCIA card plugged into a PCMCIA bridge adapter 	 * that fits into an ISA slot. Consequently, we will always 	 * be using the pccard support to probe and attach these 	 * devices, so we can never actually probe one from here. 	 */
 return|return
 operator|(
 literal|0
@@ -3177,7 +3177,7 @@ operator|(
 name|ETIMEDOUT
 operator|)
 return|;
-comment|/* 	 * Read the length and record type and make sure they 	 * match what we expect (this verifies that we have enough 	 * room to hold all of the returned data. 	 */
+comment|/* 	 * Read the length and record type and make sure they 	 * match what we expect (this verifies that we have enough 	 * room to hold all of the returned data). 	 */
 name|len
 operator|=
 name|CSR_READ_2
@@ -5226,7 +5226,7 @@ operator|->
 name|wi_max_data_len
 argument_list|)
 expr_stmt|;
-comment|/* Enable/disable IBSS ctration. */
+comment|/* Enable/disable IBSS creation. */
 name|WI_SETVAL
 argument_list|(
 name|WI_RID_CREATE_IBSS
@@ -5658,7 +5658,7 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Use RFC1042 encoding for IP and ARP datagrames, 	 * 802.3 for anything else. 	 */
+comment|/* 	 * Use RFC1042 encoding for IP and ARP datagrams, 	 * 802.3 for anything else. 	 */
 if|if
 condition|(
 name|ntohs
