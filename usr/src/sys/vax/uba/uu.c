@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uu.c	4.6	83/06/11	*/
+comment|/*	uu.c	4.7	83/06/16	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TU58 DECtape II/DL11 device driver  *  * The TU58 * is treated as a block device (only).  Error detection and  * recovery is almost non-existant.  It is assumed that the  * TU58 will follow the RSP protocol exactly, very few protocol  * errors are checked for.    */
+comment|/*  * TU58 DECtape II/DL11 device driver  *  * The TU58 is treated as a block device (only).  Error detection and  * recovery is not very extensive, but sufficient to handle the most  * common errors. It is assumed that the  * TU58 will follow the RSP protocol exactly, very few protocol  * errors are checked for.    */
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"../h/errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/uio.h"
 end_include
 
 begin_include
@@ -395,10 +389,14 @@ begin_decl_stmt
 name|u_char
 name|uunull
 index|[
-literal|2
+literal|4
 index|]
 init|=
 block|{
+literal|0
+block|,
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -808,7 +806,9 @@ index|[
 literal|1
 index|]
 condition|)
-return|return;
+goto|goto
+name|ok
+goto|;
 comment|/* 	 * If the unit already initialized, 	 * just enable interrupts and return. 	 */
 if|if
 condition|(
@@ -959,86 +959,27 @@ name|uu_softc
 modifier|*
 name|uuc
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|UNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|int
-name|ctlr
-init|=
-name|unit
-operator|/
-name|NDPC
-decl_stmt|;
 name|uuc
 operator|=
 operator|&
 name|uu_softc
 index|[
-name|ctlr
+name|UNIT
+argument_list|(
+name|dev
+argument_list|)
+operator|/
+name|NDPC
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|uuc
-operator|->
-name|tu_serrs
-operator|+
-name|uuc
-operator|->
-name|tu_cerrs
-operator|+
-name|uuc
-operator|->
-name|tu_herrs
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 		 * A tu58 is like nothing ever seen before; 		 * I guess this is appropriate then... 		 */
-name|uprintf
-argument_list|(
-literal|"uu%d: %d soft errors, %d checksum errors, %d hard errors\n"
-argument_list|,
-name|unit
-argument_list|,
-name|uuc
-operator|->
-name|tu_serrs
-argument_list|,
-name|uuc
-operator|->
-name|tu_cerrs
-argument_list|,
-name|uuc
-operator|->
-name|tu_herrs
-argument_list|)
-expr_stmt|;
-name|uuc
-operator|->
-name|tu_serrs
-operator|=
-name|uuc
-operator|->
-name|tu_cerrs
-operator|=
-name|uuc
-operator|->
-name|tu_herrs
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|uuc
 operator|->
 name|tu_dopen
 index|[
-name|unit
+name|UNIT
+argument_list|(
+name|dev
+argument_list|)
 operator|&
 name|UMASK
 index|]
@@ -1300,6 +1241,13 @@ name|NDPC
 index|]
 expr_stmt|;
 comment|/* one request queue per controller */
+name|s
+operator|=
+name|splx
+argument_list|(
+name|UUIPL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1319,13 +1267,6 @@ name|pcnt
 index|[
 name|unit
 index|]
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splx
-argument_list|(
-name|UUIPL
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1853,45 +1794,27 @@ name|TUS_RCVERR
 case|:
 if|if
 condition|(
+operator|(
 name|c
 operator|&
 name|UURDB_ORUN
+operator|)
+operator|==
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"uu(%d): data overrun, bytes left: %d"
+literal|"uu%d: break received, transfer restarted\n"
 argument_list|,
-name|ui
-operator|->
-name|ui_unit
-argument_list|,
-name|uuc
-operator|->
-name|tu_count
-operator|+
-name|uuc
-operator|->
-name|tu_rcnt
-operator|-
 name|data
 operator|->
-name|pk_mcount
+name|pk_unit
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"uu(%d): break received"
-argument_list|,
-name|ui
+name|uuc
 operator|->
-name|ui_unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|", transfer restarted\n"
-argument_list|)
+name|tu_serrs
+operator|++
 expr_stmt|;
 name|uu_restart
 argument_list|(
@@ -2137,6 +2060,31 @@ comment|/* 	 * Got header, now get data; amount to 	 * fetch is included in pack
 case|case
 name|TUS_GETH
 case|:
+ifndef|#
+directive|ifndef
+name|UUDMA
+if|if
+condition|(
+name|data
+operator|->
+name|pk_flag
+operator|==
+name|TUF_DATA
+condition|)
+name|uuc
+operator|->
+name|tu_rbptr
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|uuc
+operator|->
+name|tu_addr
+expr_stmt|;
+endif|#
+directive|endif
 name|uuc
 operator|->
 name|tu_rcnt
@@ -2356,11 +2304,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uu(%d): no bp, active %d\n"
+literal|"uu%d: no bp, active %d\n"
 argument_list|,
-name|ui
+name|data
 operator|->
-name|ui_unit
+name|pk_unit
 argument_list|,
 name|uitab
 index|[
@@ -2504,23 +2452,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"neither data nor end: %o %o\n"
-argument_list|,
-name|data
-operator|->
-name|pk_flag
-operator|&
-literal|0xff
-argument_list|,
-name|data
-operator|->
-name|pk_op
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Neither data nor end: data was lost 			 * somehow, restart the transfer. 			 */
 name|uuaddr
 operator|->
 name|rcs
@@ -2528,18 +2460,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* flush the rest */
-name|uuc
-operator|->
-name|tu_state
-operator|=
-name|TUS_INIT1
-expr_stmt|;
 name|uu_restart
 argument_list|(
 name|ctlr
 argument_list|,
 name|ui
 argument_list|)
+expr_stmt|;
+name|uuc
+operator|->
+name|tu_serrs
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -2564,7 +2495,9 @@ name|printf
 argument_list|(
 literal|"uu%d protocol error, state="
 argument_list|,
-name|unit
+name|data
+operator|->
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printstate
@@ -2660,7 +2593,9 @@ name|printf
 argument_list|(
 literal|"uu%d receive state error, state="
 argument_list|,
-name|unit
+name|data
+operator|->
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printstate
@@ -2883,11 +2818,6 @@ name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-case|case
-name|TUS_IDLE
-case|:
-comment|/* stray interrupt? */
 break|break;
 comment|/* 	 * Read cmd packet sent, get ready for data 	 */
 case|case
@@ -3131,6 +3061,10 @@ expr_stmt|;
 comment|/* disable transm. interrupts */
 break|break;
 comment|/* 	 * Random interrupt 	 */
+case|case
+name|TUS_IDLE
+case|:
+comment|/* stray interrupt? */
 default|default:
 break|break;
 block|}
@@ -3262,6 +3196,7 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* 			 * If both devices on this controller have 			 * been closed and the request queue is 			 * empty, mark ths controller not active 			 */
 name|uuc
 operator|->
 name|tu_flag
@@ -3301,9 +3236,14 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"uu(%d): read stalled\n"
+literal|"uu%d: read stalled\n"
 argument_list|,
+name|uudata
+index|[
 name|ctlr
+index|]
+operator|.
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3855,7 +3795,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* 	 * to be added later 	 */
+comment|/* 	 * add code to wind/rewind cassette here 	 */
 return|return
 operator|(
 name|ENXIO
