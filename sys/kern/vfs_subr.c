@@ -12533,14 +12533,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_exit
-argument_list|(
-operator|&
-name|mountlist_mtx
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
