@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.22	82/11/13	*/
+comment|/*	ut.c	4.23	82/11/26	*/
 end_comment
 
 begin_include
@@ -4011,10 +4011,11 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|ubadone
-argument_list|(
 name|um
-argument_list|)
+operator|->
+name|um_ubinfo
+operator|=
+literal|0
 expr_stmt|;
 block|}
 operator|(
