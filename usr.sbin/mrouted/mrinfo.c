@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +28,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -252,6 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -1365,6 +1373,7 @@ return|;
 block|}
 block|}
 block|}
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -1373,7 +1382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: mrinfo [-n] [-t timeout] [-r retries] [router]\n"
+literal|"usage: mrinfo [-n] [-t timeout] [-r retries] [router]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1431,20 +1440,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mrinfo: must be root\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be root"
 argument_list|)
 expr_stmt|;
-block|}
 name|init_igmp
 argument_list|()
 expr_stmt|;
@@ -1726,12 +1728,11 @@ argument_list|(
 name|target_addr
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mrinfo: %s: no such host\n"
+literal|"%s: no such host"
 argument_list|,
 name|argv
 index|[
@@ -1739,12 +1740,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug
@@ -1914,19 +1909,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"Determining local address"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"determining local address"
 argument_list|)
 expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|udp
@@ -2136,7 +2126,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"select"
 argument_list|)
@@ -2253,7 +2243,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -2442,11 +2432,9 @@ operator|!=
 name|target_addr
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mrinfo: got reply from %s"
+literal|"got reply from %s instead of %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -2454,13 +2442,6 @@ name|src
 argument_list|,
 name|s1
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" instead of %s\n"
 argument_list|,
 name|inet_fmt
 argument_list|(

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) mtrace.c,v 5.1.1.1 1996/12/20 00:43:40 fenner Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,36 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
 
 begin_include
 include|#
@@ -39,25 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -69,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1690,6 +1703,19 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4192,7 +4218,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl (SIOCGIFCONF)"
 argument_list|)
@@ -5197,7 +5223,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"select"
 argument_list|)
@@ -5271,7 +5297,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -5289,10 +5315,8 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"packet too short (%u bytes) for IP header"
 argument_list|,
 name|recvlen
@@ -5342,11 +5366,9 @@ operator|!=
 name|recvlen
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"packet shorter (%u bytes) than hdr+data len (%u+%u)\n"
+literal|"packet shorter (%u bytes) than hdr+data len (%u+%u)"
 argument_list|,
 name|recvlen
 argument_list|,
@@ -5383,11 +5405,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"IP data field too short (%u bytes) for IGMP from %s\n"
+literal|"IP data field too short (%u bytes) for IGMP from %s"
 argument_list|,
 name|ipdatalen
 argument_list|,
@@ -5730,11 +5750,9 @@ operator|>
 name|code
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Num hops received (%d) exceeds request (%d)\n"
+literal|"num hops received (%d) exceeds request (%d)"
 argument_list|,
 name|len
 argument_list|,
@@ -5921,10 +5939,6 @@ name|int
 name|len
 decl_stmt|,
 name|recvlen
-decl_stmt|,
-name|dummy
-init|=
-literal|0
 decl_stmt|;
 name|u_int32
 name|smask
@@ -6050,7 +6064,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -6068,10 +6082,8 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"packet too short (%u bytes) for IP header"
 argument_list|,
 name|recvlen
@@ -6121,11 +6133,9 @@ operator|!=
 name|recvlen
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"packet shorter (%u bytes) than hdr+data len (%u+%u)\n"
+literal|"packet shorter (%u bytes) than hdr+data len (%u+%u)"
 argument_list|,
 name|recvlen
 argument_list|,
@@ -6162,11 +6172,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"IP data field too short (%u bytes) for IGMP from %s\n"
+literal|"IP data field too short (%u bytes) for IGMP from %s"
 argument_list|,
 name|ipdatalen
 argument_list|,
@@ -10554,20 +10562,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtrace: must be root\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be root"
 argument_list|)
 expr_stmt|;
-block|}
 name|init_igmp
 argument_list|()
 expr_stmt|;
@@ -10589,9 +10590,9 @@ name|argc
 operator|==
 literal|0
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|argc
@@ -10737,9 +10738,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'M'
 case|:
@@ -10992,9 +10993,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'m'
 case|:
@@ -11056,9 +11057,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'q'
 case|:
@@ -11109,9 +11110,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'g'
 case|:
@@ -11148,9 +11149,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'t'
 case|:
@@ -11205,9 +11206,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'e'
 case|:
@@ -11258,9 +11259,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'r'
 case|:
@@ -11297,9 +11298,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'i'
 case|:
@@ -11336,9 +11337,9 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 case|case
 literal|'S'
 case|:
@@ -11389,13 +11390,13 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 do|while
@@ -11453,9 +11454,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|argv
@@ -11551,9 +11552,9 @@ name|qdst
 argument_list|)
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -11569,9 +11570,9 @@ name|qgrp
 argument_list|)
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -11596,16 +11597,7 @@ literal|0
 condition|)
 block|{
 name|usage
-label|:
-name|printf
-argument_list|(
-literal|"\ Usage: mtrace [-Mlnps] [-w wait] [-m max_hops] [-q nqueries] [-g gateway]\n\               [-S statint] [-t ttl] [-r resp_dest] [-i if_addr] source [receiver] [group]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/*      * Set useful defaults for as many parameters as possible.      */
@@ -11662,11 +11654,9 @@ name|tunstats
 condition|)
 block|{
 comment|/* Stats are useless without a group */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mtrace: WARNING: no multicast group specified, so no statistics printed\n"
+literal|"WARNING: no multicast group specified, so no statistics printed"
 argument_list|)
 expr_stmt|;
 name|numstats
@@ -11681,11 +11671,9 @@ if|if
 condition|(
 name|weak
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mtrace: WARNING: group was specified so not performing \"weak\" mtrace\n"
+literal|"WARNING: group was specified so not performing \"weak\" mtrace"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11802,19 +11790,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"Determining local address"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"determining local address"
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|SUNOS5
@@ -11866,9 +11849,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"Getting my hostname"
+literal|"getting my hostname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -11909,9 +11892,9 @@ name|sin_addr
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"Finding IP address for my hostname"
+literal|"finding IP address for my hostname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -12031,9 +12014,9 @@ name|qsrc
 operator|==
 literal|0
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|dst_netmask
 operator|=
 name|get_netmask
@@ -12363,20 +12346,13 @@ literal|0
 operator|&&
 name|weak
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtrace: -W requires -g if destination is not local.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-W requires -g if destination is not local"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|IN_MULTICAST
@@ -13738,6 +13714,33 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: mtrace [-Mlnps] [-w wait] [-m max_hops] [-q nqueries]"
+argument_list|,
+literal|"              [-g gateway] [-S statint] [-t ttl] [-r resp_dest]"
+argument_list|,
+literal|"              [-i if_addr] source [receiver] [group]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

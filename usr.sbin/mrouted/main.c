@@ -1,11 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id$  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
 end_comment
 
 begin_comment
 comment|/*  * Written by Steve Deering, Stanford University, February 1989.  *  * (An earlier version of DVMRP was implemented by David Waitzman of  *  BBN STC by extending Berkeley's routed program.  Some of Waitzman's  *  extensions have been incorporated into mrouted, but none of the  *  original routed code has been adopted.)  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -58,27 +86,6 @@ include|#
 directive|include
 file|"snmp.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#) $Id$"
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -362,6 +369,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* To shut up gcc -Wstrict-prototypes */
 end_comment
@@ -538,20 +558,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mrouted: must be root\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be root"
 argument_list|)
 expr_stmt|;
-block|}
 name|argv
 operator|++
 operator|,
@@ -661,9 +674,9 @@ name|argv
 expr_stmt|;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -745,9 +758,9 @@ endif|#
 directive|endif
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -761,22 +774,9 @@ name|argc
 operator|>
 literal|0
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: mrouted [-p] [-c configfile] [-d [debug_level]]\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug
@@ -916,7 +916,7 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setsid"
 argument_list|)
@@ -2004,6 +2004,27 @@ comment|/* poll */
 endif|#
 directive|endif
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mrouted [-p] [-c configfile] [-d [debug_level]]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

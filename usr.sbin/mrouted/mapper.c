@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id$  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.10 1997/02/22 16:06:57 peter Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *    * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *    * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *    * These notices must be retained in any copies of any part of this software.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -502,6 +508,19 @@ operator|(
 name|char
 operator|*
 name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4375,20 +4394,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"map-mbone: must be root\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be root"
 argument_list|)
 expr_stmt|;
-block|}
 name|init_igmp
 argument_list|()
 expr_stmt|;
@@ -4457,9 +4469,9 @@ operator|&
 name|argc
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'f'
@@ -4506,9 +4518,9 @@ operator|&
 name|argc
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'t'
@@ -4531,14 +4543,14 @@ operator|&
 name|argc
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 break|break;
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|argv
 operator|++
@@ -4555,48 +4567,7 @@ literal|1
 condition|)
 block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: map-mbone [-f] [-g] [-n] [-t timeout] %s\n\n"
-argument_list|,
-literal|"[-r retries] [-d [debug-level]] [router]"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-f  Flood the routing graph with queries\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t    (True by default unless `router' is given)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-g  Generate output in GraphEd format\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-n  Don't look up DNS names for routers\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -4619,12 +4590,11 @@ index|]
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"Unknown host: %s\n"
+literal|"unknown host: %s"
 argument_list|,
 name|argv
 index|[
@@ -4632,12 +4602,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug
@@ -4770,19 +4734,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"Determining local address"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"determining local address"
 argument_list|)
 expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|udp
@@ -4920,7 +4879,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"select"
 argument_list|)
@@ -4991,7 +4950,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -5030,6 +4989,28 @@ block|}
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: map-mbone [-f] [-g] [-n] [-t timeout] [-r retries]"
+argument_list|,
+literal|"                 [-d [debug-level]] [router]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
