@@ -3606,6 +3606,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|next
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Don't deactivate pages that are busy. 		 */
