@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.9 (Berkeley) %G%"
+literal|"@(#)stty.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,18 @@ block|,
 name|OXTABS
 block|,
 literal|0
+block|,
+literal|"xtabs"
+block|,
+name|OXTABS
+block|,
+literal|0
+block|,
+literal|"-xtabs"
+block|,
+literal|0
+block|,
+name|OXTABS
 block|,
 literal|"oxtabs"
 block|,
@@ -978,6 +990,8 @@ modifier|*
 name|names
 index|[
 name|MAXNAMES
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
