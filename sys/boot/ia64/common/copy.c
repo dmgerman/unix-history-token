@@ -30,7 +30,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * MD primitives supporting placement of module data   *  * XXX should check load address/size against memory top.  */
+comment|/*  * MD primitives supporting placement of module data   */
 end_comment
 
 begin_include
@@ -72,6 +72,20 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+name|EFI_PHYSICAL_ADDRESS
+name|p
+init|=
+name|IA64_RR_MASK
+argument_list|(
+name|dest
+argument_list|)
+decl_stmt|;
+if|#
+directive|if
+literal|0
+block|BS->AllocatePages(AllocateAddress, EfiRuntimeServicesData, 			  len>> 12,&p);
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 name|src
@@ -80,7 +94,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|dest
+name|p
 argument_list|,
 name|len
 argument_list|)
@@ -114,7 +128,10 @@ operator|(
 name|void
 operator|*
 operator|)
+name|IA64_RR_MASK
+argument_list|(
 name|src
+argument_list|)
 argument_list|,
 name|dest
 argument_list|,
@@ -143,6 +160,20 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+name|EFI_PHYSICAL_ADDRESS
+name|p
+init|=
+name|IA64_RR_MASK
+argument_list|(
+name|dest
+argument_list|)
+decl_stmt|;
+if|#
+directive|if
+literal|0
+block|BS->AllocatePages(AllocateAddress, EfiRuntimeServicesData, 			  len>> 12,&p);
+endif|#
+directive|endif
 return|return
 operator|(
 name|read
@@ -153,7 +184,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|dest
+name|p
 argument_list|,
 name|len
 argument_list|)
