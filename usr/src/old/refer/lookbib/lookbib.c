@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookbib.c	4.4 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,10 +74,6 @@ name|hunt
 index|[
 literal|64
 index|]
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
 decl_stmt|;
 name|int
 name|instructions
@@ -184,6 +180,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s
@@ -209,6 +208,9 @@ operator|-
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s
@@ -264,6 +266,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|hunt
