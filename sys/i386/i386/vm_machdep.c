@@ -752,6 +752,13 @@ operator|~
 name|PSL_I
 expr_stmt|;
 comment|/* ints disabled */
+name|pcb2
+operator|->
+name|pcb_gs
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above. 	 * pcb2->pcb_ext:	cleared below. 	 */
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2
@@ -1321,6 +1328,13 @@ name|PSL_I
 operator|)
 expr_stmt|;
 comment|/* interrupts must be disabled */
+name|pcb2
+operator|->
+name|pcb_gs
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above.  XXXKSE ??? 	 * pcb2->pcb_ext:	cleared below. 	 */
 name|pcb2
 operator|->
