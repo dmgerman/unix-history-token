@@ -234,6 +234,20 @@ name|TRALTA
 value|288
 end_define
 
+begin_define
+define|#
+directive|define
+name|THALT
+value|289
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPDWN
+value|290
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int

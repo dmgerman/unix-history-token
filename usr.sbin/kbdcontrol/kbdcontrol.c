@@ -1084,6 +1084,22 @@ operator||
 literal|0x100
 return|;
 case|case
+name|THALT
+case|:
+return|return
+name|HALT
+operator||
+literal|0x100
+return|;
+case|case
+name|TPDWN
+case|:
+return|return
+name|PDWN
+operator||
+literal|0x100
+return|;
+case|case
 name|TACC
 case|:
 if|if
@@ -2137,6 +2153,32 @@ literal|" ralta "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|HALT
+operator||
+literal|0x100
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" halt  "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PDWN
+operator||
+literal|0x100
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" pdwn  "
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
@@ -3017,6 +3059,24 @@ case|:
 name|printf
 argument_list|(
 literal|"RALTA, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|HALT
+case|:
+name|printf
+argument_list|(
+literal|" HALT, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PDWN
+case|:
+name|printf
+argument_list|(
+literal|" PDWN, "
 argument_list|)
 expr_stmt|;
 break|break;

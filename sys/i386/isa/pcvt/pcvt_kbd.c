@@ -6273,7 +6273,9 @@ name|altgr_down
 operator|)
 condition|)
 name|shutdown_nice
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -1200,6 +1200,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HALT
+value|0xa1
+end_define
+
+begin_comment
+comment|/* halt machine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDWN
+value|0xa2
+end_define
+
+begin_comment
+comment|/* halt machine and power down */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|F
 parameter_list|(
 name|x

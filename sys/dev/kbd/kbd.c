@@ -5428,6 +5428,12 @@ case|:
 case|case
 name|PNC
 case|:
+case|case
+name|HALT
+case|:
+case|case
+name|PDWN
+case|:
 operator|*
 name|accents
 operator|=

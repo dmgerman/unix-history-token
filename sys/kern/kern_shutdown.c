@@ -585,11 +585,27 @@ begin_comment
 comment|/*  * Called by events that want to shut down.. e.g<CTL><ALT><DEL> on a PC  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|shutdown_howto
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|shutdown_nice
-parameter_list|()
+parameter_list|(
+name|int
+name|howto
+parameter_list|)
 block|{
+name|shutdown_howto
+operator|=
+name|howto
+expr_stmt|;
 comment|/* Send a signal to init(8) and have it shutdown the world */
 if|if
 condition|(
@@ -789,6 +805,11 @@ name|int
 name|howto
 decl_stmt|;
 block|{
+comment|/* collect extra flags that shutdown_nice might have set */
+name|howto
+operator||=
+name|shutdown_howto
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
