@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -448,11 +448,16 @@ name|message
 argument_list|(
 literal|"220"
 argument_list|,
-literal|"%s Sendmail version %s at your service"
+literal|"%s Sendmail v%s ready at %s"
 argument_list|,
 name|HostName
 argument_list|,
 name|Version
+argument_list|,
+name|arpadate
+argument_list|(
+name|NULL
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
