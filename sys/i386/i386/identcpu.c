@@ -871,6 +871,21 @@ operator|=
 name|CPU_PIII
 expr_stmt|;
 break|break;
+case|case
+literal|0x80
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Pentium III"
+argument_list|)
+expr_stmt|;
+name|cpu
+operator|=
+name|CPU_PIII
+expr_stmt|;
+break|break;
 default|default:
 name|strcat
 argument_list|(
