@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,14 @@ end_function_decl
 begin_function_decl
 name|off_t
 name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|readline
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -395,13 +403,22 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Errors jump back to the main loop here. 	 * If the error occurred while the process was running, 	 * we need to remove any breakpoints. 	 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|mainloop
 argument_list|)
+condition|)
+name|waserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* well, presumably */
+else|else
+name|waserr
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -786,29 +803,24 @@ begin_comment
 comment|/*  * Read a line.  Return -1 at end of file.  * Alas, cannot read more than one character at a time here (except  * possibly on tty devices; must think about that later).  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|readline
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|n
 operator|--
@@ -879,7 +891,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the next non-white non-end-of-line character.  */
