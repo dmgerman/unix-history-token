@@ -4783,6 +4783,9 @@ condition|)
 return|return
 literal|0
 return|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|p
@@ -4907,6 +4910,9 @@ name|vm_page_free_zero
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 return|return
 literal|1
