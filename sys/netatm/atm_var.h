@@ -939,6 +939,15 @@ comment|/* atm_socket.c */
 end_comment
 
 begin_function_decl
+name|void
+name|atm_sock_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|atm_sock_attach
 parameter_list|(
