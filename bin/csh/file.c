@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.6 1997/02/22 14:01:54 peter Exp $"
+literal|"$Id: file.c,v 1.7 1997/08/07 21:42:08 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2304,9 +2304,6 @@ condition|(
 name|looking_for_lognames
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|setpwent
 argument_list|()
 expr_stmt|;
@@ -2604,9 +2601,6 @@ if|if
 condition|(
 name|looking_for_lognames
 condition|)
-operator|(
-name|void
-operator|)
 name|setpwent
 argument_list|()
 expr_stmt|;

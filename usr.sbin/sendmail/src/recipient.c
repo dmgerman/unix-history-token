@@ -3004,9 +3004,6 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|setpwent
 argument_list|()
 expr_stmt|;
