@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.1 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.2 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -42,12 +42,6 @@ name|NTMSCP
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"../vax/pte.h"
-end_include
 
 begin_include
 include|#
@@ -137,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -3002,6 +3002,12 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|tms
+operator|->
+name|tms_openf
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(

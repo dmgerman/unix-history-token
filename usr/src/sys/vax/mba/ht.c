@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,12 +20,6 @@ end_if
 begin_comment
 comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	cleanup messages on errors  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	fixup rle error on block tape code  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -103,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
 end_include
 
 begin_include
@@ -328,6 +328,14 @@ modifier|*
 name|sc_ttyp
 decl_stmt|;
 comment|/* record user's tty for errors */
+name|int
+name|sc_blks
+decl_stmt|;
+comment|/* number of I/O operations since open */
+name|int
+name|sc_softerrs
+decl_stmt|;
+comment|/* number of soft I/O errors since open */
 block|}
 name|tu_softc
 index|[
@@ -641,6 +649,12 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|1
+expr_stmt|;
 name|olddens
 operator|=
 name|sc
@@ -702,6 +716,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"tu%d: not online\n"
@@ -732,6 +752,12 @@ name|HTDS_WRL
 operator|)
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"tu%d: no write ring\n"
@@ -770,6 +796,12 @@ operator|->
 name|sc_dens
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 name|uprintf
 argument_list|(
 literal|"tu%d: can't change density in mid-tape\n"
@@ -783,12 +815,6 @@ name|EIO
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_openf
-operator|=
-literal|1
-expr_stmt|;
 name|sc
 operator|->
 name|sc_blkno
@@ -815,6 +841,18 @@ operator|->
 name|sc_dens
 operator|=
 name|dens
+expr_stmt|;
+name|sc
+operator|->
+name|sc_blks
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_softerrs
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -939,6 +977,44 @@ argument_list|,
 name|HT_REW
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_blks
+operator|>
+literal|100
+operator|&&
+name|sc
+operator|->
+name|sc_softerrs
+operator|>
+name|sc
+operator|->
+name|sc_blks
+operator|/
+literal|100
+condition|)
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"tu%d: %d soft errors in %d blocks\n"
+argument_list|,
+name|TUUNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|sc_softerrs
+argument_list|,
+name|sc
+operator|->
+name|sc_blks
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2172,6 +2248,24 @@ operator|->
 name|b_resid
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_blks
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_errcnt
+condition|)
+name|sc
+operator|->
+name|sc_softerrs
+operator|++
 expr_stmt|;
 if|if
 condition|(
