@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.68 1996/02/02 22:08:28 ache Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.69 1996/02/03 00:06:49 ache Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -8676,6 +8676,12 @@ operator|->
 name|data_format
 operator|!=
 name|CD_CURRENT_POSITION
+operator|&&
+name|sc
+operator|->
+name|data_format
+operator|!=
+name|CD_MEDIA_CATALOG
 condition|)
 return|return
 name|EINVAL
@@ -8731,6 +8737,43 @@ name|sc
 operator|->
 name|data_format
 expr_stmt|;
+switch|switch
+condition|(
+name|sc
+operator|->
+name|data_format
+condition|)
+block|{
+case|case
+name|CD_MEDIA_CATALOG
+case|:
+name|data
+operator|.
+name|what
+operator|.
+name|media_catalog
+operator|.
+name|mc_valid
+operator|=
+literal|1
+expr_stmt|;
+name|data
+operator|.
+name|what
+operator|.
+name|media_catalog
+operator|.
+name|mc_number
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+case|case
+name|CD_CURRENT_POSITION
+case|:
 name|data
 operator|.
 name|what
@@ -8970,7 +9013,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Pre-gap has index number of 0, and decreasing MSF 		 * address.  Must be converted to negative LBA, per 		 * SCSI spec. 		 */
+comment|/* 			 * Pre-gap has index number of 0, and decreasing MSF 			 * address.  Must be converted to negative LBA, per 			 * SCSI spec. 			 */
 if|if
 condition|(
 name|data
@@ -9025,6 +9068,8 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 break|break;
 block|}
 return|return
