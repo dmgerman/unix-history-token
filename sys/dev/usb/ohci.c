@@ -5124,28 +5124,12 @@ name|intrs
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* nothing to be done ?! */
-name|printf
-argument_list|(
-literal|"%s: interrupt, but not for us\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* nothing to be done (PCI shared interrupt) */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|intrs
 operator|&=
 operator|~

@@ -4628,7 +4628,7 @@ name|status
 operator|==
 literal|0
 condition|)
-comment|/* The interrupt was not for us. */
+comment|/* nothing to be done (PCI shared interrupt) */
 return|return
 operator|(
 literal|0
