@@ -869,8 +869,6 @@ modifier|*
 name|hp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rval
 decl_stmt|;
 specifier|static
@@ -1461,8 +1459,6 @@ modifier|*
 name|hp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rval
 decl_stmt|;
 ifdef|#
@@ -3760,8 +3756,6 @@ index|]
 decl_stmt|;
 name|int
 name|af0
-init|=
-name|af
 decl_stmt|;
 name|name
 operator|=
@@ -3825,6 +3819,10 @@ operator|=
 name|hp
 operator|=
 name|NULL
+expr_stmt|;
+name|af0
+operator|=
+name|af
 expr_stmt|;
 while|while
 condition|(
