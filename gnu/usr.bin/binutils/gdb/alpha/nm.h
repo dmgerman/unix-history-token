@@ -124,11 +124,11 @@ directive|include
 file|"solib.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"elf/common.h"
+end_include
 
 begin_define
 define|#
@@ -141,11 +141,6 @@ define|#
 directive|define
 name|TARGET_ELF64
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* This is a lie.  It's actually in stdio.h. */

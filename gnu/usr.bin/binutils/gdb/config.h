@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -964,12 +968,23 @@ begin_comment
 comment|/* Define if<sys/procfs.h> has gregset_t. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|HAVE_GREGSET_T
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if<sys/procfs.h> has fpregset_t. */
