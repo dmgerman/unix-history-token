@@ -103,7 +103,7 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|MB_LEN_MAX
+name|MB_CUR_MAX
 operator|==
 literal|1
 operator|&&
