@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer7.c	4.3 (Berkeley) %G%"
+literal|"@(#)refer7.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,13 @@ operator|!
 name|endpush
 condition|)
 return|return;
+if|if
+condition|(
+name|fo
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fclose
 argument_list|(
 name|fo
@@ -186,6 +193,7 @@ name|fo
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sort
