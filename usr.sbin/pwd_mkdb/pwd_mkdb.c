@@ -766,6 +766,7 @@ literal|0
 index|]
 operator|==
 literal|'+'
+operator|||
 name|pwd
 operator|.
 name|pw_name
