@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)calendar.c	4.4 (Berkeley) 83/07/03"
+literal|"@(#)calendar.c	4.5 (Berkeley) 84/05/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(^|[ (,;])((%s[^ ]* *|(0%d|%d)/)0*%d)([^0123456789]|$)\n"
+literal|"(^|[ 	(,;])((%s[^ \t]*[ \t]*|(0%d|%d)/)0*%d)([^0123456789]|$)\n"
 argument_list|,
 name|month
 index|[
@@ -127,7 +127,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(^|[ (,;])((\\* *)0*%d)([^0123456789]|$)\n"
+literal|"(^|[ 	(,;])((\\*[ \t]*)0*%d)([^0123456789]|$)\n"
 argument_list|,
 name|tm
 operator|->
