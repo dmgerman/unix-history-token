@@ -131,8 +131,8 @@ name|struct
 name|timespec
 name|si_mtime
 decl_stmt|;
-name|dev_t
-name|si_udev
+name|u_int
+name|si_drv0
 decl_stmt|;
 name|int
 name|si_refcount

@@ -898,7 +898,7 @@ operator|(
 operator|(
 name|x
 operator|->
-name|si_udev
+name|si_drv0
 operator|>>
 literal|8
 operator|)
@@ -932,7 +932,7 @@ return|return
 operator|(
 name|x
 operator|->
-name|si_udev
+name|si_drv0
 operator|&
 name|MAXMINOR
 operator|)
@@ -1217,7 +1217,7 @@ if|if
 condition|(
 name|si2
 operator|->
-name|si_udev
+name|si_drv0
 operator|==
 name|udev
 condition|)
@@ -1236,7 +1236,7 @@ block|}
 block|}
 name|si
 operator|->
-name|si_udev
+name|si_drv0
 operator|=
 name|udev
 expr_stmt|;
@@ -1341,7 +1341,7 @@ if|if
 condition|(
 name|si
 operator|->
-name|si_udev
+name|si_drv0
 operator|==
 name|udev
 condition|)
@@ -3693,7 +3693,7 @@ literal|"Driver has goofed in cloning underways udev %x"
 operator|,
 name|dev
 operator|->
-name|si_udev
+name|si_drv0
 operator|)
 argument_list|)
 expr_stmt|;
