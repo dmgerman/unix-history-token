@@ -3271,7 +3271,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0
+literal|1
 operator|&&
 name|pci_get_subclass
 argument_list|(
@@ -3374,6 +3374,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mode
+operator|=
+name|ata_limit_mode
+argument_list|(
+name|atadev
+argument_list|,
+name|mode
+argument_list|,
+name|ATA_WDMA2
+argument_list|)
+expr_stmt|;
 comment|/* XXX missing WDMA0+1 + PIO modes */
 if|if
 condition|(
