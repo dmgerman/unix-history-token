@@ -15,6 +15,23 @@ directive|include
 file|<dev/sound/pcm/vchan.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USING_MUTEX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|SND_DECLARE_FILE
 argument_list|(
@@ -169,7 +186,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|sx
 name|sndstat_lock
 decl_stmt|;
 end_decl_stmt
@@ -365,7 +382,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -390,7 +407,7 @@ name|sndstat_verbose
 operator|=
 name|verbose
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -470,7 +487,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -481,7 +498,7 @@ condition|(
 name|sndstat_isopen
 condition|)
 block|{
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -500,7 +517,7 @@ name|sndstat_isopen
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -568,7 +585,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -578,7 +595,7 @@ name|sndstat_isopen
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -628,7 +645,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -640,7 +657,7 @@ operator|!
 name|sndstat_isopen
 condition|)
 block|{
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -665,7 +682,7 @@ name|sndstat_isopen
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -714,7 +731,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -726,7 +743,7 @@ operator|!
 name|sndstat_isopen
 condition|)
 block|{
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -787,7 +804,7 @@ name|sndstat_bufptr
 operator|+=
 name|l
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1031,7 +1048,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1068,7 +1085,7 @@ name|unit
 else|:
 name|sndstat_maxunit
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1128,7 +1145,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1164,7 +1181,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1187,7 +1204,7 @@ literal|0
 return|;
 block|}
 block|}
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1226,7 +1243,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1271,7 +1288,7 @@ expr_stmt|;
 name|sndstat_files
 operator|--
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1294,7 +1311,7 @@ literal|0
 return|;
 block|}
 block|}
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1572,16 +1589,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|sndstat_lock
 argument_list|,
 literal|"sndstat"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|sndstat_dev
@@ -1632,7 +1645,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1643,7 +1656,7 @@ condition|(
 name|sndstat_isopen
 condition|)
 block|{
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|sndstat_lock
@@ -1676,7 +1689,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|sndstat_lock
