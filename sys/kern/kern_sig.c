@@ -452,6 +452,9 @@ name|td
 parameter_list|,
 name|int
 name|sig
+parameter_list|,
+name|sigtarget_t
+name|target
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3917,6 +3920,8 @@ argument_list|,
 name|info
 operator|.
 name|si_signo
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -4112,6 +4117,8 @@ argument_list|,
 name|info
 operator|.
 name|si_signo
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -4268,6 +4275,8 @@ argument_list|,
 name|info
 operator|.
 name|si_signo
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -7744,6 +7753,8 @@ argument_list|(
 name|td
 argument_list|,
 name|sig
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 block|}
@@ -7910,6 +7921,8 @@ argument_list|(
 name|td
 argument_list|,
 name|sig
+argument_list|,
+name|SIGTARGET_P
 argument_list|)
 expr_stmt|;
 block|}
@@ -7930,6 +7943,9 @@ name|td
 parameter_list|,
 name|int
 name|sig
+parameter_list|,
+name|sigtarget_t
+name|target
 parameter_list|)
 block|{
 name|sigset_t
@@ -7963,6 +7979,8 @@ argument_list|(
 name|td
 argument_list|,
 name|sig
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 if|if
@@ -8031,6 +8049,9 @@ name|td
 parameter_list|,
 name|int
 name|sig
+parameter_list|,
+name|sigtarget_t
+name|target
 parameter_list|)
 block|{
 name|struct
@@ -8112,9 +8133,15 @@ argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this thread is blocking this signal then we'll leave it in the 	 * proc so that we can find it in the first thread that unblocks it. 	 */
+comment|/* 	 * If this thread is blocking this signal then we'll leave it in the 	 * proc so that we can find it in the first thread that unblocks 	 * it--  unless the signal is meant for the thread and not the process. 	 */
 if|if
 condition|(
+name|target
+operator|==
+name|SIGTARGET_P
+condition|)
+name|siglist
+operator|=
 name|SIGISMEMBER
 argument_list|(
 name|td
@@ -8123,13 +8150,16 @@ name|td_sigmask
 argument_list|,
 name|sig
 argument_list|)
-condition|)
-name|siglist
-operator|=
+condition|?
 operator|&
 name|p
 operator|->
 name|p_siglist
+else|:
+operator|&
+name|td
+operator|->
+name|td_siglist
 expr_stmt|;
 else|else
 name|siglist

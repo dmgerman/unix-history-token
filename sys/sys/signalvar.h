@@ -654,6 +654,23 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * Specifies the target of a signal.  *	P - Doesn't matter which thread it gets delivered to.  *	TD - Must be delivered to a specific thread.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|sigtarget_enum
+block|{
+name|SIGTARGET_P
+block|,
+name|SIGTARGET_TD
+block|}
+name|sigtarget_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Return nonzero if process p has an unmasked pending signal. */
 end_comment
 
@@ -1076,6 +1093,9 @@ name|td
 parameter_list|,
 name|int
 name|sig
+parameter_list|,
+name|sigtarget_t
+name|target
 parameter_list|)
 function_decl|;
 end_function_decl

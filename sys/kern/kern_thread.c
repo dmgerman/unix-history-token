@@ -1884,6 +1884,8 @@ argument_list|(
 name|td2
 argument_list|,
 name|sig
+argument_list|,
+name|SIGTARGET_P
 argument_list|)
 expr_stmt|;
 block|}

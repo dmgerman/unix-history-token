@@ -953,7 +953,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * We need a way to force this to go into this thread's siglist. 	 * Until then blocked signals will go to the proc. 	 */
 name|tdsignal
 argument_list|(
 name|ttd
@@ -961,6 +960,8 @@ argument_list|,
 name|uap
 operator|->
 name|sig
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 name|out
