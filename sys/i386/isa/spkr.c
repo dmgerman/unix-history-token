@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.38 1999/08/17 20:25:49 billf Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.39 1999/08/23 20:35:17 bde Exp $  */
 end_comment
 
 begin_include
@@ -16,12 +16,6 @@ name|NSPEAKER
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -82,31 +76,6 @@ include|#
 directive|include
 file|<machine/speaker.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2755,25 +2724,12 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|spkr_cdevsw
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|spkr_cdevsw
 argument_list|,
 literal|0
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -2784,8 +2740,6 @@ argument_list|,
 literal|"speaker"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

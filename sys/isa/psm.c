@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.15 1999/08/17 12:14:13 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.16 1999/08/22 06:11:52 yokota Exp $  */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -115,23 +109,6 @@ include|#
 directive|include
 file|<sys/rman.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -581,19 +558,6 @@ name|int
 name|yold
 decl_stmt|;
 comment|/* previous absolute Y position */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|b_devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PSM_HOOKAPM
@@ -4603,14 +4567,7 @@ operator|=
 name|PSM_VALID
 expr_stmt|;
 comment|/* Done */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|psm_cdevsw
@@ -4621,8 +4578,6 @@ name|unit
 argument_list|,
 name|FALSE
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -4635,11 +4590,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|b_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|psm_cdevsw
@@ -4650,8 +4601,6 @@ name|unit
 argument_list|,
 name|TRUE
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -4664,9 +4613,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS */
 ifdef|#
 directive|ifdef
 name|PSM_HOOKAPM

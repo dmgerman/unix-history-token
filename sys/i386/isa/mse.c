@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.43 1999/05/30 16:52:20 phk Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.44 1999/05/31 11:26:17 phk Exp $  */
 end_comment
 
 begin_comment
@@ -24,12 +24,6 @@ name|NMSE
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -72,27 +66,6 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -390,19 +363,6 @@ decl_stmt|;
 name|mousestatus_t
 name|status
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|n_devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|mse_sc
 index|[
@@ -1282,14 +1242,7 @@ operator|)
 operator|>>
 literal|4
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mse_cdevsw
@@ -1297,8 +1250,6 @@ argument_list|,
 name|unit
 operator|<<
 literal|1
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -1311,11 +1262,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|n_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mse_cdevsw
@@ -1328,8 +1275,6 @@ operator|)
 operator|+
 literal|1
 argument_list|,
-name|DV_CHR
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -1341,8 +1286,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1

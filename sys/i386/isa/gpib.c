@@ -24,12 +24,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -62,27 +56,6 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -514,16 +487,6 @@ modifier|*
 name|sc_inbuf
 decl_stmt|;
 comment|/* buffer for data		*/
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-comment|/* handle for devfs entry	*/
-endif|#
-directive|endif
 block|}
 name|gpib_sc
 struct|;
@@ -774,21 +737,12 @@ name|sc_flags
 operator||=
 name|ATTACHED
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|gp_cdevsw
 argument_list|,
 literal|0
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -799,8 +753,6 @@ argument_list|,
 literal|"gp"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1

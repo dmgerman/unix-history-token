@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.51 1999/05/30 16:52:31 phk Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.52 1999/05/31 11:26:40 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -24,12 +24,6 @@ name|NWT
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -78,27 +72,6 @@ include|#
 directive|include
 file|<sys/conf.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -632,15 +605,6 @@ name|REQUEST
 decl_stmt|,
 name|IEN
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token_r
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|wtinfo_t
 typedef|;
@@ -1423,14 +1387,7 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|t
-operator|->
-name|devfs_token_r
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|wt_cdevsw
@@ -1438,8 +1395,6 @@ argument_list|,
 name|id
 operator|->
 name|id_unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -1454,8 +1409,6 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1

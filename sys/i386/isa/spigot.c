@@ -32,9 +32,6 @@ endif|#
 directive|endif
 include|#
 directive|include
-file|"opt_devfs.h"
-include|#
-directive|include
 file|"opt_spigot.h"
 include|#
 directive|include
@@ -57,15 +54,6 @@ file|<sys/signalvar.h>
 include|#
 directive|include
 file|<sys/mman.h>
-ifdef|#
-directive|ifdef
-name|DEVFS
-include|#
-directive|include
-file|<sys/devfsext.h>
-endif|#
-directive|endif
-comment|/* DEVFS */
 include|#
 directive|include
 file|<machine/frame.h>
@@ -100,17 +88,7 @@ name|signal_num
 block|;
 name|u_short
 name|irq
-block|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-operator|*
-name|devfs_token
-block|;
-endif|#
-directive|endif
-block|}
+block|; }
 name|spigot_softc
 index|[
 name|NSPIGOT
@@ -473,21 +451,12 @@ name|devp
 operator|->
 name|id_irq
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|ss
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|spigot_cdevsw
 argument_list|,
 name|unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -500,8 +469,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;

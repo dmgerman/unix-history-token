@@ -444,16 +444,6 @@ name|int
 name|pwr_off_pending
 decl_stmt|;
 comment|/* Power status of slot */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS*/
 name|struct
 name|slot
 modifier|*

@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.37 1999/05/30 16:52:07 phk Exp $  */
+comment|/*  * $Id: asc.c,v 1.38 1999/05/31 11:25:50 phk Exp $  */
 end_comment
 
 begin_include
@@ -74,33 +74,6 @@ include|#
 directive|include
 file|<sys/select.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -630,28 +603,6 @@ name|size_t
 name|bcount
 decl_stmt|;
 comment|/* bytes to read, for pnm modes */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_asc
-decl_stmt|;
-comment|/* storage for devfs tokens (handles) */
-name|void
-modifier|*
-name|devfs_ascp
-decl_stmt|;
-name|void
-modifier|*
-name|devfs_ascd
-decl_stmt|;
-name|void
-modifier|*
-name|devfs_ascpd
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1967,9 +1918,6 @@ name|pid_t
 operator|)
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 define|#
 directive|define
 name|ASC_UID
@@ -1978,11 +1926,7 @@ define|#
 directive|define
 name|ASC_GID
 value|13
-name|scu
-operator|->
-name|devfs_asc
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|asc_cdevsw
@@ -1990,8 +1934,6 @@ argument_list|,
 name|unit
 operator|<<
 literal|6
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|ASC_UID
 argument_list|,
@@ -2004,11 +1946,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_ascp
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|asc_cdevsw
@@ -2022,8 +1960,6 @@ operator|)
 operator|+
 name|FRMT_PBM
 operator|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|ASC_UID
 argument_list|,
@@ -2036,11 +1972,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_ascd
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|asc_cdevsw
@@ -2055,8 +1987,6 @@ operator|+
 name|DBUG_MASK
 operator|)
 argument_list|,
-name|DV_CHR
-argument_list|,
 name|ASC_UID
 argument_list|,
 name|ASC_GID
@@ -2068,11 +1998,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_ascpd
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|asc_cdevsw
@@ -2089,8 +2015,6 @@ operator|+
 name|FRMT_PBM
 operator|)
 argument_list|,
-name|DV_CHR
-argument_list|,
 name|ASC_UID
 argument_list|,
 name|ASC_GID
@@ -2102,9 +2026,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*DEVFS*/
 return|return
 name|ATTACH_SUCCESS
 return|;

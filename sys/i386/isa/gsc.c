@@ -20,12 +20,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -58,27 +52,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -566,28 +539,6 @@ name|_sbuf
 name|hbuf
 decl_stmt|;
 comment|/* buffer for pnm header data */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_gsc
-decl_stmt|;
-comment|/* storage for devfs tokens (handles) */
-name|void
-modifier|*
-name|devfs_gscp
-decl_stmt|;
-name|void
-modifier|*
-name|devfs_gscd
-decl_stmt|;
-name|void
-modifier|*
-name|devfs_gscpd
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2133,9 +2084,6 @@ operator|&=
 operator|~
 name|FLAG_DEBUG
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 define|#
 directive|define
 name|GSC_UID
@@ -2144,11 +2092,7 @@ define|#
 directive|define
 name|GSC_GID
 value|13
-name|scu
-operator|->
-name|devfs_gsc
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|gsc_cdevsw
@@ -2156,8 +2100,6 @@ argument_list|,
 name|unit
 operator|<<
 literal|6
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|GSC_UID
 argument_list|,
@@ -2170,11 +2112,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_gscp
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|gsc_cdevsw
@@ -2188,8 +2126,6 @@ operator|)
 operator|+
 name|FRMT_PBM
 operator|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|GSC_UID
 argument_list|,
@@ -2202,11 +2138,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_gscd
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|gsc_cdevsw
@@ -2221,8 +2153,6 @@ operator|+
 name|DBUG_MASK
 operator|)
 argument_list|,
-name|DV_CHR
-argument_list|,
 name|GSC_UID
 argument_list|,
 name|GSC_GID
@@ -2234,11 +2164,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|scu
-operator|->
-name|devfs_gscpd
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|gsc_cdevsw
@@ -2255,8 +2181,6 @@ operator|+
 name|FRMT_PBM
 operator|)
 argument_list|,
-name|DV_CHR
-argument_list|,
 name|GSC_UID
 argument_list|,
 name|GSC_GID
@@ -2268,9 +2192,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*DEVFS*/
 return|return
 name|ATTACH_SUCCESS
 return|;

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.46 1999/05/30 16:52:24 phk Exp $ */
+comment|/* $Id: scd.c,v 1.47 1999/05/31 11:26:26 phk Exp $ */
 end_comment
 
 begin_comment
@@ -31,12 +31,6 @@ name|NSCD
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -85,27 +79,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -485,27 +458,6 @@ name|struct
 name|scd_mbx
 name|mbx
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|ra_devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|rc_devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|a_devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|c_devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|scd_data
 index|[
@@ -1143,14 +1095,7 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|cd
-operator|->
-name|ra_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|scd_cdevsw
@@ -1163,8 +1108,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1177,11 +1120,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|rc_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|scd_cdevsw
@@ -1194,8 +1133,6 @@ literal|0
 argument_list|,
 name|RAW_PART
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1208,11 +1145,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|a_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|scd_cdevsw
@@ -1226,8 +1159,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|DV_BLK
-argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
@@ -1239,11 +1170,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|c_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|scd_cdevsw
@@ -1257,8 +1184,6 @@ argument_list|,
 name|RAW_PART
 argument_list|)
 argument_list|,
-name|DV_BLK
-argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
@@ -1270,8 +1195,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;

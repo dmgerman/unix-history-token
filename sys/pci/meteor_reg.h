@@ -1181,15 +1181,6 @@ decl_stmt|;
 comment|/* frames per second */
 ifdef|#
 directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|METEOR_TEST_VIDEO
 name|struct
 name|meteor_video

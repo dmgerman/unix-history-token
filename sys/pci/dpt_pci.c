@@ -8,14 +8,8 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.13 1999/05/09 17:06:44 peter Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.14 1999/08/16 01:52:20 gibbs Exp $"
 end_empty
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#

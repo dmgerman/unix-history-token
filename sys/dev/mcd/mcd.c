@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.107 1999/05/30 16:52:19 phk Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.108 1999/05/31 11:26:15 phk Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -27,12 +27,6 @@ name|NMCD
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -87,27 +81,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -555,31 +528,6 @@ name|struct
 name|mcd_mbx
 name|mbx
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|ra_devfs_token
-decl_stmt|;
-comment|/* store the devfs handle here */
-name|void
-modifier|*
-name|rc_devfs_token
-decl_stmt|;
-comment|/* store the devfs handle here */
-name|void
-modifier|*
-name|a_devfs_token
-decl_stmt|;
-comment|/* store the devfs handle here */
-name|void
-modifier|*
-name|c_devfs_token
-decl_stmt|;
-comment|/* store the devfs handle here */
-endif|#
-directive|endif
 block|}
 name|mcd_data
 index|[
@@ -1407,14 +1355,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* name filled in probe */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|cd
-operator|->
-name|ra_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mcd_cdevsw
@@ -1427,8 +1368,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1441,11 +1380,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|rc_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mcd_cdevsw
@@ -1458,8 +1393,6 @@ literal|0
 argument_list|,
 name|RAW_PART
 argument_list|)
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1472,11 +1405,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|a_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mcd_cdevsw
@@ -1490,8 +1419,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|DV_BLK
-argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
@@ -1503,11 +1430,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|cd
-operator|->
-name|c_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|mcd_cdevsw
@@ -1521,8 +1444,6 @@ argument_list|,
 name|RAW_PART
 argument_list|)
 argument_list|,
-name|DV_BLK
-argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
@@ -1534,8 +1455,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;

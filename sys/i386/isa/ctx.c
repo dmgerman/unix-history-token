@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.31 1999/05/30 16:52:09 phk Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.32 1999/05/31 11:25:54 phk Exp $  */
 end_comment
 
 begin_comment
@@ -20,12 +20,6 @@ name|NCTX
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -62,27 +56,6 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -354,10 +327,6 @@ decl_stmt|;
 name|int
 name|msize
 decl_stmt|;
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
 block|}
 name|ctx_sr
 index|[
@@ -501,21 +470,12 @@ name|devp
 operator|->
 name|id_msize
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sr
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|ctx_cdevsw
 argument_list|,
 literal|0
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -530,9 +490,6 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS */
 return|return
 operator|(
 literal|1

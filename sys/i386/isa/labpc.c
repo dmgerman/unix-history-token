@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -69,27 +63,6 @@ include|#
 directive|include
 file|<sys/conf.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -352,15 +325,6 @@ name|callout_handle
 name|ch
 decl_stmt|;
 comment|/* Device configuration structure: 	 */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2104,23 +2068,13 @@ operator|->
 name|dcr_val
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|ctlr
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|labpc_cdevsw
 argument_list|,
 literal|0
 argument_list|,
-name|DV_CHR
-argument_list|,
-comment|/* what  UID GID PERM */
 literal|0
 argument_list|,
 literal|0
@@ -2134,8 +2088,6 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;

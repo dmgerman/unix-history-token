@@ -17,12 +17,6 @@ operator|>
 literal|0
 end_if
 
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
 begin_comment
 comment|/*  * Driver configuration parameters  */
 end_comment
@@ -107,27 +101,6 @@ include|#
 directive|include
 file|<sys/poll.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_define
 define|#
@@ -633,16 +606,6 @@ comment|/* usec time stamp on interrupt */
 endif|#
 directive|endif
 comment|/* HIRESTIME */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-comment|/* store the devfs handle */
-endif|#
-directive|endif
 block|}
 name|tw_sc
 index|[
@@ -1348,21 +1311,12 @@ operator|->
 name|abortrcv_ch
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|tw_cdevsw
 argument_list|,
 name|unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -1375,8 +1329,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1

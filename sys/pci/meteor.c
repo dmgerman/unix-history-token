@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_meteor.h"
 end_include
 
@@ -60,27 +54,6 @@ include|#
 directive|include
 file|<sys/mman.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEVFS */
-end_comment
 
 begin_include
 include|#
@@ -3651,21 +3624,12 @@ name|METEOR_DEV0
 operator||
 name|METEOR_RGB16
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|mtr
-operator|->
-name|devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|meteor_cdevsw
 argument_list|,
 name|unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -3676,8 +3640,6 @@ argument_list|,
 literal|"meteor"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.5 (Berkeley) 1/9/95  * $Id: conf.h,v 1.75 1999/08/17 20:25:48 billf Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.5 (Berkeley) 1/9/95  * $Id: conf.h,v 1.76 1999/08/20 20:24:59 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -44,23 +44,6 @@ begin_struct
 struct|struct
 name|specinfo
 block|{
-name|struct
-name|mount
-modifier|*
-name|si_mountpoint
-decl_stmt|;
-name|int
-name|si_bsize_phys
-decl_stmt|;
-comment|/* minimum physical block size */
-name|int
-name|si_bsize_best
-decl_stmt|;
-comment|/* optimal block size / VBLK */
-name|int
-name|si_bsize_max
-decl_stmt|;
-comment|/* maximum block size */
 name|udev_t
 name|si_udev
 decl_stmt|;
@@ -112,6 +95,28 @@ decl_stmt|;
 block|}
 name|__si_tty
 struct|;
+struct|struct
+block|{
+name|struct
+name|mount
+modifier|*
+name|__sid_mountpoint
+decl_stmt|;
+name|int
+name|__sid_bsize_phys
+decl_stmt|;
+comment|/* min physical block size */
+name|int
+name|__sid_bsize_best
+decl_stmt|;
+comment|/* optimal block size */
+name|int
+name|__sid_bsize_max
+decl_stmt|;
+comment|/* maximum block size */
+block|}
+name|__si_disk
+struct|;
 block|}
 name|__si_u
 union|;
@@ -124,6 +129,34 @@ define|#
 directive|define
 name|si_tty_tty
 value|__si_u.__si_tty.__sit_tty
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_mountpoint
+value|__si_u.__si_disk.__sid_mountpoint
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_bsize_phys
+value|__si_u.__si_disk.__sid_bsize_phys
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_bsize_best
+value|__si_u.__si_disk.__sid_bsize_best
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_bsize_max
+value|__si_u.__si_disk.__sid_bsize_max
 end_define
 
 begin_comment
@@ -547,6 +580,30 @@ name|tp
 typedef|,
 name|int
 name|flag
+typedef|));
+end_typedef
+
+begin_comment
+comment|/* This is type of the function DEVFS uses to hook into the kernel with */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|devfs_create_t
+name|__P
+typedef|((
+name|dev_t
+name|dev
+typedef|,
+name|uid_t
+name|uid
+typedef|,
+name|gid_t
+name|gid
+typedef|,
+name|int
+name|perms
 typedef|));
 end_typedef
 
@@ -1298,6 +1355,14 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devfs_create_t
+modifier|*
+name|devfs_create_hook
 decl_stmt|;
 end_decl_stmt
 

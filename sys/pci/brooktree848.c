@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.85 1999/06/12 14:54:54 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.89 1999/07/12 15:51:48 roger Exp $ */
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"opt_bktr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
 end_include
 
 begin_include
@@ -266,27 +260,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEVFS */
-end_comment
 
 begin_if
 if|#
@@ -29577,18 +29550,12 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-comment|/* XXX This just throw away the token, which should probably be fixed when 	   DEVFS is finally made really operational. */
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
 argument_list|,
 name|unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -29601,7 +29568,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
@@ -29609,8 +29576,6 @@ argument_list|,
 name|unit
 operator|+
 literal|16
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -29623,7 +29588,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
@@ -29631,8 +29596,6 @@ argument_list|,
 name|unit
 operator|+
 literal|32
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -29645,9 +29608,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS */
 return|return
 literal|0
 return|;
@@ -31536,18 +31496,12 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-comment|/* XXX This just throw away the token, which should probably be fixed when 	   DEVFS is finally made really operational. */
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
 argument_list|,
 name|unit
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -31560,7 +31514,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
@@ -31568,8 +31522,6 @@ argument_list|,
 name|unit
 operator|+
 literal|16
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -31582,7 +31534,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|bktr_cdevsw
@@ -31590,8 +31542,6 @@ argument_list|,
 name|unit
 operator|+
 literal|32
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -31604,9 +31554,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS */
 block|}
 comment|/*  * Special Memory Allocation  */
 specifier|static

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.101 1999/08/22 14:48:00 iwasaki Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.102 1999/08/22 19:51:33 peter Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -38,27 +32,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -338,15 +311,6 @@ index|[
 name|APM_NPMEV
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|sc_devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -5236,21 +5200,12 @@ name|initialized
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|sc_devfs_token
-operator|=
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|apm_cdevsw
 argument_list|,
 literal|0
-argument_list|,
-name|DV_CHR
 argument_list|,
 literal|0
 argument_list|,
@@ -5261,8 +5216,6 @@ argument_list|,
 literal|"apm"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.14 1999/07/03 08:23:00 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.15 1999/07/13 08:15:22 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -50,23 +44,6 @@ include|#
 directive|include
 file|<sys/timepps.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1011,10 +988,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|xrpu_cdevsw
@@ -1027,8 +1001,6 @@ operator|)
 operator|<<
 literal|16
 argument_list|,
-name|DV_CHR
-argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
@@ -1040,8 +1012,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|pps
@@ -1427,17 +1397,12 @@ operator|->
 name|virbase
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|devfs_add_devswf
+name|make_dev
 argument_list|(
 operator|&
 name|xrpu_cdevsw
 argument_list|,
 literal|0
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1450,8 +1415,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

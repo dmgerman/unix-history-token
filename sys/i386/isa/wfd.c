@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.26 1999/06/24 03:09:11 msmith Exp $  */
+comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.27 1999/08/14 11:40:41 phk Exp $  */
 end_comment
 
 begin_comment
@@ -96,27 +96,6 @@ include|#
 directive|include
 file|<sys/cdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
@@ -525,19 +504,6 @@ literal|80
 index|]
 decl_stmt|;
 comment|/* Device description */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|cdevs
-decl_stmt|;
-name|void
-modifier|*
-name|bdevs
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|diskslices
 modifier|*
@@ -817,14 +783,6 @@ name|lun
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|int
-name|mynor
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|wfdnlun
@@ -1265,11 +1223,11 @@ literal|0
 expr_stmt|;
 comment|/* no limit */
 block|}
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|mynor
-operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|wfd_cdevsw
+argument_list|,
 name|dkmakeminor
 argument_list|(
 name|t
@@ -1280,45 +1238,6 @@ name|WHOLE_DISK_SLICE
 argument_list|,
 name|RAW_PART
 argument_list|)
-expr_stmt|;
-name|t
-operator|->
-name|bdevs
-operator|=
-name|devfs_add_devswf
-argument_list|(
-operator|&
-name|wfd_cdevsw
-argument_list|,
-name|mynor
-argument_list|,
-name|DV_BLK
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_OPERATOR
-argument_list|,
-literal|0640
-argument_list|,
-literal|"wfd%d"
-argument_list|,
-name|t
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-name|t
-operator|->
-name|cdevs
-operator|=
-name|devfs_add_devswf
-argument_list|(
-operator|&
-name|wfd_cdevsw
-argument_list|,
-name|mynor
-argument_list|,
-name|DV_CHR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1333,9 +1252,6 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVFS */
 comment|/* 	 * Export the drive to the devstat interface. 	 */
 name|devstat_add_entry
 argument_list|(
