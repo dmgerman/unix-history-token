@@ -593,7 +593,7 @@ name|device_set_desc
 argument_list|(
 name|child
 argument_list|,
-literal|"Option ROM"
+literal|"ISA Option ROM"
 argument_list|)
 expr_stmt|;
 else|else
@@ -601,7 +601,7 @@ name|device_set_desc
 argument_list|(
 name|child
 argument_list|,
-literal|"Option ROMs"
+literal|"ISA Option ROMs"
 argument_list|)
 expr_stmt|;
 block|}
