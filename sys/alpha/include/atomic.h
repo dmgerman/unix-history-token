@@ -211,7 +211,144 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+name|__inline
+name|u_int32_t
+name|atomic_readandclear_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_int32_t
+name|result
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"wmb\n"
+comment|/* ensure pending writes have drained */
+literal|"1:\tldl_l %0,%3\n\t"
+comment|/* load current value, asserting lock */
+literal|"ldiq %1,0\n\t"
+comment|/* value to store */
+literal|"stl_c %1,%2\n\t"
+comment|/* attempt to store */
+literal|"beq %1,2f\n\t"
+comment|/* if the store failed, spin */
+literal|"br 3f\n"
+comment|/* it worked, exit */
+literal|"2:\tbr 1b\n"
+comment|/* *addr not updated, loop */
+literal|"3:\tmb\n"
+comment|/* it worked */
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|result
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|u_int64_t
+name|atomic_readandclear_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"wmb\n"
+comment|/* ensure pending writes have drained */
+literal|"1:\tldq_l %0,%3\n\t"
+comment|/* load current value, asserting lock */
+literal|"ldiq %1,0\n\t"
+comment|/* value to store */
+literal|"stq_c %1,%2\n\t"
+comment|/* attempt to store */
+literal|"beq %1,2f\n\t"
+comment|/* if the store failed, spin */
+literal|"br 3f\n"
+comment|/* it worked, exit */
+literal|"2:\tbr 1b\n"
+comment|/* *addr not updated, loop */
+literal|"3:\tmb\n"
+comment|/* it worked */
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|result
+return|;
+end_return
+
 begin_define
+unit|}
 define|#
 directive|define
 name|atomic_set_char
@@ -298,6 +435,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_readandclear_int
+value|atomic_readandclear_32
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_set_long
 value|atomic_set_64
 end_define
@@ -321,6 +465,13 @@ define|#
 directive|define
 name|atomic_subtract_long
 value|atomic_subtract_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_long
+value|atomic_readandclear_64
 end_define
 
 begin_endif

@@ -58,6 +58,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WANT_FUNCTIONS
+end_define
+
+begin_define
+define|#
+directive|define
 name|static
 end_define
 
