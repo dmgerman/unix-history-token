@@ -53,19 +53,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Local prototypes  */
-end_comment
-
-begin_function_decl
-name|void
-name|install_pkgs_indir
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Functions  */
 end_comment
 
