@@ -362,16 +362,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/*  * Expanded sf_freelist head. Really an SLIST_HEAD() in disguise, with the  * additional sf_lock mutex.  */
+end_comment
+
+begin_struct
 specifier|static
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|sf_buf
-argument_list|)
+struct|struct
+block|{
+name|struct
+name|sf_buf
+modifier|*
+name|slh_first
+decl_stmt|;
+name|struct
+name|mtx
+name|sf_lock
+decl_stmt|;
+block|}
 name|sf_freelist
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
@@ -6920,6 +6931,28 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+literal|"sf_bufs list lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -7009,6 +7042,16 @@ name|free_list
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7029,13 +7072,15 @@ name|sf_buf
 modifier|*
 name|sf
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
+name|mtx_enter
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -7056,10 +7101,15 @@ name|sf_buf_alloc_want
 operator|=
 literal|1
 expr_stmt|;
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|sf_freelist
+argument_list|,
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
 argument_list|,
 name|PVM
 argument_list|,
@@ -7077,9 +7127,14 @@ argument_list|,
 name|free_list
 argument_list|)
 expr_stmt|;
-name|splx
+name|mtx_exit
 argument_list|(
-name|s
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -7101,7 +7156,7 @@ value|(&sf_bufs[((uintptr_t)(x) - (uintptr_t)sf_base)>> PAGE_SHIFT])
 end_define
 
 begin_comment
-comment|/*  *  * Detatch mapped page and release resources back to the system.  *  * Must be called at splimp.  */
+comment|/*  * Detatch mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
@@ -7196,6 +7251,16 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -7222,11 +7287,21 @@ name|sf_freelist
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sf_freelist
+operator|.
+name|sf_lock
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * sendfile(2).  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if  * nbytes == 0. Optionally add a header and/or trailer to the socket  * output. If specified, write the total number of bytes sent into *sbytes.  */
+comment|/*  * sendfile(2)  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if  * nbytes == 0. Optionally add a header and/or trailer to the socket  * output. If specified, write the total number of bytes sent into *sbytes.  */
 end_comment
 
 begin_function
