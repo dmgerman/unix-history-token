@@ -805,7 +805,6 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|aa
@@ -848,7 +847,6 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|aa
