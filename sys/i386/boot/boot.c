@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.13 1994/06/14 07:31:42 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.14 1994/06/16 03:53:27 adam Exp $  */
 end_comment
 
 begin_comment
@@ -63,11 +63,7 @@ name|names
 index|[]
 init|=
 block|{
-literal|"/386bsd"
-block|,
-literal|"/o386bsd"
-block|,
-literal|"/386bsd.old"
+literal|"/kernel"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -114,7 +110,7 @@ name|t
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory  [%s]\n"
+literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
 argument_list|,
 name|ouraddr
 argument_list|,
@@ -137,13 +133,11 @@ name|memsize
 argument_list|(
 literal|1
 argument_list|)
-argument_list|,
-literal|"$Revision: 1.14 $"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"use hd(1,a)/386bsd to boot sd0 when wd0 is also installed\n"
+literal|"use hd(1,a)/kernel to boot sd0 when wd0 is also installed\n"
 argument_list|)
 expr_stmt|;
 name|gateA20

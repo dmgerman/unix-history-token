@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id$  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.3 1993/10/16 19:11:39 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ include|#
 directive|include
 file|<sys/reboot.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|0
+end_ifdef
 
 begin_comment
 comment|/* #define BUFSIZE 4096 */
@@ -47,6 +53,44 @@ decl_stmt|,
 name|iobuf
 index|[
 name|MAXBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAPBUFSIZE
+value|BUFSIZE
+end_define
+
+begin_decl_stmt
+name|char
+name|buf
+index|[
+name|BUFSIZE
+index|]
+decl_stmt|,
+name|fsbuf
+index|[
+name|BUFSIZE
+index|]
+decl_stmt|,
+name|iobuf
+index|[
+name|BUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -341,7 +385,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -589,7 +633,7 @@ begin_decl_stmt
 name|char
 name|mapbuf
 index|[
-name|MAXBSIZE
+name|MAPBUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
