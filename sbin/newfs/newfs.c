@@ -1432,7 +1432,7 @@ argument_list|(
 name|optarg
 argument_list|)
 operator|)
-operator|<=
+operator|<
 literal|0
 condition|)
 name|fatal
@@ -1456,7 +1456,7 @@ argument_list|(
 name|optarg
 argument_list|)
 operator|)
-operator|<=
+operator|<
 literal|0
 condition|)
 name|fatal
