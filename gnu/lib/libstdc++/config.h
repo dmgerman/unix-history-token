@@ -59,9 +59,12 @@ begin_comment
 comment|// Define if code specialized for wchar_t should be used.
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_USE_WCHAR_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_USE_WCHAR_T
+value|1
+end_define
 
 begin_comment
 comment|// Define if using setrlimit to limit memory usage during 'make check'.
