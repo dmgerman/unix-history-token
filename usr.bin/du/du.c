@@ -985,7 +985,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-k] [-x] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-k] [-x] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
