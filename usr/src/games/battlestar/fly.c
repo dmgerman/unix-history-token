@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fly.c	5.5 (Berkeley) %G%"
+literal|"@(#)fly.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|void
 name|moveenemy
 parameter_list|()
 function_decl|;
