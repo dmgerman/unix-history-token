@@ -574,7 +574,7 @@ argument_list|)
 expr_stmt|;
 name|ia64_set_itv
 argument_list|(
-literal|255
+name|CLOCK_VECTOR
 argument_list|)
 expr_stmt|;
 comment|/* highest priority class */

@@ -21,6 +21,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|CLOCK_VECTOR
+value|254
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int

@@ -496,7 +496,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ia64_set_itv
 argument_list|(
-literal|255
+name|CLOCK_VECTOR
 argument_list|)
 expr_stmt|;
 end_expr_stmt
