@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	trap.c	3.1	%H%	*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -61,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"../h/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/inline.h"
 end_include
 
 begin_define
@@ -231,7 +233,7 @@ case|:
 comment|/* resereved operand fault */
 name|i
 operator|=
-name|SIGINS
+name|SIGILL
 expr_stmt|;
 break|break;
 case|case
@@ -243,7 +245,6 @@ comment|/* Allow process switch */
 goto|goto
 name|out
 goto|;
-comment|/* OLD CODE... see syscall() below 	case SYSCALL + USER: 		params = (caddr_t)locr0[AP] + NBPW; 		u.u_error = 0; 		callp =&sysent[code&0177]; 		if (callp == sysent) { 			i = fuword(params); 			params += NBPW; 			callp =&sysent[i&0177]; 		} 		if (i = callp->sy_narg) 			if (copyin(params,&u.u_arg[0], i*NBPW)) { 				u.u_error = EFAULT; 				goto bad; 			} 		u.u_ap = u.u_arg; 		locr0[PS]&= ~PSL_C; 		u.u_dirp = (caddr_t)u.u_arg[0]; 		u.u_r.r_val1 = 0; 		u.u_r.r_val2 = locr0[R1]; 		if (setjmp(u.u_qsav)) { 			if (u.u_error==0) 				u.u_error = EINTR; 		} else 			(*(callp->sy_call))(); 		if(u.u_error) { 			locr0[R0] = u.u_error; 			locr0[PS] |= PSL_C; 		} else { 			locr0[R0] = u.u_r.r_val1; 			locr0[R1] = u.u_r.r_val2; 		} 		goto out; END OF OLD CODE REPLACED BY syscall() */
 case|case
 name|ARITHTRAP
 operator|+
@@ -251,7 +252,7 @@ name|USER
 case|:
 name|i
 operator|=
-name|SIGFPT
+name|SIGFPE
 expr_stmt|;
 break|break;
 comment|/* 	 * If the user SP is above the stack segment, 	 * grow the stack automatically. 	 */
@@ -284,7 +285,7 @@ name|out
 goto|;
 name|i
 operator|=
-name|SIGSEG
+name|SIGSEGV
 expr_stmt|;
 break|break;
 case|case
@@ -356,7 +357,7 @@ expr_stmt|;
 comment|/* turn off trace bit */
 name|i
 operator|=
-name|SIGTRC
+name|SIGTRAP
 expr_stmt|;
 break|break;
 case|case
@@ -384,7 +385,7 @@ name|code
 expr_stmt|;
 name|i
 operator|=
-name|SIGINS
+name|SIGILL
 expr_stmt|;
 break|break;
 block|}
@@ -409,12 +410,13 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_sig
-operator|&&
-name|issig
-argument_list|()
+name|p_cursig
+operator|||
+name|ISSIG
+argument_list|(
+name|p
+argument_list|)
 condition|)
-comment|/* check p_sig to save time */
 name|psig
 argument_list|()
 expr_stmt|;
@@ -493,21 +495,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
-
-begin_asm
-asm|asm(".globl _eintr");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Called from the trap handler when a system call occurs  */
 end_comment
@@ -580,6 +567,9 @@ decl_stmt|;
 name|time_t
 name|syst
 decl_stmt|;
+name|int
+name|opc
+decl_stmt|;
 name|syst
 operator|=
 name|u
@@ -627,6 +617,27 @@ operator|.
 name|u_error
 operator|=
 literal|0
+expr_stmt|;
+name|opc
+operator|=
+name|u
+operator|.
+name|u_ar0
+index|[
+name|PC
+index|]
+operator|-
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|code
+operator|>
+literal|63
+condition|)
+name|opc
+operator|-=
+literal|2
 expr_stmt|;
 name|callp
 operator|=
@@ -682,18 +693,24 @@ argument_list|)
 condition|)
 block|{
 asm|asm("prober $3,r9,(r10)");
+comment|/* GROT */
 asm|asm("bnequ ok");
+comment|/* GROT */
 name|u
 operator|.
 name|u_error
 operator|=
 name|EFAULT
 expr_stmt|;
+comment|/* GROT */
 goto|goto
 name|bad
 goto|;
+comment|/* GROT */
 asm|asm("ok:");
+comment|/* GROT */
 asm|asm("movc3 r9,(r10),_u+U_ARG");
+comment|/* GROT */
 block|}
 name|u
 operator|.
@@ -702,14 +719,6 @@ operator|=
 name|u
 operator|.
 name|u_arg
-expr_stmt|;
-name|locr0
-index|[
-name|PS
-index|]
-operator|&=
-operator|~
-name|PSL_C
 expr_stmt|;
 name|u
 operator|.
@@ -744,10 +753,45 @@ index|[
 name|R1
 index|]
 expr_stmt|;
-comment|/* 	 * INLINE EXPANSION OF setjmp().  NOTE THAT THIS ONLY 	 * RESTORES fp,sp, and r11=locr0 ON INTERRRUPTS (MATCHING 	 * CODE IN slp.c). 	 */
-asm|asm("movl fp,_u+U_QSAV");
-asm|asm("movl sp,_u+U_QSAV+4");
-asm|asm("movl r11,_u+U_QSAV+8");
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|u
+operator|.
+name|u_qsav
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+operator|==
+literal|0
+operator|&&
+name|u
+operator|.
+name|u_eosys
+operator|==
+name|JUSTRETURN
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|EINTR
+expr_stmt|;
+block|}
+else|else
+block|{
+name|u
+operator|.
+name|u_eosys
+operator|=
+name|JUSTRETURN
+expr_stmt|;
 operator|(
 operator|*
 operator|(
@@ -759,7 +803,40 @@ operator|)
 operator|(
 operator|)
 expr_stmt|;
-asm|asm("_eintr:");
+block|}
+name|locr0
+index|[
+name|PS
+index|]
+operator|&=
+operator|~
+name|PSL_C
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_eosys
+operator|==
+name|RESTARTSYS
+condition|)
+name|pc
+operator|=
+name|opc
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|u
+operator|.
+name|u_eosys
+operator|==
+name|SIMULATERTI
+condition|)
+name|dorti
+argument_list|()
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|u
@@ -822,12 +899,13 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_sig
-operator|&&
-name|issig
-argument_list|()
+name|p_cursig
+operator|||
+name|ISSIG
+argument_list|(
+name|p
+argument_list|)
 condition|)
-comment|/* check p_sig to save time */
 name|psig
 argument_list|()
 expr_stmt|;
