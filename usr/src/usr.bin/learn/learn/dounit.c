@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dounit.c	4.1	(Berkeley)	%G%"
+literal|"@(#)dounit.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,25 @@ include|#
 directive|include
 file|"lrnref.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|remind
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* to remind user of "again" and "bye" */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|noclobber
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|dounit
@@ -59,16 +78,24 @@ literal|0
 expr_stmt|;
 name|retry
 label|:
+if|if
+condition|(
+operator|!
+name|noclobber
+condition|)
 name|start
 argument_list|(
 name|todo
 argument_list|)
 expr_stmt|;
+comment|/* clean up play directory */
 name|sprintf
 argument_list|(
 name|tbuff
 argument_list|,
-literal|"../../%s/L%s"
+literal|"%s/%s/L%s"
+argument_list|,
+name|direct
 argument_list|,
 name|sname
 argument_list|,
@@ -92,11 +119,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|perror
+argument_list|(
+name|tbuff
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No script.\n"
+literal|"Dounit:  no lesson %s.\n"
+argument_list|,
+name|tbuff
 argument_list|)
 expr_stmt|;
 name|wrapup
@@ -112,6 +146,7 @@ argument_list|,
 name|scrin
 argument_list|)
 expr_stmt|;
+comment|/* print lesson, usually */
 if|if
 condition|(
 name|more
@@ -126,6 +161,27 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
+comment|/* user takes over */
+if|if
+condition|(
+name|skip
+condition|)
+name|setdid
+argument_list|(
+name|todo
+argument_list|,
+name|sequence
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|again
+operator|||
+name|skip
+condition|)
+comment|/* if "again" or "skip" */
+return|return;
 if|if
 condition|(
 name|more
@@ -140,6 +196,7 @@ argument_list|,
 name|scrin
 argument_list|)
 expr_stmt|;
+comment|/* evaluate user's response */
 if|if
 condition|(
 name|comfile
@@ -218,11 +275,23 @@ argument_list|(
 literal|"Try the problem again.\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+if|if
+condition|(
+name|remind
+operator|--
+condition|)
+block|{
+name|printf
 argument_list|(
-name|stdout
+literal|"[ Whenever you want to re-read the lesson, type \"again\".\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"  You can always leave learn by typing \"bye\". ]\n"
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|retry
 goto|;
@@ -242,7 +311,7 @@ condition|)
 block|{
 name|wrapup
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -263,11 +332,9 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nOK.  Lesson %s (%d)\n"
+literal|"\nOK.  That was lesson %s.\n"
 argument_list|,
 name|todo
-argument_list|,
-name|speed
 argument_list|)
 expr_stmt|;
 name|printf
