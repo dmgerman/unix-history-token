@@ -495,7 +495,7 @@ block|}
 if|if
 condition|(
 name|ncfgs
-operator|>=
+operator|>
 name|MAXDEP
 condition|)
 block|{
