@@ -19,6 +19,35 @@ directive|define
 name|_PMAP_VM_
 end_define
 
+begin_comment
+comment|/*  * Each machine dependent implementation is expected to  * keep certain statistics.  They may do this anyway they  * so choose, but are expected to return the statistics  * in the following structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmap_statistics
+block|{
+name|long
+name|resident_count
+decl_stmt|;
+comment|/* # of pages mapped (total)*/
+name|long
+name|wired_count
+decl_stmt|;
+comment|/* # of pages wired */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pmap_statistics
+modifier|*
+name|pmap_statistics_t
+typedef|;
+end_typedef
+
 begin_include
 include|#
 directive|include
