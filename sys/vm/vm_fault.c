@@ -498,6 +498,8 @@ name|vm_prot_t
 name|prot
 decl_stmt|;
 name|int
+name|is_first_object_locked
+decl_stmt|,
 name|result
 decl_stmt|;
 name|boolean_t
@@ -2119,6 +2121,10 @@ name|VM_PROT_WRITE
 condition|)
 block|{
 comment|/* 			 * This allows pages to be virtually copied from a  			 * backing_object into the first_object, where the  			 * backing object has no other refs to it, and cannot 			 * gain any more refs.  Instead of a bcopy, we just  			 * move the page from the backing object to the  			 * first object.  Note that we must mark the page  			 * dirty in the first object so that it will go out  			 * to swap when needed. 			 */
+name|is_first_object_locked
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 comment|/* 				 * Only one shadow object 				 */
@@ -2175,6 +2181,17 @@ name|type
 operator|==
 name|OBJT_SWAP
 operator|)
+operator|)
+operator|&&
+operator|(
+name|is_first_object_locked
+operator|=
+name|VM_OBJECT_TRYLOCK
+argument_list|(
+name|fs
+operator|.
+name|first_object
+argument_list|)
 operator|)
 operator|&&
 comment|/* 				 * We don't chase down the shadow chain 				 */
@@ -2274,6 +2291,18 @@ name|first_m
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|is_first_object_locked
+condition|)
+comment|/*XXX*/
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|fs
+operator|.
+name|first_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fs
