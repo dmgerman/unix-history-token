@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -344,12 +344,6 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-name|startprofclock
-argument_list|(
-operator|&
-name|proc0
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -426,6 +420,9 @@ init|=
 operator|&
 name|_gmonparam
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* all sysctl names at this level are terminal */
 if|if
 condition|(
@@ -450,8 +447,8 @@ block|{
 case|case
 name|GPROF_STATE
 case|:
-return|return
-operator|(
+name|error
+operator|=
 name|sysctl_int
 argument_list|(
 name|oldp
@@ -467,6 +464,40 @@ name|gp
 operator|->
 name|state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|gp
+operator|->
+name|state
+operator|==
+name|GMON_PROF_OFF
+condition|)
+name|stopprofclock
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
+else|else
+name|startprofclock
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 case|case
