@@ -1840,7 +1840,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Request you send encrypting */
+comment|/* Request you end encrypting */
 end_comment
 
 begin_define
