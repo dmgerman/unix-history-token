@@ -2856,7 +2856,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 */
+comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * over max, arrange to kill the process in ast(). 	 */
 if|if
 condition|(
 name|p
@@ -2885,12 +2885,20 @@ name|p_limit
 operator|->
 name|p_cpulimit
 condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
 operator||=
 name|PS_XCPU
 expr_stmt|;
+name|ke
+operator|->
+name|ke_flags
+operator||=
+name|KEF_ASTPENDING
+expr_stmt|;
+block|}
 comment|/* 	 * Finish up stats for outgoing thread. 	 */
 name|cnt
 operator|.
