@@ -189,6 +189,13 @@ name|PLX_9080
 value|0x0d
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|cy_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 modifier|*
@@ -276,13 +283,6 @@ name|cy_pci_methods
 block|,
 literal|0
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|cy_devclass
 decl_stmt|;
 end_decl_stmt
 
