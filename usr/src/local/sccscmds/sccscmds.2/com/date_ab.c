@@ -5,19 +5,35 @@ directive|include
 file|"../hdr/macros.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)date_ab.c	4.4	%G%"
+literal|"@(#)date_ab.c	4.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* 	Function to convert date in the form "yymmddhhmmss" to 	standard UNIX time (seconds since Jan. 1, 1970 GMT). 	Units left off of the right are replaced by their 	maximum possible values.  	The function corrects properly for leap year, 	daylight savings time, offset from Greenwich time, etc.  	Function returns -1 if bad time is given (i.e., "730229"). */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|dysize
+parameter_list|(
+name|year
+parameter_list|)
+value|(isleap(year) ? DAYS_PER_LYEAR : DAYS_PER_NYEAR)
+end_define
 
 begin_decl_stmt
 name|char
