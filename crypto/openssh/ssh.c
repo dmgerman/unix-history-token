@@ -1369,12 +1369,17 @@ name|krb4_tgt_passing
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KRB5
 name|options
 operator|.
 name|krb5_tgt_passing
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|options
 operator|.
 name|afs_token_passing

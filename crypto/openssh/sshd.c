@@ -5164,7 +5164,7 @@ name|auth_mask
 operator||=
 literal|1
 operator|<<
-name|SSH_PASS_KRB4_TGT
+name|SSH_PASS_KERBEROS_TGT
 expr_stmt|;
 if|if
 condition|(

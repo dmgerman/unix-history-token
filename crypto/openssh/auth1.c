@@ -558,7 +558,7 @@ ifndef|#
 directive|ifndef
 name|KRB5
 case|case
-name|SSH_CMSG_HAVE_KRB4_TGT
+name|SSH_CMSG_HAVE_KERBEROS_TGT
 case|:
 if|if
 condition|(
@@ -1678,7 +1678,14 @@ operator|.
 name|krb5_tgt_passing
 comment|/*|| !options.krb5_authentication */
 condition|)
-block|{  			}
+block|{
+name|verbose
+argument_list|(
+literal|"Kerberos v5 tgt passing disabled."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|tkt_client
