@@ -143,30 +143,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|void
-name|pc98_init_dmac
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|pc98_getmemsize
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initialize DMA controller  */
 end_comment
@@ -917,24 +893,6 @@ comment|/* total number sectors */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|int
-name|sd_bios_parms
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|disk_parms
-operator|*
-operator|,
-expr|struct
-name|scsi_link
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Read a geometry information of SCSI HDD from BIOS work area.  *  * XXX - Before reading BIOS work area, we should check whether  * host adapter support it.  */
