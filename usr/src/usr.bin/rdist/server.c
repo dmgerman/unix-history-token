@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.13 (Berkeley) 84/01/03"
+literal|"@(#)server.c	4.14 (Berkeley) 84/01/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -3009,11 +3009,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|stb
 operator|.
 name|st_mode
 operator|&
 literal|0777
+operator|)
 operator|==
 name|mode
 condition|)
