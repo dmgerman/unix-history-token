@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_devar.h,v 1.26 1998/02/11 01:28:29 thorpej Exp $	*/
+comment|/*	$NetBSD: if_devar.h,v 1.27 1998/05/25 22:13:28 mark Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.6 1998/06/07 17:12:37 dfr Exp $ */
+comment|/*	$Id: if_devar.h,v 1.7 1998/06/08 09:47:46 bde Exp $ */
 end_comment
 
 begin_comment
@@ -621,6 +621,11 @@ directive|if
 name|defined
 argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm32__
 argument_list|)
 end_if
 
