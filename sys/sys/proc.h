@@ -673,6 +673,21 @@ name|sigset_t
 name|td_siglist
 decl_stmt|;
 comment|/* (c) Sigs arrived, not delivered. */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|td_umtxq
+expr_stmt|;
+comment|/* (p) List of threads blocked by us. */
+name|STAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_umtx
+expr_stmt|;
+comment|/* (p) Link for when we're blocked. */
 define|#
 directive|define
 name|td_endzero
@@ -4899,6 +4914,15 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thr_exit1
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
