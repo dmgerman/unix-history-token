@@ -533,7 +533,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789B:b:cd:f:h:ns:T:uWw"
+literal|"0123456789aB:b:cd:f:h:ns:T:uWw"
 argument_list|)
 operator|)
 operator|!=
@@ -2364,7 +2364,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dump [-0123456789cnu] [-B records] [-b blocksize] [-d density] [-f file]\n            [-h level] [-s feet] [-T date] filesystem\n"
+literal|"usage: dump [-0123456789acnu] [-B records] [-b blocksize] [-d density] [-f file]\n            [-h level] [-s feet] [-T date] filesystem\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2867,9 +2867,6 @@ operator|*
 name|ap
 condition|)
 block|{
-case|case
-literal|'a'
-case|:
 case|case
 literal|'B'
 case|:
