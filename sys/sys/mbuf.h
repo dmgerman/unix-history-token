@@ -2895,7 +2895,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * Obtain next_hop information asociated with the mbuf; if any.  * If a tag is present devalidate it also.  */
+comment|/*  * Obtain next_hop information associated with the mbuf; if any.  * If a tag is present devalidate it also.  */
 end_comment
 
 begin_expr_stmt
