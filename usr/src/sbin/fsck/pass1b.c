@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass1b.c	3.1 (Berkeley) %G%"
+literal|"@(#)pass1b.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,13 @@ name|inumber
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|inumber
+operator|<
+name|ROOTINO
+condition|)
+continue|continue;
 name|dp
 operator|=
 name|ginode
