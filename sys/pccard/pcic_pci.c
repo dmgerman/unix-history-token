@@ -2865,11 +2865,20 @@ name|sp
 operator|->
 name|intr
 condition|)
-name|panic
+block|{
+name|device_printf
 argument_list|(
-literal|"Interrupt already established"
+name|dev
+argument_list|,
+literal|"Interrupt already established, possible multiple attach bug.\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|sp
 operator|->
 name|intr
