@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.13 2001/05/11 20:34:38 jlemon Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.14 2001/05/23 22:10:55 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -83,6 +83,17 @@ end_define
 
 begin_comment
 comment|/* Intel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_JATO
+value|0x00e083
+end_define
+
+begin_comment
+comment|/* Jato Technologies */
 end_comment
 
 begin_define
@@ -533,6 +544,24 @@ define|#
 directive|define
 name|MII_STR_INTEL_I82553C
 value|"i82553 10/100 media interface"
+end_define
+
+begin_comment
+comment|/* Jato Technologies PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_JATO_BASEX
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_JATO_BASEX
+value|"Jato 1000baseX media interface"
 end_define
 
 begin_comment
