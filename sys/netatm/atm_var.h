@@ -694,6 +694,7 @@ name|atm_dev_free
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)

@@ -1513,6 +1513,7 @@ name|atm_dev_free
 parameter_list|(
 name|uaddr
 parameter_list|)
+specifier|volatile
 name|void
 modifier|*
 name|uaddr
