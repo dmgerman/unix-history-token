@@ -6846,7 +6846,7 @@ argument_list|)
 argument_list|)
 operator|!=
 call|(
-name|u_int
+name|uintptr_t
 call|)
 argument_list|(
 name|mtod
