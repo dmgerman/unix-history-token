@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	6.8	84/12/20	*/
+comment|/*	param.c	6.9	85/04/17	*/
 end_comment
 
 begin_include
@@ -166,7 +166,7 @@ begin_decl_stmt
 name|int
 name|ntext
 init|=
-literal|24
+literal|36
 operator|+
 name|MAXUSERS
 decl_stmt|;
