@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.40 2003/01/17 18:39:49 shiba Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.41 2003/01/18 01:13:39 shiba Exp   */
 end_comment
 
 begin_comment
@@ -1446,6 +1446,27 @@ define|#
 directive|define
 name|PCMCIA_STR_BUFFALO_WLI_PCM_S11
 value|"BUFFALO AirStation 11Mbps WLAN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BUFFALO_LPC_CF_CLT
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BUFFALO_LPC_CF_CLT
+value|0x0307
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BUFFALO_LPC_CF_CLT
+value|"BUFFALO LPC-CF-CLT"
 end_define
 
 begin_define
