@@ -2395,10 +2395,9 @@ operator|)
 operator|&
 name|peermax
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|peermax
-argument_list|)
+name|peer
+operator|.
+name|sa_len
 argument_list|,
 name|pname
 argument_list|,
@@ -2434,10 +2433,9 @@ operator|)
 operator|&
 name|peermax
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|peermax
-argument_list|)
+name|peer
+operator|.
+name|sa_len
 argument_list|,
 name|pname
 argument_list|,
