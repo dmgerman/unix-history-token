@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -306,6 +312,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|bp
+operator|->
+name|bio_resid
+operator|=
+name|bp
+operator|->
+name|bio_bcount
+expr_stmt|;
 name|r
 operator|=
 name|OF_seek
@@ -327,14 +341,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bp
-operator|->
-name|bio_resid
-operator|=
-name|bp
-operator|->
-name|bio_bcount
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
