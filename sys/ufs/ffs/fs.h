@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|MAXMNTLEN
-value|472
+value|468
 end_define
 
 begin_comment
@@ -635,9 +635,13 @@ index|]
 decl_stmt|;
 comment|/* volume name */
 name|u_int64_t
-name|fs_uuid
+name|fs_swuid
 decl_stmt|;
-comment|/* system-wide unique uid */
+comment|/* system-wide uid */
+name|int32_t
+name|fs_pad
+decl_stmt|;
+comment|/* padding for non-i386 */
 comment|/* these fields retain the current block allocation info */
 name|int32_t
 name|fs_cgrotor
