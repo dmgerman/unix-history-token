@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_close[] = "@(#)close.c	1.3";  *  * close.c  -  f77 file close, flush, exit routines  */
+comment|/* char id_close[] = "@(#)close.c	1.4";  *  * close.c  -  f77 file close, flush, exit routines  */
 end_comment
 
 begin_include
@@ -345,7 +345,22 @@ block|{
 name|FILE
 modifier|*
 name|F
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|not_legal
+argument_list|(
+operator|*
+name|u
+argument_list|)
+condition|)
+return|return
+operator|(
+name|F_ERUNIT
+operator|)
+return|;
+name|F
+operator|=
 name|units
 index|[
 operator|*
@@ -353,7 +368,7 @@ name|u
 index|]
 operator|.
 name|ufd
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|F
