@@ -7,17 +7,17 @@ begin_comment
 comment|/*  * Written by Cristian Gafton<gafton@redhat.com> 1996/09/10  * See the end of the file for Copyright Information  *  *  * 1.2 - added 'deny' and 'group=' options  * 1.1 - added 'trust' option  * 1.0 - the code is working for at least another person, so... :-)  * 0.1 - use vsyslog instead of vfprintf/syslog in _pam_log  *     - return PAM_IGNORE on success (take care of sloppy sysadmins..)  *     - use pam_get_user instead of pam_get_item(...,PAM_USER,...)  *     - a new arg use_uid to auth the current uid instead of the  *       initial (logged in) one.  * 0.0 - first release  *  * TODO:  *  - try to use make_remark from pam_unix/support.c  *  - consider returning on failure PAM_FAIL_NOW if the user is not  *    a wheel member.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_BSD_SOURCE
+end_define
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__USE_BSD
-end_define
 
 begin_include
 include|#
@@ -49,23 +49,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_PWDBLIB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pwdb/pwdb_public.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -77,11 +60,6 @@ include|#
 directive|include
 file|<grp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * here, we make a definition for the externally accessible function  * in this file (this definition is required for static a module  * but strongly encouraged generally) it is used to instruct the  * modules include file to define the function prototypes.  */
@@ -98,20 +76,6 @@ include|#
 directive|include
 file|<security/pam_modules.h>
 end_include
-
-begin_comment
-comment|/* variables */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|use_group
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* some syslogging */
@@ -271,6 +235,10 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|,
+name|char
+modifier|*
+name|use_group
 parameter_list|)
 block|{
 name|int
@@ -458,15 +426,18 @@ name|retval
 init|=
 name|PAM_AUTH_ERR
 decl_stmt|;
+name|char
+name|use_group
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 comment|/* Init the optional group */
 name|bzero
 argument_list|(
 name|use_group
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|use_group
-argument_list|)
+name|BUFSIZ
 argument_list|)
 expr_stmt|;
 name|ctrl
@@ -476,6 +447,8 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
+argument_list|,
+name|use_group
 argument_list|)
 expr_stmt|;
 name|retval
@@ -652,6 +625,21 @@ index|[
 literal|0
 index|]
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|grp
+operator|=
+name|getgrnam
+argument_list|(
+literal|"wheel"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|grp
 operator|=
 name|getgrgid
@@ -659,6 +647,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
 name|grp
 operator|=

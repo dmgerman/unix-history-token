@@ -194,6 +194,8 @@ literal|"Oops: %s\n"
 argument_list|,
 name|pam_strerror
 argument_list|(
+name|pamh
+argument_list|,
 name|res
 argument_list|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: blank.c,v 1.7 1996/12/01 03:16:53 morgan Exp morgan $  *  * $Log: blank.c,v $  * Revision 1.7  1996/12/01 03:16:53  morgan  * added setcred closing function  *  * Revision 1.6  1996/11/10 19:51:40  morgan  * minor change to avoid gcc warning  *  * Revision 1.5  1996/07/07 23:53:05  morgan  * added optional fail delay (non-standard Linux-PAM)  *  * Revision 1.4  1996/05/02 04:44:18  morgan  * moved conversation to a libmisc library routine.  *  *  */
+comment|/*  * $Id: blank.c,v 1.2 2000/12/04 19:02:33 baggins Exp $  */
 end_comment
 
 begin_comment
@@ -109,7 +109,7 @@ comment|/* ------- the application itself -------- */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int

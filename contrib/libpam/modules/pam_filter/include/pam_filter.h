@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_filter.h,v 1.2 1997/02/15 19:09:09 morgan Exp $  *  * this file is associated with the Linux-PAM filter module.  * it was written by Andrew G. Morgan<morgan@parc.power.net>  *  */
+comment|/*  * $Id: pam_filter.h,v 1.1.1.1 2000/06/20 22:11:36 agmorgan Exp $  *  * this file is associated with the Linux-PAM filter module.  * it was written by Andrew G. Morgan<morgan@linux.kernel.org>  *  */
 end_comment
 
 begin_ifndef

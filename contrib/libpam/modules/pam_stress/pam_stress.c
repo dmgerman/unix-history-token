@@ -4,8 +4,14 @@ comment|/* pam_stress module */
 end_comment
 
 begin_comment
-comment|/* $Id: pam_stress.c,v 1.12 1997/02/15 19:06:30 morgan Exp morgan $  *  * created by Andrew Morgan<morgan@parc.power.net> 1996/3/12  *  * $Log: pam_stress.c,v $  * Revision 1.12  1997/02/15 19:06:30  morgan  * fixed email  *  * Revision 1.11  1997/02/15 17:33:24  morgan  * removed fixed syslog buffer  *  * Revision 1.10  1996/12/01 03:11:35  morgan  * using _pam_macros.h now  *  * Revision 1.9  1996/11/10 20:18:10  morgan  * changes for .53 compilation  *  * Revision 1.8  1996/09/05 06:31:59  morgan  * changed return value of wipe_up from int to void  *  * Revision 1.7  1996/06/02 08:12:28  morgan  * updated for new static protocol, added STRESS to various user prompts  * and added rootok flag for pam_sm_chauthtok to look out for  *  */
+comment|/* $Id: pam_stress.c,v 1.2 2000/11/19 23:54:05 agmorgan Exp $  *  * created by Andrew Morgan<morgan@linux.kernel.org> 1996/3/12  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/_pam_aconf.h>
+end_include
 
 begin_include
 include|#
@@ -18,6 +24,12 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__USE_BSD
+end_define
 
 begin_include
 include|#

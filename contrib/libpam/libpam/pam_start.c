@@ -4,7 +4,7 @@ comment|/* pam_start.c */
 end_comment
 
 begin_comment
-comment|/* Creator Marc Ewing  * Maintained by AGM  *  * $Id: pam_start.c,v 1.10 1997/04/05 06:58:11 morgan Exp $  *  * $Log: pam_start.c,v $  */
+comment|/* Creator Marc Ewing  * Maintained by AGM  *  * $Id: pam_start.c,v 1.2 2001/01/22 06:07:29 agmorgan Exp $  *  */
 end_comment
 
 begin_include
@@ -106,12 +106,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_start: calloc failed for *pamh"
@@ -123,6 +119,13 @@ name|PAM_BUF_ERR
 operator|)
 return|;
 block|}
+comment|/* Mark the caller as the application - permission to do certain        things is limited to a module or an application */
+name|__PAM_TO_APP
+argument_list|(
+operator|*
+name|pamh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|service_name
@@ -151,12 +154,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_start: _pam_strdup failed for service name"
@@ -236,12 +235,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_start: _pam_strdup failed for user"
@@ -389,12 +384,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_start: malloc failed for pam_conv"
@@ -473,12 +464,8 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_start: failed to initialize environment"
@@ -529,7 +516,6 @@ argument_list|)
 expr_stmt|;
 comment|/* cannot fail */
 comment|/* According to the SunOS man pages, loading modules and resolving      * symbols happens on the first call from the application. */
-comment|/*      * XXX - should we call _pam_init_handlers() here ? The following      * is new as of Linux-PAM 0.55      */
 if|if
 condition|(
 name|_pam_init_handlers
@@ -541,12 +527,8 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_start: failed to initialize handlers"

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * $Id: pam_radius.h,v 1.2 2000/11/19 23:54:05 agmorgan Exp $  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,16 +15,10 @@ directive|define
 name|PAM_RADIUS_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|_GNU_SOURCE
-end_define
-
 begin_include
 include|#
 directive|include
-file|<features.h>
+file|<security/_pam_aconf.h>
 end_include
 
 begin_include
@@ -29,11 +27,26 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__USE_POSIX2
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|__USE_POSIX2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __USE_POSIX2 */
+end_comment
 
 begin_include
 include|#

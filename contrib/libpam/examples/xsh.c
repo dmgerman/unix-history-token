@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: xsh.c,v 1.4 1996/11/10 21:09:45 morgan Exp morgan $  *  * $Log: xsh.c,v $  * Revision 1.4  1996/11/10 21:09:45  morgan  * no gcc warnings  *  * Revision 1.3  1996/07/07 23:53:36  morgan  * added support for non standard pam_fail_delay  *  * Revision 1.2  1996/05/02 04:44:48  morgan  * moved conversaation to a libmisc routine.  *  * Revision 1.1  1996/04/07 08:18:55  morgan  * Initial revision  *  */
+comment|/*  * $Id: xsh.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  */
 end_comment
 
 begin_comment
-comment|/* Andrew Morgan (morgan@parc.power.net) -- an example application  * that invokes a shell, based on blank.c */
+comment|/* Andrew Morgan (morgan@kernel.org) -- an example application  * that invokes a shell, based on blank.c */
 end_comment
 
 begin_include
@@ -109,7 +109,7 @@ comment|/* ------- the application itself -------- */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
@@ -119,11 +119,6 @@ name|char
 modifier|*
 modifier|*
 name|argv
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|envp
 parameter_list|)
 block|{
 name|pam_handle_t
@@ -132,28 +127,36 @@ name|pamh
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|username
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|service
+init|=
+literal|"xsh"
+decl_stmt|;
 name|int
 name|retcode
 decl_stmt|;
-comment|/* did the user call with a username as an argument ? */
+comment|/* did the user call with a username as an argument ?       * did they also */
 if|if
 condition|(
 name|argc
 operator|>
-literal|2
+literal|3
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [username]\n"
+literal|"usage: %s [username [service-name]]\n"
 argument_list|,
 name|argv
 index|[
@@ -162,11 +165,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|argc
-operator|==
+operator|>=
 literal|2
 condition|)
 block|{
@@ -178,12 +180,27 @@ literal|1
 index|]
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|==
+literal|3
+condition|)
+block|{
+name|service
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
 comment|/* initialize the Linux-PAM library */
 name|retcode
 operator|=
 name|pam_start
 argument_list|(
-literal|"xsh"
+name|service
 argument_list|,
 name|username
 argument_list|,
@@ -417,11 +434,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|pam_get_item
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_USER
+argument_list|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|username
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The user has been authenticated and `logged in'\n"
+literal|"The user [%s] has been authenticated and `logged in'\n"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 comment|/* this is always a really bad thing for security! */
@@ -463,6 +498,48 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: problem closing a session\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* `0' could be as above */
+name|retcode
+operator|=
+name|pam_setcred
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_DELETE_CRED
+argument_list|)
+expr_stmt|;
+name|bail_out
+argument_list|(
+name|pamh
+argument_list|,
+literal|0
+argument_list|,
+name|retcode
+argument_list|,
+literal|"pam_setcred"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retcode
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: problem deleting user credentials\n"
 argument_list|,
 name|argv
 index|[

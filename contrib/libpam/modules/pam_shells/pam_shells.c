@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pam_securetty module */
+comment|/* pam_shells module */
 end_comment
 
 begin_define
@@ -13,6 +13,12 @@ end_define
 begin_comment
 comment|/*  * by Erik Troan<ewt@redhat.com>, Red Hat Software.  * August 5, 1996.  * This code shamelessly ripped from the pam_securetty module.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_SOURCE
+end_define
 
 begin_include
 include|#
@@ -286,10 +292,9 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|SHELL_FILE
+literal|"%s cannot be stat'd (it probably does not exist)"
 argument_list|,
-literal|" cannot be stat'd (it probably does "
-literal|"not exist)"
+name|SHELL_FILE
 argument_list|)
 expr_stmt|;
 return|return
@@ -320,8 +325,9 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s is either world writable or not a normal file"
+argument_list|,
 name|SHELL_FILE
-literal|" is either world writable or not a normal file"
 argument_list|)
 expr_stmt|;
 return|return
@@ -349,7 +355,8 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error opening "
+literal|"Error opening %s"
+argument_list|,
 name|SHELL_FILE
 argument_list|)
 expr_stmt|;

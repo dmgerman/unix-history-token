@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_filter.c,v 1.9 1997/02/15 19:07:49 morgan Exp morgan $  *  * $Log: pam_filter.c,v $  * Revision 1.9  1997/02/15 19:07:49  morgan  * fixed email  *  * Revision 1.8  1996/11/10 20:59:23  morgan  * gcc warning removed  *  * Revision 1.7  1996/07/08 00:01:17  morgan  * set the PAM_TTY item now  *  * Revision 1.6  1996/06/02 08:08:19  morgan  * completely re-written  *  *  * written by Andrew Morgan<morgan@transmeta.com> with much help from  * Richard Stevens' UNIX Network Programming book.  */
+comment|/*  * $Id: pam_filter.c,v 1.2 2000/11/19 23:54:03 agmorgan Exp $  *  * written by Andrew Morgan<morgan@transmeta.com> with much help from  * Richard Stevens' UNIX Network Programming book.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/_pam_aconf.h>
+end_include
 
 begin_include
 include|#

@@ -4,7 +4,7 @@ comment|/* pam_nologin module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_nologin.c,v 1.4 1997/04/05 06:36:47 morgan Exp morgan $  *  * Written by Michael K. Johnson<johnsonm@redhat.com> 1996/10/24  *  * $Log: pam_nologin.c,v $  * Revision 1.4  1997/04/05 06:36:47  morgan  * display message when the user is unknown  *  * Revision 1.3  1996/12/01 03:00:54  morgan  * added prototype to conversation, gave static structure name of module  *  * Revision 1.2  1996/11/10 21:02:31  morgan  * compile against .53  *  * Revision 1.1  1996/10/25 03:19:36  morgan  * Initial revision  *  *  */
+comment|/*  * $Id: pam_nologin.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  * Written by Michael K. Johnson<johnsonm@redhat.com> 1996/10/24  *  */
 end_comment
 
 begin_include

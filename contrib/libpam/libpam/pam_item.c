@@ -4,7 +4,7 @@ comment|/* pam_item.c */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_item.c,v 1.8 1997/02/15 15:58:49 morgan Exp morgan $  *  * $Log: pam_item.c,v $  */
+comment|/*  * $Id: pam_item.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  */
 end_comment
 
 begin_include
@@ -49,6 +49,19 @@ parameter_list|)
 define|\
 value|{                                      \     char *_TMP_ = (X);                 \     if (_TMP_ != (Y)) {                \ 	 (X) = (Y) ? _pam_strdup(Y) : NULL; \ 	 if (_TMP_)                    \ 	      free(_TMP_);             \     }                                  \ }
 end_define
+
+begin_comment
+comment|/* handy version id */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|__libpam_version
+init|=
+name|LIBPAM_VERSION
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* functions */
@@ -228,7 +241,14 @@ break|break;
 case|case
 name|PAM_AUTHTOK
 case|:
-comment|/* 	  * The man page says this is only supposed to be available to 	  * the module providers.  In order to use this item the app 	  * has to #include<security/pam_modules.h>. This is something 	  * it is *not* supposed to do with "Linux-"PAM!  - AGM. 	  */
+comment|/* 	 * PAM_AUTHTOK and PAM_OLDAUTHTOK are only accessible from 	 * modules. 	 */
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
 block|{
 name|char
 modifier|*
@@ -277,12 +297,26 @@ name|_TMP_
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
 block|}
+else|else
+block|{
+name|retval
+operator|=
+name|PAM_BAD_ITEM
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|PAM_OLDAUTHTOK
 case|:
-comment|/* See note above. */
+comment|/* 	 * PAM_AUTHTOK and PAM_OLDAUTHTOK are only accessible from 	 * modules. 	 */
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
 block|{
 name|char
 modifier|*
@@ -331,8 +365,15 @@ name|_TMP_
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
 block|}
+else|else
+block|{
+name|retval
+operator|=
+name|PAM_BAD_ITEM
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|PAM_CONV
 case|:
@@ -344,12 +385,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_set_item: attempt to set conv() to NULL"
@@ -390,12 +427,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_set_item: malloc failed for pam_conv"
@@ -449,112 +482,6 @@ operator|=
 name|item
 expr_stmt|;
 break|break;
-case|case
-name|PAM_LOG_STATE
-case|:
-block|{
-name|char
-modifier|*
-name|old_ident
-init|=
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|ident
-decl_stmt|;
-if|if
-condition|(
-name|item
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* reset the default state */
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|ident
-operator|=
-name|x_strdup
-argument_list|(
-name|PAM_LOG_STATE_IDENT
-argument_list|)
-expr_stmt|;
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|option
-operator|=
-name|PAM_LOG_STATE_OPTION
-expr_stmt|;
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|facility
-operator|=
-name|PAM_LOG_STATE_FACILITY
-expr_stmt|;
-block|}
-else|else
-block|{
-specifier|const
-name|struct
-name|pam_log_state
-modifier|*
-name|state
-init|=
-name|item
-decl_stmt|;
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|ident
-operator|=
-name|x_strdup
-argument_list|(
-name|state
-operator|->
-name|ident
-argument_list|)
-expr_stmt|;
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|option
-operator|=
-name|state
-operator|->
-name|option
-expr_stmt|;
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|facility
-operator|=
-name|state
-operator|->
-name|facility
-expr_stmt|;
-block|}
-name|_pam_overwrite
-argument_list|(
-name|old_ident
-argument_list|)
-expr_stmt|;
-name|_pam_drop
-argument_list|(
-name|old_ident
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 default|default:
 name|retval
 operator|=
@@ -562,9 +489,7 @@ name|PAM_BAD_ITEM
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 end_function
@@ -588,6 +513,11 @@ modifier|*
 name|item
 parameter_list|)
 block|{
+name|int
+name|retval
+init|=
+name|PAM_SUCCESS
+decl_stmt|;
 name|D
 argument_list|(
 operator|(
@@ -611,12 +541,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_get_item: nowhere to place requested item"
@@ -645,6 +571,17 @@ break|break;
 case|case
 name|PAM_USER
 case|:
+name|D
+argument_list|(
+operator|(
+literal|"returning user=%s"
+operator|,
+name|pamh
+operator|->
+name|user
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|item
 operator|=
@@ -656,6 +593,17 @@ break|break;
 case|case
 name|PAM_USER_PROMPT
 case|:
+name|D
+argument_list|(
+operator|(
+literal|"returning userprompt=%s"
+operator|,
+name|pamh
+operator|->
+name|user
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|item
 operator|=
@@ -711,6 +659,15 @@ break|break;
 case|case
 name|PAM_AUTHTOK
 case|:
+comment|/* 	 * PAM_AUTHTOK and PAM_OLDAUTHTOK are only accessible from 	 * modules. 	 */
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
+block|{
 operator|*
 name|item
 operator|=
@@ -718,10 +675,27 @@ name|pamh
 operator|->
 name|authtok
 expr_stmt|;
+block|}
+else|else
+block|{
+name|retval
+operator|=
+name|PAM_BAD_ITEM
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PAM_OLDAUTHTOK
 case|:
+comment|/* 	 * PAM_AUTHTOK and PAM_OLDAUTHTOK are only accessible from 	 * modules. 	 */
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
+block|{
 operator|*
 name|item
 operator|=
@@ -729,6 +703,14 @@ name|pamh
 operator|->
 name|oldauthtok
 expr_stmt|;
+block|}
+else|else
+block|{
+name|retval
+operator|=
+name|PAM_BAD_ITEM
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PAM_CONV
@@ -754,34 +736,20 @@ operator|.
 name|delay_fn_ptr
 expr_stmt|;
 break|break;
-case|case
-name|PAM_LOG_STATE
-case|:
-operator|*
-name|item
-operator|=
-operator|&
-operator|(
-name|pamh
-operator|->
-name|pam_default_log
-operator|)
-expr_stmt|;
-break|break;
 default|default:
-comment|/* XXX - I made this up */
-return|return
+name|retval
+operator|=
 name|PAM_BAD_ITEM
-return|;
+expr_stmt|;
 block|}
 return|return
-name|PAM_SUCCESS
+name|retval
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* added by AGM 1996/3/2 */
+comment|/*  * This function is the 'preferred method to obtain the username'.  */
 end_comment
 
 begin_function
@@ -849,12 +817,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_get_user: no conv element in pamh"
@@ -872,12 +836,8 @@ name|NULL
 condition|)
 block|{
 comment|/* ensure the the module has suplied a destination */
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_get_user: nowhere to record username"
@@ -964,12 +924,8 @@ operator|.
 name|prompt
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_get_user: failed to resume with prompt"
@@ -994,12 +950,8 @@ name|use_prompt
 argument_list|)
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_get_user: resumed with different prompt"
@@ -1188,6 +1140,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|D
+argument_list|(
+operator|(
+literal|"completed"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|retval
 return|;

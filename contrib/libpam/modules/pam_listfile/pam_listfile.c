@@ -1,64 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_listfile.c,v 1.6 1997/04/05 06:38:35 morgan Exp $  *  * $Log: pam_listfile.c,v $  * Revision 1.6  1997/04/05 06:38:35  morgan  * reformat mostly  *  * Revision 1.5  1997/02/15 17:29:41  morgan  * removed fixed length buffer in logging  *  * Revision 1.4  1997/01/04 20:32:10  morgan  * ammendments for pam_listfile handling  *  * Revision 1.3  1996/11/10 21:02:08  morgan  * compiles with .53  *  * Revision 1.2  1996/09/05 06:22:58  morgan  * Michael's patches  *  */
+comment|/*  * $Id: pam_listfile.c,v 1.2 2000/11/19 23:54:04 agmorgan Exp $  *  */
 end_comment
 
 begin_comment
-comment|/*  * by Elliot Lee<sopwith@redhat.com>, Red Hat Software.  * July 25, 1996.  * This code shamelessly ripped from the pam_rootok module.  */
+comment|/*  * by Elliot Lee<sopwith@redhat.com>, Red Hat Software. July 25, 1996.  * log refused access error christopher mccrory<chrismcc@netus.com> 1998/7/11  *  * This code began life as the pam_rootok module.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_SVID_SOURCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|_BSD_SOURCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|__USE_BSD
-end_define
-
-begin_define
-define|#
-directive|define
-name|__USE_SVID
-end_define
-
-begin_define
-define|#
-directive|define
-name|__USE_MISC
-end_define
-
-begin_define
-define|#
-directive|define
-name|_GNU_SOURCE
-end_define
 
 begin_include
 include|#
 directive|include
-file|<features.h>
+file|<security/_pam_aconf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -163,6 +116,13 @@ begin_comment
 comment|/* some syslogging */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOCAL_LOG_PREFIX
+value|"PAM-listfile: "
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -189,19 +149,10 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-name|openlog
-argument_list|(
-literal|"PAM-listfile"
-argument_list|,
-name|LOG_CONS
-operator||
-name|LOG_PID
-argument_list|,
-name|LOG_AUTH
-argument_list|)
-expr_stmt|;
 name|vsyslog
 argument_list|(
+name|LOG_AUTH
+operator||
 name|err
 argument_list|,
 name|format
@@ -213,9 +164,6 @@ name|va_end
 argument_list|(
 name|args
 argument_list|)
-expr_stmt|;
-name|closelog
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1070,6 +1018,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Unknown option: %s"
 argument_list|,
 name|mybuf
@@ -1090,6 +1039,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Unknown item or item not specified"
 argument_list|)
 expr_stmt|;
@@ -1108,6 +1058,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"List filename not specified"
 argument_list|)
 expr_stmt|;
@@ -1127,6 +1078,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Unknown sense or sense not specified"
 argument_list|)
 expr_stmt|;
@@ -1163,6 +1115,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Invalid usage for apply= parameter"
 argument_list|)
 expr_stmt|;
@@ -1197,6 +1150,7 @@ name|_pam_log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Non-sense use for apply= parameter"
 argument_list|)
 expr_stmt|;
@@ -1220,6 +1174,7 @@ name|_pam_log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Non-sense use for apply= parameter"
 argument_list|)
 expr_stmt|;
@@ -1291,6 +1246,7 @@ name|_pam_log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"don't apply: apply=%s, user=%s"
 argument_list|,
 name|apply_val
@@ -1333,6 +1289,7 @@ name|_pam_log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"don't apply: %s not a member of group %s"
 argument_list|,
 name|user_name
@@ -1589,6 +1546,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Internal weirdness, unknown extended item %d"
 argument_list|,
 name|extitem
@@ -1606,6 +1564,7 @@ name|_pam_log
 argument_list|(
 name|LOG_INFO
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Got file = %s, item = %d, value = %s, sense = %d"
 argument_list|,
 name|ifname
@@ -1634,6 +1593,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Couldn't open %s"
 argument_list|,
 name|ifname
@@ -1667,6 +1627,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"%s is either world writable or not a normal file"
 argument_list|,
 name|ifname
@@ -1705,6 +1666,7 @@ name|_pam_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+name|LOCAL_LOG_PREFIX
 literal|"Error opening %s"
 argument_list|,
 name|ifname
@@ -1913,23 +1875,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sense
+operator|&&
 name|retval
+operator|)
+operator|||
+operator|(
+operator|!
+name|sense
+operator|&&
+operator|!
+name|retval
+operator|)
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|syslog
+name|_pam_log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Returning %d, retval = %d"
-argument_list|,
-name|sense
-condition|?
-name|PAM_AUTH_ERR
-else|:
-name|PAM_SUCCESS
+name|LOCAL_LOG_PREFIX
+literal|"Returning PAM_SUCCESS, retval = %d"
 argument_list|,
 name|retval
 argument_list|)
@@ -1937,41 +1906,80 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|sense
-condition|?
 name|PAM_SUCCESS
-else|:
-name|PAM_AUTH_ERR
 return|;
 block|}
 else|else
 block|{
+specifier|const
+name|char
+modifier|*
+name|service
+decl_stmt|,
+modifier|*
+name|user_name
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|syslog
+name|_pam_log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Returning %d, retval = %d"
-argument_list|,
-name|sense
-condition|?
-name|PAM_SUCCESS
-else|:
-name|PAM_AUTH_ERR
+name|LOCAL_LOG_PREFIX
+literal|"Returning PAM_AUTH_ERR, retval = %d"
 argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|pam_get_item
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_SERVICE
+argument_list|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|service
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pam_get_user
+argument_list|(
+name|pamh
+argument_list|,
+operator|&
+name|user_name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|_pam_log
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+name|LOCAL_LOG_PREFIX
+literal|"Refused user %s for service %s"
+argument_list|,
+name|user_name
+argument_list|,
+name|service
+argument_list|)
+expr_stmt|;
 return|return
-name|sense
-condition|?
 name|PAM_AUTH_ERR
-else|:
-name|PAM_SUCCESS
 return|;
 block|}
 block|}

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_pwdb.c,v 1.3 1997/01/04 20:38:33 morgan Exp morgan $  *  * This is the single file that will be compiled for pam_unix.  * it includes each of the modules that have beed defined in the .-c  * files in this directory.  *  * It is a little ugly to do it this way, but it is a simple way of  * defining static functions only once, and yet keeping the separate  * files modular. If you can think of something better, please email  * Andrew Morgan<morgan@linux.kernel.org>  *  * See the end of this file for Copyright information.  */
-end_comment
-
-begin_comment
-comment|/*  * $Log: pam_pwdb.c,v $  * Revision 1.3  1997/01/04 20:38:33  morgan  * this is not the unix module!  *  * Revision 1.2  1996/12/01 03:03:43  morgan  * debugging code uses _pam_malloc  *  * Revision 1.1  1996/11/10 21:21:24  morgan  * Initial revision  *  * Revision 1.3  1996/09/05 06:44:33  morgan  * more debugging, fixed static structure name  *  * Revision 1.2  1996/09/01 01:05:12  morgan  * Cristian Gafton's patches.  *  * Revision 1.1  1996/08/29 13:22:19  morgan  * Initial revision  *  */
+comment|/*  * $Id: pam_pwdb.c,v 1.3 2000/11/19 23:54:04 agmorgan Exp $  *  * This is the single file that will be compiled for pam_unix.  * it includes each of the modules that have beed defined in the .-c  * files in this directory.  *  * It is a little ugly to do it this way, but it is a simple way of  * defining static functions only once, and yet keeping the separate  * files modular. If you can think of something better, please email  * Andrew Morgan<morgan@linux.kernel.org>  *  * See the end of this file for Copyright information.  */
 end_comment
 
 begin_decl_stmt
@@ -14,33 +10,20 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pam_pwdb.c,v 1.3 1997/01/04 20:38:33 morgan Exp morgan $\n"
+literal|"$Id: pam_pwdb.c,v 1.3 2000/11/19 23:54:04 agmorgan Exp $\n"
 literal|" - PWDB Pluggable Authentication module.<morgan@linux.kernel.org>"
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_GNU_SOURCE
-end_define
+begin_comment
+comment|/* #define DEBUG */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<features.h>
+file|<security/_pam_aconf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -105,24 +88,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|_SVID_SOURCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|__USE_BSD
-end_define
-
-begin_define
-define|#
-directive|define
-name|_BSD_COMPAT
-end_define
 
 begin_include
 include|#
@@ -281,6 +246,55 @@ expr_stmt|;
 name|pwdb_end
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|on
+argument_list|(
+name|UNIX_LIKE_AUTH
+argument_list|,
+name|ctrl
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+operator|(
+literal|"recording return code for next time [%d]"
+operator|,
+name|retval
+operator|)
+argument_list|)
+expr_stmt|;
+name|pam_set_data
+argument_list|(
+name|pamh
+argument_list|,
+literal|"pwdb_setcred_return"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|retval
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|D
+argument_list|(
+operator|(
+literal|"done. [%s]"
+operator|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|retval
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|retval
 return|;
@@ -349,6 +363,55 @@ expr_stmt|;
 name|pwdb_end
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|on
+argument_list|(
+name|UNIX_LIKE_AUTH
+argument_list|,
+name|ctrl
+argument_list|)
+condition|)
+block|{
+name|int
+modifier|*
+name|pretval
+init|=
+operator|&
+name|retval
+decl_stmt|;
+name|D
+argument_list|(
+operator|(
+literal|"recovering return code from auth call"
+operator|)
+argument_list|)
+expr_stmt|;
+name|pam_get_data
+argument_list|(
+name|pamh
+argument_list|,
+literal|"pwdb_setcred_return"
+argument_list|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
+name|pretval
+argument_list|)
+expr_stmt|;
+name|D
+argument_list|(
+operator|(
+literal|"recovered data indicates that old retval was %d"
+operator|,
+name|retval
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|retval
 return|;
@@ -657,6 +720,13 @@ argument_list|)
 expr_stmt|;
 name|pwdb_end
 argument_list|()
+expr_stmt|;
+name|D
+argument_list|(
+operator|(
+literal|"done."
+operator|)
+argument_list|)
 expr_stmt|;
 return|return
 name|retval

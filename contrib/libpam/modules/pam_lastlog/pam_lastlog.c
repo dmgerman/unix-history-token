@@ -4,8 +4,14 @@ comment|/* pam_lastlog module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_lastlog.c,v 1.3 1997/04/05 06:18:21 morgan Exp morgan $  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/3/11  *  * This module does the necessary work to display the last login  * time+date for this user, it then updates this entry for the  * present (login) service.  *  * $Log: pam_lastlog.c,v $  * Revision 1.3  1997/04/05 06:18:21  morgan  * removed xstrdup - unused  *  * Revision 1.2  1997/02/15 17:18:21  morgan  * removed fixed buffer in logging  *  * Revision 1.1  1997/01/04 20:29:28  morgan  * Initial revision  *  */
+comment|/*  * $Id: pam_lastlog.c,v 1.3 2001/02/10 22:33:10 agmorgan Exp $  *  * Written by Andrew Morgan<morgan@linux.kernel.org> 1996/3/11  *  * This module does the necessary work to display the last login  * time+date for this user, it then updates this entry for the  * present (login) service.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/_pam_aconf.h>
+end_include
 
 begin_include
 include|#

@@ -4,8 +4,14 @@ comment|/* pam_rootok module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_rootok.c,v 1.5 1997/02/15 17:32:47 morgan Exp $  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/3/11  *  * $Log: pam_rootok.c,v $  * Revision 1.5  1997/02/15 17:32:47  morgan  * removed fixed syslog buffer  *  * Revision 1.4  1996/12/01 03:10:14  morgan  * reformatted  *  * Revision 1.3  1996/06/02 08:11:01  morgan  * updated for new static protocol  *  */
+comment|/*  * $Id: pam_rootok.c,v 1.1.1.1 2000/06/20 22:11:56 agmorgan Exp $  *  * Written by Andrew Morgan<morgan@linux.kernel.org> 1996/3/11  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+end_define
 
 begin_include
 include|#

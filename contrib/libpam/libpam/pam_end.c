@@ -4,7 +4,7 @@ comment|/* pam_end.c */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_end.c,v 1.5 1996/12/01 03:14:13 morgan Exp $  *  * $Log: pam_end.c,v $  */
+comment|/*  * $Id: pam_end.c,v 1.2 2001/01/22 06:07:28 agmorgan Exp $  */
 end_comment
 
 begin_include
@@ -34,6 +34,13 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|D
+argument_list|(
+operator|(
+literal|"entering pam_end()"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IF_NO_PAMH
 argument_list|(
 literal|"pam_end"
@@ -43,13 +50,25 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
+block|{
 name|D
 argument_list|(
 operator|(
-literal|"entering pam_end()"
+literal|"called from module!?"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+name|PAM_SYSTEM_ERR
+return|;
+block|}
 comment|/* first liberate the modules (it is not inconcevible that the        modules may need to use the service_name etc. to clean up) */
 name|_pam_free_data
 argument_list|(
@@ -233,24 +252,6 @@ operator|.
 name|delay_fn_ptr
 operator|=
 name|NULL
-expr_stmt|;
-name|_pam_overwrite
-argument_list|(
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|ident
-argument_list|)
-expr_stmt|;
-name|_pam_drop
-argument_list|(
-name|pamh
-operator|->
-name|pam_default_log
-operator|.
-name|ident
-argument_list|)
 expr_stmt|;
 comment|/* and finally liberate the memory for the pam_handle structure */
 name|_pam_drop

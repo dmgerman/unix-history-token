@@ -4,7 +4,7 @@ comment|/* pam_static.c -- static module loading helper functions */
 end_comment
 
 begin_comment
-comment|/* created by Michael K. Johnson, johnsonm@redhat.com  *  * $Id: pam_static.c,v 1.4 1996/12/01 03:14:13 morgan Exp $  *  * $Log: pam_static.c,v $  * Revision 1.4  1996/12/01 03:14:13  morgan  * use _pam_macros.h  *  * Revision 1.3  1996/11/10 20:09:16  morgan  * name convention change _pam_  *  * Revision 1.2  1996/06/02 08:02:56  morgan  * Michael's minor alterations  *  * Revision 1.1  1996/05/26 04:34:04  morgan  * Initial revision  *  */
+comment|/* created by Michael K. Johnson, johnsonm@redhat.com  *  * $Id: pam_static.c,v 1.1.1.1 2000/06/20 22:11:21 agmorgan Exp $  */
 end_comment
 
 begin_comment
@@ -86,6 +86,7 @@ name|pam_module
 modifier|*
 name|_pam_open_static_handler
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -94,11 +95,16 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|clpath
+init|=
+name|path
+decl_stmt|;
 name|char
 modifier|*
 name|lpath
-init|=
-name|path
 decl_stmt|,
 modifier|*
 name|end
@@ -107,14 +113,14 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|lpath
+name|clpath
 argument_list|,
 literal|'/'
 argument_list|)
 condition|)
 block|{
 comment|/* ignore path and leading "/" */
-name|lpath
+name|clpath
 operator|=
 name|strrchr
 argument_list|(
@@ -131,7 +137,7 @@ name|lpath
 operator|=
 name|_pam_strdup
 argument_list|(
-name|lpath
+name|clpath
 argument_list|)
 expr_stmt|;
 comment|/* chop .so off copy if it exists (or other extension on other        platform...) */
@@ -225,9 +231,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

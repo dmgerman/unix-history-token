@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_delay.c  *  * Copyright (c) Andrew G. Morgan<morgan@linux.kernel.org> 1996-8  * All rights reserved.  *  * $Id: pam_delay.c,v 1.5 1997/04/05 06:54:19 morgan Exp $  *  * $Log: pam_delay.c,v $  */
+comment|/*  * pam_delay.c  *  * Copyright (c) Andrew G. Morgan<morgan@kernel.org> 1996-9  * All rights reserved.  *  * $Id: pam_delay.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  *  */
 end_comment
 
 begin_comment
@@ -296,11 +296,41 @@ parameter_list|(
 name|int
 parameter_list|,
 name|unsigned
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 block|}
 name|hack_fn_u
 union|;
+name|void
+modifier|*
+name|appdata_ptr
+decl_stmt|;
+if|if
+condition|(
+name|pamh
+operator|->
+name|pam_conversation
+condition|)
+block|{
+name|appdata_ptr
+operator|=
+name|pamh
+operator|->
+name|pam_conversation
+operator|->
+name|appdata_ptr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|appdata_ptr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* always call the applications delay function, even if 	   the delay is zero - indicate status */
 name|hack_fn_u
 operator|.
@@ -319,6 +349,8 @@ argument_list|(
 name|status
 argument_list|,
 name|delay
+argument_list|,
+name|appdata_ptr
 argument_list|)
 expr_stmt|;
 block|}

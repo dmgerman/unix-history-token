@@ -4,7 +4,7 @@ comment|/* pam_group module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_group.c,v 1.7 1997/02/15 17:31:48 morgan Exp morgan $  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/7/6  *  * $Log: pam_group.c,v $  * Revision 1.7  1997/02/15 17:31:48  morgan  * time parsing more robust  *  * Revision 1.6  1997/01/04 21:57:49  morgan  * fixed warning about setgroups not being defined  *  * Revision 1.5  1997/01/04 20:26:49  morgan  * can be compiled with and without libpwdb. fixed buffer underwriting  * pays attention to PAM_CRED flags(!)  *  * Revision 1.4  1996/12/01 02:54:37  morgan  * mostly debugging now uses D(())  *  * Revision 1.3  1996/11/10 21:01:22  morgan  * compatability and pam_get_user changes  */
+comment|/*  * $Id: pam_group.c,v 1.3 2000/11/26 07:32:39 agmorgan Exp $  *  * Written by Andrew Morgan<morgan@linux.kernel.org> 1996/7/6  */
 end_comment
 
 begin_decl_stmt
@@ -14,11 +14,17 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pam_group.c,v 1.7 1997/02/15 17:31:48 morgan Exp morgan $;\n"
+literal|"$Id: pam_group.c,v 1.3 2000/11/26 07:32:39 agmorgan Exp $;\n"
 literal|"Version 0.5 for Linux-PAM\n"
-literal|"Copyright (c) Andrew G. Morgan 1996<morgan@parc.power.net>\n"
+literal|"Copyright (c) Andrew G. Morgan 1996<morgan@linux.kernel.org>\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|_BSD_SOURCE
+end_define
 
 begin_include
 include|#
@@ -74,12 +80,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|__USE_BSD
-end_define
-
 begin_include
 include|#
 directive|include
@@ -107,30 +107,36 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WANT_PWDB
+name|DEFAULT_CONF_FILE
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pwdb/pwdb_public.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|PAM_GROUP_CONF
-value|CONFILE
+value|DEFAULT_CONF_FILE
 end_define
 
 begin_comment
 comment|/* from external define */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PAM_GROUP_CONF
+value|"/etc/security/group.conf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -557,6 +563,11 @@ operator|!
 name|i
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 operator|-
@@ -847,6 +858,13 @@ name|to
 operator|-=
 literal|2
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|++
+name|i
+expr_stmt|;
+comment|/* we don't escape non-newline characters */
 block|}
 break|break;
 case|case
@@ -1209,6 +1227,10 @@ operator|||
 name|c
 operator|==
 literal|'.'
+operator|||
+name|c
+operator|==
+literal|'/'
 condition|)
 block|{
 name|token

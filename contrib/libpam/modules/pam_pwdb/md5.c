@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: md5.c,v 1.1 1996/09/05 06:43:31 morgan Exp $  *  * This code implements the MD5 message-digest algorithm.  * The algorithm is due to Ron Rivest.  This code was  * written by Colin Plumb in 1993, no copyright is claimed.  * This code is in the public domain; do with it what you wish.  *  * Equivalent code is available from RSA Data Security, Inc.  * This code has been tested against that, and is equivalent,  * except that you don't need to include two pages of legalese  * with every copy.  *  * To compute the message digest of a chunk of bytes, declare an  * MD5Context structure, pass it to MD5Init, call MD5Update as  * needed on buffers full of bytes, and then call MD5Final, which  * will fill a supplied 16-byte array with the digest.  *  * $Log: md5.c,v $  * Revision 1.1  1996/09/05 06:43:31  morgan  * Initial revision  *  */
+comment|/* $Id: md5.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  * This code implements the MD5 message-digest algorithm.  * The algorithm is due to Ron Rivest.  This code was  * written by Colin Plumb in 1993, no copyright is claimed.  * This code is in the public domain; do with it what you wish.  *  * Equivalent code is available from RSA Data Security, Inc.  * This code has been tested against that, and is equivalent,  * except that you don't need to include two pages of legalese  * with every copy.  *  * To compute the message digest of a chunk of bytes, declare an  * MD5Context structure, pass it to MD5Init, call MD5Update as  * needed on buffers full of bytes, and then call MD5Final, which  * will fill a supplied 16-byte array with the digest.  *  */
 end_comment
 
 begin_include
@@ -42,6 +42,7 @@ directive|else
 end_else
 
 begin_function_decl
+specifier|static
 name|void
 name|byteReverse
 parameter_list|(
@@ -67,6 +68,7 @@ comment|/*  * Note: this code is harmless on little-endian machines.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|byteReverse
 parameter_list|(
@@ -164,7 +166,10 @@ end_comment
 
 begin_function
 name|void
+name|MD5Name
+function|(
 name|MD5Init
+function|)
 parameter_list|(
 name|struct
 name|MD5Context
@@ -235,7 +240,10 @@ end_comment
 
 begin_function
 name|void
+name|MD5Name
+function|(
 name|MD5Update
+function|)
 parameter_list|(
 name|struct
 name|MD5Context
@@ -384,7 +392,10 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|MD5Name
+argument_list|(
 name|MD5Transform
+argument_list|)
 argument_list|(
 name|ctx
 operator|->
@@ -436,7 +447,10 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|MD5Name
+argument_list|(
 name|MD5Transform
+argument_list|)
 argument_list|(
 name|ctx
 operator|->
@@ -481,7 +495,10 @@ end_comment
 
 begin_function
 name|void
+name|MD5Name
+function|(
 name|MD5Final
+function|)
 parameter_list|(
 name|unsigned
 name|char
@@ -571,7 +588,10 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|MD5Name
+argument_list|(
 name|MD5Transform
+argument_list|)
 argument_list|(
 name|ctx
 operator|->
@@ -664,7 +684,10 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|MD5Name
+argument_list|(
 name|MD5Transform
+argument_list|)
 argument_list|(
 name|ctx
 operator|->
@@ -823,7 +846,10 @@ end_comment
 
 begin_function
 name|void
+name|MD5Name
+function|(
 name|MD5Transform
+function|)
 parameter_list|(
 name|uint32
 name|buf

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: upperLOWER.c,v 1.1 1996/06/02 08:17:02 morgan Exp $  *  * This is a sample filter program, for use with pam_filter (a module  * provided with Linux-PAM). This filter simply transposes upper and  * lower case letters, it is intended for demonstration purposes and  * it serves no purpose other than to annoy the user...  *  * $Log: upperLOWER.c,v $  * Revision 1.1  1996/06/02 08:17:02  morgan  * Initial revision  *  */
+comment|/*  * $Id: upperLOWER.c,v 1.2 2000/11/19 23:54:03 agmorgan Exp $  *  * This is a sample filter program, for use with pam_filter (a module  * provided with Linux-PAM). This filter simply transposes upper and  * lower case letters, it is intended for demonstration purposes and  * it serves no purpose other than to annoy the user...  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/_pam_aconf.h>
+end_include
 
 begin_include
 include|#
@@ -210,6 +216,15 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -221,11 +236,6 @@ name|char
 modifier|*
 modifier|*
 name|argv
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|envp
 parameter_list|)
 block|{
 name|char
@@ -281,7 +291,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|envp
+name|environ
 index|[
 name|i
 index|]
@@ -296,7 +306,7 @@ name|stderr
 argument_list|,
 literal|"-> %s\r\n"
 argument_list|,
-name|envp
+name|environ
 index|[
 name|i
 index|]

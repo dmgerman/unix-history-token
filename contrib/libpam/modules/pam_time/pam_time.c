@@ -4,7 +4,7 @@ comment|/* pam_time module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_time.c,v 1.7 1997/02/15 17:32:21 morgan Exp $  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/6/22  * (File syntax and much other inspiration from the shadow package  * shadow-960129)  *  * $Log: pam_time.c,v $  * Revision 1.7  1997/02/15 17:32:21  morgan  * time parsing more robust  *  * Revision 1.6  1997/01/04 20:43:15  morgan  * fixed buffer underflow, reformatted to 4 spaces  *  */
+comment|/*  * $Id: pam_time.c,v 1.3 2000/11/26 07:32:39 agmorgan Exp $  *  * Written by Andrew Morgan<morgan@linux.kernel.org> 1996/6/22  * (File syntax and much other inspiration from the shadow package  * shadow-960129)  */
 end_comment
 
 begin_decl_stmt
@@ -14,11 +14,17 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pam_time.c,v 1.7 1997/02/15 17:32:21 morgan Exp $;\n"
+literal|"$Id: pam_time.c,v 1.3 2000/11/26 07:32:39 agmorgan Exp $;\n"
 literal|"\t\tVersion 0.22 for Linux-PAM\n"
-literal|"Copyright (C) Andrew G. Morgan 1996<morgan@parc.power.net>\n"
+literal|"Copyright (C) Andrew G. Morgan 1996<morgan@linux.kernel.org>\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<security/_pam_aconf.h>
+end_include
 
 begin_include
 include|#
@@ -92,16 +98,39 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEFAULT_CONF_FILE
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PAM_TIME_CONF
-value|CONFILE
+value|DEFAULT_CONF_FILE
 end_define
 
 begin_comment
 comment|/* from external define */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PAM_TIME_CONF
+value|"/etc/security/time.conf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -535,6 +564,11 @@ operator|!
 name|i
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 operator|-
@@ -825,6 +859,13 @@ name|to
 operator|-=
 literal|2
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|++
+name|i
+expr_stmt|;
+comment|/* we don't escape non-newline characters */
 block|}
 break|break;
 case|case
@@ -1187,6 +1228,10 @@ operator|||
 name|c
 operator|==
 literal|'.'
+operator|||
+name|c
+operator|==
+literal|'/'
 condition|)
 block|{
 name|token

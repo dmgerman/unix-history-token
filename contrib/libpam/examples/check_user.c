@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   $Id: check_user.c,v 1.1 1996/11/10 21:19:30 morgan Exp morgan $      This program was contributed by Shane Watts<shane@icarus.bofh.asn.au>   slight modifications by AGM.    You need to add the following (or equivalent) to the /etc/pam.conf file.   # check authorization   check   auth       required     pam_unix_auth.so   check   account    required     pam_unix_acct.so    $Log: check_user.c,v $   Revision 1.1  1996/11/10 21:19:30  morgan   Initial revision   */
+comment|/*   $Id: check_user.c,v 1.2 2000/12/04 19:02:33 baggins Exp $      This program was contributed by Shane Watts<shane@icarus.bofh.asn.au>   slight modifications by AGM.    You need to add the following (or equivalent) to the /etc/pam.conf file.   # check authorization   check   auth       required     pam_unix_auth.so   check   account    required     pam_unix_acct.so */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/* pam_session.c - PAM Session Management */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_session.c,v 1.3 1996/12/01 03:14:13 morgan Exp $  *  * $Log: pam_session.c,v $  * Revision 1.3  1996/12/01 03:14:13  morgan  * use _pam_macros.h  *  * Revision 1.2  1996/03/10 02:19:12  morgan  * some oversight meant that this wasn't being compiled. It needed a  * couple of changes.  *  *  */
+comment|/*  * $Id: pam_session.c,v 1.3 2001/01/22 06:07:29 agmorgan Exp $  */
 end_comment
 
 begin_include
@@ -47,6 +47,25 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+operator|(
+literal|"called from module!?"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|PAM_SYSTEM_ERR
+return|;
+block|}
 return|return
 name|_pam_dispatch
 argument_list|(
@@ -88,6 +107,25 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|__PAM_FROM_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+operator|(
+literal|"called from module!?"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|PAM_SYSTEM_ERR
+return|;
+block|}
 return|return
 name|_pam_dispatch
 argument_list|(
