@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xargs.c,v 1.5 1997/08/27 06:26:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -244,14 +238,38 @@ name|ep
 init|=
 name|env
 decl_stmt|;
+name|long
+name|arg_max
+decl_stmt|;
 comment|/* 	 * POSIX.2 limits the exec line length to ARG_MAX - 2K.  Running that 	 * caused some E2BIG errors, so it was changed to ARG_MAX - 4K.  Given 	 * that the smallest argument is 2 bytes in length, this means that 	 * the number of arguments is limited to: 	 * 	 *	 (ARG_MAX - 4K - LENGTH(utility + arguments)) / 2. 	 * 	 * We arbitrarily limit the number of arguments to 5000.  This is 	 * allowed by POSIX.2 as long as the resulting minimum exec line is 	 * at least LINE_MAX.  Realloc'ing as necessary is possible, but 	 * probably not worthwhile. 	 */
 name|nargs
 operator|=
 literal|5000
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|arg_max
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_ARG_MAX
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"sysconf(_SC_ARG_MAX) failed"
+argument_list|)
+expr_stmt|;
 name|nline
 operator|=
-name|ARG_MAX
+name|arg_max
 operator|-
 literal|4
 operator|*
