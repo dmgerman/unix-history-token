@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_endfile[] = "@(#)endfile.c	1.2";  *  * endfile  */
+comment|/* char id_endfile[] = "@(#)endfile.c	1.3";  *  * endfile  */
 end_comment
 
 begin_include
@@ -11,8 +11,8 @@ end_include
 
 begin_decl_stmt
 name|char
-modifier|*
 name|endf
+index|[]
 init|=
 literal|"endfile"
 decl_stmt|;
@@ -201,10 +201,20 @@ condition|(
 name|b
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|b
+argument_list|)
+condition|)
+name|err
+argument_list|(
+name|errflag
+argument_list|,
+name|errno
+argument_list|,
+name|endf
 argument_list|)
 expr_stmt|;
 if|if
