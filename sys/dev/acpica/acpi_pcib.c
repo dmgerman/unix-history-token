@@ -1071,7 +1071,7 @@ operator|->
 name|Id
 operator|!=
 name|ACPI_RSTYPE_IRQ
-operator|||
+operator|&&
 name|prsres
 operator|->
 name|Id
