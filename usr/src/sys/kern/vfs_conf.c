@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -616,18 +616,6 @@ operator|&
 name|ffs_fifoop_opv_desc
 block|,
 operator|&
-name|lfs_vnodeop_opv_desc
-block|,
-operator|&
-name|lfs_specop_opv_desc
-block|,
-operator|&
-name|lfs_fifoop_opv_desc
-block|,
-operator|&
-name|mfs_vnodeop_opv_desc
-block|,
-operator|&
 name|dead_vnodeop_opv_desc
 block|,
 operator|&
@@ -636,6 +624,31 @@ block|,
 operator|&
 name|spec_vnodeop_opv_desc
 block|,
+ifdef|#
+directive|ifdef
+name|LFS
+operator|&
+name|lfs_vnodeop_opv_desc
+block|,
+operator|&
+name|lfs_specop_opv_desc
+block|,
+operator|&
+name|lfs_fifoop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MFS
+operator|&
+name|mfs_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NFS
 operator|&
 name|nfsv2_vnodeop_opv_desc
 block|,
@@ -645,6 +658,8 @@ block|,
 operator|&
 name|fifo_nfsv2nodeop_opv_desc
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
