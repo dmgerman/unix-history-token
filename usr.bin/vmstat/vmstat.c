@@ -3102,7 +3102,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9s cache hits (%d%% pos + %d%% neg) system %d%% per-process\n"
+literal|"%9s cache hits (%d%% pos + %d%% neg) system %d%% per-directory\n"
 argument_list|,
 literal|""
 argument_list|,
