@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpoptr.c	1.5 (Berkeley) %G%"
+literal|"@(#)dumpoptr.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1519,12 +1519,6 @@ name|fstab
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|keylength
-decl_stmt|;
 name|char
 modifier|*
 name|rawname
@@ -1546,25 +1540,6 @@ operator|)
 literal|0
 operator|)
 return|;
-name|keylength
-operator|=
-name|min
-argument_list|(
-name|strlen
-argument_list|(
-name|key
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|table
-operator|->
-name|pf_fstab
-operator|->
-name|fs_file
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pf
@@ -1588,15 +1563,13 @@ name|pf_fstab
 expr_stmt|;
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|fs
 operator|->
 name|fs_file
 argument_list|,
 name|key
-argument_list|,
-name|keylength
 argument_list|)
 operator|==
 literal|0
@@ -1608,15 +1581,13 @@ operator|)
 return|;
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|fs
 operator|->
 name|fs_spec
 argument_list|,
 name|key
-argument_list|,
-name|keylength
 argument_list|)
 operator|==
 literal|0
@@ -1628,7 +1599,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|rawname
 argument_list|(
@@ -1638,8 +1609,6 @@ name|fs_spec
 argument_list|)
 argument_list|,
 name|key
-argument_list|,
-name|keylength
 argument_list|)
 operator|==
 literal|0
@@ -1668,7 +1637,7 @@ name|fs_spec
 operator|==
 literal|'/'
 operator|&&
-name|strncmp
+name|strcmp
 argument_list|(
 name|fs
 operator|->
@@ -1677,8 +1646,6 @@ operator|+
 literal|1
 argument_list|,
 name|key
-argument_list|,
-name|keylength
 argument_list|)
 operator|==
 literal|0
@@ -1697,7 +1664,7 @@ name|fs_file
 operator|==
 literal|'/'
 operator|&&
-name|strncmp
+name|strcmp
 argument_list|(
 name|fs
 operator|->
@@ -1706,8 +1673,6 @@ operator|+
 literal|1
 argument_list|,
 name|key
-argument_list|,
-name|keylength
 argument_list|)
 operator|==
 literal|0
