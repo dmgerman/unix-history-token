@@ -625,6 +625,22 @@ literal|0x0286
 block|,
 literal|0x9005
 block|,
+literal|0x028c
+block|,
+name|AAC_HWIF_RKT
+block|,
+literal|0
+block|,
+literal|"Adaptec SCSI RAID 2230S"
+block|}
+block|,
+block|{
+literal|0x9005
+block|,
+literal|0x0286
+block|,
+literal|0x9005
+block|,
 literal|0x028d
 block|,
 name|AAC_HWIF_RKT
