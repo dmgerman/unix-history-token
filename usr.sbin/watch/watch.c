@@ -1788,9 +1788,10 @@ name|CHR_SWITCH
 case|:
 if|if
 condition|(
+operator|!
 name|opt_no_switch
 condition|)
-break|break;
+block|{
 name|detach_snp
 argument_list|()
 expr_stmt|;
@@ -1807,6 +1808,7 @@ name|dev_name
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 default|default:
 if|if
 condition|(
