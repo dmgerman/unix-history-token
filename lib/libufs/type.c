@@ -420,6 +420,9 @@ operator|-
 literal|1
 return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
