@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.8 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -121,6 +127,77 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_comment
+comment|/*  * The following is defined just in case someone should want to run  * this telnet on a 4.2 system.  *  * This has never been tested, so good luck...  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SETSIZE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|long
+name|fd_set
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FD_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|(*(p) |= (1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_CLR
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|(*(p)&= ~(1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ISSET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|(*(p)& (1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|(*(p) = 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
 
 begin_define
 define|#
@@ -659,7 +736,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following are some clocks used to decide how to interpret  * the relationship between various varibles.  */
+comment|/*  * The following are some clocks used to decide how to interpret  * the relationship between various variables.  */
 end_comment
 
 begin_struct
@@ -673,8 +750,14 @@ name|echotoggle
 decl_stmt|,
 comment|/* last time user entered echo character */
 name|modenegotiated
-decl_stmt|;
+decl_stmt|,
 comment|/* last time operating mode negotiated */
+name|didnetreceive
+decl_stmt|,
+comment|/* last time we read data from network */
+name|gotDM
+decl_stmt|;
+comment|/* when did we last see a data mark */
 block|}
 name|times
 struct|;
@@ -1881,8 +1964,37 @@ begin_comment
 comment|/*  * These routines decides on what the mode should be (based on the values  * of various global variables).  */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|modedescriptions
+index|[]
+init|=
+block|{
+literal|"telnet command mode"
+block|,
+comment|/* 0 */
+literal|"character-at-a-time mode"
+block|,
+comment|/* 1 */
+literal|"character-at-a-time mode (local echo)"
+block|,
+comment|/* 2 */
+literal|"line-by-line mode (remote echo)"
+block|,
+comment|/* 3 */
+literal|"line-by-line mode"
+block|,
+comment|/* 4 */
+literal|"line-by-line mode (local echoing suppressed)"
+block|,
+comment|/* 5 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
-name|setconnmode
+name|getconnmode
 argument_list|()
 end_macro
 
@@ -1964,12 +2076,26 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|mode
-argument_list|(
+return|return
 name|newmode
 index|[
 name|index
 index|]
+return|;
+block|}
+end_block
+
+begin_macro
+name|setconnmode
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|mode
+argument_list|(
+name|getconnmode
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -2073,6 +2199,25 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY
+argument_list|)
+name|ioctl
+argument_list|(
+name|net
+argument_list|,
+name|asdf
+argument_list|,
+name|asdf
+argument_list|)
+expr_stmt|;
+comment|/* handle urgent data in band */
+endif|#
+directive|endif
+comment|/* defined(IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY) */
 if|if
 condition|(
 name|telnetport
@@ -2299,6 +2444,69 @@ name|ibits
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY
+argument_list|)
+comment|/* 			 * In 4.2 (and some early 4.3) systems, the 			 * OOB indication and data handling in the kernel 			 * is such that if two separate TCP Urgent requests 			 * come in, one byte of TCP data will be overlaid. 			 * This is fatal for Telnet, but we try to live 			 * with it. 			 * 			 * In addition, in 4.2 (and...), a special protocol 			 * is needed to pick up the TCP Urgent data in 			 * the correct sequence. 			 * 			 * What we do is:  if we think we are in urgent 			 * mode, we look to see if we are "at the mark". 			 * If we are, we do an OOB receive.  If we run 			 * this twice, we will do the OOB receive twice, 			 * but the second will fail, since the second 			 * time we were "at the mark", but there wasn't 			 * any data there (the kernel doesn't reset 			 * "at the mark" until we do a normal read). 			 * Once we've read the OOB data, we go ahead 			 * and do normal reads. 			 * 			 * There is also another problem, which is that 			 * since the OOB byte we read doesn't put us 			 * out of OOB state, and since that byte is most 			 * likely the TELNET DM (data mark), we would 			 * stay in the TELNET SYNCH (flushing) state. 			 * So, clocks to the rescue.  If we've "just" 			 * received a DM, then we test for the 			 * presence of OOB data when the receive OOB 			 * fails (and AFTER we did the normal mode read 			 * to clear "at the mark"). 			 */
+if|if
+condition|(
+name|flushing
+condition|)
+block|{
+name|int
+name|atmark
+decl_stmt|;
+name|ioctl
+argument_list|(
+name|net
+argument_list|,
+name|SIOCATMARK
+argument_list|,
+operator|&
+name|atmark
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atmark
+condition|)
+block|{
+name|scc
+operator|=
+name|recv
+argument_list|(
+name|net
+argument_list|,
+name|sibuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sibuf
+argument_list|)
+argument_list|,
+name|MSG_OOB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|scc
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINVAL
+operator|)
+condition|)
+block|{
 name|scc
 operator|=
 name|read
@@ -2313,6 +2521,85 @@ name|sibuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|times
+operator|.
+name|didnetreceive
+operator|<
+name|times
+operator|.
+name|gotDM
+condition|)
+block|{
+name|flushing
+operator|=
+name|stilloob
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|scc
+operator|=
+name|read
+argument_list|(
+name|net
+argument_list|,
+name|sibuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sibuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|scc
+operator|=
+name|read
+argument_list|(
+name|net
+argument_list|,
+name|sibuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sibuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|settimer
+argument_list|(
+name|didnetreceive
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !defined(IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY) */
+name|scc
+operator|=
+name|read
+argument_list|(
+name|net
+argument_list|,
+name|sibuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sibuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY) */
 if|if
 condition|(
 name|scc
@@ -2335,7 +2622,9 @@ name|scc
 operator|<=
 literal|0
 condition|)
+block|{
 break|break;
+block|}
 name|sbp
 operator|=
 name|sibuf
@@ -3081,6 +3370,11 @@ argument_list|(
 name|net
 argument_list|)
 expr_stmt|;
+name|settimer
+argument_list|(
+name|gotDM
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|NOP
@@ -3618,26 +3912,39 @@ name|s
 decl_stmt|;
 comment|/* socket number */
 block|{
+specifier|static
 name|struct
 name|timeval
-modifier|*
 name|timeout
 init|=
 block|{
 literal|0
 block|}
 decl_stmt|;
-name|long
+name|fd_set
 name|excepts
-init|=
-operator|(
-literal|1
-operator|<<
-name|s
-operator|)
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|value
+decl_stmt|;
+do|do
+block|{
+name|FD_ZERO
+argument_list|(
+operator|&
+name|excepts
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|excepts
+argument_list|)
+expr_stmt|;
+name|value
+operator|=
 name|select
 argument_list|(
 name|s
@@ -3651,8 +3958,38 @@ argument_list|,
 operator|&
 name|excepts
 argument_list|,
+operator|&
 name|timeout
 argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|value
+operator|>=
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|value
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|=
+name|EINTR
+operator|)
+operator|)
+condition|)
+do|;
+if|if
+condition|(
+name|value
 operator|<
 literal|0
 condition|)
@@ -3668,7 +4005,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|FD_ISSET
+argument_list|(
+name|s
+argument_list|,
+operator|&
 name|excepts
+argument_list|)
 condition|)
 block|{
 return|return
@@ -3913,6 +4256,33 @@ name|neturg
 operator|-
 name|nbackp
 expr_stmt|;
+comment|/* 	     * In 4.2 (and 4.3) systems, there is some question about 	     * what byte in a sendOOB operation is the "OOB" data. 	     * To make ourselves compatible, we only send ONE byte 	     * out of band, the one WE THINK should be OOB (though 	     * we really have more the TCP philosophy of urgent data 	     * rather than the Unix philosophy of OOB data). 	     */
+if|if
+condition|(
+name|n
+operator|>
+literal|1
+condition|)
+block|{
+name|n
+operator|=
+name|send
+argument_list|(
+name|fd
+argument_list|,
+name|nbackp
+argument_list|,
+name|n
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* send URGENT all by itself */
+block|}
+else|else
+block|{
 name|n
 operator|=
 name|send
@@ -3926,7 +4296,8 @@ argument_list|,
 name|MSG_OOB
 argument_list|)
 expr_stmt|;
-comment|/* URGENT data (SYNCH) */
+comment|/* URGENT data */
+block|}
 block|}
 block|}
 if|if
@@ -5242,7 +5613,7 @@ comment|/*VARARGS*/
 end_comment
 
 begin_macro
-name|setcrmod
+name|togcrmod
 argument_list|()
 end_macro
 
@@ -5273,7 +5644,7 @@ block|}
 end_block
 
 begin_macro
-name|setdebug
+name|togdebug
 argument_list|()
 end_macro
 
@@ -5338,7 +5709,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|setnetdata
+name|tognetdata
 argument_list|()
 block|{
 name|netdata
@@ -5357,7 +5728,7 @@ else|:
 literal|"Wont"
 argument_list|)
 block|; }
-name|setoptions
+name|togoptions
 argument_list|()
 block|{
 name|showoptions
@@ -5396,10 +5767,48 @@ literal|"toggle mapping of received carriage returns"
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|togglelist
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of toggle */
+name|char
+modifier|*
+name|help
+decl_stmt|;
+comment|/* help message */
+name|int
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* routine to do actual setting */
+name|int
+name|dohelp
+decl_stmt|;
+comment|/* should we display help information */
+name|int
+modifier|*
+name|variable
+decl_stmt|;
+name|char
+modifier|*
+name|actionexplanation
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|struct
-name|cmd
 name|togglelist
+name|Togglelist
 index|[]
 init|=
 block|{
@@ -5411,6 +5820,11 @@ block|,
 name|lclsigs
 block|,
 literal|1
+block|,
+operator|&
+name|localsigs
+block|,
+literal|"recognize interrupt/quit characters"
 block|}
 block|,
 block|{
@@ -5421,6 +5835,11 @@ block|,
 name|localecho
 block|,
 literal|1
+block|,
+operator|&
+name|doechocharrecognition
+block|,
+literal|"recognize echo toggle character"
 block|}
 block|,
 block|{
@@ -5428,11 +5847,14 @@ literal|"crmod"
 block|,
 name|crmodhelp
 block|,
-name|setcrmod
+name|togcrmod
 block|,
 literal|1
 block|,
-literal|0
+operator|&
+name|crmod
+block|,
+literal|"map carriage return on output"
 block|}
 block|,
 block|{
@@ -5451,9 +5873,14 @@ literal|"debug"
 block|,
 literal|"(debugging) toggle debugging"
 block|,
-name|setdebug
+name|togdebug
 block|,
 literal|1
+block|,
+operator|&
+name|debug
+block|,
+literal|"turn on socket level debugging"
 block|}
 block|,
 block|{
@@ -5461,9 +5888,14 @@ literal|"options"
 block|,
 literal|"(debugging) toggle viewing of options processing"
 block|,
-name|setoptions
+name|togoptions
 block|,
 literal|1
+block|,
+operator|&
+name|showoptions
+block|,
+literal|"show option processing"
 block|}
 block|,
 block|{
@@ -5471,9 +5903,14 @@ literal|"netdata"
 block|,
 literal|"(debugging) toggle printing of hexadecimal network data"
 block|,
-name|setnetdata
+name|tognetdata
 block|,
 literal|1
+block|,
+operator|&
+name|netdata
+block|,
+literal|"print hexadecimal representation of network traffic"
 block|}
 block|,
 block|{
@@ -5511,7 +5948,7 @@ end_macro
 begin_block
 block|{
 name|struct
-name|cmd
+name|togglelist
 modifier|*
 name|c
 decl_stmt|;
@@ -5519,7 +5956,7 @@ for|for
 control|(
 name|c
 operator|=
-name|togglelist
+name|Togglelist
 init|;
 name|c
 operator|->
@@ -5568,13 +6005,13 @@ name|name
 decl_stmt|;
 block|{
 name|struct
-name|cmd
+name|togglelist
 modifier|*
 name|c
 init|=
 operator|(
 expr|struct
-name|cmd
+name|togglelist
 operator|*
 operator|)
 name|name
@@ -5596,7 +6033,7 @@ end_function
 
 begin_function
 name|struct
-name|cmd
+name|togglelist
 modifier|*
 name|gettoggle
 parameter_list|(
@@ -5610,7 +6047,7 @@ block|{
 return|return
 operator|(
 expr|struct
-name|cmd
+name|togglelist
 operator|*
 operator|)
 name|genget
@@ -5622,7 +6059,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|togglelist
+name|Togglelist
 argument_list|,
 name|getnexttoggle
 argument_list|)
@@ -5660,7 +6097,7 @@ modifier|*
 name|name
 decl_stmt|;
 name|struct
-name|cmd
+name|togglelist
 modifier|*
 name|c
 decl_stmt|;
@@ -5711,7 +6148,7 @@ name|c
 operator|==
 operator|(
 expr|struct
-name|cmd
+name|togglelist
 operator|*
 operator|)
 operator|-
@@ -5772,11 +6209,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|chartab
+name|setlist
 block|{
 name|char
 modifier|*
-name|label
+name|name
 decl_stmt|;
 comment|/* name */
 name|char
@@ -5795,8 +6232,8 @@ end_struct
 
 begin_decl_stmt
 name|struct
-name|chartab
-name|Chartab
+name|setlist
+name|Setlist
 index|[]
 init|=
 block|{
@@ -5873,7 +6310,7 @@ begin_function
 name|char
 modifier|*
 modifier|*
-name|getnextchar
+name|getnextset
 parameter_list|(
 name|name
 parameter_list|)
@@ -5883,13 +6320,13 @@ name|name
 decl_stmt|;
 block|{
 name|struct
-name|chartab
+name|setlist
 modifier|*
 name|c
 init|=
 operator|(
 expr|struct
-name|chartab
+name|setlist
 operator|*
 operator|)
 name|name
@@ -5911,9 +6348,9 @@ end_function
 
 begin_function
 name|struct
-name|chartab
+name|setlist
 modifier|*
-name|getchartab
+name|getset
 parameter_list|(
 name|name
 parameter_list|)
@@ -5925,7 +6362,7 @@ block|{
 return|return
 operator|(
 expr|struct
-name|chartab
+name|setlist
 operator|*
 operator|)
 name|genget
@@ -5937,9 +6374,9 @@ name|char
 operator|*
 operator|*
 operator|)
-name|Chartab
+name|Setlist
 argument_list|,
-name|getnextchar
+name|getnextset
 argument_list|)
 return|;
 block|}
@@ -5974,7 +6411,7 @@ name|int
 name|value
 decl_stmt|;
 name|struct
-name|chartab
+name|setlist
 modifier|*
 name|ct
 decl_stmt|;
@@ -5995,11 +6432,11 @@ for|for
 control|(
 name|ct
 operator|=
-name|Chartab
+name|Setlist
 init|;
 name|ct
 operator|->
-name|label
+name|name
 condition|;
 name|ct
 operator|++
@@ -6011,7 +6448,7 @@ literal|"%s\t%s\n"
 argument_list|,
 name|ct
 operator|->
-name|label
+name|name
 argument_list|,
 name|ct
 operator|->
@@ -6023,7 +6460,7 @@ return|return;
 block|}
 name|ct
 operator|=
-name|getchartab
+name|getset
 argument_list|(
 name|argv
 index|[
@@ -6058,7 +6495,7 @@ name|ct
 operator|==
 operator|(
 expr|struct
-name|chartab
+name|setlist
 operator|*
 operator|)
 operator|-
@@ -6127,7 +6564,7 @@ literal|"%s character is '%s'.\n"
 argument_list|,
 name|ct
 operator|->
-name|label
+name|name
 argument_list|,
 name|control
 argument_list|(
@@ -6522,6 +6959,251 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * The following data structures and routines implement the  * "display" command.  */
+end_comment
+
+begin_macro
+name|display
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+define|#
+directive|define
+name|dotog
+parameter_list|(
+name|tl
+parameter_list|)
+value|if (tl->variable&& tl->actionexplanation) { \ 			    if (*tl->variable) { \ 				printf("will"); \ 			    } else { \ 				printf("won't"); \ 			    } \ 			    printf(" %s.\n", tl->actionexplanation); \ 			}
+define|#
+directive|define
+name|doset
+parameter_list|(
+name|sl
+parameter_list|)
+value|printf("[%s]\t%s.\n", control(*sl->charp), sl->name);
+name|struct
+name|togglelist
+modifier|*
+name|tl
+decl_stmt|;
+name|struct
+name|setlist
+modifier|*
+name|sl
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+block|{
+for|for
+control|(
+name|tl
+operator|=
+name|Togglelist
+init|;
+name|tl
+operator|->
+name|name
+condition|;
+name|tl
+operator|++
+control|)
+block|{
+name|dotog
+argument_list|(
+name|tl
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|sl
+operator|=
+name|Setlist
+init|;
+name|sl
+operator|->
+name|name
+condition|;
+name|sl
+operator|++
+control|)
+block|{
+name|doset
+argument_list|(
+name|sl
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sl
+operator|=
+name|getset
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|tl
+operator|=
+name|gettoggle
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tl
+operator|&&
+name|sl
+operator|)
+operator|||
+operator|(
+name|sl
+operator|==
+operator|(
+expr|struct
+name|setlist
+operator|*
+operator|)
+operator|-
+literal|1
+operator|)
+operator|||
+operator|(
+name|tl
+operator|==
+operator|(
+expr|struct
+name|togglelist
+operator|*
+operator|)
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"?Ambiguous argument '%s'.\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|sl
+operator|&&
+operator|!
+name|tl
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"?Unknown argument '%s'.\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tl
+condition|)
+block|{
+name|dotog
+argument_list|(
+name|tl
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|doset
+argument_list|(
+name|sl
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+undef|#
+directive|undef
+name|doset
+name|(
+name|sl
+name|)
+undef|#
+directive|undef
+name|dotog
+name|(
+name|tl
+name|)
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/*  * The following are the data structures, and many of the routines,  * relating to command processing.  */
 end_comment
 
@@ -6797,14 +7479,28 @@ begin_comment
 comment|/*  * Print status about the connection.  */
 end_comment
 
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
 begin_macro
 name|status
-argument_list|()
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -6820,7 +7516,50 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-comment|/* XXX should print out line modes, etc. */
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Operating in %s.\n"
+argument_list|,
+name|modedescriptions
+index|[
+name|getconnmode
+argument_list|()
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|localsigs
+operator|||
+operator|(
+operator|(
+operator|!
+name|donelclsigs
+operator|)
+operator|&&
+operator|(
+name|getconnmode
+argument_list|()
+operator|>=
+literal|3
+operator|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Catching signals locally.\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 else|else
 block|{
@@ -7414,6 +8153,8 @@ name|status
 argument_list|,
 literal|"status"
 argument_list|,
+literal|"notmuch"
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -7516,15 +8257,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|togglestring
-index|[]
-init|=
-literal|"toggle various options ('toggle ?' for more)"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|sendhelp
 index|[]
 init|=
@@ -7537,7 +8269,25 @@ name|char
 name|sethelp
 index|[]
 init|=
-literal|"set various special characters ('set ?' for more)"
+literal|"set operating parameters ('set ?' for more)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|togglestring
+index|[]
+init|=
+literal|"toggle operating parameters ('toggle ?' for more)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|displayhelp
+index|[]
+init|=
+literal|"display operating parameters"
 decl_stmt|;
 end_decl_stmt
 
@@ -7546,7 +8296,7 @@ name|char
 name|modehelp
 index|[]
 init|=
-literal|"change operating mode ('mode ?' for more)"
+literal|"try to enter line-by-line or character-at-a-time mode"
 decl_stmt|;
 end_decl_stmt
 
@@ -7641,7 +8391,7 @@ literal|"crmod"
 block|,
 name|crmodhelp
 block|,
-name|setcrmod
+name|togcrmod
 block|,
 literal|1
 block|,
@@ -7654,30 +8404,6 @@ block|,
 name|sendhelp
 block|,
 name|sendcmd
-block|,
-literal|1
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"set"
-block|,
-name|sethelp
-block|,
-name|setcmd
-block|,
-literal|1
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"mode"
-block|,
-name|modehelp
-block|,
-name|modecmd
 block|,
 literal|1
 block|,
@@ -7709,6 +8435,18 @@ literal|1
 block|}
 block|,
 block|{
+literal|"set"
+block|,
+name|sethelp
+block|,
+name|setcmd
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"toggle"
 block|,
 name|togglestring
@@ -7718,6 +8456,30 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"display"
+block|,
+name|displayhelp
+block|,
+name|display
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"mode"
+block|,
+name|modehelp
+block|,
+name|modecmd
+block|,
+literal|1
+block|,
+literal|1
 block|}
 block|,
 block|{
