@@ -105,7 +105,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|short
+name|long
 name|_G_pid_t
 typedef|;
 end_typedef
