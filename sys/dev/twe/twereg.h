@@ -475,7 +475,7 @@ begin_define
 define|#
 directive|define
 name|TWE_Q_LENGTH
-value|256
+value|50
 end_define
 
 begin_define
