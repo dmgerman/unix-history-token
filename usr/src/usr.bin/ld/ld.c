@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.15 (Berkeley) %G%"
+literal|"@(#)ld.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,6 +265,24 @@ ifdef|#
 directive|ifdef
 name|sparc
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|sun
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sun
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -17964,14 +17982,6 @@ block|{
 specifier|extern
 name|int
 name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 name|char
 modifier|*
@@ -18031,14 +18041,6 @@ block|{
 specifier|extern
 name|int
 name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 name|char
 modifier|*
