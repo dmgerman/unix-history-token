@@ -208,6 +208,11 @@ struct|struct
 name|ng_eiface_private
 block|{
 name|struct
+name|arpcom
+name|arpcom
+decl_stmt|;
+comment|/* per-interface network data */
+name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -217,11 +222,6 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* Interface unit number */
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
-comment|/* per-interface network data */
 name|node_p
 name|node
 decl_stmt|;
