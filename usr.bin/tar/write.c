@@ -724,11 +724,21 @@ name|create_format
 operator|==
 name|NULL
 condition|)
+block|{
+name|r
+operator|=
 name|archive_write_set_format_pax_restricted
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|create_format
+operator|=
+literal|"pax restricted"
+expr_stmt|;
+block|}
 else|else
 block|{
 name|r
@@ -742,6 +752,7 @@ operator|->
 name|create_format
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|r
@@ -770,7 +781,6 @@ argument_list|(
 name|bsdtar
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * If user explicitly set the block size, then assume they 	 * want the last block padded as well.  Otherwise, use the 	 * default block size and accept archive_write_open_file()'s 	 * default padding decisions. 	 */
 if|if
@@ -1119,6 +1129,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
+comment|/* XXX check return val XXX */
 name|archive_write_open_fd
 argument_list|(
 name|a
@@ -1128,6 +1139,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* XXX check return val XXX */
 name|write_archive
 argument_list|(
 name|a
@@ -1135,6 +1147,7 @@ argument_list|,
 name|bsdtar
 argument_list|)
 expr_stmt|;
+comment|/* XXX check return val XXX */
 name|archive_write_finish
 argument_list|(
 name|a
@@ -1751,6 +1764,8 @@ comment|/*- 			 * The logic here for -C<dir> attempts to avoid 			 * chdir() as 
 if|if
 condition|(
 name|pending_dir
+operator|!=
+name|NULL
 operator|&&
 operator|*
 name|arg
@@ -1781,7 +1796,7 @@ name|old_pending
 init|=
 name|pending_dir
 decl_stmt|;
-name|int
+name|size_t
 name|old_len
 init|=
 name|strlen
@@ -1931,6 +1946,8 @@ name|chdir
 argument_list|(
 name|pending_dir
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|bsdtar_warnc
@@ -1982,6 +1999,8 @@ name|arg
 operator|+
 literal|1
 argument_list|)
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
@@ -2604,6 +2623,28 @@ index|]
 operator|=
 name|strdup
 argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fts_argv
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't open %s"
+argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
@@ -3390,6 +3431,8 @@ comment|/* Strip redundant "./" from start of filename. */
 if|if
 condition|(
 name|pathname
+operator|!=
+name|NULL
 operator|&&
 name|pathname
 index|[
@@ -3415,7 +3458,7 @@ condition|(
 operator|*
 name|pathname
 operator|==
-literal|0
+literal|'\0'
 condition|)
 comment|/* This is the "./" directory. */
 goto|goto
@@ -4860,10 +4903,39 @@ expr_stmt|;
 if|if
 condition|(
 name|le
-operator|==
+operator|!=
 name|NULL
 condition|)
+name|le
+operator|->
+name|name
+operator|=
+name|strdup
+argument_list|(
+name|archive_entry_pathname
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|le
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|le
+operator|->
+name|name
+operator|==
+name|NULL
+operator|)
+condition|)
 block|{
+comment|/* TODO: Just flush the entire links cache when we 		 * run out of memory; don't hold onto anything. */
 name|links_cache
 operator|->
 name|stop_allocating
@@ -4886,6 +4958,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Remaining hard links will be dumped as full files"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|le
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|le
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4968,18 +5051,6 @@ operator|->
 name|st_nlink
 operator|-
 literal|1
-expr_stmt|;
-name|le
-operator|->
-name|name
-operator|=
-name|strdup
-argument_list|(
-name|archive_entry_pathname
-argument_list|(
-name|entry
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5621,6 +5692,24 @@ name|name_cache
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|name_cache_variable
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"No more memory"
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|*
@@ -5840,6 +5929,20 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cache
+operator|->
+name|cache
+index|[
+name|slot
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+condition|)
+block|{
 name|cache
 operator|->
 name|cache
@@ -5863,6 +5966,8 @@ operator|.
 name|name
 operator|)
 return|;
+block|}
+comment|/* 			 * Conveniently, NULL marks an empty slot, so 			 * if the strdup() fails, we've just failed to 			 * cache it.  No recovery necessary. 			 */
 block|}
 block|}
 return|return
@@ -6407,6 +6512,23 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't read archive directory"
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|name
@@ -6414,6 +6536,25 @@ operator|=
 name|strdup
 argument_list|(
 name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't read archive directory"
 argument_list|)
 expr_stmt|;
 name|p

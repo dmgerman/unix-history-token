@@ -960,23 +960,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
-operator|&&
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 operator|*
 name|p
+operator|==
+literal|'\0'
+operator|)
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"%s "
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|sprintf
 argument_list|(
@@ -989,12 +985,16 @@ operator|->
 name|st_uid
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|tmp
+expr_stmt|;
 block|}
 name|w
 operator|=
 name|strlen
 argument_list|(
-name|tmp
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1024,7 +1024,7 @@ name|bsdtar
 operator|->
 name|u_width
 argument_list|,
-name|tmp
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* Use gname if it's present, else gid. */
@@ -1118,7 +1118,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%u,%u"
+literal|"%d,%u"
 argument_list|,
 name|major
 argument_list|(
@@ -1127,6 +1127,9 @@ operator|->
 name|st_rdev
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|minor
 argument_list|(
 name|st
@@ -1135,6 +1138,7 @@ name|st_rdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* ls(1) also casts here. */
 block|}
 else|else
 block|{
@@ -1708,6 +1712,27 @@ operator|->
 name|security
 operator|->
 name|path_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|security
+operator|->
+name|path
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"No Memory"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1138,9 +1138,24 @@ case|case
 name|OPTION_EXCLUDE
 case|:
 comment|/* GNU tar */
+if|if
+condition|(
 name|exclude
 argument_list|(
 name|bsdtar
+argument_list|,
+name|optarg
+argument_list|)
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Couldn't exclude %s\n"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1241,9 +1256,24 @@ break|break;
 case|case
 name|OPTION_INCLUDE
 case|:
+if|if
+condition|(
 name|include
 argument_list|(
 name|bsdtar
+argument_list|,
+name|optarg
+argument_list|)
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Failed to add %s to inclusion list"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1600,9 +1630,24 @@ case|case
 literal|'X'
 case|:
 comment|/* GNU tar */
+if|if
+condition|(
 name|exclude_from_file
 argument_list|(
 name|bsdtar
+argument_list|,
+name|optarg
+argument_list|)
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"failed to process exclusions from file %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1757,9 +1802,11 @@ block|}
 comment|/* 	 * Sanity-check options. 	 */
 if|if
 condition|(
+operator|(
 name|mode
 operator|==
 literal|'\0'
+operator|)
 operator|&&
 name|possible_help_request
 condition|)
@@ -2929,9 +2976,14 @@ condition|)
 block|{
 name|option_length
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|q
 operator|-
 name|p
+argument_list|)
 expr_stmt|;
 name|optarg
 operator|=
