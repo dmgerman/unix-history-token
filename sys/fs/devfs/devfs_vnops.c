@@ -345,6 +345,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|vop_t
+modifier|*
+modifier|*
+name|devfs_vnodeop_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vop_t
+modifier|*
+modifier|*
+name|devfs_specop_p
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Construct the fully qualified path name relative to the mountpoint  */
 end_comment
@@ -4376,15 +4394,6 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|vop_t
-modifier|*
-modifier|*
-name|devfs_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|devfs_vnodeop_entries
@@ -4663,15 +4672,6 @@ name|devfs_vnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|vop_t
-modifier|*
-modifier|*
-name|devfs_specop_p
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static

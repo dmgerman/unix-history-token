@@ -487,24 +487,6 @@ parameter_list|)
 value|((struct devfs_mount *)((mp)->mnt_data))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|devfs_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|devfs_specop_p
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|devfs_rules_apply
