@@ -4676,7 +4676,7 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
-name|arpwhohas
+name|arp_ifinit
 argument_list|(
 operator|(
 expr|struct
@@ -4685,13 +4685,7 @@ operator|*
 operator|)
 name|ifp
 argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
 name|ifa
-argument_list|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5946,7 +5940,6 @@ name|sc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|sc
 argument_list|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.8 1994/10/23 21:27:17 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.9 1994/11/24 14:29:17 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -3535,26 +3535,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 comment|/* before arpwhohas */
-comment|/* 			 * See if another station has *our* IP address. 			 * i.e.: There is an address conflict! If a 			 * conflict exists, a message is sent to the 			 * console. 			 */
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-operator|)
-operator|->
-name|ac_ipaddr
-operator|=
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-expr_stmt|;
-name|arpwhohas
+name|arp_ifinit
 argument_list|(
 operator|(
 expr|struct
@@ -3563,13 +3544,7 @@ operator|*
 operator|)
 name|ifp
 argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
 name|ifa
-argument_list|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;

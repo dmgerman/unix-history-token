@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.31 1994/10/29 10:19:32 phk Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.32 1994/11/24 14:29:22 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -4181,26 +4181,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 comment|/* before arpwhohas */
-comment|/*                          * See if another station has *our* IP address.                          * i.e.: There is an address conflict! If a                          * conflict exists, a message is sent to the                          * console.                          */
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-operator|)
-operator|->
-name|ac_ipaddr
-operator|=
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-expr_stmt|;
-name|arpwhohas
+name|arp_ifinit
 argument_list|(
 operator|(
 expr|struct
@@ -4209,13 +4190,7 @@ operator|*
 operator|)
 name|ifp
 argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
 name|ifa
-argument_list|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
