@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/dump/dumprmt.c,v 1.3 1993/03/23 00:27:12 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/dump/dumprmt.c,v 1.2 1993/07/22 16:49:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,6 +218,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|rmtuser
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|ntrec
@@ -241,15 +248,25 @@ name|int
 name|rmthost
 parameter_list|(
 name|host
+parameter_list|,
+name|user
 parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
+name|char
+modifier|*
+name|user
+decl_stmt|;
 block|{
 name|rmtpeer
 operator|=
 name|host
+expr_stmt|;
+name|rmtuser
+operator|=
+name|user
 expr_stmt|;
 name|signal
 argument_list|(
@@ -399,6 +416,10 @@ name|s_port
 argument_list|,
 name|name
 argument_list|,
+name|rmtuser
+condition|?
+name|rmtuser
+else|:
 name|name
 argument_list|,
 name|_PATH_RMT

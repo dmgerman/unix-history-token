@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/dump/dumpmain.c,v 1.4 1993/04/20 09:07:41 mycroft Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/dump/dumpmain.c,v 1.2 1993/07/22 16:49:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|user
 decl_stmt|;
 end_decl_stmt
 
@@ -960,9 +967,41 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+name|user
+operator|=
+name|tape
+expr_stmt|;
+name|host
+operator|=
+name|index
+argument_list|(
+name|user
+argument_list|,
+literal|'@'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|host
+operator|==
+literal|0
+condition|)
+block|{
+name|user
+operator|=
+name|NULL
+expr_stmt|;
 name|host
 operator|=
 name|tape
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|host
+operator|++
+operator|=
+literal|0
 expr_stmt|;
 name|tape
 operator|=
@@ -1002,6 +1041,8 @@ condition|(
 name|rmthost
 argument_list|(
 name|host
+argument_list|,
+name|user
 argument_list|)
 operator|==
 literal|0
