@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.11 (Berkeley) %G%"
+literal|"@(#)ed.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,6 @@ define|#
 directive|define
 name|NULL
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FNSIZE
-value|64
 end_define
 
 begin_define
@@ -221,7 +214,7 @@ begin_decl_stmt
 name|char
 name|savedfile
 index|[
-name|FNSIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -230,7 +223,7 @@ begin_decl_stmt
 name|char
 name|file
 index|[
-name|FNSIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
