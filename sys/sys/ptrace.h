@@ -48,15 +48,8 @@ begin_comment
 comment|/* read word in child's D space */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PT_READ_U
-value|3
-end_define
-
 begin_comment
-comment|/* read word in child's user structure */
+comment|/* was	PT_READ_U	3	 * read word in child's user structure */
 end_comment
 
 begin_define
@@ -81,15 +74,8 @@ begin_comment
 comment|/* write word in child's D space */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PT_WRITE_U
-value|6
-end_define
-
 begin_comment
-comment|/* write word in child's user structure */
+comment|/* was	PT_WRITE_U	6	 * write word in child's user structure */
 end_comment
 
 begin_define

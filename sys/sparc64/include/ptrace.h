@@ -15,24 +15,6 @@ directive|define
 name|_MACHINE_PTRACE_H_
 end_define
 
-begin_function_decl
-name|int
-name|ptrace_read_u_check
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|vm_offset_t
-name|off
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
