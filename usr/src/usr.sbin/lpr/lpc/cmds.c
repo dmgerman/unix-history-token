@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.7 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3186,6 +3186,11 @@ modifier|*
 modifier|*
 name|queue
 decl_stmt|;
+name|int
+name|changed
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -3232,6 +3237,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+elseif|else
 if|if
 condition|(
 name|status
@@ -3374,8 +3380,6 @@ index|]
 operator|->
 name|q_name
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|free
@@ -3392,6 +3396,9 @@ name|n
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+name|changed
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -3410,6 +3417,16 @@ name|n
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|queue
+index|[
+name|n
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|cfname
 operator|=
 name|queue
@@ -3421,11 +3438,8 @@ name|q_name
 expr_stmt|;
 if|if
 condition|(
-name|cfname
-operator|==
-name|NULL
+name|changed
 condition|)
-continue|continue;
 name|touch
 argument_list|(
 name|cfname
@@ -3442,9 +3456,22 @@ argument_list|(
 name|queue
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tqueue order %s\n"
+argument_list|,
+name|changed
+condition|?
+literal|"changed"
+else|:
+literal|"unchanged"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Turn on the public execute bit of the lock file to 	 * get lpd to rebuild the queue after the current job. 	 */
 if|if
 condition|(
+name|changed
+operator|&&
 name|stat
 argument_list|(
 name|LO
@@ -3460,7 +3487,7 @@ name|void
 operator|)
 name|chmod
 argument_list|(
-name|line
+name|LO
 argument_list|,
 operator|(
 name|stbuf
@@ -3518,7 +3545,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tcannot to open %s\n"
+literal|"\tcannot open %s\n"
 argument_list|,
 name|cfname
 argument_list|)
@@ -3548,7 +3575,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 literal|0
 argument_list|)
@@ -3574,6 +3601,12 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* so times will be different */
 return|return
 operator|(
 literal|1
@@ -3632,25 +3665,16 @@ name|int
 name|n
 decl_stmt|,
 name|jobnum
-decl_stmt|,
-name|fd
 decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"inqueue(%s, %x, %d)\n"
-argument_list|,
-name|job
-argument_list|,
-name|queue
-argument_list|,
-name|nitems
-argument_list|)
-expr_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|jobnum
 operator|=
 operator|-
@@ -3693,13 +3717,6 @@ name|job
 argument_list|)
 condition|)
 do|;
-name|printf
-argument_list|(
-literal|"jobnum = %d\n"
-argument_list|,
-name|jobnum
-argument_list|)
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -3724,15 +3741,6 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* this needs to be fixed since the same number can be used 		   by different machines (i.e. jobnum& machine) */
-name|printf
-argument_list|(
-literal|"q = %s\n"
-argument_list|,
-name|q
-operator|->
-name|q_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|jobnum
@@ -3760,8 +3768,6 @@ operator|*
 name|cp
 argument_list|)
 condition|;
-name|cp
-operator|++
 control|)
 name|n
 operator|=
@@ -3772,6 +3778,7 @@ operator|+
 operator|(
 operator|*
 name|cp
+operator|++
 operator|-
 literal|'0'
 operator|)
@@ -3793,26 +3800,26 @@ comment|/* 		 * Read cf file for owner's name 		 */
 if|if
 condition|(
 operator|(
-name|fd
+name|fp
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|q
 operator|->
 name|q_name
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 continue|continue;
 while|while
 condition|(
 name|getline
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 operator|>
 literal|0
@@ -3841,9 +3848,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3856,9 +3863,9 @@ block|}
 operator|(
 name|void
 operator|)
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
