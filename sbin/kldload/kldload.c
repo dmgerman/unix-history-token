@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kldload.c,v 1.4 1998/01/05 07:07:44 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
