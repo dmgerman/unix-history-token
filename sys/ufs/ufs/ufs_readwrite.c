@@ -1729,24 +1729,17 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_bsize
-operator|>
-name|xfersize
-condition|)
+comment|/*                        * Avoid a data-consistency race between write() and mmap()                  * by ensuring that newly allocated blocks are zerod.  The                  * race can occur even in the case where the write covers                  * the entire block.                  */
 name|flags
 operator||=
 name|B_CLRBUF
 expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|B_CLRBUF
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (fs->fs_bsize> xfersize) 			flags |= B_CLRBUF; 		else 			flags&= ~B_CLRBUF;
+endif|#
+directive|endif
 comment|/* XXX is uio->uio_offset the right thing here? */
 name|error
 operator|=
