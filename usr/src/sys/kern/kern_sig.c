@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -582,6 +582,33 @@ operator|&=
 operator|~
 name|bit
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_SUNOS
+if|if
+condition|(
+name|sa
+operator|->
+name|sa_flags
+operator|&
+name|SA_USERTRAMP
+condition|)
+name|ps
+operator|->
+name|ps_usertramp
+operator||=
+name|bit
+expr_stmt|;
+else|else
+name|ps
+operator|->
+name|ps_usertramp
+operator|&=
+operator|~
+name|bit
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sig
@@ -1083,11 +1110,19 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Generalized interface signal handler, 4.3-compatible.  */
@@ -1296,6 +1331,9 @@ name|sv_flags
 operator||=
 name|SV_INTERRUPT
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_SUNOS
 if|if
 condition|(
 name|p
@@ -1310,6 +1348,8 @@ name|sv_flags
 operator||=
 name|SA_NOCLDSTOP
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -1376,6 +1416,31 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|COMPAT_SUNOS
+comment|/* 		 * SunOS uses this bit (SA_NOCLDSTOP) as SV_RESETHAND, 		 * `reset to SIG_DFL on delivery'. We have no such 		 * option now or ever! 		 */
+if|if
+condition|(
+name|sv
+operator|->
+name|sv_flags
+operator|&
+name|SA_NOCLDSTOP
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|sv
+operator|->
+name|sv_flags
+operator||=
+name|SA_USERTRAMP
+expr_stmt|;
+endif|#
+directive|endif
 name|sv
 operator|->
 name|sv_flags
@@ -2055,11 +2120,19 @@ comment|/* NOTREACHED */
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ARGSUSED */

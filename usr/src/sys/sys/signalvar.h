@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,10 @@ name|sigstack
 name|ps_sigstack
 decl_stmt|;
 comment|/* sp& on stack state variable */
+name|sigset_t
+name|ps_usertramp
+decl_stmt|;
+comment|/* SunOS compat; libc sigtramp XXX */
 name|int
 name|ps_sig
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -544,6 +544,28 @@ end_define
 begin_comment
 comment|/* restart system on signal return */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_SUNOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SA_USERTRAMP
+value|0x0100
+end_define
+
+begin_comment
+comment|/* do not bounce off kernel's sigtramp */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
