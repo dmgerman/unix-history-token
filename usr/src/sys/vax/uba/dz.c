@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.17	%G%	*/
+comment|/*	dz.c	3.18	%G%	*/
 end_comment
 
 begin_include
@@ -537,7 +537,7 @@ name|dzxint
 block|,
 if|#
 directive|if
-name|NDZ
+name|NDZ11
 operator|>=
 literal|2
 operator|(
@@ -752,7 +752,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NDZ
+name|NDZ11
 operator|>=
 literal|3
 operator|(
@@ -967,7 +967,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NDZ
+name|NDZ11
 operator|>=
 literal|4
 operator|(
