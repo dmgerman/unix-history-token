@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.16 %G%"
+literal|"@(#)fend.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1165,6 +1165,24 @@ argument_list|,
 literal|"_blkclr"
 argument_list|)
 expr_stmt|;
+name|putLV
+argument_list|(
+literal|0
+argument_list|,
+name|cbn
+argument_list|,
+name|sizes
+index|[
+name|cbn
+index|]
+operator|.
+name|om_max
+argument_list|,
+name|NLOCAL
+argument_list|,
+name|P2CHAR
+argument_list|)
+expr_stmt|;
 name|putleaf
 argument_list|(
 name|P2ICON
@@ -1186,24 +1204,6 @@ argument_list|,
 name|P2INT
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|putLV
-argument_list|(
-literal|0
-argument_list|,
-name|cbn
-argument_list|,
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_max
-argument_list|,
-name|NLOCAL
-argument_list|,
-name|P2CHAR
 argument_list|)
 expr_stmt|;
 name|putop
