@@ -935,14 +935,18 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|struct
+name|prison
+modifier|*
+name|pr
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|level
 decl_stmt|;
-comment|/* 	 * If the process is in jail, return the maximum of the global and 	 * local levels; otherwise, return the global level. 	 */
-if|if
-condition|(
+name|pr
+operator|=
 name|req
 operator|->
 name|p
@@ -950,6 +954,11 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_prison
+expr_stmt|;
+comment|/* 	 * If the process is in jail, return the maximum of the global and 	 * local levels; otherwise, return the global level. 	 */
+if|if
+condition|(
+name|pr
 operator|!=
 name|NULL
 condition|)
@@ -959,13 +968,7 @@ name|imax
 argument_list|(
 name|securelevel
 argument_list|,
-name|req
-operator|->
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_prison
+name|pr
 operator|->
 name|pr_securelevel
 argument_list|)
@@ -1006,13 +1009,7 @@ return|;
 comment|/* 	 * Permit update only if the new securelevel exceeds the 	 * global level, and local level if any. 	 */
 if|if
 condition|(
-name|req
-operator|->
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_prison
+name|pr
 operator|!=
 name|NULL
 condition|)
@@ -1036,13 +1033,7 @@ name|imax
 argument_list|(
 name|securelevel
 argument_list|,
-name|req
-operator|->
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_prison
+name|pr
 operator|->
 name|pr_securelevel
 argument_list|)
@@ -1052,13 +1043,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|req
-operator|->
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_prison
+name|pr
 operator|->
 name|pr_securelevel
 operator|=
