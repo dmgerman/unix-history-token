@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.10 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RDONLY
+name|B_RDONLY
 argument_list|)
 condition|)
 block|{
@@ -181,7 +181,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 goto|goto
@@ -193,7 +193,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|?
 name|RET_SPECIAL
@@ -232,7 +232,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|B_MODIFIED
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,7 +411,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{
@@ -419,7 +419,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 expr_stmt|;
 name|deleted
@@ -782,7 +782,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{
@@ -790,7 +790,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 expr_stmt|;
 name|deleted
