@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	5.4 (Berkeley) %G%"
+literal|"@(#)pow.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,6 +596,12 @@ comment|/* defined(vax)||defined(tahoe) */
 block|}
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|mc68881
+end_ifndef
 
 begin_comment
 comment|/* pow_p(x,y) return x**y for x with sign=1 and finite y */
@@ -1185,6 +1191,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* mc68881 */
+end_comment
 
 end_unit
 
