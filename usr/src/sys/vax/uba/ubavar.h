@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	6.1	83/07/29	*/
+comment|/*	ubavar.h	4.26	83/08/13	*/
 end_comment
 
 begin_comment
@@ -527,7 +527,7 @@ comment|/* uba device addr space */
 end_comment
 
 begin_comment
-comment|/*  * Since some VAXen vector their first (and only) unibus interrupt  * vector just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vector for uba0 on all cpu's.  */
+comment|/*  * Since some VAXen vector their unibus interrupts  * just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vectors for uba0 and uba1 on all cpu's.  */
 end_comment
 
 begin_function_decl
@@ -545,6 +545,35 @@ end_function_decl
 begin_comment
 comment|/* unibus vec for uba0 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|NUBA
+operator|>
+literal|1
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|UNI1vec
+index|[]
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* unibus vec for uba1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
