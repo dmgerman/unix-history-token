@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.24 1998/05/02 01:57:38 kato Exp $"
+literal|"$Id: main.c,v 1.25 1998/06/09 14:02:03 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1405,7 +1405,7 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"static char *config = \"\\\n"
+literal|"static const char config[] = \"\\\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
