@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.31 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,7 +719,7 @@ if|if
 condition|(
 name|to_sb
 operator|.
-name|st_mode
+name|st_flags
 operator|&
 operator|(
 name|UF_IMMUTABLE
@@ -944,10 +944,19 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
+name|from_sb
+operator|.
+name|st_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
 name|devnull
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* 	 * Unlink now... avoid ETXTBSY errors later.  Try and turn 	 * off the append/immutable bits -- if we fail, go ahead, 	 * it might work. 	 */
 if|if
 condition|(
