@@ -938,6 +938,28 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|B460800
+block|{
+literal|460800
+block|,
+name|B460800
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B921600
+block|{
+literal|921600
+block|,
+name|B921600
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|EXTA
 block|{
 literal|19200
