@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.48 1998/12/16 18:42:30 phk Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.49 1998/12/26 12:14:31 phk Exp $  */
 end_comment
 
 begin_include
@@ -16,6 +16,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 end_if
 
 begin_include
@@ -169,6 +173,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 end_if
 
 begin_include
@@ -399,6 +407,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 end_if
 
 begin_define
@@ -1415,6 +1427,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 end_if
 
 begin_decl_stmt
@@ -1437,6 +1453,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 end_if
 
 begin_define
@@ -5824,6 +5844,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|sp
 operator|->
 name|pp_seq
@@ -5978,6 +6002,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|struct
 name|timeval
 name|tv
@@ -6007,6 +6035,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|getmicrouptime
 argument_list|(
 operator|&
@@ -6137,6 +6169,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|ch
 operator|->
 name|time0
@@ -9795,6 +9831,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -11724,6 +11764,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|sp
 operator|->
 name|lcp
@@ -12571,6 +12615,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|sp
 operator|->
 name|lcp
@@ -13013,6 +13061,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -16128,6 +16180,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -16762,6 +16818,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|read_random
 argument_list|(
 operator|&
@@ -17817,6 +17877,10 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -19335,36 +19399,28 @@ operator|=
 literal|0L
 expr_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
+name|si
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-for|for
-control|(
-name|ifa
-operator|=
-name|ifp
-operator|->
-name|if_addrhead
-operator|.
-name|tqh_first
-operator|,
-name|si
-operator|=
-literal|0
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_link
-operator|.
-name|tqe_next
-control|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrhead
+argument_list|,
+argument|ifa_link
+argument_list|)
 else|#
 directive|else
 for|for
@@ -19376,10 +19432,6 @@ operator|->
 name|if_addrlist
 operator|.
 name|tqh_first
-operator|,
-name|si
-operator|=
-literal|0
 init|;
 name|ifa
 condition|;
@@ -19569,36 +19621,28 @@ modifier|*
 name|si
 decl_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
+name|si
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-for|for
-control|(
-name|ifa
-operator|=
-name|ifp
-operator|->
-name|if_addrhead
-operator|.
-name|tqh_first
-operator|,
-name|si
-operator|=
-literal|0
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_link
-operator|.
-name|tqe_next
-control|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrhead
+argument_list|,
+argument|ifa_link
+argument_list|)
 else|#
 directive|else
 for|for
@@ -19610,10 +19654,6 @@ operator|->
 name|if_addrlist
 operator|.
 name|tqh_first
-operator|,
-name|si
-operator|=
-literal|0
 init|;
 name|ifa
 condition|;
