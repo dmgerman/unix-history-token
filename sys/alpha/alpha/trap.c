@@ -2707,7 +2707,7 @@ directive|ifdef
 name|DIAGNOSTIC
 name|alpha_fpstate_check
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
