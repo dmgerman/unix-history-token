@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.22 %G%"
+literal|"@(#)put.c 1.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2670,7 +2670,9 @@ else|else
 block|{
 name|w
 operator||=
-literal|' \0'
+literal|' '
+operator|<<
+literal|8
 expr_stmt|;
 name|pad
 operator|--
@@ -2755,11 +2757,36 @@ operator|>
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEC11
 name|word
 argument_list|(
-literal|'  '
+literal|' '
+operator||
+operator|(
+literal|' '
+operator|<<
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|word
+argument_list|(
+operator|(
+literal|' '
+operator|<<
+literal|8
+operator|)
+operator||
+literal|' '
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEC11
 name|pad
 operator|-=
 literal|2
@@ -2783,7 +2810,9 @@ else|#
 directive|else
 name|word
 argument_list|(
-literal|' \0'
+literal|' '
+operator|<<
+literal|8
 argument_list|)
 expr_stmt|;
 endif|#
