@@ -365,12 +365,6 @@ directive|include
 file|<pc98/pc98/pc98_machdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/ic/i8251.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -474,7 +468,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/esp.h>
+file|<dev/ic/esp.h>
 end_include
 
 begin_endif
@@ -485,7 +479,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/ns16550.h>
+file|<dev/ic/ns16550.h>
 end_include
 
 begin_ifdef
@@ -497,7 +491,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/rsa.h>
+file|<dev/ic/i8251.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/rsa.h>
 end_include
 
 begin_endif

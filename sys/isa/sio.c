@@ -256,7 +256,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<isa/ic/esp.h>
+file|<dev/ic/esp.h>
 end_include
 
 begin_endif
@@ -267,7 +267,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<isa/ic/ns16550.h>
+file|<dev/ic/ns16550.h>
 end_include
 
 begin_ifndef
