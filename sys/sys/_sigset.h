@@ -78,8 +78,7 @@ typedef|typedef
 struct|struct
 name|__sigset
 block|{
-name|unsigned
-name|int
+name|__uint32_t
 name|__bits
 index|[
 name|_SIG_WORDS
