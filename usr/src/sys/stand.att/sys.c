@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	4.8	82/12/30	*/
+comment|/*	sys.c	4.9	83/01/16	*/
 end_comment
 
 begin_include
@@ -2804,6 +2804,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|fdesc
+operator|-=
+literal|3
+expr_stmt|;
 if|if
 condition|(
 name|fdesc
@@ -2877,6 +2881,48 @@ operator|->
 name|i_flgs
 operator||=
 name|F_HCHECK
+expr_stmt|;
+break|break;
+case|case
+name|SAIONOBAD
+case|:
+name|file
+operator|->
+name|i_flgs
+operator||=
+name|F_NBSF
+expr_stmt|;
+break|break;
+case|case
+name|SAIODOBAD
+case|:
+name|file
+operator|->
+name|i_flgs
+operator|&=
+operator|~
+name|F_NBSF
+expr_stmt|;
+break|break;
+case|case
+name|SAIOECCLIM
+case|:
+name|file
+operator|->
+name|i_flgs
+operator||=
+name|F_ECCLM
+expr_stmt|;
+break|break;
+case|case
+name|SAIOECCUNL
+case|:
+name|file
+operator|->
+name|i_flgs
+operator|&=
+operator|~
+name|F_ECCLM
 expr_stmt|;
 break|break;
 default|default:
