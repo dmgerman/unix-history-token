@@ -1114,11 +1114,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following are all things that really shouldn't exist in this header,  * since its purpose is to provide typedefs, not miscellaneous doodads.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_comment
+comment|/* XXX should be moved to<sys/param.h>. */
+end_comment
 
 begin_define
 define|#
@@ -1132,44 +1146,7 @@ comment|/* number of bits in a byte */
 end_comment
 
 begin_comment
-comment|/*  * Select uses bit masks of file descriptors in longs.  These macros  * manipulate such bit fields (the filesystem macros use chars).  * FD_SETSIZE may be defined by the user, but the default here should  * be enough for most uses.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FD_SETSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FD_SETSIZE
-value|1024U
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|fd_mask
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|NFDBITS
-value|(sizeof(fd_mask) * NBBY)
-end_define
-
-begin_comment
-comment|/* bits per mask */
+comment|/* XXX should be removed, since<sys/param.h> has this. */
 end_comment
 
 begin_ifndef
@@ -1194,95 +1171,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|fd_set
-block|{
-name|fd_mask
-name|fds_bits
-index|[
-name|howmany
-argument_list|(
-name|FD_SETSIZE
-argument_list|,
-name|NFDBITS
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|fd_set
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_fdset_mask
-parameter_list|(
-name|n
-parameter_list|)
-value|((fd_mask)1<< ((n) % NFDBITS))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_SET
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS] |= _fdset_mask(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_CLR
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]&= ~_fdset_mask(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_ISSET
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]& _fdset_mask(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_COPY
-parameter_list|(
-name|f
-parameter_list|,
-name|t
-parameter_list|)
-value|bcopy(f, t, sizeof(*(f)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_ZERO
-parameter_list|(
-name|p
-parameter_list|)
-value|bzero(p, sizeof(*(p)))
-end_define
 
 begin_comment
 comment|/*  * These declarations belong elsewhere, but are repeated here and in  *<stdio.h> to give broken programs a better chance of working with  * 64-bit off_t's.  */

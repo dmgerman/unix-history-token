@@ -3685,6 +3685,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SELECT_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SELECT_DECLARED
+end_define
+
 begin_function_decl
 name|int
 name|select
@@ -3706,6 +3724,16 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
