@@ -475,11 +475,11 @@ begin_struct
 struct|struct
 name|aha_extbios
 block|{
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
 comment|/* Bit 3 == 1 extended bios enabled */
-name|u_int8_t
+name|uint8_t
 name|mailboxlock
 decl_stmt|;
 comment|/* mail box lock code to unlock it */
@@ -491,10 +491,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|num_mboxes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|base_addr
 index|[
 literal|3
@@ -509,7 +509,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|board_type
 decl_stmt|;
 comment|/* These values are mostly from the aha-1540CP technical reference, but */
@@ -553,17 +553,17 @@ directive|define
 name|BOARD_1542CP
 value|0x46
 comment|/* aha-1542CP, plug and play */
-name|u_int8_t
+name|uint8_t
 name|cust_features
 decl_stmt|;
 define|#
 directive|define
 name|FEATURES_STANDARD
 value|0x30
-name|u_int8_t
+name|uint8_t
 name|firmware_rev_major
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|firmware_rev_minor
 decl_stmt|;
 block|}
@@ -575,7 +575,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|dma_chan
 decl_stmt|;
 define|#
@@ -590,7 +590,7 @@ define|#
 directive|define
 name|DMA_CHAN_7
 value|0x80
-name|u_int8_t
+name|uint8_t
 name|irq
 decl_stmt|;
 define|#
@@ -617,7 +617,7 @@ define|#
 directive|define
 name|IRQ_15
 value|0x40
-name|u_int8_t
+name|uint8_t
 name|scsi_id
 decl_stmt|;
 block|}
@@ -629,7 +629,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|enable
 decl_stmt|;
 block|}
@@ -641,7 +641,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|offset
 range|:
 literal|4
@@ -663,7 +663,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|initiate_sync
 range|:
 literal|1
@@ -675,19 +675,19 @@ decl_stmt|,
 range|:
 literal|6
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bus_transfer_rate
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|time_on_bus
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|time_off_bus
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|num_mboxes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mbox_base_addr
 index|[
 literal|3
@@ -699,28 +699,28 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|discinfo
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|customer_sig
 index|[
 literal|20
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|auto_retry
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|board_switches
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|firmware_cksum
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bios_mbox_addr
 index|[
 literal|3
@@ -735,10 +735,10 @@ begin_struct
 struct|struct
 name|aha_isa_port
 block|{
-name|u_int16_t
+name|uint16_t
 name|addr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bio
 decl_stmt|;
 comment|/* board IO offset */
@@ -797,7 +797,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|sync_rate
 index|[
 literal|16
@@ -813,13 +813,13 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|len
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|addr
 index|[
 literal|3
@@ -862,10 +862,10 @@ typedef|typedef
 struct|struct
 name|aha_mbox_out
 block|{
-name|u_int8_t
+name|uint8_t
 name|action_code
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ccb_addr
 index|[
 literal|3
@@ -914,10 +914,10 @@ typedef|typedef
 struct|struct
 name|aha_mbox_in
 block|{
-name|u_int8_t
+name|uint8_t
 name|comp_code
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ccb_addr
 index|[
 literal|3
@@ -1018,11 +1018,11 @@ begin_struct
 struct|struct
 name|aha_hccb
 block|{
-name|u_int8_t
+name|uint8_t
 name|opcode
 decl_stmt|;
 comment|/* 0 */
-name|u_int8_t
+name|uint8_t
 name|lun
 range|:
 literal|3
@@ -1040,63 +1040,63 @@ name|target
 range|:
 literal|3
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cmd_len
 decl_stmt|;
 comment|/* 2 */
-name|u_int8_t
+name|uint8_t
 name|sense_len
 decl_stmt|;
 comment|/* 3 */
-name|u_int8_t
+name|uint8_t
 name|data_len
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* 4 */
-name|u_int8_t
+name|uint8_t
 name|data_addr
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* 7 */
-name|u_int8_t
+name|uint8_t
 name|link_ptr
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* 10 */
-name|u_int8_t
+name|uint8_t
 name|link_id
 decl_stmt|;
 comment|/* 13 */
-name|u_int8_t
+name|uint8_t
 name|ahastat
 decl_stmt|;
 comment|/* 14 */
-name|u_int8_t
+name|uint8_t
 name|sdstat
 decl_stmt|;
 comment|/* 15 */
-name|u_int8_t
+name|uint8_t
 name|reserved1
 decl_stmt|;
 comment|/* 16 */
-name|u_int8_t
+name|uint8_t
 name|reserved2
 decl_stmt|;
 comment|/* 17 */
-name|u_int8_t
+name|uint8_t
 name|scsi_cdb
 index|[
 literal|16
 index|]
 decl_stmt|;
 comment|/* 18 */
-name|u_int8_t
+name|uint8_t
 name|sense_data
 index|[
 name|SSD_FULL_SIZE
@@ -1145,7 +1145,7 @@ argument|aha_ccb
 argument_list|)
 name|links
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|union
@@ -1160,7 +1160,7 @@ name|aha_sg_t
 modifier|*
 name|sg_list
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sg_list_phys
 decl_stmt|;
 block|}
@@ -1249,7 +1249,7 @@ expr_stmt|;
 name|u_int
 name|active_ccbs
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|aha_ccb_physbase
 decl_stmt|;
 name|aha_ccb_opcode_t
@@ -1271,7 +1271,7 @@ name|scsi_sense_data
 modifier|*
 name|sense_buffers
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sense_buffers_physbase
 decl_stmt|;
 name|struct
@@ -1335,7 +1335,7 @@ decl_stmt|;
 name|u_int
 name|scsi_id
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|extended_trans
 range|:
 literal|1
@@ -1363,30 +1363,30 @@ decl_stmt|,
 range|:
 literal|26
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|disc_permitted
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|sync_permitted
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|init_level
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 name|command_cmp
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 name|latched_status
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bios_addr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fw_major
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fw_minor
 decl_stmt|;
 name|char
@@ -1395,7 +1395,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|boardid
 decl_stmt|;
 name|struct
@@ -1499,12 +1499,12 @@ modifier|*
 parameter_list|,
 name|aha_op_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|u_int

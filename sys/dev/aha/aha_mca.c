@@ -159,7 +159,7 @@ name|AHA_MCA_IOPORT
 parameter_list|(
 name|pos
 parameter_list|)
-value|(0x30 + \ 					(((u_int32_t)pos& \ 						AHA_MCA_IOPORT_MASK1)<< 8) + \ 					(((u_int32_t)pos& \ 						AHA_MCA_IOPORT_MASK2)>> 4))
+value|(0x30 + \ 					(((uint32_t)pos& \ 						AHA_MCA_IOPORT_MASK1)<< 8) + \ 					(((uint32_t)pos& \ 						AHA_MCA_IOPORT_MASK2)>> 4))
 end_define
 
 begin_define
@@ -260,27 +260,27 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|iobase
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|iosize
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|drq
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|irq
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pos
 decl_stmt|;
 name|desc

@@ -272,7 +272,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|ahaccbvtop
 parameter_list|(
 name|struct
@@ -298,7 +298,7 @@ name|ahaccbptov
 argument_list|(
 argument|struct aha_softc *aha
 argument_list|,
-argument|u_int32_t ccb_addr
+argument|uint32_t ccb_addr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -306,7 +306,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|ahaccbvtop
 parameter_list|(
 name|struct
@@ -327,7 +327,7 @@ operator|->
 name|aha_ccb_physbase
 operator|+
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 operator|(
@@ -357,7 +357,7 @@ name|ahaccbptov
 argument_list|(
 argument|struct aha_softc *aha
 argument_list|,
-argument|u_int32_t ccb_addr
+argument|uint32_t ccb_addr
 argument_list|)
 block|{
 return|return
@@ -675,7 +675,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|aha_board_ports
 index|[]
 init|=
@@ -1211,7 +1211,7 @@ comment|/*parmlen*/
 literal|0
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1365,7 +1365,7 @@ decl_stmt|;
 name|config_data_t
 name|config_data
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length_param
 decl_stmt|;
 name|int
@@ -1629,7 +1629,7 @@ argument_list|,
 name|AOP_MBOX_IF_ENABLE
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1718,7 +1718,7 @@ comment|/*paramlen*/
 literal|1
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1802,7 +1802,7 @@ comment|/*parmlen*/
 literal|0
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -2096,11 +2096,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|error_exit
 goto|;
-block|}
 name|aha
 operator|->
 name|init_level
@@ -2275,11 +2273,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|error_exit
 goto|;
-block|}
 name|aha
 operator|->
 name|init_level
@@ -2378,11 +2374,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|error_exit
 goto|;
-block|}
 name|aha
 operator|->
 name|init_level
@@ -2436,7 +2430,9 @@ goto|;
 block|}
 comment|/* 	 * Note that we are going and return (to probe) 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|error_exit
 label|:
@@ -2726,13 +2722,10 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
 name|i
 operator|>=
 name|AHA_NUM_ISAPORTS
-operator|)
 operator|||
-operator|(
 name|ioport
 operator|!=
 name|aha_isa_ports
@@ -2741,7 +2734,6 @@ name|i
 index|]
 operator|.
 name|addr
-operator|)
 condition|)
 block|{
 name|printf
@@ -2753,11 +2745,9 @@ literal|"aha_isa_probe: Failing probe.\n"
 argument_list|,
 name|ioport
 argument_list|,
-operator|(
 name|i
 operator|<
 name|AHA_NUM_ISAPORTS
-operator|)
 condition|?
 name|aha_isa_ports
 index|[
@@ -3440,6 +3430,9 @@ name|aha_softc
 modifier|*
 name|aha
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|ccb
@@ -3511,9 +3504,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|s
 operator|=
 name|splcam
@@ -3876,9 +3866,6 @@ literal|0
 condition|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|s
@@ -4158,7 +4145,6 @@ break|break;
 case|case
 name|XPT_SET_TRAN_SETTINGS
 case|:
-block|{
 comment|/* XXX Implement */
 name|ccb
 operator|->
@@ -4174,7 +4160,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|XPT_GET_TRAN_SETTINGS
 case|:
@@ -4353,10 +4338,10 @@ name|ccb_calc_geometry
 modifier|*
 name|ccg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size_mb
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|secs_per_cylinder
 decl_stmt|;
 name|ccg
@@ -4489,7 +4474,6 @@ case|case
 name|XPT_RESET_BUS
 case|:
 comment|/* Reset the specified SCSI bus */
-block|{
 name|ahareset
 argument_list|(
 name|aha
@@ -4512,7 +4496,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|XPT_TERM_IO
 case|:
@@ -4730,7 +4713,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|paddr
 decl_stmt|;
 name|accb
@@ -5337,6 +5320,9 @@ decl_stmt|;
 name|u_int
 name|intstat
 decl_stmt|;
+name|uint32_t
+name|paddr
+decl_stmt|;
 name|aha
 operator|=
 operator|(
@@ -5426,9 +5412,6 @@ operator|!=
 name|AMBI_FREE
 condition|)
 block|{
-name|u_int32_t
-name|paddr
-decl_stmt|;
 name|paddr
 operator|=
 name|aha_a24tou
@@ -6398,7 +6381,7 @@ decl_stmt|;
 name|u_int
 name|timeout
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reset_type
 decl_stmt|;
 if|if
@@ -6800,14 +6783,14 @@ parameter_list|,
 name|aha_op_t
 name|opcode
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|params
 parameter_list|,
 name|u_int
 name|param_len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|reply_data
 parameter_list|,
@@ -7314,7 +7297,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|data
 decl_stmt|;
 name|data
@@ -7518,7 +7501,6 @@ operator||
 name|INIT_REQUIRED
 operator|)
 condition|)
-block|{
 name|ahareset
 argument_list|(
 name|aha
@@ -7527,7 +7509,6 @@ comment|/*hard_reset*/
 name|FALSE
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|EINVAL
@@ -7724,7 +7705,7 @@ argument_list|,
 name|AOP_INITIALIZE_MBOX
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -7799,7 +7780,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|param
 decl_stmt|;
 name|targ_syncinfo_t
@@ -7844,7 +7825,7 @@ comment|/*paramlen*/
 literal|1
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -8184,7 +8165,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|paddr
 decl_stmt|;
 name|accb

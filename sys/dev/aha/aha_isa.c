@@ -452,7 +452,7 @@ comment|/*parmlen*/
 literal|0
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
