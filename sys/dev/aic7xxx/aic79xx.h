@@ -1006,6 +1006,10 @@ block|,
 name|AHD_RUNNING_QOUTFIFO
 init|=
 literal|0x800000
+block|,
+name|AHD_HAD_FIRST_SEL
+init|=
+literal|0x1000000
 block|}
 name|ahd_flag
 typedef|;
