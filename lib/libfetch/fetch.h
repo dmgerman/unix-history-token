@@ -688,6 +688,13 @@ name|fetchTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|fetchRestartCalls
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
