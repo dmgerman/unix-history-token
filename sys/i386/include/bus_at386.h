@@ -231,6 +231,8 @@ comment|/*  * Unmap a region of device bus space.  */
 end_comment
 
 begin_function_decl
+specifier|static
+name|__inline
 name|void
 name|bus_space_unmap
 parameter_list|(
@@ -245,6 +247,24 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|bus_space_unmap
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|)
+block|{ }
+end_function
 
 begin_comment
 comment|/*  * Get a new handle for a subregion of an already-mapped area of bus space.  */
@@ -358,6 +378,8 @@ comment|/*  * Free a region of bus space accessible memory.  */
 end_comment
 
 begin_function_decl
+specifier|static
+name|__inline
 name|void
 name|bus_space_free
 parameter_list|(
@@ -372,6 +394,24 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|bus_space_free
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|)
+block|{ }
+end_function
 
 begin_if
 if|#
