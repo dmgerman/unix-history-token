@@ -68,10 +68,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$Revision: 1.1.1.2 $"
-end_empty
-
 begin_include
 include|#
 directive|include
