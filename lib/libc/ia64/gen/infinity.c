@@ -32,10 +32,12 @@ comment|/* bytes for +Infinity on an ia64 (IEEE double format) */
 end_comment
 
 begin_decl_stmt
-name|char
+specifier|const
+name|union
+name|__infinity_un
 name|__infinity
-index|[]
 init|=
+block|{
 block|{
 literal|0
 block|,
@@ -52,6 +54,7 @@ block|,
 literal|0xf0
 block|,
 literal|0x7f
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

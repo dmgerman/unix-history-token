@@ -23,19 +23,32 @@ begin_comment
 comment|/*  * ANSI/POSIX  */
 end_comment
 
-begin_decl_stmt
+begin_union
 specifier|extern
+specifier|const
+union|union
+name|__infinity_un
+block|{
+name|unsigned
 name|char
-name|__infinity
-index|[]
+name|__uc
+index|[
+literal|8
+index|]
 decl_stmt|;
-end_decl_stmt
+name|double
+name|__ud
+decl_stmt|;
+block|}
+name|__infinity
+union|;
+end_union
 
 begin_define
 define|#
 directive|define
 name|HUGE_VAL
-value|(*(double *) __infinity)
+value|(__infinity.__ud)
 end_define
 
 begin_comment
