@@ -156,16 +156,6 @@ end_ifdef
 
 begin_decl_stmt
 name|u_int32_t
-name|astpending
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* need to trap before returning to user mode */
-end_comment
-
-begin_decl_stmt
-name|u_int32_t
 name|intr_nesting_level
 decl_stmt|;
 end_decl_stmt
