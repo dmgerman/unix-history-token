@@ -177,10 +177,16 @@ name|__LINE__
 expr_stmt|;
 do|do
 block|{
-comment|/* Reset the interrupted operation flag: */
+comment|/* Reset the interrupted and timeout flags: */
 name|_thread_run
 operator|->
 name|interrupted
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_run
+operator|->
+name|timeout
 operator|=
 literal|0
 expr_stmt|;
@@ -236,9 +242,11 @@ name|rc
 operator|==
 literal|0
 operator|&&
+name|_thread_run
+operator|->
 name|timeout
-operator|!=
-name|NULL
+operator|==
+literal|0
 condition|)
 do|;
 block|}
