@@ -2036,6 +2036,8 @@ argument_list|,
 name|M_GEOM_UZIP
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|gp
