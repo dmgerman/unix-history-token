@@ -5100,7 +5100,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|cnt
 operator|<
 name|reqlen
 condition|)
