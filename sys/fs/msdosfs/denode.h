@@ -128,19 +128,6 @@ struct|struct
 name|denode
 block|{
 name|struct
-name|denode
-modifier|*
-name|de_next
-decl_stmt|;
-comment|/* Hash chain forward */
-name|struct
-name|denode
-modifier|*
-modifier|*
-name|de_prev
-decl_stmt|;
-comment|/* Hash chain back */
-name|struct
 name|vnode
 modifier|*
 name|de_vnode

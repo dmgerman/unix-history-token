@@ -4764,11 +4764,6 @@ operator|=
 name|msdosfs_fhtovp
 block|,
 operator|.
-name|vfs_init
-operator|=
-name|msdosfs_init
-block|,
-operator|.
 name|vfs_mount
 operator|=
 name|msdosfs_mount
@@ -4792,11 +4787,6 @@ operator|.
 name|vfs_sync
 operator|=
 name|msdosfs_sync
-block|,
-operator|.
-name|vfs_uninit
-operator|=
-name|msdosfs_uninit
 block|,
 operator|.
 name|vfs_unmount
