@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.9		%G%"
+literal|"@(#)sendmail.h	4.10		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,6 +611,17 @@ end_define
 
 begin_comment
 comment|/* mailer takes picky -r flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SECURE_PORT
+value|'R'
+end_define
+
+begin_comment
+comment|/* try to send on a reserved TCP port */
 end_comment
 
 begin_define
