@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	8.2 (Berkeley) %G%"
+literal|"@(#)preen.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1566,11 +1566,11 @@ name|char
 modifier|*
 name|blockcheck
 parameter_list|(
-name|name
+name|origname
 parameter_list|)
 name|char
 modifier|*
-name|name
+name|origname
 decl_stmt|;
 block|{
 name|struct
@@ -1582,6 +1582,9 @@ decl_stmt|,
 name|stchar
 decl_stmt|;
 name|char
+modifier|*
+name|newname
+decl_stmt|,
 modifier|*
 name|raw
 decl_stmt|;
@@ -1619,17 +1622,21 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|origname
 operator|)
 return|;
 block|}
+name|newname
+operator|=
+name|origname
+expr_stmt|;
 name|retry
 label|:
 if|if
 condition|(
 name|stat
 argument_list|(
-name|name
+name|newname
 argument_list|,
 operator|&
 name|stblock
@@ -1640,19 +1647,19 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"Can't stat %s\n"
 argument_list|,
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|origname
 operator|)
 return|;
 block|}
@@ -1686,7 +1693,7 @@ name|raw
 operator|=
 name|rawname
 argument_list|(
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1716,7 +1723,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
@@ -1750,7 +1757,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
@@ -1772,11 +1779,11 @@ operator|!
 name|retried
 condition|)
 block|{
-name|name
+name|newname
 operator|=
 name|unrawname
 argument_list|(
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 name|retried
@@ -1789,7 +1796,7 @@ block|}
 comment|/* 	 * Not a block or character device, just return name and 	 * let the user decide whether to use it. 	 */
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
