@@ -44,23 +44,9 @@ begin_comment
 comment|/* Prototype for ioctl wrapper */
 end_comment
 
-begin_function_decl
-specifier|static
-name|int
-name|linux_ioctl_tdfx
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|linux_ioctl_args
-modifier|*
-name|args
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*static int linux_ioctl_tdfx(struct proc* p, struct linux_ioctl_args*  * args);*/
+end_comment
 
 begin_comment
 comment|/* Values for /dev/3dfx */

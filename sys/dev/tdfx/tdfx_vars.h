@@ -254,6 +254,8 @@ name|cardno
 decl_stmt|;
 name|vm_offset_t
 name|addr
+decl_stmt|,
+name|addr2
 decl_stmt|;
 name|struct
 name|resource
@@ -261,10 +263,15 @@ modifier|*
 name|memrange
 decl_stmt|,
 modifier|*
+name|memrange2
+decl_stmt|,
+modifier|*
 name|piorange
 decl_stmt|;
 name|int
 name|memrid
+decl_stmt|,
+name|memrid2
 decl_stmt|,
 name|piorid
 decl_stmt|;
@@ -279,6 +286,8 @@ name|type
 decl_stmt|;
 name|int
 name|addr0
+decl_stmt|,
+name|addr1
 decl_stmt|;
 name|unsigned
 name|char
