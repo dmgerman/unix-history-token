@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.3 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,6 +332,15 @@ name|line
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|doit
 argument_list|(
@@ -375,6 +384,10 @@ name|struct
 name|hostent
 modifier|*
 name|hp
+decl_stmt|;
+name|struct
+name|hostent
+name|hostent
 decl_stmt|;
 name|char
 name|c
@@ -451,29 +464,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|fatal
-argument_list|(
-name|f
-argument_list|,
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"Host name for your address (%s) unknown"
-argument_list|,
+comment|/* 		 * Only the name is used below. 		 */
+name|hp
+operator|=
+operator|&
+name|hostent
+expr_stmt|;
+name|hp
+operator|->
+name|h_name
+operator|=
 name|inet_ntoa
 argument_list|(
 name|fromp
 operator|->
 name|sin_addr
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
