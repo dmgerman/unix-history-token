@@ -63,6 +63,25 @@ name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
+comment|/* Ignored signals get dropped on the floor. */
+elseif|else
+if|if
+condition|(
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|==
+name|SIG_IGN
+condition|)
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Find the thread in the list of active threads: */
 elseif|else
 if|if
@@ -79,22 +98,83 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
-operator|(
 name|pthread
 operator|->
 name|state
-operator|==
-name|PS_SIGWAIT
-operator|)
-operator|&&
+condition|)
+block|{
+case|case
+name|PS_SIGSUSPEND
+case|:
+comment|/* 			 * Only wake up the thread if the signal is unblocked 			 * and there is a handler installed for the signal. 			 */
+if|if
+condition|(
+operator|!
 name|sigismember
 argument_list|(
 operator|&
 name|pthread
 operator|->
 name|sigmask
+argument_list|,
+name|sig
+argument_list|)
+operator|&&
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|!=
+name|SIG_DFL
+condition|)
+block|{
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+block|}
+comment|/* Increment the pending signal count: */
+name|sigaddset
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigpend
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PS_SIGWAIT
+case|:
+comment|/* Wake up the thread if the signal is blocked. */
+if|if
+condition|(
+name|sigismember
+argument_list|(
+name|pthread
+operator|->
+name|data
+operator|.
+name|sigwait
 argument_list|,
 name|sig
 argument_list|)
@@ -117,6 +197,19 @@ name|sig
 expr_stmt|;
 block|}
 else|else
+comment|/* Increment the pending signal count. */
+name|sigaddset
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigpend
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 comment|/* Increment the pending signal count: */
 name|sigaddset
 argument_list|(
@@ -128,6 +221,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return

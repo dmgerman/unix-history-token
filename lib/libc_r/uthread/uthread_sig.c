@@ -53,28 +53,9 @@ begin_decl_stmt
 specifier|static
 name|int
 specifier|volatile
-name|yield_on_unlock_dead
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-specifier|volatile
 name|yield_on_unlock_thread
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|spinlock_t
-name|thread_dead_lock
-init|=
-name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -107,25 +88,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Lock the dead thread list: */
-end_comment
-
-begin_function
-name|void
-name|_lock_dead_thread_list
-parameter_list|()
-block|{
-comment|/* Lock the dead thread list: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-name|thread_dead_lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Lock the thread list: */
 end_comment
 
@@ -149,41 +111,6 @@ condition|)
 block|{
 comment|/* Reset the interrupt flag: */
 name|yield_on_unlock_thread
-operator|=
-literal|0
-expr_stmt|;
-comment|/* This thread has overstayed it's welcome: */
-name|sched_yield
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Lock the dead thread list: */
-end_comment
-
-begin_function
-name|void
-name|_unlock_dead_thread_list
-parameter_list|()
-block|{
-comment|/* Unlock the dead thread list: */
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|thread_dead_lock
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Check if a scheduler interrupt occurred while the dead 	 * thread list was locked: 	 */
-if|if
-condition|(
-name|yield_on_unlock_dead
-condition|)
-block|{
-comment|/* Reset the interrupt flag: */
-name|yield_on_unlock_dead
 operator|=
 literal|0
 expr_stmt|;
@@ -278,18 +205,6 @@ name|yield_on_unlock_thread
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Check if the scheduler interrupt has come at an 		 * unfortunate time which one of the threads is 		 * modifying the dead thread list: 		 */
-if|if
-condition|(
-name|thread_dead_lock
-operator|.
-name|access_lock
-condition|)
-comment|/* 			 * Set a flag so that the thread that has 			 * the lock yields when it unlocks the 			 * dead thread list: 			 */
-name|yield_on_unlock_dead
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 		 * Check if the kernel has not been interrupted while 		 * executing scheduler code: 		 */
 elseif|else
 if|if
@@ -368,7 +283,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 		 * POSIX says that pending SIGCONT signals are 		 * discarded when one of there signals occurs. 		 */
+comment|/* 		 * POSIX says that pending SIGCONT signals are 		 * discarded when one of these signals occurs. 		 */
 if|if
 condition|(
 name|sig
@@ -411,6 +326,65 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 		 * Enter a loop to process each thread in the linked 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
+for|for
+control|(
+name|pthread
+operator|=
+name|_thread_link_list
+init|;
+name|pthread
+operator|!=
+name|NULL
+condition|;
+name|pthread
+operator|=
+name|pthread
+operator|->
+name|nxt
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_SIGWAIT
+operator|)
+operator|&&
+name|sigismember
+argument_list|(
+name|pthread
+operator|->
+name|data
+operator|.
+name|sigwait
+argument_list|,
+name|sig
+argument_list|)
+condition|)
+block|{
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+comment|/* 				 * Do not attempt to deliver this signal 				 * to other threads. 				 */
+return|return;
+block|}
 block|}
 comment|/* Check if the signal is not being ignored: */
 if|if
@@ -526,6 +500,9 @@ case|case
 name|PS_SIGTHREAD
 case|:
 case|case
+name|PS_SIGWAIT
+case|:
+case|case
 name|PS_SUSPENDED
 case|:
 comment|/* Nothing to do here. */
@@ -577,9 +554,6 @@ case|:
 case|case
 name|PS_SELECT_WAIT
 case|:
-case|case
-name|PS_SIGWAIT
-case|:
 if|if
 condition|(
 name|sig
@@ -605,6 +579,52 @@ name|interrupted
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PS_SIGSUSPEND
+case|:
+comment|/* 		 * Only wake up the thread if the signal is unblocked 		 * and there is a handler installed for the signal. 		 */
+if|if
+condition|(
+operator|!
+name|sigismember
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigmask
+argument_list|,
+name|sig
+argument_list|)
+operator|&&
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|!=
+name|SIG_DFL
+condition|)
+block|{
 comment|/* Change the state of the thread to run: */
 name|PTHREAD_NEW_STATE
 argument_list|(

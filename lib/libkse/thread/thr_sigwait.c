@@ -56,7 +56,7 @@ name|int
 name|i
 decl_stmt|;
 name|sigset_t
-name|oset
+name|tempset
 decl_stmt|;
 name|struct
 name|sigaction
@@ -140,7 +140,73 @@ argument_list|,
 name|SIGINFO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the application must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them, so we ignore SIG_IGN signals. 	 */
+comment|/* Check to see if a pending signal is in the wait mask. */
+if|if
+condition|(
+name|tempset
+operator|=
+operator|(
+name|_thread_run
+operator|->
+name|sigpend
+operator|&
+name|act
+operator|.
+name|sa_mask
+operator|)
+condition|)
+block|{
+comment|/* Enter a loop to find a pending signal: */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|NSIG
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sigismember
+argument_list|(
+operator|&
+name|tempset
+argument_list|,
+name|i
+argument_list|)
+condition|)
+break|break;
+block|}
+comment|/* Clear the pending signal: */
+name|sigdelset
+argument_list|(
+operator|&
+name|_thread_run
+operator|->
+name|sigpend
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number to the caller: */
+operator|*
+name|sig
+operator|=
+name|i
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the application must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them.  Note that SIG_IGN signals are left in the 	 * mask because a subsequent sigaction could enable an 	 * ignored signal. 	 */
 for|for
 control|(
 name|i
@@ -181,7 +247,6 @@ name|sa_handler
 operator|==
 name|SIG_DFL
 condition|)
-block|{
 if|if
 condition|(
 name|_thread_sys_sigaction
@@ -202,31 +267,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|_thread_sigact
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-operator|==
-name|SIG_IGN
-condition|)
-name|sigdelset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -235,18 +275,14 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Save the current signal mask: */
-name|oset
+comment|/* 		 * Save the wait signal mask.  The wait signal 		 * mask is independent of the threads signal mask 		 * and requires separate storage. 		 */
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|sigwait
 operator|=
-name|_thread_run
-operator|->
-name|sigmask
-expr_stmt|;
-comment|/* Combine the caller's mask with the current one: */
-name|_thread_run
-operator|->
-name|sigmask
-operator||=
+operator|&
 name|act
 operator|.
 name|sa_mask
@@ -269,12 +305,14 @@ name|_thread_run
 operator|->
 name|signo
 expr_stmt|;
-comment|/* Restore the signal mask: */
+comment|/* 		 * Probably unnecessary, but since it's in a union struct 		 * we don't know how it could be used in the future. 		 */
 name|_thread_run
 operator|->
-name|sigmask
+name|data
+operator|.
+name|sigwait
 operator|=
-name|oset
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Restore the sigactions: */

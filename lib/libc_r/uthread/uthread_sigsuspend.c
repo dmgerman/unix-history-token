@@ -60,25 +60,25 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Save the current sigmal mask: */
+comment|/* Save the current signal mask: */
 name|oset
 operator|=
 name|_thread_run
 operator|->
 name|sigmask
 expr_stmt|;
-comment|/* Combine the caller's mask with the current one: */
+comment|/* Change the caller's mask: */
 name|_thread_run
 operator|->
 name|sigmask
-operator||=
+operator|=
 operator|*
 name|set
 expr_stmt|;
 comment|/* Wait for a signal: */
 name|_thread_kern_sched_state
 argument_list|(
-name|PS_SIGWAIT
+name|PS_SIGSUSPEND
 argument_list|,
 name|__FILE__
 argument_list|,
