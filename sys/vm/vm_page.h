@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.14 1995/02/14 06:10:24 phk Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.15 1995/02/20 23:35:43 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|_VM_PAGE_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
 
 begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
@@ -196,6 +202,28 @@ end_define
 
 begin_comment
 comment|/* physical page doesn't exist (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_WRITEABLE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* page is mapped writeable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_MAPPED
+value|0x400
+end_define
+
+begin_comment
+comment|/* page is mapped */
 end_comment
 
 begin_define
@@ -865,7 +893,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|vm_page_unqueue
 name|__P
 argument_list|(
@@ -896,7 +924,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vm_page_hold
 parameter_list|(
@@ -935,7 +963,7 @@ end_endif
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vm_page_unhold
 parameter_list|(
@@ -969,6 +997,101 @@ name|hold_count
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_protect
+parameter_list|(
+name|vm_page_t
+name|mem
+parameter_list|,
+name|int
+name|prot
+parameter_list|)
+block|{
+if|if
+condition|(
+name|prot
+operator|==
+name|VM_PROT_NONE
+condition|)
+block|{
+if|if
+condition|(
+name|mem
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_WRITEABLE
+operator||
+name|PG_MAPPED
+operator|)
+condition|)
+block|{
+name|pmap_page_protect
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|mem
+argument_list|)
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+name|mem
+operator|->
+name|flags
+operator|&=
+operator|~
+operator|(
+name|PG_WRITEABLE
+operator||
+name|PG_MAPPED
+operator|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|prot
+operator|==
+name|VM_PROT_READ
+operator|)
+operator|&&
+operator|(
+name|mem
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+condition|)
+block|{
+name|pmap_page_protect
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|mem
+argument_list|)
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+name|mem
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PG_WRITEABLE
+expr_stmt|;
+block|}
 block|}
 end_function
 
