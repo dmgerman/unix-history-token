@@ -355,7 +355,7 @@ expr_stmt|;
 name|pcond
 operator|->
 name|c_flags
-operator||=
+operator|=
 name|COND_FLAGS_INITED
 expr_stmt|;
 name|pcond
