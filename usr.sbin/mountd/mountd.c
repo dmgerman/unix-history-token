@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.25 1997/12/09 18:43:44 guido Exp $"
+literal|"$Id: mountd.c,v 1.26 1997/12/10 20:33:59 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,7 +1348,7 @@ begin_decl_stmt
 name|int
 name|log
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
