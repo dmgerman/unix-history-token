@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
-
 begin_comment
-comment|/*	tty_pty.c	4.1	%G%	*/
+comment|/*	tty_pty.c	4.2	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  *  * Overhauled, and ported to VAX/VMUNIX (V7) Bruce Borden, July 80  * Modified and integrated into 4bsd by Kipp Hickman and Michael Toy  */
+comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  */
 end_comment
 
 begin_include
