@@ -831,15 +831,8 @@ operator|->
 name|pic_disable_source
 argument_list|(
 name|isrc
-argument_list|)
-expr_stmt|;
-name|isrc
-operator|->
-name|is_pic
-operator|->
-name|pic_eoi_source
-argument_list|(
-name|isrc
+argument_list|,
+name|PIC_EOI
 argument_list|)
 expr_stmt|;
 if|if
