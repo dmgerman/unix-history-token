@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.7 1996/10/01 03:41:28 pst Exp $"
+literal|"$Id: auth.c,v 1.7.2.1 1996/11/13 20:19:36 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,21 +2058,11 @@ name|tty
 operator|+=
 literal|5
 expr_stmt|;
-name|logwtmp
-argument_list|(
-name|tty
-argument_list|,
-name|user
-argument_list|,
-literal|":PPP"
-argument_list|)
-expr_stmt|;
-comment|/* Add wtmp login entry */
 name|logged_in
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Log in utmp too */
+comment|/* Log in wtmp and utmp using login() */
 name|memset
 argument_list|(
 operator|(
