@@ -2808,9 +2808,16 @@ literal|"ad_transfer: timeout waiting for DRQ"
 argument_list|)
 expr_stmt|;
 comment|/* output the data */
-ifdef|#
-directive|ifdef
-name|ATA_16BIT_ONLY
+if|if
+condition|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|flags
+operator|&
+name|ATA_USE_16BIT
+condition|)
 name|outsw
 argument_list|(
 name|adp
@@ -2848,8 +2855,7 @@ name|int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|outsl
 argument_list|(
 name|adp
@@ -2887,8 +2893,6 @@ name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|request
 operator|->
 name|bytecount
@@ -3375,9 +3379,16 @@ name|oops
 goto|;
 block|}
 comment|/* data ready, read in */
-ifdef|#
-directive|ifdef
-name|ATA_16BIT_ONLY
+if|if
+condition|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|flags
+operator|&
+name|ATA_USE_16BIT
+condition|)
 name|insw
 argument_list|(
 name|adp
@@ -3415,8 +3426,7 @@ name|int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|insl
 argument_list|(
 name|adp
@@ -3454,8 +3464,6 @@ name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|request
 operator|->
 name|bytecount

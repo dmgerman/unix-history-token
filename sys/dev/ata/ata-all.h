@@ -884,6 +884,10 @@ define|#
 directive|define
 name|ATA_ATAPI_DMA_RO
 value|0x02
+define|#
+directive|define
+name|ATA_USE_16BIT
+value|0x04
 name|int32_t
 name|devices
 decl_stmt|;
