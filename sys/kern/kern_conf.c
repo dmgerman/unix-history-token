@@ -207,6 +207,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX: This is a hack */
+end_comment
+
+begin_function_decl
+name|void
+name|disk_dev_synth
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|struct
 name|cdevsw
@@ -230,6 +244,48 @@ operator|->
 name|si_devsw
 operator|)
 return|;
+comment|/* XXX: Hack around our backwards disk code */
+name|disk_dev_synth
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|si_devsw
+condition|)
+return|return
+operator|(
+name|dev
+operator|->
+name|si_devsw
+operator|)
+return|;
+if|if
+condition|(
+name|devfs_present
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: devsw() called on %s %u/%u\n"
+argument_list|,
+name|dev
+operator|->
+name|si_name
+argument_list|,
+name|major
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|cdevsw
@@ -1135,6 +1191,11 @@ operator|->
 name|si_name
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"don't do that"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dev
@@ -1470,6 +1531,11 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"don't do that"
 argument_list|)
 expr_stmt|;
 return|return;
