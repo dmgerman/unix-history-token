@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -225,6 +225,11 @@ argument_list|,
 operator|&
 name|hp
 operator|->
+name|pmh_pte
+index|[
+literal|0
+index|]
+operator|.
 name|low
 argument_list|)
 expr_stmt|;
@@ -235,6 +240,11 @@ argument_list|,
 operator|&
 name|hp
 operator|->
+name|pmh_pte
+index|[
+literal|0
+index|]
+operator|.
 name|high
 argument_list|)
 expr_stmt|;
