@@ -5881,6 +5881,7 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* Note:  The -direct -> -background is for callback ! */
 name|log_Printf
 argument_list|(
 name|LogWARN

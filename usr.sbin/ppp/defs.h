@@ -541,8 +541,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PHYS_FOREGROUND
+value|64
+end_define
+
+begin_comment
+comment|/* Pseudo mode, same as background */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PHYS_ALL
-value|63
+value|127
 end_define
 
 begin_function_decl

@@ -306,6 +306,12 @@ literal|"background"
 block|}
 block|,
 block|{
+name|PHYS_FOREGROUND
+block|,
+literal|"foreground"
+block|}
+block|,
+block|{
 name|PHYS_ALL
 block|,
 literal|"*"

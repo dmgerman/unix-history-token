@@ -1611,6 +1611,8 @@ name|PHYS_DEDICATED
 operator||
 name|PHYS_BACKGROUND
 operator||
+name|PHYS_FOREGROUND
+operator||
 name|PHYS_DDIAL
 operator|)
 operator|)
@@ -1622,7 +1624,7 @@ name|bundle
 operator|->
 name|CleaningUp
 condition|)
-comment|/*          * Our first time in - DEDICATED& DDIAL never come down, and          * DIRECT& BACKGROUND get deleted when they enter DATALINK_CLOSED.          * Go to DATALINK_OPENING via datalink_Up() and fall through.          */
+comment|/*          * Our first time in - DEDICATED& DDIAL never come down, and          * DIRECT, FOREGROUND& BACKGROUND get deleted when they enter          * DATALINK_CLOSED.  Go to DATALINK_OPENING via datalink_Up()          * and fall through.          */
 name|datalink_Up
 argument_list|(
 name|dl
@@ -9072,6 +9074,8 @@ operator|(
 name|PHYS_DDIAL
 operator||
 name|PHYS_BACKGROUND
+operator||
+name|PHYS_FOREGROUND
 operator|)
 operator|&&
 name|dl

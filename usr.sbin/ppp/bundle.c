@@ -5219,7 +5219,7 @@ modifier|*
 name|dl
 parameter_list|)
 block|{
-comment|/*    * Our datalink has closed.    * CleanDatalinks() (called from DoLoop()) will remove closed    * BACKGROUND and DIRECT links.    * If it's the last data link, enter phase DEAD.    *    * NOTE: dl may not be in our list (bundle_SendDatalink()) !    */
+comment|/*    * Our datalink has closed.    * CleanDatalinks() (called from DoLoop()) will remove closed    * BACKGROUND, FOREGROUND and DIRECT links.    * If it's the last data link, enter phase DEAD.    *    * NOTE: dl may not be in our list (bundle_SendDatalink()) !    */
 name|struct
 name|datalink
 modifier|*
@@ -7215,6 +7215,8 @@ operator|(
 name|PHYS_DIRECT
 operator||
 name|PHYS_BACKGROUND
+operator||
+name|PHYS_FOREGROUND
 operator|)
 condition|)
 block|{
