@@ -13130,6 +13130,18 @@ condition|(
 name|flag
 condition|)
 block|{
+if|if
+condition|(
+name|transflag
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Internal: flagxfer(1): "
+literal|"transfer already under way"
+argument_list|)
+expr_stmt|;
 name|transflag
 operator|=
 literal|1
@@ -13146,6 +13158,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|transflag
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Internal: flagxfer(0): "
+literal|"no active transfer"
+argument_list|)
+expr_stmt|;
 name|maskurg
 argument_list|(
 literal|1
