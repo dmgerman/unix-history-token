@@ -1968,7 +1968,7 @@ block|}
 else|else
 name|err
 argument_list|(
-literal|"*mktemp: '%s'"
+literal|"*mkstemp: '%s'"
 argument_list|,
 name|tname
 argument_list|)
