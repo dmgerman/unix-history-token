@@ -481,7 +481,7 @@ literal|0x02
 block|}
 block|,
 block|{
-literal|"p controller error"
+literal|"a controller error"
 block|,
 literal|0x03
 block|}
@@ -535,7 +535,103 @@ literal|0x0b
 block|}
 block|,
 block|{
-literal|"p aen queue full"
+literal|"c init started"
+block|,
+literal|0x0c
+block|}
+block|,
+block|{
+literal|"c logical unit deleted"
+block|,
+literal|0x0d
+block|}
+block|,
+block|{
+literal|"p SMART threshold exceeded"
+block|,
+literal|0x0f
+block|}
+block|,
+block|{
+literal|"p ATA UDMA downgrade"
+block|,
+literal|0x21
+block|}
+block|,
+block|{
+literal|"p ATA UDMA upgrade"
+block|,
+literal|0x22
+block|}
+block|,
+block|{
+literal|"p sector repair occurred"
+block|,
+literal|0x23
+block|}
+block|,
+block|{
+literal|"a SBUF integrity check failure"
+block|,
+literal|0x24
+block|}
+block|,
+block|{
+literal|"p lost cached write"
+block|,
+literal|0x25
+block|}
+block|,
+block|{
+literal|"p drive ECC error detected"
+block|,
+literal|0x26
+block|}
+block|,
+block|{
+literal|"p DCB checksum error"
+block|,
+literal|0x27
+block|}
+block|,
+block|{
+literal|"p DCB unsupported version"
+block|,
+literal|0x28
+block|}
+block|,
+block|{
+literal|"c verify started"
+block|,
+literal|0x29
+block|}
+block|,
+block|{
+literal|"c verify failed"
+block|,
+literal|0x2a
+block|}
+block|,
+block|{
+literal|"c verify complete"
+block|,
+literal|0x2b
+block|}
+block|,
+block|{
+literal|"p overwrote bad sector during rebuild"
+block|,
+literal|0x2c
+block|}
+block|,
+block|{
+literal|"p encountered bad sector during rebuild"
+block|,
+literal|0x2d
+block|}
+block|,
+block|{
+literal|"a aen queue full"
 block|,
 literal|0xff
 block|}

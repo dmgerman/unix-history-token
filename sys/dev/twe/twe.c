@@ -635,6 +635,9 @@ name|twe_request
 modifier|*
 name|tr
 decl_stmt|;
+name|u_int32_t
+name|status_reg
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -750,6 +753,21 @@ name|tr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Check status register for errors, clear them.      */
+name|status_reg
+operator|=
+name|TWE_STATUS
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|twe_check_bits
+argument_list|(
+name|sc
+argument_list|,
+name|status_reg
+argument_list|)
+expr_stmt|;
 comment|/*      * Wait for the controller to come ready.      */
 if|if
 condition|(
@@ -2498,6 +2516,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* XXX implement ATA PASSTHROUGH */
 comment|/* nothing we understand */
 default|default:
 name|error
@@ -3876,6 +3895,19 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
+comment|/*      * Sleep for a short period to allow AENs to be signalled.      */
+name|tsleep
+argument_list|(
+name|NULL
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"twereset"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/*      * Disable interrupts from the controller, and mask any accidental entry      * into our interrupt handler.      */
 name|twe_printf
 argument_list|(
 name|sc
@@ -3883,7 +3915,6 @@ argument_list|,
 literal|"controller reset in progress...\n"
 argument_list|)
 expr_stmt|;
-comment|/*      * Disable interrupts from the controller, and mask any accidental entry      * into our interrupt handler.      */
 name|twe_disable_interrupts
 argument_list|(
 name|sc
@@ -4745,7 +4776,7 @@ name|sc
 argument_list|,
 name|TWE_STATUS_ATTENTION_INTERRUPT
 argument_list|,
-literal|15
+literal|30
 argument_list|)
 condition|)
 block|{
@@ -4762,6 +4793,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|TWE_CONTROL
+argument_list|(
+name|sc
+argument_list|,
+name|TWE_CONTROL_CLEAR_ATTENTION_INTERRUPT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|twe_drain_aen_queue
@@ -6361,6 +6399,46 @@ name|result
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|status_reg
+operator|&
+name|TWE_STATUS_PCI_PARITY_ERROR
+condition|)
+block|{
+name|twe_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"PCI parity error: Reseat card, move card or buggy device present."
+argument_list|)
+expr_stmt|;
+name|twe_clear_pci_parity_error
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|status_reg
+operator|&
+name|TWE_STATUS_PCI_ABORT
+condition|)
+block|{
+name|twe_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"PCI abort, clearing."
+argument_list|)
+expr_stmt|;
+name|twe_clear_pci_abort
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -6445,7 +6523,7 @@ operator|)
 return|;
 comment|/* FALLTHROUGH */
 case|case
-literal|'p'
+literal|'a'
 case|:
 return|return
 operator|(
@@ -6515,6 +6593,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+case|case
+literal|'p'
+case|:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"twe%d: port %d: %s"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|twe_dev
+argument_list|)
+argument_list|,
+name|TWE_AEN_UNIT
+argument_list|(
+name|aen
+argument_list|)
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -6623,12 +6730,77 @@ operator|>
 name|TWE_STATUS_FATAL
 condition|)
 block|{
-comment|/* 	 * Fatal errors that don't require controller reset. 	 */
-name|twe_printf
+comment|/* 	 * Fatal errors that don't require controller reset. 	 * 	 * We know a few special flags values. 	 */
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|generic
+operator|.
+name|flags
+condition|)
+block|{
+case|case
+literal|0x1b
+case|:
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|twe_drive
+index|[
+name|cmd
+operator|->
+name|generic
+operator|.
+name|unit
+index|]
+operator|.
+name|td_disk
 argument_list|,
-literal|"command returned fatal status - %s (flags = 0x%x)\n"
+literal|"drive timeout"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x51
+case|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|twe_drive
+index|[
+name|cmd
+operator|->
+name|generic
+operator|.
+name|unit
+index|]
+operator|.
+name|td_disk
+argument_list|,
+literal|"unrecoverable drive error"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|twe_drive
+index|[
+name|cmd
+operator|->
+name|generic
+operator|.
+name|unit
+index|]
+operator|.
+name|td_disk
+argument_list|,
+literal|"controller error - %s (flags = 0x%x)\n"
 argument_list|,
 name|twe_describe_code
 argument_list|(
@@ -6653,6 +6825,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -6666,11 +6839,22 @@ name|TWE_STATUS_WARNING
 condition|)
 block|{
 comment|/* 	 * Warning level status. 	 */
-name|twe_printf
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|twe_drive
+index|[
+name|cmd
+operator|->
+name|generic
+operator|.
+name|unit
+index|]
+operator|.
+name|td_disk
 argument_list|,
-literal|"command returned warning status - %s (flags = 0x%x)\n"
+literal|"warning - %s (flags = 0x%x)\n"
 argument_list|,
 name|twe_describe_code
 argument_list|(
@@ -6704,11 +6888,22 @@ literal|0x40
 condition|)
 block|{
 comment|/* 	 * Info level status. 	 */
-name|twe_printf
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|twe_drive
+index|[
+name|cmd
+operator|->
+name|generic
+operator|.
+name|unit
+index|]
+operator|.
+name|td_disk
 argument_list|,
-literal|"command returned info status: %s (flags = 0x%x)\n"
+literal|"attention - %s (flags = 0x%x)\n"
 argument_list|,
 name|twe_describe_code
 argument_list|(
