@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)check.c 1.2 %G%"
+literal|"@(#)check.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,12 @@ operator|->
 name|op
 operator|!=
 name|O_SYM
+name|and
+name|exp
+operator|->
+name|op
+operator|!=
+name|O_CALL
 condition|)
 block|{
 name|error

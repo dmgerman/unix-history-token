@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.2 %G%"
+literal|"@(#)eval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3040,15 +3040,26 @@ else|else
 block|{
 name|left
 operator|=
-operator|(
 name|exp
+expr_stmt|;
+if|if
+condition|(
+name|left
 operator|->
 name|op
 operator|==
 name|O_RVAL
-operator|)
-condition|?
-name|exp
+name|or
+name|left
+operator|->
+name|op
+operator|==
+name|O_CALL
+condition|)
+block|{
+name|left
+operator|=
+name|left
 operator|->
 name|value
 operator|.
@@ -3056,9 +3067,8 @@ name|arg
 index|[
 literal|0
 index|]
-else|:
-name|exp
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|left
