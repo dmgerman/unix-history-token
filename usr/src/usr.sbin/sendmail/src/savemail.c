@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -874,30 +874,6 @@ end_expr_stmt
 begin_expr_stmt
 name|addheader
 argument_list|(
-literal|"date"
-argument_list|,
-literal|"$b"
-argument_list|,
-name|ee
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|addheader
-argument_list|(
-literal|"from"
-argument_list|,
-literal|"$g (Mail Delivery Subsystem)"
-argument_list|,
-name|ee
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|addheader
-argument_list|(
 literal|"to"
 argument_list|,
 name|returnto
@@ -1155,6 +1131,7 @@ operator|->
 name|m_flags
 argument_list|)
 decl_stmt|;
+comment|/* 	**  Output transcript of errors 	*/
 operator|(
 name|void
 operator|)
@@ -1178,6 +1155,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"Cannot open %s"
@@ -1185,11 +1163,16 @@ argument_list|,
 name|Transcript
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-literal|0
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"  ----- Transcript of session is unavailable -----\n"
+argument_list|)
 expr_stmt|;
-comment|/* 	**  Output transcript of errors 	*/
+block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -1227,6 +1210,19 @@ name|fp
 argument_list|,
 name|fullsmtp
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|xfile
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	**  Output text of original message 	*/
 if|if
@@ -1333,14 +1329,6 @@ literal|"\n  ----- No message was collected -----\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Cleanup and exit 	*/
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|xfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|errno

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.95		%G%"
+literal|"@(#)sendmail.h	3.96		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,10 +755,6 @@ name|u_short
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
-name|u_short
-name|hi_mflags
-decl_stmt|;
-comment|/* m_flags needed for this field */
 block|}
 struct|;
 end_struct

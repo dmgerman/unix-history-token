@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -84,6 +84,11 @@ name|struct
 name|hdrinfo
 modifier|*
 name|hi
+decl_stmt|;
+name|bool
+name|cond
+init|=
+name|FALSE
 decl_stmt|;
 name|u_long
 name|mopts
@@ -194,6 +199,10 @@ literal|"chompheader: syntax error, line \"%s\""
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|cond
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* find canonical name */
@@ -432,10 +441,6 @@ operator|->
 name|h_mflags
 operator|=
 name|mopts
-operator||
-name|hi
-operator|->
-name|hi_mflags
 expr_stmt|;
 operator|*
 name|hp
@@ -461,18 +466,14 @@ name|h_flags
 operator||=
 name|H_DEFAULT
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-name|mopts
-operator|==
-literal|0
+name|cond
 condition|)
 name|h
 operator|->
 name|h_flags
-operator|&=
-operator|~
+operator||=
 name|H_CHECK
 expr_stmt|;
 if|if
@@ -799,9 +800,7 @@ name|h
 operator|->
 name|h_mflags
 operator|=
-name|hi
-operator|->
-name|hi_mflags
+literal|0
 expr_stmt|;
 operator|*
 name|hp

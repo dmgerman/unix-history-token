@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.127
+literal|3.128
 operator|%
 name|G
 operator|%
@@ -85,6 +85,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* sender's full name */
+end_comment
+
+begin_decl_stmt
+name|ENVELOPE
+name|BlankEnvelope
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a "blank" envelope */
 end_comment
 
 begin_decl_stmt
@@ -184,6 +194,10 @@ name|fnptr
 function_decl|)
 parameter_list|()
 function_decl|;
+name|STAB
+modifier|*
+name|st
+decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -194,13 +208,6 @@ init|=
 name|TRUE
 decl_stmt|;
 comment|/* this conf file is sys default */
-name|char
-name|jbuf
-index|[
-literal|30
-index|]
-decl_stmt|;
-comment|/* holds HostName */
 name|bool
 name|queuemode
 init|=
@@ -212,15 +219,24 @@ name|aliasinit
 init|=
 name|FALSE
 decl_stmt|;
+specifier|static
+name|bool
+name|reenter
+init|=
+name|FALSE
+decl_stmt|;
+name|char
+name|jbuf
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* holds HostName */
 specifier|extern
 name|bool
 name|safefile
 parameter_list|()
 function_decl|;
-name|STAB
-modifier|*
-name|st
-decl_stmt|;
 specifier|extern
 name|time_t
 name|convtime
@@ -240,14 +256,14 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|reenter
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
+begin_function_decl
+specifier|extern
+name|ENVELOPE
+modifier|*
+name|newenvelope
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_if
 if|if
@@ -421,11 +437,11 @@ endif|V6
 end_endif
 
 begin_comment
-comment|/* set up the main envelope */
+comment|/* set up the blank envelope */
 end_comment
 
 begin_expr_stmt
-name|MainEnvelope
+name|BlankEnvelope
 operator|.
 name|e_puthdr
 operator|=
@@ -434,7 +450,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MainEnvelope
+name|BlankEnvelope
 operator|.
 name|e_putbody
 operator|=
@@ -446,7 +462,7 @@ begin_expr_stmt
 name|CurEnv
 operator|=
 operator|&
-name|MainEnvelope
+name|BlankEnvelope
 expr_stmt|;
 end_expr_stmt
 
@@ -1334,6 +1350,21 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_comment
+comment|/* 	**  Switch to the main envelope. 	*/
+end_comment
+
+begin_expr_stmt
+name|CurEnv
+operator|=
+name|newenvelope
+argument_list|(
+operator|&
+name|MainEnvelope
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  If test mode, read addresses from stdin and process. 	*/
@@ -3079,7 +3110,7 @@ name|chmod
 argument_list|(
 name|p
 argument_list|,
-name|FileMode
+literal|0644
 argument_list|)
 expr_stmt|;
 block|}
@@ -4074,6 +4105,17 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+specifier|register
+name|HDR
+modifier|*
+name|bh
+decl_stmt|;
+specifier|register
+name|HDR
+modifier|*
+modifier|*
+name|nhp
+decl_stmt|;
 name|clear
 argument_list|(
 operator|(
@@ -4134,6 +4176,77 @@ name|CurEnv
 operator|->
 name|e_putbody
 expr_stmt|;
+name|bh
+operator|=
+name|BlankEnvelope
+operator|.
+name|e_header
+expr_stmt|;
+name|nhp
+operator|=
+operator|&
+name|e
+operator|->
+name|e_header
+expr_stmt|;
+while|while
+condition|(
+name|bh
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|nhp
+operator|=
+operator|(
+name|HDR
+operator|*
+operator|)
+name|xalloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|bh
+argument_list|)
+expr_stmt|;
+name|bmove
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|bh
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|*
+name|nhp
+argument_list|,
+sizeof|sizeof
+expr|*
+name|bh
+argument_list|)
+expr_stmt|;
+name|bh
+operator|=
+name|bh
+operator|->
+name|h_link
+expr_stmt|;
+name|nhp
+operator|=
+operator|&
+operator|(
+operator|*
+name|nhp
+operator|)
+operator|->
+name|h_link
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|e
