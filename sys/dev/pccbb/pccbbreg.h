@@ -124,8 +124,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CBB_MEMALIGN_BITS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|CBB_IOALIGN
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_IOALIGN_BITS
+value|2
 end_define
 
 begin_define
