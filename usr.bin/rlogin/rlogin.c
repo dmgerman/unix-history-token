@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogin.c,v 1.13.2.1 1997/08/06 06:43:09 charnier Exp $"
+literal|"$Id: rlogin.c,v 1.13.2.2 1997/08/29 05:29:46 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

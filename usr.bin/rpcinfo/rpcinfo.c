@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpcinfo.c,v 1.2.6.1 1997/08/07 06:40:11 charnier Exp $"
+literal|"$Id: rpcinfo.c,v 1.2.6.2 1997/08/29 05:29:46 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

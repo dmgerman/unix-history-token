@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusers.c,v 1.2 1995/05/30 06:33:28 rgrimes Exp $"
+literal|"$Id: rusers.c,v 1.2.6.1 1997/08/11 07:11:24 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -829,6 +829,10 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|hp
 operator|=
 name|gethostbyname
@@ -897,6 +901,19 @@ name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|15
+expr_stmt|;
+comment|/* XXX ?? */
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|clnt_call
@@ -914,7 +931,7 @@ argument_list|,
 operator|&
 name|up
 argument_list|,
-name|NULL
+name|tv
 argument_list|)
 operator|!=
 name|RPC_SUCCESS
@@ -1007,6 +1024,10 @@ name|NULL
 argument_list|,
 name|xdr_utmpidlearr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|up
 argument_list|,

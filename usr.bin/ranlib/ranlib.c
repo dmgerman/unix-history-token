@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ranlib.c,v 1.2.2.1 1997/08/05 06:39:14 charnier Exp $"
+literal|"$Id: ranlib.c,v 1.2.2.2 1997/08/29 05:29:44 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.4 1995/11/21 05:43:27 wpaul Exp $"
+literal|"$Id: rup.c,v 1.4.2.1 1997/08/08 12:06:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,6 +673,10 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|hp
 operator|=
 name|gethostbyname
@@ -755,6 +759,19 @@ name|host_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|15
+expr_stmt|;
+comment|/* XXX ??? */
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|clnt_call
@@ -772,7 +789,7 @@ argument_list|,
 operator|&
 name|host_stat
 argument_list|,
-name|NULL
+name|tv
 argument_list|)
 operator|!=
 name|RPC_SUCCESS
@@ -863,6 +880,10 @@ name|NULL
 argument_list|,
 name|xdr_statstime
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|host_stat
 argument_list|,
