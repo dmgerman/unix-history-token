@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -211,6 +211,10 @@ name|u_char
 name|if_hdrlen
 decl_stmt|;
 comment|/* media header length */
+name|u_char
+name|if_index
+decl_stmt|;
+comment|/* numeric abbreviation for this if  */
 comment|/* more statistics here to avoid recompiling netstat */
 name|struct
 name|timeval
@@ -517,9 +521,42 @@ modifier|*
 name|ifa_next
 decl_stmt|;
 comment|/* next address for interface */
+name|int
+function_decl|(
+modifier|*
+name|ifa_rtrequest
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* check or clean routes (+ or -)'d */
+name|struct
+name|rtentry
+modifier|*
+name|ifa_rt
+decl_stmt|;
+comment|/* ??? for ROUTETOIF */
+name|u_short
+name|ifa_flags
+decl_stmt|;
+comment|/* mostly rt_flags for cloning */
+name|u_short
+name|ifa_llinfolen
+decl_stmt|;
+comment|/* extra to malloc for link info */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IFA_ROUTE
+value|RTF_UP
+end_define
+
+begin_comment
+comment|/* route installed */
+end_comment
 
 begin_comment
 comment|/*  * Interface request structure used for socket  * ioctl's.  All interface ioctl's must have parameter  * definitions which begin with ifr_name.  The  * remainder may be interface specific.  */
