@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.15 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,7 +1115,7 @@ operator|*
 operator|(
 name|sfb
 operator|.
-name|f_fsize
+name|f_bsize
 operator|/
 literal|512
 operator|)
