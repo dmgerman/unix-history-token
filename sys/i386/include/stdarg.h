@@ -146,12 +146,6 @@ begin_comment
 comment|/* ! __GNUC__ post GCC 2.95 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -162,6 +156,12 @@ parameter_list|)
 define|\
 value|(((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
 
 begin_define
 define|#
@@ -181,6 +181,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* non-GNU compiler */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -198,6 +202,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_define
 define|#
