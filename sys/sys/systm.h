@@ -501,18 +501,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|einval
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|seltrue
 name|__P
 argument_list|(

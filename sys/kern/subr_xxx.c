@@ -37,23 +37,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return error for an inval operation  * on a specific object or file type.  */
-end_comment
-
-begin_function
-name|int
-name|einval
-parameter_list|()
-block|{
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Generic null operation, always returns success.  */
 end_comment
 
