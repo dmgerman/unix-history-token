@@ -1868,6 +1868,26 @@ name|dp
 operator|->
 name|d_sectorsize
 expr_stmt|;
+name|dp
+operator|->
+name|d_label
+operator|->
+name|d_nsectors
+operator|=
+name|dp
+operator|->
+name|d_fwsectors
+expr_stmt|;
+name|dp
+operator|->
+name|d_label
+operator|->
+name|d_ntracks
+operator|=
+name|dp
+operator|->
+name|d_fwheads
+expr_stmt|;
 block|}
 comment|/* Inherit properties from the whole/raw dev_t */
 name|inherit_raw
