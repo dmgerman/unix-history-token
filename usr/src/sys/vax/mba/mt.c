@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,14 +18,8 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TM78/TU78 tape driver  *  *	Original author - ?  *	Most error recovery bug fixes - ggs (ulysses!ggs)  *  * OPTIONS:  *	MTLERRM - Long error message text - twd, Brown University  *	MTRDREV - `read reverse' error recovery - ggs (ulysses!ggs)  *  * TODO:  *	Add odd byte count kludge from VMS driver (?)  *	Write dump routine  */
+comment|/*  * TM78/TU78 tape driver  *  *	Original author - ?  *	Most error recovery bug fixes - ggs (ulysses!ggs)  *	`read reverse' error recovery - ggs (ulysses!ggs)  *  * OPTIONS:  *	MTLERRM - Long error message text - twd, Brown University  *  * TODO:  *	Add odd byte count kludge from VMS driver (?)  *	Write dump routine  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -103,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -202,50 +208,6 @@ begin_comment
 comment|/* ignore EOT condition */
 end_comment
 
-begin_comment
-comment|/* Bits in minor device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MUUNIT
-parameter_list|(
-name|dev
-parameter_list|)
-value|(minor(dev)&03)
-end_define
-
-begin_define
-define|#
-directive|define
-name|H_NOREWIND
-value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|H_6250BPI
-value|010
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTUNIT
-parameter_list|(
-name|dev
-parameter_list|)
-value|(mutomt[MUUNIT(dev)])
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MTRDREV
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|mt_do_readrev
@@ -253,24 +215,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|mt_do_readrev
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Per unit status information */
@@ -312,16 +256,6 @@ name|short
 name|sc_dens
 decl_stmt|;
 comment|/* density code - MT_GCR or zero */
-name|struct
-name|mba_device
-modifier|*
-name|sc_mi
-decl_stmt|;
-comment|/* massbus structure for unit */
-name|int
-name|sc_slave
-decl_stmt|;
-comment|/* slave number for unit */
 name|int
 name|sc_i_mtas
 decl_stmt|;
@@ -334,27 +268,20 @@ name|int
 name|sc_i_mtds
 decl_stmt|;
 comment|/* mtds at slave attach time */
-ifdef|#
-directive|ifdef
-name|MTLERRM
-name|char
-modifier|*
-name|sc_mesg
-decl_stmt|;
-comment|/* text for interrupt type code */
-name|char
-modifier|*
-name|sc_fmesg
-decl_stmt|;
-comment|/* text for tape error code */
-endif|#
-directive|endif
 name|struct
 name|tty
 modifier|*
 name|sc_ttyp
 decl_stmt|;
 comment|/* record user's tty for errors */
+name|int
+name|sc_blks
+decl_stmt|;
+comment|/* number of I/O operations since open */
+name|int
+name|sc_softerrs
+decl_stmt|;
+comment|/* number of soft I/O errors since open */
 block|}
 name|mu_softc
 index|[
@@ -362,20 +289,6 @@ name|NMU
 index|]
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|buf
-name|rmtbuf
-index|[
-name|NMT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* data transfer buffer structures */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -403,12 +316,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* unit massbus structure pointers */
+comment|/* unit to ctlr structures */
 end_comment
 
 begin_decl_stmt
-name|short
-name|mutomt
+name|struct
+name|mba_slave
+modifier|*
+name|muinfo
 index|[
 name|NMU
 index|]
@@ -416,7 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* tape unit to controller number map */
+comment|/* unit to slave structures */
 end_comment
 
 begin_decl_stmt
@@ -496,6 +411,44 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Bits in minor device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUUNIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)&03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_NOREWIND
+value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_6250BPI
+value|010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTUNIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(muinfo[MUUNIT(dev)]->ms_ctlr)
+end_define
+
 begin_function_decl
 name|void
 name|mtcreset
@@ -523,7 +476,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{
+comment|/* void */
+block|}
 end_block
 
 begin_macro
@@ -602,8 +557,7 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Just in case the controller is ill, reset it.  Then issue	*/
-comment|/* a sense operation and wait about a second for it to respond.	*/
+comment|/* 	 * Just in case the controller is ill, reset it.  Then issue 	 * a sense operation and wait about a second for it to respond. 	 */
 name|mtcreset
 argument_list|(
 name|mtaddr
@@ -683,22 +637,18 @@ name|mtaddr
 operator|->
 name|mtds
 expr_stmt|;
-comment|/* If no response, whimper.  If wrong response, call it an	*/
-comment|/* unsolicited interrupt and use mtndtint to log and correct.	*/
-comment|/* Otherwise, note whether this slave exists.			*/
+comment|/* 	 * If no response, whimper.  If wrong response, call it an 	 * unsolicited interrupt and use mtndtint to log and correct. 	 * Otherwise, note whether this slave exists. 	 */
 if|if
 condition|(
 name|i
 operator|<=
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"mt: controller hung\n"
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -712,7 +662,6 @@ operator|)
 operator|!=
 name|MTER_DONE
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -721,7 +670,6 @@ argument_list|(
 name|mi
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -731,36 +679,11 @@ name|mtds
 operator|&
 name|MTDS_PRES
 condition|)
-block|{
-name|sc
-operator|->
-name|sc_mi
-operator|=
-name|mi
-expr_stmt|;
-name|sc
-operator|->
-name|sc_slave
-operator|=
-name|sn
-expr_stmt|;
-name|mutomt
-index|[
-name|ms
-operator|->
-name|ms_unit
-index|]
-operator|=
-name|mi
-operator|->
-name|mi_unit
-expr_stmt|;
 name|rtn
 operator|=
 literal|1
 expr_stmt|;
-block|}
-comment|/* Cancel the interrupt, then wait a little while for it to go away. */
+comment|/* cancel the interrupt, then wait a little while for it to go away */
 name|mtaddr
 operator|->
 name|mtas
@@ -816,15 +739,15 @@ name|muunit
 decl_stmt|;
 specifier|register
 name|struct
-name|mba_device
-modifier|*
-name|mi
-decl_stmt|;
-specifier|register
-name|struct
 name|mu_softc
 modifier|*
 name|sc
+decl_stmt|;
+specifier|register
+name|struct
+name|mba_slave
+modifier|*
+name|ms
 decl_stmt|;
 name|muunit
 operator|=
@@ -835,35 +758,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|muunit
 operator|>=
 name|NMU
-operator|)
 operator|||
 operator|(
-operator|(
-name|mi
+name|ms
 operator|=
-name|mtinfo
+name|muinfo
 index|[
-name|MTUNIT
-argument_list|(
-name|dev
-argument_list|)
+name|muunit
 index|]
 operator|)
 operator|==
-literal|0
-operator|)
+name|NULL
 operator|||
-operator|(
-name|mi
+name|ms
+operator|->
+name|ms_alive
+operator|==
+literal|0
+operator|||
+name|mtinfo
+index|[
+name|ms
+operator|->
+name|ms_ctlr
+index|]
 operator|->
 name|mi_alive
 operator|==
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
@@ -889,6 +814,12 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dens
@@ -935,6 +866,12 @@ argument_list|,
 name|muunit
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -960,6 +897,12 @@ literal|"mu%d: not online (port selector)\n"
 argument_list|,
 name|muunit
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -991,6 +934,12 @@ argument_list|,
 name|muunit
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -1000,7 +949,6 @@ block|}
 if|if
 condition|(
 operator|(
-operator|(
 name|sc
 operator|->
 name|sc_dsreg
@@ -1009,7 +957,6 @@ name|MTDS_BOT
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|flag
@@ -1018,33 +965,13 @@ name|FWRITE
 operator|)
 operator|&&
 operator|(
-operator|(
-operator|(
 name|sc
 operator|->
 name|sc_dens
 operator|==
 name|MT_GCR
 operator|)
-operator|&&
-operator|(
-name|sc
-operator|->
-name|sc_dsreg
-operator|&
-name|MTDS_PE
-operator|)
-operator|)
-operator|||
-operator|(
-operator|(
-name|sc
-operator|->
-name|sc_dens
 operator|!=
-name|MT_GCR
-operator|)
-operator|&&
 operator|(
 operator|(
 name|sc
@@ -1055,8 +982,6 @@ name|MTDS_PE
 operator|)
 operator|==
 literal|0
-operator|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -1067,18 +992,18 @@ argument_list|,
 name|muunit
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_openf
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_openf
-operator|=
-literal|1
-expr_stmt|;
 name|sc
 operator|->
 name|sc_blkno
@@ -1088,9 +1013,7 @@ name|daddr_t
 operator|)
 literal|0
 expr_stmt|;
-comment|/* Since cooked I/O may do a read-ahead before a write, trash	*/
-comment|/* on a tape can make the first write fail.  Suppress the first	*/
-comment|/* read-ahead unless definitely doing read-write		*/
+comment|/* 	 * Since cooked I/O may do a read-ahead before a write, trash 	 * on a tape can make the first write fail.  Suppress the first 	 * read-ahead unless definitely doing read-write. 	 */
 name|sc
 operator|->
 name|sc_nxrec
@@ -1126,6 +1049,18 @@ expr_stmt|;
 name|sc
 operator|->
 name|sc_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_blks
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_softerrs
 operator|=
 literal|0
 expr_stmt|;
@@ -1185,7 +1120,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|flag
 operator|&
 operator|(
@@ -1196,7 +1130,6 @@ operator|)
 operator|)
 operator|==
 name|FWRITE
-operator|)
 operator|||
 operator|(
 operator|(
@@ -1249,6 +1182,44 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_blks
+operator|>
+literal|100
+operator|&&
+name|sc
+operator|->
+name|sc_softerrs
+operator|>
+name|sc
+operator|->
+name|sc_blks
+operator|/
+literal|100
+condition|)
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"mu%d: %d soft errors in %d blocks\n"
+argument_list|,
+name|MUUNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|sc_softerrs
+argument_list|,
+name|sc
+operator|->
+name|sc_blks
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_openf
@@ -1291,7 +1262,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|int
 name|s
 decl_stmt|;
@@ -1322,13 +1292,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_repcnt
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|bp
@@ -1411,7 +1379,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|iowait
+name|biowait
 argument_list|(
 name|bp
 argument_list|)
@@ -1458,6 +1426,11 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|buf
+modifier|*
+name|dp
+decl_stmt|;
+name|struct
 name|mba_device
 modifier|*
 name|mi
@@ -1472,19 +1445,10 @@ name|b_dev
 argument_list|)
 index|]
 decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
-specifier|register
 name|int
 name|s
 decl_stmt|;
-comment|/* If this is a data transfer operation, set the resid to a	*/
-comment|/* default value (EOF) to simplify getting it right during	*/
-comment|/* error recovery or bail out.					*/
+comment|/* 	 * If this is a data transfer operation, set the resid to a 	 * default value (EOF) to simplify getting it right during 	 * error recovery or bail out. 	 */
 if|if
 condition|(
 name|bp
@@ -1508,8 +1472,7 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
-comment|/* Link this request onto the end of the queue for this		*/
-comment|/* controller, then start I/O if not already active.		*/
+comment|/* 	 * Link this request onto the end of the queue for this 	 * controller, then start I/O if not already active. 	 */
 name|bp
 operator|->
 name|av_forw
@@ -1680,11 +1643,9 @@ argument_list|)
 index|]
 condition|)
 block|{
-comment|/* Signal "no space" if out of tape unless suppressed	*/
-comment|/* by MTIOCIEOT.					*/
+comment|/* 		 * Data transfer.  If write at end of tape, 		 * signal "no space" unless suppressed 		 * by MTIOCIEOT. 		 */
 if|if
 condition|(
-operator|(
 operator|(
 name|sc
 operator|->
@@ -1698,9 +1659,7 @@ operator|)
 operator|)
 operator|==
 name|H_EOT
-operator|)
 operator|&&
-operator|(
 operator|(
 name|bp
 operator|->
@@ -1710,7 +1669,6 @@ name|B_READ
 operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|bp
@@ -1731,22 +1689,39 @@ name|MBU_NEXT
 operator|)
 return|;
 block|}
-comment|/* special case tests for cooked mode */
 if|if
 condition|(
 name|bp
-operator|!=
+operator|->
+name|b_flags
 operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
+name|B_RAW
+condition|)
+block|{
+comment|/* raw transfer; never seek */
+name|sc
+operator|->
+name|sc_blkno
+operator|=
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|b_blkno
 argument_list|)
-index|]
-condition|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_nxrec
+operator|=
+name|sc
+operator|->
+name|sc_blkno
+operator|+
+literal|1
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* seek beyond end of file */
 if|if
@@ -1781,11 +1756,9 @@ name|MBU_NEXT
 operator|)
 return|;
 block|}
-comment|/* This should be end of file, but the buffer	   */
-comment|/* system wants a one-block look-ahead.  Humor it. */
+comment|/* 			 * This should be end of file, but the buffer 			 * system wants a one-block look-ahead.  Humor it. 			 */
 if|if
 condition|(
-operator|(
 name|bdbtofsb
 argument_list|(
 name|bp
@@ -1796,17 +1769,22 @@ operator|==
 name|sc
 operator|->
 name|sc_nxrec
-operator|)
 operator|&&
-operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_READ
-operator|)
 condition|)
 block|{
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 name|clrbuf
 argument_list|(
 name|bp
@@ -1881,28 +1859,9 @@ name|MBU_STARTED
 operator|)
 return|;
 block|}
-comment|/* If raw I/O, or if the tape is positioned correctly for	*/
-comment|/* cooked I/O, set the byte count, unit number and repeat count	*/
-comment|/* then tell the MASSBUS to proceed.  Note that a negative	*/
-comment|/* bcount tells mbstart to map the buffer for "read backwards".	*/
+comment|/* 	 * If raw I/O, or if the tape is positioned correctly for 	 * cooked I/O, set the byte count, unit number and repeat count 	 * then tell the MASSBUS to proceed.  Note that a negative 	 * bcount tells mbstart to map the buffer for "read backwards". 	 */
 if|if
 condition|(
-operator|(
-name|bp
-operator|==
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
-operator|)
-operator|||
-operator|(
 operator|(
 name|blkno
 operator|=
@@ -1917,7 +1876,6 @@ name|bp
 operator|->
 name|b_blkno
 argument_list|)
-operator|)
 condition|)
 block|{
 if|if
@@ -1936,11 +1894,9 @@ operator|->
 name|mtbc
 operator|=
 operator|-
-operator|(
 name|bp
 operator|->
 name|b_bcount
-operator|)
 expr_stmt|;
 name|mtaddr
 operator|->
@@ -2002,10 +1958,6 @@ argument_list|)
 condition|)
 name|count
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|bdbtofsb
 argument_list|(
 name|bp
@@ -2014,15 +1966,10 @@ name|b_blkno
 argument_list|)
 operator|-
 name|blkno
-argument_list|)
 expr_stmt|;
 else|else
 name|count
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|blkno
 operator|-
 name|bdbtofsb
@@ -2031,10 +1978,12 @@ name|bp
 operator|->
 name|b_blkno
 argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|count
 operator|>
 literal|0377
@@ -2364,28 +2313,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_resid
 operator|>
 literal|0
-operator|)
 operator|&&
 operator|(
 name|bp
-operator|!=
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
-name|bp
 operator|->
-name|b_dev
-argument_list|)
-index|]
+name|b_flags
+operator|&
+name|B_RAW
 operator|)
+operator|==
+literal|0
 condition|)
 name|bp
 operator|->
@@ -2395,14 +2337,12 @@ name|B_ERROR
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bp
 operator|->
 name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|MTER_SHRTREC
@@ -2433,18 +2373,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
-operator|!=
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
+operator|(
 name|bp
 operator|->
-name|b_dev
-argument_list|)
-index|]
+name|b_flags
+operator|&
+name|B_RAW
+operator|)
+operator|==
+literal|0
 condition|)
 name|bp
 operator|->
@@ -2456,8 +2393,7 @@ break|break;
 case|case
 name|MTER_RETRY
 case|:
-comment|/* Simple re-try.  Since resid is always a copy of the	*/
-comment|/* original byte count, use it to restore the count.	*/
+comment|/* 		 * Simple re-try.  Since resid is always a copy of the 		 * original byte count, use it to restore the count. 		 */
 name|mi
 operator|->
 name|mi_tab
@@ -2482,16 +2418,7 @@ return|;
 case|case
 name|MTER_RDOPP
 case|:
-comment|/* The controller just decided to read it backwards.	*/
-comment|/* If the controller returns a byte count of zero,	*/
-comment|/* change it to 1, since zero encodes 65536, which	*/
-comment|/* isn't quite what we had in mind.  The byte count	*/
-comment|/* may be larger than the size of the input buffer, so	*/
-comment|/* limit the count to the buffer size.  After		*/
-comment|/* making the byte count reasonable, set bcount to the	*/
-comment|/* negative of the controller's version of the byte	*/
-comment|/* count so that the start address for the transfer is	*/
-comment|/* set up correctly.					*/
+comment|/* 		 * The controller just decided to read it backwards. 		 * If the controller returns a byte count of zero, 		 * change it to 1, since zero encodes 65536, which 		 * isn't quite what we had in mind.  The byte count 		 * may be larger than the size of the input buffer, so 		 * limit the count to the buffer size.  After 		 * making the byte count reasonable, set bcount to the 		 * negative of the controller's version of the byte 		 * count so that the start address for the transfer is 		 * set up correctly. 		 */
 if|if
 condition|(
 name|mt_do_readrev
@@ -2673,8 +2600,7 @@ goto|;
 case|case
 name|MTER_TM
 case|:
-comment|/* End of file.  Since the default byte count has	*/
-comment|/* already been set, just count the block and proceed.	*/
+comment|/* 		 * End of file.  Since the default byte count has 		 * already been set, just count the block and proceed. 		 */
 name|sc
 operator|->
 name|sc_blkno
@@ -2682,21 +2608,6 @@ operator|++
 expr_stmt|;
 name|err
 label|:
-if|if
-condition|(
-name|bp
-operator|!=
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
-condition|)
 name|sc
 operator|->
 name|sc_nxrec
@@ -2855,20 +2766,20 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* Code 010 means a garbage record, nothing serious. */
+comment|/* code 010 means a garbage record, nothing serious. */
 if|if
 condition|(
-operator|(
 operator|(
 name|er
 operator|&
 name|MTER_FAILCODE
 operator|)
-operator|>>
-literal|10
-operator|)
 operator|==
+operator|(
 literal|010
+operator|<<
+name|MTER_FSHIFT
+operator|)
 condition|)
 block|{
 name|tprintf
@@ -2903,21 +2814,16 @@ name|B_ERROR
 expr_stmt|;
 break|break;
 block|}
-comment|/* Anything else might be a hardware problem,	*/
-comment|/* fall into the error report.			*/
+comment|/* 		 * Anything else might be a hardware problem, 		 * fall into the error report. 		 */
 default|default:
-comment|/* The bits in sc->sc_dsreg are from the last sense	*/
-comment|/* command.  To get the most recent copy, you have to	*/
-comment|/* do a sense at interrupt level, which requires nested	*/
-comment|/* error processing.  This is a bit messy, so leave	*/
-comment|/* well enough alone.					*/
+comment|/* 		 * The bits in sc->sc_dsreg are from the last sense 		 * command.  To get the most recent copy, you have to 		 * do a sense at interrupt level, which requires nested 		 * error processing.  This is a bit messy, so leave 		 * well enough alone. 		 */
 name|tprintf
 argument_list|(
 name|sc
 operator|->
 name|sc_ttyp
 argument_list|,
-literal|"mu%d: hard error (data transfer) rn=%d bn=%d mbsr=%b er=%o (octal) ds=%b\n"
+literal|"\ mu%d: hard error (data transfer) rn=%d bn=%d mbsr=%b er=0%o ds=%b\n"
 argument_list|,
 name|MUUNIT
 argument_list|(
@@ -2955,32 +2861,7 @@ directive|ifdef
 name|MTLERRM
 name|mtintfail
 argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     interrupt code = %o (octal)<%s>\n     failure code = %o (octal)<%s>\n"
-argument_list|,
 name|er
-operator|&
-name|MTER_INTCODE
-argument_list|,
-name|sc
-operator|->
-name|sc_mesg
-argument_list|,
-operator|(
-name|er
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-argument_list|,
-name|sc
-operator|->
-name|sc_fmesg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2991,11 +2872,9 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-comment|/* The TM78 manual says to reset the controller after	*/
-comment|/* TM fault B or MASSBUS fault.				*/
+comment|/* 		 * The TM78 manual says to reset the controller after 		 * TM fault B or MASSBUS fault. 		 */
 if|if
 condition|(
-operator|(
 operator|(
 name|er
 operator|&
@@ -3003,9 +2882,7 @@ name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_TMFLTB
-operator|)
 operator|||
-operator|(
 operator|(
 name|er
 operator|&
@@ -3013,19 +2890,14 @@ name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_MBFLT
-operator|)
 condition|)
-block|{
 name|mtcreset
 argument_list|(
 name|mtaddr
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Just in case some strange error slipped through, (drive off	*/
-comment|/* line during read-reverse error recovery comes to mind) make	*/
-comment|/* sure the byte count is reasonable.				*/
+comment|/* 	 * Just in case some strange error slipped through (drive off 	 * line during read-reverse error recovery comes to mind), make 	 * sure the byte count is reasonable. 	 */
 if|if
 condition|(
 name|bp
@@ -3042,6 +2914,40 @@ name|bp
 operator|->
 name|b_resid
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ERROR
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* this counts reverse reads as soft errors */
+name|sc
+operator|->
+name|sc_blks
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_errcnt
+condition|)
+comment|/* alternatively, if == 1 */
+name|sc
+operator|->
+name|sc_softerrs
+operator|++
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|MBD_DONE
@@ -3147,7 +3053,7 @@ if|if
 condition|(
 name|bp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|unit
 operator|!=
@@ -3159,7 +3065,6 @@ name|b_dev
 argument_list|)
 condition|)
 block|{
-comment|/* consistency check */
 if|if
 condition|(
 operator|(
@@ -3167,13 +3072,17 @@ name|er
 operator|&
 name|MTER_INTCODE
 operator|)
-operator|!=
+operator|==
 name|MTER_ONLINE
 condition|)
-block|{
+return|return
+operator|(
+name|MBN_SKIP
+operator|)
+return|;
 name|printf
 argument_list|(
-literal|"mt: unit %d unexpected interrupt (non data transfer) er=%o (octal) ds=%b\n"
+literal|"mu%d: stray intr (non data transfer) er=0%o ds=%b\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3194,32 +3103,7 @@ directive|ifdef
 name|MTLERRM
 name|mtintfail
 argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"    interrupt code = %o (octal)<%s>\n    failure code = %o (octal)<%s>\n"
-argument_list|,
 name|er
-operator|&
-name|MTER_INTCODE
-argument_list|,
-name|sc
-operator|->
-name|sc_mesg
-argument_list|,
-operator|(
-name|er
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-argument_list|,
-name|sc
-operator|->
-name|sc_fmesg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3227,16 +3111,13 @@ directive|endif
 if|if
 condition|(
 operator|(
-operator|(
 name|er
 operator|&
 name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_TMFLTB
-operator|)
 operator|||
-operator|(
 operator|(
 name|er
 operator|&
@@ -3244,15 +3125,9 @@ name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_MBFLT
-operator|)
 condition|)
 block|{
-comment|/* Reset the controller, then set error	*/
-comment|/* status if there was anything active	*/
-comment|/* when the fault occurred.  This may	*/
-comment|/* shoot an innocent bystander, but	*/
-comment|/* it's better than letting an error	*/
-comment|/* slip through.			*/
+comment|/* 			 * Reset the controller, then set error status 			 * if there was anything active when the fault 			 * occurred.  This may shoot an innocent 			 * bystander, but it's better than letting 			 * an error slip through. 			 */
 name|mtcreset
 argument_list|(
 name|mtaddr
@@ -3262,7 +3137,7 @@ if|if
 condition|(
 name|bp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|bp
@@ -3278,24 +3153,12 @@ operator|)
 return|;
 block|}
 block|}
-block|}
 return|return
 operator|(
 name|MBN_SKIP
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|bp
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|MBN_SKIP
-operator|)
-return|;
 name|fc
 operator|=
 operator|(
@@ -3317,11 +3180,9 @@ name|sc_resid
 operator|=
 name|fc
 expr_stmt|;
-comment|/* Clear the "written" flag after any operation that changes	*/
-comment|/* the position of the tape.					*/
+comment|/* 	 * Clear the "written" flag after any operation that changes 	 * the position of the tape. 	 */
 if|if
 condition|(
-operator|(
 name|bp
 operator|!=
 operator|&
@@ -3334,15 +3195,12 @@ operator|->
 name|b_dev
 argument_list|)
 index|]
-operator|)
 operator|||
-operator|(
 name|bp
 operator|->
 name|b_command
 operator|!=
 name|MT_SENSE
-operator|)
 condition|)
 name|sc
 operator|->
@@ -3415,9 +3273,7 @@ name|MBN_DONE
 operator|)
 return|;
 block|}
-comment|/* It's not a command buffer, must be a cooked I/O	*/
-comment|/* skip operation (perhaps a shaky assumption, but it	*/
-comment|/* wasn't my idea).					*/
+comment|/* 		 * It's not a command buffer, must be a cooked I/O 		 * skip operation (perhaps a shaky assumption, but it 		 * wasn't my idea). 		 */
 if|if
 condition|(
 operator|(
@@ -3515,9 +3371,7 @@ case|:
 case|case
 name|MTER_LEOT
 case|:
-comment|/* For an ioctl skip operation, count a tape mark as	*/
-comment|/* a record.  If there's anything left to do, update	*/
-comment|/* the repeat count and re-start the command.		*/
+comment|/* 		 * For an ioctl skip operation, count a tape mark as 		 * a record.  If there's anything left to do, update 		 * the repeat count and re-start the command. 		 */
 if|if
 condition|(
 name|bp
@@ -3563,11 +3417,10 @@ operator|(
 name|MBN_RETRY
 operator|)
 return|;
-comment|/* Cooked I/O again.  Just update the books and wait	*/
-comment|/* for someone else to return end of file or complain	*/
-comment|/* about a bad seek.					*/
 block|}
-elseif|else
+else|else
+block|{
+comment|/* 			 * Cooked I/O again.  Just update the books and 			 * wait for someone else to return end of file or 			 * complain about a bad seek. 			 */
 if|if
 condition|(
 name|sc
@@ -3632,6 +3485,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+block|}
 return|return
 operator|(
 name|MBN_RETRY
@@ -3673,7 +3527,6 @@ case|:
 comment|/* If `off line' was intentional, don't complain. */
 if|if
 condition|(
-operator|(
 name|bp
 operator|==
 operator|&
@@ -3686,15 +3539,12 @@ operator|->
 name|b_dev
 argument_list|)
 index|]
-operator|)
 operator|&&
-operator|(
 name|bp
 operator|->
 name|b_command
 operator|==
 name|MT_UNLOAD
-operator|)
 condition|)
 return|return
 operator|(
@@ -3821,7 +3671,7 @@ name|sc
 operator|->
 name|sc_ttyp
 argument_list|,
-literal|"mu%d: hard error (non data transfer) rn=%d bn=%d er=%o (octal) ds=%b\n"
+literal|"\ mu%d: hard error (non data transfer) rn=%d bn=%d er=0%o ds=%b\n"
 argument_list|,
 name|MUUNIT
 argument_list|(
@@ -3855,34 +3705,7 @@ directive|ifdef
 name|MTLERRM
 name|mtintfail
 argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     interrupt code = %o (octal)<%s>\n     failure code = %o (octal)<%s>\n"
-argument_list|,
-operator|(
 name|er
-operator|&
-name|MTER_INTCODE
-operator|)
-argument_list|,
-name|sc
-operator|->
-name|sc_mesg
-argument_list|,
-operator|(
-name|er
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-argument_list|,
-name|sc
-operator|->
-name|sc_fmesg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3890,16 +3713,13 @@ directive|endif
 if|if
 condition|(
 operator|(
-operator|(
 name|er
 operator|&
 name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_TMFLTB
-operator|)
 operator|||
-operator|(
 operator|(
 name|er
 operator|&
@@ -3907,16 +3727,13 @@ name|MTER_INTCODE
 operator|)
 operator|==
 name|MTER_MBFLT
-operator|)
 condition|)
-block|{
 name|mtcreset
 argument_list|(
 name|mtaddr
 argument_list|)
 expr_stmt|;
 comment|/* reset the controller */
-block|}
 name|bp
 operator|->
 name|b_flags
@@ -4004,268 +3821,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_macro
-name|mtread
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|errno
-decl_stmt|;
-name|errno
-operator|=
-name|mtphys
-argument_list|(
-name|dev
-argument_list|,
-name|uio
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-return|return
-operator|(
-name|physio
-argument_list|(
-name|mtstrategy
-argument_list|,
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
-name|dev
-argument_list|)
-index|]
-argument_list|,
-name|dev
-argument_list|,
-name|B_READ
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|mtwrite
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|errno
-decl_stmt|;
-name|errno
-operator|=
-name|mtphys
-argument_list|(
-name|dev
-argument_list|,
-name|uio
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-return|return
-operator|(
-name|physio
-argument_list|(
-name|mtstrategy
-argument_list|,
-operator|&
-name|rmtbuf
-index|[
-name|MTUNIT
-argument_list|(
-name|dev
-argument_list|)
-index|]
-argument_list|,
-name|dev
-argument_list|,
-name|B_WRITE
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|mtphys
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|mtunit
-decl_stmt|;
-name|struct
-name|mba_device
-modifier|*
-name|mi
-decl_stmt|;
-specifier|register
-name|int
-name|bsize
-init|=
-name|uio
-operator|->
-name|uio_iov
-operator|->
-name|iov_len
-decl_stmt|;
-name|mtunit
-operator|=
-name|MTUNIT
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|mtunit
-operator|>=
-name|NMT
-operator|)
-operator|||
-operator|(
-operator|(
-name|mi
-operator|=
-name|mtinfo
-index|[
-name|mtunit
-index|]
-operator|)
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|mi
-operator|->
-name|mi_alive
-operator|==
-literal|0
-operator|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-name|bsize
-operator|>
-literal|0xffff
-operator|)
-comment|/* controller limit */
-operator|||
-operator|(
-name|bsize
-operator|<=
-literal|0
-operator|)
-condition|)
-comment|/* ambiguous */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -4480,17 +4035,13 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
 name|callcount
 operator|<=
 literal|0
-operator|)
 operator|||
-operator|(
 name|fcount
 operator|<=
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
@@ -4734,28 +4285,23 @@ name|fc
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|mtop
 operator|->
 name|mt_op
 operator|==
 name|MTFSR
-operator|)
 operator|||
-operator|(
 name|mtop
 operator|->
 name|mt_op
 operator|==
 name|MTBSR
-operator|)
 condition|)
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
-else|else
 break|break;
 block|}
 if|if
@@ -5324,1480 +4870,1029 @@ directive|ifdef
 name|MTLERRM
 end_ifdef
 
-begin_expr_stmt
+begin_comment
+comment|/*  * Failure messages for each failure code, per interrupt code.  * Each table ends with a code of -1 as a default.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fmesg
+block|{
+name|int
+name|f_code
+decl_stmt|;
+name|char
+modifier|*
+name|f_mesg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|char
+name|unclass
+index|[]
+init|=
+literal|"unclassified failure code"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_BOT */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|botmsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"tape was at BOT"
+block|,
+literal|02
+block|,
+literal|"BOT seen after tape started"
+block|,
+literal|03
+block|,
+literal|"ARA ID detected"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_NOTRDY */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|notrdymsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"TU on-line but not ready"
+block|,
+literal|02
+block|,
+literal|"fatal error has occurred"
+block|,
+literal|03
+block|,
+literal|"access allowed by not really"
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_NOTCAP */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|notcapmsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"no record found within 25 feet"
+block|,
+literal|02
+block|,
+literal|"ID burst neither PE nor GCR"
+block|,
+literal|03
+block|,
+literal|"ARA ID not found"
+block|,
+literal|04
+block|,
+literal|"no gap found after ID burst"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_LONGREC */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|longrecmsg
+index|[]
+init|=
+block|{
+literal|00
+block|,
+literal|"extended sense data not found"
+block|,
+literal|01
+block|,
+literal|"extended sense data updated"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_UNREAD, MTER_ERROR, MTER_EOTERR, MTER_BADTAPE */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|code22msg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"GCR write error"
+block|,
+literal|02
+block|,
+literal|"GCR read error"
+block|,
+literal|03
+block|,
+literal|"PE read error"
+block|,
+literal|04
+block|,
+literal|"PE write error"
+block|,
+literal|05
+block|,
+literal|"at least 1 bit set in ECCSTA"
+block|,
+literal|06
+block|,
+literal|"PE write error"
+block|,
+literal|07
+block|,
+literal|"GCR write error"
+block|,
+literal|010
+block|,
+literal|"RSTAT contains bad code"
+block|,
+literal|011
+block|,
+literal|"PE write error"
+block|,
+literal|012
+block|,
+literal|"MASSBUS parity error"
+block|,
+literal|013
+block|,
+literal|"invalid data transferred"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_TMFLTA */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|tmfltamsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"illegal command code"
+block|,
+literal|02
+block|,
+literal|"DT command issued when NDT command active"
+block|,
+literal|03
+block|,
+literal|"WMC error"
+block|,
+literal|04
+block|,
+literal|"RUN not received from MASSBUS controller"
+block|,
+literal|05
+block|,
+literal|"mismatch in command read - function routine"
+block|,
+literal|06
+block|,
+literal|"ECC ROM parity error"
+block|,
+literal|07
+block|,
+literal|"XMC ROM parity error"
+block|,
+literal|010
+block|,
+literal|"mismatch in command read - ID burst command"
+block|,
+literal|011
+block|,
+literal|"mismatch in command read - verify ARA burst command"
+block|,
+literal|012
+block|,
+literal|"mismatch in command read - verify ARA ID command"
+block|,
+literal|013
+block|,
+literal|"mismatch in command read - verify gap command"
+block|,
+literal|014
+block|,
+literal|"mismatch in command read - read id burst command"
+block|,
+literal|015
+block|,
+literal|"mismatch in command read - verify ARA ID command"
+block|,
+literal|016
+block|,
+literal|"mismatch in command read - verify gap command"
+block|,
+literal|017
+block|,
+literal|"mismatch in command read - find gap command"
+block|,
+literal|020
+block|,
+literal|"WMC LEFT failed to set"
+block|,
+literal|021
+block|,
+literal|"XL PE set in INTSTA register"
+block|,
+literal|022
+block|,
+literal|"XMC DONE did not set"
+block|,
+literal|023
+block|,
+literal|"WMC ROM PE or RD PE set in WMCERR register"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_TUFLTA */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|tufltamsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"TU status parity error"
+block|,
+literal|02
+block|,
+literal|"TU command parity error"
+block|,
+literal|03
+block|,
+literal|"rewinding tape went offline"
+block|,
+literal|04
+block|,
+literal|"tape went not ready during DSE"
+block|,
+literal|05
+block|,
+literal|"TU CMD status changed during DSE"
+block|,
+literal|06
+block|,
+literal|"TU never came up to speed"
+block|,
+literal|07
+block|,
+literal|"TU velocity changed"
+block|,
+literal|010
+block|,
+literal|"TU CMD did not load correctly to start tape motion"
+block|,
+literal|011
+block|,
+literal|"TU CMD did not load correctly to set drive density"
+block|,
+literal|012
+block|,
+literal|"TU CMD did not load correctly to start tape motion to write BOT ID"
+block|,
+literal|013
+block|,
+literal|"TU CMD did not load correctly to backup tape to BOT after failing to write BOT ID"
+block|,
+literal|014
+block|,
+literal|"failed to write density ID burst"
+block|,
+literal|015
+block|,
+literal|"failed to write ARA burst"
+block|,
+literal|016
+block|,
+literal|"failed to write ARA ID"
+block|,
+literal|017
+block|,
+literal|"ARA error bit set in MTA status B register"
+block|,
+literal|021
+block|,
+literal|"could not find a gap after ID code was written correctly"
+block|,
+literal|022
+block|,
+literal|"TU CMD did not load correctly to start tape motion to read ID burst"
+block|,
+literal|023
+block|,
+literal|"timeout looking for BOT after detecting ARA ID burst"
+block|,
+literal|024
+block|,
+literal|"failed to write tape mark"
+block|,
+literal|025
+block|,
+literal|"tape never came up to speed while trying to reposition for retry of writing tape mark"
+block|,
+literal|026
+block|,
+literal|"TU CMD did not load correctly to start tape motion in erase gap routine"
+block|,
+literal|027
+block|,
+literal|"could not detect a gap in in erase gap routine"
+block|,
+literal|030
+block|,
+literal|"could not detect a gap after writing record"
+block|,
+literal|031
+block|,
+literal|"read path terminated before entire record was written"
+block|,
+literal|032
+block|,
+literal|"could not find a gap after writing record and read path terminated early"
+block|,
+literal|033
+block|,
+literal|"TU CMD did not load correctly to backup for retry of write tape mark"
+block|,
+literal|034
+block|,
+literal|"TU velocity changed after up to speed while trying to reposition for retry of writing tape mark"
+block|,
+literal|035
+block|,
+literal|"TU CMD did not load correctly to backup to retry a load of BOT ID"
+block|,
+literal|036
+block|,
+literal|"timeout looking for BOT after failing to write BOT ID"
+block|,
+literal|037
+block|,
+literal|"TU velocity changed while writing PE gap before starting to write record"
+block|,
+literal|040
+block|,
+literal|"TU CMD did not load correctly to set PE tape density at start of write BOT ID burst"
+block|,
+literal|041
+block|,
+literal|"TU CMD did not load correctly to set GCR tape density after writing Density ID"
+block|,
+literal|042
+block|,
+literal|"TU CMD did not load correctly to set PE tape density at start of read from BOT"
+block|,
+literal|043
+block|,
+literal|"TU CMD did not load correctly to set GCR tape density after reading a GCR Density ID burst"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_TMFLTB */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|inlinetest
+index|[]
+init|=
+literal|"inline test failed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|tmfltbmsg
+index|[]
+init|=
+block|{
+literal|00
+block|,
+literal|"RST0 interrupt occurred with TM RDY set"
+block|,
+literal|01
+block|,
+literal|"power failed to interrupt"
+block|,
+literal|02
+block|,
+literal|"unknown interrupt on channel 5.5"
+block|,
+literal|03
+block|,
+literal|"unknown interrupt on channel 6.5"
+block|,
+literal|04
+block|,
+literal|"unknown interrupt on channel 7"
+block|,
+literal|05
+block|,
+literal|"unknown interrupt on channel 7.5"
+block|,
+literal|06
+block|,
+literal|"CAS contention retry count expired"
+block|,
+literal|07
+block|,
+literal|"CAS contention error not retryable"
+block|,
+literal|010
+block|,
+literal|"queue error, could not find queue entry"
+block|,
+literal|011
+block|,
+literal|"queue entry already full"
+block|,
+literal|012
+block|,
+literal|"8085 ROM parity error"
+block|,
+literal|013
+block|,
+name|inlinetest
+block|,
+literal|013
+block|,
+name|inlinetest
+block|,
+literal|014
+block|,
+name|inlinetest
+block|,
+literal|015
+block|,
+name|inlinetest
+block|,
+literal|016
+block|,
+name|inlinetest
+block|,
+literal|017
+block|,
+name|inlinetest
+block|,
+literal|020
+block|,
+name|inlinetest
+block|,
+literal|021
+block|,
+name|inlinetest
+block|,
+literal|022
+block|,
+name|inlinetest
+block|,
+literal|023
+block|,
+name|inlinetest
+block|,
+literal|024
+block|,
+name|inlinetest
+block|,
+literal|025
+block|,
+name|inlinetest
+block|,
+literal|026
+block|,
+name|inlinetest
+block|,
+literal|027
+block|,
+name|inlinetest
+block|,
+literal|030
+block|,
+name|inlinetest
+block|,
+literal|031
+block|,
+name|inlinetest
+block|,
+literal|032
+block|,
+name|inlinetest
+block|,
+literal|033
+block|,
+name|inlinetest
+block|,
+literal|034
+block|,
+name|inlinetest
+block|,
+literal|035
+block|,
+name|inlinetest
+block|,
+literal|036
+block|,
+name|inlinetest
+block|,
+literal|037
+block|,
+name|inlinetest
+block|,
+literal|040
+block|,
+name|inlinetest
+block|,
+literal|041
+block|,
+name|inlinetest
+block|,
+literal|042
+block|,
+name|inlinetest
+block|,
+literal|043
+block|,
+name|inlinetest
+block|,
+literal|044
+block|,
+name|inlinetest
+block|,
+literal|045
+block|,
+name|inlinetest
+literal|046
+block|,
+name|inlinetest
+block|,
+literal|047
+block|,
+name|inlinetest
+block|,
+literal|050
+block|,
+name|inlinetest
+block|,
+literal|051
+block|,
+name|inlinetest
+block|,
+literal|052
+block|,
+name|inlinetest
+block|,
+literal|053
+block|,
+name|inlinetest
+block|,
+literal|054
+block|,
+name|inlinetest
+block|,
+literal|055
+block|,
+name|inlinetest
+block|,
+literal|056
+block|,
+name|inlinetest
+block|,
+literal|057
+block|,
+name|inlinetest
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTER_MBFLT */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|mbfltmsg
+index|[]
+init|=
+block|{
+literal|01
+block|,
+literal|"control bus parity error"
+block|,
+literal|02
+block|,
+literal|"illegal register referenced"
+block|,
+operator|-
+literal|1
+block|,
+name|unclass
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * MTER_LEOT, MTER_RWDING, NTER_NOTAVL, MTER_NONEX, MTER_KEYFAIL,  * and default: no failure message.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fmesg
+name|nullmsg
+index|[]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+literal|""
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Interrupt code table.  */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+name|errmsg
+block|{
+name|int
+name|e_code
+decl_stmt|;
+name|char
+modifier|*
+name|e_mesg
+decl_stmt|;
+name|struct
+name|fmesg
+modifier|*
+name|e_fmesg
+decl_stmt|;
+block|}
+name|errmsg
+index|[]
+init|=
+block|{
+name|MTER_BOT
+block|,
+literal|"unexpected BOT"
+block|,
+name|botmsg
+block|,
+name|MTER_LEOT
+block|,
+literal|"unexpected LEOT"
+block|,
+name|nullmsg
+block|,
+name|MTER_RWDING
+block|,
+literal|"tape rewinding"
+block|,
+name|nullmsg
+block|,
+name|MTER_NOTRDY
+block|,
+literal|"drive not ready"
+block|,
+name|notrdymsg
+block|,
+name|MTER_NOTAVL
+block|,
+literal|"drive not available"
+block|,
+name|nullmsg
+block|,
+name|MTER_NONEX
+block|,
+literal|"unit does not exist"
+block|,
+name|nullmsg
+block|,
+name|MTER_NOTCAP
+block|,
+literal|"not capable"
+block|,
+name|notcapmsg
+block|,
+name|MTER_LONGREC
+block|,
+literal|"long record"
+block|,
+name|longrecmsg
+block|,
+name|MTER_UNREAD
+block|,
+literal|"unreadable record"
+block|,
+name|code22msg
+block|,
+name|MTER_ERROR
+block|,
+literal|"error"
+block|,
+name|code22msg
+block|,
+name|MTER_EOTERR
+block|,
+literal|"EOT error"
+block|,
+name|code22msg
+block|,
+name|MTER_BADTAPE
+block|,
+literal|"tape position lost"
+block|,
+name|code22msg
+block|,
+name|MTER_TMFLTA
+block|,
+literal|"TM fault A"
+block|,
+name|tmfltamsg
+block|,
+name|MTER_TUFLTA
+block|,
+literal|"TU fault A"
+block|,
+name|tufltamsg
+block|,
+name|MTER_TMFLTB
+block|,
+literal|"TM fault B"
+block|,
+name|tmfltbmsg
+block|,
+name|MTER_MBFLT
+block|,
+literal|"MB fault"
+block|,
+name|mbfltmsg
+block|,
+name|MTER_KEYFAIL
+block|,
+literal|"keypad entry error"
+block|,
+name|nullmsg
+block|,
+operator|-
+literal|1
+block|,
+literal|"unclassified error"
+block|,
+name|nullmsg
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Decode an interrupt-time failure.  */
+end_comment
+
+begin_macro
 name|mtintfail
 argument_list|(
-name|sc
+argument|erreg
 argument_list|)
-specifier|register
-expr|struct
-name|mu_softc
-operator|*
-name|sc
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|int
+name|erreg
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-switch|switch
-condition|(
-name|sc
-operator|->
-name|sc_erreg
+specifier|register
+name|struct
+name|errmsg
+modifier|*
+name|e
+decl_stmt|;
+specifier|register
+name|struct
+name|fmesg
+modifier|*
+name|f
+decl_stmt|;
+specifier|register
+name|int
+name|ecode
+decl_stmt|,
+name|fcode
+decl_stmt|;
+name|ecode
+operator|=
+name|erreg
 operator|&
 name|MTER_INTCODE
-condition|)
-block|{
-comment|/* unexpected BOT detected */
-case|case
-name|MTER_BOT
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"unexpected BOT"
 expr_stmt|;
-switch|switch
-condition|(
+name|fcode
+operator|=
 operator|(
-name|sc
-operator|->
-name|sc_erreg
+name|erreg
 operator|&
 name|MTER_FAILCODE
 operator|)
 operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"tape was at BOT"
+name|MTER_FSHIFT
 expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
+for|for
+control|(
+name|e
 operator|=
-literal|"BOT seen after tape started"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
+name|errmsg
+init|;
+name|e
 operator|->
-name|sc_fmesg
-operator|=
-literal|"ARA ID detected"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* unexpected LEOT detected */
-case|case
-name|MTER_LEOT
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"unexpected LEOT"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-comment|/* rewinding */
-case|case
-name|MTER_RWDING
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"tape rewinding"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-comment|/* not ready */
-case|case
-name|MTER_NOTRDY
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"drive not ready"
-expr_stmt|;
-switch|switch
+name|e_code
+operator|>=
+literal|0
+condition|;
+name|e
+operator|++
+control|)
+if|if
 condition|(
-operator|(
-name|sc
+name|e
 operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
+name|e_code
+operator|==
+name|ecode
 condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU on-line but not ready"
-expr_stmt|;
 break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
+for|for
+control|(
+name|f
 operator|=
-literal|"fatal error has occurred"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
+name|e
 operator|->
-name|sc_fmesg
-operator|=
-literal|"access allowed but not really"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
+name|e_fmesg
+init|;
+name|f
 operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* not available */
-case|case
-name|MTER_NOTAVL
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"drive not available"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-comment|/* unit does not exist */
-case|case
-name|MTER_NONEX
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"unit does not exist"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-comment|/* not capable */
-case|case
-name|MTER_NOTCAP
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"not capable"
-expr_stmt|;
-switch|switch
+name|f_code
+operator|>=
+literal|0
+condition|;
+name|f
+operator|++
+control|)
+if|if
 condition|(
-operator|(
-name|sc
+name|f
 operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
+name|f_code
+operator|==
+name|fcode
 condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"no record found within 25 feet"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"ID burst neither PE nor GCR"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"ARA ID not found"
-expr_stmt|;
-break|break;
-case|case
-literal|04
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"no gap found after ID burst"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* long tape record */
-case|case
-name|MTER_LONGREC
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"long record"
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|00
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"extended sense data not found"
-expr_stmt|;
-break|break;
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"extended sense data updated"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* unreadable */
-case|case
-name|MTER_UNREAD
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"unreadable record"
-expr_stmt|;
-goto|goto
-name|code22
-goto|;
-comment|/* error */
-case|case
-name|MTER_ERROR
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"error"
-expr_stmt|;
-goto|goto
-name|code22
-goto|;
-comment|/* EOT error */
-case|case
-name|MTER_EOTERR
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"EOT error"
-expr_stmt|;
-goto|goto
-name|code22
-goto|;
-comment|/* tape position lost */
-case|case
-name|MTER_BADTAPE
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"bad tape"
-expr_stmt|;
-name|code22
-label|:
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"GCR write error"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"GCR read error"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"PE read error"
-expr_stmt|;
-break|break;
-case|case
-literal|04
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"PE write error"
-expr_stmt|;
-break|break;
-case|case
-literal|05
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"at least 1 bit set in ECCSTA"
-expr_stmt|;
-break|break;
-case|case
-literal|06
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"PE write error"
-expr_stmt|;
-break|break;
-case|case
-literal|07
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"GCR write error"
-expr_stmt|;
-break|break;
-case|case
-literal|010
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"RSTAT contains bad code"
-expr_stmt|;
-break|break;
-case|case
-literal|011
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"PE write error"
-expr_stmt|;
-break|break;
-case|case
-literal|012
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"MASSBUS parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|013
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"invalid data transferred"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* TM fault A */
-case|case
-name|MTER_TMFLTA
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"TM fault A"
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"illegal command code"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"DT command issued when NDT command active"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"WMC error"
-expr_stmt|;
-break|break;
-case|case
-literal|04
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"RUN not received from MASSBUS controller"
-expr_stmt|;
-break|break;
-case|case
-literal|05
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - function routine"
-expr_stmt|;
-break|break;
-case|case
-literal|06
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"ECC ROM parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|07
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"XMC ROM parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|010
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - ID burst command"
-expr_stmt|;
-break|break;
-case|case
-literal|011
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - verify ARA burst command"
-expr_stmt|;
-break|break;
-case|case
-literal|012
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - verify ARA ID command"
-expr_stmt|;
-break|break;
-case|case
-literal|013
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - verify gap command"
-expr_stmt|;
-break|break;
-case|case
-literal|014
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - read id burst command"
-expr_stmt|;
-break|break;
-case|case
-literal|015
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - verify ARA ID command"
-expr_stmt|;
-break|break;
-case|case
-literal|016
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - verify gap command"
-expr_stmt|;
-break|break;
-case|case
-literal|017
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"mismatch in command read - find gap command"
-expr_stmt|;
-break|break;
-case|case
-literal|020
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"WMC LEFT failed to set"
-expr_stmt|;
-break|break;
-case|case
-literal|021
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"XL PE set in INTSTA register"
-expr_stmt|;
-break|break;
-case|case
-literal|022
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"XMC DONE did not set"
-expr_stmt|;
-break|break;
-case|case
-literal|023
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"WMC ROM PE or RD PE set in WMCERR register"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* TU fault A */
-case|case
-name|MTER_TUFLTA
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"TU fault A"
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU status parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU command parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"rewinding tape went offline"
-expr_stmt|;
-break|break;
-case|case
-literal|04
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"tape went not ready during DSE"
-expr_stmt|;
-break|break;
-case|case
-literal|05
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD status changed during DSE"
-expr_stmt|;
 break|break;
-case|case
-literal|06
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU never came up to speed"
-expr_stmt|;
-break|break;
-case|case
-literal|07
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU velocity changed"
-expr_stmt|;
-break|break;
-case|case
-literal|010
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to start tape motion"
-expr_stmt|;
-break|break;
-case|case
-literal|011
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to set drive density"
-expr_stmt|;
-break|break;
-case|case
-literal|012
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to start tape motion to write BOT ID"
-expr_stmt|;
-break|break;
-case|case
-literal|013
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to backup tape to BOT after failing to write BOT ID"
-expr_stmt|;
-break|break;
-case|case
-literal|014
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"failed to write density ID burst"
-expr_stmt|;
-break|break;
-case|case
-literal|015
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"failed to write ARA burst"
-expr_stmt|;
-break|break;
-case|case
-literal|016
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"failed to write ARA ID"
-expr_stmt|;
-break|break;
-case|case
-literal|017
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"ARA error bit set in MTA status B register"
-expr_stmt|;
-break|break;
-case|case
-literal|021
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"could not find a gap after ID code was written correctly"
-expr_stmt|;
-break|break;
-case|case
-literal|022
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to start tape motion to read ID burst"
-expr_stmt|;
-break|break;
-case|case
-literal|023
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"timeout looking for BOT after detecting ARA ID burst"
-expr_stmt|;
-break|break;
-case|case
-literal|024
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"failed to write tape mark"
-expr_stmt|;
-break|break;
-case|case
-literal|025
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"tape never came up to speed while trying to reposition for retry of writing tape mark"
-expr_stmt|;
-break|break;
-case|case
-literal|026
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to start tape motion in erase gap routine"
-expr_stmt|;
-break|break;
-case|case
-literal|027
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"could not detect a gap in in erase gap routine"
-expr_stmt|;
-break|break;
-case|case
-literal|030
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"could not detect a gap after writing record"
-expr_stmt|;
-break|break;
-case|case
-literal|031
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"read path terminated before entire record was written"
-expr_stmt|;
-break|break;
-case|case
-literal|032
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"could not find a gap after writing record and read path terminated early"
-expr_stmt|;
-break|break;
-case|case
-literal|033
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to backup for retry of write tape mark"
-expr_stmt|;
-break|break;
-case|case
-literal|034
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU velocity changed after up to speed while trying to reposition for retry of writing tape mark"
-expr_stmt|;
-break|break;
-case|case
-literal|035
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to backup to retry a load of BOT ID"
-expr_stmt|;
-break|break;
-case|case
-literal|036
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"timeout looking for BOT after failing to write BOT ID"
-expr_stmt|;
-break|break;
-case|case
-literal|037
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU velocity changed while writing PE gap before starting to write record"
-expr_stmt|;
-break|break;
-case|case
-literal|040
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to set PE tape density at start of write BOT ID burst"
+name|printf
+argument_list|(
+literal|"    interrupt code = 0%o<%s>\n"
+argument_list|,
+name|ecode
+argument_list|,
+name|e
+operator|->
+name|e_mesg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    failure code = 0%o<%s>\n"
+argument_list|,
+name|fcode
+argument_list|,
+name|f
+operator|->
+name|f_mesg
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|041
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to set GCR tape density after writing Density ID"
-expr_stmt|;
-break|break;
-case|case
-literal|042
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to set PE tape density at start of read from BOT"
-expr_stmt|;
-break|break;
-case|case
-literal|043
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"TU CMD did not load correctly to set GCR tape density after reading a GCR Density ID burst"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* TM fault B */
-case|case
-name|MTER_TMFLTB
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"TM fault B"
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|00
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"RST0 interrupt occurred with TM RDY set"
-expr_stmt|;
-break|break;
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"power failed to interrupt"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unknown interrupt on channel 5.5"
-expr_stmt|;
-break|break;
-case|case
-literal|03
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unknown interrupt on channel 6.5"
-expr_stmt|;
-break|break;
-case|case
-literal|04
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unknown interrupt on channel 7"
-expr_stmt|;
-break|break;
-case|case
-literal|05
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unknown interrupt on channel 7.5"
-expr_stmt|;
-break|break;
-case|case
-literal|06
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"CAS contention retry count expired"
-expr_stmt|;
-break|break;
-case|case
-literal|07
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"CAS contention error not retryable"
-expr_stmt|;
-break|break;
-case|case
-literal|010
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"queue error, could not find queue entry"
-expr_stmt|;
-break|break;
-case|case
-literal|011
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"queue entry already full"
-expr_stmt|;
-break|break;
-case|case
-literal|012
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"8085 ROM parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|013
-case|:
-case|case
-literal|014
-case|:
-case|case
-literal|015
-case|:
-case|case
-literal|016
-case|:
-case|case
-literal|017
-case|:
-case|case
-literal|020
-case|:
-case|case
-literal|021
-case|:
-case|case
-literal|022
-case|:
-case|case
-literal|023
-case|:
-case|case
-literal|024
-case|:
-case|case
-literal|025
-case|:
-case|case
-literal|026
-case|:
-case|case
-literal|027
-case|:
-case|case
-literal|030
-case|:
-case|case
-literal|031
-case|:
-case|case
-literal|032
-case|:
-case|case
-literal|033
-case|:
-case|case
-literal|034
-case|:
-case|case
-literal|035
-case|:
-case|case
-literal|036
-case|:
-case|case
-literal|037
-case|:
-case|case
-literal|040
-case|:
-case|case
-literal|041
-case|:
-case|case
-literal|042
-case|:
-case|case
-literal|043
-case|:
-case|case
-literal|044
-case|:
-case|case
-literal|045
-case|:
-case|case
-literal|046
-case|:
-case|case
-literal|047
-case|:
-case|case
-literal|050
-case|:
-case|case
-literal|051
-case|:
-case|case
-literal|052
-case|:
-case|case
-literal|053
-case|:
-case|case
-literal|054
-case|:
-case|case
-literal|055
-case|:
-case|case
-literal|056
-case|:
-case|case
-literal|057
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"inline test failed"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* MASSBUS fault */
-case|case
-name|MTER_MBFLT
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"MB fault"
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|MTER_FAILCODE
-operator|)
-operator|>>
-literal|10
-condition|)
-block|{
-case|case
-literal|01
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"control bus parity error"
-expr_stmt|;
-break|break;
-case|case
-literal|02
-case|:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"illegal register referenced"
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|"unclassified failure code"
-expr_stmt|;
-block|}
-break|break;
-comment|/* keypad entry error */
-case|case
-name|MTER_KEYFAIL
-case|:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"keypad entry error"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-default|default:
-name|sc
-operator|->
-name|sc_mesg
-operator|=
-literal|"unclassified error"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_fmesg
-operator|=
-literal|""
-expr_stmt|;
-break|break;
-block|}
 block|}
 end_block
 
 begin_endif
 endif|#
 directive|endif
-endif|MTLERRM
 end_endif
+
+begin_comment
+comment|/* MTLERRM */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NMT> 0 */
+end_comment
 
 end_unit
 
