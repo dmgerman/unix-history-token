@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.2	%G%	*/
+comment|/*	saio.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -189,52 +189,6 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
-begin_define
-define|#
-directive|define
-name|PHYSUBA0
-value|0x20006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSUMEM
-value|0x2013e000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PHYSUBA0
-value|0xf30000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSUMEM
-value|0xfc0000+0760000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
