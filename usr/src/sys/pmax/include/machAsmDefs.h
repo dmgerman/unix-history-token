@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.1 (Berkeley) %G%  *  * machAsmDefs.h --  *  *	Macros used when writing assembler programs.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/mach/ds3100.md/RCS/machAsmDefs.h,  *	v 1.2 89/08/15 18:28:24 rab Exp $ SPRITE (DECWRL)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * machAsmDefs.h --  *  *	Macros used when writing assembler programs.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/mach/ds3100.md/RCS/machAsmDefs.h,  *	v 1.2 89/08/15 18:28:24 rab Exp $ SPRITE (DECWRL)  */
 end_comment
 
 begin_ifndef
@@ -14,6 +18,12 @@ define|#
 directive|define
 name|_MACHASMDEFS
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/regdef.h>
+end_include
 
 begin_comment
 comment|/*  * LEAF(x)  *  *	Declare a leaf routine.  */
@@ -116,7 +126,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|la	a0,9f; \ 	jal	printf; \ 	MSG(msg)
+value|la	a0, 9f; \ 	jal	printf; \ 	MSG(msg)
 end_define
 
 begin_define
@@ -128,6 +138,17 @@ name|msg
 parameter_list|)
 define|\
 value|.rdata; \ 9:	.asciiz	msg; \ 	.text
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMSTR
+parameter_list|(
+name|str
+parameter_list|)
+define|\
+value|.asciiz str; \ 	.align	2
 end_define
 
 begin_endif
