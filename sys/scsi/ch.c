@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.8 1994/01/29 10:30:36 rgrimes Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.9 1994/10/19 00:09:44 wollman Exp $  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/chio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -356,13 +362,13 @@ block|{
 return|return
 name|scsi_externalize
 argument_list|(
-name|sd_data
+name|ch_data
 index|[
 name|kdc
 operator|->
 name|kdc_unit
 index|]
-operator|->
+operator|.
 name|sc_link
 argument_list|,
 name|userp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.5 1994/08/13 03:50:04 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.6 1994/10/19 01:58:59 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -381,8 +381,6 @@ begin_function_decl
 name|void
 name|el_reset
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -1217,9 +1215,6 @@ name|el_reset
 parameter_list|(
 name|int
 name|unit
-parameter_list|,
-name|int
-name|uban
 parameter_list|)
 block|{
 name|int
@@ -4055,8 +4050,6 @@ expr_stmt|;
 name|el_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
