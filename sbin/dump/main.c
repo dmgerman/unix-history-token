@@ -1128,10 +1128,11 @@ if|if
 condition|(
 name|index
 argument_list|(
-argument|tape
+name|tape
 argument_list|,
-literal|"\n"
+literal|'\n'
 argument_list|)
+condition|)
 block|{
 operator|(
 name|void
