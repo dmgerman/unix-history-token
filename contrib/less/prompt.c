@@ -129,7 +129,7 @@ name|char
 name|s_proto
 index|[]
 init|=
-literal|"?n?f%f .?m(file %i of %m) ..?e(END) ?x- Next\\: %x..%t"
+literal|"?n?f%f .?m(%T %i of %m) ..?e(END) ?x- Next\\: %x..%t"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|m_proto
 index|[]
 init|=
-literal|"?n?f%f .?m(file %i of %m) ..?e(END) ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t"
+literal|"?n?f%f .?m(%T %i of %m) ..?e(END) ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ name|char
 name|M_proto
 index|[]
 init|=
-literal|"?f%f .?n?m(file %i of %m) ..?ltlines %lt-%lb?L/%L. :byte %bB?s/%s. .?e(END) ?x- Next\\: %x.:?pB%pB\\%..%t"
+literal|"?f%f .?n?m(%T %i of %m) ..?ltlines %lt-%lb?L/%L. :byte %bB?s/%s. .?e(END) ?x- Next\\: %x.:?pB%pB\\%..%t"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,7 +162,7 @@ name|char
 name|e_proto
 index|[]
 init|=
-literal|"?f%f .?m(file %i of %m) .?ltlines %lt-%lb?L/%L. .byte %bB?s/%s. ?e(END) :?pB%pB\\%..%t"
+literal|"?f%f .?m(%T %i of %m) .?ltlines %lt-%lb?L/%L. .byte %bB?s/%s. ?e(END) :?pB%pB\\%..%t"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,17 @@ name|h_proto
 index|[]
 init|=
 literal|"HELP -- ?eEND -- Press g to see it again:Press RETURN for more., or q when done"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|constant
+name|char
+name|w_proto
+index|[]
+init|=
+literal|"Waiting for data"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +218,17 @@ modifier|*
 name|hproto
 init|=
 name|h_proto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|char
+name|constant
+modifier|*
+name|wproto
+init|=
+name|w_proto
 decl_stmt|;
 end_decl_stmt
 
@@ -280,6 +302,13 @@ operator|=
 name|save
 argument_list|(
 name|h_proto
+argument_list|)
+expr_stmt|;
+name|wproto
+operator|=
+name|save
+argument_list|(
+name|w_proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -413,21 +442,87 @@ block|{
 name|char
 name|buf
 index|[
-name|MAX_PRINT_POSITION
-index|]
-decl_stmt|;
-name|sprintf
+name|INT_STRLEN_BOUND
 argument_list|(
-name|buf
-argument_list|,
-name|PR_POSITION
-argument_list|,
 name|pos
 argument_list|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+name|int
+name|neg
+init|=
+operator|(
+name|pos
+operator|<
+literal|0
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|neg
+condition|)
+name|pos
+operator|=
+operator|-
+name|pos
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+do|do
+operator|*
+operator|--
+name|p
+operator|=
+literal|'0'
+operator|+
+operator|(
+name|pos
+operator|%
+literal|10
+operator|)
+expr_stmt|;
+do|while
+condition|(
+operator|(
+name|pos
+operator|/=
+literal|10
+operator|)
+operator|!=
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+name|neg
+condition|)
+operator|*
+operator|--
+name|p
+operator|=
+literal|'-'
 expr_stmt|;
 name|ap_str
 argument_list|(
-name|buf
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -451,7 +546,12 @@ block|{
 name|char
 name|buf
 index|[
-name|MAX_PRINT_INT
+name|INT_STRLEN_BOUND
+argument_list|(
+name|n
+argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|sprintf
@@ -683,10 +783,22 @@ case|:
 comment|/* More than one file? */
 return|return
 operator|(
+name|ntags
+argument_list|()
+condition|?
+operator|(
+name|ntags
+argument_list|()
+operator|>
+literal|1
+operator|)
+else|:
+operator|(
 name|nifile
 argument_list|()
 operator|>
 literal|1
+operator|)
 operator|)
 return|;
 case|case
@@ -695,6 +807,11 @@ case|:
 comment|/* First prompt in a new file? */
 return|return
 operator|(
+name|ntags
+argument_list|()
+condition|?
+literal|1
+else|:
 name|new_file
 operator|)
 return|;
@@ -766,6 +883,16 @@ case|case
 literal|'x'
 case|:
 comment|/* Is there a "next" file? */
+if|if
+condition|(
+name|ntags
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|next_ifile
@@ -1042,6 +1169,18 @@ case|case
 literal|'i'
 case|:
 comment|/* Index into list of files */
+if|if
+condition|(
+name|ntags
+argument_list|()
+condition|)
+name|ap_int
+argument_list|(
+name|curr_tag
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
 name|ap_int
 argument_list|(
 name|get_index
@@ -1125,6 +1264,21 @@ case|case
 literal|'m'
 case|:
 comment|/* Number of files */
+name|n
+operator|=
+name|ntags
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+name|ap_int
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+else|else
 name|ap_int
 argument_list|(
 name|nifile
@@ -1284,6 +1438,27 @@ literal|' '
 condition|)
 name|mp
 operator|--
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* Type of list */
+if|if
+condition|(
+name|ntags
+argument_list|()
+condition|)
+name|ap_str
+argument_list|(
+literal|"tag"
+argument_list|)
+expr_stmt|;
+else|else
+name|ap_str
+argument_list|(
+literal|"file"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1786,13 +1961,6 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
-name|new_file
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|if
 condition|(
@@ -1876,18 +2044,27 @@ modifier|*
 name|pr_string
 parameter_list|()
 block|{
-if|if
-condition|(
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
+name|prompt
+operator|=
+name|pr_expand
+argument_list|(
+operator|(
 name|ch_getflags
 argument_list|()
 operator|&
 name|CH_HELPFILE
-condition|)
-return|return
-operator|(
-name|pr_expand
-argument_list|(
+operator|)
+condition|?
 name|hproto
+else|:
+name|prproto
+index|[
+name|pr_type
+index|]
 argument_list|,
 name|sc_width
 operator|-
@@ -1897,16 +2074,35 @@ name|so_e_width
 operator|-
 literal|2
 argument_list|)
+expr_stmt|;
+name|new_file
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|prompt
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return a message suitable for printing while waiting in the F command.  */
+end_comment
+
+begin_function
+name|public
+name|char
+modifier|*
+name|wait_message
+parameter_list|()
+block|{
 return|return
 operator|(
 name|pr_expand
 argument_list|(
-name|prproto
-index|[
-name|pr_type
-index|]
+name|wproto
 argument_list|,
 name|sc_width
 operator|-

@@ -76,12 +76,6 @@ directive|include
 file|<dir.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -127,6 +121,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|OS2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_endif
 endif|#
@@ -3279,6 +3290,28 @@ name|pipefd
 operator|!=
 name|NULL
 condition|)
+block|{
+if|#
+directive|if
+name|OS2
+comment|/* 		 * The pclose function of OS/2 emx sometimes fails. 		 * Send SIGINT to the piped process before closing it. 		 */
+name|kill
+argument_list|(
+operator|(
+operator|(
+name|FILE
+operator|*
+operator|)
+name|pipefd
+operator|)
+operator|->
+name|_pid
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pclose
 argument_list|(
 operator|(
@@ -3288,6 +3321,7 @@ operator|)
 name|pipefd
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

@@ -258,6 +258,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|HAVE_LIMITS_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_STDLIB_H
 end_if
 
@@ -318,6 +335,8 @@ directive|if
 name|MSDOS_COMPILER
 operator|==
 name|WIN32C
+operator|||
+name|OS2
 end_if
 
 begin_include
@@ -624,6 +643,38 @@ name|BAD_LSEEK
 value|((off_t)-1)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHAR_BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CHAR_BIT
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Upper bound on the string length of an integer converted to string.  * 302 / 1000 is ceil (log10 (2.0)).  Subtract 1 for the sign bit;  * add 1 for integer division truncation; add 1 more for a minus sign.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT_STRLEN_BOUND
+parameter_list|(
+name|t
+parameter_list|)
+value|((sizeof(t) * CHAR_BIT - 1) * 302 / 1000 + 1 + 1)
+end_define
+
 begin_comment
 comment|/*  * Special types and constants.  */
 end_comment
@@ -634,27 +685,6 @@ name|off_t
 name|POSITION
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|PR_POSITION
-value|"%ld"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_PRINT_POSITION
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_PRINT_INT
-value|10
-end_define
 
 begin_define
 define|#
@@ -837,6 +867,8 @@ begin_if
 if|#
 directive|if
 name|MSDOS_COMPILER
+operator|||
+name|OS2
 end_if
 
 begin_define
@@ -1346,6 +1378,26 @@ directive|define
 name|AT_STANDOUT
 value|(5)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|'0'
+operator|==
+literal|240
+end_if
+
+begin_define
+define|#
+directive|define
+name|IS_EBCDIC_HOST
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

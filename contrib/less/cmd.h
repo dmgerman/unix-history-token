@@ -377,6 +377,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|A_NEXT_TAG
+value|53
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PREV_TAG
+value|54
+end_define
+
+begin_define
+define|#
+directive|define
 name|A_INVALID
 value|100
 end_define
@@ -590,6 +604,13 @@ define|#
 directive|define
 name|EC_NOCOMPLETE
 value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_NORIGHTLEFT
+value|010
 end_define
 
 begin_comment
