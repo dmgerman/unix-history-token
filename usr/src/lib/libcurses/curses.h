@@ -135,6 +135,7 @@ comment|/*  * Capabilities from termcap  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|AM
 decl_stmt|,
@@ -169,6 +170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|AL
@@ -281,15 +283,12 @@ comment|/*  * From the tty modes...  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|NONL
 decl_stmt|,
 name|UPPERCASE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|normtty
 decl_stmt|,
 name|_pfast
@@ -389,12 +388,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|SGTTY
 name|_tty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|WINDOW
 modifier|*
 name|stdscr
