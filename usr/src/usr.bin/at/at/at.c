@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.5 (Berkeley) %G%"
+literal|"@(#)at.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3149,17 +3149,6 @@ case|:
 case|case
 literal|' '
 case|:
-comment|/* 24 hour time */
-if|if
-condition|(
-name|val
-operator|==
-name|FULLDAY
-condition|)
-name|val
-operator|-=
-name|FULLDAY
-expr_stmt|;
 break|break;
 default|default:
 name|fprintf
