@@ -5154,6 +5154,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zerod.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zerod by 	 * vm_page_set_validclean(). 	 */
 for|for
 control|(
