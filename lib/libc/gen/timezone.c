@@ -67,11 +67,12 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
-end_include
+begin_define
+define|#
+directive|define
+name|TZ_MAX_CHARS
+value|255
+end_define
 
 begin_function_decl
 name|char

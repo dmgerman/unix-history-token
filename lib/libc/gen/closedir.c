@@ -109,9 +109,6 @@ name|dd_loc
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -123,9 +120,6 @@ operator|->
 name|dd_buf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(

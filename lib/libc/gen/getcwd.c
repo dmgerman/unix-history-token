@@ -398,9 +398,6 @@ operator|=
 literal|'/'
 expr_stmt|;
 comment|/* 			 * It's unclear that it's a requirement to copy the 			 * path to the beginning of the buffer, but it's always 			 * been that way and stuff would probably break. 			 */
-operator|(
-name|void
-operator|)
 name|bcopy
 argument_list|(
 name|bpt
@@ -736,9 +733,6 @@ name|pt
 operator|+
 name|ptsize
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bcopy
 argument_list|(
 name|bpt

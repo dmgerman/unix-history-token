@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.1 1995/03/30 12:47:26 jkh Exp $ */
+comment|/*	$Id: msgcat.c,v 1.2 1995/05/30 05:40:59 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -338,7 +338,7 @@ condition|)
 block|{
 name|nlspath
 operator|=
-literal|"/usr/share/nls/%L/%N.cat:/usr/share/nls/%N/%L"
+literal|"/usr/share/nls/%L/%N.cat:/usr/share/nls/%N/%L:/usr/local/share/nls/%L/%N.cat:/usr/local/share/nls/%N/%L"
 expr_stmt|;
 block|}
 name|len
