@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|ISP_GET_FW_CRASH_DUMP
-value|_IOR(ISP_IOC, 10, void *)
+value|_IO(ISP_IOC, 10)
 end_define
 
 begin_define

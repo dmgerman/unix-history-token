@@ -28335,8 +28335,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|k
 decl_stmt|;
 name|mbreg_t
 name|mbs
@@ -29148,8 +29146,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|k
 decl_stmt|;
 name|mbreg_t
 name|mbs
@@ -30048,7 +30044,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_2300
+name|IS_23XX
 argument_list|(
 name|isp
 argument_list|)
