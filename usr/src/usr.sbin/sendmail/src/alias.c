@@ -62,72 +62,54 @@ directive|ifdef
 name|DBM
 end_ifdef
 
-begin_error
-error|#
-directive|error
-error|DBM is no longer supported -- use NDBM instead.
-end_error
+begin_label
+name|ERROR
+label|:
+end_label
 
-begin_endif
+begin_expr_stmt
+name|DBM
+name|is
+name|no
+name|longer
+name|supported
+operator|--
+name|use
+name|NDBM
+name|instead
+operator|.
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NEWDB
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<db.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NDBM
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<ndbm.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
-end_ifndef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NEWDB
-end_ifdef
-
-begin_decl_stmt
-specifier|static
+expr|static
 name|char
 name|sccsid
 index|[]
-init|=
-literal|"@(#)alias.c	5.39 (Berkeley) %G% (with NEWDB)"
-decl_stmt|;
-end_decl_stmt
+operator|=
+literal|"@(#)alias.c	5.40 (Berkeley) %G% (with NEWDB)"
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -146,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.39 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	5.40 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.39 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	5.40 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
