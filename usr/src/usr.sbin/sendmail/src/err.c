@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -532,6 +532,12 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* output to transcript */
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|OutChannel
+condition|)
 name|fprintf
 argument_list|(
 name|Xscript
