@@ -54,6 +54,12 @@ begin_comment
 comment|/* for fcntl.h, fdopen */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
