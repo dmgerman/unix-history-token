@@ -1632,7 +1632,7 @@ asm|__asm __volatile("srlz.i;;");
 end_asm
 
 begin_asm
-asm|__asm __volatile("mov psr.l=%0;; srlz.i" :: "r" (psr));
+asm|__asm __volatile("mov psr.l=%0;; srlz.i;;" :: "r" (psr));
 end_asm
 
 begin_function
