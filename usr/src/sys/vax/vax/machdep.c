@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -347,12 +347,18 @@ decl_stmt|;
 if|#
 directive|if
 name|VAX630
+operator|||
+name|VAX650
 comment|/*  	 * Leave last 5k of phys. memory as console work area. 	 */
 if|if
 condition|(
 name|cpu
 operator|==
 name|VAX_630
+operator|||
+name|cpu
+operator|==
+name|VAX_650
 condition|)
 name|maxmem
 operator|-=
@@ -425,9 +431,9 @@ name|msgbufmapped
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|VAX630
+ifdef|#
+directive|ifdef
+name|QBA
 include|#
 directive|include
 file|"qv.h"
@@ -3162,6 +3168,8 @@ operator|||
 name|VAX730
 operator|||
 name|VAX630
+operator|||
+name|VAX650
 case|case
 name|VAX_8200
 case|:
@@ -3176,6 +3184,9 @@ name|VAX_730
 case|:
 case|case
 name|VAX_630
+case|:
+case|case
+name|VAX_650
 case|:
 name|c
 operator||=
@@ -3888,6 +3899,8 @@ operator|||
 name|VAX750
 operator|||
 name|VAX730
+operator|||
+name|VAX650
 case|case
 name|VAX_8600
 case|:
@@ -3902,6 +3915,9 @@ name|VAX_750
 case|:
 case|case
 name|VAX_730
+case|:
+case|case
+name|VAX_650
 case|:
 return|return
 operator|(

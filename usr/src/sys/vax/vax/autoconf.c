@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -658,6 +658,26 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+if|#
+directive|if
+name|VAX650
+case|case
+name|VAX_650
+case|:
+name|printf
+argument_list|(
+literal|"MicroVAX 3000, ucode rev %d\n"
+argument_list|,
+name|cpusid
+operator|.
+name|cpu650
+operator|.
+name|cp_urev
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -951,6 +971,8 @@ block|{
 if|#
 directive|if
 name|VAX630
+operator|||
+name|VAX650
 case|case
 name|IO_QBUS
 case|:

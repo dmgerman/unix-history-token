@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -285,6 +285,8 @@ operator|||
 name|VAX750
 operator|||
 name|VAX730
+operator|||
+name|VAX650
 end_if
 
 begin_define
@@ -412,6 +414,8 @@ operator|||
 name|VAX750
 operator|||
 name|VAX730
+operator|||
+name|VAX650
 end_if
 
 begin_define
@@ -458,6 +462,8 @@ directive|if
 name|VAX750
 operator|||
 name|VAX730
+operator|||
+name|VAX650
 end_if
 
 begin_define
@@ -664,6 +670,8 @@ operator|||
 name|VAX730
 operator|||
 name|VAX630
+operator|||
+name|VAX650
 end_if
 
 begin_define
@@ -674,7 +682,7 @@ value|0x37
 end_define
 
 begin_comment
-comment|/* init unibus (Qbus on 630) register */
+comment|/* init unibus (Qbus on 6x0) register */
 end_comment
 
 begin_endif
@@ -789,6 +797,8 @@ directive|if
 name|VAX8600
 operator|||
 name|VAX8200
+operator|||
+name|VAX650
 end_if
 
 begin_define

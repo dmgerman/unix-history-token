@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -205,6 +205,27 @@ comment|/* VAX_630 */
 block|}
 name|cpu630
 struct|;
+struct|struct
+name|cpu650
+block|{
+name|u_int
+name|cp_urev
+range|:
+literal|8
+decl_stmt|,
+comment|/* ucode rev level */
+range|:
+literal|16
+decl_stmt|,
+comment|/* reserved */
+name|cp_type
+range|:
+literal|8
+decl_stmt|;
+comment|/* VAX_650 */
+block|}
+name|cpu650
+struct|;
 block|}
 union|;
 end_union
@@ -296,8 +317,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VAX_650
+value|10
+end_define
+
+begin_comment
+comment|/* uVAX 3000 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VAX_MAX
-value|8
+value|10
 end_define
 
 begin_comment
