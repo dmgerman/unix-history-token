@@ -1960,6 +1960,22 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_comment
 comment|/* If any error codes are removed, changed, or added, update the    `re_error_msg' table in regex.c.  */
 end_comment
@@ -2026,6 +2042,11 @@ block|}
 name|reg_errcode_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The regex.c support, as a client of rx, defines a set of possible  * side effects that can be added to the edge lables of nfa edges.  * Here is the list of sidef effects in use.  */
@@ -2272,6 +2293,22 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_comment
 comment|/* Type for byte offsets within the string.  POSIX mandates this.  */
 end_comment
@@ -2334,6 +2371,11 @@ block|}
 name|regmatch_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -2700,6 +2742,22 @@ name|RE_DUP_MAX
 value|((1<< 15) - 1)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_comment
 comment|/* POSIX `cflags' bits (i.e., information for `regcomp').  */
 end_comment
@@ -2773,6 +2831,11 @@ directive|define
 name|REG_NOTEOL
 value|(1<< 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* If `regs_allocated' is REGS_UNALLOCATED in the pattern buffer,  * `re_match_2' returns information about at least this many registers  * the first time a `regs' structure is passed.   *  * Also, this is the greatest number of backreferenced subexpressions  * allowed in a pattern being matched without caller-supplied registers.  */
@@ -4491,6 +4554,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_function_decl
 specifier|extern
 name|char
@@ -4601,6 +4680,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -4676,6 +4760,22 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_function_decl
 specifier|extern
 name|char
@@ -4724,6 +4824,11 @@ name|regfree
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
