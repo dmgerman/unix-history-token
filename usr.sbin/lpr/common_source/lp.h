@@ -1202,7 +1202,7 @@ name|char
 modifier|*
 name|_strp
 parameter_list|,
-name|int
+name|size_t
 name|_strsize
 parameter_list|)
 function_decl|;

@@ -990,15 +990,7 @@ index|]
 operator|==
 literal|'/'
 condition|)
-block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1009,9 +1001,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -1029,7 +1019,6 @@ operator|->
 name|lock_file
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|buf
 return|;
@@ -1093,15 +1082,7 @@ index|]
 operator|==
 literal|'/'
 condition|)
-block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1112,9 +1093,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -1132,7 +1111,6 @@ operator|->
 name|status_file
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|buf
 return|;
@@ -1156,7 +1134,7 @@ name|char
 modifier|*
 name|strp
 parameter_list|,
-name|int
+name|size_t
 name|strsize
 parameter_list|)
 block|{
@@ -1425,7 +1403,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|strp
 argument_list|,
@@ -1604,6 +1582,9 @@ name|pp
 operator|->
 name|tr_timestr
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|TIMESTR_SIZE
 argument_list|)
 expr_stmt|;
@@ -1707,6 +1688,9 @@ name|tr_done
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
