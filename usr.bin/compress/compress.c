@@ -1236,8 +1236,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: file would grow; left unmodified\n"
 argument_list|,
 name|in
@@ -1295,8 +1297,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: "
 argument_list|,
 name|out
@@ -1315,8 +1319,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%.0f%% compression\n"
 argument_list|,
 operator|(
@@ -1339,8 +1345,10 @@ else|else
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%.0f%% expansion\n"
 argument_list|,
 operator|(
