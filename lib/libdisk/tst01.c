@@ -94,6 +94,12 @@ directive|include
 file|"libdisk.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_decl_stmt
 name|u_char
 name|mbrboot
@@ -2160,6 +2166,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|scan_block
@@ -3279,6 +3290,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 operator|!
@@ -3331,6 +3345,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
@@ -3417,11 +3433,16 @@ argument_list|(
 literal|"\tboot\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|printf
 argument_list|(
 literal|"\tbteasy17\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
@@ -3460,11 +3481,16 @@ argument_list|(
 literal|"\tlist\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|printf
 argument_list|(
 literal|"\tmbr\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
