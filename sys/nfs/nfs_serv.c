@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.47 1997/08/16 19:15:56 wollman Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.48 1997/09/02 01:19:33 bde Exp $  */
 end_comment
 
 begin_comment
@@ -15444,42 +15444,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|ncookies
-operator|=
-name|siz
-operator|/
-operator|(
-literal|5
-operator|*
-name|NFSX_UNSIGNED
-operator|)
-expr_stmt|;
-comment|/*7 for V3, but it's an est. so*/
-name|MALLOC
-argument_list|(
-name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
-name|ncookies
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_long
-operator|*
-argument_list|)
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|again
 label|:
 name|iv
@@ -15874,9 +15838,6 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that preceed the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
 while|while
 condition|(
@@ -15909,27 +15870,6 @@ name|toff
 operator|)
 condition|)
 block|{
-else|#
-directive|else
-while|while
-condition|(
-name|dp
-operator|->
-name|d_fileno
-operator|==
-literal|0
-operator|&&
-name|cpos
-operator|<
-name|cend
-operator|&&
-name|ncookies
-operator|>
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
 name|cpos
 operator|+=
 name|dp
@@ -16423,6 +16363,9 @@ expr_stmt|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|int
 name|nfsrv_readdirplus
 parameter_list|(
@@ -16953,41 +16896,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|ncookies
-operator|=
-name|siz
-operator|/
-operator|(
-literal|7
-operator|*
-name|NFSX_UNSIGNED
-operator|)
-expr_stmt|;
-name|MALLOC
-argument_list|(
-name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
-name|ncookies
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_long
-operator|*
-argument_list|)
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|again
 label|:
 name|iv
@@ -17348,9 +17256,6 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that preceed the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
 while|while
 condition|(
@@ -17383,27 +17288,6 @@ name|toff
 operator|)
 condition|)
 block|{
-else|#
-directive|else
-while|while
-condition|(
-name|dp
-operator|->
-name|d_fileno
-operator|==
-literal|0
-operator|&&
-name|cpos
-operator|<
-name|cend
-operator|&&
-name|ncookies
-operator|>
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
 name|cpos
 operator|+=
 name|dp
@@ -18166,7 +18050,13 @@ expr_stmt|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * nfs commit service  */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_commit
 parameter_list|(
@@ -18540,7 +18430,13 @@ return|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * nfs statfs service  */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_statfs
 parameter_list|(
@@ -19102,7 +18998,13 @@ block|}
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * nfs fsinfo service  */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_fsinfo
 parameter_list|(
@@ -19506,7 +19408,13 @@ expr_stmt|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * nfs pathconf service  */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_pathconf
 parameter_list|(
@@ -19899,8 +19807,17 @@ expr_stmt|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Null operation, used by clients to ping server  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_null
 parameter_list|(
@@ -19984,8 +19901,17 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * No operation, used for obsolete procedures  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 name|int
 name|nfsrv_noop
 parameter_list|(
@@ -20084,7 +20010,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for exported rdonly as well as MNT_RDONLY for the write case  * 2 - The owner is to be given access irrespective of mode bits so that  *     processes that chmod after opening a file don't break. I don't like  *     this because it opens a security hole, but since the nfs server opens  *     a security hole the size of a barn door anyhow, what the heck.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfsrv_access
