@@ -3224,23 +3224,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vm_map_growstack
-argument_list|(
-name|p
-argument_list|,
-name|va
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-else|else
-comment|/* 		 * fault the data page 		 */
+comment|/* 	 * fault the data page 	 */
 name|rv
 operator|=
 name|vm_fault
