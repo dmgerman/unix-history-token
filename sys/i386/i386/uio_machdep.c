@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -259,6 +265,9 @@ operator|-
 name|page_offset
 argument_list|)
 expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|sf
 operator|=
 name|sf_buf_alloc
@@ -270,7 +279,7 @@ operator|>>
 name|PAGE_SHIFT
 index|]
 argument_list|,
-literal|0
+name|SFB_CPUPRIVATE
 argument_list|)
 expr_stmt|;
 name|cp
@@ -355,6 +364,9 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -404,6 +416,9 @@ name|sf_buf_free
 argument_list|(
 name|sf
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 name|iov
 operator|->
