@@ -1343,6 +1343,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|UREAD1
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|)
+value|inb((sc)->sc_iobase + (r))
+end_define
+
+begin_define
+define|#
+directive|define
 name|UREAD2
 parameter_list|(
 name|sc
@@ -2144,7 +2156,8 @@ block|{
 name|printf
 argument_list|(
 literal|"%s; regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
-literal|"flbase=%08x, sof=%04x, portsc1=%04x, portsc2=%04x\n"
+literal|"flbase=%08x, sof=%02x, portsc1=%04x, portsc2=%04x, "
+literal|"legsup=%04x\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2183,14 +2196,14 @@ argument_list|,
 name|UHCI_FRNUM
 argument_list|)
 argument_list|,
-name|UREAD2
+name|UREAD4
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_FLBASEADDR
 argument_list|)
 argument_list|,
-name|UREAD2
+name|UREAD1
 argument_list|(
 name|sc
 argument_list|,
@@ -2209,6 +2222,13 @@ argument_list|(
 name|sc
 argument_list|,
 name|UHCI_PORTSC2
+argument_list|)
+argument_list|,
+name|UREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_LEGSUP
 argument_list|)
 argument_list|)
 expr_stmt|;
