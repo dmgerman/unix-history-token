@@ -10193,7 +10193,7 @@ name|tmp
 decl_stmt|;
 name|minfo
 argument_list|(
-literal|"EXCLUDE_FILE ( %s"
+literal|"EXCLUDE_FILE(%s"
 argument_list|,
 name|sec
 operator|->
@@ -10226,7 +10226,7 @@ name|next
 control|)
 name|minfo
 argument_list|(
-literal|", %s"
+literal|" %s"
 argument_list|,
 name|tmp
 operator|->
@@ -10235,7 +10235,7 @@ argument_list|)
 expr_stmt|;
 name|minfo
 argument_list|(
-literal|")"
+literal|") "
 argument_list|)
 expr_stmt|;
 block|}
@@ -10277,6 +10277,17 @@ condition|)
 name|minfo
 argument_list|(
 literal|")"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|->
+name|next
+condition|)
+name|minfo
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 block|}
