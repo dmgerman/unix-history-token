@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)idp_usrreq.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)idp_usrreq.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -2177,17 +2171,14 @@ name|PRU_ATTACH
 case|:
 if|if
 condition|(
-name|suser
-argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
+operator|!
+operator|(
+name|so
+operator|->
+name|so_state
 operator|&
-name|u
-operator|.
-name|u_acflag
-argument_list|)
+name|SS_PRIV
+operator|)
 operator|||
 operator|(
 name|nsp

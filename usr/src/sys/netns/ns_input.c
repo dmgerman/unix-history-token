@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_input.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_input.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1016,12 +1016,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|idp_donosocks
-operator|=
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|idp_ctlinput
@@ -2109,14 +2110,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_decl_stmt
-specifier|static
-name|union
-name|ns_net
-name|ns_zeronet
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|ns_watch_output
