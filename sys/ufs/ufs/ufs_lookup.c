@@ -333,10 +333,6 @@ name|bmask
 decl_stmt|;
 comment|/* block offset mask */
 name|int
-name|wantparent
-decl_stmt|;
-comment|/* 1 => wantparent or lockparent flag */
-name|int
 name|namlen
 decl_stmt|,
 name|error
@@ -419,16 +415,6 @@ name|VTOI
 argument_list|(
 name|vdp
 argument_list|)
-expr_stmt|;
-name|wantparent
-operator|=
-name|flags
-operator|&
-operator|(
-name|LOCKPARENT
-operator||
-name|WANTPARENT
-operator|)
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|slotstatus
@@ -1713,7 +1699,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 * If the wantparent flag isn't set, we return only 	 * the directory (in ndp->ni_dvp), otherwise we go 	 * on and lock the inode, being careful with ".". 	 */
+comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if
 condition|(
 name|nameiop
@@ -1908,8 +1894,6 @@ condition|(
 name|nameiop
 operator|==
 name|RENAME
-operator|&&
-name|wantparent
 operator|&&
 operator|(
 name|flags
