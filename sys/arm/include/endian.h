@@ -407,7 +407,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(__builtin_constant_p(x) ?	\      __bswap16_constant(x) : \      __bswap16_var(x))
+value|((__uint16_t)(__builtin_constant_p(x) ?	\      __bswap16_constant(x) :			\      __bswap16_var(x)))
 end_define
 
 begin_define
@@ -418,7 +418,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(__builtin_constant_p(x) ? 	\      __bswap32_constant(x) : \      __bswap32_var(x))
+value|((__uint32_t)(__builtin_constant_p(x) ? 	\      __bswap32_constant(x) :			\      __bswap32_var(x)))
 end_define
 
 begin_else
