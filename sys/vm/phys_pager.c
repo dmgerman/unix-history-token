@@ -148,7 +148,14 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Lock to prevent object creation race condition. 	 */
+if|if
+condition|(
+name|handle
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Lock to prevent object creation race condition. 		 */
 while|while
 condition|(
 name|phys_pager_alloc_lock
@@ -177,7 +184,7 @@ name|phys_pager_alloc_lock
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Look up pager, creating as necessary. 	 */
+comment|/* 		 * Look up pager, creating as necessary. 		 */
 name|object
 operator|=
 name|vm_pager_object_lookup
@@ -195,7 +202,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Allocate object and associate it with the pager. 		 */
+comment|/* 			 * Allocate object and associate it with the pager. 			 */
 name|object
 operator|=
 name|vm_object_allocate
@@ -205,8 +212,6 @@ argument_list|,
 name|OFF_TO_IDX
 argument_list|(
 name|foff
-operator|+
-name|PAGE_MASK
 operator|+
 name|size
 argument_list|)
@@ -231,7 +236,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Gain a reference to the object. 		 */
+comment|/* 			 * Gain a reference to the object. 			 */
 name|vm_object_reference
 argument_list|(
 name|object
@@ -276,6 +281,24 @@ operator|&
 name|phys_pager_alloc_lock
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|object
+operator|=
+name|vm_object_allocate
+argument_list|(
+name|OBJT_PHYS
+argument_list|,
+name|OFF_TO_IDX
+argument_list|(
+name|foff
+operator|+
+name|size
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|object
@@ -293,6 +316,14 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
+if|if
+condition|(
+name|object
+operator|->
+name|handle
+operator|!=
+name|NULL
+condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
