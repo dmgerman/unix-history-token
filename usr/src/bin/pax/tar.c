@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	1.1 (Berkeley) %G%"
+literal|"@(#)tar.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,7 +431,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * ul_oct()  *	convert an unsigned long to an octal string. one of many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is BLANK padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
+comment|/*  * ul_oct()  *	convert an unsigned long to an octal string. many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is BLANK padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
 end_comment
 
 begin_if
@@ -1591,6 +1591,12 @@ name|arcn
 operator|->
 name|sb
 operator|.
+name|st_ctime
+operator|=
+name|arcn
+operator|->
+name|sb
+operator|.
 name|st_atime
 operator|=
 name|arcn
@@ -1860,7 +1866,6 @@ name|pt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* remove trailing / */
 operator|--
 name|arcn
 operator|->
@@ -3138,7 +3143,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * follow the spec to the letter, we should only have mode bits, strip 	 * off all other crud we may be passed. 	 */
+comment|/* 	 * follow the spec to the letter. we should only have mode bits, strip 	 * off all other crud we may be passed. 	 */
 name|arcn
 operator|->
 name|sb
@@ -3222,6 +3227,12 @@ name|arcn
 operator|->
 name|sb
 operator|.
+name|st_ctime
+operator|=
+name|arcn
+operator|->
+name|sb
+operator|.
 name|st_atime
 operator|=
 name|arcn
@@ -3230,7 +3241,7 @@ name|sb
 operator|.
 name|st_mtime
 expr_stmt|;
-comment|/* 	 * If we can find the ascii names for gname and uname in the password 	 * and group files we will use the uid's and gid they bind. Otherwise 	 * we use the uid and gid values stored in the header. 	 */
+comment|/* 	 * If we can find the ascii names for gname and uname in the password 	 * and group files we will use the uid's and gid they bind. Otherwise 	 * we use the uid and gid values stored in the header. (This is what 	 * the posix spec wants). 	 */
 name|hd
 operator|->
 name|gname
