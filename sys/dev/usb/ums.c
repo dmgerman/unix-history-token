@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * HID spec: http://www.usb.org/developers/data/devclass/hid1_1.pdf  */
+comment|/*  * HID spec: http://www.usb.org/developers/devclass_docs/HID1_11.pdf  */
 end_comment
 
 begin_include
