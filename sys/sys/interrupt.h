@@ -274,7 +274,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/*  * Software interrupt bit numbers in priority order.  The priority only  * determines which swi will be dispatched next; a higher priority swi  * may be dispatched when a nested h/w interrupt handler returns.  */
+comment|/*  * Software interrupt numbers in priority order.  The priority determines  * the priority of the corresponding interrupt thread.  */
 end_comment
 
 begin_define
@@ -315,14 +315,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SWI_TQ_FAST
+name|SWI_CLOCK
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_TQ_GIANT
+name|SWI_TQ_FAST
 value|6
 end_define
 
@@ -330,14 +330,14 @@ begin_define
 define|#
 directive|define
 name|SWI_TQ
-value|7
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_CLOCK
-value|8
+name|SWI_TQ_GIANT
+value|6
 end_define
 
 begin_decl_stmt
