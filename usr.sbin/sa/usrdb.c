@@ -32,6 +32,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -1008,7 +1014,11 @@ name|data
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8s %9qu "
+literal|"%-*s %9qu "
+argument_list|,
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 name|user_from_uid
 argument_list|(
