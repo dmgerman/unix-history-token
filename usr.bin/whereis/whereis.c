@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whereis.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)whereis.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -199,6 +205,15 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/* Retrieve the standard path. */
 name|mib
@@ -456,7 +471,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"whereis: program ...\n"
+literal|"usage: whereis program [...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
