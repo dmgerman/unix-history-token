@@ -604,7 +604,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot bind udp: %m"
+literal|"cannot bind tcp: %m"
 argument_list|)
 expr_stmt|;
 name|exit
