@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_enreg.h	4.1	81/11/07	*/
+comment|/*	if_enreg.h	4.2	81/11/07	*/
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EN_PROMISCUOOS
+name|EN_PROMISCUOUS
 value|0x0002
 end_define
 
