@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	8.5 (Berkeley) %G%"
+literal|"@(#)rec_open.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,6 @@ name|bt_rcursor
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * In 4.4BSD stat(2) returns true for ISSOCK on pipes.  Until 	 * then, this is fairly close.  Pipes are read-only. 	 */
 if|if
 condition|(
 name|fname
@@ -424,6 +423,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * In 4.4BSD, stat(2) returns true for ISSOCK on pipes. 		 * Unfortunately, that's not portable, so we use lseek 		 * and check the errno values. 		 */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|lseek
