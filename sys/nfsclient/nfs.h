@@ -571,8 +571,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|callout_handle
-name|nfs_timer_handle
+name|callout
+name|nfs_callout
 decl_stmt|;
 end_decl_stmt
 

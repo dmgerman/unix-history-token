@@ -1214,11 +1214,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rpcclnt_timer
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* !__OpenBSD__ */
@@ -1243,13 +1238,13 @@ argument_list|(
 literal|"uninit"
 argument_list|)
 expr_stmt|;
+comment|/* XXX delete sysctl variables? */
 name|callout_stop
 argument_list|(
 operator|&
 name|rpcclnt_callout
 argument_list|)
 expr_stmt|;
-comment|/* XXX delete sysctl variables? */
 block|}
 end_function
 
@@ -5205,6 +5200,26 @@ operator|=
 name|splsoftclock
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|rpctask_q
+argument_list|)
+condition|)
+name|callout_reset
+argument_list|(
+operator|&
+name|rpcclnt_callout
+argument_list|,
+name|rpcclnt_ticks
+argument_list|,
+name|rpcclnt_timer
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5399,6 +5414,20 @@ argument_list|,
 name|task
 argument_list|,
 name|r_chain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|rpctask_q
+argument_list|)
+condition|)
+name|callout_stop
+argument_list|(
+operator|&
+name|rpcclnt_callout
 argument_list|)
 expr_stmt|;
 name|splx
@@ -6623,20 +6652,6 @@ argument_list|,
 name|to
 argument_list|,
 name|rpcclnt_ticks
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|callout_reset
-argument_list|(
-operator|&
-name|rpcclnt_callout
-argument_list|,
-name|rpcclnt_ticks
-argument_list|,
-name|rpcclnt_timer
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
