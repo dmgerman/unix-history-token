@@ -205,11 +205,6 @@ name|date
 name|dt
 decl_stmt|;
 comment|/* Last day of Julian calendar */
-name|char
-modifier|*
-name|efmt
-decl_stmt|;
-comment|/* strftime format for printing date of easter */
 block|}
 name|switches
 index|[]
@@ -227,8 +222,6 @@ literal|11
 block|,
 literal|30
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -243,8 +236,6 @@ literal|10
 block|,
 literal|5
 block|}
-block|,
-literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -259,8 +250,6 @@ literal|9
 block|,
 literal|2
 block|}
-block|,
-literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -275,8 +264,6 @@ literal|12
 block|,
 literal|14
 block|}
-block|,
-literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -291,8 +278,6 @@ literal|3
 block|,
 literal|18
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -307,8 +292,6 @@ literal|9
 block|,
 literal|2
 block|}
-block|,
-literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -323,8 +306,6 @@ literal|2
 block|,
 literal|28
 block|}
-block|,
-literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -339,8 +320,6 @@ literal|12
 block|,
 literal|18
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -355,8 +334,6 @@ literal|1
 block|,
 literal|6
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -371,8 +348,6 @@ literal|2
 block|,
 literal|18
 block|}
-block|,
-literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -387,8 +362,6 @@ literal|2
 block|,
 literal|18
 block|}
-block|,
-literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -403,8 +376,6 @@ literal|10
 block|,
 literal|4
 block|}
-block|,
-literal|"%e de %B de %Y"
 block|}
 block|,
 block|{
@@ -419,8 +390,6 @@ literal|2
 block|,
 literal|17
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -435,8 +404,6 @@ literal|12
 block|,
 literal|9
 block|}
-block|,
-literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -451,8 +418,6 @@ literal|9
 block|,
 literal|2
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -467,8 +432,6 @@ literal|3
 block|,
 literal|9
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -483,8 +446,6 @@ literal|10
 block|,
 literal|21
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -499,8 +460,6 @@ literal|11
 block|,
 literal|16
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -515,8 +474,6 @@ literal|10
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -531,8 +488,6 @@ literal|12
 block|,
 literal|18
 block|}
-block|,
-literal|"%Y\x94N %B%e"
 block|}
 block|,
 block|{
@@ -547,8 +502,6 @@ literal|2
 block|,
 literal|1
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -563,8 +516,6 @@ literal|05
 block|,
 literal|31
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -579,8 +530,6 @@ literal|12
 block|,
 literal|14
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -595,8 +544,6 @@ literal|2
 block|,
 literal|1
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -611,8 +558,6 @@ literal|12
 block|,
 literal|14
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -627,8 +572,6 @@ literal|2
 block|,
 literal|18
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -643,8 +586,6 @@ literal|10
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -659,8 +600,6 @@ literal|10
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -675,8 +614,6 @@ literal|3
 block|,
 literal|31
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -691,8 +628,6 @@ literal|1
 block|,
 literal|31
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -707,8 +642,6 @@ literal|3
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -723,8 +656,6 @@ literal|3
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -739,8 +670,6 @@ literal|2
 block|,
 literal|17
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -755,8 +684,6 @@ literal|12
 block|,
 literal|18
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -771,8 +698,6 @@ literal|9
 block|,
 literal|2
 block|}
-block|,
-literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -787,8 +712,6 @@ literal|3
 block|,
 literal|4
 block|}
-block|,
-literal|"%e %B %Y"
 block|}
 block|}
 struct|;
@@ -914,17 +837,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* switch date for backward compatibility */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|efmt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* strftime format string for printeaster() */
 end_comment
 
 begin_function_decl
@@ -1387,12 +1299,6 @@ operator|->
 name|dt
 argument_list|)
 expr_stmt|;
-name|efmt
-operator|=
-name|dftswitch
-operator|->
-name|efmt
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1405,12 +1311,6 @@ name|p
 operator|->
 name|dt
 argument_list|)
-expr_stmt|;
-name|efmt
-operator|=
-name|p
-operator|->
-name|efmt
 expr_stmt|;
 name|dftswitch
 operator|=
@@ -2185,7 +2085,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|efmt
+literal|"%EF %Y"
 argument_list|,
 operator|&
 name|tm
