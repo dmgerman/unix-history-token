@@ -224,6 +224,7 @@ value|((a)>= (b) ? (a) : (b))
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfname
@@ -233,6 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfextension
@@ -299,7 +301,11 @@ name|struct
 name|fileusage
 modifier|*
 name|lookup
-parameter_list|()
+parameter_list|(
+name|u_long
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -308,7 +314,14 @@ name|struct
 name|fileusage
 modifier|*
 name|addid
-parameter_list|()
+parameter_list|(
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1402,18 +1415,27 @@ name|printf
 argument_list|(
 literal|"  %7lu %7lu %7lu %6s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|fup
 operator|->
 name|fu_dqblk
 operator|.
 name|dqb_curinodes
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|fup
 operator|->
 name|fu_dqblk
 operator|.
 name|dqb_isoftlimit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|fup
 operator|->
 name|fu_dqblk
@@ -2113,11 +2135,25 @@ name|now
 operator|>
 name|seconds
 condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"none"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|"none"
+name|buf
 operator|)
 return|;
+block|}
 name|seconds
 operator|-=
 name|now
@@ -2155,11 +2191,14 @@ name|buf
 argument_list|,
 literal|"%lddays"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|hours
 operator|+
 literal|12
-operator|)
+argument_list|)
 operator|/
 literal|24
 argument_list|)
@@ -2183,10 +2222,16 @@ name|buf
 argument_list|,
 literal|"%2ld:%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 operator|/
 literal|60
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 operator|%
 literal|60
@@ -2204,6 +2249,9 @@ name|buf
 argument_list|,
 literal|"%2ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 argument_list|)
 expr_stmt|;
