@@ -396,7 +396,11 @@ operator|||
 operator|(
 name|bmsr
 operator|&
+operator|(
+name|BMSR_EXTSTAT
+operator||
 name|BMSR_MEDIAMASK
+operator|)
 operator|)
 operator|==
 literal|0
@@ -1199,7 +1203,11 @@ operator|||
 operator|(
 name|bmsr
 operator|&
+operator|(
+name|BMSR_EXTSTAT
+operator||
 name|BMSR_MEDIAMASK
+operator|)
 operator|)
 operator|==
 literal|0
