@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.28 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,8 +1517,8 @@ name|int
 operator|)
 name|secsize
 argument_list|)
-operator|<
-literal|0
+operator|!=
+name|secsize
 condition|)
 block|{
 operator|(
@@ -1769,8 +1769,8 @@ name|int
 operator|)
 name|dev_bsize
 argument_list|)
-operator|<
-literal|0
+operator|!=
+name|dev_bsize
 condition|)
 block|{
 operator|(
@@ -2085,6 +2085,12 @@ name|struct
 name|inodesc
 name|idesc
 decl_stmt|;
+specifier|static
+name|int
+name|busy
+init|=
+literal|0
+decl_stmt|;
 specifier|extern
 name|int
 name|findname
@@ -2092,6 +2098,9 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+name|busy
+operator|||
+operator|(
 name|statemap
 index|[
 name|curdir
@@ -2105,6 +2114,7 @@ name|curdir
 index|]
 operator|!=
 name|DFOUND
+operator|)
 condition|)
 block|{
 operator|(
@@ -2119,6 +2129,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|busy
+operator|=
+literal|1
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2140,6 +2154,12 @@ operator|.
 name|id_type
 operator|=
 name|DATA
+expr_stmt|;
+name|idesc
+operator|.
+name|id_fix
+operator|=
+name|IGNORE
 expr_stmt|;
 name|cp
 operator|=
@@ -2315,6 +2335,10 @@ operator|.
 name|id_number
 expr_stmt|;
 block|}
+name|busy
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ino
@@ -2568,6 +2592,9 @@ operator|)
 return|;
 case|case
 name|NOFIX
+case|:
+case|case
+name|IGNORE
 case|:
 return|return
 operator|(
