@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.10	85/01/16	*/
+comment|/*	gethostent.c	4.10	85/01/21	*/
 end_comment
 
 begin_include
@@ -59,16 +59,6 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|HOSTDB
-init|=
-literal|"/etc/hosts"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|FILE
 modifier|*
 name|hostf
@@ -115,6 +105,19 @@ name|host_aliases
 index|[
 name|MAXALIASES
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The following is shared with gethostnamadr.c  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_host_file
+init|=
+literal|"/etc/hosts"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +259,7 @@ name|hostf
 operator|=
 name|fopen
 argument_list|(
-name|HOSTDB
+name|_host_file
 argument_list|,
 literal|"r"
 argument_list|)
@@ -534,7 +537,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|HOSTDB
+name|_host_file
 operator|=
 name|file
 expr_stmt|;
