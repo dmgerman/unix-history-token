@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	2.1	%G%"
+literal|"@(#)err.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,11 @@ argument_list|(
 literal|"delivermail: %s\n"
 argument_list|,
 name|errbuf
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 name|Errors
@@ -317,6 +322,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 return|return
