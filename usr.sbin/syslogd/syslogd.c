@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.49 1999/05/02 17:44:16 dt Exp $"
+literal|"$Id: syslogd.c,v 1.50 1999/05/04 18:03:59 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3102,11 +3102,11 @@ literal|1
 index|]
 decl_stmt|;
 name|int
-name|l
+name|len
 decl_stmt|,
 name|i
 decl_stmt|;
-name|l
+name|len
 operator|=
 literal|0
 expr_stmt|;
@@ -3124,13 +3124,13 @@ name|fklog
 argument_list|,
 name|line
 operator|+
-name|l
+name|len
 argument_list|,
 name|MAXLINE
 operator|-
 literal|1
 operator|-
-name|l
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -3143,7 +3143,7 @@ name|line
 index|[
 name|i
 operator|+
-name|l
+name|len
 index|]
 operator|=
 literal|'\0'
@@ -3215,7 +3215,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|l
+name|len
 operator|=
 name|strlen
 argument_list|(
@@ -3224,7 +3224,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l
+name|len
 operator|>=
 name|MAXLINE
 operator|-
@@ -3236,14 +3236,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|l
+name|len
 operator|=
 literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|l
+name|len
 operator|>
 literal|0
 condition|)
@@ -3253,7 +3253,7 @@ name|line
 argument_list|,
 name|p
 argument_list|,
-name|l
+name|len
 operator|+
 literal|1
 argument_list|)
@@ -3261,7 +3261,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|l
+name|len
 operator|>
 literal|0
 condition|)
