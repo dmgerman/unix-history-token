@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.3 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,7 +708,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[mcleanup] frompc %d selfpc %d count %d\n"
+literal|"[mcleanup] frompc 0x%x selfpc 0x%x count %d\n"
 argument_list|,
 name|frompc
 argument_list|,
