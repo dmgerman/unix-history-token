@@ -186,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bdg.h"
 end_include
 
