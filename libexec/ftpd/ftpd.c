@@ -7940,8 +7940,16 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * Never sending a raw directory is a workaround 			 * for buggy clients that will attempt to RETR 			 * a directory before listing it, e.g., Mozilla. 			 * Preventing a guest from getting irregular files 			 * is a simple security measure. 			 */
 if|if
 condition|(
+name|S_ISDIR
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+operator|||
 name|guest
 condition|)
 block|{
