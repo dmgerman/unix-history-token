@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.13	84/03/16  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.14	84/03/21  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.13	84/03/16"
+literal|"dver.c	1.14	84/03/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -6636,6 +6636,28 @@ operator|->
 name|nbytes
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"char %d at (%d,%d)"
+argument_list|,
+name|code
+argument_list|,
+name|hpos
+argument_list|,
+name|vpos
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|=
 name|bits
@@ -6756,10 +6778,6 @@ control|)
 block|{
 if|if
 condition|(
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|scanp
 operator|+
 operator|(
@@ -6767,14 +6785,44 @@ name|count
 operator|=
 name|llen
 operator|)
-argument_list|)
 operator|>
-operator|(
-name|unsigned
-operator|)
 name|BUFBOTTOM
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" scrapped\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|scanp
@@ -6880,6 +6928,22 @@ operator|+=
 name|count
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block
@@ -6951,6 +7015,11 @@ argument_list|,
 name|tsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dbg
+condition|)
 endif|#
 directive|endif
 if|if
