@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.242 1997/12/07 08:09:19 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.243 1998/01/07 08:40:34 yokota Exp $  */
 end_comment
 
 begin_include
@@ -20990,6 +20990,10 @@ init|=
 name|get_scr_num
 argument_list|()
 decl_stmt|;
+name|accents
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|next
@@ -21068,21 +21072,29 @@ operator|<=
 name|L_ACC
 condition|)
 block|{
-name|accents
-operator|=
+comment|/* turn it into an index */
 name|action
-operator|-
+operator|-=
 name|F_ACC
-operator|+
+operator|-
 literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|action
+operator|>
+name|accent_map
+operator|.
+name|n_accs
+operator|)
+operator|||
+operator|(
 name|accent_map
 operator|.
 name|acc
 index|[
-name|accents
+name|action
 operator|-
 literal|1
 index|]
@@ -21090,8 +21102,10 @@ operator|.
 name|accchar
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
+comment|/*  			 * The index is out of range or pointing to an  			 * empty entry. 			 */
 name|accents
 operator|=
 literal|0
@@ -21106,6 +21120,50 @@ name|BELL_DURATION
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  		     * If the same accent key has been hit twice, 		     * produce the accent char itself. 		     */
+if|if
+condition|(
+name|action
+operator|==
+name|accents
+condition|)
+block|{
+name|action
+operator|=
+name|accent_map
+operator|.
+name|acc
+index|[
+name|accents
+operator|-
+literal|1
+index|]
+operator|.
+name|accchar
+expr_stmt|;
+name|accents
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|metas
+condition|)
+name|action
+operator||=
+name|MKEY
+expr_stmt|;
+return|return
+operator|(
+name|action
+operator|)
+return|;
+block|}
+comment|/* remember the index and wait for the next key stroke */
+name|accents
+operator|=
+name|action
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -21203,6 +21261,7 @@ name|accents
 operator|=
 literal|0
 expr_stmt|;
+comment|/*  		 * If the accent key is followed by the space key, 		 * produce the accent char itself. 		 */
 if|if
 condition|(
 name|action
@@ -21258,6 +21317,7 @@ index|]
 operator|==
 literal|0
 condition|)
+comment|/* end of the map entry */
 break|break;
 if|if
 condition|(
