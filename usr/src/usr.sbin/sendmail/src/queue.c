@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.32 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.33 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.32 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.33 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3769,9 +3769,6 @@ operator|!
 name|readqf
 argument_list|(
 name|e
-argument_list|,
-operator|!
-name|requeueflag
 argument_list|)
 condition|)
 block|{
@@ -3870,7 +3867,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		announcefile -- if set, announce the name of the queue **			file in error messages. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
 end_comment
 
 begin_function
@@ -3878,16 +3875,11 @@ name|bool
 name|readqf
 parameter_list|(
 name|e
-parameter_list|,
-name|announcefile
 parameter_list|)
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
-decl_stmt|;
-name|bool
-name|announcefile
 decl_stmt|;
 block|{
 specifier|register
@@ -4285,14 +4277,6 @@ name|e_id
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|announcefile
-condition|)
-name|FileName
-operator|=
-name|qf
 expr_stmt|;
 name|LineNumber
 operator|=
@@ -4721,11 +4705,9 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf: bad line \"%s\""
+literal|"readqf: %s: line %s: bad line \"%s\""
 argument_list|,
-name|e
-operator|->
-name|e_id
+name|qf
 argument_list|,
 name|LineNumber
 argument_list|,
@@ -4765,10 +4747,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|FileName
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	**  If we haven't read any lines, this queue file is empty. 	**  Arrange to remove it without referencing any null pointers. 	*/
 if|if
 condition|(
