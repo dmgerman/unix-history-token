@@ -284,11 +284,9 @@ name|int
 name|nprot
 decl_stmt|;
 block|{
-comment|/* Don't return ENODEV.  That would allow mapping address ENODEV! */
 return|return
 operator|(
-operator|-
-literal|1
+name|ENODEV
 operator|)
 return|;
 block|}
