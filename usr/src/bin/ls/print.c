@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.34 (Berkeley) %G%"
+literal|"@(#)print.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,7 +380,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*ld "
+literal|"%*qd "
 argument_list|,
 name|dp
 operator|->
@@ -1075,7 +1075,7 @@ name|chcnt
 operator|+=
 name|printf
 argument_list|(
-literal|"%*ld "
+literal|"%*qd "
 argument_list|,
 name|sizefield
 argument_list|,
