@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	8.5 (Berkeley) %G%"
+literal|"@(#)w.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -901,6 +901,10 @@ name|utmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|stp
 operator|=
 name|ttystat
@@ -911,7 +915,9 @@ name|utmp
 operator|.
 name|ut_line
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+continue|continue;
 name|ep
 operator|->
 name|tdev
@@ -2358,15 +2364,11 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|ttybuf
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 operator|&
