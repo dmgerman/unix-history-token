@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_arp.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_arp.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,10 +47,31 @@ name|ARPOP_REPLY
 value|2
 comment|/* response to previous request */
 comment|/*  * The remaining fields are variable in size,  * according to the sizes above.  */
-comment|/*	u_char	ar_sha[];	/* sender hardware address */
-comment|/*	u_char	ar_spa[];	/* sender protocol address */
-comment|/*	u_char	ar_tha[];	/* target hardware address */
-comment|/*	u_char	ar_tpa[];	/* target protocol address */
+ifdef|#
+directive|ifdef
+name|COMMENT_ONLY
+name|u_char
+name|ar_sha
+index|[]
+decl_stmt|;
+comment|/* sender hardware address */
+name|u_char
+name|ar_spa
+index|[]
+decl_stmt|;
+comment|/* sender protocol address */
+name|u_char
+name|ar_tha
+index|[]
+decl_stmt|;
+comment|/* target hardware address */
+name|u_char
+name|ar_tpa
+index|[]
+decl_stmt|;
+comment|/* target protocol address */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
