@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4089,30 +4089,9 @@ condition|)
 goto|goto
 name|drop
 goto|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_socket
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-condition|)
-name|tcp_trace
+name|m_freem
 argument_list|(
-name|TA_RESPOND
-argument_list|,
-name|ostate
-argument_list|,
-name|tp
-argument_list|,
-operator|&
-name|tcp_saveti
-argument_list|,
-literal|0
+name|m
 argument_list|)
 expr_stmt|;
 name|tp
