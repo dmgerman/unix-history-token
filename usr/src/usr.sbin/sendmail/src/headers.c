@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.7 (Berkeley) %G%"
+literal|"@(#)headers.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,10 @@ name|p
 operator|++
 operator|!=
 literal|':'
+operator|||
+name|fname
+operator|==
+name|fvalue
 condition|)
 block|{
 name|syserr
