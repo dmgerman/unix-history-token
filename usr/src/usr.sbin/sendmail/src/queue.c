@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.27 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.28 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.27 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.28 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,12 +413,11 @@ condition|)
 continue|continue;
 name|syserr
 argument_list|(
-literal|"queueup: cannot create temp file %s"
+literal|"!queueup: cannot create temp file %s"
 argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -521,37 +520,15 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
 name|syserr
 argument_list|(
-literal|"queueup: cannot create %s"
+literal|"!queueup: cannot create %s"
 argument_list|,
 name|e
 operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|newid
-condition|)
-operator|(
-name|void
-operator|)
-name|xfclose
-argument_list|(
-name|tfp
-argument_list|,
-literal|"queueup tfp"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|dfp
 operator|=
 name|fdopen

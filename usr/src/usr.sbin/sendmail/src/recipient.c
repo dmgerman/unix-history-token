@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.28 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2468,6 +2468,41 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|transienterror
+argument_list|(
+name|ret
+argument_list|)
+condition|)
+block|{
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+operator||
+name|QDONTSEND
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"451 Cannot open %s: %s"
+argument_list|,
+name|fname
+argument_list|,
+name|errstring
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|usrerr
 argument_list|(
 literal|"550 Cannot open %s: %s"
@@ -2480,6 +2515,7 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;

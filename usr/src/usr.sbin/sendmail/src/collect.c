@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.9 (Berkeley) %G%"
+literal|"@(#)collect.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,6 +1092,8 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* we haven't acked receipt yet, so just chuck this */
 name|syserr
 argument_list|(
 literal|"Cannot reopen %s"
@@ -1101,6 +1103,10 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_block
 

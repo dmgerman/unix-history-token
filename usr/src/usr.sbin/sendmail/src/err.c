@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.7 (Berkeley) %G%"
+literal|"@(#)err.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<netdb.h>
 end_include
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_ifdef
@@ -160,7 +160,24 @@ name|olderrno
 init|=
 name|errno
 decl_stmt|;
+name|bool
+name|panic
+decl_stmt|;
 name|VA_LOCAL_DECL
+name|panic
+init|=
+operator|*
+name|fmt
+operator|==
+literal|'!'
+decl_stmt|;
+if|if
+condition|(
+name|panic
+condition|)
+name|fmt
+operator|++
+expr_stmt|;
 comment|/* format and output the error message */
 if|if
 condition|(
@@ -243,6 +260,10 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
+name|panic
+condition|?
+name|LOG_ALERT
+else|:
 name|LOG_CRIT
 argument_list|,
 literal|"%s: SYSERR: %s"
@@ -269,6 +290,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+if|if
+condition|(
+name|panic
+condition|)
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 literal|0
