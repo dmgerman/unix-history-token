@@ -1071,7 +1071,7 @@ decl_stmt|;
 define|#
 directive|define
 name|IDENTLEN
-value|80
+value|300
 name|char
 name|keybuf
 index|[
