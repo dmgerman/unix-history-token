@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.5	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.6	%G% */
 end_comment
 
 begin_ifndef
@@ -84,23 +84,31 @@ begin_comment
 comment|/* define the types of some common functions */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strncpy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strncat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
