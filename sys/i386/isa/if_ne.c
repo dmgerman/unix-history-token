@@ -1594,7 +1594,9 @@ name|ETHERMTU
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" ethernet address %s"
+literal|"ne%d: address %s"
+argument_list|,
+name|unit
 argument_list|,
 name|ether_sprintf
 argument_list|(

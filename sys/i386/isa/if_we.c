@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.2  1993/07/29  12:07:10  davidg  * Added include of systm.h to get min/max/bcmp etc...  *  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
+comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.3  1993/08/22  22:54:56  ats  * Added a new-line in the output of the ethernet-address that it gets  * on it's line alone ( not mangled with the FPU detection ).  * Commented out a debug printf in if_ec.c ( printf("ecinit") ).  *  * Revision 1.2  1993/07/29  12:07:10  davidg  * Added include of systm.h to get min/max/bcmp etc...  *  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
 end_comment
 
 begin_include
@@ -602,12 +602,20 @@ directive|ifdef
 name|WECOMPAT
 name|printf
 argument_list|(
-literal|"we: probe: checksum failed... installing anyway\n"
+literal|"we%d: probe: checksum failed... installing anyway\n"
+argument_list|,
+name|is
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"we: Danpex EW-2016 or other 8013 clone card?\n"
+literal|"we%d: Danpex EW-2016 or other 8013 clone card?\n"
+argument_list|,
+name|is
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 else|#
@@ -1283,7 +1291,11 @@ directive|endif
 comment|/* 	 * Banner... 	 */
 name|printf
 argument_list|(
-literal|" %saddr %s\n"
+literal|"we%d: %s address %s\n"
+argument_list|,
+name|is
+operator|->
+name|id_unit
 argument_list|,
 operator|(
 name|sc
@@ -1293,9 +1305,9 @@ operator|&
 name|WD_ETHERNET
 operator|)
 condition|?
-literal|"enet"
+literal|"ethernet"
 else|:
-literal|"slan"
+literal|"starlan"
 argument_list|,
 name|ether_sprintf
 argument_list|(

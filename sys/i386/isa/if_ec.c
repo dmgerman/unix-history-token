@@ -890,7 +890,11 @@ expr_stmt|;
 comment|/*  * Weeee.. We get to tell people we exist...  */
 name|printf
 argument_list|(
-literal|" address %s\n"
+literal|"ec%d: address %s\n"
+argument_list|,
+name|is
+operator|->
+name|id_unit
 argument_list|,
 name|ether_sprintf
 argument_list|(
