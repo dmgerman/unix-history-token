@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)streams.c	2.3	%G%"
+literal|"@(#)streams.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ file|"ctype.h"
 end_include
 
 begin_comment
-comment|/*  getword(stream,p,ignore):         read next sequence of nonspaces on current line into *p.     null if no more words on current line.     %x (x in ignore) terminates line.     all words of the form %a are returned as null.     *p is a null terminated string (char p[maxstr]). */
+comment|/*  getword(stream,p,ignore):         read next sequence of nonspaces on current line into *p.     null if no more words on current line.     %x (x in ignore) terminates line and any following non-blank lines that        don't begin with '%'     all words of the form %a are returned as null.     *p is a null terminated string (char p[maxstr]). */
 end_comment
 
 begin_macro
@@ -86,6 +86,9 @@ name|oldp
 decl_stmt|,
 modifier|*
 name|stop
+decl_stmt|;
+name|long
+name|save
 decl_stmt|;
 name|oldp
 operator|=
@@ -188,6 +191,9 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+do|do
+block|{
 while|while
 condition|(
 name|c
@@ -201,6 +207,44 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
+name|save
+operator|=
+name|ftell
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getc
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|c
+operator|!=
+name|EOF
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+name|c
+operator|!=
+literal|'%'
+condition|)
+do|;
+name|pos
+argument_list|(
+name|save
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -367,12 +411,6 @@ operator|=
 name|x
 expr_stmt|;
 comment|/*  find start of first non-blank record        */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|c
 operator|=
 name|getc
@@ -380,15 +418,50 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|c
 operator|==
 literal|'\n'
 condition|)
+block|{
 name|start
 operator|=
 name|ftell
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getc
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'#'
+condition|)
+while|while
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
+name|c
+operator|=
+name|getc
 argument_list|(
 name|stream
 argument_list|)
@@ -403,6 +476,14 @@ name|c
 argument_list|)
 condition|)
 break|break;
+else|else
+name|c
+operator|=
+name|getc
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
