@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ntfs/ntfsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isofs/cd9660/cd9660_mount.h>
 end_include
 
@@ -4310,6 +4316,10 @@ name|struct
 name|msdosfs_args
 name|da
 decl_stmt|;
+name|struct
+name|ntfs_args
+name|na
+decl_stmt|;
 block|}
 name|targs
 union|;
@@ -4343,6 +4353,16 @@ operator|->
 name|f_fstypename
 argument_list|,
 literal|"msdos"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|fsp
+operator|->
+name|f_fstypename
+argument_list|,
+literal|"ntfs"
 argument_list|)
 operator|||
 operator|!
@@ -8497,6 +8517,10 @@ name|da
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|ntfs_args
+name|na
+decl_stmt|;
 block|}
 name|args
 union|;
