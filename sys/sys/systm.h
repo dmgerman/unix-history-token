@@ -1620,7 +1620,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|u_cansee
+name|cr_cansee
 name|__P
 argument_list|(
 operator|(

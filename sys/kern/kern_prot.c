@@ -5586,7 +5586,7 @@ end_comment
 
 begin_function
 name|int
-name|u_cansee
+name|cr_cansee
 parameter_list|(
 name|struct
 name|ucred
@@ -5680,10 +5680,10 @@ modifier|*
 name|p2
 parameter_list|)
 block|{
-comment|/* Wrap u_cansee() for all functionality. */
+comment|/* Wrap cr_cansee() for all functionality. */
 return|return
 operator|(
-name|u_cansee
+name|cr_cansee
 argument_list|(
 name|p1
 operator|->

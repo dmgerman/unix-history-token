@@ -3155,7 +3155,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|u_cansee
+name|cr_cansee
 argument_list|(
 name|req
 operator|->
