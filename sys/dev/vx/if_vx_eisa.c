@@ -641,9 +641,11 @@ literal|"vx"
 block|,
 name|vx_eisa_methods
 block|,
-literal|1
-block|,
-comment|/* unused */
+expr|sizeof
+operator|(
+expr|struct
+name|vx_softc
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
