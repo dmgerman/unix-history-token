@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.17 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,7 +267,9 @@ name|dbp
 operator|=
 name|__bt_open
 argument_list|(
-name|NULL
+name|openinfo
+operator|->
+name|bfname
 argument_list|,
 name|O_RDWR
 argument_list|,
@@ -330,7 +332,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_FIXEDLEN
+name|R_FIXLEN
 argument_list|)
 expr_stmt|;
 name|t
@@ -373,7 +375,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RECNO
+name|R_RECNO
 argument_list|)
 expr_stmt|;
 if|if
@@ -386,9 +388,9 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 expr_stmt|;
 else|else
@@ -448,7 +450,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RDONLY
+name|R_RDONLY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -483,7 +485,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_CLOSEFP
+name|R_CLOSEFP
 argument_list|)
 expr_stmt|;
 name|t
@@ -494,7 +496,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_FIXEDLEN
+name|R_FIXLEN
 argument_list|)
 condition|?
 name|__rec_fpipe
@@ -518,7 +520,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RDONLY
+name|R_RDONLY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -616,7 +618,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 argument_list|)
 expr_stmt|;
 else|else
@@ -694,7 +696,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_FIXEDLEN
+name|R_FIXLEN
 argument_list|)
 condition|?
 name|__rec_fmap
@@ -705,7 +707,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MEMMAPPED
+name|R_MEMMAPPED
 argument_list|)
 expr_stmt|;
 block|}
@@ -836,9 +838,9 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 operator|&&
 name|t
