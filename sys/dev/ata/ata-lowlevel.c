@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2003 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2004 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/sema.h>
 end_include
 
 begin_include
@@ -259,6 +259,27 @@ modifier|*
 name|request
 parameter_list|)
 block|{
+comment|/* safety check, device might have been detached FIXME SOS */
+if|if
+condition|(
+operator|!
+name|request
+operator|->
+name|device
+operator|->
+name|param
+condition|)
+block|{
+name|request
+operator|->
+name|result
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return
+name|ATA_OP_FINISHED
+return|;
+block|}
 comment|/* record the request as running */
 name|request
 operator|->
@@ -269,6 +290,13 @@ operator|->
 name|running
 operator|=
 name|request
+expr_stmt|;
+name|ATA_DEBUG_RQ
+argument_list|(
+name|request
+argument_list|,
+literal|"transaction"
+argument_list|)
 expr_stmt|;
 comment|/* disable ATAPI DMA writes if HW doesn't support it */
 if|if
@@ -332,7 +360,7 @@ block|{
 comment|/* ATA PIO data transfer and control commands */
 default|default:
 block|{
-comment|/* record command direction here as our request might be done later */
+comment|/* record command direction here as our request might be gone later */
 name|int
 name|write
 init|=
@@ -1403,9 +1431,25 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+name|ATA_DEBUG_RQ
+argument_list|(
+name|request
+argument_list|,
+literal|"interrupt"
+argument_list|)
+expr_stmt|;
 comment|/* ignore interrupt if device is busy */
 if|if
 condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
+operator|&&
 name|ATA_IDX_INB
 argument_list|(
 name|ch
@@ -1437,6 +1481,13 @@ operator|)
 condition|)
 return|return;
 block|}
+name|ATA_DEBUG_RQ
+argument_list|(
+name|request
+argument_list|,
+literal|"interrupt accepted"
+argument_list|)
+expr_stmt|;
 comment|/* clear interrupt and get status */
 name|request
 operator|->
@@ -1448,6 +1499,12 @@ name|ch
 argument_list|,
 name|ATA_STATUS
 argument_list|)
+expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_INTR_SEEN
 expr_stmt|;
 switch|switch
 condition|(
@@ -2251,6 +2308,24 @@ expr_stmt|;
 comment|/* done with HW */
 break|break;
 block|}
+comment|/* if we timed out, we hold on to the channel, ata_reinit() will unlock */
+if|if
+condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+condition|)
+block|{
+name|ata_finish
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* schedule completition for this request */
 name|ata_finish
 argument_list|(
 name|request
@@ -2435,7 +2510,7 @@ literal|0x02
 expr_stmt|;
 block|}
 block|}
-comment|/* if nothing showed up no need to get any further */
+comment|/* if nothing showed up there is no need to get any further */
 comment|/* SOS is that too strong?, we just might loose devices here XXX */
 name|ch
 operator|->
@@ -2469,7 +2544,21 @@ argument_list|,
 name|ostat1
 argument_list|)
 expr_stmt|;
-comment|/* reset channel */
+comment|/* reset host end of channel (if supported) */
+if|if
+condition|(
+name|ch
+operator|->
+name|reset
+condition|)
+name|ch
+operator|->
+name|reset
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+comment|/* reset (both) devices on this channel */
 name|ATA_IDX_OUTB
 argument_list|(
 name|ch
@@ -2991,6 +3080,21 @@ literal|100000
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* enable interrupt */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|ATA_IDX_OUTB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|,
+name|ATA_A_4BIT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat0
@@ -3039,12 +3143,6 @@ argument_list|,
 literal|"\20\4ATAPI_SLAVE\3ATAPI_MASTER\2ATA_SLAVE\1ATA_MASTER"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!mask) 	return;      if (mask& 0x01&& ostat0 != 0x00&&         !(ch->devices& (ATA_ATA_MASTER | ATA_ATAPI_MASTER))) { 	ATA_IDX_OUTB(ch, ATA_DRIVE, ATA_D_IBM | ATA_MASTER); 	DELAY(10); 	ATA_IDX_OUTB(ch, ATA_ERROR, 0x58); 	ATA_IDX_OUTB(ch, ATA_CYL_LSB, 0xa5); 	err = ATA_IDX_INB(ch, ATA_ERROR); 	lsb = ATA_IDX_INB(ch, ATA_CYL_LSB); 	if (bootverbose) 	    ata_printf(ch, ATA_MASTER, "ATA err=0x%02x lsb=0x%02x\n", err, lsb); 	if (err != 0x58&& lsb == 0xa5) 	    ch->devices |= ATA_ATA_MASTER;     }     if (mask& 0x02&& ostat1 != 0x00&& 	!(ch->devices& (ATA_ATA_SLAVE | ATA_ATAPI_SLAVE))) { 	ATA_IDX_OUTB(ch, ATA_DRIVE, ATA_D_IBM | ATA_SLAVE); 	DELAY(10); 	ATA_IDX_OUTB(ch, ATA_ERROR, 0x58); 	ATA_IDX_OUTB(ch, ATA_CYL_LSB, 0xa5); 	err = ATA_IDX_INB(ch, ATA_ERROR); 	lsb = ATA_IDX_INB(ch, ATA_CYL_LSB); 	if (bootverbose) 	    ata_printf(ch, ATA_SLAVE, "ATA err=0x%02x lsb=0x%02x\n", err, lsb); 	if (err != 0x58&& lsb == 0xa5) 	    ch->devices |= ATA_ATA_SLAVE;     }      if (bootverbose) 	ata_printf(ch, -1, "reset tp3 devices=0x%b\n", ch->devices, 		   "\20\4ATAPI_SLAVE\3ATAPI_MASTER\2ATA_SLAVE\1ATA_MASTER");
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3374,18 +3472,6 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* enable interrupt */
-name|ATA_IDX_OUTB
-argument_list|(
-name|atadev
-operator|->
-name|channel
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|,
-name|ATA_A_4BIT
-argument_list|)
-expr_stmt|;
 comment|/* only use 48bit addressing if needed (avoid bugs and overhead) */
 if|if
 condition|(
