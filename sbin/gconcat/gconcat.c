@@ -1770,9 +1770,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|class
 argument_list|,
-argument|&mesh->class
+argument|&mesh->lg_class
 argument_list|,
-argument|class
+argument|lg_class
 argument_list|)
 block|{
 if|if
@@ -1781,7 +1781,7 @@ name|strcmp
 argument_list|(
 name|class
 operator|->
-name|name
+name|lg_name
 argument_list|,
 name|name
 argument_list|)
@@ -1829,9 +1829,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|conf
 argument_list|,
-argument|&gp->config
+argument|&gp->lg_config
 argument_list|,
-argument|config
+argument|lg_config
 argument_list|)
 block|{
 if|if
@@ -1840,7 +1840,7 @@ name|strcmp
 argument_list|(
 name|conf
 operator|->
-name|name
+name|lg_name
 argument_list|,
 name|name
 argument_list|)
@@ -1851,7 +1851,7 @@ return|return
 operator|(
 name|conf
 operator|->
-name|val
+name|lg_val
 operator|)
 return|;
 block|}
@@ -1891,7 +1891,7 @@ argument_list|(
 operator|&
 name|gp
 operator|->
-name|provider
+name|lg_provider
 argument_list|)
 expr_stmt|;
 if|if
@@ -1907,7 +1907,7 @@ literal|"      NAME: %s\n"
 argument_list|,
 name|pp
 operator|->
-name|name
+name|lg_name
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1940,7 +1940,7 @@ literal|" mediasize: %jd\n"
 argument_list|,
 name|pp
 operator|->
-name|mediasize
+name|lg_mediasize
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1949,7 +1949,7 @@ literal|"sectorsize: %u\n"
 argument_list|,
 name|pp
 operator|->
-name|sectorsize
+name|lg_sectorsize
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1958,7 +1958,7 @@ literal|"      mode: %s\n"
 argument_list|,
 name|pp
 operator|->
-name|mode
+name|lg_mode
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1970,9 +1970,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|cp
 argument_list|,
-argument|&gp->consumer
+argument|&gp->lg_consumer
 argument_list|,
-argument|consumer
+argument|lg_consumer
 argument_list|)
 block|{
 name|printf
@@ -1981,9 +1981,9 @@ literal|" %s"
 argument_list|,
 name|cp
 operator|->
-name|provider
+name|lg_provider
 operator|->
-name|name
+name|lg_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2072,9 +2072,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&class->geom
+argument|&class->lg_geom
 argument_list|,
-argument|geom
+argument|lg_geom
 argument_list|)
 block|{
 name|show_config
