@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.37 1997/04/09 17:35:52 ache Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.38 1997/04/14 23:48:12 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1919,6 +1919,29 @@ end_function
 begin_function
 specifier|static
 name|int
+name|ShowReconnect
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|" Reconnect Timer:  %d,  %d tries\n"
+argument_list|,
+name|VarReconnectTimer
+argument_list|,
+name|VarReconnectTries
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|ShowRedial
 parameter_list|()
 block|{
@@ -2342,6 +2365,34 @@ name|StrNull
 block|}
 block|,
 block|{
+literal|"reconnect"
+block|,
+name|NULL
+block|,
+name|ShowReconnect
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Show Reconnect timer ntries"
+block|,
+name|StrNull
+block|}
+block|,
+block|{
+literal|"redial"
+block|,
+name|NULL
+block|,
+name|ShowRedial
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Show Redial timeout value"
+block|,
+name|StrNull
+block|}
+block|,
+block|{
 literal|"route"
 block|,
 name|NULL
@@ -2365,20 +2416,6 @@ block|,
 name|LOCAL_AUTH
 block|,
 literal|"Show Idle timeout value"
-block|,
-name|StrNull
-block|}
-block|,
-block|{
-literal|"redial"
-block|,
-name|NULL
-block|,
-name|ShowRedial
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"Show Redial timeout value"
 block|,
 name|StrNull
 block|}
@@ -3305,6 +3342,81 @@ literal|"invalid speed.\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|SetReconnect
+parameter_list|(
+name|list
+parameter_list|,
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|struct
+name|cmdtab
+modifier|*
+name|list
+decl_stmt|;
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+condition|)
+block|{
+name|VarReconnectTimer
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|VarReconnectTries
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"Usage: %s %s\n"
+argument_list|,
+name|list
+operator|->
+name|name
+argument_list|,
+name|list
+operator|->
+name|syntax
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -5573,6 +5685,34 @@ name|VAR_PHONE
 block|}
 block|,
 block|{
+literal|"reconnect"
+block|,
+name|NULL
+block|,
+name|SetReconnect
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set Reconnect timeout"
+block|,
+literal|"value ntries"
+block|}
+block|,
+block|{
+literal|"redial"
+block|,
+name|NULL
+block|,
+name|SetRedialTimeout
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set Redial timeout"
+block|,
+literal|"value|random[.value|random] [dial_attempts]"
+block|}
+block|,
+block|{
 literal|"speed"
 block|,
 name|NULL
@@ -5598,20 +5738,6 @@ block|,
 literal|"Set Idle timeout"
 block|,
 name|StrValue
-block|}
-block|,
-block|{
-literal|"redial"
-block|,
-name|NULL
-block|,
-name|SetRedialTimeout
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"Set Redial timeout"
-block|,
-literal|"value|random[.value|random] [dial_attempts]"
 block|}
 block|,
 ifdef|#

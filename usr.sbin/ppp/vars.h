@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.10 1997/02/22 16:11:02 peter Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.11 1997/04/14 23:48:20 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -212,6 +212,14 @@ name|int
 name|retry_timeout
 decl_stmt|;
 comment|/* Retry timeout value */
+name|int
+name|reconnect_timer
+decl_stmt|;
+comment|/* Timeout before reconnect on carrier loss */
+name|int
+name|reconnect_tries
+decl_stmt|;
+comment|/* Attempt reconnect on carrier loss */
 name|int
 name|redial_timeout
 decl_stmt|;
@@ -449,6 +457,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VarReconnectTimer
+value|pppVars.reconnect_timer
+end_define
+
+begin_define
+define|#
+directive|define
+name|VarReconnectTries
+value|pppVars.reconnect_tries
+end_define
+
+begin_define
+define|#
+directive|define
 name|VarRedialTimeout
 value|pppVars.redial_timeout
 end_define
@@ -497,6 +519,12 @@ name|int
 name|ipConnectSecs
 decl_stmt|,
 name|ipIdleSecs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lostCarrier
 decl_stmt|;
 end_decl_stmt
 

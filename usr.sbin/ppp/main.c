@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.43 1997/04/13 00:54:43 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.44 1997/04/14 23:48:15 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -3157,6 +3157,10 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+name|lostCarrier
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -3223,7 +3227,48 @@ name|dial_up
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/*     * If Ip packet for output is enqueued and require dial up,     * Just do it!     */
+comment|/*      * If we lost carrier and want to re-establish the connection      * due to the "set reconnect" value, we'd better bring the line      * back up now.      */
+if|if
+condition|(
+name|LcpFsm
+operator|.
+name|state
+operator|<=
+name|ST_CLOSED
+operator|&&
+name|dial_up
+operator|!=
+name|TRUE
+operator|&&
+name|lostCarrier
+operator|&&
+name|lostCarrier
+operator|<=
+name|VarReconnectTries
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Connection lost, re-establish (%d/%d)\n"
+argument_list|,
+name|lostCarrier
+argument_list|,
+name|VarReconnectTries
+argument_list|)
+expr_stmt|;
+name|StartRedialTimer
+argument_list|(
+name|VarReconnectTimer
+argument_list|)
+expr_stmt|;
+name|dial_up
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+comment|/*     * If Ip packet for output is enqueued and require dial up,      * Just do it!     */
 if|if
 condition|(
 name|dial_up
@@ -3235,7 +3280,6 @@ operator|!=
 name|TIMER_RUNNING
 condition|)
 block|{
-comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
