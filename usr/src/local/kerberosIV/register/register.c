@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.11 (Berkeley) %G%"
+literal|"@(#)register.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -333,7 +333,7 @@ name|krb_get_lrealm
 argument_list|(
 name|realm
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 operator|!=
