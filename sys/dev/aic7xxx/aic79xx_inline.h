@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#34 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#36 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -932,90 +932,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************** Untagged Transaction Routines ************************/
-end_comment
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|ahd_freeze_untagged_queues
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|ahd_release_untagged_queues
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Block our completion routine from starting the next untagged  * transaction for this target or target lun.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ahd_freeze_untagged_queues
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|)
-block|{
-comment|/* 	 * Assume we have enough space in the card's SCB 	 * to obviate the need for a per target untagged 	 * transaction limit. 	 */
-if|#
-directive|if
-literal|0
-block|ahd->untagged_queue_lock++;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/*  * Allow the next untagged transaction for this target or target lun  * to be executed.  We use a counting semaphore to allow the lock  * to be acquired recursively.  Once the count drops to zero, the  * transaction queues will be run.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ahd_release_untagged_queues
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|)
-block|{
-comment|/* 	 * Assume we have enough space in the card's SCB 	 * to obviate the need for a per target untagged 	 * transaction limit. 	 */
-if|#
-directive|if
-literal|0
-block|ahd->untagged_queue_lock--; 	if (ahd->untagged_queue_lock == 0) 		ahd_run_untagged_queues(ahd);
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
 comment|/*********************** Scatter Gather List Handling *************************/
 end_comment
 
@@ -1233,9 +1149,11 @@ name|sg
 operator|->
 name|addr
 operator|=
-name|ahd_htole64
+name|ahd_htole32
 argument_list|(
 name|addr
+operator|&
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 name|sg
@@ -1312,7 +1230,7 @@ name|scb
 operator|->
 name|hscb
 operator|->
-name|task_attribute_nonpkt_tag
+name|task_attribute
 operator|=
 name|scb
 operator|->
@@ -1345,20 +1263,6 @@ operator|->
 name|hscb
 operator|->
 name|lun
-expr_stmt|;
-block|}
-else|else
-block|{
-name|scb
-operator|->
-name|hscb
-operator|->
-name|task_attribute_nonpkt_tag
-operator|=
-name|SCB_GET_TAG
-argument_list|(
-name|scb
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4169,7 +4073,6 @@ operator|=
 name|q_hscb
 expr_stmt|;
 comment|/* Now define the mapping from tag to SCB in the scbindex */
-comment|/* XXX This should be constant now.  Can we avoid the mapping? */
 name|ahd
 operator|->
 name|scb_data
