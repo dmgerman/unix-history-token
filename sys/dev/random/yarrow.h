@@ -154,7 +154,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* This is the beastie that needs protecting. It contains all of the  * state that we are excited about.  * This is a biiig structure. It may move over to a malloc(9)ed  * replacement.  */
+comment|/* This is the beastie that needs protecting. It contains all of the  * state that we are excited about.  */
 end_comment
 
 begin_struct
