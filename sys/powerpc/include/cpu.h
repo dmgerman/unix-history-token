@@ -110,15 +110,6 @@ parameter_list|()
 value|0
 end_define
 
-begin_function_decl
-name|void
-name|delay
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
