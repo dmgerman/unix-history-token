@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.11 (Berkeley) %G%"
+literal|"@(#)str.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2086,6 +2086,7 @@ operator|=
 name|n
 expr_stmt|;
 block|}
+comment|/*       * XXX: When we are in AsciiOnly we want all characters>= 0200 to      * be encoded, but currently there is no way in vis to do that.      */
 operator|(
 name|void
 operator|)
@@ -2098,15 +2099,7 @@ argument_list|(
 name|cp
 argument_list|)
 argument_list|,
-name|AsciiOnly
-condition|?
 name|VIS_NOSLASH
-else|:
-operator|(
-name|VIS_NLS
-operator||
-name|VIS_NOSLASH
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
