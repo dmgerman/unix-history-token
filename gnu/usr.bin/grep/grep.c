@@ -5150,11 +5150,11 @@ directive|elif
 name|HAVE_LIBZ
 operator|>
 literal|0
-literal|"0123456789A:B:C::EFGHVX:Zabcd:e:f:hiLlnqrsvwxy"
+literal|"0123456789A:B:C::EFGHRVX:Zabcd:e:f:hiLlnqrsvwxy"
 argument_list|,
 else|#
 directive|else
-literal|"0123456789A:B:C::EFGHVX:abcd:e:f:hiLlnqrsvwxy"
+literal|"0123456789A:B:C::EFGHRVX:abcd:e:f:hiLlnqrsvwxy"
 argument_list|,
 endif|#
 directive|endif
@@ -5848,6 +5848,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'R'
+case|:
 case|case
 literal|'r'
 case|:
