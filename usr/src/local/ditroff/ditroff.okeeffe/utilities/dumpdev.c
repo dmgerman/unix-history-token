@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpdev.c	1.1 (CWI) 85/10/24"
+literal|"@(#)dumpdev.c	1.2 (CWI) 85/10/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ name|char
 modifier|*
 name|fontdir
 init|=
-literal|"/usr/lib/ditroff/font"
+literal|"/usr/local/lib/ditroff/font"
 decl_stmt|;
 end_decl_stmt
 
