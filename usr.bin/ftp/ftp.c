@@ -6334,12 +6334,6 @@ condition|(
 name|passivemode
 condition|)
 block|{
-specifier|static
-name|int
-name|try_epsv
-init|=
-literal|1
-decl_stmt|;
 name|data_addr
 operator|=
 name|myctladdr
@@ -6510,10 +6504,26 @@ case|:
 if|if
 condition|(
 name|try_epsv
-operator|!=
-literal|0
 condition|)
 block|{
+name|int
+name|overbose
+decl_stmt|;
+name|overbose
+operator|=
+name|verbose
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|==
+literal|0
+condition|)
+name|verbose
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|result
 operator|=
 name|command
@@ -6522,6 +6532,10 @@ name|pasvcmd
 operator|=
 literal|"EPSV"
 argument_list|)
+expr_stmt|;
+name|verbose
+operator|=
+name|overbose
 expr_stmt|;
 if|if
 condition|(
@@ -6538,7 +6552,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"wrong server: return code must be 229"
+literal|"wrong server: EPSV return code must be 229"
 argument_list|)
 expr_stmt|;
 name|result
@@ -6608,7 +6622,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"wrong server: return code must be 229"
+literal|"wrong server: EPSV return code must be 229"
 argument_list|)
 expr_stmt|;
 name|result
@@ -9508,6 +9522,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|try_epsv
+operator|&&
+name|command
+argument_list|(
+literal|"EPSV"
+argument_list|)
+operator|!=
+name|COMPLETE
+condition|)
+name|try_epsv
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|try_epsv
+operator|&&
 name|command
 argument_list|(
 literal|"PASV"

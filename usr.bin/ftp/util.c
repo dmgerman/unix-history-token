@@ -381,6 +381,10 @@ name|connected
 operator|=
 literal|1
 expr_stmt|;
+name|try_epsv
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 		 * Set up defaults for FTP. 		 */
 operator|(
 name|void

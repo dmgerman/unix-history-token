@@ -701,6 +701,16 @@ begin_comment
 comment|/* temporary directory */
 end_comment
 
+begin_decl_stmt
+name|int
+name|try_epsv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* try EPSV for this session */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
