@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ppp.c,v 1.89.2.3 2004/03/24 03:32:43 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ppp.c,v 1.89.2.4 2004/07/13 16:00:25 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2208,6 +2208,14 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|pfunc
+operator|==
+name|NULL
+condition|)
+comment|/* catch the above null pointer if unknown CP */
+break|break;
 if|if
 condition|(
 operator|(
