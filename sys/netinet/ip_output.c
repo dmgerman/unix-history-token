@@ -553,6 +553,10 @@ name|isbroadcast
 decl_stmt|,
 name|sw_csum
 decl_stmt|;
+name|struct
+name|in_addr
+name|pkt_dst
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -857,6 +861,22 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+name|pkt_dst
+operator|=
+operator|(
+name|ip_fw_fwd_addr
+operator|==
+name|NULL
+operator|)
+condition|?
+name|ip
+operator|->
+name|ip_dst
+else|:
+name|ip_fw_fwd_addr
+operator|->
+name|sin_addr
+expr_stmt|;
 comment|/* 	 * Fill in IP header. 	 */
 if|if
 condition|(
@@ -999,9 +1019,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|!=
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 operator|.
 name|s_addr
 operator|)
@@ -1055,9 +1073,7 @@ name|dst
 operator|->
 name|sin_addr
 operator|=
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 expr_stmt|;
 block|}
 comment|/* 	 * If routing to interface only, 	 * short circuit routing lookup. 	 */
@@ -1318,9 +1334,7 @@ name|IN_MULTICAST
 argument_list|(
 name|ntohl
 argument_list|(
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 operator|.
 name|s_addr
 argument_list|)
@@ -1476,9 +1490,7 @@ expr_stmt|;
 block|}
 name|IN_LOOKUP_MULTI
 argument_list|(
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 argument_list|,
 name|ifp
 argument_list|,
@@ -2379,12 +2391,18 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check with the firewall... 	 */
+comment|/* 	 * Check with the firewall... 	 * but not if we are already being fwd'd from a firewall. 	 */
 if|if
 condition|(
 name|fw_enable
 operator|&&
 name|IPFW_LOADED
+operator|&&
+operator|(
+name|ip_fw_fwd_addr
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|struct
@@ -3036,6 +3054,10 @@ goto|goto
 name|done
 goto|;
 block|}
+name|ip_fw_fwd_addr
+operator|=
+name|NULL
+expr_stmt|;
 name|pass
 label|:
 name|m
