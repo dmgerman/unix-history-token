@@ -952,8 +952,13 @@ value|1
 comment|/* to be used for quirks */
 define|#
 directive|define
-name|SHUTTLE_EUSB
+name|ZIP_250
 value|2
+comment|/* to be used for quirks */
+define|#
+directive|define
+name|SHUTTLE_EUSB
+value|3
 name|unsigned
 name|char
 name|quirks
