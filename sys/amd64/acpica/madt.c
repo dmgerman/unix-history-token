@@ -940,6 +940,13 @@ literal|"acpi"
 argument_list|,
 literal|0
 argument_list|)
+operator|||
+name|resource_disabled
+argument_list|(
+literal|"apic"
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
