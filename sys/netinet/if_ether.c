@@ -845,6 +845,13 @@ operator|)
 operator|==
 literal|0
 operator|&&
+name|rt_mask
+argument_list|(
+name|rt
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
 name|SIN
 argument_list|(
 name|rt_mask
