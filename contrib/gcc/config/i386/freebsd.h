@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /usr/libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
+value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
