@@ -2828,9 +2828,7 @@ name|rndtest_detach
 argument_list|(
 name|sc
 operator|->
-name|sc
-operator|->
-name|rndtest
+name|sc_rndtest
 argument_list|)
 expr_stmt|;
 endif|#
