@@ -4871,11 +4871,6 @@ name|newparent
 operator|=
 literal|1
 expr_stmt|;
-name|vrele
-argument_list|(
-name|fdvp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|doingdirectory
@@ -5137,9 +5132,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|relookup
 argument_list|(
 name|fdvp
@@ -5148,6 +5142,13 @@ operator|&
 name|fvp
 argument_list|,
 name|fcnp
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|vrele
+argument_list|(
+name|fdvp
 argument_list|)
 expr_stmt|;
 if|if
