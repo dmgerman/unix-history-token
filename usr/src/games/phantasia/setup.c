@@ -193,7 +193,7 @@ literal|", "
 argument|monsters.asc
 literal|"); 	    } 	else 	    { 	    Curmonster.m_o_strength = 	    Curmonster.m_o_speed = 	    Curmonster.m_maxspeed = 	    Curmonster.m_o_energy = 	    Curmonster.m_melee = 	    Curmonster.m_skirmish = 0.0;  	    while (fgets(Databuf, SZ_DATABUF, fp) != NULL) 		/* read in text file, convert to binary */ 		{ 		sscanf(&Databuf[24], "
 argument|%F%F%F%F%F%d%d%F
-literal|",&Curmonster.m_strength,&Curmonster.m_brains,&Curmonster.m_speed,&Curmonster.m_energy,&Curmonster.m_experience,&Curmonster.m_treasuretype,&Curmonster.m_type,&Curmonster.m_flock); 		Databuf[24] = '\0'; 		strcpy(Curmonster.m_name, Databuf); 		fwrite((char *)&Curmonster, SZ_MONSTERSTRUCT, 1, Monstfp); 		} 	    fclose(fp); 	    fclose(Monstfp); 	    } 	}      /* write to motd file */     printf("
+literal|",&Curmonster.m_strength,&Curmonster.m_brains,&Curmonster.m_speed,&Curmonster.m_energy,&Curmonster.m_experience,&Curmonster.m_treasuretype,&Curmonster.m_type,&Curmonster.m_flock); 		Databuf[24] = '\0'; 		strcpy(Curmonster.m_name, Databuf); 		fwrite((char *)&Curmonster, SZ_MONSTERSTRUCT, 1, Monstfp); 		} 	    fclose(fp); 	    fclose(Monstfp); 	    } 	}  #ifdef MAKE_INSTALLS_THIS_AND_DOESNT_ANSWER_QUESTIONS     /* write to motd file */     printf("
 argument|One line
 literal|'motd'
 argument|?
@@ -201,7 +201,7 @@ literal|");     if (fgets(Databuf, SZ_DATABUF, stdin) == NULL) 	Databuf[0] = '\0
 argument|w
 literal|")) == NULL) 	Error("
 argument|Cannot update %s.\n
-literal|", Motdfile);     else 	{ 	fwrite(Databuf, sizeof(char), strlen(Databuf), fp); 	fclose(fp); 	}      /* report compile-time options */     printf("
+literal|", Motdfile);     else 	{ 	fwrite(Databuf, sizeof(char), strlen(Databuf), fp); 	fclose(fp); 	} #endif      /* report compile-time options */     printf("
 argument|Compiled options:\n\n
 literal|");     printf("
 argument|Phantasia destination directory:  %s\n
