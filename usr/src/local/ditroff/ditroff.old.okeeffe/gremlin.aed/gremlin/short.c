@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)short.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the short commands  * of the gremlin picture editor.  *  */
+comment|/* @(#)short.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the short commands  * of the gremlin picture editor.  *  */
 end_comment
 
 begin_include
@@ -4410,7 +4410,7 @@ empty_stmt|;
 if|if
 condition|(
 name|SEQ
-operator|=
+operator|==
 literal|0
 condition|)
 comment|/* no positioning points */
