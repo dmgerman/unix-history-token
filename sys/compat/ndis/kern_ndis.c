@@ -3140,6 +3140,12 @@ name|sc
 operator|->
 name|ndis_dev
 expr_stmt|;
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|brl_rev
+argument_list|)
+expr_stmt|;
 name|rl
 operator|=
 name|malloc
@@ -3228,12 +3234,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * We have a small problem. Some PCI devices have 		 * multiple I/O ranges. Windows orders them starting 		 * from lowest numbered BAR to highest. We discover 		 * them in that order too, but insert them into a singly 		 * linked list head first, which means when time comes 		 * to traverse the list, we enumerate them in reverse 		 * order. This screws up some drivers which expect the 		 * BARs to be in ascending order so that they can choose 		 * the "first" one as their register space. Unfortunately, 		 * in order to fix this, we have to create our own 		 * temporary list with the entries in reverse order. 		 */
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|brl_rev
-argument_list|)
-expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|brle
