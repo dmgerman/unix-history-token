@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fort.c	4.7 (Berkeley) %G%"
+literal|"@(#)fort.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,17 +209,20 @@ begin_comment
 comment|/* for default reading routines */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NOLNREAD
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|FLEXNAMES
-end_ifdef
+argument_list|)
+end_if
 
 begin_function
 name|char
@@ -324,12 +327,6 @@ end_function
 begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|NOLNREAD
 end_endif
 
 begin_ifndef
