@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	5.9 (Berkeley) %G%"
+literal|"@(#)lgamma.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,6 +841,10 @@ name|x1
 expr_stmt|;
 comment|/* error< 2.3e-18 absolute */
 comment|/* 0< p< 1/64 (at x = 5.5) */
+name|v
+operator|.
+name|a
+operator|=
 name|x
 operator|=
 name|x
