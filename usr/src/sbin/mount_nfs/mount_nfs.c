@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.5 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,10 +546,6 @@ decl_stmt|;
 name|struct
 name|nfsd_cargs
 name|ncd
-decl_stmt|;
-name|struct
-name|stat
-name|sb
 decl_stmt|;
 name|int
 name|flags
@@ -1293,47 +1289,6 @@ condition|)
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|name
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|S_ISDIR
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-name|err
-argument_list|(
-literal|"%s: not a directory"
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
 if|if
