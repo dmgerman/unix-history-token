@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.9 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,10 +81,8 @@ directive|define
 name|PUTC
 parameter_list|(
 name|ch
-parameter_list|,
-name|fd
 parameter_list|)
-value|{++cnt; putc(ch, fd);}
+value|{++cnt; putc(ch, fp);}
 end_define
 
 begin_define
@@ -166,6 +164,20 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
+name|base
+decl_stmt|,
+name|cnt
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|bp
+decl_stmt|,
+modifier|*
+name|t
+decl_stmt|;
+specifier|register
 name|u_long
 name|reg_ulong
 decl_stmt|;
@@ -173,32 +185,20 @@ specifier|register
 name|long
 name|reg_long
 decl_stmt|;
-specifier|register
-name|int
-name|base
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|digs
-decl_stmt|,
-modifier|*
-name|bp
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|,
-name|padc
-decl_stmt|;
 name|double
 name|_double
 decl_stmt|;
 name|char
 name|argsize
 decl_stmt|,
+name|padc
+decl_stmt|,
 modifier|*
 name|_cvt
 argument_list|()
+decl_stmt|,
+modifier|*
+name|digs
 decl_stmt|,
 name|buf
 index|[
@@ -206,8 +206,6 @@ name|MAXBUF
 index|]
 decl_stmt|;
 name|int
-name|cnt
-decl_stmt|,
 name|n
 decl_stmt|,
 name|ladjust
@@ -247,8 +245,6 @@ name|PUTC
 argument_list|(
 operator|*
 name|fmt
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -537,8 +533,6 @@ expr_stmt|;
 name|PUTC
 argument_list|(
 name|ch
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -585,8 +579,6 @@ condition|)
 name|PUTC
 argument_list|(
 name|printsign
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 name|base
@@ -663,8 +655,6 @@ block|{
 name|PUTC
 argument_list|(
 name|padc
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -693,8 +683,6 @@ name|PUTC
 argument_list|(
 operator|*
 name|t
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 for|for
@@ -710,8 +698,6 @@ control|)
 name|PUTC
 argument_list|(
 name|padc
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -819,8 +805,6 @@ block|{
 name|PUTC
 argument_list|(
 name|padc
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -835,8 +819,6 @@ do|;
 name|PUTC
 argument_list|(
 literal|'0'
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -925,8 +907,6 @@ condition|)
 name|PUTC
 argument_list|(
 literal|' '
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -959,8 +939,6 @@ name|PUTC
 argument_list|(
 operator|*
 name|bp
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -977,8 +955,6 @@ block|{
 name|PUTC
 argument_list|(
 literal|' '
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1032,16 +1008,12 @@ block|{
 name|PUTC
 argument_list|(
 literal|'0'
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
 operator|*
 name|fmt
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1131,8 +1103,6 @@ block|{
 name|PUTC
 argument_list|(
 name|padc
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1161,8 +1131,6 @@ name|PUTC
 argument_list|(
 operator|*
 name|bp
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 for|for
@@ -1178,8 +1146,6 @@ control|)
 name|PUTC
 argument_list|(
 name|padc
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 name|digs
@@ -1209,8 +1175,6 @@ name|PUTC
 argument_list|(
 operator|*
 name|fmt
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
