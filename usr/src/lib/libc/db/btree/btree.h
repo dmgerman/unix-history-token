@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|PAGE
+name|_page
 block|{
 name|pgno_t
 name|pgno
@@ -207,7 +207,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BINTERNAL
+name|_binternal
 block|{
 name|size_t
 name|ksize
@@ -301,7 +301,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|RINTERNAL
+name|_rinternal
 block|{
 name|recno_t
 name|nrecs
@@ -370,7 +370,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BLEAF
+name|_bleaf
 block|{
 name|size_t
 name|ksize
@@ -471,7 +471,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|RLEAF
+name|_rleaf
 block|{
 name|size_t
 name|dsize
@@ -563,7 +563,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|EPGNO
+name|_epgno
 block|{
 name|pgno_t
 name|pgno
@@ -581,7 +581,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|EPG
+name|_epg
 block|{
 name|PAGE
 modifier|*
@@ -604,7 +604,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BTMETA
+name|_btmeta
 block|{
 name|u_long
 name|m_magic
@@ -650,7 +650,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BTREE
+name|_btree
 block|{
 name|MPOOL
 modifier|*
@@ -662,6 +662,11 @@ modifier|*
 name|bt_dbp
 decl_stmt|;
 comment|/* pointer to enclosing DB */
+name|PAGE
+modifier|*
+name|bt_pinned
+decl_stmt|;
+comment|/* page pinned across calls */
 name|EPGNO
 name|bt_bcursor
 decl_stmt|;
@@ -795,7 +800,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|BTREE
+name|_btree
 operator|*
 operator|,
 name|recno_t
@@ -877,6 +882,11 @@ value|0x00040
 comment|/* read-only tree */
 define|#
 directive|define
+name|R_RECNO
+value|0x00080
+comment|/* record oriented tree */
+define|#
+directive|define
 name|B_SEQINIT
 value|0x00100
 comment|/* sequential scan initialized */
@@ -902,11 +912,6 @@ value|0x01000
 comment|/* memory mapped file. */
 define|#
 directive|define
-name|R_RECNO
-value|0x00080
-comment|/* record oriented tree */
-define|#
-directive|define
 name|R_INMEM
 value|0x02000
 comment|/* in-memory file */
@@ -920,6 +925,21 @@ directive|define
 name|R_RDONLY
 value|0x08000
 comment|/* read-only file */
+define|#
+directive|define
+name|B_DB_LOCK
+value|0x10000
+comment|/* DB_LOCK specified. */
+define|#
+directive|define
+name|B_DB_SHMEM
+value|0x20000
+comment|/* DB_SHMEM specified. */
+define|#
+directive|define
+name|B_DB_TXN
+value|0x40000
+comment|/* DB_TXN specified. */
 name|u_long
 name|bt_flags
 decl_stmt|;
