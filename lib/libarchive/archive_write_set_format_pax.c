@@ -1639,9 +1639,11 @@ name|wp
 decl_stmt|,
 modifier|*
 name|wp2
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
-name|wname_start
+name|suffix_start
 decl_stmt|;
 name|int
 name|need_extension
@@ -1843,30 +1845,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wcslen
+name|strlen
 argument_list|(
-name|wp
+name|p
 argument_list|)
 operator|<=
 literal|100
 condition|)
 comment|/* Short enough for just 'name' field */
-name|wname_start
+name|suffix_start
 operator|=
-name|wp
+name|p
 expr_stmt|;
 comment|/* Record a zero-length prefix */
 else|else
 comment|/* Find the largest suffix that fits in 'name' field. */
-name|wname_start
+name|suffix_start
 operator|=
-name|wcschr
+name|strchr
 argument_list|(
-name|wp
+name|p
 operator|+
-name|wcslen
+name|strlen
 argument_list|(
-name|wp
+name|p
 argument_list|)
 operator|-
 literal|100
@@ -1900,13 +1902,13 @@ expr_stmt|;
 comment|/* 	 * If name is too long, or has non-ASCII characters, add 	 * 'path' to pax extended attrs. 	 */
 if|if
 condition|(
-name|wname_start
+name|suffix_start
 operator|==
 name|NULL
 operator|||
-name|wname_start
+name|suffix_start
 operator|-
-name|wp
+name|p
 operator|>
 literal|155
 operator|||
