@@ -896,9 +896,9 @@ argument_list|,
 name|info
 argument_list|)
 condition|?
-literal|0
-else|:
 name|EINVAL
+else|:
+literal|0
 return|;
 case|case
 name|QC_SET
@@ -911,9 +911,9 @@ argument_list|,
 name|info
 argument_list|)
 condition|?
-literal|0
-else|:
 name|EINVAL
+else|:
+literal|0
 return|;
 default|default:
 return|return
