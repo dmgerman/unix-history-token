@@ -13486,6 +13486,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Card resets the SUNI when resetted, so re-initialize it 	 */
+name|utopia_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|utopia
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_RUNNING disappeared. 	 */
 while|while
 condition|(
