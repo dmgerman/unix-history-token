@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_tc.c 1.26 92/01/21$  *  *	@(#)ite_tc.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_tc.c 1.27 92/12/20$  *  *	@(#)ite_tc.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -956,13 +956,6 @@ name|ip
 operator|->
 name|cols
 decl_stmt|;
-name|topcat_cursor
-argument_list|(
-name|ip
-argument_list|,
-name|ERASE_CURSOR
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dir
