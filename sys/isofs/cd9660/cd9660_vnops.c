@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.9 1994/09/26 00:32:59 gpalmer Exp $  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.10 1994/09/28 16:44:59 dfr Exp $  */
 end_comment
 
 begin_include
@@ -960,7 +960,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t	 a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1634,6 +1634,9 @@ decl_stmt|;
 name|int
 name|reclen
 decl_stmt|;
+name|int
+name|isoflags
+decl_stmt|;
 name|struct
 name|iso_mnt
 modifier|*
@@ -1935,6 +1938,29 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+name|isoflags
+operator|=
+name|isonum_711
+argument_list|(
+name|imp
+operator|->
+name|iso_ftype
+operator|==
+name|ISO_FTYPE_HIGH_SIERRA
+condition|?
+operator|&
+name|ep
+operator|->
+name|date
+index|[
+literal|6
+index|]
+else|:
+name|ep
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|reclen
@@ -2007,12 +2033,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isonum_711
-argument_list|(
-name|ep
-operator|->
-name|flags
-argument_list|)
+name|isoflags
 operator|&
 literal|2
 condition|)
@@ -2142,7 +2163,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* ISO_FTYPE_DEFAULT || ISO_FTYPE_9660 */
+comment|/* ISO_FTYPE_DEFAULT || ISO_FTYPE_9660 || ISO_FTYPE_HIGH_SIERRA*/
 name|strcpy
 argument_list|(
 name|idp
@@ -2248,12 +2269,7 @@ name|iso_ftype
 operator|==
 name|ISO_FTYPE_9660
 argument_list|,
-name|isonum_711
-argument_list|(
-name|ep
-operator|->
-name|flags
-argument_list|)
+name|isoflags
 operator|&
 literal|4
 argument_list|)

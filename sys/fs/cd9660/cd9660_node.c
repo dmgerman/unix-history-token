@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_node.c	8.2 (Berkeley) 1/23/94  * $Id: cd9660_node.c,v 1.6 1994/09/26 00:32:56 gpalmer Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_node.c	8.2 (Berkeley) 1/23/94  * $Id: cd9660_node.c,v 1.7 1994/10/06 21:06:17 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1182,7 +1182,7 @@ name|iso_ftype
 condition|)
 block|{
 default|default:
-comment|/* ISO_FTYPE_9660 */
+comment|/* ISO_FTYPE_9660 || ISO_FTYPE_HIGH_SIERRA */
 if|if
 condition|(
 operator|(
@@ -1223,6 +1223,10 @@ argument_list|,
 name|ip
 argument_list|,
 name|bp2
+argument_list|,
+name|imp
+operator|->
+name|iso_ftype
 argument_list|)
 expr_stmt|;
 name|cd9660_deftstamp
@@ -1232,6 +1236,10 @@ argument_list|,
 name|ip
 argument_list|,
 name|bp2
+argument_list|,
+name|imp
+operator|->
+name|iso_ftype
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1991,6 +1999,8 @@ parameter_list|,
 name|inop
 parameter_list|,
 name|bp
+parameter_list|,
+name|ftype
 parameter_list|)
 name|struct
 name|iso_directory_record
@@ -2006,6 +2016,10 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|enum
+name|ISO_FTYPE
+name|ftype
 decl_stmt|;
 block|{
 name|struct
@@ -2030,10 +2044,23 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
+comment|/* high sierra does not have timezone data, flag is one byte ahead */
 if|if
 condition|(
 name|isonum_711
 argument_list|(
+name|ftype
+operator|==
+name|ISO_FTYPE_HIGH_SIERRA
+condition|?
+operator|&
+name|isodir
+operator|->
+name|date
+index|[
+literal|6
+index|]
+else|:
 name|isodir
 operator|->
 name|flags
@@ -2415,6 +2442,8 @@ parameter_list|,
 name|inop
 parameter_list|,
 name|bp
+parameter_list|,
+name|ftype
 parameter_list|)
 name|struct
 name|iso_directory_record
@@ -2430,6 +2459,10 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|enum
+name|ISO_FTYPE
+name|ftype
 decl_stmt|;
 block|{
 name|struct
@@ -2525,6 +2558,10 @@ name|b_addr
 expr_stmt|;
 if|if
 condition|(
+name|ftype
+operator|!=
+name|ISO_FTYPE_HIGH_SIERRA
+operator|&&
 name|isonum_711
 argument_list|(
 name|ap
@@ -2649,6 +2686,8 @@ operator|->
 name|inode
 operator|.
 name|iso_ctime
+argument_list|,
+name|ftype
 argument_list|)
 expr_stmt|;
 name|inop
@@ -2695,6 +2734,8 @@ parameter_list|(
 name|pi
 parameter_list|,
 name|pu
+parameter_list|,
+name|ftype
 parameter_list|)
 name|char
 modifier|*
@@ -2704,6 +2745,10 @@ name|struct
 name|timespec
 modifier|*
 name|pu
+decl_stmt|;
+name|enum
+name|ISO_FTYPE
+name|ftype
 decl_stmt|;
 block|{
 name|int
@@ -2770,12 +2815,24 @@ index|[
 literal|5
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ftype
+operator|!=
+name|ISO_FTYPE_HIGH_SIERRA
+condition|)
 name|tz
 operator|=
 name|pi
 index|[
 literal|6
 index|]
+expr_stmt|;
+else|else
+comment|/* original high sierra misses timezone data */
+name|tz
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3072,7 +3129,7 @@ index|[
 literal|7
 index|]
 decl_stmt|;
-comment|/* year:"0001"-"9999" -> -1900  */
+comment|/* year:"0001"-"9999" -> -1900	*/
 name|buf
 index|[
 literal|0
@@ -3087,7 +3144,7 @@ argument_list|)
 operator|-
 literal|1900
 expr_stmt|;
-comment|/* month: " 1"-"12"      -> 1 - 12 */
+comment|/* month: " 1"-"12"   -> 1 - 12 */
 name|buf
 index|[
 literal|1
@@ -3102,7 +3159,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* day:   " 1"-"31"      -> 1 - 31 */
+comment|/* day:	  " 1"-"31"   -> 1 - 31 */
 name|buf
 index|[
 literal|2
@@ -3117,7 +3174,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* hour:  " 0"-"23"      -> 0 - 23 */
+comment|/* hour:  " 0"-"23"   -> 0 - 23 */
 name|buf
 index|[
 literal|3
@@ -3132,7 +3189,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* minute:" 0"-"59"      -> 0 - 59 */
+comment|/* minute:" 0"-"59"   -> 0 - 59 */
 name|buf
 index|[
 literal|4
@@ -3147,7 +3204,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* second:" 0"-"59"      -> 0 - 59 */
+comment|/* second:" 0"-"59"   -> 0 - 59 */
 name|buf
 index|[
 literal|5
@@ -3179,6 +3236,8 @@ argument_list|(
 name|buf
 argument_list|,
 name|pu
+argument_list|,
+name|ISO_FTYPE_DEFAULT
 argument_list|)
 return|;
 block|}
