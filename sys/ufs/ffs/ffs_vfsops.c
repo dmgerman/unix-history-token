@@ -553,6 +553,23 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 			 * Flush any dirty data. 			 */
+name|VFS_SYNC
+argument_list|(
+name|mp
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Check for and optionally get rid of files open 			 * for writing. 			 */
 name|flags
 operator|=
 name|WRITECLOSE
