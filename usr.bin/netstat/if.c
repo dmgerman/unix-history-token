@@ -860,6 +860,34 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|AF_APPLETALK
+case|:
+name|printf
+argument_list|(
+literal|"atalk:%-7.7s "
+argument_list|,
+name|atalk_print
+argument_list|(
+name|sa
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-15.15s "
+argument_list|,
+name|atalk_print
+argument_list|(
+name|sa
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|NS
