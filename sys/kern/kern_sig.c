@@ -2344,9 +2344,11 @@ name|int
 name|sig
 decl_stmt|;
 comment|/* 	 * Reset caught signals.  Held signals remain held 	 * through p_sigmask (unless they were caught, 	 * and are now ignored by default). 	 */
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|ps
@@ -2503,11 +2505,6 @@ argument_list|)
 index|]
 operator|=
 name|SIG_DFL
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 block|}
 end_function
