@@ -179,7 +179,13 @@ modifier|*
 name|mdi_device_type
 decl_stmt|;
 name|int
-name|mdi_interrupt
+name|mdi_interrupts
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|int
+name|mdi_ninterrupts
 decl_stmt|;
 name|int
 name|mdi_base
