@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.5 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2243,6 +2243,7 @@ expr_stmt|;
 block|}
 comment|/* format is now */
 comment|/* ttyd0 std.100 dialup on secure # comment */
+comment|/* except, 2nd item may have embedded spaces inside quotes, Hubert */
 name|cp
 operator|=
 name|lbuf
@@ -2264,6 +2265,43 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'"'
+condition|)
+block|{
+name|cp
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|'"'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 while|while
 condition|(
 operator|*
@@ -2282,6 +2320,7 @@ condition|)
 name|cp
 operator|++
 expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*
