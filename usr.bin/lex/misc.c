@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson of Lawrence Berkeley Laboratory.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/* misc - miscellaneous flex routines */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -12,10 +16,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) 2/26/91"
+literal|"@(#) $Header: /usr/fsys/odin/a/vern/flex/RCS/misc.c,v 2.9 90/08/14 00:10:24 vern Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,24 +28,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/* misc - miscellaneous flex routines */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -1000,7 +990,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|flexend
+name|exit
 argument_list|(
 literal|1
 argument_list|)
@@ -1280,6 +1270,73 @@ block|}
 end_function
 
 begin_comment
+comment|/* is_hex_digit - returns true if a character is a valid hex digit, false  *		  otherwise  *  * synopsis:  *    int true_or_false, is_hex_digit();  *    int ch;  *    val = is_hex_digit( ch );  */
+end_comment
+
+begin_function
+name|int
+name|is_hex_digit
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|isdigit
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+switch|switch
+condition|(
+name|clower
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+block|{
+case|case
+literal|'a'
+case|:
+case|case
+literal|'b'
+case|:
+case|case
+literal|'c'
+case|:
+case|case
+literal|'d'
+case|:
+case|case
+literal|'e'
+case|:
+case|case
+literal|'f'
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* line_directive_out - spit out a "# line" statement */
 end_comment
 
@@ -1500,6 +1557,15 @@ name|array
 index|[]
 decl_stmt|;
 block|{
+name|Char
+name|c
+decl_stmt|,
+name|esc_char
+decl_stmt|;
+specifier|register
+name|int
+name|sptr
+decl_stmt|;
 switch|switch
 condition|(
 name|array
@@ -1508,6 +1574,9 @@ literal|1
 index|]
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__STDC__
 case|case
 literal|'a'
 case|:
@@ -1516,6 +1585,8 @@ operator|(
 literal|'\a'
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 literal|'b'
 case|:
@@ -1565,10 +1636,6 @@ literal|'\v'
 operator|)
 return|;
 case|case
-literal|'x'
-case|:
-comment|/* fall through */
-case|case
 literal|'0'
 case|:
 case|case
@@ -1599,29 +1666,10 @@ case|case
 literal|'9'
 case|:
 block|{
-comment|/* \<octal> or \x<hex> */
-name|Char
-name|c
-decl_stmt|,
-name|esc_char
-decl_stmt|;
-specifier|register
-name|int
+comment|/* \<octal> */
 name|sptr
-init|=
+operator|=
 literal|1
-decl_stmt|;
-if|if
-condition|(
-name|array
-index|[
-literal|1
-index|]
-operator|==
-literal|'x'
-condition|)
-operator|++
-name|sptr
 expr_stmt|;
 while|while
 condition|(
@@ -1641,7 +1689,7 @@ name|sptr
 index|]
 argument_list|)
 condition|)
-comment|/* don't increment inside loop control because if 		 * isdigit() is a macro it will expand it to two 		 * increments ... 		 */
+comment|/* don't increment inside loop control because if 		 * isdigit() is a macro it might expand into multiple 		 * increments ... 		 */
 operator|++
 name|sptr
 expr_stmt|;
@@ -1659,25 +1707,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|array
-index|[
-literal|1
-index|]
-operator|==
-literal|'x'
-condition|)
-name|esc_char
-operator|=
-name|htoi
-argument_list|(
-name|array
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-else|else
 name|esc_char
 operator|=
 name|otoi
@@ -1685,6 +1714,74 @@ argument_list|(
 name|array
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|array
+index|[
+name|sptr
+index|]
+operator|=
+name|c
+expr_stmt|;
+return|return
+operator|(
+name|esc_char
+operator|)
+return|;
+block|}
+case|case
+literal|'x'
+case|:
+block|{
+comment|/* \x<hex> */
+name|int
+name|sptr
+init|=
+literal|2
+decl_stmt|;
+while|while
+condition|(
+name|isascii
+argument_list|(
+name|array
+index|[
+name|sptr
+index|]
+argument_list|)
+operator|&&
+name|is_hex_digit
+argument_list|(
+name|array
+index|[
+name|sptr
+index|]
+argument_list|)
+condition|)
+comment|/* don't increment inside loop control because if 		 * isdigit() is a macro it might expand into multiple 		 * increments ... 		 */
+operator|++
+name|sptr
+expr_stmt|;
+name|c
+operator|=
+name|array
+index|[
+name|sptr
+index|]
+expr_stmt|;
+name|array
+index|[
+name|sptr
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|esc_char
+operator|=
+name|htoi
+argument_list|(
+name|array
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|array
