@@ -96,6 +96,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|__sparc64_utrap_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -303,6 +313,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|__sparc_utrap_setup
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 literal|0
