@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.18 (Berkeley) %G%"
+literal|"@(#)headers.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,7 +1716,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s, received from %s"
+literal|"%s: %s, relay=%s"
 argument_list|,
 name|e
 operator|->
