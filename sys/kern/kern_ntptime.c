@@ -513,6 +513,8 @@ argument_list|)
 argument_list|,
 name|ntp_sysctl
 argument_list|,
+literal|"S,ntptimeval"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
