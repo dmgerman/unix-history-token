@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.24	%G%	*/
+comment|/*	up.c	3.25	%G%	*/
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ file|"../h/vm.h"
 end_include
 
 begin_comment
-comment|/*  * Define number of drives, and range of sampling information to be used.  *  * Normally, DK_N .. DK_N+NUP-1 gather individual drive stats,  * and DK_N+NUP gathers controller transferring stats.  *  * If DK_N+NUP> DK_NMAX, then transfer stats are divided per drive.  * If DK_NMAX is yet smaller, some drives are not monitored.  */
+comment|/*  * Drive stats are gathered in dk_*[DK_N].. dk_*[DK_NMAX]  */
 end_comment
 
 begin_define
@@ -1073,6 +1073,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|DK_N
+operator|+
+name|unit
+operator|<=
+name|DK_NMAX
+condition|)
+name|dk_mspw
+index|[
+name|DK_N
+operator|+
+name|unit
+index|]
+operator|=
+literal|.0000020345
+expr_stmt|;
 name|bp
 operator|->
 name|b_cylin
@@ -1558,12 +1575,6 @@ condition|(
 name|unit
 operator|<=
 name|DK_NMAX
-operator|&&
-name|DK_N
-operator|+
-name|NUP
-operator|<=
-name|DK_NMAX
 condition|)
 block|{
 name|dk_busy
@@ -1572,7 +1583,7 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-name|dk_numb
+name|dk_seek
 index|[
 name|unit
 index|]
@@ -2110,20 +2121,6 @@ name|DK_N
 expr_stmt|;
 if|if
 condition|(
-name|NUP
-operator|+
-name|DK_N
-operator|==
-name|DK_NMAX
-condition|)
-name|unit
-operator|=
-name|NUP
-operator|+
-name|DK_N
-expr_stmt|;
-if|if
-condition|(
 name|unit
 operator|<=
 name|DK_NMAX
@@ -2135,7 +2132,7 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-name|dk_numb
+name|dk_xfer
 index|[
 name|unit
 index|]
@@ -2283,7 +2280,7 @@ name|b_active
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Mark controller or drive not busy, and check for an 		 * error condition which may have resulted from the transfer. 		 */
+comment|/* 		 * Mark drive not busy, and check for an 		 * error condition which may have resulted from the transfer. 		 */
 name|dp
 operator|=
 name|uptab
@@ -2303,28 +2300,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DK_N
-operator|+
-name|NUP
-operator|==
-name|DK_NMAX
-condition|)
-name|dk_busy
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-operator|(
-name|DK_N
-operator|+
-name|NUP
-operator|)
-operator|)
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|DK_N
@@ -3430,27 +3405,6 @@ operator|.
 name|b_actl
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|DK_N
-operator|+
-name|NUP
-operator|==
-name|DK_NMAX
-condition|)
-name|dk_busy
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-operator|(
-name|DK_N
-operator|+
-name|NUP
-operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
