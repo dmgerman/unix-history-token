@@ -543,7 +543,7 @@ name|driver_t
 name|uvisor_driver
 init|=
 block|{
-literal|"usio"
+literal|"ucom"
 block|,
 name|uvisor_methods
 block|,
