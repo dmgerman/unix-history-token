@@ -112,6 +112,27 @@ directive|include
 file|"chpass.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"pw_yp.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* YP */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -294,7 +315,16 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#Changing user database information for %s.\n"
+ifdef|#
+directive|ifdef
+name|YP
+literal|"#Changing %s information for %s.\n"
+argument_list|,
+name|_use_yp
+condition|?
+literal|"NIS"
+else|:
+literal|"user database"
 argument_list|,
 name|pw
 operator|->
@@ -305,8 +335,28 @@ if|if
 condition|(
 operator|!
 name|uid
+operator|&&
+operator|!
+name|_use_yp
 condition|)
 block|{
+else|#
+directive|else
+literal|"#Changing user database information for %s.\n"
+operator|,
+name|pw
+operator|->
+name|pw_name
+block|)
+if|if
+condition|(
+operator|!
+name|uid
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* YP */
 operator|(
 name|void
 operator|)
