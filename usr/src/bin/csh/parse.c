@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parse.c	5.2 (Berkeley) %G%"
+literal|"@(#)parse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1035,6 +1035,18 @@ operator|->
 name|t_dtyp
 operator|==
 name|TLST
+operator|||
+name|t1
+operator|->
+name|t_dtyp
+operator|==
+name|TAND
+operator|||
+name|t1
+operator|->
+name|t_dtyp
+operator|==
+name|TOR
 condition|)
 block|{
 name|t
