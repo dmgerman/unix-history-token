@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	6.2	84/08/28	*/
+comment|/*	tty.h	6.3	84/12/31	*/
 end_comment
 
 begin_ifdef
@@ -222,6 +222,11 @@ name|ttychars
 name|t_chars
 decl_stmt|;
 comment|/* tty */
+name|struct
+name|winsize
+name|t_winsize
+decl_stmt|;
+comment|/* window size */
 comment|/* be careful of tchars& co. */
 define|#
 directive|define
