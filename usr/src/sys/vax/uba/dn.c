@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.5	82/07/15	*/
+comment|/*	dn.c	4.6	82/08/22	*/
 end_comment
 
 begin_include
@@ -644,12 +644,22 @@ begin_macro
 name|dnwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -718,9 +728,9 @@ name|cc
 operator|=
 name|MIN
 argument_list|(
-name|u
-operator|.
-name|u_count
+name|uio
+operator|->
+name|uio_resid
 argument_list|,
 name|OBUFSIZ
 argument_list|)
@@ -729,7 +739,11 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
-name|iomove
+name|u
+operator|.
+name|u_error
+operator|=
+name|uiomove
 argument_list|(
 name|cp
 argument_list|,
@@ -738,7 +752,9 @@ name|unsigned
 operator|)
 name|cc
 argument_list|,
-name|B_WRITE
+name|UIO_WRITE
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 if|if

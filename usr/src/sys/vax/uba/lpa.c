@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.4	82/08/13	*/
+comment|/*	lpa.c	4.5	82/08/22	*/
 end_comment
 
 begin_include
@@ -1744,12 +1744,22 @@ begin_macro
 name|lpawrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1852,6 +1862,8 @@ argument_list|(
 name|lpaaddr
 argument_list|,
 name|sc
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1876,6 +1888,8 @@ argument_list|,
 name|ui
 operator|->
 name|ui_ubanum
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1896,6 +1910,8 @@ argument_list|(
 name|lpaaddr
 argument_list|,
 name|sc
+argument_list|,
+name|uio
 argument_list|)
 specifier|register
 expr|struct
@@ -1911,6 +1927,14 @@ name|struct
 name|lpa_softc
 modifier|*
 name|sc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1931,19 +1955,21 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|u
-operator|.
-name|u_count
+name|uio
+operator|->
+name|uio_resid
 condition|)
 block|{
-name|iomove
+name|uiomove
 argument_list|(
 operator|&
 name|v
 argument_list|,
 literal|2
 argument_list|,
-name|B_WRITE
+name|UIO_WRITE
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 comment|/* get next microcode word */
@@ -2075,6 +2101,8 @@ argument_list|,
 name|sc
 argument_list|,
 name|ubanum
+argument_list|,
+name|uio
 argument_list|)
 specifier|register
 expr|struct
@@ -2097,6 +2125,14 @@ begin_decl_stmt
 specifier|register
 name|short
 name|ubanum
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -2204,15 +2240,15 @@ name|n
 operator|=
 name|min
 argument_list|(
-name|u
-operator|.
-name|u_count
+name|uio
+operator|->
+name|uio_resid
 argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
 comment|/* dedicated mode dispatch table */
-name|iomove
+name|uiomove
 argument_list|(
 operator|(
 name|char
@@ -2222,7 +2258,9 @@ name|p
 argument_list|,
 name|n
 argument_list|,
-name|B_WRITE
+name|UIO_WRITE
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 name|n
@@ -2991,7 +3029,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	read  *		read 1 character only - the next available buffer number  */
+comment|/*  * Lparead reads 1 character only -- the next available buffer number.  */
 end_comment
 
 begin_macro
@@ -3238,7 +3276,7 @@ name|sc_ubufn
 argument_list|,
 literal|1
 argument_list|,
-name|B_READ
+name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
@@ -3247,7 +3285,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	execute a command and wait for completion  */
+comment|/*  * Execute a lpa command and wait for completion.  */
 end_comment
 
 begin_expr_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.6	82/06/14	*/
+comment|/*	flp.c	4.7	82/08/22	*/
 end_comment
 
 begin_if
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_struct
@@ -237,16 +243,24 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|flstrategy
+begin_expr_stmt
+name|floperation
 argument_list|(
-argument|rw
+name|rw
+argument_list|,
+name|uio
 argument_list|)
-end_macro
+expr|enum
+name|uio_rw
+name|rw
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|int
-name|rw
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -259,15 +273,15 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
-name|unsigned
+name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Assume one block read/written for each call -  	 * and enforce this by checking for block size of 128. 	 * Use the b_blkno field to address 	 * physical, 128-byte blocks (u.u_offset/128). 	 * This is checked for validity, and is further interpreted as: 	 * 	 *	track# * (sectors/track) + sector # 	 */
 if|if
 condition|(
-name|u
-operator|.
-name|u_count
+name|uio
+operator|->
+name|uio_resid
 operator|==
 literal|0
 condition|)
@@ -320,16 +334,16 @@ condition|(
 operator|(
 name|i
 operator|=
-name|min
+name|imin
 argument_list|(
 name|RXBYSEC
 argument_list|,
-name|u
-operator|.
-name|u_count
+name|uio
+operator|->
+name|uio_resid
 argument_list|)
 operator|)
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -337,9 +351,9 @@ name|bp
 operator|->
 name|b_blkno
 operator|=
-name|u
-operator|.
-name|u_offset
+name|uio
+operator|->
+name|uio_offset
 operator|>>
 literal|7
 expr_stmt|;
@@ -352,9 +366,9 @@ operator|>=
 name|MAXSEC
 operator|||
 operator|(
-name|u
-operator|.
-name|u_offset
+name|uio
+operator|->
+name|uio_offset
 operator|&
 literal|0177
 operator|)
@@ -376,10 +390,14 @@ if|if
 condition|(
 name|rw
 operator|==
-name|B_WRITE
+name|UIO_WRITE
 condition|)
 block|{
-name|iomove
+name|u
+operator|.
+name|u_error
+operator|=
+name|uiomove
 argument_list|(
 name|bp
 operator|->
@@ -389,7 +407,9 @@ name|b_addr
 argument_list|,
 name|i
 argument_list|,
-name|B_WRITE
+name|UIO_WRITE
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -397,8 +417,6 @@ condition|(
 name|u
 operator|.
 name|u_error
-operator|!=
-literal|0
 condition|)
 break|break;
 block|}
@@ -407,6 +425,12 @@ operator|->
 name|b_flags
 operator|=
 name|rw
+operator|==
+name|UIO_WRITE
+condition|?
+name|B_WRITE
+else|:
+name|B_READ
 expr_stmt|;
 operator|(
 name|void
@@ -466,10 +490,14 @@ if|if
 condition|(
 name|rw
 operator|==
-name|B_READ
+name|UIO_READ
 condition|)
 block|{
-name|iomove
+name|u
+operator|.
+name|u_error
+operator|=
+name|uiomove
 argument_list|(
 name|bp
 operator|->
@@ -479,7 +507,9 @@ name|b_addr
 argument_list|,
 name|i
 argument_list|,
-name|B_READ
+name|UIO_READ
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -487,20 +517,10 @@ condition|(
 name|u
 operator|.
 name|u_error
-operator|!=
-literal|0
 condition|)
 break|break;
 block|}
 block|}
-name|u
-operator|.
-name|u_count
-operator|=
-name|bp
-operator|->
-name|b_resid
-expr_stmt|;
 name|fltab
 operator|.
 name|fl_state
@@ -528,6 +548,8 @@ begin_macro
 name|flread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
@@ -537,11 +559,21 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|flstrategy
+name|floperation
 argument_list|(
-name|B_READ
+name|UIO_READ
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -555,6 +587,8 @@ begin_macro
 name|flwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
@@ -564,11 +598,21 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|flstrategy
+name|floperation
 argument_list|(
-name|B_WRITE
+name|UIO_WRITE
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 block|}

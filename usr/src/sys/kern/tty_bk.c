@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_bk.c	4.3	82/08/13	*/
+comment|/*	tty_bk.c	4.4	82/08/22	*/
 end_comment
 
 begin_include
@@ -412,10 +412,8 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|copyuout
+name|uiomove
 argument_list|(
-name|uio
-argument_list|,
 name|tp
 operator|->
 name|t_bufp
@@ -427,6 +425,10 @@ argument_list|,
 name|tp
 operator|->
 name|t_inbuf
+argument_list|,
+name|UIO_READ
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 name|tp

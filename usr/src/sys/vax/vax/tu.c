@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.6	82/05/27	*/
+comment|/*	tu.c	4.7	82/08/22	*/
 end_comment
 
 begin_if
@@ -116,12 +116,23 @@ begin_comment
 comment|/* mask for drive number (should match NTU) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MRSP
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MRSP
 value|(cpu != VAX_750)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -295,53 +306,53 @@ name|tu
 block|{
 name|u_char
 modifier|*
-name|rbptr
+name|tu_rbptr
 decl_stmt|;
 comment|/* pointer to buffer for read */
 name|int
-name|rcnt
+name|tu_rcnt
 decl_stmt|;
 comment|/* how much to read */
 name|u_char
 modifier|*
-name|wbptr
+name|tu_wbptr
 decl_stmt|;
 comment|/* pointer to buffer for write */
 name|int
-name|wcnt
+name|tu_wcnt
 decl_stmt|;
 comment|/* how much to write */
 name|int
-name|state
+name|tu_state
 decl_stmt|;
-comment|/* current state of tansfer operation */
+comment|/* current tu_state of tansfer operation */
 name|int
-name|flag
+name|tu_flag
 decl_stmt|;
 comment|/* read in progress flag */
 name|char
 modifier|*
-name|addr
+name|tu_addr
 decl_stmt|;
 comment|/* real buffer data address */
 name|int
-name|count
+name|tu_count
 decl_stmt|;
 comment|/* real requested count */
 name|int
-name|serrs
+name|tu_serrs
 decl_stmt|;
 comment|/* count of soft errors */
 name|int
-name|cerrs
+name|tu_cerrs
 decl_stmt|;
 comment|/* count of checksum errors */
 name|int
-name|herrs
+name|tu_herrs
 decl_stmt|;
 comment|/* count of hard errors */
 name|char
-name|dopen
+name|tu_dopen
 index|[
 literal|2
 index|]
@@ -359,7 +370,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INIT1
+name|TUS_INIT1
 value|0
 end_define
 
@@ -370,7 +381,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INIT2
+name|TUS_INIT2
 value|1
 end_define
 
@@ -381,7 +392,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IDLE
+name|TUS_IDLE
 value|2
 end_define
 
@@ -392,7 +403,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SENDH
+name|TUS_SENDH
 value|3
 end_define
 
@@ -403,7 +414,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SENDD
+name|TUS_SENDD
 value|4
 end_define
 
@@ -414,7 +425,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SENDC
+name|TUS_SENDC
 value|5
 end_define
 
@@ -425,7 +436,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SENDR
+name|TUS_SENDR
 value|6
 end_define
 
@@ -436,7 +447,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SENDW
+name|TUS_SENDW
 value|7
 end_define
 
@@ -447,7 +458,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GETH
+name|TUS_GETH
 value|8
 end_define
 
@@ -458,7 +469,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GETD
+name|TUS_GETD
 value|9
 end_define
 
@@ -469,7 +480,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GETC
+name|TUS_GETC
 value|10
 end_define
 
@@ -480,7 +491,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GET
+name|TUS_GET
 value|11
 end_define
 
@@ -491,13 +502,69 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WAIT
+name|TUS_WAIT
 value|12
 end_define
 
 begin_comment
 comment|/* waiting for continue */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TUS_NSTATES
+value|13
+end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tustates
+index|[
+name|TUS_NSTATES
+index|]
+init|=
+block|{
+literal|"INIT1"
+block|,
+literal|"INIT2"
+block|,
+literal|"IDLE"
+block|,
+literal|"SENDH"
+block|,
+literal|"SENDD"
+block|,
+literal|"SENDC"
+block|,
+literal|"SENDR"
+block|,
+literal|"SENDW"
+block|,
+literal|"GETH"
+block|,
+literal|"GETD"
+block|,
+literal|"GETC"
+block|,
+literal|"GET"
+block|,
+literal|"WAIT"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|printstate
+parameter_list|(
+name|state
+parameter_list|)
+define|\
+value|if ((state)< TUS_NSTATES) \ 		printf("%s", tustates[(state)]); \ 	else \ 		printf("%d", (state));
+end_define
 
 begin_comment
 comment|/*  * Packet Flags  */
@@ -782,7 +849,7 @@ name|NTU
 operator|||
 name|tu
 operator|.
-name|dopen
+name|tu_dopen
 index|[
 name|minor
 argument_list|(
@@ -826,7 +893,7 @@ expr_stmt|;
 block|}
 name|tu
 operator|.
-name|dopen
+name|tu_dopen
 index|[
 name|minor
 argument_list|(
@@ -844,15 +911,31 @@ argument_list|(
 name|TUIPL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the cassette's already initialized, 	 * just enable interrupts and return. 	 */
 if|if
 condition|(
 name|tu
 operator|.
-name|state
-operator|!=
-name|IDLE
+name|tu_state
+operator|==
+name|TUS_IDLE
 condition|)
 block|{
+name|mtpr
+argument_list|(
+name|CSRS
+argument_list|,
+name|IE
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*  	 * Must initialize, reset the cassette 	 * and wait for things to settle down. 	 */
 name|tureset
 argument_list|()
 expr_stmt|;
@@ -879,12 +962,11 @@ if|if
 condition|(
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|!=
-name|IDLE
+name|TUS_IDLE
 condition|)
 block|{
-comment|/* couldn't initialize */
 name|u
 operator|.
 name|u_error
@@ -893,13 +975,13 @@ name|ENXIO
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT1
+name|TUS_INIT1
 expr_stmt|;
 name|tu
 operator|.
-name|dopen
+name|tu_dopen
 index|[
 name|minor
 argument_list|(
@@ -913,11 +995,11 @@ literal|0
 expr_stmt|;
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -936,15 +1018,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-name|mtpr
-argument_list|(
-name|CSRS
-argument_list|,
-name|IE
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -991,20 +1064,20 @@ if|if
 condition|(
 name|tu
 operator|.
-name|serrs
+name|tu_serrs
 operator|+
 name|tu
 operator|.
-name|cerrs
+name|tu_cerrs
 operator|+
 name|tu
 operator|.
-name|herrs
+name|tu_herrs
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* any errors ? */
+comment|/* 		 * A tu58 is like nothing ever seen before; 		 * I guess this is appropriate then... 		 */
 name|uprintf
 argument_list|(
 literal|"tu%d: %d soft errors, %d chksum errors, %d hard errors\n"
@@ -1016,35 +1089,35 @@ argument_list|)
 argument_list|,
 name|tu
 operator|.
-name|serrs
+name|tu_serrs
 argument_list|,
 name|tu
 operator|.
-name|cerrs
+name|tu_cerrs
 argument_list|,
 name|tu
 operator|.
-name|herrs
+name|tu_herrs
 argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|serrs
+name|tu_serrs
 operator|=
 name|tu
 operator|.
-name|cerrs
+name|tu_cerrs
 operator|=
 name|tu
 operator|.
-name|herrs
+name|tu_herrs
 operator|=
 literal|0
 expr_stmt|;
 block|}
 name|tu
 operator|.
-name|dopen
+name|tu_dopen
 index|[
 name|minor
 argument_list|(
@@ -1072,22 +1145,24 @@ begin_block
 block|{
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT1
+name|TUS_INIT1
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 name|tunull
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tunull
+argument_list|)
 expr_stmt|;
 name|tucmd
 operator|.
@@ -1100,7 +1175,9 @@ operator|.
 name|pk_mcount
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tucmd
+argument_list|)
 operator|-
 literal|4
 expr_stmt|;
@@ -1151,7 +1228,6 @@ name|tuxintr
 argument_list|()
 expr_stmt|;
 comment|/* start output */
-return|return;
 block|}
 end_block
 
@@ -1187,7 +1263,6 @@ operator|>=
 name|NTUBLK
 condition|)
 block|{
-comment|/* block number out of range? */
 name|bp
 operator|->
 name|b_flags
@@ -1324,9 +1399,9 @@ if|if
 condition|(
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|!=
-name|IDLE
+name|TUS_IDLE
 condition|)
 block|{
 name|tureset
@@ -1421,7 +1496,7 @@ name|pk_count
 operator|=
 name|tu
 operator|.
-name|count
+name|tu_count
 operator|=
 name|bp
 operator|->
@@ -1469,7 +1544,7 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
 name|bp
 operator|->
@@ -1477,13 +1552,13 @@ name|b_flags
 operator|&
 name|B_READ
 condition|?
-name|SENDR
+name|TUS_SENDR
 else|:
-name|SENDW
+name|TUS_SENDW
 expr_stmt|;
 name|tu
 operator|.
-name|addr
+name|tu_addr
 operator|=
 name|bp
 operator|->
@@ -1493,7 +1568,7 @@ name|b_addr
 expr_stmt|;
 name|tu
 operator|.
-name|count
+name|tu_count
 operator|=
 name|bp
 operator|->
@@ -1501,7 +1576,7 @@ name|b_bcount
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 operator|(
 name|u_char
@@ -1512,10 +1587,12 @@ name|tucmd
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tucmd
+argument_list|)
 expr_stmt|;
 name|tuxintr
 argument_list|()
@@ -1586,14 +1663,14 @@ if|if
 condition|(
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 condition|)
 block|{
 comment|/* still waiting for data? */
 operator|*
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 operator|++
 operator|=
 name|c
@@ -1604,47 +1681,39 @@ condition|(
 operator|--
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 condition|)
 comment|/* decrement count, any left? */
 return|return;
 comment|/* get some more */
 block|}
-comment|/* 	 * We got all the data we were expecting for now, 	 * switch on the state of the transfer. 	 */
+comment|/* 	 * We got all the data we were expecting for now, 	 * switch on the tu_state of the transfer. 	 */
 switch|switch
 condition|(
 name|tu
 operator|.
-name|state
+name|tu_state
 condition|)
 block|{
+comment|/* 	 * If we get an unexpected "continue", 	 * start all over again... 	 */
 case|case
-name|INIT2
+name|TUS_INIT2
 case|:
-if|if
-condition|(
+name|tu
+operator|.
+name|tu_state
+operator|=
 name|c
 operator|==
 name|TUF_CONT
-condition|)
-comment|/* did we get the expected continue? */
-name|tu
-operator|.
-name|state
-operator|=
-name|IDLE
+condition|?
+name|TUS_IDLE
+else|:
+name|TUS_INIT1
 expr_stmt|;
-else|else
 name|tu
 operator|.
-name|state
-operator|=
-name|INIT1
-expr_stmt|;
-comment|/* bad news... */
-name|tu
-operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|0
 expr_stmt|;
@@ -1661,8 +1730,9 @@ name|tustart
 argument_list|()
 expr_stmt|;
 break|break;
+comment|/* 	 * Only transition from this state 	 * is on a "continue", so if we don't 	 * get it, reset the world. 	 */
 case|case
-name|WAIT
+name|TUS_WAIT
 case|:
 comment|/* waiting for continue */
 if|if
@@ -1674,16 +1744,15 @@ condition|)
 block|{
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT1
+name|TUS_INIT1
 expr_stmt|;
-comment|/* bad news... */
 break|break;
 block|}
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|0
 expr_stmt|;
@@ -1703,7 +1772,7 @@ literal|128
 argument_list|,
 name|tu
 operator|.
-name|count
+name|tu_count
 argument_list|)
 expr_stmt|;
 name|tudata
@@ -1727,7 +1796,7 @@ name|caddr_t
 operator|)
 name|tu
 operator|.
-name|addr
+name|tu_addr
 argument_list|,
 operator|(
 name|int
@@ -1739,13 +1808,13 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|SENDH
+name|TUS_SENDH
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 operator|(
 name|u_char
@@ -1756,7 +1825,7 @@ name|tudata
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 literal|2
 expr_stmt|;
@@ -1765,28 +1834,25 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|SENDW
+name|TUS_SENDW
 case|:
 if|if
 condition|(
 name|c
-operator|==
+operator|!=
 name|TUF_CONT
 condition|)
-block|{
+goto|goto
+name|bad
+goto|;
 name|tureset
 argument_list|()
 expr_stmt|;
 break|break;
-block|}
-else|else
-goto|goto
-name|bad
-goto|;
+comment|/* 	 * Got header, now get data; amount to 	 * fetch is include in packet. 	 */
 case|case
-name|GETH
+name|TUS_GETH
 case|:
-comment|/* got header, get data */
 if|if
 condition|(
 name|tudata
@@ -1795,10 +1861,9 @@ name|pk_flag
 operator|==
 name|TUF_DATA
 condition|)
-comment|/* data message? */
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 operator|=
 operator|(
 name|u_char
@@ -1806,32 +1871,30 @@ operator|*
 operator|)
 name|tu
 operator|.
-name|addr
+name|tu_addr
 expr_stmt|;
-comment|/* yes put in buffer */
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 name|tudata
 operator|.
 name|pk_mcount
 expr_stmt|;
-comment|/* amount to get */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|GETD
+name|TUS_GETD
 expr_stmt|;
 break|break;
+comment|/* 	 * Got the data, now fetch the checksum. 	 */
 case|case
-name|GETD
+name|TUS_GETD
 case|:
-comment|/* got data, get checksum */
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 operator|=
 operator|(
 name|u_char
@@ -1844,25 +1907,27 @@ name|pk_chksum
 expr_stmt|;
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tudata
 operator|.
 name|pk_chksum
+argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|GETC
+name|TUS_GETC
 expr_stmt|;
 break|break;
 case|case
-name|GET
+name|TUS_GET
 case|:
 case|case
-name|GETC
+name|TUS_GETC
 case|:
 comment|/* got entire packet */
 ifdef|#
@@ -1894,7 +1959,7 @@ name|TUF_DATA
 condition|?
 name|tu
 operator|.
-name|addr
+name|tu_addr
 else|:
 operator|&
 name|tudata
@@ -1911,7 +1976,7 @@ argument_list|)
 condition|)
 name|tu
 operator|.
-name|cerrs
+name|tu_cerrs
 operator|++
 expr_stmt|;
 endif|#
@@ -1928,7 +1993,7 @@ block|{
 comment|/* data packet, advance to next */
 name|tu
 operator|.
-name|addr
+name|tu_addr
 operator|+=
 name|tudata
 operator|.
@@ -1936,7 +2001,7 @@ name|pk_mcount
 expr_stmt|;
 name|tu
 operator|.
-name|count
+name|tu_count
 operator|-=
 name|tudata
 operator|.
@@ -1944,13 +2009,13 @@ name|pk_mcount
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|GETH
+name|TUS_GETH
 expr_stmt|;
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 operator|=
 operator|(
 name|u_char
@@ -1962,7 +2027,7 @@ expr_stmt|;
 comment|/* next packet */
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 literal|2
 expr_stmt|;
@@ -1986,13 +2051,13 @@ block|{
 comment|/* end packet, idle and reenable transmitter */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|IDLE
+name|TUS_IDLE
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|0
 expr_stmt|;
@@ -2023,12 +2088,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tu: no bp!\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"active %d\n"
+literal|"tu: no bp, active %d\n"
 argument_list|,
 name|tutab
 operator|.
@@ -2058,7 +2118,7 @@ name|B_ERROR
 expr_stmt|;
 name|tu
 operator|.
-name|herrs
+name|tu_herrs
 operator|++
 expr_stmt|;
 name|harderr
@@ -2092,7 +2152,7 @@ condition|)
 comment|/* soft error */
 name|tu
 operator|.
-name|serrs
+name|tu_serrs
 operator|++
 expr_stmt|;
 name|tutab
@@ -2115,7 +2175,7 @@ name|b_resid
 operator|=
 name|tu
 operator|.
-name|count
+name|tu_count
 expr_stmt|;
 if|if
 condition|(
@@ -2183,22 +2243,22 @@ expr_stmt|;
 comment|/* flush the rest */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT1
+name|TUS_INIT1
 expr_stmt|;
 block|}
 break|break;
 case|case
-name|IDLE
+name|TUS_IDLE
 case|:
 case|case
-name|INIT1
+name|TUS_INIT1
 case|:
 break|break;
+default|default:
 name|bad
 label|:
-default|default:
 if|if
 condition|(
 name|c
@@ -2208,16 +2268,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"TU protocol error, state %d\n"
-argument_list|,
+literal|"tu protocol error, state="
+argument_list|)
+expr_stmt|;
+name|printstate
+argument_list|(
 name|tu
 operator|.
-name|state
+name|tu_state
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%o %d %d\n"
+literal|", op=%x, cnt=%d, block=%d\n"
 argument_list|,
 name|tucmd
 operator|.
@@ -2297,25 +2360,38 @@ expr_stmt|;
 block|}
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT1
+name|TUS_INIT1
 expr_stmt|;
 block|}
 else|else
 block|{
 name|printf
 argument_list|(
-literal|"TU receive state error %d %o\n"
-argument_list|,
-name|tu
-operator|.
-name|state
+literal|"tu receive state error, state="
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", byte=%x\n"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/*	tu.state = INIT1; */
+ifdef|#
+directive|ifdef
+name|notdef
+name|tu
+operator|.
+name|tu_state
+operator|=
+name|TUS_INIT1
+expr_stmt|;
+operator|*
+operator|/
+endif|#
+directive|endif
 name|wakeup
 argument_list|(
 operator|(
@@ -2347,7 +2423,7 @@ if|if
 condition|(
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 condition|)
 block|{
 comment|/* still stuff to send, send one byte */
@@ -2372,38 +2448,47 @@ argument_list|,
 operator|*
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|++
 argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|--
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Last message byte was sent out. 	 * Switch on state of transfer. 	 */
-name|printd
+comment|/* 	 * Last message byte was sent out. 	 * Switch on tu_state of transfer. 	 */
+if|if
+condition|(
+name|tudebug
+condition|)
+block|{
+name|printf
 argument_list|(
-literal|"tuxintr: state %d\n"
-argument_list|,
-name|tu
-operator|.
-name|state
+literal|"tuxintr: state="
 argument_list|)
 expr_stmt|;
+name|printstate
+argument_list|(
+name|tu
+operator|.
+name|tu_state
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|tu
 operator|.
-name|state
+name|tu_state
 condition|)
 block|{
+comment|/* 	 * Two nulls have been sent, remove break, and send inits 	 */
 case|case
-name|INIT1
+name|TUS_INIT1
 case|:
-comment|/* two nulls sent, remove break, send inits */
 name|mtpr
 argument_list|(
 name|CSTS
@@ -2418,30 +2503,32 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|INIT2
+name|TUS_INIT2
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 name|tuinit
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tuinit
+argument_list|)
 expr_stmt|;
 goto|goto
 name|top
 goto|;
+comment|/* 	 * Inits have been sent, wait for a continue msg. 	 */
 case|case
-name|INIT2
+name|TUS_INIT2
 case|:
-comment|/* inits sent, wait for continue */
 operator|(
 name|void
 operator|)
@@ -2459,29 +2546,29 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 case|case
-name|IDLE
+name|TUS_IDLE
 case|:
 comment|/* stray interrupt? */
 break|break;
+comment|/* 	 * Read cmd packet sent, get ready for data 	 */
 case|case
-name|SENDR
+name|TUS_SENDR
 case|:
-comment|/* read cmd packet sent, get ready for data */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|GETH
+name|TUS_GETH
 expr_stmt|;
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 operator|=
 operator|(
 name|u_char
@@ -2492,13 +2579,13 @@ name|tudata
 expr_stmt|;
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 literal|2
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
@@ -2516,19 +2603,19 @@ literal|"OFF "
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * Write cmd packet sent, wait for continue 	 */
 case|case
-name|SENDW
+name|TUS_SENDW
 case|:
-comment|/* write cmd packet sent, wait for continue */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|WAIT
+name|TUS_WAIT
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
@@ -2560,19 +2647,19 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+comment|/* 	 * Header sent, send data. 	 */
 case|case
-name|SENDH
+name|TUS_SENDH
 case|:
-comment|/* header sent, send data */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|SENDD
+name|TUS_SENDD
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 operator|(
 name|u_char
@@ -2580,11 +2667,11 @@ operator|*
 operator|)
 name|tu
 operator|.
-name|addr
+name|tu_addr
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 name|tudata
 operator|.
@@ -2593,19 +2680,19 @@ expr_stmt|;
 goto|goto
 name|top
 goto|;
+comment|/* 	 * Data sent, follow with checksum. 	 */
 case|case
-name|SENDD
+name|TUS_SENDD
 case|:
-comment|/* data sent, send checksum */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|SENDC
+name|TUS_SENDC
 expr_stmt|;
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 operator|=
 operator|(
 name|u_char
@@ -2618,7 +2705,7 @@ name|pk_chksum
 expr_stmt|;
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 operator|=
 sizeof|sizeof
 name|tudata
@@ -2628,48 +2715,58 @@ expr_stmt|;
 goto|goto
 name|top
 goto|;
+comment|/*  	 * Checksum sent, wait for continue. 	 */
 case|case
-name|SENDC
+name|TUS_SENDC
 case|:
-comment|/* checksum sent, wait for continue */
+comment|/* 		 * Updata buffer address and count. 		 */
 name|tu
 operator|.
-name|addr
+name|tu_addr
 operator|+=
 name|tudata
 operator|.
 name|pk_mcount
 expr_stmt|;
-comment|/* update buffer address */
 name|tu
 operator|.
-name|count
+name|tu_count
 operator|-=
 name|tudata
 operator|.
 name|pk_mcount
 expr_stmt|;
-comment|/* and count */
 if|if
 condition|(
 name|tu
 operator|.
-name|count
-operator|==
-literal|0
+name|tu_count
 condition|)
 block|{
-comment|/* all done? */
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|GET
+name|TUS_WAIT
 expr_stmt|;
-comment|/* set up to get end packet */
 name|tu
 operator|.
-name|rbptr
+name|tu_flag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * End of transmission, get ready for end packet. 		 */
+name|tu
+operator|.
+name|tu_state
+operator|=
+name|TUS_GET
+expr_stmt|;
+name|tu
+operator|.
+name|tu_rbptr
 operator|=
 operator|(
 name|u_char
@@ -2680,14 +2777,16 @@ name|tudata
 expr_stmt|;
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 operator|=
 sizeof|sizeof
+argument_list|(
 name|tudata
+argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
@@ -2703,37 +2802,29 @@ argument_list|(
 literal|"OFF2 "
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|tu
-operator|.
-name|state
-operator|=
-name|WAIT
-expr_stmt|;
-comment|/* wait for continue */
-name|tu
-operator|.
-name|flag
-operator|=
-literal|1
-expr_stmt|;
-block|}
 break|break;
+comment|/* 	 * Random interrupt, probably from MRSP ACK 	 */
 default|default:
-comment|/* random interrupt, probably from MRSP ACK */
 break|break;
 block|}
+if|if
+condition|(
+name|tudebug
+condition|)
+block|{
 name|printd
 argument_list|(
-literal|"  new state %d\n"
-argument_list|,
-name|tu
-operator|.
-name|state
+literal|"  new tu_state="
 argument_list|)
 expr_stmt|;
+name|printstate
+argument_list|(
+name|tu
+operator|.
+name|tu_state
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2954,7 +3045,7 @@ condition|)
 block|{
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|0
 expr_stmt|;
@@ -2964,22 +3055,36 @@ if|if
 condition|(
 name|tu
 operator|.
-name|flag
+name|tu_flag
 condition|)
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|++
 expr_stmt|;
 if|if
 condition|(
 name|tu
 operator|.
-name|flag
-operator|>
+name|tu_flag
+operator|<=
 literal|40
 condition|)
 block|{
+name|timeout
+argument_list|(
+name|tuwatch
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"tu: read stalled\n"
@@ -2991,40 +3096,40 @@ literal|"%X %X %X %X %X %X %X %X\n"
 argument_list|,
 name|tu
 operator|.
-name|rbptr
+name|tu_rbptr
 argument_list|,
 name|tu
 operator|.
-name|rcnt
+name|tu_rcnt
 argument_list|,
 name|tu
 operator|.
-name|wbptr
+name|tu_wbptr
 argument_list|,
 name|tu
 operator|.
-name|wcnt
+name|tu_wcnt
 argument_list|,
 name|tu
 operator|.
-name|state
+name|tu_state
 argument_list|,
 name|tu
 operator|.
-name|flag
+name|tu_flag
 argument_list|,
 name|tu
 operator|.
-name|addr
+name|tu_addr
 argument_list|,
 name|tu
 operator|.
-name|count
+name|tu_count
 argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|flag
+name|tu_flag
 operator|=
 literal|0
 expr_stmt|;
@@ -3060,27 +3165,48 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|.
-name|state
+name|tu_state
 operator|=
-name|IDLE
+name|TUS_IDLE
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|tutab
 operator|.
 name|b_active
 condition|)
 block|{
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tu
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 if|if
 condition|(
 operator|++
 name|tutab
 operator|.
 name|b_errcnt
-operator|>
+operator|<=
 literal|1
 condition|)
 block|{
+name|tustart
+argument_list|()
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 if|if
 condition|(
 name|bp
@@ -3130,28 +3256,13 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-name|tustart
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|tu
-argument_list|)
-expr_stmt|;
+name|retry
+label|:
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 name|timeout
 argument_list|(
 name|tuwatch
@@ -3204,7 +3315,6 @@ operator|)
 operator|>
 name|NTUQ
 condition|)
-block|{
 name|sleep
 argument_list|(
 name|cp
@@ -3212,7 +3322,6 @@ argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -3258,13 +3367,11 @@ operator|)
 operator|<=
 name|NTUQ
 condition|)
-block|{
 name|wakeup
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.26	82/08/13	*/
+comment|/*	ht.c	4.27	82/08/22	*/
 end_comment
 
 begin_include
@@ -2730,11 +2730,15 @@ end_macro
 
 begin_block
 block|{
+name|u
+operator|.
+name|u_error
+operator|=
 name|htphys
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -2763,7 +2767,7 @@ name|B_WRITE
 argument_list|,
 name|minphys
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -2843,37 +2847,16 @@ name|mi_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENXIO
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|uio
-condition|)
 name|a
 operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|>>
-literal|9
-expr_stmt|;
-else|else
-name|a
-operator|=
-name|u
-operator|.
-name|u_offset
 operator|>>
 literal|9
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.6	82/08/13	*/
+comment|/*	dmf.c	4.7	82/08/22	*/
 end_comment
 
 begin_include
@@ -1860,12 +1860,22 @@ begin_macro
 name|dmfwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,6 +1911,8 @@ name|l_write
 operator|)
 operator|(
 name|tp
+operator|,
+name|uio
 operator|)
 expr_stmt|;
 block|}

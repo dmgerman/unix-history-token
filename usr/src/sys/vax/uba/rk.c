@@ -12,7 +12,7 @@ name|RKBDEBUG
 end_define
 
 begin_comment
-comment|/*	rk.c	4.43	82/08/13	*/
+comment|/*	rk.c	4.44	82/08/22	*/
 end_comment
 
 begin_include
@@ -3299,12 +3299,22 @@ begin_macro
 name|rkwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -3350,7 +3360,7 @@ name|B_WRITE
 argument_list|,
 name|minphys
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
