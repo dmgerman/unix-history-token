@@ -10567,7 +10567,7 @@ argument_list|)
 condition|)
 name|vprint
 argument_list|(
-name|NULL
+literal|""
 argument_list|,
 name|vp
 argument_list|)
