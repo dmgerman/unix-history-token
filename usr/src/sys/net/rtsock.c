@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1420,6 +1420,14 @@ operator|=
 name|rt
 operator|->
 name|rt_rmx
+expr_stmt|;
+name|rtm
+operator|->
+name|rtm_addrs
+operator|=
+name|info
+operator|.
+name|rti_addrs
 expr_stmt|;
 break|break;
 case|case
