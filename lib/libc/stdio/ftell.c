@@ -89,7 +89,6 @@ parameter_list|(
 name|fp
 parameter_list|)
 specifier|register
-specifier|const
 name|FILE
 modifier|*
 name|fp

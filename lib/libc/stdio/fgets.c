@@ -98,7 +98,7 @@ modifier|*
 name|buf
 decl_stmt|;
 specifier|register
-name|size_t
+name|int
 name|n
 decl_stmt|;
 specifier|register
