@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.36 1999/05/05 17:05:06 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.37 1999/05/09 17:07:06 peter Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c980-TX	10/100Mbps server adapter  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c905C-TX	10/100Mbps/RJ-45  * 3Com 3c980-TX	10/100Mbps server adapter  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.36 1999/05/05 17:05:06 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.37 1999/05/09 17:07:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,14 @@ block|,
 name|TC_DEVICEID_CYCLONE_10_100_COMBO
 block|,
 literal|"3Com 3c905B-COMBO Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_TORNADO_10_100BT
+block|,
+literal|"3Com 3c905C-TX Fast Etherlink XL"
 block|}
 block|,
 block|{
