@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	5.1 (Berkeley) %G%"
+literal|"@(#)timedc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -593,12 +593,6 @@ decl_stmt|,
 name|longest
 decl_stmt|;
 specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
-decl_stmt|;
-specifier|extern
 name|int
 name|NCMDS
 decl_stmt|;
@@ -878,12 +872,6 @@ name|struct
 name|cmd
 modifier|*
 name|c
-decl_stmt|;
-specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
 decl_stmt|;
 if|if
 condition|(

@@ -1,13 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
 begin_struct_decl
 struct_decl|struct
 name|tsp
 struct_decl|;
 end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cmd
+name|cmdtab
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
