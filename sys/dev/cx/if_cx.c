@@ -12207,6 +12207,12 @@ name|mode
 operator|==
 name|M_ASYNC
 operator|&&
+operator|!
+name|IF_CUNIT
+argument_list|(
+name|dev
+argument_list|)
+operator|&&
 name|d
 operator|->
 name|tty
