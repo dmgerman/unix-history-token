@@ -48,6 +48,15 @@ operator|==
 name|PTHREAD_NEEDS_INIT
 condition|)
 block|{
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
 name|pthread_mutex_lock
 argument_list|(
 operator|&
