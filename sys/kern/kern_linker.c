@@ -4864,6 +4864,8 @@ argument_list|,
 name|M_LINKER
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4875,17 +4877,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"no memory for module list"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|mod
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|mod
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|mod
