@@ -2221,7 +2221,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-block|}
 comment|/* be sure to update variables that are affected by ipsec4_output() */
 name|ip
 operator|=
@@ -2280,6 +2279,13 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|state
+operator|.
+name|encap
+condition|)
+block|{
 name|ia
 operator|=
 name|ifatoia
@@ -2299,6 +2305,8 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* make it flipped, again. */
 name|ip
