@@ -989,7 +989,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_post_event_x(%p, %p, %d"
+literal|"g_post_event_x(%p, %p, %d)"
 argument_list|,
 name|func
 argument_list|,
@@ -1073,7 +1073,6 @@ operator|->
 name|ref
 index|[
 name|n
-operator|++
 index|]
 operator|=
 name|p
