@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.21	81/12/22	*/
+comment|/*	uipc_socket.c	4.22	82/01/07	*/
 end_comment
 
 begin_include
@@ -2020,6 +2020,16 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
 block|}
 name|splx
 argument_list|(
@@ -2060,14 +2070,6 @@ name|m
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
-operator|=
-name|n
 expr_stmt|;
 block|}
 else|else
@@ -2291,7 +2293,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|cmdp
+name|cmd
 condition|)
 block|{
 case|case
@@ -2361,6 +2363,10 @@ name|flags
 operator|&
 name|FWRITE
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 call|(
 modifier|*
 name|so
