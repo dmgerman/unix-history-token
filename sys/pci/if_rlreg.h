@@ -2240,6 +2240,28 @@ value|0x1340
 end_define
 
 begin_comment
+comment|/*  * Corega K.K vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COREGA_VENDORID
+value|0x1259
+end_define
+
+begin_comment
+comment|/*  * Coreaga FEther CB-TXD device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COREGA_DEVICEID_CBTXD
+value|0xa117
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

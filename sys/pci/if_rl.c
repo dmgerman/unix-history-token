@@ -298,6 +298,14 @@ literal|"Nortel Networks 10/100BaseTX"
 block|}
 block|,
 block|{
+name|COREGA_VENDORID
+block|,
+name|COREGA_DEVICEID_CBTXD
+block|,
+literal|"Corega FEther CB-TXD"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -3904,6 +3912,10 @@ operator|||
 name|rl_did
 operator|==
 name|DLINK_DEVICEID_690TXD
+operator|||
+name|rl_did
+operator|==
+name|COREGA_DEVICEID_CBTXD
 condition|)
 name|sc
 operator|->
