@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -211,6 +211,14 @@ name|u_long
 name|lfs_nfiles
 decl_stmt|;
 comment|/* number of allocated inodes */
+name|u_long
+name|lfs_avail
+decl_stmt|;
+comment|/* blocks available for writing */
+name|u_long
+name|lfs_uinodes
+decl_stmt|;
+comment|/* inodes in cache not yet on disk */
 name|daddr_t
 name|lfs_idaddr
 decl_stmt|;
@@ -372,6 +380,10 @@ name|u_long
 name|lfs_doifile
 decl_stmt|;
 comment|/* Write ifile blocks on next write */
+name|u_long
+name|lfs_nactive
+decl_stmt|;
+comment|/* Number of segments since last ckp */
 name|u_char
 name|lfs_fmod
 decl_stmt|;
@@ -538,6 +550,17 @@ begin_define
 define|#
 directive|define
 name|UNASSIGNED
+value|-1
+end_define
+
+begin_comment
+comment|/* Unused logical block number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_UNUSED_LBN
 value|-1
 end_define
 
@@ -856,7 +879,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(IP) = (IFILE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_ifpb; \ }
+value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read %d", _e); \ 	(IP) = (IFILE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_ifpb; \ }
 end_define
 
 begin_comment
@@ -876,21 +899,38 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + ((IN)& (F)->lfs_sepb - 1); \ }
+value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read: %d", _e); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + ((IN)& (F)->lfs_sepb - 1); \ }
 end_define
 
 begin_comment
-comment|/* Write a block and update the inode change times. */
+comment|/*   * Determine if there is enough room currently available to write db  * disk blocks.  We need enough blocks for the new blocks, the current,  * inode blocks, a summary block, plus potentially the ifile inode and  * the segment usage table, plus an ifile page.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LFS_UBWRITE
+name|LFS_FITS
 parameter_list|(
-name|BP
+name|fs
+parameter_list|,
+name|db
 parameter_list|)
-value|{ \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	VOP_BWRITE(BP); \ }
+define|\
+value|((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE + (fs)->lfs_segtabsz)\< (fs)->lfs_avail)
+end_define
+
+begin_comment
+comment|/* Determine if a buffer belongs to the ifile */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_IFILE
+parameter_list|(
+name|bp
+parameter_list|)
+value|(VTOI(bp->b_vp)->i_number == LFS_IFILE_INUM)
 end_define
 
 begin_comment
@@ -955,6 +995,97 @@ block|}
 name|INODE_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* In-memory description of a segment about to be written. */
+end_comment
+
+begin_struct
+struct|struct
+name|segment
+block|{
+name|struct
+name|lfs
+modifier|*
+name|fs
+decl_stmt|;
+comment|/* file system pointer */
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|bpp
+decl_stmt|;
+comment|/* pointer to buffer array */
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|cbpp
+decl_stmt|;
+comment|/* pointer to next available bp */
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|start_bpp
+decl_stmt|;
+comment|/* pointer to first bp in this set */
+name|struct
+name|buf
+modifier|*
+name|ibp
+decl_stmt|;
+comment|/* buffer pointer to inode page */
+name|struct
+name|finfo
+modifier|*
+name|fip
+decl_stmt|;
+comment|/* current fileinfo pointer */
+name|void
+modifier|*
+name|segsum
+decl_stmt|;
+comment|/* segment summary info */
+name|u_long
+name|ninodes
+decl_stmt|;
+comment|/* number of inodes in this segment */
+name|u_long
+name|seg_bytes_left
+decl_stmt|;
+comment|/* bytes left in segment */
+name|u_long
+name|sum_bytes_left
+decl_stmt|;
+comment|/* bytes left in summary block */
+name|u_long
+name|seg_number
+decl_stmt|;
+comment|/* number of this segment */
+name|daddr_t
+modifier|*
+name|start_lbp
+decl_stmt|;
+comment|/* beginning lbn for this set */
+define|#
+directive|define
+name|SEGM_CKP
+value|0x01
+comment|/* doing a checkpoint */
+define|#
+directive|define
+name|SEGM_CLEAN
+value|0x02
+comment|/* cleaner call; don't sort */
+name|u_long
+name|seg_flags
+decl_stmt|;
+comment|/* run-time flags for this segment */
+block|}
+struct|;
+end_struct
 
 end_unit
 
