@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.7	82/10/09	*/
+comment|/*	if_vv.c	4.8	82/10/10	*/
 end_comment
 
 begin_comment
@@ -52,38 +52,26 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vmmac.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
+end_include
 
 begin_include
 include|#
@@ -109,15 +97,16 @@ directive|include
 file|"../netinet/ip_var.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"../vax/cpu.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
@@ -135,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.13	82/10/09	*/
+comment|/*	if_uba.c	4.14	82/10/10	*/
 end_comment
 
 begin_include
@@ -42,25 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/cmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
 end_include
 
 begin_include
@@ -84,7 +66,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vaxif/if_uba.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_comment
