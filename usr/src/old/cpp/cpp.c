@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.8 %G%"
+literal|"@(#)cpp.c	1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,17 +115,29 @@ name|SALT
 value|'#'
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
 name|BUFSIZ
-end_ifndef
+operator|||
+name|BUFSIZ
+operator|<
+literal|8192
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|BUFSIZ
+end_undef
 
 begin_define
 define|#
 directive|define
 name|BUFSIZ
-value|512
+value|8192
 end_define
 
 begin_endif
@@ -592,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|SBSIZE
-value|60000
+value|80000
 end_define
 
 begin_comment
