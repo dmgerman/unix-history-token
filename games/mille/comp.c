@@ -61,7 +61,9 @@ end_define
 begin_function
 name|void
 name|calcmove
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CARD
 name|card
@@ -2198,12 +2200,10 @@ begin_function
 name|bool
 name|onecard
 parameter_list|(
-name|pp
-parameter_list|)
 name|PLAY
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CARD
 name|bat
@@ -2400,28 +2400,17 @@ begin_function
 name|bool
 name|canplay
 parameter_list|(
-name|pp
-parameter_list|,
-name|op
-parameter_list|,
-name|card
-parameter_list|)
 name|PLAY
 modifier|*
 name|pp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|PLAY
+modifier|*
 name|op
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|CARD
 name|card
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2631,7 +2620,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -955,6 +955,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|C_fmt
@@ -962,7 +963,12 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|C_name
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 modifier|*
 name|Fromfile
 decl_stmt|,
@@ -1135,6 +1141,7 @@ begin_function_decl
 name|bool
 name|error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1260,7 +1267,7 @@ begin_function_decl
 name|void
 name|prscore
 parameter_list|(
-name|bool
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1351,7 +1358,14 @@ name|int
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

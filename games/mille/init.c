@@ -54,7 +54,9 @@ end_comment
 begin_function
 name|void
 name|init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|PLAY
 modifier|*
@@ -313,7 +315,9 @@ end_function
 begin_function
 name|void
 name|shuffle
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -415,7 +419,9 @@ end_function
 begin_function
 name|void
 name|newboard
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -824,7 +830,9 @@ end_function
 begin_function
 name|void
 name|newscore
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

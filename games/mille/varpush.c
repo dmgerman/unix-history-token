@@ -61,30 +61,20 @@ begin_comment
 comment|/*  *	push variables around via the routine func() on the file  * channel file.  func() is either read or write.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|varpush
-argument_list|(
-name|file
-argument_list|,
-name|func
-argument_list|)
+parameter_list|(
 name|int
 name|file
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
 name|func
 function_decl|)
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|temp
@@ -456,7 +446,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

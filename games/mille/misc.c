@@ -112,6 +112,7 @@ begin_function
 name|bool
 name|error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -178,7 +179,9 @@ end_function
 begin_function
 name|CARD
 name|getcard
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -414,11 +417,9 @@ begin_function
 name|bool
 name|check_ext
 parameter_list|(
-name|forcomp
-parameter_list|)
 name|bool
 name|forcomp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -700,11 +701,9 @@ begin_function
 name|bool
 name|getyn
 parameter_list|(
-name|promptno
-parameter_list|)
 name|int
 name|promptno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
@@ -855,7 +854,9 @@ end_comment
 begin_function
 name|void
 name|check_more
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|On_exit
 operator|=
@@ -997,7 +998,9 @@ end_function
 begin_function
 name|char
 name|readch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|cnt

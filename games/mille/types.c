@@ -55,11 +55,9 @@ begin_function
 name|int
 name|isrepair
 parameter_list|(
-name|card
-parameter_list|)
 name|CARD
 name|card
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|card
@@ -85,11 +83,9 @@ begin_function
 name|CARD
 name|safety
 parameter_list|(
-name|card
-parameter_list|)
 name|CARD
 name|card
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(

@@ -79,12 +79,6 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|C_fmt
-init|=
-literal|"%-18.18s"
-decl_stmt|,
-comment|/* format for printing cards		*/
-modifier|*
 name|Fromfile
 init|=
 name|NULL
@@ -94,8 +88,22 @@ name|Initstr
 index|[
 literal|100
 index|]
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* initial string for error field	*/
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|C_fmt
+init|=
+literal|"%-18.18s"
+decl_stmt|,
+comment|/* format for printing cards	*/
 modifier|*
 name|_cn
 index|[
@@ -103,7 +111,7 @@ name|NUM_CARDS
 index|]
 init|=
 block|{
-comment|/* Card name buffer			*/
+comment|/* Card name buffer		*/
 literal|""
 block|,
 literal|"25"
@@ -158,7 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Card names				*/
+comment|/* Card names			*/
 end_comment
 
 begin_decl_stmt
