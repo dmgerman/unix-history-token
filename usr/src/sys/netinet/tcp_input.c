@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3172,6 +3172,24 @@ name|ti
 operator|->
 name|ti_ack
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|snd_wnd
+operator|>
+name|tp
+operator|->
+name|max_sndwnd
+condition|)
+name|tp
+operator|->
+name|max_sndwnd
+operator|=
+name|tp
+operator|->
+name|snd_wnd
+expr_stmt|;
 block|}
 comment|/* 	 * Process segments with URG. 	 */
 if|if
@@ -3403,6 +3421,39 @@ operator|->
 name|t_flags
 operator||=
 name|TF_ACKNOW
+expr_stmt|;
+comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
+name|len
+operator|=
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|-
+operator|(
+name|tp
+operator|->
+name|rcv_nxt
+operator|-
+name|tp
+operator|->
+name|rcv_adv
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|tp
+operator|->
+name|max_rcvd
+condition|)
+name|tp
+operator|->
+name|max_rcvd
+operator|=
+name|len
 expr_stmt|;
 block|}
 else|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -422,7 +422,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 * If retransmitting (possibly after persist timer forced us 	 * to send into a small window), then must resend. 	 */
+comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 * If peer's buffer is tiny, then send 	 * when window is at least half open. 	 * If retransmitting (possibly after persist timer forced us 	 * to send into a small window), then must resend. 	 */
 if|if
 condition|(
 name|len
@@ -463,6 +463,19 @@ condition|(
 name|tp
 operator|->
 name|t_force
+condition|)
+goto|goto
+name|send
+goto|;
+if|if
+condition|(
+name|len
+operator|>=
+name|tp
+operator|->
+name|max_sndwnd
+operator|/
+literal|2
 condition|)
 goto|goto
 name|send
