@@ -2106,7 +2106,7 @@ comment|/* Read only */
 name|char
 name|name
 index|[
-literal|33
+literal|30
 index|]
 decl_stmt|;
 name|int

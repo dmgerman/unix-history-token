@@ -4532,7 +4532,7 @@ operator|.
 name|name
 argument_list|)
 argument_list|,
-literal|"MPU-401 %d.%d%c Midi interface #%d"
+literal|"MPU-401 %d.%d%c Midi interface"
 argument_list|,
 call|(
 name|int
@@ -4554,8 +4554,6 @@ operator|&
 literal|0x0f
 argument_list|,
 name|revision_char
-argument_list|,
-name|n_mpu_devs
 argument_list|)
 expr_stmt|;
 block|}
