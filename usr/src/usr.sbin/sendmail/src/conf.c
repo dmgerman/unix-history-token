@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.20 (Berkeley) %G%"
+literal|"@(#)conf.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,7 +331,7 @@ literal|"needmailhelo"
 block|,
 name|PRIV_NEEDMAILHELO
 block|,
-literal|"needexpnnelo"
+literal|"needexpnhelo"
 block|,
 name|PRIV_NEEDEXPNHELO
 block|,
