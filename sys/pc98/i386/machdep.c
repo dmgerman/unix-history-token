@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_cpu.h"
 end_include
 
@@ -4663,7 +4669,7 @@ name|uc_mcontext
 operator|.
 name|mc_fs
 argument_list|,
-name|regs
+name|tf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4671,6 +4677,12 @@ expr|struct
 name|trapframe
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|tf
+operator|->
+name|tf_eflags
+operator|=
+name|eflags
 expr_stmt|;
 name|tf
 operator|->
