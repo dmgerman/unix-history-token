@@ -23,12 +23,23 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.7		%G%"
+literal|"@(#)cpr.c	1.8		%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  CPR -- print on concept 108 ** **	This filter arranges to output onto a printer connected **	to a Concept 108 terminal.  It probably works on other **	models in the Concept 100 series also. ** **	Usage: **		cpr [-f] [file ...] ** **	Flags: **		-f	form feed following to print. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINELEN
+value|132
+end_define
+
+begin_comment
+comment|/* carriage width */
 end_comment
 
 begin_typedef
@@ -303,37 +314,6 @@ unit|}  copyfile
 operator|(
 operator|)
 block|{
-name|char
-name|buf
-index|[
-literal|200
-index|]
-block|;
-specifier|register
-name|char
-operator|*
-name|p
-block|;
-specifier|extern
-name|char
-operator|*
-name|index
-argument_list|()
-block|;
-while|while
-condition|(
-name|fgets
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-name|stdin
-argument_list|)
-operator|!=
-name|NULL
-condition|)
 block|{
 name|p
 operator|=
@@ -343,7 +323,7 @@ name|buf
 argument_list|,
 literal|'\n'
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|p
@@ -355,14 +335,14 @@ operator|*
 name|p
 operator|=
 literal|'\r'
-expr_stmt|;
+block|;
 name|printf
 argument_list|(
 literal|"\033 5%s\033|"
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|getack
