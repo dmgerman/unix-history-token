@@ -1027,13 +1027,6 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"ithread list lock"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
 literal|"sched lock"
 block|,
 operator|&
@@ -2278,6 +2271,14 @@ operator|*
 name|lock_list
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|flags
+operator|&
+name|LOP_TRYLOCK
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -2318,6 +2319,7 @@ operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Try locks do not block if they fail to acquire the lock, thus 	 * there is no danger of deadlocks or of switching while holding a 	 * spin lock if we acquire a lock via a try operation. 	 */
 if|if
 condition|(
 name|flags
