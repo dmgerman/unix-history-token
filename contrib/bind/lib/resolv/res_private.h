@@ -61,6 +61,12 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|char
+name|nsuffix2
+index|[
+literal|64
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

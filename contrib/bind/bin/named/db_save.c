@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_save.c,v 8.29 2001/04/25 13:53:09 marka Exp $"
+literal|"$Id: db_save.c,v 8.30 2002/05/18 01:02:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,7 +337,7 @@ decl_stmt|;
 name|int
 name|bytes
 init|=
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|size
 argument_list|)

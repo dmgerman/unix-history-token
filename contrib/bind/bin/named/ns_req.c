@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.168 2002/04/30 03:43:52 marka Exp $"
+literal|"$Id: ns_req.c,v 8.169 2002/05/12 23:41:52 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2645,6 +2645,27 @@ name|hp
 operator|->
 name|qdcount
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ns_name_rollback
+argument_list|(
+name|cp
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|*
+operator|)
+name|dnptrs
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|*
+operator|)
+name|dnptrs_end
 argument_list|)
 expr_stmt|;
 if|if

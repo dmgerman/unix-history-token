@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_glue.c,v 8.46 2001/11/25 23:52:19 marka Exp $"
+literal|"$Id: db_glue.c,v 8.47 2002/05/18 01:02:54 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1984,7 +1984,7 @@ block|{
 name|int
 name|bytes
 init|=
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|dp
 operator|->

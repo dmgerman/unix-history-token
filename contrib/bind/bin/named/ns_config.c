@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.134 2002/04/25 05:27:04 marka Exp $"
+literal|"$Id: ns_config.c,v 8.135 2002/05/24 03:04:59 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -12733,6 +12733,12 @@ operator|&=
 operator|~
 name|SERVER_INFO_SUPPORT_IXFR
 expr_stmt|;
+name|si
+operator|->
+name|flags
+operator||=
+name|SERVER_INFO_EDNS
+expr_stmt|;
 return|return
 operator|(
 name|si
@@ -13132,6 +13138,9 @@ name|SERVER_INFO_BOGUS
 case|:
 case|case
 name|SERVER_INFO_SUPPORT_IXFR
+case|:
+case|case
+name|SERVER_INFO_EDNS
 case|:
 if|if
 condition|(
