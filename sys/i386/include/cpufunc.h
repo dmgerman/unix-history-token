@@ -1228,7 +1228,7 @@ block|{
 name|u_int
 name|sel
 decl_stmt|;
-asm|__asm __volatile("movl %%fs,%0" : "=r" (sel));
+asm|__asm __volatile("movl %%fs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1249,7 +1249,7 @@ block|{
 name|u_int
 name|sel
 decl_stmt|;
-asm|__asm __volatile("movl %%gs,%0" : "=r" (sel));
+asm|__asm __volatile("movl %%gs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1268,7 +1268,7 @@ name|u_int
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%fs" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%fs" : : "rm" (sel));
 block|}
 end_function
 
@@ -1282,7 +1282,7 @@ name|u_int
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%gs" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
