@@ -30,31 +30,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
-begin_warning
-warning|#
-directive|warning
-literal|"Fix i4b pnp!"
-end_warning
-
-begin_undef
-undef|#
-directive|undef
-name|NPNP
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 operator|(
 name|NISIC
 operator|>
@@ -188,9 +163,11 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
-begin_comment
-comment|/* #include<i386/isa/pnp.h> */
-end_comment
+begin_include
+include|#
+directive|include
+file|<i386/isa/pnp.h>
+end_include
 
 begin_include
 include|#
