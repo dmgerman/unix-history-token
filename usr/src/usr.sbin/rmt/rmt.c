@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	4.7 (Berkeley) 85/03/20"
+literal|"@(#)rmt.c	4.8 (Berkeley) 85/03/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,9 +1055,12 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+while|while
+condition|(
+name|size
+operator|>
+literal|1024
+operator|&&
 name|setsockopt
 argument_list|(
 literal|0
@@ -1074,6 +1077,12 @@ argument_list|(
 name|size
 argument_list|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|size
+operator|-=
+literal|1024
 expr_stmt|;
 return|return
 operator|(
