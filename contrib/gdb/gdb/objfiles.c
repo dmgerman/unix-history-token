@@ -330,25 +330,6 @@ argument_list|,
 name|asect
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* XXX perhaps this should be in bfd_section_vma (), but it wouldn't      even compile there, since a bfd pointer isn't actually passed in      all invocations of bfd_section_vma ().  */
-if|if
-condition|(
-name|kernel_debugging
-condition|)
-name|section
-operator|.
-name|addr
-operator|+=
-name|bfd_get_start_address
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|section
 operator|.
 name|endaddr
