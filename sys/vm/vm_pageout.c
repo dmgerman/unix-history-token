@@ -171,59 +171,47 @@ begin_comment
 comment|/* the kernel process "vm_pageout"*/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_pageout
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vm_pageout_clean
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_page_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_pageout_scan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|pass
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vm_pageout_free_page_calc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_size_t
 name|count
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -279,18 +267,15 @@ begin_comment
 comment|/* the kernel process "vm_daemon"*/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_daemon
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -869,32 +854,29 @@ begin_typedef
 typedef|typedef
 name|void
 name|freeer_fcn_t
-name|__P
-typedef|((
+parameter_list|(
 name|vm_map_t
-typedef|,
+parameter_list|,
 name|vm_object_t
-typedef|,
+parameter_list|,
 name|vm_pindex_t
-typedef|,
+parameter_list|,
 name|int
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_pageout_map_deactivate_pages
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_map_t
-operator|,
+parameter_list|,
 name|vm_pindex_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -903,18 +885,15 @@ name|vm_pageout_object_deactivate_pages
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_req_vmdaemon
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

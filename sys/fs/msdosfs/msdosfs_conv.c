@@ -177,24 +177,21 @@ name|lastdtime
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 name|u_int8_t
 name|find_lcode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int16_t
 name|code
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|*
+modifier|*
 name|u2w
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Convert the unix version of time to dos's idea of time to be used in  * file timestamps. The passed in unix time is assumed to be in GMT.  */

@@ -16,33 +16,27 @@ begin_comment
 comment|/*  * Prototypes for fifo operations on vnodes.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|fifo_vnoperate
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vop_generic_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|fifo_printinfo
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vnode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

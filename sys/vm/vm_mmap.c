@@ -229,19 +229,16 @@ begin_comment
 comment|/*  * Set the maximum number of vm_map_entry structures per process.  Roughly  * speaking vm_map_entry structures are tiny, so allowing them to eat 1/100  * of our KVM malloc space still results in generous limits.  We want a   * default that is good enough to prevent the kernel running out of resources  * if attacked from compromised user account but generous enough such that  * multi-threaded processes are not unduly inconvenienced.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vmmapentry_rsrc_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|SYSINIT

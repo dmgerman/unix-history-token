@@ -546,47 +546,38 @@ define|\
 value|(1024<< ((pmp)->pm_BlkPerSec>> 2))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|msdosfs_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vfsconf
-operator|*
+modifier|*
 name|vfsp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|msdosfs_uninit
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vfsconf
-operator|*
+modifier|*
 name|vfsp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|msdosfs_mountroot
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

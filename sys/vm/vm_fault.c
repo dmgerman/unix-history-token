@@ -133,28 +133,25 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vm_fault_additional_pages
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_page_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|vm_page_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -426,24 +423,21 @@ begin_comment
 comment|/*  *	vm_fault:  *  *	Handle a page fault occurring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vm_fault1
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_map_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_prot_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

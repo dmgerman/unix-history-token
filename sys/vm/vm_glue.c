@@ -158,19 +158,16 @@ begin_comment
 comment|/*  * System initialization  *  * Note: proc0 from proc.h  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vm_init_limits
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|SYSINIT
@@ -191,19 +188,16 @@ begin_comment
 comment|/*  * THIS MUST BE THE LAST INITIALIZATION ITEM!!!  *  * Note: run scheduling should be divorced from the vm system.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|scheduler
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|SYSINIT
@@ -226,20 +220,17 @@ directive|ifndef
 name|NO_SWAPPING
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|swapout
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
