@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	3.1	%H%	*/
+comment|/*	tty.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -69,16 +69,71 @@ begin_struct
 struct|struct
 name|tty
 block|{
+union|union
+block|{
+struct|struct
+block|{
 name|struct
 name|clist
+name|T_rawq
+decl_stmt|;
+name|struct
+name|clist
+name|T_canq
+decl_stmt|;
+block|}
+name|t_t
+struct|;
+define|#
+directive|define
 name|t_rawq
-decl_stmt|;
+value|t_nu.t_t.T_rawq
 comment|/* input chars right off device */
-name|struct
-name|clist
+define|#
+directive|define
 name|t_canq
-decl_stmt|;
+value|t_nu.t_t.T_canq
 comment|/* input chars after erase and kill */
+ifdef|#
+directive|ifdef
+name|BERKNET
+struct|struct
+block|{
+name|struct
+name|buf
+modifier|*
+name|T_bufp
+decl_stmt|;
+name|char
+modifier|*
+name|T_cp
+decl_stmt|;
+name|int
+name|T_inbuf
+decl_stmt|;
+block|}
+name|t_n
+struct|;
+define|#
+directive|define
+name|t_bufp
+value|t_nu.t_n.T_bufp
+comment|/* buffer we ripped off for network */
+define|#
+directive|define
+name|t_cp
+value|t_nu.t_n.T_cp
+comment|/* pointer into the ripped off buffer */
+define|#
+directive|define
+name|t_inbuf
+value|t_nu.t_n.T_inbuf
+comment|/* number chars in the magic buffer */
+endif|#
+directive|endif
+block|}
+name|t_nu
+union|;
 name|struct
 name|clist
 name|t_outq
@@ -897,6 +952,39 @@ directive|define
 name|MXNBLK
 value|(('x'<<8)|2)
 end_define
+
+begin_comment
+comment|/* ##bsb 1/12/80 (from stt) ioctl code for "capacity" call */
+end_comment
+
+begin_comment
+comment|/* returns no. of bytes left before EOF or hang in cp_nbytes */
+end_comment
+
+begin_comment
+comment|/* returns flag indicating EOF versus hang in cp_eof */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIOCAPACITY
+value|(('f'<<8)|99)
+end_define
+
+begin_struct
+struct|struct
+name|capacity
+block|{
+name|off_t
+name|cp_nbytes
+decl_stmt|;
+name|int
+name|cp_eof
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
