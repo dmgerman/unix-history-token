@@ -190,6 +190,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|strcmp
 argument_list|(
 name|argv
@@ -201,6 +202,13 @@ literal|"-lang"
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|argc
+operator|<
+name|i
+operator|)
 condition|)
 block|{
 operator|++
