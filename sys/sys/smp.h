@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.34 1998/01/01 08:47:12 bde Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.35 1998/02/25 03:56:15 dyson Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -383,32 +383,6 @@ ifdef|#
 directive|ifdef
 name|BETTER_CLOCK
 end_ifdef
-
-begin_decl_stmt
-name|void
-name|forward_statclock
-name|__P
-argument_list|(
-operator|(
-name|int
-name|pscnt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|forward_hardclock
-name|__P
-argument_list|(
-operator|(
-name|int
-name|pscnt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -895,6 +869,47 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BETTER_CLOCK
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|forward_statclock
+name|__P
+argument_list|(
+operator|(
+name|int
+name|pscnt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|forward_hardclock
+name|__P
+argument_list|(
+operator|(
+name|int
+name|pscnt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BETTER_CLOCK */
+end_comment
 
 begin_comment
 comment|/* global data in mpapic.c */
