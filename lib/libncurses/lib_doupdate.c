@@ -891,6 +891,10 @@ argument_list|)
 expr_stmt|;
 name|vidattr
 argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
@@ -1516,6 +1520,10 @@ argument_list|)
 expr_stmt|;
 name|vidattr
 argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
@@ -1805,6 +1813,10 @@ argument_list|)
 expr_stmt|;
 name|vidattr
 argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
@@ -1948,6 +1960,10 @@ argument_list|)
 expr_stmt|;
 name|vidattr
 argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
@@ -2470,6 +2486,10 @@ argument_list|)
 expr_stmt|;
 name|vidattr
 argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
