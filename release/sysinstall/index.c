@@ -252,6 +252,10 @@ literal|"emulators"
 block|,
 literal|"Utilities for emulating other OS types."
 block|,
+literal|"french"
+block|,
+literal|"Ported software for French countries."
+block|,
 literal|"ftp"
 block|,
 literal|"FTP client and server utilities."
@@ -483,6 +487,10 @@ block|,
 literal|"x11-wm"
 block|,
 literal|"X Window System window managers."
+block|,
+literal|"zope"
+block|,
+literal|"Software related to the Zope language."
 block|,
 name|NULL
 block|,
