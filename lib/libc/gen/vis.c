@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -36,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -94,7 +108,6 @@ name|flag
 parameter_list|,
 name|nextc
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|dst
@@ -104,7 +117,6 @@ name|c
 decl_stmt|,
 name|nextc
 decl_stmt|;
-specifier|register
 name|int
 name|flag
 decl_stmt|;
@@ -217,6 +229,34 @@ name|done
 goto|;
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|flag
+operator|&
+name|VIS_GLOB
+operator|)
+operator|&&
+operator|(
+name|c
+operator|==
+literal|'*'
+operator|||
+name|c
+operator|==
+literal|'?'
+operator|||
+name|c
+operator|==
+literal|'['
+operator|||
+name|c
+operator|==
+literal|'#'
+operator|)
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|isgraph
@@ -392,19 +432,9 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-if|#
-directive|if
-name|__STDC__
 case|case
 literal|'\a'
 case|:
-else|#
-directive|else
-case|case
-literal|'\007'
-case|:
-endif|#
-directive|endif
 operator|*
 name|dst
 operator|++
@@ -544,6 +574,11 @@ operator|)
 operator|==
 literal|' '
 operator|)
+operator|||
+name|isgraph
+argument_list|(
+name|c
+argument_list|)
 operator|||
 operator|(
 name|flag
@@ -712,7 +747,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * strvis, strvisx - visually encode characters from src into dst  *  *	Dst must be 4 times the size of src to account for possible  *	expansion.  The length of dst, not including the trailing NULL,  *	is returned.  *  *	Strvisx encodes exactly len bytes from src into dst.  *	This is useful for encoding a block of data.  */
+comment|/*  * strvis, strvisx - visually encode characters from src into dst  *  *	Dst must be 4 times the size of src to account for possible  *	expansion.  The length of dst, not including the trailing NUL,  *	is returned.  *  *	Strvisx encodes exactly len bytes from src into dst.  *	This is useful for encoding a block of data.  */
 end_comment
 
 begin_function
@@ -725,12 +760,10 @@ name|src
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -740,7 +773,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -804,18 +836,15 @@ name|len
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|src
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
