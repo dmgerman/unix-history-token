@@ -8,7 +8,7 @@ comment|/*  * Broadcom BCM570x family gigabit ethernet driver for FreeBSD.  *   
 end_comment
 
 begin_comment
-comment|/*  * The Broadcom BCM5700 is based on technology originally developed by  * Alteon Networks as part of the Tigon I and Tigon II gigabit ethernet  * MAC chips. The BCM5700, sometimes refered to as the Tigon III, has  * two on-board MIPS R4000 CPUs and can have as much as 16MB of external  * SSRAM. The BCM5700 supports TCP, UDP and IP checksum offload, jumbo  * frames, highly configurable RX filtering, and 16 RX and TX queues  * (which, along with RX filter rules, can be used for QOS applications).  * Other features, such as TCP segmentation, may be available as part  * of value-added firmware updates. Unlike the Tigon I and Tigon II,  * firmware images can be stored in hardware and need not be compiled  * into the driver.  *  * The BCM5700 supports the PCI v2.2 and PCI-X v1.0 standards, and will  * function in a 32-bit/64-bit 33/66Mhz bus, or a 64-bit/133Mhz bus.  *   * The BCM5701 is a single-chip solution incorporating both the BCM5700  * MAC and a BCM5401 10/100/1000 PHY. Unlike the BCM5700, the BCM5700  * does not support external SSRAM.  *  * Broadcom also produces a variation of the BCM5700 under the "Altima"  * brand name, which is functionally similar but lacks PCI-X support.  *  * Without external SSRAM, you can only have at most 4 TX rings,  * and the use of the mini RX ring is disabled. This seems to imply  * that these features are simply not available on the BCM5701. As a  * result, this driver does not implement any support for the mini RX  * ring.  */
+comment|/*  * The Broadcom BCM5700 is based on technology originally developed by  * Alteon Networks as part of the Tigon I and Tigon II gigabit ethernet  * MAC chips. The BCM5700, sometimes refered to as the Tigon III, has  * two on-board MIPS R4000 CPUs and can have as much as 16MB of external  * SSRAM. The BCM5700 supports TCP, UDP and IP checksum offload, jumbo  * frames, highly configurable RX filtering, and 16 RX and TX queues  * (which, along with RX filter rules, can be used for QOS applications).  * Other features, such as TCP segmentation, may be available as part  * of value-added firmware updates. Unlike the Tigon I and Tigon II,  * firmware images can be stored in hardware and need not be compiled  * into the driver.  *  * The BCM5700 supports the PCI v2.2 and PCI-X v1.0 standards, and will  * function in a 32-bit/64-bit 33/66Mhz bus, or a 64-bit/133Mhz bus.  *   * The BCM5701 is a single-chip solution incorporating both the BCM5700  * MAC and a BCM5401 10/100/1000 PHY. Unlike the BCM5700, the BCM5701  * does not support external SSRAM.  *  * Broadcom also produces a variation of the BCM5700 under the "Altima"  * brand name, which is functionally similar but lacks PCI-X support.  *  * Without external SSRAM, you can only have at most 4 TX rings,  * and the use of the mini RX ring is disabled. This seems to imply  * that these features are simply not available on the BCM5701. As a  * result, this driver does not implement any support for the mini RX  * ring.  */
 end_comment
 
 begin_include
@@ -2206,6 +2206,23 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5701_B5
+operator|&&
+name|phy
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|ifp
@@ -7365,6 +7382,22 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
+comment|/* Save ASIC rev. */
+name|sc
+operator|->
+name|bge_asicrev
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|BGE_PCI_MISC_CTL
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+name|BGE_PCIMISCCTL_ASICREV
+expr_stmt|;
 comment|/* The SysKonnect SK-9D41 is a 1000baseSX card. */
 if|if
 condition|(
@@ -8843,6 +8876,15 @@ operator|&
 name|BGE_STATFLAG_LINKSTATE_CHANGED
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|!=
+name|BGE_ASICREV_BCM5701_B5
+condition|)
+block|{
 name|sc
 operator|->
 name|bge_link
@@ -8865,6 +8907,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* ack the event to clear/reset it */
 name|CSR_WRITE_4
 argument_list|(

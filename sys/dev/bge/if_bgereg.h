@@ -910,6 +910,38 @@ name|BGE_ASICREV_BCM5700_C0
 value|0x72000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5701_A0
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* grrrr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5701_B0
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5701_B2
+value|0x01020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5701_B5
+value|0x01050000
+end_define
+
 begin_comment
 comment|/* PCI DMA Read/Write Control register */
 end_comment
@@ -11012,6 +11044,9 @@ decl_stmt|;
 comment|/* has external SSRAM */
 name|u_int8_t
 name|bge_tbi
+decl_stmt|;
+name|u_int32_t
+name|bge_asicrev
 decl_stmt|;
 name|struct
 name|bge_ring_data
