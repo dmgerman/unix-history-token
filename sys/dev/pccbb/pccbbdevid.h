@@ -489,6 +489,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIC_ID_TI6411
+value|0x8031104cul
+end_define
+
+begin_comment
+comment|/* PCI[67]x[12]1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_TI6420
+value|0xac8d104cul
+end_define
+
+begin_comment
+comment|/* PCI[67]x20 Smartcard dis */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_TI6420SD
+value|0xac8e104cul
+end_define
+
+begin_comment
+comment|/* PCI[67]x20 Smartcard en */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_ID_TI7410
 value|0xac49104cul
 end_define
