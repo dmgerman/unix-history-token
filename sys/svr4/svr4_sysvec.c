@@ -1455,7 +1455,24 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* XXX There needs to be a generic function that any 		 * emulator can call to say, "Are any currently-running 		 * executables using me?" so we can fail to unload the 		 * module if it's in use.  Locking up because you forgot 		 * to shut down a program prior to a kldunload isn't fun. 		 */
+comment|/* Only allow the emulator to be removed if it isn't in use. */
+if|if
+condition|(
+name|elf_brand_inuse
+argument_list|(
+operator|&
+name|svr4_brand
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|elf_remove_brand_entry
@@ -1466,17 +1483,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
 condition|)
 name|printf
 argument_list|(
-literal|"Could not deinstall ELF interpreter entry\n"
+literal|"Could not deinstall ELF interpreter entry (error %d)\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 elseif|else
