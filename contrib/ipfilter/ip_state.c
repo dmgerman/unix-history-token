@@ -1366,6 +1366,17 @@ name|fin
 operator|->
 name|fin_dp
 decl_stmt|;
+if|if
+condition|(
+name|tcp
+operator|->
+name|th_flags
+operator|&
+name|TH_RST
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* 		 * The endian of the ports doesn't matter, but the ack and 		 * sequence numbers do as we do mathematics on them later. 		 */
 name|hv
 operator|+=
