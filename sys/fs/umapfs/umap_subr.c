@@ -1214,6 +1214,19 @@ operator|==
 name|NOCRED
 condition|)
 return|return;
+name|KASSERT
+argument_list|(
+operator|!
+name|crshared
+argument_list|(
+name|credp
+argument_list|)
+argument_list|,
+operator|(
+literal|"remapping a shared cred"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Find uid entry in map */
 name|uid
 operator|=
