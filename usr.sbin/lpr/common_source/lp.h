@@ -15,6 +15,12 @@ directive|include
 file|<time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
 begin_comment
 comment|/*  * All this information used to be in global static variables shared  * mysteriously by various parts of the lpr/lpd suite.  * This structure attempts to centralize all these declarations in the  * hope that they can later be made more dynamic.  */
 end_comment
@@ -510,23 +516,12 @@ begin_comment
 comment|/* client's machine name */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXIPSTRLEN
-value|32
-end_define
-
-begin_comment
-comment|/* maxlen of an IP-address as a string */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|char
 name|from_ip
 index|[
-name|MAXIPSTRLEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -592,6 +587,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of person doing lprm */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|family
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address family */
 end_comment
 
 begin_comment
