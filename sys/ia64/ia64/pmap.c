@@ -424,16 +424,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_offset_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of last available physical page */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
 end_decl_stmt
@@ -1374,15 +1364,6 @@ operator|+=
 literal|2
 control|)
 empty_stmt|;
-name|avail_end
-operator|=
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-expr_stmt|;
 name|count
 operator|=
 name|i
