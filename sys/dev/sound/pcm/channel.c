@@ -729,11 +729,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|chn_dmaupdate
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
+comment|/* chn_dmaupdate(c); */
 block|}
 block|}
 end_function
@@ -1900,6 +1896,13 @@ name|c
 operator|->
 name|buffer
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"overrun, dumping %d bytes\n"
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
 name|b
 operator|->
 name|rl
@@ -1970,6 +1973,7 @@ name|l
 decl_stmt|,
 name|lacc
 decl_stmt|;
+comment|/* 	printf("b: [rl: %d, rp %d, fl %d, fp %d]; bs: [rl: %d, rp %d, fl %d, fp %d]\n", 		b->rl, b->rp, b->fl, b->fp, bs->rl, bs->rp, bs->fl, bs->fp); 	 */
 comment|/* ensure we always have a whole number of samples */
 name|lacc
 operator|=
@@ -2179,17 +2183,6 @@ name|w
 decl_stmt|,
 name|wacc
 decl_stmt|;
-comment|/* The DMA buffer may have pcm data. */
-while|while
-condition|(
-name|chn_rdfeed
-argument_list|(
-name|c
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
 comment|/* ensure we always have a whole number of samples */
 name|wacc
 operator|=
@@ -2197,19 +2190,25 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|buf
 operator|->
 name|uio_resid
 operator|>
 literal|0
+operator|)
 operator|&&
+operator|(
 name|bs
 operator|->
 name|rl
 operator|>
 literal|0
+operator|)
 condition|)
 block|{
+comment|/* The DMA buffer may have pcm data. */
+comment|/* while (chn_rdfeed(c)> 0); */
 comment|/* 		 * The size of the data to move here does not have to be 		 * aligned. We take care of it upon moving the data to a 		 * DMA buffer. 		 */
 name|l
 operator|=
@@ -2318,23 +2317,6 @@ name|wacc
 operator|+=
 name|w
 expr_stmt|;
-comment|/* If any pcm data gets moved, suck up the DMA buffer. */
-if|if
-condition|(
-name|w
-operator|>
-literal|0
-condition|)
-while|while
-condition|(
-name|chn_rdfeed
-argument_list|(
-name|c
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
 block|}
 return|return
 name|wacc
@@ -2653,11 +2635,33 @@ operator|&=
 operator|~
 name|CHN_F_ABORTING
 expr_stmt|;
-name|limit
-operator|=
+comment|/* suck up the DMA and secondary buffers. */
+while|while
+condition|(
+name|chn_rdfeed2nd
+argument_list|(
+name|c
+argument_list|,
+name|buf
+argument_list|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
+if|if
+condition|(
 name|buf
 operator|->
 name|uio_resid
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip
+goto|;
+name|limit
+operator|=
+name|res
 operator|-
 name|b
 operator|->
@@ -2673,24 +2677,6 @@ name|limit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Update the pointers and suck up the DMA and secondary buffers. */
-name|chn_dmaupdate
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|chn_rdfeed2nd
-argument_list|(
-name|c
-argument_list|,
-name|buf
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
 comment|/* Start capturing if not yet. */
 if|if
 condition|(
@@ -2744,6 +2730,16 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|chn_rdfeed
+argument_list|(
+name|c
+argument_list|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
 while|while
 condition|(
 name|chn_rdfeed2nd
@@ -2800,7 +2796,7 @@ name|PCATCH
 argument_list|,
 literal|"pcmrd"
 argument_list|,
-name|timeout
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* s = spltty(); */
@@ -2834,6 +2830,8 @@ operator|=
 name|EAGAIN
 expr_stmt|;
 block|}
+name|skip
+label|:
 name|c
 operator|->
 name|flags
@@ -5228,6 +5226,30 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+name|blksz
+operator|>
+name|CHN_2NDBUFMAXSIZE
+operator|/
+literal|2
+condition|)
+name|blksz
+operator|=
+name|CHN_2NDBUFMAXSIZE
+operator|/
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|blkcnt
+operator|<
+literal|2
+condition|)
+name|blkcnt
+operator|=
+literal|2
+expr_stmt|;
+if|if
+condition|(
 name|blkcnt
 operator|*
 name|blksz
@@ -5359,19 +5381,6 @@ operator|->
 name|blksz
 operator|=
 name|blksz
-expr_stmt|;
-name|RANGE
-argument_list|(
-name|blksz
-argument_list|,
-literal|16
-argument_list|,
-name|b
-operator|->
-name|bufsize
-operator|/
-literal|2
-argument_list|)
 expr_stmt|;
 name|b
 operator|->
