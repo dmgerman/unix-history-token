@@ -372,35 +372,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_SRC
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|int
-name|PrintAddr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG_SRC */
-end_comment
-
 begin_comment
 comment|/*************** Lst Predicates ****************/
 end_comment
@@ -1667,35 +1638,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * SuffRebuildGraph --  *	Called from Suff_AddSuffix via Lst_ForEach to search through the  *	list of existing transformation rules and rebuild the transformation  *	graph when it has been destroyed by Suff_ClearSuffixes. If the  *	given rule is a transformation involving this suffix and another,  *	existing suffix, the proper relationship is established between  *	the two.  *  * Results:  *	Always 0.  *  * Side Effects:  *	The appropriate links will be made between this suffix and  *	others if transformation rules exist for it.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * SuffRebuildGraph --  *	Called from Suff_AddSuffix via LST_FOREACH to search through the  *	list of existing transformation rules and rebuild the transformation  *	graph when it has been destroyed by Suff_ClearSuffixes. If the  *	given rule is a transformation involving this suffix and another,  *	existing suffix, the proper relationship is established between  *	the two.  *  * Side Effects:  *	The appropriate links will be made between this suffix and  *	others if transformation rules exist for it.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|SuffRebuildGraph
 parameter_list|(
-name|void
-modifier|*
-name|transformp
-parameter_list|,
-name|void
-modifier|*
-name|sp
-parameter_list|)
-block|{
+specifier|const
 name|GNode
 modifier|*
 name|transform
-init|=
-name|transformp
-decl_stmt|;
+parameter_list|,
 name|Suff
 modifier|*
 name|s
-init|=
-name|sp
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|cp
@@ -1801,11 +1761,7 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* 	* Not from, maybe to? 	*/
@@ -1906,11 +1862,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1951,10 +1902,11 @@ expr_stmt|;
 if|if
 condition|(
 name|ln
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
+comment|/* 		 * Already known 		 */
+return|return;
 name|s
 operator|=
 name|emalloc
@@ -2044,18 +1996,23 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Look for any existing transformations from or to this suffix. 		 * XXX: Only do this after a Suff_ClearSuffixes? 		 */
-name|Lst_ForEach
+comment|/* 	 * Look for any existing transformations from or to this suffix. 	 * XXX: Only do this after a Suff_ClearSuffixes? 	 */
+name|LST_FOREACH
 argument_list|(
-operator|&
-name|transforms
+argument|ln
 argument_list|,
+argument|&transforms
+argument_list|)
 name|SuffRebuildGraph
+argument_list|(
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2525,6 +2482,16 @@ modifier|*
 name|targ
 decl_stmt|;
 comment|/* Target structure */
+ifdef|#
+directive|ifdef
+name|DEBUG_SRC
+specifier|const
+name|LstNode
+modifier|*
+name|ln
+decl_stmt|;
+endif|#
+directive|endif
 name|targ
 operator|=
 name|ls
@@ -2659,19 +2626,25 @@ operator|->
 name|l
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-name|ls
-operator|->
-name|l
+argument|ln
 argument_list|,
-name|PrintAddr
+argument|ls->l
+argument_list|)
+name|printf
+argument_list|(
+literal|"%p "
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
-name|NULL
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2795,19 +2768,25 @@ operator|->
 name|l
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-name|ls
-operator|->
-name|l
+argument|ln
 argument_list|,
-name|PrintAddr
+argument|ls->l
+argument_list|)
+name|printf
+argument_list|(
+literal|"%p "
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
-name|NULL
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2920,17 +2899,25 @@ operator|)
 name|l
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-name|l
+argument|ln
 argument_list|,
-name|PrintAddr
+argument|l
+argument_list|)
+name|printf
+argument_list|(
+literal|"%p "
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
-name|NULL
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3110,6 +3097,11 @@ directive|ifdef
 name|DEBUG_SRC
 else|else
 block|{
+specifier|const
+name|LstNode
+modifier|*
+name|tln
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"keep: [l=%p] p=%p %d: "
@@ -3123,20 +3115,25 @@ operator|->
 name|children
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-operator|&
-name|s
-operator|->
-name|cp
+argument|tln
 argument_list|,
-name|PrintAddr
+argument|&s->cp
+argument_list|)
+name|printf
+argument_list|(
+literal|"%p "
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
-name|NULL
+name|Lst_Datum
+argument_list|(
+name|tln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7134,55 +7131,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_SRC
-end_ifdef
-
-begin_comment
-comment|/*  * Printaddr --  * 	Print the address of a node.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|PrintAddr
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|,
-name|void
-modifier|*
-name|b
-name|__unused
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"%p "
-argument_list|,
-name|a
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG_SRC */
-end_comment
 
 end_unit
 
