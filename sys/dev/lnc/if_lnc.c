@@ -331,7 +331,6 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|lnc_rint
 parameter_list|(
@@ -345,7 +344,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|lnc_tint
 parameter_list|(
@@ -1974,7 +1972,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|lnc_rint
 parameter_list|(
@@ -2683,7 +2680,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|lnc_tint
 parameter_list|(
