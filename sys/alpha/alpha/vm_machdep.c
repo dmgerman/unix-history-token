@@ -561,7 +561,7 @@ name|u_int64_t
 operator|)
 name|fork_return
 expr_stmt|;
-comment|/* s0: pc */
+comment|/* s0: a0 */
 name|up
 operator|->
 name|u_pcb
@@ -591,7 +591,7 @@ name|u_long
 operator|)
 name|p2
 expr_stmt|;
-comment|/* s2: a0 */
+comment|/* s2: a1 */
 name|up
 operator|->
 name|u_pcb
