@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.1 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,6 +301,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|fast
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|nosync
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|nosyncflag
+index|[]
+init|=
+literal|"-n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|term
 index|[
@@ -360,6 +386,15 @@ literal|"nologin"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|fastboot
+index|[]
+init|=
+literal|"fastboot"
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -371,6 +406,15 @@ name|nologin
 index|[]
 init|=
 literal|"/etc/nologin"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|fastboot
+index|[]
+init|=
+literal|"/fastboot"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +638,22 @@ literal|0
 expr_stmt|;
 continue|continue;
 case|case
+literal|'n'
+case|:
+name|nosync
+operator|=
+name|nosyncflag
+expr_stmt|;
+continue|continue;
+case|case
+literal|'f'
+case|:
+name|fast
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
 literal|'r'
 case|:
 name|reboot
@@ -639,14 +699,30 @@ operator|<
 literal|1
 condition|)
 block|{
+comment|/* argv[0] is not available after the argument handling. */
 name|printf
 argument_list|(
-literal|"Usage: %s [ -krh ] shutdowntime [ message ]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"Usage: shutdown [ -krhfn ] shutdowntime [ message ]\n"
+argument_list|)
+expr_stmt|;
+name|finish
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fast
+operator|&&
+operator|(
+name|nosync
+operator|==
+name|nosyncflag
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"shutdown: Incompatible switches 'fast'& 'nosync'\n"
 argument_list|)
 expr_stmt|;
 name|finish
@@ -1335,6 +1411,13 @@ name|finish
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fast
+condition|)
+name|doitfast
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
@@ -1363,6 +1446,8 @@ name|REBOOT
 argument_list|,
 literal|"reboot"
 argument_list|,
+name|nosync
+argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -1377,6 +1462,8 @@ argument_list|(
 name|HALT
 argument_list|,
 literal|"halt"
+argument_list|,
+name|nosync
 argument_list|,
 literal|0
 argument_list|,
@@ -1409,6 +1496,43 @@ directive|else
 name|printf
 argument_list|(
 literal|"EXTERMINATE EXTERMINATE\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reboot
+condition|)
+name|printf
+argument_list|(
+literal|"REBOOT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|halt
+condition|)
+name|printf
+argument_list|(
+literal|" HALT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fast
+condition|)
+name|printf
+argument_list|(
+literal|" %s (without fsck's)\n"
+argument_list|,
+name|nosync
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %s\n"
+argument_list|,
+name|nosync
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1959,6 +2083,49 @@ argument_list|,
 literal|"System going down IMMEDIATELY\r\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|doitfast
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|FILE
+modifier|*
+name|fastd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fastd
+operator|=
+name|fopen
+argument_list|(
+name|fastboot
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|fastd
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fastd
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
