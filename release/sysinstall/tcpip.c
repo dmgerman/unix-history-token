@@ -2501,6 +2501,30 @@ comment|/* Now do all the screen I/O */
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+comment|/* Modify the help line for PLIP config */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|devp
+operator|->
+name|name
+argument_list|,
+literal|"lp"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|layout
+index|[
+name|LAYOUT_EXTRAS
+index|]
+operator|.
+name|help
+operator|=
+literal|"For PLIP configuration, you must enter the peer's IP address here."
+expr_stmt|;
 comment|/* We need a curses window */
 name|tmp
 operator|=
