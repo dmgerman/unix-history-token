@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|I387
-value|(*(struct i387_struct *)&(((struct pcb *)curproc->p_addr)->pcb_savefpu))
+value|(*(struct i387_struct *)&(((struct pcb *)curproc->p_addr)->pcb_save.sv_87))
 end_define
 
 begin_define
