@@ -219,6 +219,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|set_user_ldt_rv
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1261,7 +1287,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_function
+specifier|static
 name|void
 name|set_user_ldt_rv
 parameter_list|(
@@ -1300,6 +1333,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Must be called with either sched_lock free or held but not recursed.  * If it does not return NULL, it will return with it owned.  */
