@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.18 1997/07/24 06:58:08 charnier Exp $"
+literal|"$Id: parse.c,v 1.19 1998/05/25 03:28:37 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4319,12 +4319,15 @@ literal|':'
 condition|)
 if|if
 condition|(
-operator|--
 name|opc
-operator|<
+operator|==
 name|line
 condition|)
 break|break;
+else|else
+operator|--
+name|opc
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
