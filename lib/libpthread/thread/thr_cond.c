@@ -483,6 +483,15 @@ operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
+comment|/* Free the cond lock structure: */
+name|_lock_destroy
+argument_list|(
+operator|&
+name|cv
+operator|->
+name|c_lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Free the memory allocated for the condition 		 * variable structure: 		 */
 name|free
 argument_list|(

@@ -730,6 +730,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Free the mutex lock structure: */
+name|_lock_destroy
+argument_list|(
+operator|&
+name|pmutex
+operator|->
+name|m_lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|pmutex
@@ -896,6 +905,15 @@ comment|/* 			 * Free the memory allocated for the mutex 			 * structure: 			 */
 name|MUTEX_ASSERT_NOT_OWNED
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+comment|/* Free the mutex lock structure: */
+name|_lock_destroy
+argument_list|(
+operator|&
+name|m
+operator|->
+name|m_lock
 argument_list|)
 expr_stmt|;
 name|free
