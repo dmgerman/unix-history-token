@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.25	82/02/15	*/
+comment|/*	init_main.c	4.26	82/03/11	*/
 end_comment
 
 begin_include
@@ -345,6 +345,10 @@ comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
 name|mbinit
 argument_list|()
 expr_stmt|;
+name|cinit
+argument_list|()
+expr_stmt|;
+comment|/* needed by dmc-11 driver */
 ifdef|#
 directive|ifdef
 name|INET
@@ -371,9 +375,6 @@ name|ihinit
 argument_list|()
 expr_stmt|;
 name|bhinit
-argument_list|()
-expr_stmt|;
-name|cinit
 argument_list|()
 expr_stmt|;
 name|binit
