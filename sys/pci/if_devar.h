@@ -27,11 +27,12 @@ directive|define
 name|_DEVAR_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TULIP_IOMAPPED
-end_ifdef
+begin_typedef
+typedef|typedef
+name|bus_addr_t
+name|tulip_csrptr_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -47,13 +48,6 @@ name|TULIP_PCI_CSROFFSET
 value|0
 end_define
 
-begin_typedef
-typedef|typedef
-name|pci_port_t
-name|tulip_csrptr_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -63,7 +57,8 @@ name|sc
 parameter_list|,
 name|csr
 parameter_list|)
-value|(inl((sc)->tulip_csrs.csr))
+define|\
+value|bus_space_read_4((sc)->tulip_csrs_bst,	\ 			 (sc)->tulip_csrs_bsh,	\ 			 (sc)->tulip_csrs.csr)
 end_define
 
 begin_define
@@ -77,7 +72,8 @@ name|csr
 parameter_list|,
 name|val
 parameter_list|)
-value|outl((sc)->tulip_csrs.csr, val)
+define|\
+value|bus_space_write_4((sc)->tulip_csrs_bst,		\ 			  (sc)->tulip_csrs_bsh,		\ 			  (sc)->tulip_csrs.csr, val)
 end_define
 
 begin_define
@@ -89,7 +85,8 @@ name|sc
 parameter_list|,
 name|csr
 parameter_list|)
-value|(inb((sc)->tulip_csrs.csr))
+define|\
+value|bus_space_read_1((sc)->tulip_csrs_bst,	\ 			 (sc)->tulip_csrs_bsh,	\ 			 (sc)->tulip_csrs.csr)
 end_define
 
 begin_define
@@ -103,165 +100,9 @@ name|csr
 parameter_list|,
 name|val
 parameter_list|)
-value|outb((sc)->tulip_csrs.csr, val)
+define|\
+value|bus_space_write_1((sc)->tulip_csrs_bst,		\ 			  (sc)->tulip_csrs_bsh,		\ 			  (sc)->tulip_csrs.csr, val)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* TULIP_IOMAPPED */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_PCI_CSRSIZE
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_PCI_CSROFFSET
-value|0
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|tulip_csrptr_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_READ
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|)
-value|(readl((sc)->tulip_csrs.csr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_WRITE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|,
-name|val
-parameter_list|)
-value|writel((sc)->tulip_csrs.csr, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_READBYTE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|)
-value|(readb((sc)->tulip_csrs.csr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_WRITEBYTE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|,
-name|val
-parameter_list|)
-value|writeb((sc)->tulip_csrs.csr, val)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
-
-begin_typedef
-typedef|typedef
-specifier|volatile
-name|u_int32_t
-modifier|*
-name|tulip_csrptr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * macros to read and write CSRs.  Note that the "0 +" in  * READ_CSR is to prevent the macro from being an lvalue  * and WRITE_CSR shouldn't be assigned from.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_READ
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|)
-value|(0 + *(sc)->tulip_csrs.csr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_CSR_WRITE
-parameter_list|(
-name|sc
-parameter_list|,
-name|csr
-parameter_list|,
-name|val
-parameter_list|)
-value|((void)(*(sc)->tulip_csrs.csr = (val)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TULIP_IOMAPPED */
-end_comment
 
 begin_comment
 comment|/*  * This structure contains "pointers" for the registers on  * the various 21x4x chips.  CSR0 through CSR8 are common  * to all chips.  After that, it gets messy...  */
@@ -1523,6 +1364,12 @@ directive|endif
 name|struct
 name|arpcom
 name|tulip_ac
+decl_stmt|;
+name|bus_space_tag_t
+name|tulip_csrs_bst
+decl_stmt|;
+name|bus_space_handle_t
+name|tulip_csrs_bsh
 decl_stmt|;
 name|tulip_regfile_t
 name|tulip_csrs
