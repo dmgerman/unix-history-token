@@ -6208,7 +6208,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR_32BIT
+literal|0x08000000
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
