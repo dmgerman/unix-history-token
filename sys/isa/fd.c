@@ -955,6 +955,12 @@ name|struct
 name|devstat
 name|device_stats
 decl_stmt|;
+name|eventhandler_tag
+name|clonetag
+decl_stmt|;
+name|dev_t
+name|masterdev
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -2428,6 +2434,8 @@ name|int
 name|ispnp
 decl_stmt|,
 name|ispcmcia
+decl_stmt|,
+name|nports
 decl_stmt|;
 name|dev
 operator|=
@@ -2488,6 +2496,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * On standard ISA, we don't just use an 8 port range 	 * (e.g. 0x3f0-0x3f7) since that covers an IDE control 	 * register at 0x3f6. 	 * 	 * Isn't PC hardware wonderful. 	 * 	 * The Y-E Data PCMCIA FDC doesn't have this problem, it 	 * uses the register with offset 6 for pseudo-DMA, and the 	 * one with offset 7 as control register. 	 */
+name|nports
+operator|=
+name|ispcmcia
+condition|?
+literal|8
+else|:
+operator|(
+name|ispnp
+condition|?
+literal|1
+else|:
+literal|6
+operator|)
+expr_stmt|;
 name|fdc
 operator|->
 name|res_ioport
@@ -2508,17 +2530,7 @@ argument_list|,
 operator|~
 literal|0ul
 argument_list|,
-name|ispcmcia
-condition|?
-literal|8
-else|:
-operator|(
-name|ispnp
-condition|?
-literal|1
-else|:
-literal|6
-operator|)
+name|nports
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2536,7 +2548,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot reserve I/O port range\n"
+literal|"cannot reserve I/O port range (%d ports)\n"
+argument_list|,
+name|nports
 argument_list|)
 expr_stmt|;
 return|return
@@ -2685,7 +2699,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot reserve control I/O port range\n"
+literal|"cannot reserve control I/O port range (control port)\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3549,10 +3563,19 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCARD> 0 */
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|fdc_pccard_detach
+name|fdc_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -3590,6 +3613,33 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* reset controller, turn motor off */
+name|fdout_wr
+argument_list|(
+name|fdc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fdc
+operator|->
+name|flags
+operator|&
+name|FDC_NODMA
+operator|)
+operator|==
+literal|0
+condition|)
+name|isa_dma_release
+argument_list|(
+name|fdc
+operator|->
+name|dmachan
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3660,15 +3710,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NCARD> 0 */
-end_comment
 
 begin_comment
 comment|/*  * Add a child device to the fdc controller.  It will then be probed etc.  */
@@ -4109,7 +4150,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|bus_generic_detach
+name|fdc_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -4229,7 +4270,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|fdc_pccard_detach
+name|fdc_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -5487,6 +5528,37 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|devstat_remove_entry
+argument_list|(
+operator|&
+name|fd
+operator|->
+name|device_stats
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|fd
+operator|->
+name|masterdev
+argument_list|)
+expr_stmt|;
+name|cdevsw_remove
+argument_list|(
+operator|&
+name|fd_cdevsw
+argument_list|)
+expr_stmt|;
+comment|/* XXX need to destroy cloned devs as well */
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|dev_clone
+argument_list|,
+name|fd
+operator|->
+name|clonetag
 argument_list|)
 expr_stmt|;
 name|untimeout
