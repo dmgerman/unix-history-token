@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.20	kern_clock.c	*/
+comment|/*	%H%	3.21	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -114,12 +114,12 @@ begin_decl_stmt
 name|double
 name|ccpu
 init|=
-literal|0.93550698503161773774
+literal|0.95122942450071400909
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* exp(-1/15) */
+comment|/* exp(-1/20) */
 end_comment
 
 begin_comment
@@ -209,6 +209,8 @@ name|int
 name|a
 decl_stmt|,
 name|cpstate
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* 	 * reprime clock 	 */
 name|clkreld
@@ -584,18 +586,38 @@ name|vm_stime
 operator|++
 expr_stmt|;
 block|}
-name|dk_time
+name|cp_time
 index|[
 name|cpstate
 index|]
-index|[
+operator|++
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|DK_NDRIVE
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
 name|dk_busy
 operator|&
 operator|(
-name|DK_NSTATES
-operator|-
 literal|1
+operator|<<
+name|i
 operator|)
+condition|)
+name|dk_time
+index|[
+name|i
 index|]
 operator|++
 expr_stmt|;
