@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.7 (Berkeley) %G%"
+literal|"@(#)tio.c	4.8	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,14 +355,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|len
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -828,7 +821,7 @@ argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|text
 argument_list|)
@@ -1232,7 +1225,7 @@ argument_list|,
 name|bufr
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|bufr
 argument_list|)
