@@ -259,6 +259,15 @@ begin_comment
 comment|/*  * The following two macros do splhigh and splx respectively.  * _alpha_pal_swpipl is a special version of alpha_pal_swpipl which  * doesn't include profiling support.  *  * XXX These macros should probably use inline assembly.  */
 end_comment
 
+begin_function_decl
+name|u_long
+name|_alpha_pal_swpipl
+parameter_list|(
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -266,7 +275,6 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-define|\
 value|s = _alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH)
 end_define
 
@@ -277,8 +285,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-define|\
-value|(void)_alpha_pal_swpipl(s);
+value|(void)_alpha_pal_swpipl(s)
 end_define
 
 begin_define
@@ -290,6 +297,74 @@ name|s
 parameter_list|)
 value|u_long s;
 end_define
+
+begin_function_decl
+name|void
+name|bintr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|btrap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eintr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|user
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_FROMPC_USER
+parameter_list|(
+name|pc
+parameter_list|)
+define|\
+value|((pc< (uintfptr_t)VM_MAXUSER_ADDRESS) ? (uintfptr_t)user : pc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_FROMPC_INTR
+parameter_list|(
+name|pc
+parameter_list|)
+define|\
+value|((pc>= (uintfptr_t)btrap&& pc< (uintfptr_t)eintr) ?	\ 	    ((pc>= (uintfptr_t)bintr) ? (uintfptr_t)bintr :	\ 		(uintfptr_t)btrap) : ~0UL)
+end_define
+
+begin_expr_stmt
+name|_MCOUNT_DECL
+argument_list|(
+name|uintfptr_t
+argument_list|,
+name|uintfptr_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
