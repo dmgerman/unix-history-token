@@ -1713,6 +1713,10 @@ operator|+
 name|chnbuf
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -2999,12 +3003,18 @@ name|s
 operator|=
 literal|"NeoMagic 256AV"
 expr_stmt|;
-else|else
+name|DEB
+argument_list|(
+argument|else
+argument_list|)
+name|DEB
+argument_list|(
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"this is a non-ac97 NM256AV, not attaching\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
