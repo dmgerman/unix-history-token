@@ -658,7 +658,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 literal|"AID_"
 argument_list|,
@@ -696,7 +696,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 literal|"PF"
 argument_list|,
