@@ -141,10 +141,6 @@ name|bucket
 decl_stmt|;
 specifier|register
 name|int
-name|s
-decl_stmt|;
-specifier|register
-name|int
 name|curticks
 decl_stmt|;
 specifier|register
@@ -166,11 +162,6 @@ comment|/* MAX_SOFTCLOCK_STEPS */
 name|steps
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -256,16 +247,8 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
+empty_stmt|;
+comment|/* nothing */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -412,20 +395,10 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|c_func
 argument_list|(
 name|c_arg
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -469,11 +442,6 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -504,9 +472,6 @@ name|int
 name|to_ticks
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|callout
 modifier|*
@@ -516,11 +481,6 @@ name|struct
 name|callout_handle
 name|handle
 decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -581,11 +541,6 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|handle
@@ -617,10 +572,6 @@ name|callout_handle
 name|handle
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Check for a handle that was initialized 	 * by callout_handle_init, but never used 	 * for a real timeout. 	 */
 if|if
 condition|(
@@ -631,11 +582,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -671,11 +617,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|callout_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -750,14 +691,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -777,7 +710,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We could spl down here and back up at the TAILQ_INSERT_TAIL, 	 * but there's no point since doing this setup doesn't take much 	 * time. 	 */
+comment|/* 	 * We could unlock callout_lock here and lock it again before the 	 * TAILQ_INSERT_TAIL, but there's no point since doing this setup 	 * doesn't take much time. 	 */
 if|if
 condition|(
 name|to_ticks
@@ -843,11 +776,6 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -863,14 +791,6 @@ modifier|*
 name|c
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -901,11 +821,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|callout_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -993,11 +908,6 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1071,9 +981,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|delta_ticks
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 comment|/*  	 * How many ticks were we asleep? 	 * (stolen from tvtohz()). 	 */
 comment|/* Don't do anything */
@@ -1173,11 +1080,6 @@ name|INT_MAX
 expr_stmt|;
 comment|/*  	 * Now rip through the timer calltodo list looking for timers 	 * to expire. 	 */
 comment|/* don't collide with softclock() */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1232,11 +1134,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|callout_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
