@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.43 1999/01/27 20:09:16 dillon Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.44 1999/02/18 18:08:39 ken Exp $  */
 end_comment
 
 begin_include
@@ -778,6 +778,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+name|seagate
+index|[]
+init|=
+literal|"SEAGATE"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|xpt_quirk_entry
 name|xpt_quirk_table
@@ -961,7 +972,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"SEAGATE"
+name|seagate
 block|,
 literal|"ST410800*"
 block|,
@@ -976,6 +987,30 @@ literal|0
 block|,
 comment|/*maxtags*/
 literal|0
+block|}
+block|,
+block|{
+comment|/* 		 * Broken tagged queueing drive.  (Write performance is 		 * very bad with anything more than 2 tags. 		 * 		 * Reported by:  Paul van der Zwan<paulz@trantor.xs4all.nl> 		 * Drive:<SEAGATE ST36530N 1444> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|seagate
+block|,
+literal|"ST36530*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+literal|0
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|2
 block|}
 block|,
 block|{
