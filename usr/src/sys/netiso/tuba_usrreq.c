@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -767,6 +767,41 @@ name|nam
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|siso
+operator|=
+name|isop
+operator|->
+name|isop_laddr
+operator|)
+operator|&&
+name|siso
+operator|->
+name|siso_nlen
+operator|>
+literal|1
+condition|)
+name|siso
+operator|->
+name|siso_data
+index|[
+name|siso
+operator|->
+name|siso_nlen
+operator|-
+literal|1
+index|]
+operator|=
+name|ISOPROTO_TCP
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"tuba_usrreq: connect"
+argument_list|)
+expr_stmt|;
 name|siso
 operator|=
 name|mtod

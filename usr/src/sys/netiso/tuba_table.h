@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -40,14 +40,6 @@ name|u_short
 name|tc_ssum
 decl_stmt|;
 comment|/* swab(tc_sum) */
-name|u_short
-name|tc_sum_d
-decl_stmt|;
-comment|/* o.c. diff sum - index */
-name|u_short
-name|tc_ssum_d
-decl_stmt|;
-comment|/* o.c. diff ssum - index */
 name|struct
 name|sockaddr_iso
 name|tc_siso
@@ -77,6 +69,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|{ union { u_short s[2]; long l;} l_util; long x; \ 	l_util.l = (b); x = l_util.s[0] + l_util.s[1]; ADDCARRY(x); \ 	if (x == 0) x = 0xffff; a = x;}
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWAB
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{ union { u_char c[2]; u_short s;} s_util; u_short x; \ 	u_char t; s_util.s = b; t = c[0]; c[0] = c[1]; c[1] = t; }
 end_define
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -601,12 +601,12 @@ operator|->
 name|tc_sum
 argument_list|)
 expr_stmt|;
+name|SWAB
+argument_list|(
 name|tc
 operator|->
 name|tc_ssum
-operator|=
-name|swab
-argument_list|(
+argument_list|,
 name|tc
 operator|->
 name|tc_sum
@@ -818,36 +818,6 @@ operator|->
 name|tc_index
 operator|=
 name|i
-expr_stmt|;
-name|i
-operator|^=
-literal|0xffff
-expr_stmt|;
-name|REDUCE
-argument_list|(
-name|tc
-operator|->
-name|tc_sum_d
-argument_list|,
-name|tc
-operator|->
-name|tc_sum
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-name|REDUCE
-argument_list|(
-name|tc
-operator|->
-name|tc_ssum_d
-argument_list|,
-name|tc
-operator|->
-name|tc_ssum
-operator|+
-name|i
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
