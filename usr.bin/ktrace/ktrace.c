@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -46,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -65,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -123,6 +127,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -133,6 +143,7 @@ file|"ktrace.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|no_ktrace
 parameter_list|(
@@ -142,6 +153,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|int
+name|rpid
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -151,6 +174,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -193,6 +217,7 @@ name|pidset
 decl_stmt|,
 name|trpoints
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tracefile
@@ -379,17 +404,21 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pidset
 operator|&&
 operator|*
 name|argv
+operator|)
 operator|||
+operator|(
 operator|!
 name|pidset
 operator|&&
 operator|!
 operator|*
 name|argv
+operator|)
 condition|)
 name|usage
 argument_list|()
@@ -714,21 +743,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|rpid
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -774,9 +799,10 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -804,6 +830,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|no_ktrace
 parameter_list|(
@@ -811,6 +838,7 @@ name|sig
 parameter_list|)
 name|int
 name|sig
+name|__unused
 decl_stmt|;
 block|{
 operator|(
