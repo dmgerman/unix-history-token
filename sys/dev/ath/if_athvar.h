@@ -765,10 +765,6 @@ name|u_int
 name|sc_ledidle
 decl_stmt|;
 comment|/* idle polling interval */
-name|u_int32_t
-name|sc_ipackets
-decl_stmt|;
-comment|/* last data packet count */
 name|int
 name|sc_ledevent
 decl_stmt|;

@@ -11682,6 +11682,8 @@ name|an
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|type
 decl_stmt|;
 name|u_int
 name|phyerr
@@ -12500,6 +12502,8 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * Send frame up for processing. 		 */
+name|type
+operator|=
 name|ieee80211_input
 argument_list|(
 name|ic
@@ -12531,23 +12535,11 @@ block|{
 comment|/* 			 * Blink for any data frame.  Otherwise do a 			 * heartbeat-style blink when idle.  The latter 			 * is mainly for station mode where we depend on 			 * periodic beacon frames to trigger the poll event. 			 */
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_ipackets
-operator|!=
-name|ifp
-operator|->
-name|if_ipackets
+name|type
+operator|==
+name|IEEE80211_FC0_TYPE_DATA
 condition|)
 block|{
-name|sc
-operator|->
-name|sc_ipackets
-operator|=
-name|ifp
-operator|->
-name|if_ipackets
-expr_stmt|;
 name|sc
 operator|->
 name|sc_rxrate
