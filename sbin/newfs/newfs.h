@@ -186,28 +186,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|bbsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* boot block size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sbsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* superblock size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|avgfilesize
 decl_stmt|;
 end_decl_stmt

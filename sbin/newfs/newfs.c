@@ -504,30 +504,6 @@ comment|/* expected number of files per directory */
 end_comment
 
 begin_decl_stmt
-name|int
-name|bbsize
-init|=
-name|BBSIZE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* boot block size */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sbsize
-init|=
-name|SBSIZE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* superblock size */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|char
 name|device
@@ -1854,24 +1830,6 @@ argument_list|(
 name|bsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* label may be 0 if faked up by kernel */
-name|bbsize
-operator|=
-name|lp
-operator|->
-name|d_bbsize
-expr_stmt|;
-name|sbsize
-operator|=
-name|lp
-operator|->
-name|d_sbsize
-expr_stmt|;
-endif|#
-directive|endif
 name|oldpartition
 operator|=
 operator|*
