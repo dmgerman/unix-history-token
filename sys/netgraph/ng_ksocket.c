@@ -599,6 +599,14 @@ name|PF_INET
 block|}
 block|,
 block|{
+literal|"pim"
+block|,
+name|IPPROTO_PIM
+block|,
+name|PF_INET
+block|}
+block|,
+block|{
 literal|"ddp"
 block|,
 name|ATPROTO_DDP
