@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.3 82/03/31"
+literal|"@(#)cp.c	4.4 82/04/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -958,11 +958,18 @@ name|dp
 operator|==
 literal|0
 condition|)
+block|{
+name|closedir
+argument_list|(
+name|fold
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|errs
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|dp
