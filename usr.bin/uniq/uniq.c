@@ -1089,7 +1089,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uniq [-c | -du | -i] [-f fields] [-s chars] [input [output]]\n"
+literal|"usage: uniq [-c | -d | -u] [-i] [-f fields] [-s chars] [input [output]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
