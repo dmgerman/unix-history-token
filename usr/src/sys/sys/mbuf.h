@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -387,17 +387,6 @@ begin_comment
 comment|/* put new clusters on free list */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MPG_SPACE
-value|2
-end_define
-
-begin_comment
-comment|/* don't free; caller wants space */
-end_comment
-
 begin_comment
 comment|/* length to m_copy to copy all */
 end_comment
@@ -523,9 +512,9 @@ name|m_clusters
 decl_stmt|;
 comment|/* clusters obtained from page pool */
 name|u_long
-name|m_space
+name|m_spare
 decl_stmt|;
-comment|/* interface pages obtained from page pool */
+comment|/* spare field */
 name|u_long
 name|m_clfree
 decl_stmt|;
