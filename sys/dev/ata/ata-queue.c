@@ -1992,19 +1992,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"status=%b error=%b\n"
-argument_list|,
-name|request
-operator|->
-name|status
-argument_list|,
-literal|"\20\10BUSY\7READY\6DMA"
-literal|"\5DSC\4DRQ\3CORRECTABLE\2INDEX\1ERROR"
+literal|"error=%b\n"
 argument_list|,
 operator|(
 name|request
 operator|->
-name|error
+name|u
+operator|.
+name|atapi
+operator|.
+name|sense_key
 operator|&
 name|ATA_E_MASK
 operator|)
