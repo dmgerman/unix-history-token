@@ -7004,7 +7004,7 @@ condition|(
 name|ppc
 operator|->
 name|ppc_dmachan
-operator|>=
+operator|>
 literal|0
 condition|)
 block|{
