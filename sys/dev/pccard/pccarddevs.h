@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.72 2003/09/22 05:27:03 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.73 2003/10/08 01:15:41 imp Exp   */
 end_comment
 
 begin_comment
@@ -4589,6 +4589,27 @@ end_define
 begin_comment
 comment|/* Xircom Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_CWE1130
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CWE1130
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CWE1130
+value|"Xircom Wireless Ethernet Adapter"
+end_define
 
 begin_define
 define|#
