@@ -1639,7 +1639,7 @@ name|rp_writech2
 argument_list|(
 name|ChP
 argument_list|,
-name|_INDX_ADDR
+name|_INDX_DATA
 argument_list|,
 literal|0
 argument_list|)
@@ -1662,7 +1662,7 @@ name|rp_writech2
 argument_list|(
 name|ChP
 argument_list|,
-name|_INDX_ADDR
+name|_INDX_DATA
 argument_list|,
 literal|0
 argument_list|)
@@ -1690,7 +1690,7 @@ name|rp_writech1
 argument_list|(
 name|ChP
 argument_list|,
-name|_INDX_ADDR
+name|_INDX_DATA
 argument_list|,
 literal|0
 argument_list|)
@@ -1718,7 +1718,7 @@ name|rp_writech1
 argument_list|(
 name|ChP
 argument_list|,
-name|_INDX_ADDR
+name|_INDX_DATA
 argument_list|,
 literal|0
 argument_list|)
@@ -3243,11 +3243,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|sDisRxStatusMode
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
