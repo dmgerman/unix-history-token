@@ -82,7 +82,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VIA_BUFFSIZE
+name|VIA_DEFAULT_BUFSZ
 value|0x1000
 end_define
 
@@ -226,6 +226,10 @@ name|struct
 name|ac97_info
 modifier|*
 name|codec
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|via_chinfo
@@ -1105,7 +1109,9 @@ name|via
 operator|->
 name|parent_dmat
 argument_list|,
-name|VIA_BUFFSIZE
+name|via
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -2199,6 +2205,21 @@ argument_list|)
 expr_stmt|;
 name|via
 operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|VIA_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
+name|via
+operator|->
 name|irqid
 operator|=
 literal|0
@@ -2391,7 +2412,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|VIA_BUFFSIZE
+name|via
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1

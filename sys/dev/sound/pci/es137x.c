@@ -185,7 +185,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ES_BUFFSIZE
+name|ES_DEFAULT_BUFSZ
 value|4096
 end_define
 
@@ -271,6 +271,10 @@ name|dev
 decl_stmt|;
 name|int
 name|num
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 comment|/* Contents of board's registers */
 name|u_long
@@ -1429,7 +1433,9 @@ name|ch
 operator|->
 name|bufsz
 operator|=
-name|ES_BUFFSIZE
+name|es
+operator|->
+name|bufsz
 expr_stmt|;
 name|ch
 operator|->
@@ -5371,6 +5377,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|es
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|ES_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pci_get_devid
@@ -5619,7 +5640,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|ES_BUFFSIZE
+name|es
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1

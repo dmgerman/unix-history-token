@@ -399,8 +399,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FM801_BUFFSIZE
-value|1024*4
+name|FM801_DEFAULT_BUFSZ
+value|4096
 end_define
 
 begin_comment
@@ -577,6 +577,10 @@ decl_stmt|,
 name|rec_shift
 decl_stmt|,
 name|rec_size
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|fm801_chinfo
@@ -1520,7 +1524,9 @@ name|fm801
 operator|->
 name|parent_dmat
 argument_list|,
-name|FM801_BUFFSIZE
+name|fm801
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -3117,6 +3123,21 @@ goto|goto
 name|oops
 goto|;
 block|}
+name|fm801
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|FM801_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 name|fm801_init
 argument_list|(
 name|fm801
@@ -3258,7 +3279,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|FM801_BUFFSIZE
+name|fm801
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1

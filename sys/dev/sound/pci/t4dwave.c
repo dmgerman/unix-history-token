@@ -76,7 +76,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TR_BUFFSIZE
+name|TR_DEFAULT_BUFSZ
 value|0x1000
 end_define
 
@@ -236,6 +236,10 @@ name|lock
 decl_stmt|;
 name|u_int32_t
 name|playchns
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|tr_chinfo
@@ -2376,7 +2380,9 @@ name|tr
 operator|->
 name|parent_dmat
 argument_list|,
-name|TR_BUFFSIZE
+name|tr
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -2923,7 +2929,9 @@ name|tr
 operator|->
 name|parent_dmat
 argument_list|,
-name|TR_BUFFSIZE
+name|tr
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -4184,6 +4192,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|tr
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|TR_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tr_init
@@ -4342,7 +4365,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|TR_BUFFSIZE
+name|tr
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1

@@ -50,8 +50,8 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|ESS_BUFFSIZE
-value|(16384)
+name|SOLO_DEFAULT_BUFSZ
+value|16384
 end_define
 
 begin_define
@@ -290,6 +290,10 @@ name|dmasz
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|ess_chinfo
@@ -2859,7 +2863,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|ESS_BUFFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -4353,7 +4359,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* should we bus_teardown_intr here? */
 if|if
 condition|(
 name|sc
@@ -5041,6 +5046,21 @@ condition|)
 goto|goto
 name|no
 goto|;
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|SOLO_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 name|ddma
 operator|=
 name|rman_get_start
@@ -5242,7 +5262,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|ESS_BUFFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
