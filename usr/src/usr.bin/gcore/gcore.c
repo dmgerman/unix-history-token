@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	5.4 (Berkeley) %G%"
+literal|"@(#)gcore.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,25 +59,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
@@ -95,12 +83,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pte.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vm.h>
 end_include
 
@@ -108,6 +90,18 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
 end_include
 
 begin_comment
