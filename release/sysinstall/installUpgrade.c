@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33.2.18 1998/03/21 02:08:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33.2.19 1998/03/23 08:33:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -566,7 +566,47 @@ block|,
 block|{
 name|JUST_COPY
 block|,
+literal|"rc"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
+literal|"rc.firewall"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
+literal|"rc.i386"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
 literal|"rc.local"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
+literal|"rc.network"
 block|,
 name|TRUE
 block|,
@@ -1618,12 +1658,13 @@ expr_stmt|;
 block|}
 name|msgConfirm
 argument_list|(
-literal|"OK!  At this stage, we've resurrected all the /etc files\n"
-literal|"and moved each new copy over to /etc/upgrade/<file> in case you want\n"
-literal|"to see what the new versions look like.  If you want to wander over\n"
-literal|"to the Emergency Holographic Shell [ALT-F4] at this point to do\n"
-literal|"that, now would be a good time.  When you're ready to reboot into\n"
-literal|"the new system, just exit the installation."
+literal|"Upgrade completed!  All of your old /etc files have been restored.\n"
+literal|"For your reference, the new /etc files are in /etc/upgrade/ in case\n"
+literal|"you wish to upgrade these files by hand (though that should not be\n"
+literal|"strictly necessary).  If your root partition is specified in /etc/fstab\n"
+literal|"using the old \"compatibility\" slice, you may also wish to update it to\n"
+literal|"use a fully qualified slice name in order to avoid warnings on startup.\n\n"
+literal|"When you're ready to reboot into the new system, simply exit the installation."
 argument_list|)
 expr_stmt|;
 return|return
