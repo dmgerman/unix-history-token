@@ -2116,8 +2116,6 @@ argument_list|)
 expr_stmt|;
 name|ng_unref
 argument_list|(
-name|sc
-operator|->
 name|node
 argument_list|)
 expr_stmt|;
