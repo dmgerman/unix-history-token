@@ -1447,7 +1447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatMake --  *	Make a target, given the parent, to abort if necessary.  *  * Results:  *	0  *  * Side Effects:  *	If an error is detected and not being ignored, the process exits.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * CompatMake --  *	Make a target, given the parent, to abort if necessary.  *  * Side Effects:  *	If an error is detected and not being ignored, the process exits.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1455,27 +1455,15 @@ specifier|static
 name|int
 name|CompatMake
 parameter_list|(
-name|void
-modifier|*
-name|gnp
-parameter_list|,
-name|void
-modifier|*
-name|pgnp
-parameter_list|)
-block|{
 name|GNode
 modifier|*
 name|gn
-init|=
-name|gnp
-decl_stmt|;
+parameter_list|,
 name|GNode
 modifier|*
 name|pgn
-init|=
-name|pgnp
-decl_stmt|;
+parameter_list|)
+block|{
 name|LstNode
 modifier|*
 name|ln
@@ -1525,14 +1513,18 @@ argument_list|(
 name|gn
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-operator|&
-name|gn
-operator|->
-name|children
+argument|ln
 argument_list|,
+argument|&gn->children
+argument_list|)
 name|CompatMake
+argument_list|(
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|,
 name|gn
 argument_list|)
