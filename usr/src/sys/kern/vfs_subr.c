@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.70 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.71 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3265,20 +3265,18 @@ begin_comment
 comment|/*  * Page or buffer structure gets a reference.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vhold
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|vp
 operator|->
@@ -3286,26 +3284,24 @@ name|v_holdcnt
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Page or buffer structure frees a reference.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|holdrele
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3326,7 +3322,7 @@ name|v_holdcnt
 operator|--
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove any vnodes in the vnode table belonging to mount point mp.  *  * If MNT_NOFORCE is specified, there should not be any active ones,  * return error if any are found (nb: this is a user error, not a  * system error). If MNT_FORCE is specified, detach any active vnodes  * that are found.  */
