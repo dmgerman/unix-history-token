@@ -1118,8 +1118,9 @@ name|isp_lipseq
 decl_stmt|;
 comment|/* LIP sequence # */
 name|u_int16_t
-name|isp_xxxxxx
+name|isp_fwattr
 decl_stmt|;
+comment|/* firmware attributes */
 name|u_int8_t
 name|isp_execthrottle
 decl_stmt|;
@@ -1828,11 +1829,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_FW_MAJOR
+parameter_list|(
+name|code
+parameter_list|)
+value|((code>> 24)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_MINOR
+parameter_list|(
+name|code
+parameter_list|)
+value|((code>> 16)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_MICRO
+parameter_list|(
+name|code
+parameter_list|)
+value|((code>>  8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REVX
 parameter_list|(
 name|xp
 parameter_list|)
 value|((xp[0]<<24) | (xp[1]<< 16) | xp[2])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_MAJORX
+parameter_list|(
+name|xp
+parameter_list|)
+value|(xp[0])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_MINORX
+parameter_list|(
+name|xp
+parameter_list|)
+value|(xp[1])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_MICROX
+parameter_list|(
+name|xp
+parameter_list|)
+value|(xp[2])
 end_define
 
 begin_comment
