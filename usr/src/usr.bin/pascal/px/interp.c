@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.6 %G%"
+literal|"@(#)interp.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,10 +509,10 @@ name|stp
 decl_stmt|;
 comment|/* active stack frame ptr */
 comment|/* 	 * the following variables are used as scratch 	 */
-name|double
-name|td
-decl_stmt|,
-name|td1
+specifier|register
+name|char
+modifier|*
+name|tcp
 decl_stmt|;
 specifier|register
 name|long
@@ -521,6 +521,15 @@ decl_stmt|,
 name|tl1
 decl_stmt|,
 name|tl2
+decl_stmt|;
+name|double
+name|td
+decl_stmt|,
+name|td1
+decl_stmt|;
+name|struct
+name|sze8
+name|t8
 decl_stmt|;
 name|long
 modifier|*
@@ -532,11 +541,6 @@ name|tsp
 decl_stmt|,
 modifier|*
 name|tsp1
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|tcp
 decl_stmt|;
 name|char
 modifier|*
@@ -562,6 +566,10 @@ modifier|*
 modifier|*
 name|ip
 decl_stmt|;
+comment|/* 	 * Setup sets up any hardware specific parameters before 	 * starting the interpreter. Typically this is inline replaced 	 * by interp.sed to utilize specific machine instructions. 	 */
+name|setup
+argument_list|()
+expr_stmt|;
 comment|/* 	 * necessary only on systems which do not initialize 	 * memory to zero 	 */
 for|for
 control|(
@@ -2744,20 +2752,21 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-name|td
+name|t8
 operator|=
-name|pop8
+name|popsze8
 argument_list|()
 expr_stmt|;
 operator|*
 operator|(
-name|double
+expr|struct
+name|sze8
 operator|*
 operator|)
 name|popaddr
 argument_list|()
 operator|=
-name|td
+name|t8
 expr_stmt|;
 continue|continue;
 case|case
@@ -4404,11 +4413,12 @@ name|ucp
 operator|++
 index|]
 expr_stmt|;
-name|push8
+name|pushsze8
 argument_list|(
 operator|*
 operator|(
-name|double
+expr|struct
+name|sze8
 operator|*
 operator|)
 operator|(
@@ -4683,11 +4693,12 @@ name|ucp
 operator|++
 index|]
 expr_stmt|;
-name|push8
+name|pushsze8
 argument_list|(
 operator|*
 operator|(
-name|double
+expr|struct
+name|sze8
 operator|*
 operator|)
 operator|(
@@ -4885,11 +4896,12 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-name|push8
+name|pushsze8
 argument_list|(
 operator|*
 operator|(
-name|double
+expr|struct
+name|sze8
 operator|*
 operator|)
 operator|(
