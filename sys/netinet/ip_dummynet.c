@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.1 1998/09/12 22:03:20 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.2 1998/12/14 18:09:13 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -457,9 +457,6 @@ parameter_list|)
 block|{
 name|struct
 name|dn_pkt
-modifier|*
-name|tmp
-decl_stmt|,
 modifier|*
 name|pkt
 decl_stmt|;
@@ -1732,9 +1729,6 @@ block|{
 name|struct
 name|dn_pipe
 modifier|*
-name|q
-decl_stmt|,
-modifier|*
 name|p
 init|=
 name|all_pipes
@@ -1921,9 +1915,6 @@ name|struct
 name|dn_pipe
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|,
 name|tmp_pipe
 decl_stmt|;
