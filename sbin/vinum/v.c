@@ -2163,6 +2163,8 @@ comment|/* and make them again */
 name|VINUM_DIR
 literal|"/plex "
 name|VINUM_DIR
+literal|"/rplex "
+name|VINUM_DIR
 literal|"/sd "
 name|VINUM_DIR
 literal|"/rsd "
@@ -2868,6 +2870,11 @@ block|{
 name|dev_t
 name|plexdev
 decl_stmt|;
+comment|/* block device */
+name|dev_t
+name|plexcdev
+decl_stmt|;
+comment|/* and character device device */
 name|char
 name|filename
 index|[
@@ -2895,6 +2902,116 @@ operator|!=
 name|plex_unallocated
 condition|)
 block|{
+name|plexdev
+operator|=
+name|VINUM_BLOCK_PLEX
+argument_list|(
+name|plexno
+argument_list|)
+expr_stmt|;
+name|plexcdev
+operator|=
+name|VINUM_CHAR_PLEX
+argument_list|(
+name|plexno
+argument_list|)
+expr_stmt|;
+comment|/* /dev/vinum/plex/<plex> */
+name|sprintf
+argument_list|(
+name|filename
+argument_list|,
+name|VINUM_DIR
+literal|"/plex/%s"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|filename
+argument_list|,
+name|S_IRWXU
+operator||
+name|S_IRGRP
+operator||
+name|S_IXGRP
+operator||
+name|S_IROTH
+operator||
+name|S_IFBLK
+argument_list|,
+name|plexdev
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't create %s: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* /dev/vinum/rplex/<plex> */
+name|sprintf
+argument_list|(
+name|filename
+argument_list|,
+name|VINUM_DIR
+literal|"/rplex/%s"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|filename
+argument_list|,
+name|S_IRWXU
+operator||
+name|S_IRGRP
+operator||
+name|S_IXGRP
+operator||
+name|S_IROTH
+operator||
+name|S_IFCHR
+argument_list|,
+name|plexcdev
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't create %s: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|plex
@@ -3032,69 +3149,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* detached plex */
-name|plexdev
-operator|=
-name|VINUMBDEV
-argument_list|(
-literal|0
-argument_list|,
-name|plexno
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_RAWPLEX_TYPE
-argument_list|)
-expr_stmt|;
-comment|/* Create /dev/vinum/plex/<plex> */
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/plex/%s"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|filename
-argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRGRP
-operator||
-name|S_IXGRP
-operator||
-name|S_IROTH
-operator||
-name|S_IFBLK
-argument_list|,
-name|plexdev
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|recurse
@@ -3141,6 +3195,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Create the contents of /dev/vinum/sd and /dev/vinum/rsd */
+end_comment
+
 begin_function
 name|void
 name|make_sd_dev
@@ -3149,7 +3207,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-comment|/* Create the contents of /dev/vinum/<vol>.plex/<plex>.sd */
 name|dev_t
 name|sddev
 decl_stmt|;
@@ -3710,6 +3767,7 @@ name|EAGAIN
 condition|;
 control|)
 block|{
+comment|/* revive the subdisk */
 name|message
 operator|->
 name|index
