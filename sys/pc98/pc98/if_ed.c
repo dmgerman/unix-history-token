@@ -1689,6 +1689,24 @@ block|{
 name|int
 name|nports
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|nports98
+decl_stmt|;
+define|#
+directive|define
+name|EDNPORTS
+value|nports98
+else|#
+directive|else
+define|#
+directive|define
+name|EDNPORTS
+value|nports
+endif|#
+directive|endif
 if|#
 directive|if
 name|NCRD
@@ -1743,6 +1761,8 @@ name|type
 operator|=
 name|ED_TYPE98_LPC
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -1763,7 +1783,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -1779,6 +1799,8 @@ name|type
 operator|=
 name|ED_TYPE98_GENERIC
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -1889,6 +1911,8 @@ name|type
 operator|=
 name|ED_TYPE98_SIC
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -1909,7 +1933,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -1951,6 +1975,8 @@ name|type
 operator|=
 name|ED_TYPE98_BDN
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -1971,7 +1997,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2013,6 +2039,8 @@ name|type
 operator|=
 name|ED_TYPE98_LGY
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2033,7 +2061,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2075,6 +2103,8 @@ name|type
 operator|=
 name|ED_TYPE98_ICM
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2095,7 +2125,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2137,6 +2167,8 @@ name|type
 operator|=
 name|ED_TYPE98_EGY
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2157,7 +2189,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2199,6 +2231,8 @@ name|type
 operator|=
 name|ED_TYPE98_LA98
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2219,7 +2253,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2261,6 +2295,8 @@ name|type
 operator|=
 name|ED_TYPE98_108
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2281,7 +2317,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2323,6 +2359,8 @@ name|type
 operator|=
 name|ED_TYPE98_CNET98EL
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2343,7 +2381,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
@@ -2385,6 +2423,8 @@ name|type
 operator|=
 name|ED_TYPE98_CNET98
 expr_stmt|;
+name|nports98
+operator|=
 name|pc98_set_register
 argument_list|(
 name|isa_dev
@@ -2405,7 +2445,7 @@ name|nports
 condition|)
 return|return
 operator|(
-name|nports
+name|EDNPORTS
 operator|)
 return|;
 block|}
