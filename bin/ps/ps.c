@@ -845,7 +845,7 @@ begin_define
 define|#
 directive|define
 name|PS_ARGS
-value|"AaCc" OPT_LAZY_f "G:gHhjLlM:mN:O:o:p:rSTt:U:uvwXxZ"
+value|"AaCce" OPT_LAZY_f "G:gHhjLlM:mN:O:o:p:rSTt:U:uvwXxZ"
 end_define
 
 begin_function
