@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.16 (Berkeley) %G%"
+literal|"@(#)init.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3938,11 +3938,43 @@ name|sp
 operator|->
 name|se_getty
 operator|=
-name|strdup
+name|malloc
+argument_list|(
+name|strlen
 argument_list|(
 name|typ
 operator|->
 name|ty_getty
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|typ
+operator|->
+name|ty_name
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|sp
+operator|->
+name|se_getty
+argument_list|,
+literal|"%s %s"
+argument_list|,
+name|typ
+operator|->
+name|ty_getty
+argument_list|,
+name|typ
+operator|->
+name|ty_name
 argument_list|)
 expr_stmt|;
 name|sp
@@ -4424,6 +4456,8 @@ operator|(
 name|unsigned
 operator|)
 name|GETTY_SPACING
+operator|+
+literal|1
 operator|-
 operator|(
 name|current_time
