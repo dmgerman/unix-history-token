@@ -6518,13 +6518,9 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
-expr_stmt|;
-comment|/* 		 * Wire the page. 		 */
-name|m
-operator|->
-name|wire_count
-operator|++
 expr_stmt|;
 comment|/* 		 * Enter the page into the kernel address space. 		 */
 name|pmap_kenter
@@ -6551,15 +6547,6 @@ argument_list|(
 name|m
 argument_list|,
 name|PG_ZERO
-argument_list|)
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_MAPPED
-operator||
-name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
 name|m
