@@ -13376,6 +13376,16 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_RDONLY
+operator|)
+operator|==
+literal|0
+operator|&&
 name|n
 operator|->
 name|m_len
