@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -125,6 +125,10 @@ name|short
 name|ifw_xswapd
 decl_stmt|;
 comment|/* mask of clusters swapped */
+name|short
+name|ifw_nmr
+decl_stmt|;
+comment|/* number of entries in wmap */
 block|}
 struct|;
 end_struct

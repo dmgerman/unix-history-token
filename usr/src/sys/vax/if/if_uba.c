@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -498,6 +498,15 @@ operator|.
 name|ifw_flags
 operator|=
 name|IFRW_W
+expr_stmt|;
+name|ifw
+index|[
+name|nw
+index|]
+operator|.
+name|ifw_nmr
+operator|=
+name|nmr
 expr_stmt|;
 block|}
 return|return
@@ -1557,7 +1566,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|IF_MAXNUBAMR
+name|ifw
+operator|->
+name|ifw_nmr
 condition|;
 name|i
 operator|++
