@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.13 1998/02/23 09:41:02 ache Exp $"
+literal|"$Id: mount_msdos.c,v 1.14 1998/02/23 16:49:16 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,7 +1126,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_msdos [-o options] [-u user] [-g group] [-m mask] [-s] [-l] [-9] [-L locale] [-W table] bdev dir\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: mount_msdos [-o options] [-u user] [-g group] [-m mask]"
+argument_list|,
+literal|"                   [-s] [-l] [-9] [-L locale] [-W table] bdev dir"
 argument_list|)
 expr_stmt|;
 name|exit
