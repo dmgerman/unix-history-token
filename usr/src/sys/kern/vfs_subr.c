@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1058,12 +1058,6 @@ expr|*
 name|vp
 argument_list|)
 expr_stmt|;
-name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|1
-expr_stmt|;
 name|numvnodes
 operator|++
 expr_stmt|;
@@ -1120,11 +1114,20 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
+comment|/* see comment on why 0xdeadb is set at end of vgone (below) */
 name|vp
 operator|->
-name|v_usecount
+name|v_freelist
+operator|.
+name|tqe_prev
 operator|=
-literal|1
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+literal|0xdeadb
 expr_stmt|;
 name|vp
 operator|->
@@ -1265,6 +1268,12 @@ operator|*
 name|vpp
 operator|=
 name|vp
+expr_stmt|;
+name|vp
+operator|->
+name|v_usecount
+operator|=
+literal|1
 expr_stmt|;
 name|vp
 operator|->
@@ -3865,7 +3874,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. 	 */
+comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. The test of the back 	 * pointer and the reference count of zero is because 	 * it will be removed from the free list by getnewvnode, 	 * but will not have its reference count incremented until 	 * after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to 	 * close the previous instance of the underlying object. 	 * So, the back pointer is explicitly set to `0xdeadb' in 	 * getnewvnode after removing it from the freelist to ensure 	 * that we do not try to move it here. 	 */
 if|if
 condition|(
 name|vp
@@ -3873,6 +3882,20 @@ operator|->
 name|v_usecount
 operator|==
 literal|0
+operator|&&
+name|vp
+operator|->
+name|v_freelist
+operator|.
+name|tqe_prev
+operator|!=
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+literal|0xdeadb
 operator|&&
 name|vnode_free_list
 operator|.
