@@ -2985,7 +2985,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" newvers"
+literal|" vers.o"
 argument_list|)
 expr_stmt|;
 name|fprintf
