@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.22	81/12/12	*/
+comment|/*	uipc_mbuf.c	1.23	81/12/20	*/
 end_comment
 
 begin_include
@@ -343,6 +343,12 @@ block|{
 name|m
 operator|->
 name|m_off
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|m_free
 operator|=
 literal|0
 expr_stmt|;
