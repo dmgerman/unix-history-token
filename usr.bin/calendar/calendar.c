@@ -435,7 +435,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: calendar [-a] [-A days] [-B days] [-f calendarfile]\n"
+literal|"usage: calendar [-a] [-A days] [-B days] [-f calendarfile] [-t dd[.mm[.year]]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
