@@ -1581,6 +1581,9 @@ decl_stmt|;
 name|u_int
 name|ncomp
 decl_stmt|;
+name|int
+name|lev
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2173,7 +2176,7 @@ name|sc_eintrs
 operator|=
 name|EHCI_NORMAL_INTRS
 expr_stmt|;
-comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 * XXX this probably isn't the most sensible arrangement, and it 	 * would be better if we didn't leave all the QHs in the periodic 	 * schedule all the time. 	 */
+comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 */
 for|for
 control|(
 name|i
@@ -2222,6 +2225,10 @@ operator|=
 name|sqh
 expr_stmt|;
 block|}
+name|lev
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2236,6 +2243,22 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|==
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|lev
+operator|++
+expr_stmt|;
 name|sqh
 operator|=
 name|sc
@@ -2281,15 +2304,16 @@ name|sc
 operator|->
 name|sc_islots
 index|[
-operator|(
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|-
+literal|1
+argument_list|,
 name|i
 operator|+
 literal|1
-operator|)
-operator|/
-literal|2
-operator|-
-literal|1
+argument_list|)
 index|]
 operator|.
 name|sqh
