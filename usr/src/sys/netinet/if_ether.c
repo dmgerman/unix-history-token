@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -892,30 +892,25 @@ begin_comment
 comment|/*  * Broadcast an ARP packet, asking who has addr on interface ac.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|arpwhohas
-argument_list|(
+parameter_list|(
 name|ac
-argument_list|,
+parameter_list|,
 name|addr
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|arpcom
-operator|*
+modifier|*
 name|ac
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|inaddr
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1218,7 +1213,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
