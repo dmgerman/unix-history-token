@@ -729,7 +729,7 @@ name|warnx
 argument_list|(
 literal|"%s(): malloc() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|retval

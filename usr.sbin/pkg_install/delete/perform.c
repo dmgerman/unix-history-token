@@ -296,7 +296,7 @@ name|warnx
 argument_list|(
 literal|"%s(): alloca() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|err_cnt
@@ -340,7 +340,7 @@ name|warnx
 argument_list|(
 literal|"%s(): alloca() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|err_cnt
@@ -599,7 +599,7 @@ literal|2
 argument_list|,
 literal|"%s: unable to get current working directory!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1073,7 +1073,7 @@ literal|2
 argument_list|,
 literal|"%s: unable to return to working directory %s!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|home
 argument_list|)
@@ -1202,7 +1202,7 @@ literal|2
 argument_list|,
 literal|"%s: unable to return to working directory %s!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|home
 argument_list|)
@@ -1337,7 +1337,7 @@ literal|2
 argument_list|,
 literal|"%s: installed package %s has no %s file!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|pkg
 argument_list|,

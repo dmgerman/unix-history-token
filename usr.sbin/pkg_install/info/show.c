@@ -744,7 +744,7 @@ literal|2
 argument_list|,
 literal|"%s: unknown command type %d (%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|p
 operator|->
