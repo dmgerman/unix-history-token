@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.7	83/12/19	*/
+comment|/* main.c	(Berkeley)	1.8	84/01/02	*/
 end_comment
 
 begin_include
@@ -482,6 +482,14 @@ literal|1
 index|]
 operator|==
 literal|'-'
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
 condition|)
 block|{
 switch|switch
@@ -621,6 +629,12 @@ operator|>
 literal|1
 condition|)
 block|{
+name|filename
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -628,15 +642,28 @@ name|yyin
 operator|=
 name|fopen
 argument_list|(
-operator|*
-operator|++
-name|argv
+name|filename
 argument_list|,
 literal|"r"
 argument_list|)
 operator|)
 operator|==
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|||
+name|filename
+index|[
+literal|1
+index|]
 condition|)
 block|{
 name|fprintf
@@ -655,11 +682,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|yyin
+operator|=
+name|stdin
+expr_stmt|;
 name|filename
 operator|=
-operator|*
-name|argv
+literal|"standard input"
 expr_stmt|;
+block|}
+block|}
 name|getdata
 argument_list|(
 name|yyin
