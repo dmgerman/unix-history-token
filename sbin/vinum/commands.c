@@ -1736,6 +1736,37 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* create a file name here */
+comment|/* Variables for use by children */
+name|int
+name|failed
+init|=
+literal|0
+decl_stmt|;
+comment|/* set if a child dies badly */
+name|int
+name|sdfh
+decl_stmt|;
+comment|/* and for subdisk */
+name|char
+name|zeros
+index|[
+name|PLEXINITSIZE
+index|]
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+comment|/* write count */
+name|long
+name|long
+name|offset
+decl_stmt|;
+comment|/* offset in subdisk */
+name|long
+name|long
+name|sdsize
+decl_stmt|;
+comment|/* size of subdisk */
 for|for
 control|(
 name|plexindex
@@ -1872,6 +1903,14 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* don't wait for completion */
 name|pid
 operator|=
 name|fork
@@ -1884,37 +1923,24 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* we're the child */
-name|int
-name|failed
-init|=
-literal|0
-decl_stmt|;
-comment|/* set if a child dies badly */
-name|int
-name|sdfh
-decl_stmt|;
-comment|/* and for subdisk */
-name|char
-name|zeros
-index|[
-name|PLEXINITSIZE
-index|]
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-comment|/* write count */
-name|long
-name|long
-name|offset
-decl_stmt|;
-comment|/* offset in subdisk */
-name|long
-name|long
-name|sdsize
-decl_stmt|;
-comment|/* size of subdisk */
+comment|/* non-waiting parent */
+name|close
+argument_list|(
+name|plexfh
+argument_list|)
+expr_stmt|;
+comment|/* we don't need this any more */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* give them a chance to print */
+return|return;
+comment|/* and go on about our business */
+block|}
+block|}
+comment|/* 	     * If we get here, we're either the first-level child 	     * (if we're not waiting) or we're going to wait. 	     */
 name|bzero
 argument_list|(
 name|zeros
@@ -1955,7 +1981,7 @@ operator|++
 control|)
 block|{
 comment|/* initialize each subdisk */
-comment|/* We already have the plex data in global 		     * plex from the call to find_object */
+comment|/* We already have the plex data in global 		 * plex from the call to find_object */
 name|pid
 operator|=
 name|fork
@@ -2297,27 +2323,19 @@ argument_list|,
 name|failed
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+comment|/* we're the waiting child, */
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|close
-argument_list|(
-name|plexfh
-argument_list|)
-expr_stmt|;
-comment|/* we don't need this any more */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* give them a chance to print */
-block|}
+comment|/* we've done our dash */
 block|}
 block|}
 block|}

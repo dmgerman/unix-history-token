@@ -294,6 +294,18 @@ begin_comment
 comment|/* show statistics */
 end_comment
 
+begin_decl_stmt
+name|int
+name|dowait
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wait for completion */
+end_comment
+
 begin_comment
 comment|/* Structures to read kernel data into */
 end_comment
@@ -1318,6 +1330,15 @@ literal|'s'
 case|:
 comment|/* -s: show statistics */
 name|stats
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+comment|/* -w: wait for completion */
+name|dowait
 operator|=
 literal|1
 expr_stmt|;
