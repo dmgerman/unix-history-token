@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)at.c	4.3 (Berkeley) %G%"
+literal|"@(#)at.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,18 @@ operator|<=
 name|now
 condition|)
 name|uday
+operator|++
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|uday
+operator|<
+name|today
+condition|)
+name|uyear
 operator|++
 expr_stmt|;
 end_if
