@@ -2203,6 +2203,10 @@ name|high_sierra
 condition|)
 block|{
 comment|/* this effectively ignores all the mount flags */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2254,6 +2258,10 @@ break|break;
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2281,6 +2289,10 @@ operator|&&
 name|joliet_level
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|log
 argument_list|(
 name|LOG_INFO
