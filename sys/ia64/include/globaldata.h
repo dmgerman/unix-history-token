@@ -105,6 +105,9 @@ argument|globaldata
 argument_list|)
 name|gd_allcpu
 expr_stmt|;
+name|int
+name|gd_witness_spin_check
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
