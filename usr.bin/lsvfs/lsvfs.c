@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  */
+comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -37,22 +37,34 @@ begin_define
 define|#
 directive|define
 name|FMT
-value|"%-32.32s %5d %5d %5d\n"
+value|"%-32.32s %5d %5d %s\n"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDRFMT
-value|"%-32.32s %5.5s %5.5s %5.5s\n"
+value|"%-32.32s %5.5s %5.5s %s\n"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DASHES
-value|"-------------------------------- ----- ----- -----\n"
+value|"-------------------------------- ----- ----- ---------------\n"
 end_define
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|fmt_flags
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -154,9 +166,12 @@ name|vfc
 operator|->
 name|vfc_refcount
 argument_list|,
+name|fmt_flags
+argument_list|(
 name|vfc
 operator|->
 name|vfc_flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -214,6 +229,31 @@ argument_list|()
 expr_stmt|;
 return|return
 name|rv
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|fmt_flags
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+block|{
+return|return
+operator|(
+name|flags
+operator|&
+name|VFCF_STATIC
+operator|)
+condition|?
+literal|"static"
+else|:
+literal|""
 return|;
 block|}
 end_function
