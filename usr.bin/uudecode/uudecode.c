@@ -935,7 +935,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|q
+argument_list|,
+literal|"/dev/stdout"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
 comment|/* strip down to leaf name */
 name|p
@@ -969,9 +980,19 @@ name|outfile
 operator|=
 name|q
 expr_stmt|;
+comment|/* POSIX says "/dev/stdout" is a 'magic cookie' not a special file. */
 if|if
 condition|(
 name|pflag
+operator|||
+name|strcmp
+argument_list|(
+name|outfile
+argument_list|,
+literal|"/dev/stdout"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|outfp
 operator|=
