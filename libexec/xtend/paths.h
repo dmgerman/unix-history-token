@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|X10DIR
-value|"/var/spool/xten/"
+value|"/var/spool/xten"
 end_define
 
 begin_define
