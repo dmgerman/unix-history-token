@@ -2684,7 +2684,15 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"identify failed\n"
+literal|"%s identify failed\n"
+argument_list|,
+name|command
+operator|==
+name|ATA_C_ATAPI_IDENTIFY
+condition|?
+literal|"ATAPI"
+else|:
+literal|"ATA"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2706,7 +2714,15 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"identify retries exceeded\n"
+literal|"%s identify retries exceeded\n"
+argument_list|,
+name|command
+operator|==
+name|ATA_C_ATAPI_IDENTIFY
+condition|?
+literal|"ATAPI"
+else|:
+literal|"ATA"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4164,6 +4180,24 @@ name|ostat1
 argument_list|)
 expr_stmt|;
 comment|/* reset channel */
+name|ATA_OUTB
+argument_list|(
+name|scp
+operator|->
+name|r_io
+argument_list|,
+name|ATA_DRIVE
+argument_list|,
+name|ATA_D_IBM
+operator||
+name|ATA_MASTER
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|ATA_OUTB
 argument_list|(
 name|scp
@@ -6512,6 +6546,18 @@ index|]
 argument_list|,
 name|M_ATA
 argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|dev_name
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
