@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -189,6 +195,28 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ttymsg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|iovec
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -363,6 +391,9 @@ name|void
 name|usage
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -405,9 +436,6 @@ name|sbuf
 decl_stmt|;
 name|time_t
 name|now
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|FILE
 modifier|*
@@ -418,7 +446,7 @@ name|fd
 decl_stmt|;
 name|char
 modifier|*
-name|whom
+name|tty
 decl_stmt|,
 name|hostname
 index|[
@@ -435,6 +463,14 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|whom
+decl_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|tmpname
@@ -451,7 +487,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|fd
 operator|=
@@ -460,6 +495,9 @@ argument_list|(
 name|tmpname
 argument_list|)
 operator|)
+operator|==
+operator|-
+literal|1
 operator|||
 operator|!
 operator|(
@@ -473,7 +511,7 @@ literal|"r+"
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -561,6 +599,23 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+name|tty
+operator|=
+name|ttyname
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tty
+operator|==
+name|NULL
+condition|)
+name|tty
+operator|=
+literal|"no tty"
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -570,10 +625,7 @@ name|fp
 argument_list|,
 literal|"        (%s) at %d:%02d ...\n"
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|tty
 argument_list|,
 name|lt
 operator|->
@@ -607,7 +659,7 @@ name|stdin
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -652,7 +704,7 @@ operator|&
 name|sbuf
 argument_list|)
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -680,7 +732,7 @@ name|mbufsize
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -706,7 +758,7 @@ argument_list|)
 operator|!=
 name|mbufsize
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
