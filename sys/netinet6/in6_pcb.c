@@ -2022,9 +2022,6 @@ name|sin6
 operator|->
 name|sin6_flowinfo
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 operator|(
@@ -2055,8 +2052,6 @@ operator|&
 name|IPV6_FLOWLABEL_MASK
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 name|in_pcbrehash
 argument_list|(
 name|inp
