@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.65	82/12/17	*/
+comment|/*	up.c	4.66	83/02/10	*/
 end_comment
 
 begin_include
@@ -190,23 +190,11 @@ block|,
 comment|/* A=cyl 0 thru 26 */
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|ERNIE
-literal|49324
-block|,
-literal|0
-block|,
-comment|/* A=cyl 0 thru 26 */
-else|#
-directive|else
 literal|15884
 block|,
 literal|0
 block|,
 comment|/* A=cyl 0 thru 26 */
-endif|#
-directive|endif
 endif|#
 directive|endif
 literal|33440
@@ -229,9 +217,6 @@ block|,
 literal|589
 block|,
 comment|/* E=cyl 589 thru 680 */
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|81376
 block|,
 literal|681
@@ -242,18 +227,6 @@ block|,
 literal|562
 block|,
 comment|/* G=cyl 562 thru 814 */
-else|#
-directive|else
-literal|81472
-block|,
-literal|681
-block|,
-literal|153824
-block|,
-literal|562
-block|,
-endif|#
-directive|endif
 literal|291346
 block|,
 literal|82
@@ -298,22 +271,11 @@ literal|0
 block|,
 literal|0
 block|,
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|213664
 block|,
 literal|155
 block|,
 comment|/* H=cyl 155 thru 822 */
-else|#
-directive|else
-literal|213760
-block|,
-literal|155
-block|,
-endif|#
-directive|endif
 block|}
 struct|,
 name|upam_sizes
@@ -670,12 +632,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOBADSECT
-end_ifndef
-
 begin_decl_stmt
 name|struct
 name|buf
@@ -695,11 +651,6 @@ name|NUP
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1722,9 +1673,6 @@ name|didie
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 name|st
 operator|=
 operator|&
@@ -1816,8 +1764,6 @@ name|bp
 operator|=
 name|bbp
 expr_stmt|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|NOBADSECT
@@ -2936,9 +2882,6 @@ name|ui
 operator|->
 name|ui_slave
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|bp
@@ -2959,8 +2902,6 @@ argument_list|)
 condition|)
 return|return;
 block|}
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|NOBADSECT
@@ -3151,9 +3092,6 @@ operator|&
 name|UPER2_BSE
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|upecc
@@ -3165,8 +3103,6 @@ argument_list|)
 condition|)
 return|return;
 else|else
-endif|#
-directive|endif
 goto|goto
 name|hard
 goto|;
