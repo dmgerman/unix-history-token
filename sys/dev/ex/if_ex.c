@@ -494,20 +494,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ex_stop
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ex_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|void
 name|ex_reset
@@ -4188,15 +4174,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-name|struct
-name|ex_softc
-modifier|*
-name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
 return|return
 operator|(
 literal|0
