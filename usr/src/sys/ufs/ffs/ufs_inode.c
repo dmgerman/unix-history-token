@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.29	82/10/19	*/
+comment|/*	ufs_inode.c	4.30	82/10/23	*/
 end_comment
 
 begin_include
@@ -1906,6 +1906,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+block|{
+name|int
+name|size
+decl_stmt|;
 name|fre
 argument_list|(
 name|ip
@@ -1933,6 +1937,7 @@ name|size
 operator|/
 name|DEV_BSIZE
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
