@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compare.c,v 1.8 1997/10/01 06:30:00 charnier Exp $"
+literal|"$Id: compare.c,v 1.9 1998/06/09 05:02:29 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,10 +411,16 @@ literal|"%suser (%lu, %lu"
 argument_list|,
 name|tab
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|s
 operator|->
 name|st_uid
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|p
 operator|->
 name|fts_statp
@@ -512,10 +518,16 @@ literal|"%sgid (%lu, %lu"
 argument_list|,
 name|tab
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|s
 operator|->
 name|st_gid
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|p
 operator|->
 name|fts_statp

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: create.c,v 1.9 1997/10/01 06:30:00 charnier Exp $"
+literal|"$Id: create.c,v 1.10 1998/06/05 14:43:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1788,6 +1788,9 @@ name|printf
 argument_list|(
 literal|" uid=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|saveuid
 argument_list|)
 expr_stmt|;
@@ -1847,6 +1850,9 @@ name|printf
 argument_list|(
 literal|" gid=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|savegid
 argument_list|)
 expr_stmt|;

@@ -353,7 +353,7 @@ argument_list|(
 name|header
 argument_list|)
 argument_list|,
-literal|"%d%s-blocks"
+literal|"%ld%s-blocks"
 argument_list|,
 name|n
 argument_list|,
