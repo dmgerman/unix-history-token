@@ -1,6 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)nvsort.c	1.2 (CWI) 86/11/26"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* vsort.c	1.11	84/05/29  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  *  *	Jaap Akkerhuis  *	de-Berkletized by #ifdef BERK  */
+comment|/*   * from (Berkeley):  *    vsort.c	1.11	84/05/29  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  *  *	Jaap Akkerhuis  *	de-Berkletized by #ifdef BERK  */
 end_comment
 
 begin_include
@@ -2821,6 +2842,11 @@ case|case
 literal|'p'
 case|:
 comment|/* new page */
+name|startspan
+argument_list|(
+name|vpos
+argument_list|)
+expr_stmt|;
 name|t_page
 argument_list|(
 name|ngetnumber
@@ -4233,7 +4259,7 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* flag to catch the 1st time through */
-comment|/* if we're near the edge, we'll go over on */
+comment|/*  	 * if we're near the edge,  or this is the first page 	 * we'll go over on this page.  	 */
 if|if
 condition|(
 name|leftmarg
@@ -4251,7 +4277,6 @@ literal|0
 operator|)
 operator|>
 name|WIDTH
-comment|/* this page, */
 operator|||
 name|maxh
 operator|>
@@ -4262,7 +4287,6 @@ operator|||
 name|first
 condition|)
 block|{
-comment|/* or this is the first page */
 name|oflush
 argument_list|()
 expr_stmt|;
@@ -4355,7 +4379,6 @@ directive|else
 name|oflush
 argument_list|()
 expr_stmt|;
-comment|/*  *  printf("P");  */
 name|printf
 argument_list|(
 literal|"p%d\n"
