@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	8.2 (Berkeley) %G%"
+literal|"@(#)chpass.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<pw_util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pw_copy.h"
 end_include
 
 begin_include
