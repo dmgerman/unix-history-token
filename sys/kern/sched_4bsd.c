@@ -237,10 +237,6 @@ modifier|*
 name|ke_runq
 decl_stmt|;
 comment|/* runq the kse is currently on */
-name|int
-name|ke_pinned
-decl_stmt|;
-comment|/* (k) nested count, pinned to a cpu */
 block|}
 struct|;
 end_struct
@@ -417,7 +413,7 @@ parameter_list|(
 name|ke
 parameter_list|)
 define|\
-value|((ke)->ke_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
+value|((ke)->ke_thread->td_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_decl_stmt
@@ -4457,70 +4453,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function
-name|void
-name|sched_pin
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|curthread
-operator|->
-name|td_sched
-operator|->
-name|ke_pinned
-operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sched_unpin
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|curthread
-operator|->
-name|td_sched
-operator|->
-name|ke_pinned
-operator|--
-expr_stmt|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_function
-name|int
-name|sched_ispinned
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|curthread
-operator|->
-name|td_sched
-operator|->
-name|ke_pinned
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
