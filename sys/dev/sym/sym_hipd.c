@@ -36712,6 +36712,7 @@ name|np
 operator|->
 name|intr
 condition|)
+block|{
 name|bus_teardown_intr
 argument_list|(
 name|np
@@ -36727,6 +36728,13 @@ operator|->
 name|intr
 argument_list|)
 expr_stmt|;
+name|np
+operator|->
+name|intr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|np
@@ -36754,6 +36762,12 @@ comment|/*free_devq*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|np
+operator|->
+name|sim
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -36761,6 +36775,7 @@ name|np
 operator|->
 name|path
 condition|)
+block|{
 name|xpt_free_path
 argument_list|(
 name|np
@@ -36768,6 +36783,13 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+name|np
+operator|->
+name|path
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/*============ OPTIONNAL NVRAM SUPPORT =================*/
 comment|/*  *  Get host setup from NVRAM.  */
