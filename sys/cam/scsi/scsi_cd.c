@@ -11702,7 +11702,7 @@ name|disk
 operator|->
 name|d_sectorsize
 operator|=
-literal|0
+literal|2048
 expr_stmt|;
 name|softc
 operator|->
