@@ -914,6 +914,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|icu_reinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * WARNING: These are internal functions and not to be used by device drivers!  * They are subject to change without notice.   */
 end_comment
