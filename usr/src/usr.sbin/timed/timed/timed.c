@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.5 (Berkeley) %G%"
+literal|"@(#)timed.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,14 @@ name|Mflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|justquit
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|nets
@@ -460,7 +468,9 @@ name|openlog
 argument_list|(
 literal|"timed"
 argument_list|,
-name|LOG_ODELAY
+name|LOG_CONS
+operator||
+name|LOG_PID
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
@@ -812,17 +822,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-name|openlog
-argument_list|(
-literal|"timed"
-argument_list|,
-name|LOG_ODELAY
-operator||
-name|LOG_CONS
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
 name|srvp
 operator|=
 name|getservbyname
@@ -1978,6 +1977,10 @@ argument_list|)
 expr_stmt|;
 name|setstatus
 argument_list|()
+expr_stmt|;
+name|justquit
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
