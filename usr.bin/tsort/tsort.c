@@ -122,17 +122,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASHSIZE
-value|53
-end_define
-
-begin_comment
-comment|/* doesn't need to be big */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NF_MARK
 value|0x1
 end_define
