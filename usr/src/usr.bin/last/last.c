@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.15 (Berkeley) %G%"
+literal|"@(#)last.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +496,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+condition|)
+block|{
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|argv
@@ -537,6 +547,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|wtmp
 argument_list|()
