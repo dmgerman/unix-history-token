@@ -1484,6 +1484,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|vm_page_splay
+parameter_list|(
+name|vm_pindex_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_offset_t
 name|vm_page_startup
 parameter_list|(

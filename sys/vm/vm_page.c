@@ -1424,7 +1424,6 @@ comment|/*  *	vm_page_splay:  *  *	Implements Sleator and Tarjan's top-down spla
 end_comment
 
 begin_function
-specifier|static
 name|vm_page_t
 name|vm_page_splay
 parameter_list|(
