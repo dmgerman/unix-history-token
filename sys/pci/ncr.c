@@ -11630,7 +11630,7 @@ decl_stmt|;
 name|u_int8_t
 name|idmsg
 decl_stmt|;
-name|u_int8_t
+name|int
 name|qidx
 decl_stmt|;
 name|tp
