@@ -7447,8 +7447,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|first_entry
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Find the start of the region, and clip it 	 */
 if|if
 condition|(
@@ -7655,6 +7653,8 @@ name|kmem_object
 operator|)
 condition|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -7669,6 +7669,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -7779,6 +7785,12 @@ name|offidxstart
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		 * Delete the entry (which may delete the object) only after 		 * removing all pmap entries pointing to its pages. 		 * (Otherwise, its page frames may be reallocated, and any 		 * modify bits will be set in the wrong object!) 		 */
 name|vm_map_entry_delete
@@ -7826,8 +7838,6 @@ name|s
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|map
