@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.32	81/04/17	*/
+comment|/*	machdep.c	4.33	81/04/22	*/
 end_comment
 
 begin_include
@@ -1693,9 +1693,7 @@ index|[
 name|PS
 index|]
 operator||=
-name|PSL_CURMOD
-operator||
-name|PSL_PRVMOD
+name|PSL_USERSET
 expr_stmt|;
 name|u
 operator|.
@@ -2791,8 +2789,6 @@ argument_list|)
 name|printf
 argument_list|(
 literal|"%s%s\n"
-argument_list|,
-name|type
 argument_list|,
 name|mc780
 index|[
