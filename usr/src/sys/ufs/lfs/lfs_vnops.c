@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.73 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.74 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1414,6 +1414,9 @@ name|vnode_pager_setsize
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_size
