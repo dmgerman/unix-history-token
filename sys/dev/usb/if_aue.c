@@ -246,6 +246,12 @@ name|USB_PRODUCT_LINKSYS_USB100TX
 block|}
 block|,
 block|{
+name|USB_VENDOR_COREGA
+block|,
+name|USB_PRODUCT_COREGA_FETHER_USB_TX
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
