@@ -1664,8 +1664,8 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|BURN_BRIDGES
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
@@ -1861,11 +1861,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|BURN_BRIDGES
-end_ifdef
+end_ifndef
 
 begin_function
 specifier|static
@@ -1936,16 +1936,6 @@ operator|*
 name|p
 operator|!=
 literal|'\0'
-condition|)
-return|return;
-else|#
-directive|else
-if|if
-condition|(
-operator|*
-name|p
-operator|!=
-literal|'\0'
 operator|&&
 name|strcmp
 argument_list|(
@@ -1964,6 +1954,16 @@ literal|"c"
 argument_list|)
 operator|!=
 literal|0
+condition|)
+return|return;
+else|#
+directive|else
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
 condition|)
 return|return;
 endif|#
@@ -2056,8 +2056,8 @@ name|flags
 operator||=
 name|ATA_D_MEDIA_CHANGED
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|BURN_BRIDGES
 name|cdp
 operator|->
