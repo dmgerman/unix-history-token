@@ -8,7 +8,7 @@ end_if
 begin_warning
 warning|#
 directive|warning
-literal|"this file includes<malloc.h> which is obsoleted, use<stdlib.h> instead"
+literal|"this file includes<malloc.h> which is deprecated, use<stdlib.h> instead"
 end_warning
 
 begin_endif
