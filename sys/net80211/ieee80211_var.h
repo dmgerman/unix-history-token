@@ -79,6 +79,28 @@ define|\
 value|((struct ieee80211_channel *) IEEE80211_CHAN_ANY)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_TXPOWER_MAX
+value|100
+end_define
+
+begin_comment
+comment|/* max power */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_TXPOWER_MIN
+value|0
+end_define
+
+begin_comment
+comment|/* kill radio (if possible) */
+end_comment
+
 begin_enum
 enum|enum
 name|ieee80211_phytype
@@ -187,6 +209,33 @@ name|IEEE80211_M_MONITOR
 init|=
 literal|8
 comment|/* Monitor mode */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * 802.11g protection mode.  */
+end_comment
+
+begin_enum
+enum|enum
+name|ieee80211_protmode
+block|{
+name|IEEE80211_PROT_NONE
+init|=
+literal|0
+block|,
+comment|/* no protection */
+name|IEEE80211_PROT_CTSONLY
+init|=
+literal|1
+block|,
+comment|/* CTS to self */
+name|IEEE80211_PROT_RTSCTS
+init|=
+literal|2
+block|,
+comment|/* RTS-CTS */
 block|}
 enum|;
 end_enum
@@ -698,6 +747,11 @@ name|ieee80211_state
 name|ic_state
 decl_stmt|;
 comment|/* 802.11 state */
+name|enum
+name|ieee80211_protmode
+name|ic_protmode
+decl_stmt|;
+comment|/* 802.11g protection mode */
 name|struct
 name|ifmedia
 name|ic_media
@@ -1111,6 +1165,28 @@ end_define
 
 begin_comment
 comment|/* CONF: short preamble */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_USEPROT
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* STATUS: protection enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_USEBARKER
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* STATUS: use barker preamble*/
 end_comment
 
 begin_comment

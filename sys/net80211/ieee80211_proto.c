@@ -339,6 +339,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* no fixed rate */
+name|ic
+operator|->
+name|ic_protmode
+operator|=
+name|IEEE80211_PROT_CTSONLY
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

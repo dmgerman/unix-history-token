@@ -411,6 +411,12 @@ argument_list|)
 expr_stmt|;
 name|ic
 operator|->
+name|ic_txpower
+operator|=
+name|IEEE80211_TXPOWER_MAX
+expr_stmt|;
+name|ic
+operator|->
 name|ic_bss
 operator|->
 name|ni_chan
