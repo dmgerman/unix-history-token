@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa Utashiro  * of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa Utashiro  * of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -728,23 +728,13 @@ operator|&=
 operator|~
 name|PGOFSET
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"trap: ktlbmod: TLBupdate hi %x lo %x i %x\n"
-argument_list|,
-name|vadr
-argument_list|,
-name|entry
-argument_list|,
 name|MachTLBUpdate
 argument_list|(
 name|vadr
 argument_list|,
 name|entry
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|pa
 operator|=
 name|entry
@@ -934,23 +924,13 @@ operator|<<
 name|VMMACH_TLB_PID_SHIFT
 operator|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"trap: utlbmod: TLBupdate hi %x lo %x i %x\n"
-argument_list|,
-name|vadr
-argument_list|,
-name|entry
-argument_list|,
 name|MachTLBUpdate
 argument_list|(
 name|vadr
 argument_list|,
 name|entry
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|pa
 operator|=
 name|entry
@@ -3361,35 +3341,6 @@ literal|"trap"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"trap: pid %d '%s' sig %d adr %x pc %x ra %x\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|,
-name|i
-argument_list|,
-name|vadr
-argument_list|,
-name|pc
-argument_list|,
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_regs
-index|[
-name|RA
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|trapsignal
 argument_list|(
 name|p
