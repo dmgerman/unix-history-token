@@ -1392,6 +1392,10 @@ name|tcps_listendrop
 decl_stmt|;
 comment|/* listen queue overflows */
 name|u_long
+name|tcps_badrst
+decl_stmt|;
+comment|/* ignored RSTs in the window */
+name|u_long
 name|tcps_sc_added
 decl_stmt|;
 comment|/* entry added to syncache */
