@@ -3402,6 +3402,7 @@ block|{
 specifier|register
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|pp
 decl_stmt|;
@@ -5246,6 +5247,8 @@ expr_stmt|;
 name|longjmp
 argument_list|(
 name|handler
+operator|->
+name|loc
 argument_list|,
 literal|1
 argument_list|)

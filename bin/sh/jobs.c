@@ -3783,11 +3783,6 @@ expr_stmt|;
 return|return
 name|wait3
 argument_list|(
-operator|(
-expr|union
-name|wait
-operator|*
-operator|)
 name|status
 argument_list|,
 name|flags
