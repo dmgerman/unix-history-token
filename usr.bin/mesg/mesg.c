@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mesg.c	8.2 (Berkeley) 1/21/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mesg.c	8.2 (Berkeley) 1/21/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -100,6 +108,19 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -155,9 +176,9 @@ case|case
 literal|'?'
 case|:
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|argc
 operator|-=
@@ -333,7 +354,22 @@ argument_list|)
 expr_stmt|;
 block|}
 name|usage
-label|:
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
 operator|(
 name|void
 operator|)
