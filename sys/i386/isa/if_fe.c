@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.20.2.4 1997/11/29 04:45:41 steve Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.45 1998/12/15 15:51:37 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -4420,13 +4420,42 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
 comment|/* Do we need this?  FIXME.  */
-block|outb(sc->ioaddr[0x18], 0x00); 	DELAY( 200 );
-endif|#
-directive|endif
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR7
+index|]
+argument_list|,
+name|sc
+operator|->
+name|proto_dlcr7
+operator||
+name|FE_D7_RBS_BMPR
+operator||
+name|FE_D7_POWER_UP
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+literal|0x18
+index|]
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 comment|/* Setup IRQ control register on the ASIC.  */
 name|outb
 argument_list|(
