@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rxp.c	5.2 (Berkeley) %G%"
+literal|"@(#)rxp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,7 @@ comment|/* parser error message */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rxp__compile
 name|__P
@@ -196,6 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|rxp__expand
@@ -209,6 +211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rxp__match
 name|__P
