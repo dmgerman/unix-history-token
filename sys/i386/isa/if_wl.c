@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.15 1998/08/24 02:28:15 bde Exp $ */
+comment|/* $Id: if_wl.c,v 1.16 1998/10/22 05:58:39 bde Exp $ */
 end_comment
 
 begin_comment
@@ -973,9 +973,14 @@ end_ifdef
 begin_if
 if|#
 directive|if
-name|__FreeBSD
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|<
-literal|3
+literal|300000
 end_if
 
 begin_function_decl
@@ -2762,9 +2767,14 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 if|if
 condition|(
 name|ifp
@@ -5346,9 +5356,14 @@ name|SIOCDELMULTI
 case|:
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|<
-literal|3
+literal|300000
 if|if
 condition|(
 name|cmd
@@ -9166,9 +9181,14 @@ directive|if
 name|MULTICAST
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -9489,9 +9509,14 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 for|for
 control|(
 name|ifma
@@ -12250,9 +12275,14 @@ directive|ifdef
 name|MULTICAST
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
 operator|<
-literal|3
+literal|300000
 comment|/* not required */
 specifier|static
 name|int
