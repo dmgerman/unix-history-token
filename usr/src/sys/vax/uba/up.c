@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.52	82/05/19	*/
+comment|/*	up.c	4.53	82/05/27	*/
 end_comment
 
 begin_include
@@ -2237,7 +2237,8 @@ operator|->
 name|um_tab
 operator|.
 name|b_active
-operator|++
+operator|=
+literal|2
 expr_stmt|;
 comment|/* should now be 2 */
 name|upaddr
@@ -2413,6 +2414,14 @@ goto|goto
 name|doattn
 goto|;
 block|}
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_device for the drive.  Select the drive. 	 */
 name|dp
 operator|=
@@ -3584,15 +3593,6 @@ operator|-=
 literal|8
 expr_stmt|;
 block|}
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_active
-operator|=
-literal|2
-expr_stmt|;
-comment|/* Either complete or continuing... */
 if|if
 condition|(
 name|up
@@ -3755,6 +3755,15 @@ name|UP_GO
 operator||
 name|UP_RCOM
 expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|2
+expr_stmt|;
+comment|/* continuing transfer ... */
 name|up
 operator|->
 name|upcs1
