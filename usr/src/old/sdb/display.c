@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c 4.1 %G%"
+literal|"@(#)display.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,9 +245,9 @@ name|callpc
 operator|=
 name|get
 argument_list|(
-name|argp
+name|frame
 operator|+
-literal|12
+literal|64
 argument_list|,
 name|DSP
 argument_list|)
