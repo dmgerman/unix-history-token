@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output Dwarf format symbol table information from the GNU C compiler.    Copyright (C) 1992, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com) of Network Computing Devices.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output Dwarf format symbol table information from the GNU C compiler.    Copyright (C) 1992, 1993, 95-98, 1999 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com) of Network Computing Devices.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -212,33 +216,6 @@ end_comment
 begin_comment
 comment|/* Note that the implementation of C++ support herein is (as yet) unfinished.    If you want to try to complete it, more power to you.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-operator|(
-name|NDEBUG
-operator|!=
-literal|1
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* How to start an assembler comment.  */
@@ -798,6 +775,51 @@ begin_define
 define|#
 directive|define
 name|PENDING_TYPES_INCREMENT
+value|64
+end_define
+
+begin_comment
+comment|/* A pointer to the base of a list of incomplete types which might be    completed at some later time.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|tree
+modifier|*
+name|incomplete_types_list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of elements currently allocated for the incomplete_types_list.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|incomplete_types_allocated
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of elements of incomplete_types_list currently in use.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|incomplete_types
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Size (in elements) of increments by which we may expand the incomplete    types list.  Actually, a single hunk of space of this size should    be enough for most typical programs.	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCOMPLETE_TYPES_INCREMENT
 value|64
 end_define
 
@@ -4240,6 +4262,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ASM_OUTPUT_DWARF_STRING is defined to output an ascii string, but to    NOT issue a trailing newline. We define ASM_OUTPUT_DWARF_STRING_NEWLINE    based on whether ASM_OUTPUT_DWARF_STRING is defined or not. If it is    defined, we call it, then issue the line feed. If not, we supply a    default defintion of calling ASM_OUTPUT_ASCII */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4249,7 +4275,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 parameter_list|(
 name|FILE
 parameter_list|,
@@ -4257,6 +4283,24 @@ name|P
 parameter_list|)
 define|\
 value|ASM_OUTPUT_ASCII ((FILE), P, strlen (P)+1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
+parameter_list|(
+name|FILE
+parameter_list|,
+name|P
+parameter_list|)
+define|\
+value|ASM_OUTPUT_DWARF_STRING (FILE,P), ASM_OUTPUT_DWARF_STRING (FILE,"\n")
 end_define
 
 begin_endif
@@ -5579,65 +5623,31 @@ name|tree
 name|decl
 decl_stmt|;
 block|{
-specifier|register
-name|tree
-name|immediate_origin
-init|=
+ifdef|#
+directive|ifdef
+name|ENABLE_CHECKING
+if|if
+condition|(
+name|DECL_FROM_INLINE
+argument_list|(
+name|DECL_ORIGIN
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+condition|)
+comment|/* Since the DECL_ABSTRACT_ORIGIN for a DECL is supposed to be the        most distant ancestor, this should never happen.  */
+name|abort
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
 name|DECL_ABSTRACT_ORIGIN
 argument_list|(
 name|decl
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|immediate_origin
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
 return|;
-else|else
-block|{
-specifier|register
-name|tree
-name|ret_val
-decl_stmt|;
-specifier|register
-name|tree
-name|lookahead
-init|=
-name|immediate_origin
-decl_stmt|;
-do|do
-block|{
-name|ret_val
-operator|=
-name|lookahead
-expr_stmt|;
-name|lookahead
-operator|=
-name|DECL_ABSTRACT_ORIGIN
-argument_list|(
-name|ret_val
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|lookahead
-operator|!=
-name|NULL
-operator|&&
-name|lookahead
-operator|!=
-name|ret_val
-condition|)
-do|;
-return|return
-name|ret_val
-return|;
-block|}
 block|}
 end_function
 
@@ -6256,6 +6266,19 @@ else|:
 name|FT_char
 operator|)
 return|;
+comment|/* In C++, __java_boolean is an INTEGER_TYPE with precision == 1 */
+if|if
+condition|(
+name|TYPE_PRECISION
+argument_list|(
+name|type
+argument_list|)
+operator|==
+literal|1
+condition|)
+return|return
+name|FT_boolean
+return|;
 name|abort
 argument_list|()
 expr_stmt|;
@@ -6345,9 +6368,25 @@ argument_list|)
 operator|==
 name|DOUBLE_TYPE_SIZE
 condition|)
+block|{
+comment|/* On the SH, when compiling with -m3e or -m4-single-only, both 	       float and double are 32 bits.  But since the debugger doesn't 	       know about the subtarget, it always thinks double is 64 bits. 	       So we have to tell the debugger that the type is float to 	       make the output of the 'print' command etc. readable.  */
+if|if
+condition|(
+name|DOUBLE_TYPE_SIZE
+operator|==
+name|FLOAT_TYPE_SIZE
+operator|&&
+name|FLOAT_TYPE_SIZE
+operator|==
+literal|32
+condition|)
+return|return
+name|FT_float
+return|;
 return|return
 name|FT_dbl_prec_float
 return|;
+block|}
 if|if
 condition|(
 name|TYPE_PRECISION
@@ -7544,7 +7583,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -7976,9 +8015,11 @@ name|object_offset_in_align_units
 operator|*
 name|type_align_in_bytes
 expr_stmt|;
-comment|/* The above code assumes that the field does not cross an alignment      boundary.  This can happen if PCC_BITFIELD_TYPE_MATTERS is not defined,      or if the structure is packed.  If this happens, then we get an object      which starts after the bitfield, which means that the bit offset is      negative.  Gdb fails when given negative bit offsets.  We avoid this      by recomputing using the first bit of the bitfield.  This will give      us an object which does not completely contain the bitfield, but it      will be aligned, and it will contain the first bit of the bitfield.  */
+comment|/* The above code assumes that the field does not cross an alignment      boundary.  This can happen if PCC_BITFIELD_TYPE_MATTERS is not defined,      or if the structure is packed.  If this happens, then we get an object      which starts after the bitfield, which means that the bit offset is      negative.  Gdb fails when given negative bit offsets.  We avoid this      by recomputing using the first bit of the bitfield.  This will give      us an object which does not completely contain the bitfield, but it      will be aligned, and it will contain the first bit of the bitfield.       However, only do this for a BYTES_BIG_ENDIAN target.  For a      ! BYTES_BIG_ENDIAN target, bitpos_int + field_size_in_bits is the first      first bit of the bitfield.  If we recompute using bitpos_int + 1 below,      then we end up computing the object byte offset for the wrong word of the      desired bitfield, which in turn causes the field offset to be negative      in bit_offset_attribute.  */
 if|if
 condition|(
+name|BYTES_BIG_ENDIAN
+operator|&&
 name|object_offset_in_bits
 operator|>
 name|bitpos_int
@@ -8445,7 +8486,7 @@ break|break;
 case|case
 name|CONST_STRING
 case|:
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -8680,7 +8721,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 name|leaf_renumber_regs_insn
 argument_list|(
@@ -8802,7 +8843,7 @@ argument_list|,
 name|AT_name
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -10155,7 +10196,7 @@ argument_list|,
 name|AT_comp_dir
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -10304,7 +10345,7 @@ argument_list|,
 name|AT_prototyped
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -10336,7 +10377,7 @@ argument_list|,
 name|AT_producer
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -10374,7 +10415,7 @@ argument_list|,
 name|AT_inline
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -10611,7 +10652,7 @@ argument_list|,
 name|AT_virtual
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -12140,6 +12181,7 @@ argument_list|(
 name|decl
 argument_list|)
 decl_stmt|;
+comment|/* Deleted labels are programmer specified labels which have been 	 eliminated because of various optimisations.  We still emit them 	 here so that it is possible to put breakpoints on them.  */
 if|if
 condition|(
 name|GET_CODE
@@ -12148,6 +12190,24 @@ name|insn
 argument_list|)
 operator|==
 name|CODE_LABEL
+operator|||
+operator|(
+operator|(
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|NOTE
+operator|&&
+name|NOTE_LINE_NUMBER
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|NOTE_INSN_DELETED_LABEL
+operator|)
+operator|)
 condition|)
 block|{
 name|char
@@ -12992,7 +13052,7 @@ argument_list|,
 name|AT_virtual
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -13015,7 +13075,7 @@ argument_list|,
 name|AT_public
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -13039,7 +13099,7 @@ argument_list|,
 name|AT_protected
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -14280,6 +14340,106 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Remember a type in the incomplete_types_list.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|add_incomplete_type
+parameter_list|(
+name|type
+parameter_list|)
+name|tree
+name|type
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|incomplete_types
+operator|==
+name|incomplete_types_allocated
+condition|)
+block|{
+name|incomplete_types_allocated
+operator|+=
+name|INCOMPLETE_TYPES_INCREMENT
+expr_stmt|;
+name|incomplete_types_list
+operator|=
+operator|(
+name|tree
+operator|*
+operator|)
+name|xrealloc
+argument_list|(
+name|incomplete_types_list
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tree
+argument_list|)
+operator|*
+name|incomplete_types_allocated
+argument_list|)
+expr_stmt|;
+block|}
+name|incomplete_types_list
+index|[
+name|incomplete_types
+operator|++
+index|]
+operator|=
+name|type
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Walk through the list of incomplete types again, trying once more to    emit full debugging info for them.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|retry_incomplete_types
+parameter_list|()
+block|{
+specifier|register
+name|tree
+name|type
+decl_stmt|;
+name|finalizing
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|incomplete_types
+condition|)
+block|{
+operator|--
+name|incomplete_types
+expr_stmt|;
+name|type
+operator|=
+name|incomplete_types_list
+index|[
+name|incomplete_types
+index|]
+expr_stmt|;
+name|output_type
+argument_list|(
+name|type
+argument_list|,
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -14776,8 +14936,23 @@ operator|&&
 operator|!
 name|finalizing
 condition|)
+block|{
+comment|/* We can't do this for function-local types, and we don't need                to.  */
+if|if
+condition|(
+name|TREE_PERMANENT
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|add_incomplete_type
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* EARLY EXIT!  Avoid setting TREE_ASM_WRITTEN.  */
+block|}
 comment|/* Prevent infinite recursion in cases where the type of some 	   member of this type is expressed in terms of this type itself.  */
 name|TREE_ASM_WRITTEN
 argument_list|(
@@ -14896,18 +15071,35 @@ condition|;
 name|i
 operator|++
 control|)
-name|output_die
-argument_list|(
-name|output_inheritance_die
-argument_list|,
+block|{
+name|tree
+name|binfo
+init|=
 name|TREE_VEC_ELT
 argument_list|(
 name|bases
 argument_list|,
 name|i
 argument_list|)
+decl_stmt|;
+name|output_type
+argument_list|(
+name|BINFO_TYPE
+argument_list|(
+name|binfo
+argument_list|)
+argument_list|,
+name|containing_scope
 argument_list|)
 expr_stmt|;
+name|output_die
+argument_list|(
+name|output_inheritance_die
+argument_list|,
+name|binfo
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 operator|++
 name|in_class
@@ -16537,7 +16729,7 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -16649,7 +16841,7 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -16834,7 +17026,16 @@ argument_list|(
 name|NULL_TREE
 argument_list|)
 expr_stmt|;
-comment|/* The above call should have totally emptied the pending_types_list.  */
+comment|/* The above call should have totally emptied the pending_types_list      if this is not a nested function or class.  If this is a nested type,      then the remaining pending_types will be emitted when the containing type      is handled.  */
+if|if
+condition|(
+operator|!
+name|DECL_CONTEXT
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|pending_types
@@ -16844,6 +17045,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
 name|ASM_OUTPUT_POP_SECTION
 argument_list|(
 name|asm_out_file
@@ -17286,7 +17488,7 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -17838,7 +18040,7 @@ argument_list|,
 name|type_and_offset
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -18456,7 +18658,7 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -18761,6 +18963,9 @@ index|[
 name|MAX_ARTIFICIAL_LABEL_BYTES
 index|]
 decl_stmt|;
+name|retry_incomplete_types
+argument_list|()
+expr_stmt|;
 name|fputc
 argument_list|(
 literal|'\n'
@@ -19078,7 +19283,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -19113,7 +19318,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_DWARF_STRING
+name|ASM_OUTPUT_DWARF_STRING_NEWLINE
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -19238,6 +19443,16 @@ name|asm_out_file
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* There should not be any pending types left at the end.  We need      this now because it may not have been checked on the last call to      dwarfout_file_scope_decl.  */
+if|if
+condition|(
+name|pending_types
+operator|!=
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
