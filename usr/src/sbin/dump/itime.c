@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.7 (Berkeley) %G%"
+literal|"@(#)itime.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/dir.h>
 end_include
 
 begin_include
@@ -205,19 +199,10 @@ block|{
 if|if
 condition|(
 name|errno
-operator|==
+operator|!=
 name|ENOENT
 condition|)
 block|{
-name|msg
-argument_list|(
-literal|"WARNING: no file `%s'\n"
-argument_list|,
-name|dumpdates
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|quit
 argument_list|(
 literal|"cannot read %s: %s\n"
@@ -231,6 +216,83 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
+comment|/* 		 * Dumpdates does not exist, make an empty one. 		 */
+name|msg
+argument_list|(
+literal|"WARNING: no file `%s', making an empty one\n"
+argument_list|,
+name|dumpdates
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|df
+operator|=
+name|fopen
+argument_list|(
+name|dumpdates
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|quit
+argument_list|(
+literal|"cannot create %s: %s\n"
+argument_list|,
+name|dumpdates
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|df
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|df
+operator|=
+name|fopen
+argument_list|(
+name|dumpdates
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|quit
+argument_list|(
+literal|"cannot read %s even after creating it: %s\n"
+argument_list|,
+name|dumpdates
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 operator|(
 name|void
