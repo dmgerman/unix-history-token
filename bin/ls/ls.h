@@ -142,6 +142,28 @@ begin_comment
 comment|/* add type character for non-regular files */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COLORLS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_color
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add type in color for non-regular files */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct

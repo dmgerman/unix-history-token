@@ -495,7 +495,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+ifdef|#
+directive|ifdef
+name|COLORLS
+literal|"usage: ls [-ACFGHLPRTWacdfgiklnoqrstu1]"
+else|#
+directive|else
 literal|"usage: ls [-ACFHLPRTWacdfgiklnoqrstu1]"
+endif|#
+directive|endif
 literal|" [file ...]\n"
 argument_list|)
 expr_stmt|;
