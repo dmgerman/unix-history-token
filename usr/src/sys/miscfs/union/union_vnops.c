@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -359,33 +359,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_MLOCK
-condition|)
-block|{
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_MWAIT
-expr_stmt|;
-name|sleep
+name|vfs_busy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mp
 argument_list|,
-name|PVFS
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
-expr_stmt|;
+condition|)
 continue|continue;
-block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_ROOT
@@ -395,6 +380,17 @@ argument_list|,
 operator|&
 name|tdvp
 argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
