@@ -451,6 +451,7 @@ literal|'X'
 case|:
 switch|switch
 condition|(
+operator|(
 name|i
 operator|=
 name|gethex
@@ -469,6 +470,9 @@ name|bb
 argument_list|,
 name|sign
 argument_list|)
+operator|)
+operator|&
+name|STRTOG_Retmask
 condition|)
 block|{
 case|case
@@ -487,6 +491,11 @@ name|STRTOG_Zero
 case|:
 break|break;
 default|default:
+if|if
+condition|(
+name|bb
+condition|)
+block|{
 name|copybits
 argument_list|(
 name|bits
@@ -503,6 +512,7 @@ argument_list|(
 name|bb
 argument_list|)
 expr_stmt|;
+block|}
 name|ULtod
 argument_list|(
 operator|(
