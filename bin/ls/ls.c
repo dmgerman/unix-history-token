@@ -949,7 +949,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The -G flag is depricated, please define CLICOLOR instead.\n"
+literal|"The -G flag is deprecated, please define CLICOLOR instead.\n"
 argument_list|)
 expr_stmt|;
 name|setenv
