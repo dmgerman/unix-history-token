@@ -283,9 +283,9 @@ name|CPUARM_SA110
 block|}
 block|,
 block|{
-literal|"PowerPC 603e"
+literal|"MPC824x"
 block|,
-name|CPUPPC_603e
+name|CPUMPC_824x
 block|}
 block|,
 block|{
@@ -452,6 +452,12 @@ block|{
 literal|"Pseudo RAID 3"
 block|,
 name|CT_PSEUDO_RAID3
+block|}
+block|,
+block|{
+literal|"RAID 50"
+block|,
+name|CT_RAID50
 block|}
 block|,
 block|{

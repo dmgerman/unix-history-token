@@ -1039,6 +1039,9 @@ comment|/* volume of mirror */
 name|CT_PSEUDO_RAID3
 block|,
 comment|/* really raid4 */
+name|CT_RAID50
+block|,
+comment|/* stripe of raid5 */
 block|}
 name|AAC_FSAVolType
 typedef|;
@@ -1375,7 +1378,7 @@ name|CPUARM_SA110
 block|,
 name|CPUARM_xxx
 block|,
-name|CPUPPC_603e
+name|CPUMPC_824x
 block|,
 name|CPUPPC_xxx
 block|,
@@ -3206,6 +3209,101 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Register set for adapters based on the Falcon bridge and PPC core  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_DOORBELL0_CLEAR
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_DOORBELL1_CLEAR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_DOORBELL0
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_DOORBELL1
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_MASK0_CLEAR
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_MASK1_CLEAR
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_MASK0
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_MASK1
+value|0x0e
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_MAILBOX
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_FWSTATUS
+value|0x2c
+end_define
+
+begin_comment
+comment|/* Mailbox 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_INTSRC
+value|0x900
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FA_HACK
+parameter_list|(
+name|sc
+parameter_list|)
+value|(void)AAC_GETREG4(sc, AAC_FA_INTSRC)
+end_define
+
+begin_comment
 comment|/*  * Register definitions for the Adaptec AAC-364 'Jalapeno I/II' adapters, based  * on the SA110 'StrongArm'.  */
 end_comment
 
@@ -3263,6 +3361,13 @@ begin_define
 define|#
 directive|define
 name|AAC_SA_DOORBELL1_SET
+value|0x9e
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_SA_DOORBELL1
 value|0x9e
 end_define
 
@@ -3462,6 +3567,17 @@ end_define
 
 begin_comment
 comment|/* adapter requests host printf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_PRINTF_DONE
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* Host completed printf processing */
 end_comment
 
 begin_comment
