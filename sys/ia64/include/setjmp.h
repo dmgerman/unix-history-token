@@ -326,13 +326,6 @@ name|J_SIGSET
 value|0x1e0
 end_define
 
-begin_define
-define|#
-directive|define
-name|J_GP
-value|0x1f0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -343,7 +336,7 @@ comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
-comment|/*  * We have 8 bytes left for future use, but it's a nice round,  * but above all large number. Size is in bytes.  */
+comment|/*  * We only have 16 bytes left for future use, but it's a nice round,  * but above all large number. Size is in bytes.  */
 end_comment
 
 begin_define
