@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.73 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.74 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -421,8 +421,6 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
-name|LOCKLEAF
-operator||
 name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
@@ -454,6 +452,22 @@ operator|=
 name|nd
 operator|.
 name|ni_vp
+expr_stmt|;
+name|LEASE_CHECK
+argument_list|(
+name|vp
+argument_list|,
+name|p
+argument_list|,
+name|cred
+argument_list|,
+name|LEASE_READ
+argument_list|)
+expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|indir
 operator|=

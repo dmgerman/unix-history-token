@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.27 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -921,6 +921,19 @@ operator|=
 name|p
 operator|->
 name|p_acflag
+expr_stmt|;
+name|LEASE_CHECK
+argument_list|(
+name|vp
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|LEASE_WRITE
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
