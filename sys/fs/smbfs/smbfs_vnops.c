@@ -4159,17 +4159,20 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_PHYS
-condition|)
-name|panic
-argument_list|(
+operator|)
+argument_list|,
+operator|(
 literal|"smbfs physio"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
