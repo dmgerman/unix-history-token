@@ -535,6 +535,18 @@ name|mbsave
 parameter_list|)
 function_decl|;
 name|int
+function_decl|(
+modifier|*
+name|amr_poll_command
+function_decl|)
+parameter_list|(
+name|struct
+name|amr_command
+modifier|*
+name|ac
+parameter_list|)
+function_decl|;
+name|int
 name|support_ext_cdb
 decl_stmt|;
 comment|/* greater than 10 byte cdb support */

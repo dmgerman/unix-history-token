@@ -208,7 +208,18 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|, }
+block|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+comment|/* bmaj */
+operator|-
+literal|1
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
