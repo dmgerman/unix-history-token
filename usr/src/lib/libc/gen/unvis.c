@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unvis.c	1.4 (Berkeley) %G%"
+literal|"@(#)unvis.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,29 +152,8 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|unvis
 parameter_list|(
-name|char
-modifier|*
-name|cp
-parameter_list|,
-name|char
-name|c
-parameter_list|,
-name|int
-modifier|*
-name|astate
-parameter_list|,
-name|int
-name|flag
-parameter_list|)
-else|#
-directive|else
-function|unvis
-parameter_list|(
 name|cp
 parameter_list|,
 name|c
@@ -186,17 +165,18 @@ parameter_list|)
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
-modifier|*
+name|c
+decl_stmt|,
+decl|*
 name|astate
 decl_stmt|,
 name|flag
 decl_stmt|;
-endif|#
-directive|endif
+end_function
+
+begin_block
 block|{
 if|if
 condition|(
@@ -789,7 +769,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * strunvis - decode src into dst   *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
