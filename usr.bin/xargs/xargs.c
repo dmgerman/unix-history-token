@@ -1750,17 +1750,16 @@ argument_list|(
 name|tmp2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free the input line buffer, and create a new dummy. 	 */
+comment|/* 	 * Free the input line buffer, if we have one. 	 */
+if|if
+condition|(
+name|inpline
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|inpline
-argument_list|)
-expr_stmt|;
-name|inpline
-operator|=
-name|strdup
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 block|}

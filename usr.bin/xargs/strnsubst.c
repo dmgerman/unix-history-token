@@ -67,7 +67,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Replaces str with a string consisting of str with match replaced with  * replstr as many times as can be done before the constructed string is  * maxsize bytes large.  It does not free the string pointed to by str, it  * is up to the calling program to be sure that the original contents of  * str as well as the new contents are handled in an appropriate manner.  * No value is returned.  */
+comment|/*  * Replaces str with a string consisting of str with match replaced with  * replstr as many times as can be done before the constructed string is  * maxsize bytes large.  It does not free the string pointed to by str, it  * is up to the calling program to be sure that the original contents of  * str as well as the new contents are handled in an appropriate manner.  * If replstr is NULL, then that internally is changed to a nil-string, so  * that we can still pretend to do somewhat meaningful substitution.  * No value is returned.  */
 end_comment
 
 begin_function
@@ -136,6 +136,16 @@ literal|1
 argument_list|,
 literal|"calloc"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|replstr
+operator|==
+name|NULL
+condition|)
+name|replstr
+operator|=
+literal|""
 expr_stmt|;
 if|if
 condition|(
