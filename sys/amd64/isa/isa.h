@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.15 1995/06/14 07:38:31 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.16 1995/09/08 03:14:00 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -248,7 +248,7 @@ comment|/* Game Controller */
 end_comment
 
 begin_comment
-comment|/* 0x202 (?) - 0x26F Open */
+comment|/* 0x202 - 0x22A Open */
 end_comment
 
 begin_define
@@ -260,6 +260,21 @@ end_define
 
 begin_comment
 comment|/* AmiScan addr.grp. 2 */
+end_comment
+
+begin_comment
+comment|/* 0x230 - 0x26A Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC3
+value|0x26B
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 3 */
 end_comment
 
 begin_define
@@ -284,15 +299,8 @@ begin_comment
 comment|/* Parallel Port #2 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IO_ASC3
-value|0x26B
-end_define
-
 begin_comment
-comment|/* AmiScan addr.grp. 3 */
+comment|/* 0x280 - 0x2AA Open */
 end_comment
 
 begin_define
@@ -307,7 +315,7 @@ comment|/* AmiScan addr.grp. 4 */
 end_comment
 
 begin_comment
-comment|/* 0x280 - 0x2DF Open */
+comment|/* 0x2B0 - 0x2DF Open */
 end_comment
 
 begin_define
@@ -332,10 +340,6 @@ begin_comment
 comment|/* COM4 i/o address */
 end_comment
 
-begin_comment
-comment|/* 0x2F0 - 0x2F7 Open */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -345,6 +349,10 @@ end_define
 
 begin_comment
 comment|/* AmiScan addr.grp. 5 */
+end_comment
+
+begin_comment
+comment|/* 0x2F0 - 0x2F7 Open */
 end_comment
 
 begin_define
@@ -358,6 +366,10 @@ begin_comment
 comment|/* COM2 i/o address */
 end_comment
 
+begin_comment
+comment|/* 0x300 - 0x32A Open */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -367,10 +379,6 @@ end_define
 
 begin_comment
 comment|/* AmiScan addr.grp. 6 */
-end_comment
-
-begin_comment
-comment|/* 0x300 - 0x32F Open */
 end_comment
 
 begin_define
@@ -429,7 +437,7 @@ comment|/* bustek 742a default addr. */
 end_comment
 
 begin_comment
-comment|/* 0x340 - 0x36F Open */
+comment|/* 0x340 - 0x36A Open */
 end_comment
 
 begin_define
@@ -477,7 +485,7 @@ comment|/* Parallel Port #1 */
 end_comment
 
 begin_comment
-comment|/* 0x380 - 0x3AF Open */
+comment|/* 0x380 - 0x3AA Open */
 end_comment
 
 begin_define
@@ -607,7 +615,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IO_ISABEGIN */
+comment|/* !IO_ISABEGIN */
 end_comment
 
 begin_comment
@@ -629,12 +637,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|IO_COMSIZE
-value|8
+name|IO_ASCSIZE
+value|5
 end_define
 
 begin_comment
-comment|/* 8250, 16x50 com controllers */
+comment|/* AmiScan GI1904-based hand scanner */
 end_comment
 
 begin_define
@@ -646,6 +654,17 @@ end_define
 
 begin_comment
 comment|/* CGA controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_COMSIZE
+value|8
+end_define
+
+begin_comment
+comment|/* 8250, 16x50 com controllers */
 end_comment
 
 begin_define
@@ -673,6 +692,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_EISASIZE
+value|256
+end_define
+
+begin_comment
+comment|/* EISA controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_FDCSIZE
 value|8
 end_define
@@ -684,23 +714,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_WDCSIZE
-value|8
-end_define
-
-begin_comment
-comment|/* WD compatible disk controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_GAMSIZE
 value|16
 end_define
 
 begin_comment
 comment|/* AT compatible game controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_GSCSIZE
+value|8
+end_define
+
+begin_comment
+comment|/* GeniScan GS-4500G hand scanner */
 end_comment
 
 begin_define
@@ -750,6 +780,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_NPXSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* 80387/80487 NPX registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_PMPSIZE
+value|2
+end_define
+
+begin_comment
+comment|/* 82347 power management peripheral */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_RTCSIZE
 value|16
 end_define
@@ -772,17 +824,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_NPXSIZE
-value|16
-end_define
-
-begin_comment
-comment|/* 80387/80487 NPX registers */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_VGASIZE
 value|16
 end_define
@@ -794,23 +835,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_EISASIZE
-value|256
+name|IO_WDCSIZE
+value|8
 end_define
 
 begin_comment
-comment|/* EISA controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_PMPSIZE
-value|2
-end_define
-
-begin_comment
-comment|/* 82347 power management peripheral */
+comment|/* WD compatible disk controllers */
 end_comment
 
 begin_endif
@@ -819,7 +849,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IO_ISASIZES */
+comment|/* !IO_ISASIZES */
 end_comment
 
 begin_comment
@@ -867,7 +897,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IOM_BEGIN */
+comment|/* !IOM_BEGIN */
 end_comment
 
 begin_comment
@@ -915,7 +945,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RAM_BEGIN */
+comment|/* !RAM_BEGIN */
 end_comment
 
 begin_comment
@@ -978,7 +1008,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAQ_RAMRELOC */
+comment|/* !COMPAQ_RAMRELOC */
 end_comment
 
 begin_endif
