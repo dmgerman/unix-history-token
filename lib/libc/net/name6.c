@@ -7915,8 +7915,6 @@ init|=
 block|{
 literal|"ip6.arpa"
 block|,
-literal|"ip6.int"
-block|,
 name|NULL
 block|}
 decl_stmt|;
