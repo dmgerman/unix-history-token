@@ -344,6 +344,91 @@ name|master_key_version
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|gets
+parameter_list|(
+name|buf
+parameter_list|)
+value|_gets(buf, sizeof(buf))
+end_define
+
+begin_comment
+comment|/* hack */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|_gets
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|rv
+decl_stmt|,
+modifier|*
+name|fgets
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|rv
+operator|=
+name|fgets
+argument_list|(
+name|p
+argument_list|,
+name|n
+argument_list|,
+name|stdin
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+if|if
+condition|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|p
+argument_list|,
+literal|'\n'
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|main
 parameter_list|(
@@ -877,7 +962,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\n\07\07<Not found>, Create [y] ? "
+literal|"%s.%s not found, Create [y] ? "
+argument_list|,
+name|input_name
+argument_list|,
+name|input_instance
 argument_list|)
 expr_stmt|;
 name|gets
@@ -1091,7 +1180,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\nPrincipal: %s, Instance: %s, kdc_key_ver: %d"
+literal|"Principal: %s, Instance: %s, kdc_key_ver: %d\n"
 argument_list|,
 name|principal_data
 index|[
@@ -1163,7 +1252,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nChange password [n] ? "
+literal|"Change password [n] ? "
 argument_list|)
 expr_stmt|;
 name|gets
@@ -1208,7 +1297,7 @@ argument_list|,
 sizeof|sizeof
 name|pw_str
 argument_list|,
-literal|"\nNew Password: "
+literal|"New Password: "
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1222,7 +1311,7 @@ argument_list|,
 sizeof|sizeof
 name|pw_str
 argument_list|,
-literal|"\nNew Password: "
+literal|"New Password: "
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1231,6 +1320,13 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|pw_str
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
 operator|!
 name|strcmp
 argument_list|(
@@ -1242,7 +1338,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nRandom password [y] ? "
+literal|"Random password [y] ? "
 argument_list|)
 expr_stmt|;
 name|gets
