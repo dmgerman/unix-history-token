@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.4 1998/12/28 04:56:24 peter Exp $ */
+comment|/* $Id: vinumhdr.h,v 1.11 1998/12/30 05:11:15 grog Exp grog $ */
 end_comment
 
 begin_ifdef
@@ -219,6 +219,12 @@ directive|include
 file|<sys/dkbad.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -264,63 +270,6 @@ include|#
 directive|include
 file|<vm/vm.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USES_VM
-end_ifdef
-
-begin_comment
-comment|/* XXX Do we need this? */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_prot.h>
-end_include
-
-begin_comment
-comment|/* #include<vm/vm_page.h> */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_comment
-comment|/* #include<machine/pmap.h> */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USES_VM */
-end_comment
 
 begin_include
 include|#
