@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tput.c	5.4 (Berkeley) %G%"
+literal|"@(#)tput.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +256,10 @@ control|(
 name|cptr
 operator|=
 name|buf
+operator|,
+name|exitval
+operator|=
+literal|0
 init|;
 name|p
 operator|=
@@ -266,10 +270,6 @@ operator|++
 name|argv
 control|)
 block|{
-name|exitval
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 operator|*
