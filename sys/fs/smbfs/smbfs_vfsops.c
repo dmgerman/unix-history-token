@@ -739,7 +739,7 @@ literal|"soft"
 block|,
 literal|"intr"
 block|,
-literal|"strongs"
+literal|"strong"
 block|,
 literal|"have_nls"
 block|,
