@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.12 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3738,6 +3738,8 @@ argument_list|,
 argument|s; 	register TWORD t; 	int o;
 comment|/* note: size of an individual initializer is assumed to fit into an int */
 argument|if( iclass<
+literal|0
+argument||| pstk ==
 literal|0
 argument|) goto leave; 	if( iclass == EXTERN || iclass == UNAME ){ 		uerror(
 literal|"cannot initialize extern or union"
