@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.51	82/12/17	*/
+comment|/*	rk.c	4.52	83/02/10	*/
 end_comment
 
 begin_include
@@ -436,12 +436,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOBADSECT
-end_ifndef
-
 begin_decl_stmt
 name|struct
 name|dkbad
@@ -461,11 +455,6 @@ name|NRK
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -1458,9 +1447,6 @@ literal|0
 condition|)
 block|{
 comment|/* SHOULD WARN SYSTEM THAT THIS HAPPENED */
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 name|struct
 name|rkst
 modifier|*
@@ -1487,8 +1473,6 @@ operator|->
 name|ui_unit
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|rkaddr
 operator|->
 name|rkcs1
@@ -1510,9 +1494,6 @@ name|ui_flags
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 name|bbp
 operator|->
 name|b_flags
@@ -1594,8 +1575,6 @@ name|bp
 operator|=
 name|bbp
 expr_stmt|;
-endif|#
-directive|endif
 name|rkwait
 argument_list|(
 name|rkaddr
@@ -2483,9 +2462,6 @@ operator|->
 name|ui_dk
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|bp
@@ -2504,8 +2480,6 @@ name|CONT
 argument_list|)
 condition|)
 return|return;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rkaddr
@@ -2663,9 +2637,6 @@ operator|&
 name|RKER_BSE
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|rkecc
@@ -2677,8 +2648,6 @@ argument_list|)
 condition|)
 return|return;
 else|else
-endif|#
-directive|endif
 goto|goto
 name|hard
 goto|;
@@ -3514,9 +3483,6 @@ name|tn
 decl_stmt|,
 name|sn
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|flag
@@ -3530,8 +3496,6 @@ operator|->
 name|b_error
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|npf
 operator|=
 name|btop
@@ -3846,9 +3810,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 case|case
 name|BSE
 case|:
@@ -4083,8 +4044,6 @@ operator|)
 return|;
 block|}
 break|break;
-endif|#
-directive|endif
 block|}
 name|rk
 operator|->
