@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.5 %G%"
+literal|"@(#)ERROR.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,46 +660,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Value of %D out of set bounds\n"
-argument_list|,
-name|errdata
-operator|.
-name|longdat
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|ENARGS
-case|:
-if|if
-condition|(
-name|errdata
-operator|.
-name|longdat
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"There were %D too few arguments to formal routine\n"
-argument_list|,
-operator|-
-name|errdata
-operator|.
-name|longdat
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"There were %D too many arguments to formal routine\n"
 argument_list|,
 name|errdata
 operator|.
