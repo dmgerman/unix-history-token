@@ -85,6 +85,10 @@ directive|include
 file|<string.h>
 end_include
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -140,7 +144,7 @@ literal|0
 index|]
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
@@ -240,11 +244,9 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
