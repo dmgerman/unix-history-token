@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.11 1996/09/03 10:23:04 asami Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.11.2.1 1997/06/09 04:15:09 brian Exp $ */
 end_comment
 
 begin_comment
@@ -2921,8 +2921,6 @@ while|while
 condition|(
 name|len
 operator|--
-operator|>
-literal|0
 condition|)
 name|fcs
 operator|=
@@ -3196,6 +3194,31 @@ name|spltty
 argument_list|()
 expr_stmt|;
 comment|/* in case.. do not want netisrs to preempt us */
+name|m
+operator|=
+name|sc
+operator|->
+name|sc_outm
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|&&
+name|m
+operator|->
+name|m_len
+operator|<
+literal|0
+condition|)
+name|MFREE
+argument_list|(
+name|m
+argument_list|,
+name|sc
+operator|->
+name|sc_outm
+argument_list|)
+expr_stmt|;
 name|idle
 operator|=
 literal|0
