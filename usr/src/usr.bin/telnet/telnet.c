@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.48 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3286,6 +3286,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|char
+name|tmp
+index|[
+literal|256
+index|]
+decl_stmt|;
 name|int
 name|dokrb4
 init|=
@@ -3541,11 +3547,6 @@ literal|6
 operator|+
 literal|1
 operator|+
-name|strlen
-argument_list|(
-name|remotename
-argument_list|)
-operator|+
 literal|2
 operator|+
 name|space
@@ -3642,7 +3643,7 @@ argument_list|(
 operator|&
 name|netoring
 argument_list|,
-literal|"%c%c%c%c%c%c%c%s"
+literal|"%c%c%c%c%c%c"
 argument_list|,
 name|IAC
 argument_list|,
@@ -3655,20 +3656,13 @@ argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS
 argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS_V4
-argument_list|,
-name|strlen
-argument_list|(
-name|remotename
-argument_list|)
-argument_list|,
-name|remotename
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%c%c%c%c%s%c%c"
+literal|"%c%c%c%c%c%c"
 argument_list|,
 name|TELOPT_AUTHENTICATION
 argument_list|,
@@ -3677,8 +3671,6 @@ argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS
 argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS_V4
-argument_list|,
-name|remotename
 argument_list|,
 name|IAC
 argument_list|,
@@ -3692,7 +3684,7 @@ argument_list|(
 operator|&
 name|netoring
 argument_list|,
-literal|"%c%c%c%c%c%c%s"
+literal|"%c%c%c%c%c"
 argument_list|,
 name|IAC
 argument_list|,
@@ -3703,28 +3695,19 @@ argument_list|,
 name|TELQUAL_IS
 argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS_V4
-argument_list|,
-name|strlen
-argument_list|(
-name|remotename
-argument_list|)
-argument_list|,
-name|remotename
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%c%c%c%s%c%c"
+literal|"%c%c%c%c%c"
 argument_list|,
 name|TELOPT_AUTHENTICATION
 argument_list|,
 name|TELQUAL_IS
 argument_list|,
 name|TELQUAL_AUTHTYPE_KERBEROS_V4
-argument_list|,
-name|remotename
 argument_list|,
 name|IAC
 argument_list|,
@@ -3740,11 +3723,6 @@ argument_list|,
 name|tmp
 argument_list|,
 literal|4
-operator|+
-name|strlen
-argument_list|(
-name|remotename
-argument_list|)
 operator|+
 literal|2
 operator|-
