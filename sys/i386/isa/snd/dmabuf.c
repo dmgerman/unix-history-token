@@ -381,6 +381,20 @@ name|rl
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DEB
+argument_list|(
+argument|printf(
+literal|"wrintr: dl %d -> %d\n"
+argument|, b->dl, l);
+argument_list|)
+if|if
+condition|(
+name|b
+operator|->
+name|dl
+operator|!=
+literal|0
+condition|)
 name|d
 operator|->
 name|callback
@@ -740,10 +754,6 @@ condition|(
 name|ret
 operator|==
 name|EINTR
-operator|||
-name|ret
-operator|==
-name|ERESTART
 condition|)
 name|d
 operator|->
@@ -761,6 +771,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 break|break ;
 continue|continue;
@@ -1643,6 +1657,12 @@ operator|&=
 name|DMA_ALIGN_MASK
 expr_stmt|;
 comment|/* realign sizes */
+name|DEB
+argument_list|(
+argument|printf(
+literal|"rdintr: dl %d -> %d\n"
+argument|, b->dl, l);
+argument_list|)
 if|if
 condition|(
 name|l
@@ -1653,12 +1673,14 @@ name|dl
 condition|)
 block|{
 comment|/* for any reason, size has changed. Stop and restart */
+if|if
+condition|(
 name|b
 operator|->
 name|dl
-operator|=
-name|l
-expr_stmt|;
+operator|>
+literal|0
+condition|)
 name|d
 operator|->
 name|callback
@@ -1669,6 +1691,12 @@ name|SND_CB_RD
 operator||
 name|SND_CB_STOP
 argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|dl
+operator|=
+name|l
 expr_stmt|;
 name|d
 operator|->
@@ -2012,10 +2040,6 @@ condition|(
 name|ret
 operator|==
 name|EINTR
-operator|||
-name|ret
-operator|==
-name|ERESTART
 condition|)
 name|d
 operator|->
@@ -2033,6 +2057,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 break|break ;
 continue|continue;
@@ -2266,10 +2294,11 @@ block|{
 name|d
 operator|->
 name|flags
-operator||=
+operator|&=
 operator|~
 name|SND_F_ABORTING
 expr_stmt|;
+comment|/* XXX */
 name|splx
 argument_list|(
 name|s
@@ -3059,7 +3088,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08lx\n"
+literal|"timeout flushing dbuf_out, chan %d cnt 0x%x flags 0x%08lx\n"
+argument_list|,
+name|b
+operator|->
+name|chan
 argument_list|,
 name|b
 operator|->

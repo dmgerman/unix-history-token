@@ -179,7 +179,7 @@ comment|/* for DELAY */
 end_comment
 
 begin_comment
-comment|/* To minimize changes with the code in 2.2.X */
+comment|/*  * the following assumes that FreeBSD 3.X uses poll(2) instead of select(2).  * This change dates to late 1997.  */
 end_comment
 
 begin_include
@@ -498,7 +498,7 @@ comment|/* primary I/O address for the board */
 name|int
 name|alt_base
 decl_stmt|;
-comment|/* some codecs are accessible as SB+WSS... */
+comment|/* some codecs are accessible as SB+MSS... */
 name|int
 name|conf_base
 decl_stmt|;
