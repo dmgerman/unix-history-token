@@ -237,26 +237,15 @@ directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
 name|LINUX_IFNAMSIZ
-operator|!=
+operator|==
 name|IFNAMSIZ
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"LINUX_IFNAMSIZ != IFNAMSIZ"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
