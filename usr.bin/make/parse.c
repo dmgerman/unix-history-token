@@ -7232,6 +7232,11 @@ operator|*
 name|line
 operator|==
 literal|'#'
+operator|||
+operator|*
+name|line
+operator|==
+literal|'\0'
 condition|)
 block|{
 comment|/* If we're this far, the line must be a comment. */
