@@ -1639,7 +1639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Database access routines.  *  * - yp_get_record(): retrieve an arbitrary key/data pair given one key  *                 to match against.  *  * - yp_first_record(): retrieve first key/data base in a database.  *   * - yp_next_record(): retrieve key/data pair that sequentially follows  *                   the supplied key value in the database.  */
+comment|/*  * Database access routines.  *  * - yp_get_record(): retrieve an arbitrary key/data pair given one key  *                 to match against.  *  * - yp_first_record(): retrieve first key/data base in a database.  *  * - yp_next_record(): retrieve key/data pair that sequentially follows  *                   the supplied key value in the database.  */
 end_comment
 
 begin_ifdef

@@ -246,7 +246,7 @@ operator|(
 name|YPERR_RPC
 operator|)
 return|;
-comment|/* 	 * Assemble netname of server.  	 * NOTE: It's difficult to discern from the documentation, but 	 * when you make a Secure RPC call, the netname you pass should 	 * be the netname of the guy on the other side, not your own 	 * netname. This is how the client side knows what public key 	 * to use for the initial exchange. Passing your own netname 	 * only works if the server on the other side is running under 	 * your UID. 	 */
+comment|/* 	 * Assemble netname of server. 	 * NOTE: It's difficult to discern from the documentation, but 	 * when you make a Secure RPC call, the netname you pass should 	 * be the netname of the guy on the other side, not your own 	 * netname. This is how the client side knows what public key 	 * to use for the initial exchange. Passing your own netname 	 * only works if the server on the other side is running under 	 * your UID. 	 */
 if|if
 condition|(
 operator|!

@@ -71,23 +71,20 @@ directive|include
 file|"ypxfr_extern.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_ypresp_all_seq
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
