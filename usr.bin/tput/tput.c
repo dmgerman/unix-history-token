@@ -290,7 +290,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|"tgetent failure"
 argument_list|)
@@ -938,7 +938,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
