@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$NetBSD: netif.h,v 1.4 1995/09/14 23:45:30 pk Exp $	*/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -35,6 +39,7 @@ begin_struct
 struct|struct
 name|netif_driver
 block|{
+specifier|const
 name|char
 modifier|*
 name|netif_bname
