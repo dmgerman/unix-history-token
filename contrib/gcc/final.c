@@ -1169,13 +1169,6 @@ argument_list|,
 name|align
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|asm_out_file
-argument_list|,
-literal|".stabs \"bbset\", 25, 0, 0, LPBX0\n"
-argument_list|)
-expr_stmt|;
 name|ASM_OUTPUT_INTERNAL_LABEL
 argument_list|(
 name|asm_out_file
@@ -1193,6 +1186,13 @@ argument_list|,
 name|UNITS_PER_WORD
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|asm_out_file
+argument_list|,
+literal|".stabs \"bbset\", 25, 0, 0, LPBX0\n"
 argument_list|)
 expr_stmt|;
 comment|/* address of filename */
