@@ -282,6 +282,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Supported traffic type  */
+end_comment
+
+begin_struct
+struct|struct
+name|traffics
+block|{
+specifier|const
+name|char
+modifier|*
+name|t_name
+decl_stmt|;
+comment|/* Traffic name: CBR, VBR, UBR, ... */
+name|uint8_t
+name|t_type
+decl_stmt|;
+comment|/* HARP code T_ATM_XXX */
+name|int
+name|t_argc
+decl_stmt|;
+comment|/* Number of args */
+specifier|const
+name|char
+modifier|*
+name|help
+decl_stmt|;
+comment|/* User help string */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * External variables  */
 end_comment
 
