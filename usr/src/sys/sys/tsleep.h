@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tsleep.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tsleep.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -18,690 +18,827 @@ end_define
 begin_define
 define|#
 directive|define
-name|SLP_WAIT
-value|0
+name|tsleep
+value|ttsleep
 end_define
+
+begin_comment
+comment|/* tmp tsleep, does longjmp */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SLP_PAUSE
-value|1
+name|SLP_WAIT
+value|"child"
 end_define
+
+begin_comment
+comment|/* "wait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_LOGREAD
-value|2
+value|"syslog"
 end_define
+
+begin_comment
+comment|/* "log_read" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SELECT
-value|3
+value|"select"
 end_define
+
+begin_comment
+comment|/* "select" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTYOUT
-value|4
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "ttyout" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTY_NOTFG
-value|5
+value|"tty"
 end_define
+
+begin_comment
+comment|/* "tty_notfg" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTY_CARR
-value|6
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "tty_carrier" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTYIN_NOTFG
-value|7
+value|"ttyin"
 end_define
+
+begin_comment
+comment|/* "ttyin_notfg" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTY_READ
-value|8
+value|"ttyin"
 end_define
+
+begin_comment
+comment|/* "ttread" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTY_TSTP
-value|9
+value|"ttyin"
 end_define
+
+begin_comment
+comment|/* "tty_tstp" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTYOUT_NOTFG
-value|10
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "ttyout_notfg" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TTYOUT_CLIST
-value|11
+value|"ttybuf"
 end_define
+
+begin_comment
+comment|/* "tty_clists" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PTS_OPEN
-value|12
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "tty_ptsopen" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PTC_WRITE
-value|13
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "tty_ptcwrite" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SO_LINGER
-value|14
+value|"netcls"
 end_define
+
+begin_comment
+comment|/* "so_linger" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SO_SBWAIT
-value|15
+value|"netio"
 end_define
+
+begin_comment
+comment|/* "so_sbwait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SO_ACCEPT
-value|16
+value|"netcon"
 end_define
+
+begin_comment
+comment|/* "so_accept" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SO_ACCEPT2
-value|17
+value|"netcon"
 end_define
+
+begin_comment
+comment|/* "so_accept2" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_EXLCK
-value|18
+value|"flock"
 end_define
+
+begin_comment
+comment|/* "exlock" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SHLCK
-value|19
+value|"flock"
 end_define
+
+begin_comment
+comment|/* "shlock" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_ISO_CONSOUT
-value|20
+value|"netcon"
 end_define
+
+begin_comment
+comment|/* "iso_cons" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_ISO_CONSCONN
-value|21
+value|"netcon"
 end_define
+
+begin_comment
+comment|/* "iso_consconn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_NFS_IOD
-value|22
+value|"nfsio"
 end_define
+
+begin_comment
+comment|/* "nfs_iod" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_SO_SBLOCK
-value|23
+value|"netio"
 end_define
+
+begin_comment
+comment|/* "so_sblock" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TU_OPN
-value|24
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "tu58_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MFS
-value|25
+value|"mfsio"
 end_define
+
+begin_comment
+comment|/* "mfs_idle" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLP_FIFO_OPEN
+value|"devopn"
+end_define
+
+begin_comment
+comment|/* "fifo_open" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_HP_OPEN
-value|26
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "hp_open" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_AD_GETW
-value|27
+value|"devi"
 end_define
+
+begin_comment
+comment|/* "ad_getw" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PCAT_OUT
-value|28
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "pcat_out" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PCAT_CLIST
-value|29
+value|"ttybuf"
 end_define
+
+begin_comment
+comment|/* "pcat_clist" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DH_OPN
-value|30
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "dh_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DHU_OPN
-value|31
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "dhu_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DMFL_ASLP
-value|32
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "dmfl_aslp" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DMFL_ERROR
-value|33
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "dmfl_err" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DMX_OPN
-value|34
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "dmx_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DN_REG
-value|35
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "dn_reg" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DN_PAUSE
-value|36
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "dn_pause" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DZ_OPN
-value|37
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "dz_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_IK_BUSY
-value|38
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "ik_busy" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_LP_OUT
-value|39
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "lp_out" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_LP_CLIST
-value|40
+value|"ttybuf"
 end_define
+
+begin_comment
+comment|/* "lp_clist" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_NP_SLP
-value|41
+value|"devin"
 end_define
+
+begin_comment
+comment|/* "np_slp" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PS_REFRESH
-value|42
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "ps_refresh" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_PS_MAP
-value|43
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "ps_map" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_TM_OPN
-value|44
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "tm_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_UDA_OPN
-value|45
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "uda_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_UT_OPN
-value|46
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "ut_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_UU_OPN
-value|47
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "uu_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_WAIT
-value|48
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_wait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_USRWAIT
-value|49
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_usrwait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_START
-value|50
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_start" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_ABORT
-value|51
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_abort" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_PWRUP
-value|52
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_pwrup" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_IOBCTL
-value|53
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_iobctl" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_FIB
-value|54
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_fib" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_FIBRET
-value|55
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_fibret" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_INITF
-value|56
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_initf" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VS_INITDEV
-value|57
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "vs_initdev" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DR_WAIT
-value|58
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "dr_wait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DR_RESET
-value|59
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "dr_reset" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_DR_ACTV
-value|60
+value|"devout"
 end_define
+
+begin_comment
+comment|/* "dr_actv" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_HD_OPN
-value|61
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "hd_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_1OPN
-value|62
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "mp_1opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_POPN
-value|63
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "mp_popn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_OPN
-value|64
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "mp_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_1CLS
-value|65
+value|"ttycls"
 end_define
+
+begin_comment
+comment|/* "mp_1cls" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_CLS
-value|66
+value|"ttycls"
 end_define
+
+begin_comment
+comment|/* "mp_cls" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_BRK
-value|67
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "mp_brk" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_STDL
-value|68
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "mp_stdl" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_MP_DLWAIT
-value|69
+value|"ttyout"
 end_define
+
+begin_comment
+comment|/* "mp_dlwait" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VD_OPN
-value|70
+value|"devopn"
 end_define
+
+begin_comment
+comment|/* "vd_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VX_OPN
-value|71
+value|"ttyopn"
 end_define
+
+begin_comment
+comment|/* "vx_opn" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VX_CLS
-value|72
+value|"ttycls"
 end_define
+
+begin_comment
+comment|/* "vx_cls" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SLP_VX_PARAM
-value|73
+value|"ttyout"
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SLP_MSGLIST
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|slp_mesg
-index|[]
-init|=
-block|{
-literal|"wait"
-block|,
-literal|"pause"
-block|,
-literal|"log_read"
-block|,
-literal|"select"
-block|,
-literal|"ttyout"
-block|,
-literal|"tty_notfg"
-block|,
-literal|"tty_carrier"
-block|,
-literal|"ttyin_notfg"
-block|,
-literal|"ttread"
-block|,
-literal|"tty_tstp"
-block|,
-literal|"ttyout_notfg"
-block|,
-literal|"tty_clists"
-block|,
-literal|"tty_ptsopen"
-block|,
-literal|"tty_ptcwrite"
-block|,
-comment|/* 13 */
-literal|"so_linger"
-block|,
-literal|"so_sbwait"
-block|,
-literal|"so_accept"
-block|,
-literal|"so_accept2"
-block|,
-literal|"exlock"
-block|,
-literal|"shlock"
-block|,
-literal|"iso_cons"
-block|,
-literal|"iso_consconn"
-block|,
-literal|"nfs_iod"
-block|,
-literal|"so_sblock"
-block|,
-literal|"tu58_opn"
-block|,
-literal|"mfs_idle"
-block|,
-literal|"hp_open"
-block|,
-literal|"ad_getw"
-block|,
-literal|"pcat_out"
-block|,
-literal|"pcat_clist"
-block|,
-literal|"dh_opn"
-block|,
-literal|"dhu_opn"
-block|,
-literal|"dmfl_aslp"
-block|,
-literal|"dmfl_err"
-block|,
-literal|"dmx_opn"
-block|,
-literal|"dn_reg"
-block|,
-literal|"dn_pause"
-block|,
-literal|"dz_opn"
-block|,
-literal|"ik_busy"
-block|,
-literal|"lp_out"
-block|,
-literal|"lp_clist"
-block|,
-literal|"np_slp"
-block|,
-literal|"ps_refresh"
-block|,
-literal|"ps_map"
-block|,
-literal|"tm_opn"
-block|,
-literal|"uda_opn"
-block|,
-literal|"ut_opn"
-block|,
-literal|"uu_opn"
-block|,
-literal|"vs_wait"
-block|,
-literal|"vs_usrwait"
-block|,
-literal|"vs_start"
-block|,
-literal|"vs_abort"
-block|,
-literal|"vs_pwrup"
-block|,
-literal|"vs_iobctl"
-block|,
-literal|"vs_fib"
-block|,
-literal|"vs_fibret"
-block|,
-literal|"vs_initf"
-block|,
-literal|"vs_initdev"
-block|,
-literal|"dr_wait"
-block|,
-literal|"dr_reset"
-block|,
-literal|"dr_actv"
-block|,
-literal|"hd_opn"
-block|,
-literal|"mp_1opn"
-block|,
-literal|"mp_popn"
-block|,
-literal|"mp_opn"
-block|,
-literal|"mp_1cls"
-block|,
-literal|"mp_cls"
-block|,
-literal|"mp_brk"
-block|,
-literal|"mp_stdl"
-block|,
-literal|"mp_dlwait"
-block|,
-literal|"vd_opn"
-block|,
-literal|"vx_opn"
-block|,
-literal|"vx_cls"
-block|,
-literal|"vx_param"
-block|, }
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* "vx_param" */
+end_comment
 
 begin_endif
 endif|#
