@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.61 1997/12/08 23:00:24 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.62 1997/12/12 21:45:23 tegge Exp $  */
 end_comment
 
 begin_include
@@ -7670,6 +7670,10 @@ condition|)
 comment|/* wait for each to clear its bit */
 comment|/* spin */
 empty_stmt|;
+name|stopped_cpus
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -8741,17 +8745,30 @@ name|smp_started
 operator|||
 operator|!
 name|invltlb_ok
+operator|||
+name|cold
+operator|||
+name|panicstr
 condition|)
 return|return;
 comment|/* Step 1: Probe state   (user, cpu, interrupt, spinlock, idle ) */
 name|map
 operator|=
 name|other_cpus
+operator|&
+operator|~
+name|stopped_cpus
 expr_stmt|;
 name|checkstate_probed_cpus
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|!=
+literal|0
+condition|)
 name|selected_apic_ipi
 argument_list|(
 name|map
@@ -8790,6 +8807,7 @@ argument_list|,
 name|checkstate_probed_cpus
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/* 	 * Step 2: walk through other processors processes, update ticks and  	 * profiling info. 	 */
@@ -8832,13 +8850,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"state for cpu %d not available"
-argument_list|,
-name|cpuid
-argument_list|)
-expr_stmt|;
+continue|continue;
 name|forwarded_statclock
 argument_list|(
 name|id
@@ -8938,17 +8950,30 @@ name|smp_started
 operator|||
 operator|!
 name|invltlb_ok
+operator|||
+name|cold
+operator|||
+name|panicstr
 condition|)
 return|return;
 comment|/* Step 1: Probe state   (user, cpu, interrupt, spinlock, idle) */
 name|map
 operator|=
 name|other_cpus
+operator|&
+operator|~
+name|stopped_cpus
 expr_stmt|;
 name|checkstate_probed_cpus
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|!=
+literal|0
+condition|)
 name|selected_apic_ipi
 argument_list|(
 name|map
@@ -8987,6 +9012,7 @@ argument_list|,
 name|checkstate_probed_cpus
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/* 	 * Step 2: walk through other processors processes, update virtual  	 * timer and profiling timer. If stathz == 0, also update ticks and  	 * profiling info. 	 */
@@ -9029,13 +9055,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"state for cpu %d not available"
-argument_list|,
-name|cpuid
-argument_list|)
-expr_stmt|;
+continue|continue;
 name|p
 operator|=
 name|checkstate_curproc
