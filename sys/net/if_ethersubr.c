@@ -3182,7 +3182,7 @@ name|ETHERTYPE_IP
 case|:
 if|if
 condition|(
-name|ipflow_fastforward
+name|ip_fastforward
 argument_list|(
 name|m
 argument_list|)

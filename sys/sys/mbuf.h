@@ -2334,6 +2334,17 @@ begin_comment
 comment|/* MAC label */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPFASTFWD_OURS
+value|20
+end_define
+
+begin_comment
+comment|/* IP fastforward dropback */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines */
 end_comment

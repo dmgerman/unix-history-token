@@ -7020,7 +7020,7 @@ name|PPP_HDRLEN
 expr_stmt|;
 if|if
 condition|(
-name|ipflow_fastforward
+name|ip_fastforward
 argument_list|(
 name|m
 argument_list|)
