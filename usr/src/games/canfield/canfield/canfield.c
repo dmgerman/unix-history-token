@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.5 %G%"
+literal|"@(#)canfield.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1732,11 +1732,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-end_comment
-
-begin_comment
-comment|/* clean up the board for another game */
+comment|/*  * clean up the board for another game  */
 end_comment
 
 begin_macro
@@ -1998,7 +1994,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to create a deck of cards */
+comment|/*  * procedure to create a deck of cards  */
 end_comment
 
 begin_macro
@@ -2129,7 +2125,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to shuffle the deck */
+comment|/*  * procedure to shuffle the deck  */
 end_comment
 
 begin_macro
@@ -2253,7 +2249,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to remove the card from the board */
+comment|/*  * procedure to remove the card from the board  */
 end_comment
 
 begin_macro
@@ -2283,7 +2279,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to print the cards on the board */
+comment|/*  * procedure to print the cards on the board  */
 end_comment
 
 begin_macro
@@ -2431,6 +2427,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * procedure to print out a card  */
+end_comment
 
 begin_macro
 name|printcard
@@ -3178,7 +3178,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to print the beginning cards and to start each game */
+comment|/*  * procedure to print the beginning cards and to start each game  */
 end_comment
 
 begin_macro
@@ -3239,6 +3239,12 @@ expr_stmt|;
 name|this
 operator|.
 name|wins
+operator|=
+literal|0
+expr_stmt|;
+name|this
+operator|.
+name|thinktime
 operator|=
 literal|0
 expr_stmt|;
@@ -3423,7 +3429,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to clear the message printed from an error */
+comment|/*  * procedure to clear the message printed from an error  */
 end_comment
 
 begin_macro
@@ -3480,7 +3486,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to print an error message if the move is not listed */
+comment|/*  * procedure to print an error message if the move is not listed  */
 end_comment
 
 begin_macro
@@ -3510,7 +3516,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to print an error message if the move is not possible */
+comment|/*  * procedure to print an error message if the move is not possible  */
 end_comment
 
 begin_macro
@@ -3540,7 +3546,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* function to see if the source has cards in it */
+comment|/*  * function to see if the source has cards in it  */
 end_comment
 
 begin_function
@@ -3594,7 +3600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* function to see if the rank of one card is less than another */
+comment|/*  * function to see if the rank of one card is less than another  */
 end_comment
 
 begin_function
@@ -3672,7 +3678,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* function to check the cardcolor for moving to a tableau */
+comment|/*  * function to check the cardcolor for moving to a tableau  */
 end_comment
 
 begin_function
@@ -3720,7 +3726,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* function to see if the card can move to the tableau */
+comment|/*  * function to see if the card can move to the tableau  */
 end_comment
 
 begin_function
@@ -5452,6 +5458,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * print the tableau  */
+end_comment
+
 begin_macro
 name|tabprint
 argument_list|(
@@ -5599,7 +5609,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to move from the tableau to the tableau */
+comment|/*  * procedure to move from the tableau to the tableau  */
 end_comment
 
 begin_macro
@@ -5735,7 +5745,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* functions to see if the card can go onto the foundation */
+comment|/*  * functions to see if the card can go onto the foundation  */
 end_comment
 
 begin_function
@@ -5812,6 +5822,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * function to determine if two cards are the same suit  */
+end_comment
+
 begin_macro
 name|samesuit
 argument_list|(
@@ -5859,7 +5873,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to move a card to the correct foundation pile */
+comment|/*  * procedure to move a card to the correct foundation pile  */
 end_comment
 
 begin_macro
@@ -6110,7 +6124,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to get a command */
+comment|/*  * procedure to get a command  */
 end_comment
 
 begin_macro
@@ -6421,7 +6435,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Suspend the game (shell escape if no process control on system) */
+comment|/*  * Suspend the game (shell escape if no process control on system)  */
 end_comment
 
 begin_macro
@@ -6505,7 +6519,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to evaluate and make the specific moves */
+comment|/*  * procedure to evaluate and make the specific moves  */
 end_comment
 
 begin_macro
@@ -7385,7 +7399,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* procedure to initialize the game */
+comment|/*  * procedure to initialize the game  */
 end_comment
 
 begin_macro
@@ -7858,6 +7872,10 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 end_block
+
+begin_comment
+comment|/*  * Can you tell that this used to be a Pascal program?  */
+end_comment
 
 begin_function
 name|main
