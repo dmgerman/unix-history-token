@@ -325,7 +325,7 @@ operator|(
 name|Path
 operator|*
 operator|)
-name|NULL
+name|NILLNODE
 condition|)
 name|err
 argument_list|(
