@@ -3072,13 +3072,13 @@ argument_list|)
 expr_stmt|;
 name|tu
 operator|=
+operator|(
+name|u_int64_t
+operator|)
 name|tv
 operator|.
 name|tv_sec
 operator|*
-operator|(
-name|u_int64_t
-operator|)
 literal|1000000
 operator|+
 name|tv
