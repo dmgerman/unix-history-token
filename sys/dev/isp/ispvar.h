@@ -51,6 +51,12 @@ directive|include
 file|<dev/ic/isp_target.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ic/isp_tpublic.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -85,6 +91,12 @@ directive|include
 file|<dev/isp/isp_target.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_tpublic.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -117,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"isp_target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"isp_tpublic.h"
 end_include
 
 begin_endif
