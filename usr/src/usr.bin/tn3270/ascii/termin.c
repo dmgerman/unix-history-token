@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/astosc.h"
+file|"../api/astosc.h"
 end_include
 
 begin_include
