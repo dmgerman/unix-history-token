@@ -622,6 +622,15 @@ name|found
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 for|for
 control|(
 name|c
