@@ -413,6 +413,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
+name|int
+name|no_mounts
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|fstab
+modifier|*
+name|mounts
+index|[
+name|MAX_NO_MOUNTS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|unsigned
 name|char

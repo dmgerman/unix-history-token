@@ -254,17 +254,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|fstab
-modifier|*
-name|mounts
-index|[
-name|MAX_NO_MOUNTS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|no_devices
 decl_stmt|;
@@ -273,12 +262,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|no_disks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|no_mounts
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,6 +1324,9 @@ index|]
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
