@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.6 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1040,6 +1040,31 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|interval
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|reps
+condition|)
+name|reps
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|reps
+condition|)
+name|interval
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1584,6 +1609,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reps
+operator|>=
+literal|0
+operator|&&
 operator|--
 name|reps
 operator|<=
