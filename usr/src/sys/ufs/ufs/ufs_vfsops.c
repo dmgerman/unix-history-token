@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vfsops.c	6.2	84/01/03	*/
+comment|/*	ufs_vfsops.c	6.3	84/02/07	*/
 end_comment
 
 begin_include
@@ -1552,11 +1552,18 @@ operator|)
 operator|!=
 name|IFBLK
 condition|)
+block|{
+name|iput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTBLK
 operator|)
 return|;
+block|}
 name|dev
 operator|=
 operator|(
@@ -1565,6 +1572,11 @@ operator|)
 name|ip
 operator|->
 name|i_rdev
+expr_stmt|;
+name|iput
+argument_list|(
+name|ip
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1580,11 +1592,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|iput
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 operator|*
 name|pdev
 operator|=
