@@ -25,6 +25,10 @@ directive|ifdef
 name|LAPTOP
 end_ifdef
 
+begin_comment
+comment|/*  * Machine-dependent options  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -56,27 +60,6 @@ begin_comment
 comment|/* COMPAT_APM10 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIO_IRQ_BUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SIO_IRQ_BUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIO_IRQ_BUG */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -96,46 +79,8 @@ begin_comment
 comment|/* Digital Hinote Ultra */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FORCE_APM10
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FORCE_APM10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* FORCE_APM10 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIO_IRQ_BUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SIO_IRQ_BUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIO_IRQ_BUG */
+comment|/* (update BIOS to 1.41 or later) */
 end_comment
 
 begin_endif
@@ -160,13 +105,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIO_IRQ_BUG2
+name|SIO_IRQ_BUG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIO_IRQ_BUG2
+name|SIO_IRQ_BUG
 end_define
 
 begin_endif
@@ -175,7 +120,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SIO_IRQ_BUG2 */
+comment|/* SIO_IRQ_BUG */
 end_comment
 
 begin_ifndef
@@ -242,13 +187,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIO_IRQ_BUG2
+name|SIO_IRQ_BUG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIO_IRQ_BUG2
+name|SIO_IRQ_BUG
 end_define
 
 begin_endif
@@ -257,7 +202,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SIO_IRQ_BUG2 */
+comment|/* SIO_IRQ_BUG */
 end_comment
 
 begin_ifndef
@@ -526,13 +471,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIO_IRQ_BUG
+name|PCIC_NOCLRREGS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIO_IRQ_BUG
+name|PCIC_NOCLRREGS
 end_define
 
 begin_endif
@@ -541,7 +486,47 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SIO_IRQ_BUG */
+comment|/* PCIC_NOCLRREGS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APM_SUSPEND_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|APM_SUSPEND_DELAY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APM_SUSPEND_DELAY */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONTURA */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ELITE
+end_ifdef
+
+begin_comment
+comment|/* COMPAQ ELITE Series */
 end_comment
 
 begin_ifndef
@@ -592,7 +577,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CONTURA */
+comment|/* ELITE */
 end_comment
 
 begin_endif
