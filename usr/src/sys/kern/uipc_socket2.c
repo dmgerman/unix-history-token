@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)uipc_socket2.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)uipc_socket2.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1191,7 +1191,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_act field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This commits  * some of the available buffer space in the system buffer pool for the  * socket.  The space should be released by calling sbrelease() when the  * socket is destroyed.  */
+comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_act field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space  * should be released by calling sbrelease() when the socket is destroyed.  */
 end_comment
 
 begin_expr_stmt
@@ -1212,7 +1212,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|u_long
 name|sndcc
 decl_stmt|,
 name|rcvcc
@@ -1301,17 +1301,20 @@ name|sb
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_long
+name|cc
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
 name|cc
 operator|>
 operator|(
-name|unsigned
+name|u_long
 operator|)
 name|SB_MAX
 operator|*
