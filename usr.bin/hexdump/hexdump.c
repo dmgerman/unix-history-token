@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: hexdump.c,v 1.2 1997/07/10 06:48:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -167,6 +173,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: odsyntax.c,v 1.5 1997/07/10 06:48:21 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,20 +480,19 @@ specifier|extern
 name|off_t
 name|skip
 decl_stmt|;
-specifier|register
+name|unsigned
 name|char
+modifier|*
+name|p
+decl_stmt|,
 modifier|*
 name|num
 decl_stmt|,
 modifier|*
-name|p
+name|end
 decl_stmt|;
 name|int
 name|base
-decl_stmt|;
-name|char
-modifier|*
-name|end
 decl_stmt|;
 comment|/* 	 * The offset syntax of od(1) was genuinely bizarre.  First, if 	 * it started with a plus it had to be an offset.  Otherwise, if 	 * there were at least two arguments, a number or lower-case 'x' 	 * followed by a number makes it an offset.  By default it was 	 * octal; if it started with 'x' or '0x' it was hex.  If it ended 	 * in a '.', it was decimal.  If a 'b' or 'B' was appended, it 	 * multiplied the number by 512 or 1024 byte units.  There was 	 * no way to assign a block count to a hex offset. 	 * 	 * We assume it's a file if the offset is bad. 	 */
 name|p
@@ -704,6 +703,11 @@ name|strtol
 argument_list|(
 name|num
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|end
 argument_list|,
