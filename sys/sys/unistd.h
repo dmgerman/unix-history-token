@@ -599,22 +599,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ??? #define	_POSIX_FSYNC			1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|_POSIX_FSYNC
+value|200112L
+end_define
 
 begin_define
 define|#
 directive|define
 name|_POSIX_MAPPED_FILES
-value|1
+value|200112L
 end_define
 
 begin_define
 define|#
 directive|define
 name|_POSIX_SHARED_MEMORY_OBJECTS
-value|1
+value|200112L
 end_define
 
 begin_comment
