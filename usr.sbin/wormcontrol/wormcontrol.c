@@ -797,11 +797,6 @@ literal|"blank"
 argument_list|)
 condition|)
 block|{
-define|#
-directive|define
-name|CDRIOCBLANK
-value|_IO('c',100)
-comment|/* Blank a CDRW disc */
 if|if
 condition|(
 name|ioctl
@@ -839,10 +834,6 @@ block|{
 name|int
 name|addr
 decl_stmt|;
-define|#
-directive|define
-name|CDRIOCNEXTWRITEABLEADDR
-value|_IOR('c',101,int)
 if|if
 condition|(
 name|ioctl
