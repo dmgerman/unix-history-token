@@ -705,8 +705,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"got %d bytes for %s._CRS\n"
+literal|"got %ld bytes for %s._CRS\n"
 operator|,
+operator|(
+name|long
+operator|)
 name|crsbuf
 operator|.
 name|Length
@@ -723,8 +726,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"got %d bytes for %s._PRS\n"
+literal|"got %ld bytes for %s._PRS\n"
 operator|,
+operator|(
+name|long
+operator|)
 name|prsbuf
 operator|.
 name|Length
