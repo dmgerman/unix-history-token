@@ -2951,8 +2951,7 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|PRISON_CHECK
+name|p_trespass
 argument_list|(
 name|curproc
 argument_list|,

@@ -766,6 +766,14 @@ condition|(
 name|p
 operator|->
 name|p_args
+operator|&&
+operator|!
+name|p_trespass
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|)
 condition|)
 block|{
 name|bp

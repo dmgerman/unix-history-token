@@ -1112,12 +1112,6 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
-operator|&&
-operator|!
-name|procfs_kmemaccess
-argument_list|(
-name|curp
-argument_list|)
 condition|)
 block|{
 return|return

@@ -742,8 +742,7 @@ name|a_p
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|CHECKIO
+name|p_trespass
 argument_list|(
 name|p1
 argument_list|,
@@ -1020,8 +1019,7 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|CHECKIO
+name|p_trespass
 argument_list|(
 name|p
 argument_list|,

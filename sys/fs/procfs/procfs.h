@@ -176,23 +176,6 @@ name|KMEM_GROUP
 value|2
 end_define
 
-begin_comment
-comment|/*  * Check to see whether access to target process is allowed  * Evaluates to 1 if access is allowed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECKIO
-parameter_list|(
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|((p1) == (p2) || \        (PRISON_CHECK(p1, p2)&& \        ((((p1)->p_ucred->cr_uid == (p2)->p_cred->p_ruid)&& \        ((p1)->p_cred->p_ruid == (p2)->p_cred->p_ruid)&& \        ((p1)->p_cred->p_svuid == (p2)->p_cred->p_ruid)&& \        ((p2)->p_flag& P_SUGID) == 0) || \ 	(suser_xxx(0, (p1), PRISON_ROOT) == 0))))
-end_define
-
 begin_define
 define|#
 directive|define

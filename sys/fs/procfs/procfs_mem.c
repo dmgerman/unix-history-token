@@ -792,8 +792,7 @@ return|;
 comment|/*  	 * XXX  	 * We need to check for KMEM_GROUP because ps is sgid kmem;  	 * not allowing it here causes ps to not work properly.  Arguably,  	 * this is a bug with what ps does.  We only need to do this  	 * for Pmem nodes, and only if it's reading.  This is still not  	 * good, as it may still be possible to grab illicit data if  	 * a process somehow gets to be KMEM_GROUP.  Note that this also  	 * means that KMEM_GROUP can't change without editing procfs.h!  	 * All in all, quite yucky.  	 */
 if|if
 condition|(
-operator|!
-name|CHECKIO
+name|p_trespass
 argument_list|(
 name|curp
 argument_list|,

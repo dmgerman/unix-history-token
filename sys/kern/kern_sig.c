@@ -370,14 +370,12 @@ name|CANSIGNAL
 parameter_list|(
 name|p
 parameter_list|,
-name|pc
-parameter_list|,
 name|q
 parameter_list|,
 name|sig
 parameter_list|)
 define|\
-value|(PRISON_CHECK(p, q)&& ((pc)->pc_ucred->cr_uid == 0 || \ 	    (pc)->p_ruid == (q)->p_cred->p_ruid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (pc)->p_ruid == (q)->p_ucred->cr_uid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_ucred->cr_uid || \ 	    ((sig) == SIGCONT&& (q)->p_session == (p)->p_session)))
+value|(!p_trespass(p, q) || \ 	((sig) == SIGCONT&& (q)->p_session == (p)->p_session))
 end_define
 
 begin_comment
@@ -4036,16 +4034,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
-name|struct
-name|pcred
-modifier|*
-name|pc
-init|=
-name|cp
-operator|->
-name|p_cred
-decl_stmt|;
 name|struct
 name|pgrp
 modifier|*
@@ -4092,8 +4080,6 @@ operator|!
 name|CANSIGNAL
 argument_list|(
 name|cp
-argument_list|,
-name|pc
 argument_list|,
 name|p
 argument_list|,
@@ -4186,8 +4172,6 @@ name|CANSIGNAL
 argument_list|(
 name|cp
 argument_list|,
-name|pc
-argument_list|,
 name|p
 argument_list|,
 name|sig
@@ -4278,16 +4262,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
-name|struct
-name|pcred
-modifier|*
-name|pc
-init|=
-name|cp
-operator|->
-name|p_cred
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -4340,8 +4314,6 @@ operator|!
 name|CANSIGNAL
 argument_list|(
 name|cp
-argument_list|,
-name|pc
 argument_list|,
 name|p
 argument_list|,
