@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dir.c,v 1.10 1998/06/15 07:07:10 charnier Exp $"
+literal|"$Id: dir.c,v 1.11 1998/06/28 19:23:02 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,18 +2320,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|parentdir
-operator|!=
-literal|0
-condition|)
-name|lncntp
-index|[
-name|parentdir
-index|]
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|lfdir
