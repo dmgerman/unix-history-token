@@ -1413,6 +1413,17 @@ block|,
 literal|"usage: pw usernext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
+literal|"\t-q             quiet operation\n"
+block|,
+literal|"usage pw: lock [switches]\n"
+literal|"\t-V etcdir      alternate /etc locations\n"
+literal|"\t-C config      configuration file\n"
+literal|"\t-q             quiet operation\n"
+block|,
+literal|"usage pw: unlock [switches]\n"
+literal|"\t-V etcdir      alternate /etc locations\n"
+literal|"\t-C config      configuration file\n"
+literal|"\t-q             quiet operation\n"
 block|}
 block|,
 block|{
@@ -1457,6 +1468,7 @@ block|,
 literal|"usage: pw groupnext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
+literal|"\t-q             quiet operation\n"
 block|}
 block|}
 decl_stmt|;
