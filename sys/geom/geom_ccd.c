@@ -4677,13 +4677,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * use b_bufsize to determine how big the original request was rather 	 * then b_bcount, because b_bcount may have been truncated for EOF. 	 * 	 * XXX We check for an error, but we do not test the resid for an 	 * aligned EOF condition.  This may result in character& block 	 * device access not recognizing EOF properly when read or written  	 * sequentially, but will not effect filesystems. 	 */
 name|count
 operator|=
 name|cbp
 operator|->
 name|cb_buf
 operator|.
-name|b_bcount
+name|b_bufsize
 expr_stmt|;
 name|putccdbuf
 argument_list|(
