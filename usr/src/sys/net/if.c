@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.7	82/02/03	*/
+comment|/*	if.c	4.8	82/02/03	*/
 end_comment
 
 begin_include
@@ -148,18 +148,40 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|ifnet
+modifier|*
+modifier|*
+name|p
+init|=
+operator|&
+name|ifnet
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|IF_ATTACH
 argument_list|)
 expr_stmt|;
-name|ifp
+while|while
+condition|(
+operator|*
+name|p
+condition|)
+name|p
+operator|=
+operator|&
+operator|(
+operator|(
+operator|*
+name|p
+operator|)
 operator|->
 name|if_next
-operator|=
-name|ifnet
+operator|)
 expr_stmt|;
-name|ifnet
+operator|*
+name|p
 operator|=
 name|ifp
 expr_stmt|;
