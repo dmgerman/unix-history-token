@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.1 1995/06/25 17:32:40 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.2 1995/11/22 07:43:50 bde Exp $  */
 end_comment
 
 begin_include
@@ -245,25 +245,11 @@ name|NULL
 decl_stmt|,
 name|bsd_sa
 decl_stmt|;
-struct|struct
+name|struct
 name|sigaction_args
-block|{
-name|int
-name|sig
-decl_stmt|;
-name|struct
-name|sigaction
-modifier|*
-name|nsa
-decl_stmt|;
-name|struct
-name|sigaction
-modifier|*
-name|osa
-decl_stmt|;
-block|}
+comment|/* { 	int signum; 	struct sigaction *nsa; 	struct sigaction *osa;     } */
 name|sa
-struct|;
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -443,7 +429,7 @@ return|;
 block|}
 name|sa
 operator|.
-name|sig
+name|signum
 operator|=
 name|linux_to_bsd_signal
 index|[
@@ -1084,7 +1070,9 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-name|sigset_t
+name|struct
+name|sigsuspend_args
+comment|/* { 	int mask;     } */
 name|tmp
 decl_stmt|;
 ifdef|#
@@ -1106,6 +1094,8 @@ expr_stmt|;
 endif|#
 directive|endif
 name|tmp
+operator|.
+name|mask
 operator|=
 name|linux_to_bsd_sigmask
 argument_list|(
@@ -1161,17 +1151,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|signum
-decl_stmt|;
-block|}
+name|struct
+name|kill_args
+comment|/* { 	int pid; 	int signum;     } */
 name|tmp
-struct|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG

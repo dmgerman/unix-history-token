@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_file.c,v 1.3 1995/10/10 23:13:27 swallace Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_file.c,v 1.4 1995/11/22 07:43:45 bde Exp $  */
 end_comment
 
 begin_include
@@ -133,21 +133,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
-block|{
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-block|}
+name|struct
+name|open_args
+comment|/* { 	char *path; 	int flags; 	int mode;     } */
 name|bsd_open_args
-struct|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -247,21 +237,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
-block|{
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-block|}
+name|struct
+name|open_args
+comment|/* { 	char *path; 	int flags; 	int mode;     } */
 name|bsd_open_args
-struct|;
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -839,21 +819,11 @@ name|error
 decl_stmt|,
 name|result
 decl_stmt|;
-struct|struct
+name|struct
 name|fcntl_args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-block|}
+comment|/* { 	int fd; 	int cmd; 	int arg;     } */
 name|fcntl_args
-struct|;
+decl_stmt|;
 name|struct
 name|linux_flock
 name|linux_flock
@@ -1463,26 +1433,10 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
+name|struct
 name|lseek_args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|int
-name|pad
-decl_stmt|;
-name|off_t
-name|off
-decl_stmt|;
-name|int
-name|whence
-decl_stmt|;
-block|}
+comment|/* { 	int fd; 	int pad; 	off_t offset; 	int whence;     } */
 name|tmp_args
-struct|;
-name|off_t
-name|tmp_retval
 decl_stmt|;
 name|int
 name|error
@@ -1515,7 +1469,7 @@ endif|#
 directive|endif
 name|tmp_args
 operator|.
-name|fdes
+name|fd
 operator|=
 name|args
 operator|->
@@ -1523,7 +1477,7 @@ name|fdes
 expr_stmt|;
 name|tmp_args
 operator|.
-name|off
+name|offset
 operator|=
 operator|(
 name|off_t
@@ -1549,17 +1503,8 @@ argument_list|,
 operator|&
 name|tmp_args
 argument_list|,
-operator|&
-name|tmp_retval
-argument_list|)
-expr_stmt|;
-operator|*
 name|retval
-operator|=
-operator|(
-name|int
-operator|)
-name|tmp_retval
+argument_list|)
 expr_stmt|;
 return|return
 name|error
