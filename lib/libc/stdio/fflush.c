@@ -133,6 +133,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * There is disagreement about the correct behaviour of fflush() 	 * when passed a file which is not open for reading.  According to 	 * the ISO C standard, the behaviour is undefined. 	 * Under linux, such an fflush returns success and has no effect; 	 * under Windows, such an fflush is documented as behaving instead 	 * as fpurge(). 	 * Given that applications may be written with the expectation of 	 * either of these two behaviours, the only safe (non-astonishing) 	 * option is to return EBADF and ask that applications be fixed. 	 */
 if|if
 condition|(
 operator|(
