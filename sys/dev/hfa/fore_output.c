@@ -517,7 +517,9 @@ name|xdp
 operator|->
 name|xd_rate
 operator|=
-name|FORE_DEF_RATE
+name|fvp
+operator|->
+name|rate
 expr_stmt|;
 comment|/* 	 * Everything is ready to go, so officially claim the host queue 	 * entry and setup the CP-resident queue entry.  The CP will grab 	 * the PDU when the descriptor pointer is set. 	 */
 name|fup
