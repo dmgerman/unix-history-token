@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	7.1 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	7.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -1085,6 +1085,8 @@ operator|)
 name|btoc
 argument_list|(
 name|IMPMTU
+operator|+
+literal|2
 argument_list|)
 argument_list|)
 operator|==
@@ -1135,6 +1137,8 @@ argument_list|,
 name|HDHSUPR
 argument_list|,
 name|IMPMTU
+operator|+
+literal|2
 argument_list|,
 name|HDHRDB
 argument_list|)
@@ -1147,6 +1151,8 @@ argument_list|,
 name|HDHDATR
 argument_list|,
 name|IMPMTU
+operator|+
+literal|2
 argument_list|,
 name|HDHRDB
 operator|+
@@ -2270,6 +2276,8 @@ argument_list|,
 name|lcn
 argument_list|,
 name|IMPMTU
+operator|+
+literal|2
 argument_list|,
 name|HDHRDB
 operator|+
@@ -2530,6 +2538,8 @@ argument_list|,
 name|HDHSUPR
 argument_list|,
 name|IMPMTU
+operator|+
+literal|2
 argument_list|,
 name|HDHRDB
 operator|+
