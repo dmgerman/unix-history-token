@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.6 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1100,6 +1100,12 @@ name|SNONUNIQ
 expr_stmt|;
 comment|/* old entry is nonunique */
 comment|/* determine if name has occurred in this structure/union */
+if|if
+condition|(
+name|paramno
+operator|>
+literal|0
+condition|)
 for|for
 control|(
 name|memp
