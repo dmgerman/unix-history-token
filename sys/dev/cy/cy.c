@@ -12568,7 +12568,7 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|criticale_t
+name|critical_t
 name|savecrit
 decl_stmt|;
 name|register_t
