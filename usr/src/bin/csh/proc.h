@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -259,13 +259,6 @@ end_define
 begin_comment
 comment|/* notify as soon as practical */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PNULL
-value|(struct process *)0
-end_define
 
 begin_define
 define|#

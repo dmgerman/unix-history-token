@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.20 (Berkeley) %G%"
+literal|"@(#)proc.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,7 +413,7 @@ name|p_next
 init|;
 name|pp
 operator|!=
-name|PNULL
+name|NULL
 condition|;
 name|pp
 operator|=
@@ -1010,7 +1010,7 @@ name|p_next
 init|;
 name|pp
 operator|!=
-name|PNULL
+name|NULL
 condition|;
 name|pp
 operator|=
@@ -1137,7 +1137,7 @@ name|p_next
 init|;
 name|pp
 operator|!=
-name|PNULL
+name|NULL
 condition|;
 name|pp
 operator|=
@@ -1860,7 +1860,7 @@ name|p_next
 init|;
 name|pp
 operator|!=
-name|PNULL
+name|NULL
 condition|;
 name|pp
 operator|=
@@ -2077,7 +2077,7 @@ if|if
 condition|(
 name|pprevious
 operator|!=
-name|PNULL
+name|NULL
 condition|)
 block|{
 name|pcurrent
@@ -2481,7 +2481,7 @@ if|if
 condition|(
 name|pcurrent
 operator|==
-name|PNULL
+name|NULL
 condition|)
 name|pcurrent
 operator|=
@@ -2492,7 +2492,7 @@ if|if
 condition|(
 name|pprevious
 operator|==
-name|PNULL
+name|NULL
 condition|)
 name|pprevious
 operator|=
@@ -2905,7 +2905,7 @@ name|pcurrjob
 expr_stmt|;
 name|pcurrjob
 operator|=
-name|PNULL
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -2925,7 +2925,7 @@ name|pholdjob
 expr_stmt|;
 name|pholdjob
 operator|=
-name|PNULL
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -5337,7 +5337,7 @@ if|if
 condition|(
 name|pcurrent
 operator|==
-name|PNULL
+name|NULL
 condition|)
 name|stderror
 argument_list|(
@@ -5373,7 +5373,7 @@ if|if
 condition|(
 name|pprevious
 operator|==
-name|PNULL
+name|NULL
 condition|)
 name|stderror
 argument_list|(
@@ -5459,7 +5459,7 @@ expr_stmt|;
 block|}
 name|np
 operator|=
-name|PNULL
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -5645,7 +5645,7 @@ name|process
 modifier|*
 name|xp
 init|=
-name|PNULL
+name|NULL
 decl_stmt|;
 for|for
 control|(
@@ -5703,7 +5703,7 @@ if|if
 condition|(
 name|xp
 operator|==
-name|PNULL
+name|NULL
 condition|)
 name|xp
 operator|=
@@ -5920,7 +5920,7 @@ argument_list|()
 expr_stmt|;
 name|pcurrjob
 operator|=
-name|PNULL
+name|NULL
 expr_stmt|;
 name|child
 operator|++
