@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -158,7 +158,6 @@ name|DB
 operator|*
 name|dbp
 operator|,
-specifier|const
 name|DBT
 operator|*
 operator|,
@@ -182,6 +181,11 @@ name|BTREE
 operator|*
 operator|,
 name|EPG
+operator|*
+operator|,
+name|recno_t
+operator|,
+name|DBT
 operator|*
 operator|,
 name|DBT
