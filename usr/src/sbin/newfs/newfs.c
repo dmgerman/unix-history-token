@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.11 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1539,6 +1539,7 @@ name|fatal
 argument_list|(
 literal|"-%c: unknown flag"
 argument_list|,
+operator|*
 name|cp
 argument_list|)
 expr_stmt|;
