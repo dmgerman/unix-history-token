@@ -1620,6 +1620,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VCANRECYCLE
+parameter_list|(
+name|vp
+parameter_list|)
+define|\
+value|(!((vp)->v_iflag& (VI_DOOMED|VI_DOINGINACT|VI_XLOCK))&& \ 	 ((vp)->v_iflag& VI_FREE)&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
+end_define
+
+begin_comment
+comment|/* Requires interlock. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VSHOULDFREE
 parameter_list|(
 name|vp
