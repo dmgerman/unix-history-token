@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|UINT_MAX
-value|__UNIT_MAX
+value|__UINT_MAX
 end_define
 
 begin_comment
