@@ -2792,8 +2792,8 @@ operator|=
 literal|0
 init|;
 name|map
-operator|<
-name|PSR_FFB0_INT_MAP
+operator|<=
+name|PSR_SERIAL_INT_MAP
 condition|;
 name|map
 operator|+=
@@ -3322,8 +3322,8 @@ operator|=
 name|PSR_SCSI_INT_CLR
 init|;
 name|intrmap
-operator|<
-name|PSR_FFB0_INT_MAP
+operator|<=
+name|PSR_SERIAL_INT_MAP
 condition|;
 name|intrmap
 operator|+=
