@@ -58,6 +58,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -145,13 +151,6 @@ name|int
 name|ncols
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DECIMAL
-value|'.'
-end_define
 
 begin_define
 define|#
@@ -1072,6 +1071,27 @@ name|u_char
 modifier|*
 name|nweights
 decl_stmt|;
+specifier|static
+name|char
+name|DECIMAL
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|DECIMAL
+condition|)
+name|DECIMAL
+operator|=
+name|localeconv
+argument_list|()
+operator|->
+name|decimal_point
+index|[
+literal|0
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|Rflag
