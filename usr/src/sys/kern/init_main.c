@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -886,10 +886,6 @@ name|fork
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|rval
@@ -908,26 +904,6 @@ literal|1
 index|]
 condition|)
 block|{
-specifier|static
-name|char
-name|initflags
-index|[]
-init|=
-literal|"-sf"
-decl_stmt|;
-name|char
-modifier|*
-name|ip
-init|=
-name|initflags
-operator|+
-literal|1
-decl_stmt|;
-name|vm_offset_t
-name|addr
-init|=
-literal|0
-decl_stmt|;
 specifier|extern
 name|int
 name|icode
@@ -939,14 +915,26 @@ name|int
 name|szicode
 decl_stmt|;
 comment|/* size of icode */
-comment|/* 		 * Now in process 1.  Set init flags into icode, 		 * get a minimal address space, copy out "icode", 		 * and return to it to do an exec of init. 		 */
-name|p
+specifier|static
+name|char
+name|initflags
+index|[]
+init|=
+literal|"-sf"
+decl_stmt|;
+name|vm_offset_t
+name|addr
+decl_stmt|;
+name|char
+modifier|*
+name|ip
+decl_stmt|;
+comment|/* 		 * Now in process 1.  Set init flags into icode, get a minimal 		 * address space, copy out "icode", and return to it to do an 		 * exec of init. 		 */
+name|ip
 operator|=
-name|curproc
-expr_stmt|;
-name|initproc
-operator|=
-name|p
+name|initflags
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -977,11 +965,35 @@ literal|'f'
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ip
+operator|==
+name|initflags
+operator|+
+literal|1
+condition|)
+operator|*
+name|ip
+operator|++
+operator|=
+literal|'-'
+expr_stmt|;
 operator|*
 name|ip
 operator|++
 operator|=
 literal|'\0'
+expr_stmt|;
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+name|initproc
+operator|=
+name|p
+operator|=
+name|curproc
 expr_stmt|;
 if|if
 condition|(
@@ -1084,7 +1096,7 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|szicode
 argument_list|)
@@ -1117,10 +1129,6 @@ name|fork
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|rval
