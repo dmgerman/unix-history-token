@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.8 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.9 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.8 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.9 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,6 +623,8 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|CheckLoopBack
+operator|&&
 name|strcasecmp
 argument_list|(
 operator|&

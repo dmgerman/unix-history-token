@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.37 (Berkeley) %G%"
+literal|"@(#)conf.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,90 @@ end_decl_stmt
 begin_comment
 comment|/* max open files; reset in 4.2bsd */
 end_comment
+
+begin_comment
+comment|/* **  Following should be config parameters (and probably will be in **  future releases).  In the meantime, setting these is considered **  unsupported, and is intentionally undocumented. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BROKENSMTPPEERS
+end_ifdef
+
+begin_decl_stmt
+name|bool
+name|BrokenSmtpPeers
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if you have broken SMTP peers */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|bool
+name|BrokenSmtpPeers
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if you have broken SMTP peers */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOLOOPBACKCHECK
+end_ifdef
+
+begin_decl_stmt
+name|bool
+name|CheckLoopBack
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to check HELO loopback */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|bool
+name|CheckLoopBack
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to check HELO loopback */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
