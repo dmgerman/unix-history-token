@@ -4424,6 +4424,22 @@ literal|0
 condition|)
 return|return;
 comment|/* no */
+comment|/* For slow machines loop as long as an interrupt is active */
+for|for
+control|(
+init|;
+operator|(
+operator|(
+name|stat
+operator|&
+name|ASL_IRQ_Pending
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|;
+control|)
+block|{
 comment|/* interrupts are high active */
 if|if
 condition|(
@@ -4475,6 +4491,27 @@ expr_stmt|;
 name|ifpi2_isacsx_intr
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|stat
+operator|=
+name|bus_space_read_1
+argument_list|(
+name|btag
+argument_list|,
+name|bhandle
+argument_list|,
+name|STAT0_OFFSET
+argument_list|)
+expr_stmt|;
+name|NDBGL1
+argument_list|(
+name|L1_H_IRQ
+argument_list|,
+literal|"stat %x"
+argument_list|,
+name|stat
 argument_list|)
 expr_stmt|;
 block|}
