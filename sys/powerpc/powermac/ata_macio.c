@@ -298,6 +298,15 @@ literal|"ata"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
+literal|"ide"
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
