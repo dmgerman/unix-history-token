@@ -238,6 +238,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_sx_try_upgrade
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_sx_downgrade
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -296,6 +336,26 @@ parameter_list|(
 name|sx
 parameter_list|)
 value|_sx_xunlock((sx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_try_upgrade
+parameter_list|(
+name|sx
+parameter_list|)
+value|_sx_try_upgrade((sx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_downgrade
+parameter_list|(
+name|sx
+parameter_list|)
+value|_sx_downgrade((sx), __FILE__, __LINE__)
 end_define
 
 begin_ifdef
