@@ -152,6 +152,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCHEME_HTTPS
+value|"https"
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCHEME_FILE
 value|"file"
 end_define

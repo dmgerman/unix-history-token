@@ -2135,9 +2135,9 @@ argument_list|(
 literal|"FTP_PASSIVE_MODE"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 name|strncasecmp
 argument_list|(
 name|s
