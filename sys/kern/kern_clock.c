@@ -1411,7 +1411,6 @@ name|curthread
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|td
 operator|->
 name|td_proc
@@ -1419,16 +1418,6 @@ operator|->
 name|p_sflag
 operator|&
 name|PS_PROFIL
-operator|)
-operator|&&
-operator|!
-operator|(
-name|td
-operator|->
-name|td_flags
-operator|&
-name|TDF_UPCALLING
-operator|)
 condition|)
 name|addupc_intr
 argument_list|(
