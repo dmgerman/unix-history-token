@@ -7382,6 +7382,10 @@ name|end
 operator|=
 name|tmp
 expr_stmt|;
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
 break|break;
 case|case
 name|SYS_RES_IOPORT
