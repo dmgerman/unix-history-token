@@ -2171,7 +2171,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*qd %*qd %*qd"
+literal|" %*jd %*jd %*jd"
 argument_list|,
 operator|(
 name|u_int
@@ -2292,7 +2292,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*qd %*qd %4.0f%% "
+literal|" %*jd %*jd %4.0f%% "
 argument_list|,
 operator|(
 name|u_int
