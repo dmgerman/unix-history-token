@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.20 %G%"
+literal|"@(#)fdec.c 1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,7 +177,37 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
+name|OBJ
+name|error
+argument_list|(
+literal|"Procedures or functions cannot be declared external."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|OBJ
+ifdef|#
+directive|ifdef
 name|PC
+comment|/* 	     *	save the counter for this function 	     */
+if|if
+condition|(
+name|monflg
+condition|)
+block|{
+name|fp
+operator|->
+name|value
+index|[
+name|NL_CNTR
+index|]
+operator|=
+name|bodycnts
+index|[
+name|cbn
+index|]
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|opt
@@ -234,17 +264,6 @@ block|}
 endif|#
 directive|endif
 endif|PC
-ifdef|#
-directive|ifdef
-name|OBJ
-name|error
-argument_list|(
-literal|"Procedures or functions cannot be declared external."
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|OBJ
 return|return
 operator|(
 name|fp
