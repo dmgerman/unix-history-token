@@ -270,6 +270,12 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|ip6_maxfragpackets
+operator|=
+name|nmbclusters
+operator|/
+literal|4
+expr_stmt|;
 comment|/* 	 * in many cases, random() here does NOT return random number 	 * as initialization during bootstrap time occur in fixed order. 	 */
 name|microtime
 argument_list|(
