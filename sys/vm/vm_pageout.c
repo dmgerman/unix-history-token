@@ -1155,7 +1155,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * we allow reads during pageouts... 	 */
 for|for
 control|(
 name|i
@@ -1190,7 +1189,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|VM_PROT_READ
+name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1340,12 +1339,9 @@ case|case
 name|VM_PAGER_BAD
 case|:
 comment|/* 			 * Page outside of range of object. Right now we 			 * essentially lose the changes by pretending it 			 * worked. 			 */
-name|pmap_clear_modify
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|pmap_tc_modified
 argument_list|(
 name|mt
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|mt
@@ -1627,7 +1623,7 @@ continue|continue;
 block|}
 name|refcount
 operator|=
-name|pmap_ts_referenced
+name|pmap_tc_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -2264,8 +2260,6 @@ name|cnt
 operator|.
 name|v_inactive_target
 expr_stmt|;
-name|rescan0
-label|:
 name|maxscan
 operator|=
 name|cnt
@@ -2336,9 +2330,7 @@ operator|!=
 name|PQ_INACTIVE
 condition|)
 block|{
-goto|goto
-name|rescan0
-goto|;
+break|break;
 block|}
 name|next
 operator|=
@@ -2416,6 +2408,15 @@ if|if
 condition|(
 name|m
 operator|->
+name|valid
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
 name|object
 operator|->
 name|ref_count
@@ -2430,7 +2431,7 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
-name|pmap_clear_reference
+name|pmap_tc_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -2454,7 +2455,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-name|pmap_ts_referenced
+name|pmap_tc_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -2490,7 +2491,7 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
-name|pmap_clear_reference
+name|pmap_tc_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -2537,6 +2538,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|m
@@ -2558,10 +2560,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+operator|++
 name|cnt
 operator|.
 name|v_dfree
-operator|++
 expr_stmt|;
 operator|++
 name|pages_freed
@@ -3135,7 +3137,7 @@ expr_stmt|;
 block|}
 name|refcount
 operator|+=
-name|pmap_ts_referenced
+name|pmap_tc_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
