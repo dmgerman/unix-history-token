@@ -3087,6 +3087,10 @@ argument_list|,
 name|cis
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cisconf
+condition|)
 name|sp
 operator|->
 name|config
