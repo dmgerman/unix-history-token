@@ -2836,7 +2836,9 @@ name|pw_name
 argument_list|,
 name|hostname
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2891,7 +2893,9 @@ name|auth_ttyok
 argument_list|(
 name|lc
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 condition|)
 block|{
@@ -2913,7 +2917,9 @@ name|pw_name
 argument_list|,
 name|hostname
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit
