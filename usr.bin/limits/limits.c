@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 by  * David L. Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Display/change(+runprogram)/eval resource limits.  *  *	$Id: limits.c,v 1.2 1997/02/22 19:55:37 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 by  * David L. Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Display/change(+runprogram)/eval resource limits.  *  *	$Id: limits.c,v 1.3 1997/03/29 04:30:26 imp Exp $  */
 end_comment
 
 begin_include
@@ -459,7 +459,7 @@ block|}
 block|}
 block|,
 block|{
-literal|"bash"
+literal|"bash|bash2"
 block|,
 literal|"unlimited"
 block|,
@@ -513,7 +513,7 @@ literal|1024
 block|}
 block|,
 block|{
-literal|"ulimit%s -v %s"
+literal|"ulimit%s -m %s"
 block|,
 literal|";\n"
 block|,
@@ -521,7 +521,7 @@ literal|1024
 block|}
 block|,
 block|{
-literal|"ulimit%s -m %s"
+literal|"ulimit%s -l %s"
 block|,
 literal|";\n"
 block|,
@@ -810,7 +810,6 @@ block|}
 block|}
 block|}
 block|,
-comment|/* Note: I recommend you don't use rc/es with 'limits'      * as this seems to be fairly buggy.  The values below      * are set according to the manpage, but, for example,      * the string 'unlimited' is  not actually accepted by      * the shell.  'es' is also prone to core dumping when      * displaying or modifying limits. Hopefully this will      * be fixed.               DLN - Wed Jan 15 20:30 1997      */
 block|{
 literal|"rc|es"
 block|,
@@ -1543,7 +1542,7 @@ name|NULL
 condition|)
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|pwd
 argument_list|)
@@ -1554,6 +1553,11 @@ condition|(
 name|cls
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|cls
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|lc
@@ -1780,7 +1784,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* If we're setting limits or doing an eval (ie. we're not just    * displaying), then check that hard limits are not lower than    * soft limits, and force rasing the hard limit if we need to if    * we are raising the soft limit, or lower the soft limit if we    * are lowering the hard limit.    */
+comment|/* If we're setting limits or doing an eval (ie. we're not just      * displaying), then check that hard limits are not lower than      * soft limits, and force rasing the hard limit if we need to if      * we are raising the soft limit, or lower the soft limit if we      * are lowering the hard limit.      */
 if|if
 condition|(
 operator|(
@@ -1936,7 +1940,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* else.. if we're specifically setting both to 	     * silly values, then let it error out. 	     */
+comment|/* else.. if we're specifically setting both to 			 * silly values, then let it error out. 			 */
 block|}
 block|}
 block|}
@@ -2010,7 +2014,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-comment|/* If *argv is not NULL, then we are being asked to    * (perhaps) set environment variables and run a program    */
+comment|/* If *argv is not NULL, then we are being asked to      * (perhaps) set environment variables and run a program      */
 if|if
 condition|(
 operator|*
@@ -2626,33 +2630,6 @@ name|inf
 argument_list|)
 expr_stmt|;
 else|else
-ifdef|#
-directive|ifdef
-name|RLIM_LONG
-name|sprintf
-argument_list|(
-name|numbr
-argument_list|,
-literal|"%ql"
-argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-operator|(
-name|limit
-operator|+
-name|divisor
-operator|/
-literal|2
-operator|)
-operator|/
-name|divisor
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sprintf
 argument_list|(
 name|numbr
@@ -2675,8 +2652,6 @@ name|divisor
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 name|pfx
@@ -2695,36 +2670,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RLIM_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STRTOV
-value|strtol
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STRTOV
-value|strtoq
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2778,6 +2723,15 @@ name|strcasecmp
 argument_list|(
 name|str
 argument_list|,
+literal|"unlimit"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
 literal|"unlimited"
 argument_list|)
 operator|==
@@ -2822,7 +2776,7 @@ block|{
 name|rlim_t
 name|tim
 init|=
-name|STRTOV
+name|strtoq
 argument_list|(
 name|s
 argument_list|,
@@ -3001,7 +2955,7 @@ name|mult
 decl_stmt|,
 name|tim
 init|=
-name|STRTOV
+name|strtoq
 argument_list|(
 name|s
 argument_list|,
@@ -3098,9 +3052,6 @@ operator|*
 literal|1024
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|RLIM_LONG
 case|case
 literal|'t'
 case|:
@@ -3119,8 +3070,6 @@ operator|*
 literal|1024LL
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 block|}
 name|s
 operator|=
@@ -3144,7 +3093,7 @@ name|RLIMIT_NOFILE
 case|:
 name|res
 operator|=
-name|STRTOV
+name|strtoq
 argument_list|(
 name|s
 argument_list|,
