@@ -2216,7 +2216,7 @@ name|ncookies
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int
+name|u_long
 argument_list|)
 argument_list|,
 name|M_TEMP
