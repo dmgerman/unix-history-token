@@ -63,9 +63,26 @@ name|struct
 name|sigvec
 name|sigv
 decl_stmt|;
+if|if
+condition|(
+operator|!
 name|initscr
 argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't initialize terminal. Is TERM set?\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
