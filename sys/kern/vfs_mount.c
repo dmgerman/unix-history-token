@@ -6900,6 +6900,16 @@ name|nid
 operator|.
 name|ni_cnd
 operator|.
+name|cn_cred
+operator|=
+name|curthread
+operator|->
+name|td_ucred
+expr_stmt|;
+name|nid
+operator|.
+name|ni_cnd
+operator|.
 name|cn_nameptr
 operator|=
 name|cp
