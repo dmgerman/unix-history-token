@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.11 %G%"
+literal|"@(#)collect.c	2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2123,7 +2123,7 @@ name|scont
 argument_list|)
 argument_list|()
 decl_stmt|,
-name|foonly
+name|signull
 argument_list|()
 decl_stmt|;
 name|struct
@@ -2161,7 +2161,7 @@ name|sigset
 argument_list|(
 name|SIGCONT
 argument_list|,
-name|foonly
+name|signull
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2563,19 +2563,6 @@ name|obuf
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
-comment|/*  * Currently, Berkeley virtual VAX/UNIX will not let you change the  * disposition of SIGCONT, except to trap it somewhere new.  * Hence, sigset(SIGCONT, foonly) is used to ignore continue signals.  */
-end_comment
-
-begin_macro
-name|foonly
-argument_list|()
-end_macro
-
-begin_block
-block|{}
 end_block
 
 begin_comment
@@ -3156,7 +3143,7 @@ argument_list|,
 name|obuf
 argument_list|)
 operator|<
-literal|0
+literal|0L
 condition|)
 block|{
 name|perror
@@ -3224,31 +3211,23 @@ begin_comment
 comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Insert a tab in front of each  * line.  Return a count of the characters sent, or -1  * on error.  */
 end_comment
 
-begin_macro
+begin_function
+name|long
 name|transmit
-argument_list|(
-argument|mailp
-argument_list|,
-argument|obuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mailp
+parameter_list|,
+name|obuf
+parameter_list|)
 name|struct
 name|message
 modifier|*
 name|mailp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3258,13 +3237,14 @@ name|mp
 decl_stmt|;
 specifier|register
 name|int
-name|c
-decl_stmt|,
 name|ch
 decl_stmt|;
-name|int
-name|n
+name|long
+name|c
 decl_stmt|,
+name|n
+decl_stmt|;
+name|int
 name|bol
 decl_stmt|;
 name|FILE
@@ -3284,10 +3264,9 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|msize
-argument_list|(
 name|mp
-argument_list|)
+operator|->
+name|m_size
 expr_stmt|;
 name|n
 operator|=
@@ -3302,7 +3281,7 @@ condition|(
 name|c
 operator|--
 operator|>
-literal|0
+literal|0L
 condition|)
 block|{
 if|if
@@ -3340,7 +3319,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|-
-literal|1
+literal|1L
 operator|)
 return|;
 block|}
@@ -3384,7 +3363,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|-
-literal|1
+literal|1L
 operator|)
 return|;
 block|}
@@ -3395,7 +3374,7 @@ name|n
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print (continue) when continued after ^Z.  */
