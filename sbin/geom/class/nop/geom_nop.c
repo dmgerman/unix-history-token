@@ -240,7 +240,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size] [-S secsize]<dev1> [dev2 [...]]\n"
+literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size] [-S secsize] dev ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -249,7 +249,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s configure [-v] [-f failprob]<prov1> [prov2 [...]]\n"
+literal|"       %s configure [-v] [-f failprob] prov ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -258,7 +258,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s destroy [-fv]<prov1> [prov2 [...]]\n"
+literal|"       %s destroy [-fv] prov ...\n"
 argument_list|,
 name|name
 argument_list|)

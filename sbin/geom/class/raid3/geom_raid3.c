@@ -462,14 +462,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s label [-hnrvw] name prov prov prov [prov [...]]\n"
-literal|"       %s clear [-v] prov [prov [...]]\n"
-literal|"       %s dump prov [prov [...]]\n"
+literal|"usage: %s label [-hnrvw] name prov prov prov ...\n"
+literal|"       %s clear [-v] prov ...\n"
+literal|"       %s dump prov ...\n"
 literal|"       %s configure [-adhnrRvwW] name\n"
 literal|"       %s rebuild [-v] name prov\n"
 literal|"       %s insert [-hv]<-n number> name prov\n"
 literal|"       %s remove [-v]<-n number> name\n"
-literal|"       %s stop [-fv] name [...]\n"
+literal|"       %s stop [-fv] name ...\n"
 argument_list|,
 name|comm
 argument_list|,

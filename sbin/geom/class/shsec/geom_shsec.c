@@ -279,7 +279,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s label [-hv]<name><prov><prov> [prov [...]]\n"
+literal|"usage: %s label [-hv] name prov prov ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -288,7 +288,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s stop [-fv]<name> [name [...]]\n"
+literal|"       %s stop [-fv] name ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -297,7 +297,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s clear [-v]<prov> [prov [...]]\n"
+literal|"       %s clear [-v] prov ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -306,7 +306,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s dump<prov> [prov [...]]\n"
+literal|"       %s dump prov ...\n"
 argument_list|,
 name|name
 argument_list|)
