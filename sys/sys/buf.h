@@ -2270,17 +2270,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cluster_callback
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|cluster_read
 parameter_list|(
