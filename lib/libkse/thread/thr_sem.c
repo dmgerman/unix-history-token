@@ -734,7 +734,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|_thread_kern_sig_defer
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 name|retval
