@@ -1591,6 +1591,12 @@ begin_comment
 comment|/* Maximum number of mbufs */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|_mext_free
@@ -2151,6 +2157,26 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|m_uiotombuf
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|how
+parameter_list|,
+name|int
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
