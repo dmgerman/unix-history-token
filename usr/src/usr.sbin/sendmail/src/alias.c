@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -476,6 +476,10 @@ name|stb
 decl_stmt|;
 if|if
 condition|(
+name|aliasfile
+operator|==
+name|NULL
+operator|||
 name|stat
 argument_list|(
 name|aliasfile

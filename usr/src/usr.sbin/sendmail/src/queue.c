@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -3316,10 +3316,10 @@ argument_list|,
 name|FileMode
 argument_list|)
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-continue|continue;
+break|break;
 endif|#
 directive|endif
 endif|QUEUE
