@@ -4631,7 +4631,6 @@ name|isp_fwoptions
 operator||=
 name|ICBOPT_PDBCHANGE_AE
 expr_stmt|;
-comment|/* 	 * We don't set ICBOPT_PORTNAME because we want our 	 * Node Name&& Port Names to be distinct. 	 */
 comment|/* 	 * Make sure that target role reflects into fwoptions. 	 */
 if|if
 condition|(
@@ -4902,6 +4901,12 @@ operator|&&
 name|pwwn
 condition|)
 block|{
+name|icbp
+operator|->
+name|icb_fwoptions
+operator||=
+name|ICBOPT_BOTH_WWNS
+expr_stmt|;
 name|MAKE_NODE_NAME_FROM_WWN
 argument_list|(
 name|icbp
@@ -4985,13 +4990,13 @@ argument_list|,
 literal|"Not using any WWNs"
 argument_list|)
 expr_stmt|;
-name|fcp
+name|icbp
 operator|->
-name|isp_fwoptions
+name|icb_fwoptions
 operator|&=
 operator|~
 operator|(
-name|ICBOPT_USE_PORTNAME
+name|ICBOPT_BOTH_WWNS
 operator||
 name|ICBOPT_FULL_LOGIN
 operator|)
@@ -13001,6 +13006,23 @@ operator|)
 return|;
 block|}
 break|break;
+case|case
+name|ISPCTL_RUN_MBOXCMD
+case|:
+name|isp_mboxcmd
+argument_list|(
+name|isp
+argument_list|,
+name|arg
+argument_list|,
+name|MBLOGALL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
@@ -14235,11 +14257,23 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"bad request handle %d"
+literal|"bad request handle %d (type 0x%x, flags 0x%x)"
 argument_list|,
 name|sp
 operator|->
 name|req_handle
+argument_list|,
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_entry_type
+argument_list|,
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_flags
 argument_list|)
 expr_stmt|;
 name|ISP_WRITE
@@ -14759,7 +14793,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"unhandled respose queue type 0x%x"
+literal|"unhandled response queue type 0x%x"
 argument_list|,
 name|sp
 operator|->
@@ -15197,9 +15231,16 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Internal FW Error @ RISC Addr 0x%x"
+literal|"Internal Firmware Error @ RISC Addr 0x%x"
 argument_list|,
 name|mbox
+argument_list|)
+expr_stmt|;
+name|ISP_DUMPREGS
+argument_list|(
+name|isp
+argument_list|,
+literal|"Firmware Error"
 argument_list|)
 expr_stmt|;
 name|isp_reinit
@@ -16337,6 +16378,24 @@ case|case
 name|RQSTYPE_REQUEST
 case|:
 default|default:
+if|if
+condition|(
+name|isp_async
+argument_list|(
+name|isp
+argument_list|,
+name|ISPASYNC_UNHANDLED_RESPONSE
+argument_list|,
+name|sp
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|isp_prt
 argument_list|(
 name|isp
@@ -19311,7 +19370,7 @@ block|,
 comment|/* 0x02: MBOX_EXEC_FIRMWARE */
 name|ISPOPMAP
 argument_list|(
-literal|0x1f
+literal|0xdf
 argument_list|,
 literal|0x01
 argument_list|)
