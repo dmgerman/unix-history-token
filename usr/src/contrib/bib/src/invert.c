@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invert.c	2.4	%G%"
+literal|"@(#)invert.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,7 +536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Flag    Meaning                             Default     -ki     Keys per record                     100     -li     max Length of keys                  6     -%str   ignore lines that begin with %x     CNOPVX             where x is in str             str is a seq of chars     -cfile  file contains Common words          /usr/lib/bib/common             do not use common words as keys     -pfile  name of output file                 INDEX     -s	    do not print statistics		statistics printed */
+comment|/*  Flag    Meaning                             Default     -ki     Keys per record                     100     -li     max Length of keys                  6     -%str   ignore lines that begin with %x     CNOPVX             where x is in str             str is a seq of chars     -cfile  file contains Common words          /usr/new/lib/bib/common             do not use common words as keys     -pfile  name of output file                 INDEX     -s	    do not print statistics		statistics printed */
 end_comment
 
 begin_define

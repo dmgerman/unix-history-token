@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.6	%G%  */
+comment|/*  *	@(#)bib.h	2.7	%G%  */
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|N_BMACLIB
-value|"/usr/lib/bmac"
+value|"/usr/new/lib/bmac"
 end_define
 
 begin_comment
@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|N_COMFILE
-value|"/usr/lib/bmac/common"
+value|"/usr/new/lib/bmac/common"
 end_define
 
 begin_comment
@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|N_DEFSTYLE
-value|"/usr/lib/bmac/bib.stdsn"
+value|"/usr/new/lib/bmac/bib.stdsn"
 end_define
 
 begin_comment
