@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.19 (Berkeley) 84/07/02"
+literal|"@(#)server.c	4.20 (Berkeley) 84/09/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -6657,6 +6657,11 @@ name|fd
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|userid
 argument_list|)
 expr_stmt|;
 name|execl
