@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.12 1997/11/03 07:51:05 charnier Exp $"
+literal|"$Id: vacation.c,v 1.13 1998/10/13 14:52:32 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -233,6 +245,27 @@ name|MAXLINE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|msglog
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+init|=
+operator|&
+name|syslog
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -369,6 +402,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|debuglog
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -415,12 +467,20 @@ decl_stmt|,
 name|iflag
 decl_stmt|,
 name|lflag
+decl_stmt|,
+name|mfail
+decl_stmt|,
+name|ufail
 decl_stmt|;
 name|opterr
 operator|=
 name|iflag
 operator|=
 name|lflag
+operator|=
+name|mfail
+operator|=
+name|ufail
 operator|=
 literal|0
 expr_stmt|;
@@ -440,13 +500,14 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:Iilr:"
+literal|"a:dIilr:"
 argument_list|)
 operator|)
 operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 operator|(
@@ -481,7 +542,12 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
+block|{
+name|mfail
+operator|++
+expr_stmt|;
 break|break;
+block|}
 name|cur
 operator|->
 name|name
@@ -497,6 +563,16 @@ expr_stmt|;
 name|names
 operator|=
 name|cur
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* debug mode */
+name|msglog
+operator|=
+operator|&
+name|debuglog
 expr_stmt|;
 break|break;
 case|case
@@ -548,8 +624,8 @@ name|interval
 operator|<
 literal|0
 condition|)
-name|usage
-argument_list|()
+name|ufail
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -562,10 +638,38 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|ufail
+operator|++
+expr_stmt|;
+block|}
+block|}
+comment|/*  	 * Only die on the above malloc and usage errors here so that the 	 * correct logging medium is used. 	 */
+if|if
+condition|(
+name|mfail
+condition|)
+block|{
+name|msglog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: malloc failed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ufail
+condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 name|argc
 operator|-=
 name|optind
@@ -606,7 +710,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_ERR
 argument_list|,
@@ -638,7 +742,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_ERR
 argument_list|,
@@ -664,7 +768,7 @@ name|pw_dir
 argument_list|)
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
@@ -714,7 +818,7 @@ operator|!
 name|db
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
@@ -797,11 +901,20 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|exit
+block|{
+name|msglog
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+literal|"vacation: malloc failed\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|cur
 operator|->
 name|name
@@ -1257,7 +1370,7 @@ operator|*
 name|from
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
@@ -1940,7 +2053,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
@@ -1967,7 +2080,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_ERR
 argument_list|,
@@ -1997,7 +2110,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_ERR
 argument_list|,
@@ -2073,7 +2186,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_ERR
 argument_list|,
@@ -2160,11 +2273,11 @@ name|void
 name|usage
 parameter_list|()
 block|{
-name|syslog
+name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"uid %u: usage: vacation [-i [-rinterval]] [-l] [-a alias] login\n"
+literal|"uid %u: usage: vacation [-d] [-i [-rinterval]] [-l] [-a alias] login\n"
 argument_list|,
 name|getuid
 argument_list|()
@@ -2354,6 +2467,58 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Append a message to the standard error for the convenience of end-users  * debugging without access to the syslog messages.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|debuglog
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Printing syslog priority not implemented */
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
