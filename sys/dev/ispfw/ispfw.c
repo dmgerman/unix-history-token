@@ -79,6 +79,12 @@ directive|include
 file|<dev/ispfw/asm_2200.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ispfw/asm_2300.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -133,6 +139,20 @@ define|#
 directive|define
 name|PCI_PRODUCT_QLOGIC_ISP2200
 value|0x2200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2300
+value|0x2300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2312
+value|0x2312
 end_define
 
 begin_typedef
@@ -474,6 +494,18 @@ name|rp
 operator|=
 name|isp_2200_risc_code
 expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP2300
+case|:
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP2312
+case|:
+name|rp
+operator|=
+name|isp_2300_risc_code
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
