@@ -33,14 +33,18 @@ begin_define
 define|#
 directive|define
 name|QUEUE_MACRO_DEBUG
-value|1
+value|0
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|QUEUE_MACRO_DEBUG
-end_ifdef
+end_if
+
+begin_comment
+comment|/* Store the last 2 places the queue element or head was altered */
+end_comment
 
 begin_struct
 struct|struct
