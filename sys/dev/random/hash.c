@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/random.h>
 end_include
 
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<dev/randomdev/hash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/randomdev/yarrow.h>
 end_include
 
 begin_comment
