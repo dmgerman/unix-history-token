@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.10 1995/03/03 21:21:24 dima Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.11 1995/05/30 03:52:53 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -129,6 +129,7 @@ literal|"                  -c blink         (set cursor to blinking inverted blo
 literal|"                  -c destructive   (set cursor to blinking destructive char)\n"
 literal|"                  -d               (dump screenmap to stdout)\n"
 literal|"                  -l filename      (load srceenmap file filename)\n"
+literal|"                  -m on|off        (switch mousepointer support on or off)\n"
 literal|"                  -L               (load default screenmap)\n"
 literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
 literal|"                  -t N             (set screensaver timeout in seconds)\n"
@@ -1694,6 +1695,76 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function
+name|void
+name|set_mouse
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|mouse_info
+name|mouse
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"on"
+argument_list|)
+condition|)
+name|mouse
+operator|.
+name|operation
+operator|=
+name|MOUSE_SHOW
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"off"
+argument_list|)
+condition|)
+name|mouse
+operator|.
+name|operation
+operator|=
+name|MOUSE_HIDE
+expr_stmt|;
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"argument to -m must either on or off\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_MOUSECTL
+argument_list|,
+operator|&
+name|mouse
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_macro
 name|test_frame
 argument_list|()
@@ -1882,7 +1953,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:l:Lr:t:x"
+literal|"b:c:df:l:Lm:r:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -1895,18 +1966,18 @@ name|opt
 condition|)
 block|{
 case|case
-literal|'c'
+literal|'b'
 case|:
-name|set_cursor_type
+name|set_border_color
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'b'
+literal|'c'
 case|:
-name|set_border_color
+name|set_cursor_type
 argument_list|(
 name|optarg
 argument_list|)
@@ -1954,6 +2025,15 @@ literal|'L'
 case|:
 name|load_default_scrnmap
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|set_mouse
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
