@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -169,6 +169,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|lfs_check
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|daddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|lfs_create
 name|__P
 argument_list|(
@@ -224,6 +240,20 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_getattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getattr_args
 operator|*
 operator|)
 argument_list|)
@@ -375,6 +405,26 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+name|lfs_newbuf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|daddr_t
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
