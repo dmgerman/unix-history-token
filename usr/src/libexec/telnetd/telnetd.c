@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.17 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1002,6 +1002,32 @@ argument_list|,
 literal|"ttloop:  read: %m\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ncc
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"ttloop:  peer died: %m\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|netip
 operator|=
@@ -1072,6 +1098,13 @@ name|nfrontp
 operator|+=
 sizeof|sizeof
 name|sbuf
+expr_stmt|;
+name|hisopts
+index|[
+name|TELOPT_TTYPE
+index|]
+operator|=
+name|OPT_YES_BUT_ALWAYS_LOOK
 expr_stmt|;
 while|while
 condition|(
@@ -3629,6 +3662,15 @@ name|RAW
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|TELOPT_TTYPE
+case|:
+name|settimer
+argument_list|(
+name|ttypeopt
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|fmt
 operator|=
@@ -3827,19 +3869,6 @@ expr_stmt|;
 name|fmt
 operator|=
 name|wont
-expr_stmt|;
-break|break;
-case|case
-name|TELOPT_TTYPE
-case|:
-name|fmt
-operator|=
-name|wont
-expr_stmt|;
-name|settimer
-argument_list|(
-name|ttypeopt
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
