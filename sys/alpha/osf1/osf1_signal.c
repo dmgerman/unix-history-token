@@ -3083,7 +3083,7 @@ name|td_proc
 expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|td
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
