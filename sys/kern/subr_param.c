@@ -509,6 +509,8 @@ operator|=
 name|physpages
 operator|/
 operator|(
+literal|2
+operator|*
 literal|1024
 operator|*
 literal|1024
@@ -530,11 +532,11 @@ if|if
 condition|(
 name|maxusers
 operator|>
-literal|512
+literal|384
 condition|)
 name|maxusers
 operator|=
-literal|512
+literal|384
 expr_stmt|;
 block|}
 name|TUNABLE_INT_FETCH
