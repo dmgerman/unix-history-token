@@ -66,11 +66,6 @@ init|=
 literal|1048576
 block|,
 comment|/* minimum size of a slice */
-name|VINUM_CDEV_MAJOR
-init|=
-literal|91
-block|,
-comment|/* major number for character device */
 name|ROUND_ROBIN_READPOL
 init|=
 operator|-
