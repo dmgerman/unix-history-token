@@ -1233,6 +1233,17 @@ begin_comment
 comment|/* Settle GEOM before finishing syscall */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_SOFTDEP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Stuck processing softdep worklist */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
