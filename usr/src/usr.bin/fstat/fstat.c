@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.45 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1515,12 +1515,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|devname
-parameter_list|()
-function_decl|;
 name|struct
 name|vnode
 name|vn
