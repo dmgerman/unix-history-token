@@ -1,25 +1,58 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)nameser.h	8.2 (Berkeley) 2/16/94  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  *  *      @(#)nameser.h	8.2 (Berkeley) 2/16/94  *	From Id: nameser.h,v 4.9.1.15 1994/07/19 22:51:24 vixie Exp  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ARPA_NAMESER_H_
+name|_NAMESER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ARPA_NAMESER_H_
+name|_NAMESER_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_comment
+comment|/*  * revision information.  this is the release date in YYYYMMDD format.  * it can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__BIND> 19931104)".  do not  * compare for equality; rather, use it to determine whether your resolver  * is new enough to contain a certain feature.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__BIND
+value|19940417
+end_define
+
+begin_comment
+comment|/* interface version stamp */
+end_comment
 
 begin_comment
 comment|/*  * Define constants based on rfc883  */
@@ -69,8 +102,15 @@ begin_comment
 comment|/* maximum length of domain label */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HFIXEDSZ
+value|12
+end_define
+
 begin_comment
-comment|/* Number of bytes of fixed size data in query structure */
+comment|/* #/bytes of fixed data in header */
 end_comment
 
 begin_define
@@ -81,7 +121,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* number of bytes of fixed size data in resource record */
+comment|/* #/bytes of fixed data in query */
 end_comment
 
 begin_define
@@ -90,6 +130,43 @@ directive|define
 name|RRFIXEDSZ
 value|10
 end_define
+
+begin_comment
+comment|/* #/bytes of fixed data in r record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT32SZ
+value|4
+end_define
+
+begin_comment
+comment|/* for systems without 32-bit ints */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT16SZ
+value|2
+end_define
+
+begin_comment
+comment|/* for systems without 16-bit ints */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDRSZ
+value|4
+end_define
+
+begin_comment
+comment|/* for sizeof(struct inaddr) != 4 */
+end_comment
 
 begin_comment
 comment|/*  * Internet nameserver port number  */
@@ -103,7 +180,7 @@ value|53
 end_define
 
 begin_comment
-comment|/*  * Currently defined opcodes  */
+comment|/*  * Currently define	d opcodes  */
 end_comment
 
 begin_define
@@ -140,7 +217,7 @@ comment|/* nameserver status query */
 end_comment
 
 begin_comment
-comment|/*#define xxx		0x3		/* 0x3 reserved */
+comment|/* 0x3		   reserved */
 end_comment
 
 begin_comment
@@ -225,7 +302,7 @@ comment|/* incremental zone referesh */
 end_comment
 
 begin_comment
-comment|/*  * Currently defined response codes  */
+comment|/*  * Currently define	d response codes  */
 end_comment
 
 begin_define
@@ -514,6 +591,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|T_X25
+value|19
+end_define
+
+begin_comment
+comment|/* X_25 calling address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ISDN
+value|20
+end_define
+
+begin_comment
+comment|/* ISDN calling address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_RT
+value|21
+end_define
+
+begin_comment
+comment|/* router */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|T_NSAP
 value|22
 end_define
@@ -530,7 +640,7 @@ value|23
 end_define
 
 begin_comment
-comment|/* reverse lookup for NSAP */
+comment|/* reverse NSAP lookup (deprecated) */
 end_comment
 
 begin_comment
@@ -579,6 +689,17 @@ end_define
 
 begin_comment
 comment|/* Unspecified format (binary data) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SA
+value|200
+end_define
+
+begin_comment
+comment|/* shuffle address */
 end_comment
 
 begin_comment
@@ -696,277 +817,29 @@ begin_define
 define|#
 directive|define
 name|CONV_OVERFLOW
-value|-1
+value|(-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONV_BADFMT
-value|-2
+value|(-2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONV_BADCKSUM
-value|-3
+value|(-3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONV_BADBUFLEN
-value|-4
+value|(-4)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BYTE_ORDER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LITTLE_ENDIAN
-value|1234
-end_define
-
-begin_comment
-comment|/* least-significant byte first (vax, pc) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIG_ENDIAN
-value|4321
-end_define
-
-begin_comment
-comment|/* most-significant byte first (IBM, net) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDP_ENDIAN
-value|3412
-end_define
-
-begin_comment
-comment|/* LSB first in word, MSW first in long (pdp)*/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ns32000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|MIPSEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_MIPSEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BIT_ZERO_ON_RIGHT
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__alpha
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|LITTLE_ENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sel
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|pyr
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|is68k
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ibm032
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ibm370
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|MIPSEB
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_MIPSEB
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_IBMR2
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|apollo
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp9000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp9000s300
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|BIT_ZERO_ON_LEFT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|BIG_ENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BYTE_ORDER */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BYTE_ORDER
-argument_list|)
-operator|||
-expr|\
-operator|(
-name|BYTE_ORDER
-operator|!=
-name|BIG_ENDIAN
-operator|&&
-name|BYTE_ORDER
-operator|!=
-name|LITTLE_ENDIAN
-operator|&&
-expr|\
-name|BYTE_ORDER
-operator|!=
-name|PDP_ENDIAN
-operator|)
-end_if
-
-begin_comment
-comment|/* you must determine what the correct bit order is for 	 * your compiler - the next line is an intentional error 	 * which will force your compiles to bomb until you fix 	 * the above macros. 	 */
-end_comment
-
-begin_error
-error|#
-directive|error
-literal|"Undefined or invalid BYTE_ORDER"
-error|;
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Structure for query header.  The order of the fields is machine- and  * compiler-dependent, depending on the byte/bit order and the layout  * of bit fields.  We use bit fields only in int variables, as this  * is all ANSI requires.  This requires a somewhat confusing rearrangement.  */
@@ -976,8 +849,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int16_t
+name|unsigned
 name|id
+range|:
+literal|16
 decl_stmt|;
 comment|/* query identification number */
 if|#
@@ -986,56 +861,56 @@ name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 comment|/* fields in third byte */
-name|u_int
+name|unsigned
 name|qr
 range|:
 literal|1
 decl_stmt|;
 comment|/* response flag */
-name|u_int
+name|unsigned
 name|opcode
 range|:
 literal|4
 decl_stmt|;
 comment|/* purpose of message */
-name|u_int
+name|unsigned
 name|aa
 range|:
 literal|1
 decl_stmt|;
 comment|/* authoritive answer */
-name|u_int
+name|unsigned
 name|tc
 range|:
 literal|1
 decl_stmt|;
 comment|/* truncated message */
-name|u_int
+name|unsigned
 name|rd
 range|:
 literal|1
 decl_stmt|;
 comment|/* recursion desired */
 comment|/* fields in fourth byte */
-name|u_int
+name|unsigned
 name|ra
 range|:
 literal|1
 decl_stmt|;
 comment|/* recursion available */
-name|u_int
+name|unsigned
 name|pr
 range|:
 literal|1
 decl_stmt|;
-comment|/* primary server required (non standard) */
-name|u_int
+comment|/* primary server req'd (!standard) */
+name|unsigned
 name|unused
 range|:
 literal|2
 decl_stmt|;
-comment|/* unused bits */
-name|u_int
+comment|/* unused bits (MBZ as of 4.9.3a3) */
+name|unsigned
 name|rcode
 range|:
 literal|4
@@ -1053,56 +928,56 @@ name|BYTE_ORDER
 operator|==
 name|PDP_ENDIAN
 comment|/* fields in third byte */
-name|u_int
+name|unsigned
 name|rd
 range|:
 literal|1
 decl_stmt|;
 comment|/* recursion desired */
-name|u_int
+name|unsigned
 name|tc
 range|:
 literal|1
 decl_stmt|;
 comment|/* truncated message */
-name|u_int
+name|unsigned
 name|aa
 range|:
 literal|1
 decl_stmt|;
 comment|/* authoritive answer */
-name|u_int
+name|unsigned
 name|opcode
 range|:
 literal|4
 decl_stmt|;
 comment|/* purpose of message */
-name|u_int
+name|unsigned
 name|qr
 range|:
 literal|1
 decl_stmt|;
 comment|/* response flag */
 comment|/* fields in fourth byte */
-name|u_int
+name|unsigned
 name|rcode
 range|:
 literal|4
 decl_stmt|;
 comment|/* response code */
-name|u_int
+name|unsigned
 name|unused
 range|:
 literal|2
 decl_stmt|;
-comment|/* unused bits */
-name|u_int
+comment|/* unused bits (MBZ as of 4.9.3a3) */
+name|unsigned
 name|pr
 range|:
 literal|1
 decl_stmt|;
-comment|/* primary server required (non standard) */
-name|u_int
+comment|/* primary server req'd (!standard) */
+name|unsigned
 name|ra
 range|:
 literal|1
@@ -1111,20 +986,28 @@ comment|/* recursion available */
 endif|#
 directive|endif
 comment|/* remaining bytes */
-name|u_int16_t
+name|unsigned
 name|qdcount
+range|:
+literal|16
 decl_stmt|;
 comment|/* number of question entries */
-name|u_int16_t
+name|unsigned
 name|ancount
+range|:
+literal|16
 decl_stmt|;
 comment|/* number of answer entries */
-name|u_int16_t
+name|unsigned
 name|nscount
+range|:
+literal|16
 decl_stmt|;
 comment|/* number of authority entries */
-name|u_int16_t
+name|unsigned
 name|arcount
+range|:
+literal|16
 decl_stmt|;
 comment|/* number of resource entries */
 block|}
@@ -1180,24 +1063,38 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|u_int16_t
 name|_getshort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|u_int32_t
 name|_getlong
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  * We also assume that a "u_int16_t" holds 2 "chars"  * and that a "u_int32_t" holds 4 "chars".  *  * These macros demonstrate the property of C whereby it can be  * portable or it can be elegant but never both.  */
+comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  *  * These macros demonstrate the property of C whereby it can be  * portable or it can be elegant but rarely both.  */
 end_comment
 
 begin_define
@@ -1209,7 +1106,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) | (u_int16_t)t_cp[1]; \ 	(cp) += 2; \ }
+value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += INT16SZ; \ }
 end_define
 
 begin_define
@@ -1221,7 +1118,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = (((u_int32_t)t_cp[0])<< 24) \ 	    | (((u_int32_t)t_cp[1])<< 16) \ 	    | (((u_int32_t)t_cp[2])<< 8) \ 	    | (((u_int32_t)t_cp[3])); \ 	(cp) += 4; \ }
+value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += INT32SZ; \ }
 end_define
 
 begin_define
@@ -1233,12 +1130,8 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
+value|{ \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += INT16SZ; \ }
 end_define
-
-begin_comment
-comment|/*  * Warning: PUTLONG --no-longer-- destroys its first argument.  if you  * were depending on this "feature", you will lose.  */
-end_comment
 
 begin_define
 define|#
@@ -1249,7 +1142,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
+value|{ \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += INT32SZ; \ }
 end_define
 
 begin_endif
