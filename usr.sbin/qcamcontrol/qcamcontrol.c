@@ -90,6 +90,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|usage
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: qcamcontrol [-p port] [-x xsize] [-y ysize] "
+literal|"[-z zoom] [-d depth]\n"
+literal|"                   [-b brightness] [-w whitebal] "
+literal|"[-c contrast]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_function
 name|main
 parameter_list|(
@@ -423,6 +450,10 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 name|argc
 operator|--
