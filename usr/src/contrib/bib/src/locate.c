@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	2.2	%G%"
+literal|"@(#)locate.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,16 @@ end_function_decl
 
 begin_comment
 comment|/*  locate(keys, name, max_klen, common):         Returns a string containing all references pointed to by name         that contain all keys in keys.  Common is name of common word file.     Pointer returned comes from malloc.  Use free to return storage.     NB A zero length string returned if nothing is found.        A NULL pointer indicates an error accessing the file "name". */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if want the reference string to have the file name*/
 end_comment
 
 begin_function
@@ -831,6 +841,26 @@ name|length
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|fflag
+condition|)
+block|{
+name|total
+operator|+=
+name|strlen
+argument_list|(
+name|refs
+index|[
+name|i
+index|]
+operator|.
+name|reffile
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
 name|allrefs
 operator|=
 name|malloc
@@ -1017,6 +1047,42 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fflag
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|next
+argument_list|,
+name|refs
+index|[
+name|i
+index|]
+operator|.
+name|reffile
+argument_list|)
+expr_stmt|;
+name|next
+operator|+=
+name|strlen
+argument_list|(
+name|next
+argument_list|)
+expr_stmt|;
+operator|*
+name|next
+operator|++
+operator|=
+literal|'\n'
+expr_stmt|;
+operator|*
+name|next
+operator|=
+literal|0
+expr_stmt|;
+block|}
 for|for
 control|(
 name|j

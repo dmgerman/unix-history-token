@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	2.2	%G%"
+literal|"@(#)lookup.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,18 @@ name|locate
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|fflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  print out file names                    */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -397,6 +409,13 @@ name|atoi
 argument_list|(
 name|operand
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|fflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
