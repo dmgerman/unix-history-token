@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)cmp.c	5.3 (Berkeley) 6/1/90";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.3 (Berkeley) 6/1/90"
+literal|"$Id: cmp.c,v 1.3 1993/09/21 22:35:56 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +161,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -188,11 +192,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-ls"
+literal|"ls"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -218,16 +223,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'-'
-case|:
-comment|/* must be after any flags */
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|endargs
-goto|;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -235,8 +230,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|endargs
-label|:
 name|argv
 operator|+=
 name|optind
@@ -264,20 +257,9 @@ name|all
 operator|&&
 name|silent
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cmp: only one of -l and -s may be specified.\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXITERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -1030,8 +1012,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* 32V put this message on stdout, S5 does it on stderr. */
-comment|/* POSIX.2 currently does it on stdout-- Hooray! */
 if|if
 condition|(
 operator|!
@@ -1040,8 +1020,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"cmp: EOF on %s\n"
 argument_list|,
 name|filename
@@ -1068,7 +1050,7 @@ begin_block
 block|{
 name|fputs
 argument_list|(
-literal|"usage: cmp [-ls] file1 file2 [skip1] [skip2]\n"
+literal|"usage: cmp [-l | -s] file1 file2 [skip1] [skip2]\n"
 argument_list|,
 name|stderr
 argument_list|)
