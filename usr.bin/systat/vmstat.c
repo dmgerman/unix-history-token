@@ -1708,7 +1708,7 @@ name|NAMEIROW
 argument_list|,
 name|NAMEICOL
 argument_list|,
-literal|"Namei         Name-cache    Proc-cache"
+literal|"Namei         Name-cache    Dir-cache"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1719,7 +1719,7 @@ literal|1
 argument_list|,
 name|NAMEICOL
 argument_list|,
-literal|"    Calls     hits    %%     hits     %%"
+literal|"    Calls     hits    %%     hits    %%"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3479,7 +3479,7 @@ literal|2
 argument_list|,
 name|NAMEICOL
 operator|+
-literal|34
+literal|33
 argument_list|,
 literal|4
 argument_list|,
