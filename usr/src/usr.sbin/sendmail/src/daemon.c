@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.40 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.41 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.40 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.41 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1879,6 +1879,45 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|hp
+operator|->
+name|h_name
+argument_list|,
+literal|'.'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+specifier|extern
+name|bool
+name|getcanonname
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
+name|getcanonname
+argument_list|(
+name|hostbuf
+argument_list|,
+name|size
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+else|#
+directive|else
+block|{
 operator|(
 name|void
 operator|)
@@ -1904,6 +1943,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|hp
