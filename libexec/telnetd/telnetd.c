@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: telnetd.c,v 1.7.2.3 1997/12/19 07:33:32 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,6 +803,12 @@ name|nbackp
 operator|=
 name|netobuf
 expr_stmt|;
+comment|/* 	 * This initialization causes linemode to default to a configuration 	 * that works on all telnet clients, including the FreeBSD client. 	 * This is not quite the same as the telnet client issuing a "mode 	 * character" command, but has most of the same benefits, and is 	 * preferable since some clients (like usofts) don't have the 	 * mode character command anyway and linemode breaks things. 	 * The most notable symptom of fix is that csh "set filec" operations 	 * like<ESC> (filename completion) and ^D (choices) keys now work 	 * in telnet sessions and can be used more than once on the same line. 	 * CR/LF handling is also corrected in some termio modes.  This  	 * change resolves problem reports bin/771 and bin/1037. 	 */
+name|linemode
+operator|=
+literal|1
+expr_stmt|;
+comment|/*Default to mode that works on bulk of clients*/
 ifdef|#
 directive|ifdef
 name|CRAY
