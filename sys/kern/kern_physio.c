@@ -95,9 +95,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
-name|spl
-decl_stmt|;
 name|caddr_t
 name|sa
 decl_stmt|;
@@ -109,13 +106,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* We cannot trust the device driver to hold Giant for us */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* Keep the process UPAGES from being swapped. XXX: why ? */
 name|PHOLD
 argument_list|(
@@ -404,11 +394,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|spl
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -434,11 +419,6 @@ argument_list|,
 name|PRIBIO
 argument_list|,
 literal|"physwr"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|spl
 argument_list|)
 expr_stmt|;
 if|if
@@ -563,12 +543,6 @@ expr_stmt|;
 name|PRELE
 argument_list|(
 name|curproc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
