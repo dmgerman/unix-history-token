@@ -3781,17 +3781,16 @@ operator|->
 name|tt_delack
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * This completely breaks TCP if newreno is turned on.  What happens 	 * is that if delayed-acks are turned on on the receiver, this code 	 * on the transmitter effectively destroys the TCP window, forcing 	 * it to four packets (1.5Kx4 = 6K window). 	 */
+block|if (sendalot&& (!tcp_do_newreno || --maxburst)) 		goto again;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sendalot
-operator|&&
-operator|(
-operator|!
-name|tcp_do_newreno
-operator|||
-operator|--
-name|maxburst
-operator|)
 condition|)
 goto|goto
 name|again
