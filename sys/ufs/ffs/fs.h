@@ -370,7 +370,7 @@ name|int32_t
 name|fs_cgmask
 decl_stmt|;
 comment|/* used to calc mod fs_ntrak */
-name|time_t
+name|ufs_time_t
 name|fs_time
 decl_stmt|;
 comment|/* last time written */
@@ -937,7 +937,7 @@ name|int32_t
 name|cg_magic
 decl_stmt|;
 comment|/* magic number */
-name|time_t
+name|ufs_time_t
 name|cg_time
 decl_stmt|;
 comment|/* time last written */
@@ -1133,7 +1133,7 @@ name|int32_t
 name|cg_unused_1
 decl_stmt|;
 comment|/*     used for incore cyl groups */
-name|time_t
+name|ufs_time_t
 name|cg_time
 decl_stmt|;
 comment|/* time last written */

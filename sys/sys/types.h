@@ -401,6 +401,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int32_t
+name|ufs_time_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u_int32_t
 name|uid_t
 typedef|;
