@@ -193,20 +193,13 @@ modifier|*
 name|rwlockattr
 parameter_list|,
 name|int
-modifier|*
 name|pshared
 parameter_list|)
 block|{
-name|int
-name|ps
-init|=
-operator|*
-name|pshared
-decl_stmt|;
-comment|/* only PTHREAD_PROCESS_PRIVATE is supported */
+comment|/* Only PTHREAD_PROCESS_PRIVATE is supported. */
 if|if
 condition|(
-name|ps
+name|pshared
 operator|!=
 name|PTHREAD_PROCESS_PRIVATE
 condition|)
@@ -222,7 +215,7 @@ operator|)
 operator|->
 name|pshared
 operator|=
-name|ps
+name|pshared
 expr_stmt|;
 return|return
 operator|(
