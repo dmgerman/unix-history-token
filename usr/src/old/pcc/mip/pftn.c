@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.3 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3654,7 +3654,9 @@ argument|sz = -pstk->in_sz; 		} 	else { 		sz = tsize( t, d, s ); 		}  	inforce( 
 comment|/* special case: bit fields, etc. */
 argument|if( p->in.left->in.op != ICON ) uerror(
 literal|"illegal initialization"
-argument|); 		else incode( p->in.left, sz ); 		} 	else if( p->in.left->in.op == FCON ){ 		fincode( p->in.left->fpn.dval, sz ); 		} 	else { 		cinit( optim(p), sz ); 		}  	gotscal();  	leave: 	tfree(p); 	}  gotscal(){ 	register t
+argument|); 		else incode( p->in.left, sz ); 		} 	else if( p->in.left->in.op == FCON ){ 		fincode( p->in.left->fpn.dval, sz ); 		} 	else { 		p = optim(p); 		if( p->in.left->in.op != ICON ) uerror(
+literal|"illegal initialization"
+argument|); 		else cinit( p, sz ); 		}  	gotscal();  	leave: 	tfree(p); 	}  gotscal(){ 	register t
 argument_list|,
 argument|ix; 	register n
 argument_list|,
