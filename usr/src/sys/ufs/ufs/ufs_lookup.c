@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.28	82/10/19	*/
+comment|/*	ufs_lookup.c	4.29	82/10/31	*/
 end_comment
 
 begin_include
@@ -1486,7 +1486,7 @@ goto|goto
 name|bad2
 goto|;
 block|}
-name|bcopy
+name|ovbcopy
 argument_list|(
 name|cp
 argument_list|,
