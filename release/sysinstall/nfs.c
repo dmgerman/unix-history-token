@@ -126,20 +126,50 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"mount_nfs %s %s %s %s"
+literal|"mount_nfs %s %s %s %s %s %s"
 argument_list|,
-name|variable_get
+operator|!
+name|variable_cmp
+argument_list|(
+name|VAR_NFS_TCP
+argument_list|,
+literal|"YES"
+argument_list|)
+condition|?
+literal|"-T"
+else|:
+literal|""
+argument_list|,
+operator|!
+name|variable_cmp
+argument_list|(
+name|VAR_NFS_V3
+argument_list|,
+literal|"YES"
+argument_list|)
+condition|?
+literal|"-3"
+else|:
+literal|""
+argument_list|,
+operator|!
+name|variable_cmp
 argument_list|(
 name|VAR_SLOW_ETHER
+argument_list|,
+literal|"YES"
 argument_list|)
 condition|?
 literal|"-r 1024 -w 1024"
 else|:
-literal|""
+literal|"-r 4096 -w 4096"
 argument_list|,
-name|variable_get
+operator|!
+name|variable_cmp
 argument_list|(
 name|VAR_NFS_SECURE
+argument_list|,
+literal|"YES"
 argument_list|)
 condition|?
 literal|"-P"
