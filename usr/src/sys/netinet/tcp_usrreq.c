@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.74	83/02/10	*/
+comment|/*	tcp_usrreq.c	1.75	83/02/22	*/
 end_comment
 
 begin_include
@@ -834,6 +834,11 @@ operator|-
 literal|512
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOBUFS
