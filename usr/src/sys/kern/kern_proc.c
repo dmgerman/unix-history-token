@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.28	82/07/24	*/
+comment|/*	kern_proc.c	4.29	82/07/25	*/
 end_comment
 
 begin_include
@@ -2141,6 +2141,21 @@ argument_list|(
 name|TBIA
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+name|swkill
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+literal|"i/o error mapping pages"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * set SUID/SGID protections, if no tracing 	 */
