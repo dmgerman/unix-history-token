@@ -348,7 +348,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfh"
+literal|"HLPRfhv"
 argument_list|)
 operator|)
 operator|!=
@@ -422,6 +422,14 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
