@@ -416,7 +416,7 @@ break|break;
 case|case
 name|SEEK_END
 case|:
-comment|/* size always>= 0 */
+comment|/* 'size' is always>= 0 */
 if|if
 condition|(
 name|fl
@@ -489,7 +489,7 @@ name|l_len
 operator|-
 literal|1
 decl_stmt|;
-comment|/* fl->l_len& start are non-negative */
+comment|/* 'oadd' and 'start' are>= 0 */
 if|if
 condition|(
 name|oadd
