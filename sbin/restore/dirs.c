@@ -1384,13 +1384,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Looking for %s\n"
-argument_list|,
-name|pathname
-argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|buffer
