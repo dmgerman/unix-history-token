@@ -1247,7 +1247,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"begin %s scan, scangen %u\n"
+literal|"begin %s scan in %s mode, scangen %u\n"
 argument_list|,
 operator|(
 name|ic
@@ -1260,6 +1260,13 @@ condition|?
 literal|"active"
 else|:
 literal|"passive"
+argument_list|,
+name|ieee80211_phymode_name
+index|[
+name|ic
+operator|->
+name|ic_curmode
+index|]
 argument_list|,
 name|ic
 operator|->
