@@ -1059,14 +1059,11 @@ name|unsigned
 name|int
 name|ent
 init|=
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
+name|m
+operator|->
+name|seq
 decl_stmt|;
-comment|/* 1st word is index */
+comment|/* index of entry to return */
 if|if
 condition|(
 name|ent
