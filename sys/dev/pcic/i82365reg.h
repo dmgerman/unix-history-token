@@ -1597,6 +1597,52 @@ comment|/* #define	PCIC_RESERVED			0x3F */
 end_comment
 
 begin_comment
+comment|/* cardbus extensions - memory window page registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMREG_WIN_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR0_WIN
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR1_WIN
+value|0x41
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR2_WIN
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR3_WIN
+value|0x43
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR4_WIN
+value|0x44
+end_define
+
+begin_comment
 comment|/* vendor-specific registers */
 end_comment
 
@@ -1723,6 +1769,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_PNP_ACTIONTEC
+value|0x1802A904
+end_define
+
+begin_comment
+comment|/* AEI0218 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_IBM3765
+value|0x65374d24
+end_define
+
+begin_comment
+comment|/* IBM3765 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_PNP_82365
 value|0x000ED041
 end_define
@@ -1767,34 +1835,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_PNP_ACTIONTEC
-value|0x1802A904
-end_define
-
-begin_comment
-comment|/* AEI0218 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCIC_PNP_SCM_SWAPBOX
-value|0x1802A904
-end_define
-
-begin_comment
-comment|/* SCM0469 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_PNP_SCM_SWAPBOX2
 value|0x69046d4c
 end_define
 
 begin_comment
-comment|/* SCM SwapBox Classic X2P */
+comment|/* SMC0469 */
 end_comment
 
 end_unit
