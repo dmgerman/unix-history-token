@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)trace.c	8.2 (Berkeley) 3/14/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,12 +128,14 @@ end_expr_stmt
 
 begin_block
 block|{
+name|unsigned
 name|int
 name|first
 decl_stmt|,
 name|last
 decl_stmt|;
 specifier|register
+name|unsigned
 name|int
 name|i
 decl_stmt|;

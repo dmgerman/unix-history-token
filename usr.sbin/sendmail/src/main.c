@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.46 (Berkeley) 1/9/94"
+literal|"@(#)main.c	8.52 (Berkeley) 3/11/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,17 +65,11 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -1542,11 +1536,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_if
 if|if
@@ -2196,6 +2190,14 @@ case|:
 case|case
 name|MD_PRINT
 case|:
+ifdef|#
+directive|ifdef
+name|MAYBE_NEXT_RELEASE
+case|case
+name|MD_ARPAFTP
+case|:
+endif|#
+directive|endif
 name|OpMode
 operator|=
 name|j
@@ -3216,25 +3218,6 @@ comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
 name|NULL
-expr_stmt|;
-break|break;
-case|case
-name|MD_SMTP
-case|:
-if|if
-condition|(
-name|RealUid
-operator|!=
-literal|0
-condition|)
-name|auth_warning
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|"%s owned process doing -bs"
-argument_list|,
-name|RealUserName
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5486,6 +5469,10 @@ name|Verbose
 operator|=
 name|FALSE
 expr_stmt|;
+name|DisConnected
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* all input from /dev/null */
 if|if
 condition|(
@@ -5755,6 +5742,13 @@ literal|2
 index|]
 operator|==
 literal|'\0'
+operator|&&
+name|ap
+index|[
+literal|1
+index|]
+operator|!=
+literal|'d'
 operator|&&
 name|argv
 index|[

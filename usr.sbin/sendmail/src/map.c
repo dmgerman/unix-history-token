@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.20 (Berkeley) 12/11/93"
+literal|"@(#)map.c	8.22 (Berkeley) 2/18/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -2504,10 +2504,7 @@ argument_list|(
 name|O_EXLOCK
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|omode
 operator||=
 name|O_EXLOCK
@@ -2655,10 +2652,7 @@ argument_list|(
 name|OLD_NEWDB
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|fd
 operator|=
 name|db
@@ -2940,10 +2934,7 @@ argument_list|(
 name|O_EXLOCK
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|omode
 operator||=
 name|O_EXLOCK
@@ -3091,10 +3082,7 @@ argument_list|(
 name|OLD_NEWDB
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|fd
 operator|=
 name|db
@@ -4148,22 +4136,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|map
-operator|->
-name|map_domain
-operator|==
-name|NULL
-condition|)
-name|yp_get_default_domain
-argument_list|(
-operator|&
-name|map
-operator|->
-name|map_domain
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|map
 operator|->
@@ -4177,6 +4149,46 @@ name|map_file
 operator|=
 literal|"mail.aliases"
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|->
+name|map_domain
+operator|==
+name|NULL
+condition|)
+block|{
+name|yperr
+operator|=
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|map
+operator|->
+name|map_domain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|yperr
+operator|!=
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"NIS map %s specified, but NIS not running\n"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+block|}
 comment|/* check to see if this map actually exists */
 name|yperr
 operator|=

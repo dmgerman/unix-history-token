@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.62 (Berkeley) 1/12/94"
+literal|"@(#)deliver.c	8.78 (Berkeley) 3/11/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,11 +46,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -285,6 +285,16 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_FATALERRS
+operator||
+name|EF_PM_NOTIFY
+operator||
+name|EF_CLRQUEUE
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"554 too many hops %d (%d max): from %s via %s, to %s"
@@ -301,6 +311,12 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
+name|RealHostName
+operator|==
+name|NULL
+condition|?
+literal|"localhost"
+else|:
 name|RealHostName
 argument_list|,
 name|e
@@ -863,12 +879,21 @@ name|q_owner
 operator|==
 name|owner
 condition|)
+block|{
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QQUEUEUP
+expr_stmt|;
+block|}
 for|for
 control|(
 name|q
@@ -895,12 +920,21 @@ name|q_owner
 operator|!=
 name|owner
 condition|)
+block|{
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QQUEUEUP
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
@@ -973,17 +1007,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|mode
-operator|!=
-name|SM_VERIFY
-condition|)
-name|openxscript
-argument_list|(
-name|ee
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -997,7 +1020,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: clone %s"
+literal|"%s: clone %s, owner=%s"
 argument_list|,
 name|ee
 operator|->
@@ -1006,6 +1029,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|owner
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1197,11 +1222,27 @@ name|CurEnv
 operator|=
 name|ee
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|!=
+name|SM_VERIFY
+condition|)
+name|openxscript
+argument_list|(
+name|ee
+argument_list|)
+expr_stmt|;
 name|sendenvelope
 argument_list|(
 name|ee
 argument_list|,
 name|mode
+argument_list|)
+expr_stmt|;
+name|dropenvelope
+argument_list|(
+name|ee
 argument_list|)
 expr_stmt|;
 block|}
@@ -1215,24 +1256,6 @@ argument_list|(
 name|e
 argument_list|,
 name|mode
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-name|splitenv
-operator|!=
-name|NULL
-condition|;
-name|splitenv
-operator|=
-name|splitenv
-operator|->
-name|e_sibling
-control|)
-name|dropenvelope
-argument_list|(
-name|splitenv
 argument_list|)
 expr_stmt|;
 block|}
@@ -1362,8 +1385,9 @@ operator|->
 name|e_xfp
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASFLOCK
 comment|/* 		**  Since fcntl locking has the interesting semantic that 		**  the lock is owned by a process, not by an open file 		**  descriptor, we have to flush this to the queue, and 		**  then restart from scratch in the child. 		*/
 comment|/* save id for future use */
@@ -1506,13 +1530,26 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* catch intermediate zombie */
+operator|(
+name|void
+operator|)
+name|waitfor
+argument_list|(
+name|pid
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* double fork to avoid zombies */
-if|if
-condition|(
+name|pid
+operator|=
 name|fork
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
 operator|>
 literal|0
 condition|)
@@ -1529,6 +1566,26 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+comment|/* prevent parent from waiting if there was an error */
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_INQUEUE
+operator||
+name|EF_KEEPQUEUE
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 		**  Close any cached connections. 		** 		**	We don't send the QUIT protocol because the parent 		**	still knows about the connection. 		** 		**	This should only happen when delivering an error 		**	message. 		*/
 name|mci_flush
 argument_list|(
@@ -2028,8 +2085,8 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 comment|/* unless interactive, try twice, over a minute */
 if|if
@@ -2099,11 +2156,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n--deliver, mailer=%d, host=`%s', first user=`%s'\n"
+literal|"\n--deliver, id=%s, mailer=%s, host=`%s', first user=`%s'\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 name|m
 operator|->
-name|m_mno
+name|m_name
 argument_list|,
 name|host
 argument_list|,
@@ -3190,6 +3251,10 @@ name|ctladdr
 operator|==
 name|NULL
 operator|&&
+name|m
+operator|!=
+name|ProgMailer
+operator|&&
 name|bitset
 argument_list|(
 name|QGOODUID
@@ -3208,8 +3273,8 @@ name|e
 operator|->
 name|e_from
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -3782,8 +3847,8 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|mci
 operator|->
@@ -4624,6 +4689,8 @@ operator|==
 name|MD_DAEMON
 operator|||
 name|HoldErrs
+operator|||
+name|DisConnected
 condition|)
 block|{
 comment|/* put mailer output in transcript */
@@ -4816,7 +4883,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set up the mailer environment */
+comment|/* 			**  Set up the mailer environment 			**	TZ is timezone information. 			**	SYSTYPE is Apollo software sys type (required). 			**	ISP is Apollo hardware system type (required). 			*/
 name|i
 operator|=
 literal|0
@@ -4854,6 +4921,30 @@ argument_list|,
 literal|"TZ="
 argument_list|,
 literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+operator|*
+name|ep
+argument_list|,
+literal|"ISP="
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+operator|*
+name|ep
+argument_list|,
+literal|"SYSTYPE="
+argument_list|,
+literal|8
 argument_list|)
 operator|==
 literal|0
@@ -5228,8 +5319,8 @@ name|mci
 operator|->
 name|mci_errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -5299,10 +5390,6 @@ comment|/* 		**  Format and send message. 		*/
 name|putfromline
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|)
@@ -5315,10 +5402,6 @@ name|e_puthdr
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|)
@@ -5328,10 +5411,6 @@ argument_list|(
 literal|"\n"
 argument_list|,
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 call|(
@@ -5342,10 +5421,6 @@ name|e_putbody
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|,
@@ -5640,8 +5715,8 @@ block|}
 endif|#
 directive|endif
 comment|/* SMTP */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -6406,8 +6481,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -6502,8 +6577,8 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 elseif|else
 if|if
@@ -6610,16 +6685,13 @@ index|[]
 decl_stmt|;
 name|message
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|&
 name|statmsg
 index|[
 literal|4
 index|]
-argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6710,6 +6782,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"giveresponse: stat=%d, e->e_message=%s\n"
+argument_list|,
+name|stat
+argument_list|,
+name|e
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|stat
 operator|!=
 name|EX_TEMPFAIL
@@ -6771,8 +6863,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -7071,7 +7163,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|" ("
+literal|" ["
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7095,7 +7187,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|")"
+literal|"]"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7372,7 +7464,7 @@ name|l
 operator|=
 name|SYSLOG_BUFSIZE
 operator|-
-literal|80
+literal|85
 expr_stmt|;
 name|p
 operator|=
@@ -7601,6 +7693,26 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|mci
@@ -7625,9 +7737,9 @@ endif|#
 directive|endif
 name|sprintf
 argument_list|(
-name|bp
+name|buf
 argument_list|,
-literal|", relay=%s"
+literal|"relay=%s"
 argument_list|,
 name|mci
 operator|->
@@ -7642,9 +7754,9 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
-literal|" ("
+literal|" ["
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7652,7 +7764,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -7666,9 +7778,9 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
-literal|")"
+literal|"]"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7702,14 +7814,23 @@ literal|'\0'
 condition|)
 name|sprintf
 argument_list|(
-name|bp
+name|buf
 argument_list|,
-literal|", relay=%s"
+literal|"relay=%s"
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -7754,32 +7875,22 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	This can be made an arbitrary message separator by changing $l ** **	One of the ugliest hacks seen by human eyes is contained herein: **	UUCP wants those stupid "remote from<host>" lines.  Why oh why **	does a well-meaning programmer such as myself have to deal with **	this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
+comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	This can be made an arbitrary message separator by changing $l ** **	One of the ugliest hacks seen by human eyes is contained herein: **	UUCP wants those stupid "remote from<host>" lines.  Why oh why **	does a well-meaning programmer such as myself have to deal with **	this kind of antique garbage???? ** **	Parameters: **		mci -- the connection information. **		e -- the envelope. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
 end_comment
 
 begin_expr_stmt
 name|putfromline
 argument_list|(
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 argument_list|)
 specifier|register
-name|FILE
+name|MCI
 operator|*
-name|fp
+name|mci
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|MAILER
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|ENVELOPE
@@ -7808,7 +7919,9 @@ name|bitnset
 argument_list|(
 name|M_NHDR
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -7823,7 +7936,9 @@ name|bitnset
 argument_list|(
 name|M_UGLYUUCP
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -7938,9 +8053,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -7950,35 +8063,24 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor to control output format. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
+comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		mci -- the connection information. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|putbody
 argument_list|(
-argument|fp
+name|mci
 argument_list|,
-argument|m
+name|e
 argument_list|,
-argument|e
-argument_list|,
-argument|separator
+name|separator
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MAILER
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
+specifier|register
+name|MCI
+operator|*
+name|mci
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register
@@ -8068,9 +8170,7 @@ name|putline
 argument_list|(
 literal|"<<< No Message Collected>>>"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -8095,7 +8195,9 @@ condition|(
 operator|!
 name|ferror
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 operator|&&
 name|fgets
@@ -8126,7 +8228,9 @@ name|bitnset
 argument_list|(
 name|M_ESCFROM
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -8149,7 +8253,9 @@ name|putc
 argument_list|(
 literal|'>'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -8206,7 +8312,9 @@ name|putc
 argument_list|(
 literal|' '
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 block|}
@@ -8214,9 +8322,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -8252,7 +8358,9 @@ name|bitnset
 argument_list|(
 name|M_BLANKEND
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -8275,9 +8383,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8285,14 +8391,18 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ferror
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 operator|&&
 name|errno
@@ -8440,6 +8550,9 @@ comment|/* child -- actually write to file */
 name|struct
 name|stat
 name|stb
+decl_stmt|;
+name|MCI
+name|mcibuf
 decl_stmt|;
 operator|(
 name|void
@@ -8773,11 +8886,48 @@ name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
 block|}
-name|putfromline
+name|bzero
 argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+name|FileMailer
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
 name|f
+expr_stmt|;
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_7BITS
 argument_list|,
 name|FileMailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mcibuf
+operator|.
+name|mci_flags
+operator||=
+name|MCIF_7BIT
+expr_stmt|;
+name|putfromline
+argument_list|(
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -8789,9 +8939,8 @@ operator|->
 name|e_puthdr
 call|)
 argument_list|(
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -8800,9 +8949,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 call|(
@@ -8812,9 +8960,8 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|,
@@ -8825,9 +8972,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -8993,8 +9139,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|int
 name|nmx
@@ -9084,8 +9230,8 @@ operator|->
 name|s_hostsig
 return|;
 comment|/* 	**  Not already there -- create a signature. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -9196,8 +9342,8 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|mci
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.28 (Berkeley) 1/9/94"
+literal|"@(#)envelope.c	8.33 (Berkeley) 2/10/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -2254,6 +2248,10 @@ name|MD_SMTP
 operator|||
 name|OpMode
 operator|==
+name|MD_ARPAFTP
+operator|||
+name|OpMode
+operator|==
 name|MD_DAEMON
 condition|)
 name|realname
@@ -2794,6 +2792,31 @@ condition|)
 block|{
 comment|/* 			**  Process passwd file entry. 			*/
 comment|/* extract home directory */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|=
+name|newstr
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
 name|e
 operator|->
 name|e_from
@@ -2954,6 +2977,7 @@ name|q_home
 operator|==
 name|NULL
 condition|)
+block|{
 name|e
 operator|->
 name|e_from
@@ -2965,6 +2989,37 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|++
+expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_from

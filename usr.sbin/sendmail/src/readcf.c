@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.18 (Berkeley) 1/9/94"
+literal|"@(#)readcf.c	8.23 (Berkeley) 3/18/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,11 +46,11 @@ directive|include
 file|<grp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -622,7 +622,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"invalid rewrite line \"%s\""
+literal|"invalid rewrite line \"%s\" (tab expected)"
 argument_list|,
 name|bp
 argument_list|)
@@ -2049,8 +2049,8 @@ argument_list|,
 literal|"host host"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -2190,6 +2190,45 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"fileclass(%s, fmt=%s)\n"
+argument_list|,
+name|filename
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'|'
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"fileclass: pipes (F%c%s) not supported due to security problems"
+argument_list|,
+name|class
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|stat
 argument_list|(
 name|filename
@@ -2201,6 +2240,25 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"  cannot stat (%s)\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2432,24 +2490,11 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* enter the word in the symbol table */
-name|s
-operator|=
-name|stab
-argument_list|(
-name|q
-argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_ENTER
-argument_list|)
-expr_stmt|;
-name|setbitn
+name|setclass
 argument_list|(
 name|class
 argument_list|,
-name|s
-operator|->
-name|s_class
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -3686,11 +3731,11 @@ begin_comment
 comment|/* set if option is stuck */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_struct
 struct|struct
@@ -3914,7 +3959,7 @@ name|safe
 operator|&&
 name|strchr
 argument_list|(
-literal|"bCdeEijLmoprsvw7"
+literal|"bCdeijLmoprsvw7"
 argument_list|,
 name|opt
 argument_list|)
@@ -4466,8 +4511,8 @@ case|case
 literal|'I'
 case|:
 comment|/* use internet domain name server */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|UseNameServer
 operator|=

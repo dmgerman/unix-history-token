@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.10 (Berkeley) 12/21/93 (with name server)"
+literal|"@(#)domain.c	8.19 (Berkeley) 3/11/94 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.10 (Berkeley) 12/21/93 (without name server)"
+literal|"@(#)domain.c	8.19 (Berkeley) 3/11/94 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,11 +60,11 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -176,6 +176,24 @@ define|#
 directive|define
 name|NO_DATA
 value|NO_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEADERSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HEADERSZ
+value|sizeof(HEADER)
 end_define
 
 begin_endif
@@ -366,6 +384,24 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getmxrr(%s, droplocalhost=%d)\n"
+argument_list|,
+name|host
+argument_list|,
+name|droplocalhost
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fallbackMX
 operator|!=
 name|NULL
@@ -544,6 +580,15 @@ goto|;
 case|case
 name|HOST_NOT_FOUND
 case|:
+ifdef|#
+directive|ifdef
+name|BROKEN_RES_SEARCH
+comment|/* Ultrix resolver returns failure w/ h_errno=0 */
+case|case
+literal|0
+case|:
+endif|#
+directive|endif
 comment|/* the host just doesn't exist */
 operator|*
 name|rcode
@@ -585,6 +630,22 @@ operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
 break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"getmxrr: res_search (%s) failed with impossible h_errno (%d)\n"
+argument_list|,
+name|host
+argument_list|,
+name|h_errno
+argument_list|)
+expr_stmt|;
+operator|*
+name|rcode
+operator|=
+name|EX_OSERR
+expr_stmt|;
+break|break;
 block|}
 comment|/* irreconcilable differences */
 return|return
@@ -613,10 +674,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-sizeof|sizeof
-argument_list|(
-name|HEADER
-argument_list|)
+name|HEADERSZ
 expr_stmt|;
 name|eom
 operator|=
@@ -870,6 +928,24 @@ name|s_class
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"found localhost (%s) in MX list, pref=%d\n"
+argument_list|,
+name|bp
+argument_list|,
+name|pref
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1158,6 +1234,15 @@ operator|*
 name|rcode
 operator|=
 name|EX_CONFIG
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"MX list for %s points back to %s"
+argument_list|,
+name|host
+argument_list|,
+name|MyHostName
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -1453,7 +1538,7 @@ name|hfunc
 operator|<<
 literal|1
 operator|)
-operator|+
+operator|^
 name|c
 operator|)
 operator|%
@@ -1829,6 +1914,21 @@ operator|.
 name|defdname
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'.'
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 operator|*
 name|dp
 operator|=
@@ -2067,10 +2167,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-sizeof|sizeof
-argument_list|(
-name|HEADER
-argument_list|)
+name|HEADERSZ
 expr_stmt|;
 name|eom
 operator|=
@@ -2293,14 +2390,55 @@ operator|>
 name|MAXCNAMEDEPTH
 condition|)
 block|{
-name|syserr
+comment|/*XXX should notify postmaster XXX*/
+name|message
 argument_list|(
 literal|"DNS failure: CNAME loop for %s"
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-continue|continue;
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+block|{
+name|char
+name|ebuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"Deferred: DNS failure: CNAME loop for %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|ebuf
+argument_list|)
+expr_stmt|;
+block|}
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+name|FALSE
+return|;
 block|}
 comment|/* value points at name */
 if|if

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.21 (Berkeley) 12/11/93"
+literal|"@(#)alias.c	8.24 (Berkeley) 2/28/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,6 +276,14 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: alias %s => %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id
@@ -1458,9 +1466,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|errno
 operator|!=
 name|EACCES
+operator|&&
+name|errno
+operator|!=
+name|EROFS
+operator|)
 operator|||
 name|automatic
 operator|||
@@ -2803,6 +2817,14 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: forward %s: transient error: %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id

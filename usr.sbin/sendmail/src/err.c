@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.19 (Berkeley) 1/8/94"
+literal|"@(#)err.c	8.26 (Berkeley) 3/11/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_comment
@@ -76,10 +82,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|NAMED_BIND
-argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -145,6 +148,26 @@ decl_stmt|;
 name|bool
 name|panic
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+name|char
+modifier|*
+name|uname
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+name|char
+name|ubuf
+index|[
+literal|80
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|VA_LOCAL_DECL
 name|panic
 init|=
@@ -230,10 +253,63 @@ name|ExitStat
 operator|=
 name|EX_OSERR
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|54
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"syserr: ExitStat = %d\n"
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
 name|LOG
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+name|uname
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+else|else
+block|{
+name|uname
+operator|=
+name|ubuf
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ubuf
+argument_list|,
+literal|"UID%d"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|LogLevel
@@ -248,7 +324,7 @@ name|LOG_ALERT
 else|:
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: %s"
+literal|"%s: SYSERR(%s): %s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -261,6 +337,8 @@ else|:
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|uname
 argument_list|,
 operator|&
 name|MsgBuf
@@ -750,8 +828,13 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* if DisConnected, OutChannel now points to the transcript */
 if|if
 condition|(
+operator|!
+name|DisConnected
+operator|&&
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
@@ -759,6 +842,11 @@ operator|||
 name|OpMode
 operator|==
 name|MD_DAEMON
+operator|||
+name|OpMode
+operator|==
+name|MD_ARPAFTP
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -841,6 +929,8 @@ name|ferror
 argument_list|(
 name|OutChannel
 argument_list|)
+operator|||
+name|DisConnected
 condition|)
 return|return;
 comment|/* 	**  Error on output -- if reporting lost channel, just ignore it. 	**  Also, ignore errors from QUIT response (221 message) -- some 	**	rude servers don't read result. 	*/
@@ -1184,7 +1274,12 @@ name|eb
 argument_list|,
 literal|"%s... "
 argument_list|,
+name|shortenstring
+argument_list|(
 name|to
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1319,7 +1414,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ERRSTRING -- return string description of error code ** **	Parameters: **		errno -- the error number to translate ** **	Returns: **		A string description of errno. ** **	Side Effects: **		none. */
+comment|/* **  ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1328,10 +1423,10 @@ name|char
 modifier|*
 name|errstring
 parameter_list|(
-name|errno
+name|errnum
 parameter_list|)
 name|int
-name|errno
+name|errnum
 decl_stmt|;
 block|{
 name|char
@@ -1378,7 +1473,7 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|errno
+name|errnum
 condition|)
 block|{
 if|#
@@ -1407,7 +1502,7 @@ name|buf
 argument_list|,
 name|sys_errlist
 index|[
-name|errno
+name|errnum
 index|]
 argument_list|)
 expr_stmt|;
@@ -1534,8 +1629,8 @@ case|:
 return|return
 literal|"Timeout on file open"
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 case|case
 name|HOST_NOT_FOUND
@@ -1648,11 +1743,11 @@ return|;
 block|}
 if|if
 condition|(
-name|errno
+name|errnum
 operator|>
 literal|0
 operator|&&
-name|errno
+name|errnum
 operator|<
 name|sys_nerr
 condition|)
@@ -1660,7 +1755,7 @@ return|return
 operator|(
 name|sys_errlist
 index|[
-name|errno
+name|errnum
 index|]
 operator|)
 return|;
@@ -1673,7 +1768,7 @@ name|buf
 argument_list|,
 literal|"Error %d"
 argument_list|,
-name|errno
+name|errnum
 argument_list|)
 expr_stmt|;
 return|return

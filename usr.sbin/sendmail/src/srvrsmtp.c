@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.23 (Berkeley) 12/21/93 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.32 (Berkeley) 3/8/94 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.23 (Berkeley) 12/21/93 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.32 (Berkeley) 3/8/94 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,25 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|RealUserName
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAXBADCOMMANDS
+value|25
+end_define
+
+begin_comment
+comment|/* maximum number of bad commands */
+end_comment
+
 begin_expr_stmt
 name|smtp
 argument_list|(
@@ -472,6 +491,11 @@ name|long
 name|msize
 decl_stmt|;
 comment|/* approximate maximum message size */
+name|char
+modifier|*
+name|peerhostname
+decl_stmt|;
+comment|/* name of SMTP peer or "localhost" */
 specifier|auto
 name|char
 modifier|*
@@ -488,6 +512,12 @@ comment|/* number of RCPT commands */
 name|bool
 name|doublequeue
 decl_stmt|;
+name|int
+name|badcommands
+init|=
+literal|0
+decl_stmt|;
+comment|/* count of bad commands */
 name|char
 name|inp
 index|[
@@ -545,9 +575,23 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-name|CurHostName
+name|peerhostname
 operator|=
 name|RealHostName
+expr_stmt|;
+if|if
+condition|(
+name|peerhostname
+operator|==
+name|NULL
+condition|)
+name|peerhostname
+operator|=
+literal|"localhost"
+expr_stmt|;
+name|CurHostName
+operator|=
+name|peerhostname
 expr_stmt|;
 name|CurSmtpClient
 operator|=
@@ -566,7 +610,7 @@ name|NULL
 condition|)
 name|CurSmtpClient
 operator|=
-name|RealHostName
+name|CurHostName
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -655,7 +699,11 @@ name|TopFrame
 argument_list|)
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* if() nesting is necessary for Cray UNICOS */
+if|if
+condition|(
 name|InChild
 condition|)
 block|{
@@ -670,6 +718,7 @@ expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|QuickAbort
 operator|=
@@ -752,6 +801,13 @@ name|NULL
 condition|)
 block|{
 comment|/* end of file, just die */
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"421 %s Lost input channel from %s"
@@ -1037,50 +1093,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-name|RealHostName
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|strcasecmp
-argument_list|(
-name|RealHostName
-argument_list|,
-literal|"localhost"
-argument_list|)
-operator|!=
-literal|0
-operator|||
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-name|MyHostName
-argument_list|)
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|auth_warning
-argument_list|(
-name|e
-argument_list|,
-literal|"Host %s claimed to be %s"
-argument_list|,
-name|RealHostName
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 name|gothello
 operator|=
 name|TRUE
@@ -1180,7 +1192,7 @@ name|NULL
 condition|)
 name|sendinghost
 operator|=
-name|RealHostName
+name|peerhostname
 expr_stmt|;
 if|if
 condition|(
@@ -1264,10 +1276,59 @@ name|e
 argument_list|,
 literal|"Host %s didn't use HELO protocol"
 argument_list|,
-name|RealHostName
+name|peerhostname
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PICKY_HELO_CHECK
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|sendinghost
+argument_list|,
+name|peerhostname
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|strcasecmp
+argument_list|(
+name|peerhostname
+argument_list|,
+literal|"localhost"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|sendinghost
+argument_list|,
+name|MyHostName
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Host %s claimed to be %s"
+argument_list|,
+name|peerhostname
+argument_list|,
+name|sendinghost
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|protocol
@@ -1420,6 +1481,51 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* check for possible spoofing */
+if|if
+condition|(
+name|RealUid
+operator|!=
+literal|0
+operator|&&
+name|OpMode
+operator|==
+name|MD_SMTP
+operator|&&
+operator|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|!=
+name|LocalMailer
+operator|&&
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
+argument_list|,
+name|RealUserName
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"%s owned process doing -bs"
+argument_list|,
+name|RealUserName
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* now parse ESMTP arguments */
 name|msize
 operator|=
@@ -1448,6 +1554,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* locate the beginning of the keyword */
 while|while
@@ -2695,10 +2803,15 @@ argument_list|,
 name|MyHostName
 argument_list|)
 expr_stmt|;
+name|doquit
+label|:
 comment|/* avoid future 050 messages */
-name|Verbose
-operator|=
-name|FALSE
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2847,7 +2960,7 @@ name|c
 operator|->
 name|cmdname
 argument_list|,
-name|RealHostName
+name|peerhostname
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -2863,6 +2976,25 @@ case|case
 name|CMDERROR
 case|:
 comment|/* unknown command */
+if|if
+condition|(
+operator|++
+name|badcommands
+operator|>
+name|MAXBADCOMMANDS
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"421 %s Too many bad commands; closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
+block|}
 name|message
 argument_list|(
 literal|"500 Command unrecognized"
@@ -2920,6 +3052,12 @@ specifier|register
 name|char
 modifier|*
 name|q
+decl_stmt|;
+name|char
+modifier|*
+name|firstp
+init|=
+name|p
 decl_stmt|;
 comment|/* find beginning of word */
 while|while
@@ -3006,7 +3144,9 @@ name|syntax
 label|:
 name|message
 argument_list|(
-literal|"501 Syntax error in parameters"
+literal|"501 Syntax error in parameters scanning \"%s\""
+argument_list|,
+name|firstp
 argument_list|)
 expr_stmt|;
 name|Errors
@@ -3576,17 +3716,25 @@ expr_stmt|;
 comment|/* if we exited on a QUIT command, complete the process */
 if|if
 condition|(
+name|WEXITSTATUS
+argument_list|(
 name|st
+argument_list|)
 operator|==
-operator|(
 name|EX_QUIT
-operator|<<
-literal|8
-operator|)
 condition|)
+block|{
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1

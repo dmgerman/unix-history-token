@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.2 (Berkeley) 7/29/93"
+literal|"@(#)macro.c	8.3 (Berkeley) 2/7/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,18 +259,34 @@ operator|=
 operator|*
 operator|++
 name|s
+operator|&
+literal|0177
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\0'
+condition|)
 name|q
 operator|=
 name|macvalue
 argument_list|(
 name|c
-operator|&
-literal|0177
 argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|s
+operator|--
+expr_stmt|;
+name|q
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|q

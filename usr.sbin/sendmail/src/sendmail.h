@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.38 (Berkeley) 1/5/94  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.41 (Berkeley) 2/6/94  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.38		1/5/94"
+literal|"@(#)sendmail.h	8.41		2/6/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,6 +1286,275 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Information about currently open connections to mailers, or to **  hosts that we have looked up recently. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCI
+value|struct mailer_con_info
+end_define
+
+begin_macro
+name|MCI
+end_macro
+
+begin_block
+block|{
+name|short
+name|mci_flags
+decl_stmt|;
+comment|/* flag bits, see below */
+name|short
+name|mci_errno
+decl_stmt|;
+comment|/* error number on last connection */
+name|short
+name|mci_herrno
+decl_stmt|;
+comment|/* h_errno from last DNS lookup */
+name|short
+name|mci_exitstat
+decl_stmt|;
+comment|/* exit status from last connection */
+name|short
+name|mci_state
+decl_stmt|;
+comment|/* SMTP state */
+name|long
+name|mci_maxsize
+decl_stmt|;
+comment|/* max size this server will accept */
+name|FILE
+modifier|*
+name|mci_in
+decl_stmt|;
+comment|/* input side of connection */
+name|FILE
+modifier|*
+name|mci_out
+decl_stmt|;
+comment|/* output side of connection */
+name|int
+name|mci_pid
+decl_stmt|;
+comment|/* process id of subordinate proc */
+name|char
+modifier|*
+name|mci_phase
+decl_stmt|;
+comment|/* SMTP phase string */
+name|struct
+name|mailer
+modifier|*
+name|mci_mailer
+decl_stmt|;
+comment|/* ptr to the mailer for this conn */
+name|char
+modifier|*
+name|mci_host
+decl_stmt|;
+comment|/* host name */
+name|time_t
+name|mci_lastuse
+decl_stmt|;
+comment|/* last usage time */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* flag bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_VALID
+value|000001
+end_define
+
+begin_comment
+comment|/* this entry is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_TEMP
+value|000002
+end_define
+
+begin_comment
+comment|/* don't cache this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_CACHED
+value|000004
+end_define
+
+begin_comment
+comment|/* currently in open cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_ESMTP
+value|000010
+end_define
+
+begin_comment
+comment|/* this host speaks ESMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_EXPN
+value|000020
+end_define
+
+begin_comment
+comment|/* EXPN command supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_SIZE
+value|000040
+end_define
+
+begin_comment
+comment|/* SIZE option supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_8BITMIME
+value|000100
+end_define
+
+begin_comment
+comment|/* BODY=8BITMIME supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_7BIT
+value|000200
+end_define
+
+begin_comment
+comment|/* strip this message to 7 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_MULTSTAT
+value|000400
+end_define
+
+begin_comment
+comment|/* MAIL11V3: handles MULT status */
+end_comment
+
+begin_comment
+comment|/* states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_CLOSED
+value|0
+end_define
+
+begin_comment
+comment|/* no traffic on this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPENING
+value|1
+end_define
+
+begin_comment
+comment|/* sending initial protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPEN
+value|2
+end_define
+
+begin_comment
+comment|/* open, initial protocol sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ACTIVE
+value|3
+end_define
+
+begin_comment
+comment|/* message being sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_QUITING
+value|4
+end_define
+
+begin_comment
+comment|/* running quit protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_SSD
+value|5
+end_define
+
+begin_comment
+comment|/* service shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ERROR
+value|6
+end_define
+
+begin_comment
+comment|/* I/O error on connection */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Envelope structure. **	This structure defines the message itself.  There is usually **	only one of these -- for the message that we originally read **	and which is our primary interest -- but other envelopes can **	be generated during processing.  For example, error messages **	will have their own envelope. */
 end_comment
 
@@ -1389,10 +1658,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
-name|MAILER
+name|MCI
 operator|*
 operator|,
 name|ENVELOPE
@@ -1408,10 +1674,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
-name|MAILER
+name|MCI
 operator|*
 operator|,
 name|ENVELOPE
@@ -2039,264 +2302,6 @@ comment|/* internal code (as above) */
 block|}
 struct|;
 end_struct
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Information about currently open connections to mailers, or to **  hosts that we have looked up recently. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCI
-value|struct mailer_con_info
-end_define
-
-begin_macro
-name|MCI
-end_macro
-
-begin_block
-block|{
-name|short
-name|mci_flags
-decl_stmt|;
-comment|/* flag bits, see below */
-name|short
-name|mci_errno
-decl_stmt|;
-comment|/* error number on last connection */
-name|short
-name|mci_herrno
-decl_stmt|;
-comment|/* h_errno from last DNS lookup */
-name|short
-name|mci_exitstat
-decl_stmt|;
-comment|/* exit status from last connection */
-name|short
-name|mci_state
-decl_stmt|;
-comment|/* SMTP state */
-name|long
-name|mci_maxsize
-decl_stmt|;
-comment|/* max size this server will accept */
-name|FILE
-modifier|*
-name|mci_in
-decl_stmt|;
-comment|/* input side of connection */
-name|FILE
-modifier|*
-name|mci_out
-decl_stmt|;
-comment|/* output side of connection */
-name|int
-name|mci_pid
-decl_stmt|;
-comment|/* process id of subordinate proc */
-name|char
-modifier|*
-name|mci_phase
-decl_stmt|;
-comment|/* SMTP phase string */
-name|struct
-name|mailer
-modifier|*
-name|mci_mailer
-decl_stmt|;
-comment|/* ptr to the mailer for this conn */
-name|char
-modifier|*
-name|mci_host
-decl_stmt|;
-comment|/* host name */
-name|time_t
-name|mci_lastuse
-decl_stmt|;
-comment|/* last usage time */
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* flag bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_VALID
-value|000001
-end_define
-
-begin_comment
-comment|/* this entry is valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_TEMP
-value|000002
-end_define
-
-begin_comment
-comment|/* don't cache this connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_CACHED
-value|000004
-end_define
-
-begin_comment
-comment|/* currently in open cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_ESMTP
-value|000010
-end_define
-
-begin_comment
-comment|/* this host speaks ESMTP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_EXPN
-value|000020
-end_define
-
-begin_comment
-comment|/* EXPN command supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_SIZE
-value|000040
-end_define
-
-begin_comment
-comment|/* SIZE option supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_8BITMIME
-value|000100
-end_define
-
-begin_comment
-comment|/* BODY=8BITMIME supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIF_MULTSTAT
-value|000200
-end_define
-
-begin_comment
-comment|/* MAIL11V3: handles MULT status */
-end_comment
-
-begin_comment
-comment|/* states */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_CLOSED
-value|0
-end_define
-
-begin_comment
-comment|/* no traffic on this connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_OPENING
-value|1
-end_define
-
-begin_comment
-comment|/* sending initial protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_OPEN
-value|2
-end_define
-
-begin_comment
-comment|/* open, initial protocol sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_ACTIVE
-value|3
-end_define
-
-begin_comment
-comment|/* message being sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_QUITING
-value|4
-end_define
-
-begin_comment
-comment|/* running quit protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_SSD
-value|5
-end_define
-
-begin_comment
-comment|/* service shutting down */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_ERROR
-value|6
-end_define
-
-begin_comment
-comment|/* I/O error on connection */
-end_comment
 
 begin_escape
 end_escape
@@ -3191,6 +3196,17 @@ end_define
 
 begin_comment
 comment|/* run SMTP on standard input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_ARPAFTP
+value|'a'
+end_define
+
+begin_comment
+comment|/* obsolete ARPANET mode (Grey Book) */
 end_comment
 
 begin_define
@@ -4377,6 +4393,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|DisConnected
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* running with OutChannel redirected to xf */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 name|SpaceSub
 decl_stmt|;
@@ -5482,6 +5509,31 @@ name|__P
 argument_list|(
 operator|(
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|commaize
+name|__P
+argument_list|(
+operator|(
+name|HDR
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|MCI
+operator|*
+operator|,
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)

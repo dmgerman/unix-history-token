@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.75 (Berkeley) 1/8/94  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.96 (Berkeley) 3/11/94  */
 end_comment
 
 begin_comment
@@ -280,17 +280,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NAMED_BIND
-value|1
-end_define
-
-begin_comment
-comment|/* use Berkeley Internet Domain Server */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MATCHGECOS
 value|1
 end_define
@@ -325,6 +314,32 @@ end_define
 
 begin_comment
 comment|/* look in user database (requires NEWDB) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/********************************************************************** **  0/1 Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **********************************************************************/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAMED_BIND
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAMED_BIND
+value|1
+end_define
+
+begin_comment
+comment|/* use Berkeley Internet Domain Server */
 end_comment
 
 begin_endif
@@ -426,17 +441,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -463,6 +467,17 @@ directive|define
 name|LA_TYPE
 value|LA_FLOAT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_define
 define|#
@@ -602,17 +617,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNAME
 value|1
 end_define
@@ -651,6 +655,17 @@ end_undef
 
 begin_comment
 comment|/* setproctitle confuses AIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
 end_comment
 
 begin_endif
@@ -694,17 +709,6 @@ end_define
 
 begin_comment
 comment|/* has initgroups(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
 end_comment
 
 begin_define
@@ -754,6 +758,17 @@ name|GIDSET_T
 value|gid_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -777,13 +792,6 @@ argument_list|(
 name|BSD
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_INT
-end_define
 
 begin_define
 define|#
@@ -817,6 +825,13 @@ end_define
 begin_comment
 comment|/* DOES have getusershell(3) call in libc */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
 
 begin_ifdef
 ifdef|#
@@ -955,6 +970,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* allow full size syslog buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -975,16 +1012,11 @@ begin_comment
 comment|/* has setreuid(2) call */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
 
 begin_define
 define|#
@@ -995,6 +1027,22 @@ end_define
 
 begin_comment
 comment|/* has flock(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
 end_comment
 
 begin_include
@@ -1124,17 +1172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -1176,6 +1213,17 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1203,6 +1251,17 @@ undef|#
 directive|undef
 name|SETPROCTITLE
 end_undef
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
 
 begin_comment
 comment|/* these include files must be included early on DG/UX */
@@ -1253,17 +1312,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -1297,6 +1345,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|HASFLOCK
 value|1
 end_define
@@ -1304,6 +1369,11 @@ end_define
 begin_comment
 comment|/* has flock(2) call */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1314,6 +1384,17 @@ end_define
 
 begin_comment
 comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BROKEN_RES_SEARCH
+value|1
+end_define
+
+begin_comment
+comment|/* res_search(unknown) returns h_errno=0 */
 end_comment
 
 begin_ifdef
@@ -1352,6 +1433,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1393,17 +1485,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNSETENV
 value|1
 end_define
@@ -1434,6 +1515,12 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1445,12 +1532,28 @@ begin_comment
 comment|/* has flock(2) call */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1496,6 +1599,12 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1507,6 +1616,11 @@ begin_comment
 comment|/* has flock(2) call */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1516,17 +1630,6 @@ end_define
 
 begin_comment
 comment|/* need a replacement for getopt(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
 end_comment
 
 begin_define
@@ -1571,6 +1674,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1664,16 +1778,139 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|HASSTATFS
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  BSD/386 (all versions) **	From Tony Sanders, BSDI */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__bsdi__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
 value|1
 end_define
 
 begin_comment
-comment|/* has the statfs(2) syscall */
+comment|/* has the unsetenv(3) call */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has the setsid(2) POSIX syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_BSDI_VERSION
+argument_list|)
+operator|&&
+name|_BSDI_VERSION
+operator|>=
+literal|199312
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETPROCTITLE
+value|1
+end_define
+
+begin_comment
+comment|/* setproctitle is in libc */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SETPROCTITLE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1759,17 +1996,6 @@ begin_comment
 comment|/* has the setsid(2) POSIX syscall */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1803,6 +2029,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_endif
 endif|#
@@ -1856,6 +2093,12 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1867,16 +2110,10 @@ begin_comment
 comment|/* has flock(2) call */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1924,6 +2161,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
 
 begin_undef
 undef|#
@@ -1989,14 +2237,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  4.3 BSD -- this is for very old systems ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
+comment|/* **  4.3 BSD -- this is for very old systems ** **	Should work for mt Xinu MORE/BSD and Mips UMIPS-BSD 2.1. ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|oldBSD43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MORE_BSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|umipsbsd
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2229,17 +2490,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASGETUSERSHELL
 value|0
 end_define
@@ -2269,6 +2519,17 @@ name|LA_TYPE
 value|LA_SHORT
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2285,7 +2546,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  ConvexOS 11.0 and later */
+comment|/* **  ConvexOS 11.0 and later ** **	"Todd C. Miller"<millert@mroe.cs.colorado.edu> claims this **	works on 9.1 as well. */
 end_comment
 
 begin_ifdef
@@ -2319,17 +2580,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETSID
 value|1
 end_define
@@ -2355,6 +2605,88 @@ directive|define
 name|LA_TYPE
 value|LA_FLOAT
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IREAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IREAD
+value|_S_IREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWRITE
+value|_S_IWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IEXEC
+value|_S_IEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFMT
+value|_S_IFMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFCHR
+value|_S_IFCHR
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFBLK
+value|_S_IFBLK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -2404,6 +2736,12 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -2414,6 +2752,11 @@ end_define
 begin_comment
 comment|/* has flock(2) call */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2526,7 +2869,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... **	From Karl London<karl@borg.demon.co.uk>. */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[03/02/94 @ 05:34 PM (Wednesday)] **	sendmail 8.6.6.b9	named 4.9.2-931205-p1	db-1.73 **	gcc 2.5.8		libc.so.4.5.19 **	slackware 1.1.2		linux 0.99.15 */
 end_comment
 
 begin_ifdef
@@ -2543,18 +2886,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* pretend to be BSD based today */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEEDVPRINTF
-name|1
-end_undef
-
-begin_comment
-comment|/* need a replacement for vprintf(3) */
+comment|/* include BSD defines */
 end_comment
 
 begin_define
@@ -2571,12 +2903,44 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASUNSETENV
 value|1
 end_define
 
 begin_comment
 comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_comment
+comment|/* from<linux/types.h> */
 end_comment
 
 begin_ifndef
@@ -2589,7 +2953,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_FLOAT
+value|LA_PROCSTR
 end_define
 
 begin_endif
@@ -2597,18 +2961,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() impl */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/sysmacros.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|GIDSET_T
-value|gid_t
-end_define
+begin_undef
+undef|#
+directive|undef
+name|atol
+end_undef
+
+begin_comment
+comment|/* wounded in<stdlib.h> */
+end_comment
 
 begin_endif
 endif|#
@@ -2667,34 +3045,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNAME
 value|1
 end_define
 
 begin_comment
 comment|/* use System V uname(2) system call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* use System V ustat(2) syscall */
 end_comment
 
 begin_define
@@ -2783,6 +3139,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_VFS
+end_define
+
+begin_comment
+comment|/* use<sys/vfs.h> statfs() implementation */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2825,17 +3192,6 @@ end_define
 
 begin_comment
 comment|/* use System V uname(2) system call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
 end_comment
 
 begin_define
@@ -2902,6 +3258,17 @@ end_define
 
 begin_comment
 comment|/* no vfork(2) primitive available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
 end_comment
 
 begin_define
@@ -3142,6 +3509,28 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_PATH_UNIX
 end_ifndef
 
@@ -3169,6 +3558,373 @@ directive|define
 name|_PATH_SENDMAILCF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Sequent DYNIX/ptx v2.0 (and higher) ** **	For DYNIX/ptx v1.x, undefine HASSETREUID. ** **	From Tim Wright<timw@sequent.com>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SEQUENT_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SETPROCTITLE
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Cray Unicos ** **	Ported by David L. Kensiski, Sterling Sofware<kensiski@nas.nasa.gov> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNICOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATHSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Apollo DomainOS ** **  From Todd Martin<tmartint@tus.ssi1.com>& Don Lewis<gdonl@gv.ssi1.com> ** **  15 Jan 1994 ** */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|apollo
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(2) call */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SETPROCTITLE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_comment
+comment|/* use getloadavg.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* four argument statfs() call */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|S_IFSOCK
+end_undef
+
+begin_comment
+comment|/* S_IFSOCK and S_IFIFO are the same */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|S_IFIFO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|S_IFIFO
+value|0010000
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
 
 begin_endif
 endif|#
@@ -3231,6 +3987,12 @@ begin_comment
 comment|/* has initgroups(2) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -3241,6 +4003,11 @@ end_define
 begin_comment
 comment|/* has flock(2) call */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3416,17 +4183,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* use System V ustat(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SYS5SETPGRP
 value|1
 end_define
@@ -3458,6 +4214,32 @@ directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_comment
+comment|/* assume integer load average */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SFS_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_USTAT
+end_define
+
+begin_comment
+comment|/* use System V ustat(2) syscall */
+end_comment
 
 begin_endif
 endif|#
@@ -3634,6 +4416,28 @@ end_define
 
 begin_comment
 comment|/* libc has getusershell(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASFLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|0
+end_define
+
+begin_comment
+comment|/* assume no flock(2) support */
 end_comment
 
 begin_endif
@@ -4422,6 +5226,38 @@ end_define
 begin_comment
 comment|/* function to call to fork mailer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  If we are going to link scanf anyway, use it in readcf */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HASUNAME
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCANF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCANF
+value|1
+end_define
 
 begin_endif
 endif|#

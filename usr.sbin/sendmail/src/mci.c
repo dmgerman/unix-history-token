@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.9 (Berkeley) 12/1/93"
+literal|"@(#)mci.c	8.12 (Berkeley) 2/9/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +812,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* clear out any expired connections */
+name|mci_scan
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -945,6 +951,69 @@ operator|=
 name|MCIS_CLOSED
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* get peer host address for logging reasons only */
+comment|/* (this should really be in the mci struct) */
+name|int
+name|socksize
+init|=
+sizeof|sizeof
+name|CurHostAddr
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|getpeername
+argument_list|(
+name|fileno
+argument_list|(
+name|mci
+operator|->
+name|mci_in
+argument_list|)
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|CurHostAddr
+argument_list|,
+operator|&
+name|socksize
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_CLOSED
+condition|)
+block|{
+comment|/* copy out any mailer flags needed in connection state */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_7BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_7BIT
+expr_stmt|;
 block|}
 return|return
 name|mci

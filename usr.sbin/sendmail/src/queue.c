@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.36 (Berkeley) 1/9/94 (with queueing)"
+literal|"@(#)queue.c	8.40 (Berkeley) 3/6/94 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.36 (Berkeley) 1/9/94 (without queueing)"
+literal|"@(#)queue.c	8.40 (Berkeley) 3/6/94 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,9 @@ name|p
 decl_stmt|;
 name|MAILER
 name|nullmailer
+decl_stmt|;
+name|MCI
+name|mcibuf
 decl_stmt|;
 name|char
 name|buf
@@ -659,6 +662,27 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
+name|dfp
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+name|FileMailer
+expr_stmt|;
 call|(
 modifier|*
 name|e
@@ -666,9 +690,8 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|dfp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|,
@@ -1256,6 +1279,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|bzero
+argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+operator|&
+name|nullmailer
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
+name|tfp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
@@ -1555,12 +1609,10 @@ name|h
 operator|->
 name|h_value
 argument_list|,
-name|tfp
-argument_list|,
 name|oldstyle
 argument_list|,
 operator|&
-name|nullmailer
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -2384,6 +2436,12 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -3633,6 +3691,10 @@ name|UseErrorsTo
 operator|=
 name|FALSE
 expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_OK
+expr_stmt|;
 if|if
 condition|(
 name|forkflag
@@ -3721,7 +3783,9 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 else|else
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|e
 operator|->
@@ -4619,7 +4683,7 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf: %s: line %s: bad line \"%s\""
+literal|"readqf: %s: line %d: bad line \"%s\""
 argument_list|,
 name|qf
 argument_list|,
@@ -6195,6 +6259,26 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|a
+operator|->
+name|q_home
+operator|=
+literal|""
+expr_stmt|;
+else|else
 name|a
 operator|->
 name|q_home

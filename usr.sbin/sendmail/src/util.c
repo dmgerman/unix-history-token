@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.28 (Berkeley) 1/4/94"
+literal|"@(#)util.c	8.34 (Berkeley) 3/11/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -2151,16 +2151,30 @@ operator|>=
 literal|0
 condition|)
 break|break;
-if|if
+switch|switch
 condition|(
 name|errno
-operator|!=
-name|ENFILE
-operator|&&
-name|errno
-operator|!=
-name|EINTR
 condition|)
+block|{
+case|case
+name|ENFILE
+case|:
+comment|/* system file table full */
+case|case
+name|EINTR
+case|:
+comment|/* interrupted syscall */
+ifdef|#
+directive|ifdef
+name|ETXTBSY
+case|case
+name|ETXTBSY
+case|:
+comment|/* Apollo: net file locked */
+endif|#
+directive|endif
+continue|continue;
+block|}
 break|break;
 block|}
 if|if
@@ -2256,7 +2270,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		m -- the mailer used to control output. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
 begin_expr_stmt
@@ -2264,9 +2278,7 @@ name|putline
 argument_list|(
 name|l
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 specifier|register
 name|char
@@ -2276,16 +2288,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|FILE
+specifier|register
+name|MCI
 modifier|*
-name|fp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MAILER
-modifier|*
-name|m
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -2300,16 +2306,21 @@ specifier|register
 name|char
 name|svchar
 decl_stmt|;
+name|int
+name|slop
+init|=
+literal|0
+decl_stmt|;
 comment|/* strip out 0200 bits -- these can look like TELNET protocol */
 if|if
 condition|(
-name|bitnset
+name|bitset
 argument_list|(
-name|M_7BITS
+name|MCIF_7BIT
 argument_list|,
-name|m
+name|mci
 operator|->
-name|m_flags
+name|mci_flags
 argument_list|)
 condition|)
 block|{
@@ -2397,7 +2408,9 @@ expr_stmt|;
 comment|/* check for line overflow */
 while|while
 condition|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
 operator|>
@@ -2407,9 +2420,13 @@ operator|(
 name|p
 operator|-
 name|l
+operator|+
+name|slop
 operator|)
 operator|>
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
 condition|)
@@ -2422,9 +2439,13 @@ init|=
 operator|&
 name|l
 index|[
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
+operator|-
+name|slop
 operator|-
 literal|1
 index|]
@@ -2448,11 +2469,17 @@ index|]
 operator|==
 literal|'.'
 operator|&&
+name|slop
+operator|==
+literal|0
+operator|&&
 name|bitnset
 argument_list|(
 name|M_XDOT
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -2465,7 +2492,9 @@ name|putc
 argument_list|(
 literal|'.'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2489,7 +2518,9 @@ name|fputs
 argument_list|(
 name|l
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2499,16 +2530,34 @@ name|putc
 argument_list|(
 literal|'!'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_eol
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2521,7 +2570,7 @@ name|fprintf
 argument_list|(
 name|TrafficLogFile
 argument_list|,
-literal|"%s!\n%05d>>> "
+literal|"%s!\n%05d>>>  "
 argument_list|,
 name|l
 argument_list|,
@@ -2538,6 +2587,10 @@ name|l
 operator|=
 name|q
 expr_stmt|;
+name|slop
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* output last part */
 if|if
@@ -2549,11 +2602,17 @@ index|]
 operator|==
 literal|'.'
 operator|&&
+name|slop
+operator|==
+literal|0
+operator|&&
 name|bitnset
 argument_list|(
 name|M_XDOT
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -2566,7 +2625,9 @@ name|putc
 argument_list|(
 literal|'.'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2623,16 +2684,22 @@ argument_list|(
 operator|*
 name|l
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_eol
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2925,6 +2992,24 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* set the timeout */
 if|if
 condition|(
@@ -4593,9 +4678,24 @@ expr_stmt|;
 goto|goto
 name|defprint
 goto|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|S_IFIFO
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|S_IFSOCK
+argument_list|)
+operator|||
+name|S_IFIFO
+operator|!=
+name|S_IFSOCK
+operator|)
 case|case
 name|S_IFIFO
 case|:

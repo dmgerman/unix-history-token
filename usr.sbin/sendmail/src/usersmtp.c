@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.17 (Berkeley) 1/5/94 (with SMTP)"
+literal|"@(#)usersmtp.c	8.18 (Berkeley) 1/24/94 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.17 (Berkeley) 1/5/94 (without SMTP)"
+literal|"@(#)usersmtp.c	8.18 (Berkeley) 1/24/94 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,12 +1016,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mci
 operator|->
 name|mci_flags
 operator||=
 name|MCIF_8BITMIME
 expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_7BIT
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2036,10 +2045,6 @@ name|e_puthdr
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|)
@@ -2049,10 +2054,6 @@ argument_list|(
 literal|"\n"
 argument_list|,
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 call|(
@@ -2063,10 +2064,6 @@ name|e_putbody
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|,

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	8.2 (Berkeley) 9/22/93"
+literal|"@(#)praliases.c	8.3 (Berkeley) 3/6/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,11 +277,19 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:%s\n"
+literal|"%.*s:%.*s\n"
+argument_list|,
+name|newdbkey
+operator|.
+name|size
 argument_list|,
 name|newdbkey
 operator|.
 name|data
+argument_list|,
+name|newdbcontent
+operator|.
+name|size
 argument_list|,
 name|newdbcontent
 operator|.
@@ -339,11 +347,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:%s\n"
+literal|"%s:%.*s\n"
 argument_list|,
 name|newdbkey
 operator|.
 name|data
+argument_list|,
+name|newdbcontent
+operator|.
+name|size
 argument_list|,
 name|newdbcontent
 operator|.
@@ -449,11 +461,19 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%s\n"
+literal|"%.*s:%.*s\n"
+argument_list|,
+name|key
+operator|.
+name|dsize
 argument_list|,
 name|key
 operator|.
 name|dptr
+argument_list|,
+name|content
+operator|.
+name|dsize
 argument_list|,
 name|content
 operator|.
@@ -525,11 +545,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%s\n"
+literal|"%s:%.*s\n"
 argument_list|,
 name|key
 operator|.
 name|dptr
+argument_list|,
+name|content
+operator|.
+name|dsize
 argument_list|,
 name|content
 operator|.
