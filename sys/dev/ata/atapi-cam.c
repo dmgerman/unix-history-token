@@ -3240,7 +3240,7 @@ name|csio
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAMDEBUG
+name|XXXCAMDEBUG
 define|#
 directive|define
 name|err
