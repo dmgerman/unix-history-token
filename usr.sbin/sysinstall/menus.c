@@ -3700,6 +3700,51 @@ literal|"=ftp://ftp5.uk.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Ukraine"
+block|,
+literal|"ftp.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ua.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine #2"
+block|,
+literal|"ftp2.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.ua.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine #3"
+block|,
+literal|"ftp3.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.ua.freebsd.org"
+block|}
+block|,
+block|{
 literal|" USA"
 block|,
 literal|"ftp.freebsd.org"
@@ -9352,6 +9397,34 @@ literal|"keymap=uk.iso"
 block|}
 block|,
 block|{
+literal|" Ukrainian KOI8-U"
+block|,
+literal|"Ukrainian KOI8-U keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=ua.koi8-u"
+block|}
+block|,
+block|{
+literal|" Ukrainian KOI8-U+KOI8-R"
+block|,
+literal|"Ukrainian KOI8-U+KOI8-R keymap (alter)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=ua.koi8-u.shift.alt"
+block|}
+block|,
+block|{
 literal|" USA CapsLock->Ctrl"
 block|,
 literal|"US standard (Caps as L-Control)"
@@ -9786,6 +9859,20 @@ literal|"scrnmap=koi8-r2cp866"
 block|}
 block|,
 block|{
+literal|"KOI8-U to IBM866u"
+block|,
+literal|"Ukrainian KOI8-U to IBM 866u screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=koi8-u2cp866u"
+block|}
+block|,
+block|{
 literal|"ISO 8859-1 to IBM437"
 block|,
 literal|"W-Europe ISO 8859-1 to IBM 437 screenmap"
@@ -9904,7 +9991,21 @@ literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866-8x16"
 block|}
 block|,
 block|{
-literal|"6 ISO 8859-1"
+literal|"6 IBM 866u"
+block|,
+literal|"Ukrainian, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp866u-8x8,font8x14=cp866u-8x14,font8x16=cp866u-8x16"
+block|}
+block|,
+block|{
+literal|"7 ISO 8859-1"
 block|,
 literal|"Western Europe, ISO encoding"
 block|,
@@ -9918,7 +10019,7 @@ literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
 block|}
 block|,
 block|{
-literal|"7 ISO 8859-2"
+literal|"8 ISO 8859-2"
 block|,
 literal|"Eastern Europe, ISO encoding"
 block|,
@@ -9932,7 +10033,7 @@ literal|"font8x8=iso02-8x8,font8x14=iso02-8x14,font8x16=iso02-8x16"
 block|}
 block|,
 block|{
-literal|"8 KOI8-R"
+literal|"9 KOI8-R"
 block|,
 literal|"Russian, KOI8-R encoding"
 block|,
@@ -9946,7 +10047,21 @@ literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
-literal|"9 SWISS"
+literal|"0 KOI8-U"
+block|,
+literal|"Ukrainian, KOI8-U encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=koi8-u-8x8,font8x14=koi8-u-8x14,font8x16=koi8-u-8x16"
+block|}
+block|,
+block|{
+literal|"S SWISS"
 block|,
 literal|"English, better resolution"
 block|,
