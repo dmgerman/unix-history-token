@@ -490,11 +490,11 @@ argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|exit
+argument_list|(
 name|exitval
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
