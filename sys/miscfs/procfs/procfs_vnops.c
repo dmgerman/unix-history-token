@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) 2/7/94  *  *	$Id: procfs_vnops.c,v 1.18 1995/11/09 08:16:04 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) 2/7/94  *  *	$Id: procfs_vnops.c,v 1.19 1995/11/16 11:39:11 bde Exp $  */
 end_comment
 
 begin_comment
@@ -319,6 +319,19 @@ decl_stmt|;
 name|pfstype
 name|d_pfstype
 decl_stmt|;
+name|int
+argument_list|(
+argument|*d_valid
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|procent
 index|[]
@@ -331,7 +344,7 @@ parameter_list|(
 name|s
 parameter_list|)
 value|sizeof(s)-1, s
-comment|/* namlen, nam, type */
+comment|/* namlen, nam, type	 validp */
 block|{
 name|N
 argument_list|(
@@ -339,6 +352,8 @@ literal|"."
 argument_list|)
 block|,
 name|Pproc
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -348,14 +363,21 @@ literal|".."
 argument_list|)
 block|,
 name|Proot
+block|,
+name|NULL
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{  N("file"),	Pfile },
-endif|#
-directive|endif
+block|{
+name|N
+argument_list|(
+literal|"file"
+argument_list|)
+block|,
+name|Pfile
+block|,
+name|procfs_validfile
+block|}
+block|,
 block|{
 name|N
 argument_list|(
@@ -363,6 +385,8 @@ literal|"mem"
 argument_list|)
 block|,
 name|Pmem
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -372,6 +396,8 @@ literal|"regs"
 argument_list|)
 block|,
 name|Pregs
+block|,
+name|procfs_validregs
 block|}
 block|,
 block|{
@@ -381,6 +407,8 @@ literal|"fpregs"
 argument_list|)
 block|,
 name|Pfpregs
+block|,
+name|procfs_validfpregs
 block|}
 block|,
 block|{
@@ -390,6 +418,8 @@ literal|"ctl"
 argument_list|)
 block|,
 name|Pctl
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -399,6 +429,8 @@ literal|"status"
 argument_list|)
 block|,
 name|Pstatus
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -408,6 +440,8 @@ literal|"note"
 argument_list|)
 block|,
 name|Pnote
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -417,6 +451,8 @@ literal|"notepg"
 argument_list|)
 block|,
 name|Pnotepg
+block|,
+name|NULL
 block|}
 block|,
 undef|#
@@ -1199,6 +1235,9 @@ operator|->
 name|pfs_type
 condition|)
 block|{
+case|case
+name|Pctl
+case|:
 case|case
 name|Pregs
 case|:
@@ -2086,6 +2125,24 @@ name|d_namlen
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|dp
+operator|->
+name|d_valid
+operator|==
+name|NULL
+operator|||
+call|(
+modifier|*
+name|dp
+operator|->
+name|d_valid
+call|)
+argument_list|(
+name|procp
+argument_list|)
+operator|)
 condition|)
 block|{
 name|pfs_type
@@ -2204,6 +2261,35 @@ name|ENOTDIR
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Does this process have a text file?  */
+end_comment
+
+begin_function
+name|int
+name|procfs_validfile
+parameter_list|(
+name|p
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|procfs_findtextvp
+argument_list|(
+name|p
+argument_list|)
+operator|!=
+name|NULLVP
+operator|)
+return|;
 block|}
 end_function
 
@@ -2339,6 +2425,27 @@ case|case
 name|Pproc
 case|:
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|PFIND
+argument_list|(
+name|pfs
+operator|->
+name|pfs_pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+break|break;
 while|while
 condition|(
 name|uio
@@ -2368,6 +2475,31 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* see if we should show this one. */
+if|if
+condition|(
+name|dt
+operator|->
+name|d_valid
+operator|&&
+call|(
+modifier|*
+name|dt
+operator|->
+name|d_valid
+call|)
+argument_list|(
+name|p
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|i
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|dp
 operator|->
 name|d_reclen
