@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,6 +68,13 @@ include|#
 directive|include
 file|"ioctl.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|p_devtmp
+value|p_logname[11]
+end_define
 
 begin_comment
 comment|/*  * Descriptor management.  */
@@ -2359,7 +2366,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * File Descriptor pseudo-device driver (/dev/fd/).  *  * Fred Blonder - U of Maryland	11-Sep-1984  *  * Opening minor device N dup()s the file (if any) connected to file  * descriptor N belonging to the calling process.  Note that this driver  * consists of only the ``open()'' routine, because all subsequent  * references to this file will be direct to the other driver.  */
+comment|/*  * File Descriptor pseudo-device driver (/dev/fd/).  *  * Opening minor device N dup()s the file (if any) connected to file  * descriptor N belonging to the calling process.  Note that this driver  * consists of only the ``open()'' routine, because all subsequent  * references to this file will be direct to the other driver.  */
 end_comment
 
 begin_comment
@@ -2394,27 +2401,74 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|file
+name|proc
 modifier|*
-name|fp
-decl_stmt|,
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+comment|/* 	 * XXX Kludge: set p->p_devtmp to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
+name|p
+operator|->
+name|p_devtmp
+operator|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Duplicate the specified descriptor to a free descriptor.  */
+end_comment
+
+begin_expr_stmt
+name|dupfdopen
+argument_list|(
+name|indx
+argument_list|,
+name|dfd
+argument_list|,
+name|mode
+argument_list|)
+specifier|register
+name|int
+name|indx
+operator|,
+name|dfd
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|file
 modifier|*
 name|wfp
 decl_stmt|;
-name|int
-name|indx
-decl_stmt|,
-name|dfd
+name|struct
+name|file
+modifier|*
+name|fp
 decl_stmt|;
-comment|/* 	 * XXX 	 * Horrid kludge: u.u_r.r_val1 contains the value of the new file 	 * descriptor, which was set before the call to vn_open() by copen() 	 * in vfs_syscalls.c. 	 */
-name|indx
-operator|=
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
-expr_stmt|;
+comment|/* 	 * If the to-be-dup'd fd number is greater than the allowed number 	 * of file descriptors, or the fd to be dup'd has already been 	 * closed, reject.  Note, check for new == old is necessary as 	 * falloc could allocate an already closed to-be-dup'd descriptor 	 * as the new descriptor. 	 */
 name|fp
 operator|=
 name|u
@@ -2423,14 +2477,6 @@ name|u_ofile
 index|[
 name|indx
 index|]
-expr_stmt|;
-comment|/* 	 * File system device minor number is the to-be-dup'd fd number. 	 * If it is greater than the allowed number of file descriptors, 	 * or the fd to be dup'd has already been closed, reject.  Note,  	 * check for new == old is necessary as u_falloc could allocate 	 * an already closed to-be-dup'd descriptor as the new descriptor. 	 */
-name|dfd
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2467,12 +2513,14 @@ comment|/* 	 * Check that the mode the file is being opened for is a subset  	 *
 if|if
 condition|(
 operator|(
+operator|(
 name|mode
 operator|&
 operator|(
 name|FREAD
 operator||
 name|FWRITE
+operator|)
 operator|)
 operator||
 name|wfp
@@ -2531,13 +2579,11 @@ name|u_lastfile
 operator|=
 name|indx
 expr_stmt|;
-comment|/* 	 * Delete references to this pseudo-device by returning a special 	 * error (EJUSTRETURN) that will cause all resources to be freed, 	 * then detected and cleared by copen(). 	 */
 return|return
 operator|(
-name|EJUSTRETURN
+literal|0
 operator|)
 return|;
-comment|/* XXX */
 block|}
 end_block
 
