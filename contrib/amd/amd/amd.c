@@ -688,7 +688,7 @@ name|gopt
 operator|.
 name|auto_dir
 operator|=
-literal|"/a"
+literal|"/.amd_mnt"
 expr_stmt|;
 comment|/* cluster name */
 name|gopt
