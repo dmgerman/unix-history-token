@@ -375,7 +375,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cat [-benstuv] [-] [file ...]\n"
+literal|"usage: cat [-benstuv] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
