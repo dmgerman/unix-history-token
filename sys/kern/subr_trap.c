@@ -287,12 +287,6 @@ condition|)
 name|g_waitidle
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Let the scheduler adjust our priority etc. 	 */
-name|sched_userret
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 * Don't bother doing all the work if the stop bits are not set 	 * at this time.. If we miss it, we miss it.. no big deal. 	 */
 if|if
 condition|(
@@ -374,6 +368,12 @@ name|psratio
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Let the scheduler adjust our priority etc. 	 */
+name|sched_userret
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
