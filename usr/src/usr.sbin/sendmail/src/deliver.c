@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.134 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.135 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4795,21 +4795,19 @@ name|e_lockfp
 operator|!=
 name|NULL
 condition|)
-block|{
-name|fclose
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fileno
 argument_list|(
 name|e
 operator|->
 name|e_lockfp
 argument_list|)
+argument_list|)
 expr_stmt|;
-name|e
-operator|->
-name|e_lockfp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* child -- set up input& exec mailer */
 operator|(
 name|void
