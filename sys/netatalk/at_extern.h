@@ -7,16 +7,8 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|timeout_t
 name|aarpprobe
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 

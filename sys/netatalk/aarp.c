@@ -2017,9 +2017,6 @@ block|{
 comment|/* 	     * We're probing, someone either responded to our probe, or 	     * probed for the same address we'd like to use. Change the 	     * address we're probing for. 	     */
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|aarpprobe
 argument_list|,
 name|ac
@@ -2885,12 +2882,18 @@ begin_function
 name|void
 name|aarpprobe
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|arpcom
 modifier|*
 name|ac
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -3021,9 +3024,6 @@ else|else
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|aarpprobe
 argument_list|,
 operator|(

@@ -648,18 +648,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|twabortrcv
-parameter_list|(
-name|struct
-name|tw_sc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -3929,14 +3923,20 @@ specifier|static
 name|void
 name|twabortrcv
 parameter_list|(
-name|sc
+name|arg
 parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
 name|struct
 name|tw_sc
 modifier|*
 name|sc
+init|=
+name|arg
 decl_stmt|;
-block|{
 name|int
 name|s
 decl_stmt|;
@@ -4155,9 +4155,6 @@ name|newphase
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|twabortrcv
 argument_list|,
 operator|(
@@ -4248,9 +4245,6 @@ expr_stmt|;
 comment|/*       pkt[0] = sc->sc_flags;       pkt[1] = pkt[2] = 0;       twputpkt(sc, pkt);       wakeup((caddr_t)sc);  */
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|twabortrcv
 argument_list|,
 operator|(
@@ -4529,9 +4523,6 @@ argument_list|)
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|twabortrcv
 argument_list|,
 operator|(

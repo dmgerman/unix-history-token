@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.56 1997/03/23 03:35:01 bde Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.57 1997/03/24 12:02:48 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -414,16 +414,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|si_lstart
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|si_port
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -4687,9 +4679,6 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|si_lstart
 argument_list|,
 operator|(
@@ -10110,9 +10099,6 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|si_lstart
 argument_list|,
 operator|(
@@ -10146,9 +10132,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|si_lstart
 argument_list|,
 operator|(
@@ -10192,15 +10175,19 @@ specifier|static
 name|void
 name|si_lstart
 parameter_list|(
-name|pp
+name|void
+modifier|*
+name|arg
 parameter_list|)
+block|{
 specifier|register
 name|struct
 name|si_port
 modifier|*
 name|pp
+init|=
+name|arg
 decl_stmt|;
-block|{
 specifier|register
 name|struct
 name|tty

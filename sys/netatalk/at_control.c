@@ -2071,9 +2071,6 @@ expr_stmt|;
 comment|/* 		 * start off the probes as an asynchronous activity. 		 * though why wait 200mSec? 		 */
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|aarpprobe
 argument_list|,
 operator|(
