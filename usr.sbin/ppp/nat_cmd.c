@@ -1579,7 +1579,7 @@ operator|<
 name|len
 operator|+
 operator|(
-name|f
+name|len
 condition|?
 literal|1
 else|:
@@ -1589,7 +1589,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|f
+name|len
 condition|)
 name|cmd
 index|[
