@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -229,6 +235,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|fork_list_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -273,6 +287,44 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|void
+name|init_fork_list
+parameter_list|(
+name|void
+modifier|*
+name|data
+name|__unused
+parameter_list|)
+block|{
+name|sx_init
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|,
+literal|"fork list"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|fork_list
+argument_list|,
+name|SI_SUB_INTRINSIC
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|init_fork_list
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1399,6 +1451,11 @@ name|p_startzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -1433,6 +1490,11 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1443,6 +1505,11 @@ argument_list|,
 literal|"process lock"
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1489,6 +1556,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|p2
@@ -1508,6 +1580,16 @@ argument_list|,
 name|M_SUBPROC
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1607,9 +1689,16 @@ name|sigacts
 modifier|*
 name|newsigacts
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 comment|/* Create the shared sigacts structure */
 name|MALLOC
 argument_list|(
@@ -1630,10 +1719,15 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
 expr_stmt|;
 comment|/* 			 * Set p_sigacts to the new shared structure. 			 * Note that this is updating p1->p_sigacts at the 			 * same time, since p_sigacts is just a pointer to 			 * the shared p_procsig->ps_sigacts. 			 */
 name|p2
@@ -1675,15 +1769,20 @@ name|p_addr
 operator|->
 name|u_sigacts
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|p2
@@ -1703,6 +1802,16 @@ argument_list|,
 name|M_SUBPROC
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1862,7 +1971,7 @@ name|p_refcnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Preserve some more flags in subprocess.  P_PROFIL has already 	 * been preserved. 	 */
+comment|/* 	 * Preserve some more flags in subprocess.  PS_PROFIL has already 	 * been preserved. 	 */
 name|p2
 operator|->
 name|p_flag
@@ -1916,6 +2025,16 @@ argument_list|,
 name|p_pglist
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Attach the new process to its parent. 	 * 	 * If RFNOWAIT is set, the newly created process becomes a child 	 * of init.  This effectively disassociates the child from the 	 * parent. 	 */
 if|if
 condition|(
@@ -1937,11 +2056,21 @@ argument_list|(
 name|PT_EXCLUSIVE
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_pptr
 operator|=
 name|pptr
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -1958,6 +2087,11 @@ expr_stmt|;
 name|PROCTREE_LOCK
 argument_list|(
 name|PT_RELEASE
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
@@ -2002,6 +2136,11 @@ operator|->
 name|p_slpcallout
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2059,9 +2198,19 @@ operator|->
 name|p_estcpu
 expr_stmt|;
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
-name|PHOLD
+name|_PHOLD
 argument_list|(
 name|p1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish creating the child process.  It will return via a different 	 * execution path later.  (ie: directly into user mode) 	 */
@@ -2201,6 +2350,12 @@ name|vm_ssize
 expr_stmt|;
 block|}
 comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 */
+name|sx_slock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ep
@@ -2225,6 +2380,12 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
+name|sx_sunlock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
 name|microtime
 argument_list|(
@@ -2255,9 +2416,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2281,12 +2439,14 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|spl0
-argument_list|()
-expr_stmt|;
 block|}
 comment|/* 	 * Now can be swapped. 	 */
-name|PRELE
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|_PRELE
 argument_list|(
 name|p1
 argument_list|)
@@ -2306,7 +2466,17 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Preserve synchronization semantics of vfork.  If waiting for 	 * child to exec or exit, set P_PPWAIT on child, and sleep on our 	 * proc (in case of exit). 	 */
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|p2
@@ -2315,15 +2485,25 @@ name|p_flag
 operator|&
 name|P_PPWAIT
 condition|)
-name|tsleep
+name|msleep
 argument_list|(
 name|p1
+argument_list|,
+operator|&
+name|p2
+operator|->
+name|p_mtx
 argument_list|,
 name|PWAIT
 argument_list|,
 literal|"ppwait"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Return child proc pointer to parent. 	 */
@@ -2411,6 +2591,12 @@ name|function
 operator|=
 name|function
 expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2419,6 +2605,12 @@ argument_list|,
 name|ep
 argument_list|,
 name|next
+argument_list|)
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|fork_list_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2448,6 +2640,12 @@ name|forklist
 modifier|*
 name|ep
 decl_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ep
@@ -2476,6 +2674,12 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ep
@@ -2490,6 +2694,12 @@ operator|)
 return|;
 block|}
 block|}
+name|sx_xunlock
+argument_list|(
+operator|&
+name|fork_list_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2550,6 +2760,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|p
+operator|=
+name|curproc
+expr_stmt|;
 comment|/* 	 * Setup the sched_lock state so that we can release it. 	 */
 name|sched_lock
 operator|.
@@ -2558,7 +2772,7 @@ operator|=
 operator|(
 name|uintptr_t
 operator|)
-name|curproc
+name|p
 expr_stmt|;
 name|sched_lock
 operator|.
@@ -2627,9 +2841,10 @@ name|frame
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if a kernel thread misbehaved and returned from its main 	 * function. 	 */
+name|PROC_LOCK
+argument_list|(
 name|p
-operator|=
-name|CURPROC
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2640,6 +2855,11 @@ operator|&
 name|P_KTHREAD
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2665,6 +2885,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
