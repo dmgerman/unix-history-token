@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: symorder.c,v 1.12.2.1 1997/08/13 06:39:58 charnier Exp $"
+literal|"$Id: symorder.c,v 1.12.2.2 1997/08/29 05:29:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
