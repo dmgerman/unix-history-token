@@ -5039,11 +5039,6 @@ decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|timeval
 name|now
 decl_stmt|;
@@ -5053,12 +5048,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-name|td
-operator|=
-operator|&
-name|thread0
-expr_stmt|;
-comment|/* XXX for credentials, may break if sleep */
 name|s
 operator|=
 name|splnet
@@ -5433,7 +5422,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 else|else
@@ -5462,7 +5451,7 @@ name|nm_nam
 argument_list|,
 name|NULL
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
