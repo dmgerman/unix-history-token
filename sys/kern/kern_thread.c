@@ -3181,17 +3181,11 @@ name|struct
 name|thread
 modifier|*
 name|td
-init|=
-name|curthread
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|td
 operator|=
