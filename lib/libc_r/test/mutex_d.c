@@ -516,8 +516,6 @@ specifier|static
 name|FILE
 modifier|*
 name|logfile
-init|=
-name|stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,7 +1388,7 @@ argument_list|)
 expr_stmt|;
 name|log_trace
 argument_list|(
-literal|"Thread %d: wrote %d to pipe.\n"
+literal|"Thread %d: wrote to pipe.\n"
 argument_list|,
 operator|(
 name|int
@@ -6102,6 +6100,10 @@ name|struct
 name|sched_param
 name|param
 decl_stmt|;
+name|logfile
+operator|=
+name|stdout
+expr_stmt|;
 name|assert
 argument_list|(
 name|pthread_getschedparam
