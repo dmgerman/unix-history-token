@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.11 (Berkeley) %G%"
+literal|"@(#)headers.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,7 @@ operator|->
 name|hi_flags
 operator|)
 return|;
-comment|/* drop explicit From: if same as what we would generate -- for MH */
+comment|/* 	**  Drop explicit From: if same as what we would generate. 	**  This is to make MH (which doesn't always give a full name) 	**  insert the full name information in all circumstances. 	*/
 name|p
 operator|=
 literal|"resent-from"
@@ -573,6 +573,7 @@ modifier|*
 name|udbsender
 parameter_list|()
 function_decl|;
+comment|/* 			**  Try doing USERDB rewriting even on fully commented 			**  names; this saves the "comment" information (such 			**  as full name) and rewrites the electronic part. 			*/
 name|fancy
 operator|=
 name|crackaddr
