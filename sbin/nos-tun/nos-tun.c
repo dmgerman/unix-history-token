@@ -7,6 +7,10 @@ begin_comment
 comment|/*  *  'nos_tun' program configure tunN interface as a point-to-point  *  connection with two "pseudo"-addresses between this host and  *  'target'.  *  *  It uses Ip-over-Ip incapsulation ( protocol number 94 - IPIP)  *  (known as NOS-incapsulation in CISCO-routers' terminology).  *  *  'nos_tun' can works with itself and CISCO-routers.  *  (It may also work with Linux 'nos_tun's, but  *  I have no Linux system here to test with).  *  *  BUGS (or features ?):  *  - you must specify ONE of the target host's addresses  *    ( nos_tun sends and accepts packets only to/from this  *      address )  *  - there can be only ONE tunnel between two hosts,  *    more precisely - between given host and (one of)  *    target hosts' address(es)  *    (and why do you want more ?)  */
 end_comment
 
+begin_comment
+comment|/*  * Mar. 23 1999 by Isao SEKI<iseki@gongon.com>  * I added a new flag for ip protocol number.  * We are using 4 as protocol number in ampr.org.  *  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -20,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nos-tun.c,v 1.3 1998/07/15 06:38:53 charnier Exp $"
+literal|"$Id: nos-tun.c,v 1.4 1998/08/02 16:06:34 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +929,15 @@ name|char
 modifier|*
 name|target
 decl_stmt|;
+name|char
+modifier|*
+name|protocol
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|protnum
+decl_stmt|;
 name|struct
 name|sockaddr
 name|t_laddr
@@ -982,7 +995,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:s:t:"
+literal|"d:s:t:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1015,6 +1028,14 @@ case|case
 literal|'t'
 case|:
 name|devname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|protocol
 operator|=
 name|optarg
 expr_stmt|;
@@ -1058,6 +1079,24 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|protocol
+operator|==
+name|NULL
+condition|)
+name|protnum
+operator|=
+literal|94
+expr_stmt|;
+else|else
+name|protnum
+operator|=
+name|atoi
+argument_list|(
+name|protocol
+argument_list|)
+expr_stmt|;
 name|target
 operator|=
 operator|*
@@ -1155,7 +1194,7 @@ name|AF_INET
 argument_list|,
 name|SOCK_RAW
 argument_list|,
-literal|94
+name|protnum
 argument_list|)
 operator|)
 operator|<
@@ -1502,7 +1541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nos_tun -t<tun_name> -s<source_addr> -d<dest_addr><target_addr>\n"
+literal|"usage: nos_tun -t<tun_name> -s<source_addr> -d<dest_addr> -p<protocol_number><target_addr>\n"
 argument_list|)
 expr_stmt|;
 name|exit
