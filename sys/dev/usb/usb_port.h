@@ -470,7 +470,7 @@ begin_define
 define|#
 directive|define
 name|SIMPLEQ_REMOVE_HEAD
-value|STAILQ_REMOVE_HEAD_UNTIL
+value|STAILQ_REMOVE_HEAD
 end_define
 
 begin_define
