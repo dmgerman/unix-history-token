@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.13	%G%	*/
+comment|/*	conf.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -134,20 +134,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|buf
-name|hptab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|HPTAB
-value|&hptab
-end_define
-
 begin_else
 else|#
 directive|else
@@ -186,13 +172,6 @@ define|#
 directive|define
 name|hpdump
 value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|HPTAB
-value|0
 end_define
 
 begin_endif
@@ -236,20 +215,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|buf
-name|httab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|HTTAB
-value|&httab
-end_define
-
 begin_else
 else|#
 directive|else
@@ -297,13 +262,6 @@ name|htdump
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|HTTAB
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -341,20 +299,6 @@ name|rkdump
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
-name|rktab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|RKTAB
-value|&rktab
-end_define
 
 begin_else
 else|#
@@ -394,13 +338,6 @@ define|#
 directive|define
 name|rkdump
 value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|RKTAB
-value|0
 end_define
 
 begin_endif
@@ -447,20 +384,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|buf
-name|tmtab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TMTAB
-value|&tmtab
-end_define
-
 begin_else
 else|#
 directive|else
@@ -515,13 +438,6 @@ name|tmdump
 value|nodev
 end_define
 
-begin_define
-define|#
-directive|define
-name|TMTAB
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -563,20 +479,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|buf
-name|tstab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TSTAB
-value|&tstab
-end_define
-
 begin_else
 else|#
 directive|else
@@ -624,13 +526,6 @@ name|tsdump
 value|nodev
 end_define
 
-begin_define
-define|#
-directive|define
-name|TSTAB
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -668,20 +563,6 @@ name|updump
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
-name|uptab
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|UPTAB
-value|&uptab
-end_define
 
 begin_else
 else|#
@@ -723,13 +604,6 @@ name|updump
 value|nodev
 end_define
 
-begin_define
-define|#
-directive|define
-name|UPTAB
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -763,7 +637,7 @@ name|hpstrategy
 block|,
 name|hpdump
 block|,
-name|HPTAB
+literal|0
 block|,
 comment|/*0*/
 name|htopen
@@ -774,7 +648,7 @@ name|htstrategy
 block|,
 name|htdump
 block|,
-name|HTTAB
+name|B_TAPE
 block|,
 comment|/*1*/
 name|nulldev
@@ -785,7 +659,7 @@ name|upstrategy
 block|,
 name|updump
 block|,
-name|UPTAB
+literal|0
 block|,
 comment|/*2*/
 name|nulldev
@@ -796,7 +670,7 @@ name|rkstrategy
 block|,
 name|rkdump
 block|,
-name|RKTAB
+literal|0
 block|,
 comment|/*3*/
 name|nodev
@@ -818,7 +692,7 @@ name|tmstrategy
 block|,
 name|tmdump
 block|,
-name|TMTAB
+name|B_TAPE
 block|,
 comment|/*5*/
 name|tsopen
@@ -829,7 +703,7 @@ name|tsstrategy
 block|,
 name|tsdump
 block|,
-name|TSTAB
+name|B_TAPE
 block|,
 comment|/*6*/
 literal|0
@@ -3061,7 +2935,7 @@ comment|/* major device number of memory special file */
 end_comment
 
 begin_comment
-comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines as well as the placement  * of the block on the d_tab chains.  Instead, /dev/drum is  * provided as a character (raw) device.  */
+comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines. Instead, /dev/drum is  * provided as a character (raw) device.  */
 end_comment
 
 begin_decl_stmt
