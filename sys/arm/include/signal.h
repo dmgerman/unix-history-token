@@ -54,13 +54,6 @@ end_if
 
 begin_struct
 struct|struct
-name|osigcontext
-block|{ }
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sigcontext
 block|{ }
 struct|;
