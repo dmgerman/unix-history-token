@@ -863,6 +863,18 @@ index|]
 operator|=
 name|ifp
 expr_stmt|;
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_datalen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|if_data
+argument_list|)
+expr_stmt|;
 comment|/* 	 * create a Link Level name for this device 	 */
 name|namelen
 operator|=

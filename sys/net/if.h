@@ -215,6 +215,14 @@ name|u_char
 name|ifi_xmitquota
 decl_stmt|;
 comment|/* polling quota for xmit intrs */
+name|u_char
+name|ifi_do_no_use
+decl_stmt|;
+comment|/* pad for ifi_datalen's position */
+name|u_char
+name|ifi_datalen
+decl_stmt|;
+comment|/* length of this data struct */
 name|u_long
 name|ifi_mtu
 decl_stmt|;
