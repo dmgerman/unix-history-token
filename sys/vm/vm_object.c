@@ -341,6 +341,10 @@ name|object_bypasses
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * next_index determines the page color that is assigned to the next  * allocated object.  Accesses to next_index are not synchronized  * because the effects of two or more object allocations using  * next_index simultaneously are inconsequential.  At any given time,  * numerous objects have the same page color.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -707,25 +711,14 @@ name|incr
 operator|=
 name|size
 expr_stmt|;
-do|do
 name|object
 operator|->
 name|pg_color
 operator|=
 name|next_index
 expr_stmt|;
-do|while
-condition|(
-operator|!
-name|atomic_cmpset_int
-argument_list|(
-operator|&
 name|next_index
-argument_list|,
-name|object
-operator|->
-name|pg_color
-argument_list|,
+operator|=
 operator|(
 name|object
 operator|->
@@ -735,9 +728,7 @@ name|incr
 operator|)
 operator|&
 name|PQ_L2_MASK
-argument_list|)
-condition|)
-do|;
+expr_stmt|;
 name|object
 operator|->
 name|handle
