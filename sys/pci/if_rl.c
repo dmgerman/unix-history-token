@@ -288,6 +288,14 @@ literal|"D-Link DFE-530TX+ 10/100BaseTX"
 block|}
 block|,
 block|{
+name|NORTEL_VENDORID
+block|,
+name|ACCTON_DEVICEID_5030
+block|,
+literal|"Nortel Networks 10/100BaseTX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2199,6 +2207,25 @@ case|:
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+break|break;
+comment|/* 		 * Allow the rlphy driver to read the media status 		 * register. If we have a link partner which does not 		 * support NWAY, this is the register which will tell 		 * us the results of parallel detection. 		 */
+case|case
+name|RL_MEDIASTAT
+case|:
+name|rval
+operator|=
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|RL_MEDIASTAT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rval
 operator|)
 return|;
 break|break;
