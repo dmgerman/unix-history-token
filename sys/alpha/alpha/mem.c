@@ -766,6 +766,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
