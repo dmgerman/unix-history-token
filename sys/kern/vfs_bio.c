@@ -8680,13 +8680,6 @@ operator|->
 name|b_object
 argument_list|)
 expr_stmt|;
-name|vm_object_reference
-argument_list|(
-name|bp
-operator|->
-name|b_object
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
