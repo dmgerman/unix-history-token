@@ -2292,6 +2292,9 @@ name|struct
 name|smb_cred
 name|scred
 decl_stmt|;
+name|vm_object_t
+name|object
+decl_stmt|;
 name|vm_page_t
 modifier|*
 name|pages
@@ -2306,9 +2309,13 @@ name|a_vp
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|object
+operator|=
 name|vp
 operator|->
 name|v_object
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2394,6 +2401,11 @@ condition|)
 block|{
 comment|/* handled by vm_fault now	  */
 comment|/* vm_page_zero_invalid(m, TRUE); */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2428,6 +2440,11 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -2583,6 +2600,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+condition|)
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|&&
 operator|(
 name|uio
@@ -2634,6 +2660,11 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 return|return
 name|VM_PAGER_ERROR
@@ -2801,6 +2832,15 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
