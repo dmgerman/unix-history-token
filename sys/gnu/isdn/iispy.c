@@ -5,12 +5,12 @@ name|char
 name|_ispyid
 index|[]
 init|=
-literal|"@(#)$Id: iispy.c,v 1.9 1995/12/08 23:19:40 phk Exp $"
+literal|"@(#)$Id: iispy.c,v 1.10 1995/12/17 21:17:43 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.9 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.10 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -322,12 +322,6 @@ name|int
 name|ap
 parameter_list|)
 block|{
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|struct
 name|ispy_data
 modifier|*
@@ -366,25 +360,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"ispy%d"
-argument_list|,
-name|next_if
-argument_list|)
-expr_stmt|;
 name|ispy
 operator|->
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/isdn"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|ispy_cdevsw
 argument_list|,
@@ -397,6 +378,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"isdn/ispy%d"
+argument_list|,
+name|next_if
 argument_list|)
 expr_stmt|;
 endif|#

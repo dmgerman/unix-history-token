@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.15 1996/01/13 20:43:08 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.16 1996/01/27 00:53:55 bde Exp $  */
 end_comment
 
 begin_include
@@ -1813,17 +1813,6 @@ name|unittab
 operator|+
 name|unit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|scu
 operator|->
 name|flags
@@ -2014,26 +2003,12 @@ define|#
 directive|define
 name|ASC_GID
 value|13
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"asc%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/*            path      name  devsw    minor    type   uid gid perm*/
 name|scu
 operator|->
 name|devfs_asc
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|asc_cdevsw
 argument_list|,
@@ -2048,13 +2023,8 @@ argument_list|,
 name|ASC_GID
 argument_list|,
 literal|0666
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"asc%dp"
+literal|"asc%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -2063,12 +2033,8 @@ name|scu
 operator|->
 name|devfs_ascp
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|asc_cdevsw
 argument_list|,
@@ -2089,13 +2055,8 @@ argument_list|,
 name|ASC_GID
 argument_list|,
 literal|0666
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"asc%dd"
+literal|"asc%dp"
 argument_list|,
 name|unit
 argument_list|)
@@ -2104,12 +2065,8 @@ name|scu
 operator|->
 name|devfs_ascd
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|asc_cdevsw
 argument_list|,
@@ -2130,13 +2087,8 @@ argument_list|,
 name|ASC_GID
 argument_list|,
 literal|0666
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"asc%dpd"
+literal|"asc%dd"
 argument_list|,
 name|unit
 argument_list|)
@@ -2145,12 +2097,8 @@ name|scu
 operator|->
 name|devfs_ascpd
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|asc_cdevsw
 argument_list|,
@@ -2173,6 +2121,10 @@ argument_list|,
 name|ASC_GID
 argument_list|,
 literal|0666
+argument_list|,
+literal|"asc%dpd"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#

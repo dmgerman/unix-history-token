@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.35 1996/03/19 16:48:38 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.36 1996/03/19 16:56:56 nate Exp $  */
 end_comment
 
 begin_include
@@ -272,10 +272,15 @@ name|struct
 name|apmhook
 name|sc_resume
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
 name|void
 modifier|*
 name|sc_devfs_token
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -3405,12 +3410,8 @@ name|sc
 operator|->
 name|sc_devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-literal|"apm"
-argument_list|,
 operator|&
 name|apm_cdevsw
 argument_list|,
@@ -3423,6 +3424,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"apm"
 argument_list|)
 expr_stmt|;
 endif|#

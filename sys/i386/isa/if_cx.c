@@ -1203,6 +1203,25 @@ begin_comment
 comment|/*  * The adapter is present, initialize the driver structures.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|cx_devfs_token
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1711,20 +1730,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-block|{
-name|void
-modifier|*
-name|x
-decl_stmt|;
-name|x
+name|cx_devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-comment|/*	path	name	devsw			minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"cx"
-argument_list|,
 operator|&
 name|cx_cdevsw
 argument_list|,
@@ -1737,9 +1746,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"cx"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 return|return

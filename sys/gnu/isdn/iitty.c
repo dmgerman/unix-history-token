@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.18 1995/12/10 15:54:13 bde Exp $"
+literal|"@(#)$Id: iitty.c,v 1.19 1995/12/17 21:17:47 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.18 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.19 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -369,12 +369,6 @@ name|int
 name|ap
 parameter_list|)
 block|{
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|next_if
@@ -397,26 +391,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"ity%d"
-argument_list|,
-name|next_if
-argument_list|)
-expr_stmt|;
 name|devfs_token
 index|[
 name|next_if
 index|]
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/isdn"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|ity_cdevsw
 argument_list|,
@@ -429,29 +410,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"Oity%d"
+literal|"isdn/ity%d"
 argument_list|,
 name|next_if
 argument_list|)
 expr_stmt|;
-comment|/* XXX find out real name */
 name|devfs_token
 index|[
 name|next_if
 index|]
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/isdn"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|ity_cdevsw
 argument_list|,
@@ -468,6 +439,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"isdn/Oity%d"
+argument_list|,
+name|next_if
 argument_list|)
 expr_stmt|;
 endif|#

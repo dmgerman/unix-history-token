@@ -978,12 +978,6 @@ decl_stmt|;
 name|int
 name|ioport
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 comment|/* Validate unit number */
 if|if
 condition|(
@@ -1137,26 +1131,12 @@ comment|/* Successful open */
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"psm%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/*        path  name   devsw    minor */
 name|sc
 operator|->
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|psm_cdevsw
 argument_list|,
@@ -1164,7 +1144,6 @@ name|unit
 operator|<<
 literal|1
 argument_list|,
-comment|/*type   uid gid perm*/
 name|DV_CHR
 argument_list|,
 literal|0
@@ -1172,28 +1151,18 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0666
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"npsm%d"
+literal|"psm%d"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/*        path  name   devsw    minor */
 name|sc
 operator|->
 name|n_devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|psm_cdevsw
 argument_list|,
@@ -1205,7 +1174,6 @@ operator|)
 operator|+
 literal|1
 argument_list|,
-comment|/*type   uid gid perm*/
 name|DV_CHR
 argument_list|,
 literal|0
@@ -1213,6 +1181,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0666
+argument_list|,
+literal|"npsm%d"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#

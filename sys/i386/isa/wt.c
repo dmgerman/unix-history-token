@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.29 1996/01/27 02:33:37 bde Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.30 1996/02/22 00:31:48 joerg Exp $  *  */
 end_comment
 
 begin_comment
@@ -1520,12 +1520,6 @@ name|id
 operator|->
 name|id_unit
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|t
@@ -1603,27 +1597,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"rwt%d"
-argument_list|,
-name|id
-operator|->
-name|id_unit
-argument_list|)
-expr_stmt|;
 name|t
 operator|->
 name|devfs_token_r
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|wt_cdevsw
 argument_list|,
@@ -1638,13 +1617,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"wt%d"
+literal|"rwt%d"
 argument_list|,
 name|id
 operator|->
@@ -1655,12 +1629,8 @@ name|t
 operator|->
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|wt_bdevsw
 argument_list|,
@@ -1675,6 +1645,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"wt%d"
+argument_list|,
+name|id
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 endif|#

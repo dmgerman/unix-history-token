@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.23 1995/12/15 00:29:30 bde Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.24 1995/12/15 00:54:25 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1180,12 +1180,6 @@ modifier|*
 name|idp
 decl_stmt|;
 block|{
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|int
 name|unit
 init|=
@@ -1224,26 +1218,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"mse%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/*        path  name   devsw    minor */
 name|sc
 operator|->
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|mse_cdevsw
 argument_list|,
@@ -1251,7 +1231,6 @@ name|unit
 operator|<<
 literal|1
 argument_list|,
-comment|/*type   uid gid perm*/
 name|DV_CHR
 argument_list|,
 literal|0
@@ -1259,28 +1238,18 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
 argument_list|,
-literal|"nmse%d"
+literal|"mse%d"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/*        path  name   devsw    minor */
 name|sc
 operator|->
 name|n_devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-name|name
-argument_list|,
 operator|&
 name|mse_cdevsw
 argument_list|,
@@ -1292,7 +1261,6 @@ operator|)
 operator|+
 literal|1
 argument_list|,
-comment|/*type   uid gid perm*/
 name|DV_CHR
 argument_list|,
 literal|0
@@ -1300,6 +1268,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|,
+literal|"nmse%d"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#
