@@ -4668,15 +4668,6 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
-comment|/* XXX */
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* 			 * One would think that as we are deleting, and we know 			 * it doesn't exist, we could just return at this point 			 * with an "ELSE" clause, but apparently not.. 			 */
-block|return (flags& RTF_HOST ? EHOSTUNREACH : ENETUNREACH); 		}
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Do the actual request 	 */
 name|bzero
