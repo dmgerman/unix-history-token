@@ -2547,7 +2547,7 @@ name|ddb_regs
 operator|.
 name|tf_cr_ifs
 operator|&
-literal|0xff
+literal|0x7f
 operator|)
 expr_stmt|;
 asm|__asm __volatile("flushrs");
