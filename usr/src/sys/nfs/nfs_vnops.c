@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8439,6 +8439,12 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|i386
+argument_list|)
 specifier|register
 name|struct
 name|pte
@@ -8572,6 +8578,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
 argument_list|)
 comment|/* mapping was already done by vmapbuf */
 name|io
@@ -9012,6 +9023,12 @@ operator|!
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|i386
 argument_list|)
 end_if
 
