@@ -364,6 +364,9 @@ begin_define
 define|#
 directive|define
 name|LIST_HEAD_INITIALIZER
+parameter_list|(
+name|head
+parameter_list|)
 define|\
 value|{ NULL }
 end_define
