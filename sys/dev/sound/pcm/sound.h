@@ -484,6 +484,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_8BIT
+value|(AFMT_U8 | AFMT_S8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_SIGNED
 value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
 end_define
