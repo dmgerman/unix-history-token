@@ -10497,7 +10497,14 @@ name|if_flags
 operator|&
 name|IFF_RUNNING
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Cancel pending I/O and flush buffers. */
 name|bge_stop
 argument_list|(
