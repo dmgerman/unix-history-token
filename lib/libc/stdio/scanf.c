@@ -63,33 +63,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -103,12 +81,6 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|scanf
@@ -120,21 +92,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|int scanf
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|int
 name|ret
@@ -142,9 +99,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -152,15 +106,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|FLOCKFILE
 argument_list|(
 name|stdin

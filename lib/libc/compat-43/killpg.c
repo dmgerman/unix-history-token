@@ -75,9 +75,6 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|killpg
 parameter_list|(
 name|pid_t
@@ -86,22 +83,6 @@ parameter_list|,
 name|int
 name|sig
 parameter_list|)
-else|#
-directive|else
-function|killpg
-parameter_list|(
-name|pgid
-parameter_list|,
-name|sig
-parameter_list|)
-name|pid_t
-name|pgid
-decl_stmt|;
-name|int
-name|sig
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 if|if
 condition|(

@@ -59,25 +59,11 @@ end_include
 
 begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|setruid
 parameter_list|(
 name|uid_t
 name|ruid
 parameter_list|)
-else|#
-directive|else
-function|setruid
-parameter_list|(
-name|ruid
-parameter_list|)
-name|int
-name|ruid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(

@@ -51,12 +51,6 @@ name|signgam
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_gamma
@@ -64,17 +58,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_gamma
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 name|__ieee754_gamma_r

@@ -59,25 +59,11 @@ end_include
 
 begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|setrgid
 parameter_list|(
 name|gid_t
 name|rgid
 parameter_list|)
-else|#
-directive|else
-function|setrgid
-parameter_list|(
-name|rgid
-parameter_list|)
-name|int
-name|rgid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(

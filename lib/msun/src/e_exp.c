@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|one
 init|=
 literal|1.0
@@ -161,12 +149,6 @@ begin_comment
 comment|/* 0x3E663769, 0x72BEA4D0 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__generic___ieee754_exp
@@ -175,18 +157,6 @@ name|double
 name|x
 parameter_list|)
 comment|/* default IEEE double exp */
-else|#
-directive|else
-function|double __generic___ieee754_exp
-parameter_list|(
-name|x
-parameter_list|)
-comment|/* default IEEE double exp */
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|y

@@ -65,9 +65,6 @@ end_include
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|setpgrp
 parameter_list|(
 name|pid_t
@@ -76,21 +73,6 @@ parameter_list|,
 name|pid_t
 name|pgid
 parameter_list|)
-else|#
-directive|else
-function|setpgrp
-parameter_list|(
-name|pid
-parameter_list|,
-name|pgid
-parameter_list|)
-name|pid_t
-name|pid
-decl_stmt|,
-name|pgid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(

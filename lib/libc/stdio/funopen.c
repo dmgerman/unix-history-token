@@ -107,12 +107,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function_decl
 name|fpos_t
 function_decl|(
@@ -132,26 +126,6 @@ name|whence
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|fpos_t
-function_decl|(
-modifier|*
-name|seekfn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int

@@ -63,12 +63,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|long
 name|sethostid
@@ -76,17 +70,6 @@ parameter_list|(
 name|long
 name|hostid
 parameter_list|)
-else|#
-directive|else
-function|long sethostid
-parameter_list|(
-name|hostid
-parameter_list|)
-name|long
-name|hostid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|mib

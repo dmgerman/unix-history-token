@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|tiny
 init|=
 literal|1.0e-300
@@ -101,12 +89,6 @@ begin_comment
 comment|/* 0x3CA1A626, 0x33145C07 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__generic___ieee754_atan2
@@ -117,21 +99,6 @@ parameter_list|,
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __generic___ieee754_atan2
-parameter_list|(
-name|y
-parameter_list|,
-name|x
-parameter_list|)
-name|double
-name|y
-decl_stmt|,
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z

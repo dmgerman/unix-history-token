@@ -41,14 +41,6 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-operator|||
-name|c_plusplus
-end_if
-
 begin_function_decl
 specifier|extern
 name|int
@@ -63,24 +55,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|int
-name|__sfvwrite
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -63,25 +63,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|long
 name|gethostid
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|long
-name|gethostid
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -148,7 +135,7 @@ name|value
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

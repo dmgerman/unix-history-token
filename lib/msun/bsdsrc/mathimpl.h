@@ -33,12 +33,6 @@ begin_comment
 comment|/* Deal with different ways to concatenate in cpp */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -52,34 +46,6 @@ name|c
 parameter_list|)
 value|a ## b ## c
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|cat3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|a
-comment|/**/
-value|b
-comment|/**/
-value|c
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Deal with vax/tahoe byte order issues */

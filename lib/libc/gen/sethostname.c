@@ -63,12 +63,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|sethostname
@@ -81,23 +75,6 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|)
-else|#
-directive|else
-function|int sethostname
-parameter_list|(
-name|name
-parameter_list|,
-name|namelen
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|namelen
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|mib

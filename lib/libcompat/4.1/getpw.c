@@ -29,9 +29,6 @@ end_include
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|getpw
 parameter_list|(
 name|uid_t
@@ -41,23 +38,6 @@ name|char
 modifier|*
 name|buf
 parameter_list|)
-else|#
-directive|else
-function|getpw
-parameter_list|(
-name|uid
-parameter_list|,
-name|buf
-parameter_list|)
-name|uid_t
-name|uid
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|struct
 name|passwd

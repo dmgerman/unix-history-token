@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|one
 init|=
 literal|1.00000000000000000000e+00
@@ -139,12 +127,6 @@ begin_comment
 comment|/* 0x3FB3B8C5, 0xB12E9282 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__generic___ieee754_acos
@@ -152,17 +134,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __generic___ieee754_acos
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z

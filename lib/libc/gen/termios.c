@@ -257,9 +257,6 @@ end_function
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|tcsetpgrp
 parameter_list|(
 name|int
@@ -268,22 +265,6 @@ parameter_list|,
 name|pid_t
 name|pgrp
 parameter_list|)
-else|#
-directive|else
-function|tcsetpgrp
-parameter_list|(
-name|fd
-parameter_list|,
-name|pgrp
-parameter_list|)
-name|int
-name|fd
-decl_stmt|;
-name|pid_t
-name|pgrp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|s

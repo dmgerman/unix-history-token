@@ -296,12 +296,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function_decl
 name|void
 name|apr
@@ -349,30 +343,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|apr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
