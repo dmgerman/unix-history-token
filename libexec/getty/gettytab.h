@@ -273,6 +273,27 @@ name|PP
 value|gettystrs[25].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|IF
+value|gettystrs[26].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|IC
+value|gettystrs[27].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC
+value|gettystrs[28].value
+end_define
+
 begin_comment
 comment|/*  * Numeric definitions.  */
 end_comment
@@ -564,6 +585,34 @@ name|DE
 value|gettynums[25].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|RTset
+value|gettynums[26].set
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT
+value|gettynums[26].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT
+value|gettynums[27].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC
+value|gettynums[28].value
+end_define
+
 begin_comment
 comment|/*  * Boolean values.  */
 end_comment
@@ -748,6 +797,13 @@ define|#
 directive|define
 name|MB
 value|gettyflags[22].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW
+value|gettyflags[23].value
 end_define
 
 end_unit
