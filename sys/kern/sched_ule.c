@@ -3340,6 +3340,9 @@ block|{
 comment|/* 		 * If the priority has been elevated due to priority 		 * propagation, we may have to move ourselves to a new 		 * queue.  We still call adjustrunqueue below in case kse 		 * needs to fix things up. 		 */
 if|if
 condition|(
+name|ke
+operator|&&
+operator|(
 operator|(
 name|td
 operator|->
@@ -3370,6 +3373,7 @@ operator|&&
 name|prio
 operator|<
 name|PRI_MIN_IDLE
+operator|)
 operator|)
 condition|)
 block|{
@@ -4575,24 +4579,6 @@ operator|>>
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Idle tasks should always resched. 	 */
-if|if
-condition|(
-name|kg
-operator|->
-name|kg_pri_class
-operator|==
-name|PRI_IDLE
-condition|)
-block|{
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_NEEDRESCHED
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * We only do slicing code for TIMESHARE ksegrps. 	 */
 if|if
 condition|(
