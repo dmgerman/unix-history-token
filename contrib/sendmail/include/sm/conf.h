@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.116 2004/07/26 18:08:35 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.118 2004/08/20 20:30:32 ca Exp $  */
 end_comment
 
 begin_comment
@@ -5922,12 +5922,17 @@ comment|/* defined(__QNX__) */
 end_comment
 
 begin_comment
-comment|/* **  FreeBSD / NetBSD / OpenBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD	for FreeBSD 1.x and NetBSD 0.9x **  4.4BSD-Lite based			for FreeBSD 2.x and NetBSD 1.x ** **	See also BSD defines. */
+comment|/* **  DragonFly BSD/ FreeBSD / NetBSD / OpenBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD	for FreeBSD 1.x and NetBSD 0.9x **  4.4BSD-Lite based			for FreeBSD 2.x and NetBSD 1.x ** **	See also BSD defines. */
 end_comment
 
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__FreeBSD__
@@ -6393,6 +6398,148 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__DragonFly__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETLOGIN
+value|1
+end_define
+
+begin_comment
+comment|/* has setlogin(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSRANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* has srandomdev(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASURANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* has /dev/urandom(4) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SPT_TYPE
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_BUILTIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSETUSERCONTEXT
+value|1
+end_define
+
+begin_comment
+comment|/* BSDI-style login classes */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_CMDDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SMRSH_CMDDIR
+value|"/usr/libexec/sm.bin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_CMDDIR */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_PATH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SMRSH_PATH
+value|"/bin:/usr/bin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_PATH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESYSCTL
+value|1
+end_define
+
+begin_comment
+comment|/* use sysctl(3) for getting ncpus */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__DragonFly__) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
@@ -6852,7 +6999,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) */
+comment|/* defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) */
 end_comment
 
 begin_comment
@@ -18653,12 +18800,16 @@ name|double
 name|al_d
 decl_stmt|;
 name|void
-function_decl|(
-modifier|*
-name|al_f
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*al_f
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|al_u
 union|;

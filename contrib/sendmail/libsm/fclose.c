@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: fclose.c,v 1.42 2002/02/01 02:28:00 ca Exp $"
+literal|"@(#)$Id: fclose.c,v 1.43 2004/08/03 20:17:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -81,6 +81,19 @@ include|#
 directive|include
 file|"local.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|closealrm
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

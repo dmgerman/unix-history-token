@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.59 2004/07/07 21:41:31 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.60 2004/08/20 21:24:14 ca Exp $  */
 end_comment
 
 begin_comment
@@ -821,9 +821,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_SMFI_PROGRESS
 comment|/* **  Send a "no-op" up to the MTA to tell it we're still alive, so long **  milter-side operations don't time out. ** **	SMFICTX *ctx; Opaque context structure */
 name|LIBMILTER_API
 name|int
@@ -836,9 +833,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SMFI_PROGRESS */
 comment|/* **  Delete a recipient from the envelope ** **	SMFICTX *ctx; Opaque context structure **	char *rcpt; Envelope recipient to be deleted. This should be in **		exactly the form passed to xxfi_envrcpt or the address may **		not be deleted. */
 name|LIBMILTER_API
 name|int

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb.c,v 8.57 2002/05/24 23:09:11 gshapiro Exp $"
+literal|"@(#)$Id: smdb.c,v 8.58 2004/08/03 20:58:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -45,6 +45,21 @@ include|#
 directive|include
 file|<libsmdb/smdb.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|smdb_lockfile
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ** SMDB_MALLOC_DATABASE -- Allocates a database structure. ** **	Parameters: **		None ** **	Returns: **		An pointer to an allocated SMDB_DATABASE structure or **		NULL if it couldn't allocate the memory. */

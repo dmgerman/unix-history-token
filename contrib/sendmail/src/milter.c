@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.225 2004/07/08 21:52:20 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.228 2004/11/09 18:54:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -109,7 +109,7 @@ name|milter_connect_timeout
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -279,7 +279,7 @@ parameter_list|,
 name|action
 parameter_list|)
 define|\
-value|if (!initial&& tTd(71, 100)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (tTd(71, 101)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
+value|if (!initial&& tTd(71, 100)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (tTd(71, 101)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_TEMPDROP, m->mf_flags)) \ 		*state = SMFIR_SHUTDOWN; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
 end_define
 
 begin_define
@@ -4281,7 +4281,12 @@ begin_function
 specifier|static
 name|void
 name|milter_connect_timeout
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|errno
@@ -8958,7 +8963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MILTER_ERROR -- Put a milter filter into error state ** **	Parameters: **		m -- the broken filter. ** **	Returns: **		none */
+comment|/* **  MILTER_ERROR -- Put a milter filter into error state ** **	Parameters: **		m -- the broken filter. **		e -- current envelope. ** **	Returns: **		none */
 end_comment
 
 begin_function
@@ -8980,7 +8985,7 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-comment|/* 	**  We could send a quit here but 	**  we may have gotten here due to 	**  an I/O error so we don't want 	**  to try to make things worse. 	*/
+comment|/* 	**  We could send a quit here but we may have gotten here due to 	**  an I/O error so we don't want to try to make things worse. 	*/
 if|if
 condition|(
 name|m
@@ -10842,7 +10847,26 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"Delete (noop) %s:\n"
+literal|"Delete (noop) %s\n"
+argument_list|,
+name|field
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter delete (noop): header: %s"
 argument_list|,
 name|field
 argument_list|)
@@ -10863,6 +10887,27 @@ condition|)
 name|sm_dprintf
 argument_list|(
 literal|"Add %s: %s\n"
+argument_list|,
+name|field
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter change (add): header: %s: %s"
 argument_list|,
 name|field
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1047 2004/07/14 21:54:23 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1052 2004/12/15 22:45:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -161,6 +161,83 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|add_hostnames
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|NEEDSGETIPNODE
+end_if
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyaddr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET6&& NEEDSGETIPNODE */
+end_comment
 
 begin_comment
 comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
@@ -607,6 +684,18 @@ block|,
 name|PRIV_GOAWAY
 block|}
 block|,
+if|#
+directive|if
+name|_FFR_PRIV_NOACTUALRECIPIENT
+block|{
+literal|"noactualrecipient"
+block|,
+name|PRIV_NOACTUALRECIPIENT
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
 block|{
 name|NULL
 block|,
@@ -22472,15 +22561,6 @@ directive|endif
 comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
-name|_FFR_DEAL_WITH_ERROR_SSL
-comment|/* Deal with SSL errors by recognizing them as EOF. */
-literal|"_FFR_DEAL_WITH_ERROR_SSL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DEAL_WITH_ERROR_SSL */
-if|#
-directive|if
 name|_FFR_DEPRECATE_MAILER_FLAG_I
 comment|/* What it says :-) */
 literal|"_FFR_DEPRECATE_MAILER_FLAG_I"
@@ -22667,6 +22747,7 @@ directive|if
 name|_FFR_MAXDATASIZE
 comment|/* 	**  It is possible that a header is larger than MILTER_CHUNK_SIZE, 	**  hence this shouldn't be used as limit for milter communication. 	**  see also libmilter/comm.c 	**  Gurusamy Sarathy of ActiveState 	*/
 literal|"_FFR_MAXDATASIZE"
+block|,
 endif|#
 directive|endif
 comment|/* _FFR_MAXDATASIZE */
@@ -22738,6 +22819,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_NO_PIPE */
+if|#
+directive|if
+name|_FFR_PRIV_NOACTUALRECIPIENT
+comment|/* 	** PrivacyOptions=noactualrecipient stops sendmail from putting  	** X-Actual-Recipient lines in DSNs revealing the actual  	** account that addresses map to.  Patch from Dan Harkless. 	*/
+literal|"_FFR_PRIV_NOACTUALRECIPIENT"
+endif|#
+directive|endif
+comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
 if|#
 directive|if
 name|_FFR_QUEUEDELAY
@@ -22834,6 +22923,7 @@ directive|if
 name|_FFR_SKIP_DOMAINS
 comment|/* process every N'th domain instead of every N'th message */
 literal|"_FFR_SKIP_DOMAINS"
+block|,
 endif|#
 directive|endif
 comment|/* _FFR_SKIP_DOMAINS */

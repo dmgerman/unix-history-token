@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.451 2004/03/01 21:50:36 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.460 2005/01/11 00:24:19 ca Exp $"
 argument_list|)
 end_macro
 
@@ -23,37 +23,13 @@ file|<sysexits.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|void
-name|markfailure
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|,
-name|ADDRESS
-operator|*
-operator|,
-name|MCI
-operator|*
-operator|,
-name|int
-operator|,
-name|bool
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|void
 name|datatimeout
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -10712,6 +10688,26 @@ name|e_to
 operator|=
 name|oldto
 expr_stmt|;
+comment|/* 		**  Connection might be closed in response to a RCPT command, 		**  i.e., the server responded with 421. In that case (at 		**  least) one RCPT has a temporary failure, hence we don't 		**  need to check mci_okrcpts (as it is done below) to figure 		**  out which error to return. 		*/
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_CLOSED
+condition|)
+block|{
+name|errno
+operator|=
+name|mci
+operator|->
+name|mci_errno
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -11442,6 +11438,14 @@ condition|)
 return|return
 name|EX_TEMPFAIL
 return|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_DATA
+condition|)
 name|mci
 operator|->
 name|mci_state
@@ -11670,7 +11674,12 @@ begin_function
 specifier|static
 name|void
 name|datatimeout
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 name|int
 name|save_errno
@@ -12390,7 +12399,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-comment|/* 	**  Any response is deemed to be acceptable. 	**  The standard does not state the proper action 	**  to take when a value other than 250 is received. 	** 	**  However, if 421 is returned for the RSET, leave 	**  mci_state as MCIS_SSD (set in reply()). 	*/
+comment|/* 	**  Any response is deemed to be acceptable. 	**  The standard does not state the proper action 	**  to take when a value other than 250 is received. 	** 	**  However, if 421 is returned for the RSET, leave 	**  mci_state alone (MCIS_SSD can be set in reply() 	**  and MCIS_CLOSED can be set in smtpquit() if 	**  reply() gets a 421 and calls smtpquit()). 	*/
 if|if
 condition|(
 name|mci
@@ -12398,6 +12407,12 @@ operator|->
 name|mci_state
 operator|!=
 name|MCIS_SSD
+operator|&&
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_CLOSED
 condition|)
 name|mci
 operator|->
@@ -12527,59 +12542,66 @@ begin_comment
 comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function called on each line of response. **			If null, no special processing is done. **		enhstat -- optional, returns enhanced error code string (if set) **		rtype -- type of SmtpMsgBuffer: does it contains secret data? ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|reply
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|mci
-argument_list|,
+parameter_list|,
 name|e
-argument_list|,
+parameter_list|,
 name|timeout
-argument_list|,
+parameter_list|,
 name|pfunc
-argument_list|,
+parameter_list|,
 name|enhstat
-argument_list|,
+parameter_list|,
 name|rtype
-argument_list|)
+parameter_list|)
 name|MAILER
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|time_t
 name|timeout
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|pfunc
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|void
+parameter_list|(
+function_decl|*pfunc
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|MCI
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -12712,7 +12734,7 @@ condition|)
 return|return
 name|SMTPCLOSING
 return|;
-comment|/* don't try to read from a non-existant fd */
+comment|/* don't try to read from a non-existent fd */
 if|if
 condition|(
 name|mci
@@ -12756,6 +12778,12 @@ operator|=
 name|mci
 operator|->
 name|mci_errno
+expr_stmt|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_CLOSED
 expr_stmt|;
 return|return
 operator|-
@@ -12866,10 +12894,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_CLOSED
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 comment|/* if the remote end closed early, fake an error */
 name|errno
 operator|=

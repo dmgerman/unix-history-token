@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.211 2003/03/31 17:35:50 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.212 2004/08/04 21:11:31 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3809,22 +3809,33 @@ begin_comment
 comment|/* **  MCI_TRAVERSE_PERSISTENT -- walk persistent status tree ** **	Recursively find all the mci host files in `pathname'.  Default to **		main host status directory if no path is provided. **	Call (*action)(pathname, host) for each file found. ** **	Note: all information is collected in a list before it is processed. **	This may not be the best way to do it, but it seems safest, since **	the file system would be touched while we are attempting to traverse **	the directory tree otherwise (during purges). ** **	Parameters: **		action -- function to call on each node.  If returns< 0, **			return immediately. **		pathname -- root of tree.  If null, use main host status **			directory. ** **	Returns: **< 0 -- if any action routine returns a negative value, that **			value is returned. **		0 -- if we successfully went to completion. **> 0 -- return status from action() */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|mci_traverse_persistent
-argument_list|(
+parameter_list|(
 name|action
-argument_list|,
+parameter_list|,
 name|pathname
-argument_list|)
-name|int
+parameter_list|)
+function_decl|int
+parameter_list|(
+function_decl|*action
+end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
 argument_list|(
+operator|(
+name|char
 operator|*
-name|action
+operator|,
+name|char
+operator|*
+operator|)
 argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.382 2004/03/26 19:01:10 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.383 2004/08/02 18:50:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -255,7 +255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  STRIPBACKSLASH -- Strip leading backslash from a string. ** **	This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. */
+comment|/* **  STRIPBACKSLASH -- Strip all leading backslashes from a string, provided **	the following character is alpha-numerical. ** **	This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. */
 end_comment
 
 begin_function

@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.984 2004/07/14 21:54:22 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.990 2004/11/09 19:45:46 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -2425,7 +2425,7 @@ value|'B'
 end_define
 
 begin_comment
-comment|/* strip leading backslash from user */
+comment|/* strip all leading backslashes from user */
 end_comment
 
 begin_define
@@ -3067,7 +3067,7 @@ name|runqueueevent
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -10148,6 +10148,32 @@ begin_comment
 comment|/* disallow return receipts */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_PRIV_NOACTUALRECIPIENT
+end_if
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOACTUALRECIPIENT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* no X-Actual-Recipient in DSNs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
+end_comment
+
 begin_comment
 comment|/* don't give no info, anyway, anyhow */
 end_comment
@@ -10624,6 +10650,17 @@ end_define
 
 begin_comment
 comment|/* tempfail connection on failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMF_TEMPDROP
+value|'4'
+end_define
+
+begin_comment
+comment|/* 421 connection on failure */
 end_comment
 
 begin_comment
@@ -15671,9 +15708,26 @@ name|time_t
 operator|,
 name|void
 argument_list|(
-operator|*
+argument|*
 argument_list|)
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|MCI
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
 operator|,
 name|char
 operator|*
@@ -17756,6 +17810,30 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|markfailure
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|MCI
+operator|*
+operator|,
+name|int
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;

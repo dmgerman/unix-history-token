@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: clock.h,v 1.11 2001/05/14 23:25:37 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: clock.h,v 1.12 2004/08/03 19:57:21 ca Exp $  */
 end_comment
 
 begin_comment
@@ -146,28 +146,6 @@ begin_decl_stmt
 specifier|extern
 name|SM_EVENT
 modifier|*
-name|sm_setevent
-name|__P
-argument_list|(
-operator|(
-name|time_t
-operator|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SM_EVENT
-modifier|*
 name|sm_seteventm
 name|__P
 argument_list|(
@@ -176,9 +154,14 @@ name|int
 operator|,
 name|void
 argument_list|(
-operator|*
+argument|*
 argument_list|)
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 operator|,
 name|int
 operator|)
@@ -198,9 +181,14 @@ name|int
 operator|,
 name|void
 argument_list|(
-operator|*
+argument|*
 argument_list|)
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 operator|,
 name|int
 operator|)
