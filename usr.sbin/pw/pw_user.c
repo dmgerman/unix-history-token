@@ -6374,6 +6374,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|srandomdev
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
