@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.7	81/02/27	*/
+comment|/*	lp.c	4.8	81/03/02	*/
 end_comment
 
 begin_include
@@ -493,9 +493,6 @@ name|logcol
 decl_stmt|,
 name|physcol
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HALFASCII
 if|if
 condition|(
 name|lp11
@@ -595,9 +592,6 @@ literal|'-'
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-endif|HALFASCII
 name|logcol
 operator|=
 name|lp11
