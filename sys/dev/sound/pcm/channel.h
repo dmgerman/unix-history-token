@@ -389,6 +389,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMTRIG_EMLDMARD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMTRIG_STOP
 value|0
 end_define

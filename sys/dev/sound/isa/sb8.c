@@ -3526,6 +3526,10 @@ condition|(
 name|go
 operator|==
 name|PCMTRIG_EMLDMAWR
+operator|||
+name|go
+operator|==
+name|PCMTRIG_EMLDMARD
 condition|)
 return|return
 literal|0
