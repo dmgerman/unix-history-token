@@ -24,7 +24,7 @@ file|<time.h>
 end_include
 
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.5 1996/07/04 00:55:21 jkh Exp $  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.6 1996/08/03 11:58:54 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -74,6 +74,44 @@ typedef|*
 name|FTP_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Structure we use to match FTP error codes with readable strings */
+end_comment
+
+begin_struct
+struct|struct
+name|ftperr
+block|{
+specifier|const
+name|int
+name|num
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|string
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ftperr
+name|ftpErrList
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+specifier|const
+name|ftpErrListLength
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Exported routines - deal only with FILE* type */
@@ -296,6 +334,19 @@ parameter_list|,
 name|char
 modifier|*
 name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ftpErrString
+parameter_list|(
+name|int
+name|errno
 parameter_list|)
 function_decl|;
 end_function_decl
