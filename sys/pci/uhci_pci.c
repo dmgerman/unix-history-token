@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.2 1999/03/23 21:37:45 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.3 1999/03/27 23:08:43 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -813,7 +813,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"uhcis%d: PIRQD enable not set\n"
+literal|"uhci%d: PIRQD enable not set\n"
 argument_list|,
 name|unit
 argument_list|)
