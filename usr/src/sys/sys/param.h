@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	6.13 (Berkeley) %G%  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD
+value|4.3
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD4_3
+end_define
 
 begin_comment
 comment|/*  * Machine type dependent parameters.  */
@@ -403,41 +416,6 @@ parameter_list|(
 name|i
 parameter_list|)
 value|(((i) + (CLSIZE-1))&~ (CLSIZE-1))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INTRLVE
-end_ifndef
-
-begin_comment
-comment|/* macros replacing interleaving functions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|dkblock
-parameter_list|(
-name|bp
-parameter_list|)
-value|((bp)->b_blkno)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dkunit
-parameter_list|(
-name|bp
-parameter_list|)
-value|(minor((bp)->b_dev)>> 3)
 end_define
 
 begin_endif
