@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -644,20 +644,18 @@ begin_comment
 comment|/*  * Return the best possible estimate of the current time.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|microtime
-argument_list|(
+parameter_list|(
 name|tvp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|timeval
-operator|*
+modifier|*
 name|tvp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 specifier|volatile
@@ -772,7 +770,7 @@ operator|=
 name|u
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
