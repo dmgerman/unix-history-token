@@ -15,16 +15,6 @@ directive|define
 name|_FTS_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|_fts_private
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* implementation data */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -160,7 +150,7 @@ name|_fts_private
 modifier|*
 name|fts_priv
 decl_stmt|;
-comment|/* Implementation data */
+comment|/* implementation data */
 block|}
 name|FTS
 typedef|;
