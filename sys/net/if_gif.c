@@ -1031,12 +1031,6 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-name|sc
-operator|->
-name|called
-operator|=
-literal|0
-expr_stmt|;
 name|if_attach
 argument_list|(
 operator|&
@@ -1647,6 +1641,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+name|int
+name|called
+init|=
+literal|0
+decl_stmt|;
+comment|/* XXX: MUTEX */
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1675,15 +1676,11 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * gif may cause infinite recursion calls when misconfigured. 	 * We'll prevent this by introducing upper limit. 	 */
+comment|/* 	 * gif may cause infinite recursion calls when misconfigured. 	 * We'll prevent this by introducing upper limit. 	 * XXX: this mechanism may introduce another problem about 	 *      mutual exclusion of the variable CALLED, especially if we 	 *      use kernel thread. 	 */
 if|if
 condition|(
 operator|++
-operator|(
-name|sc
-operator|->
 name|called
-operator|)
 operator|>
 name|max_gif_nesting
 condition|)
@@ -1694,8 +1691,6 @@ name|LOG_NOTICE
 argument_list|,
 literal|"gif_output: recursively called too many times(%d)\n"
 argument_list|,
-name|sc
-operator|->
 name|called
 argument_list|)
 expr_stmt|;
@@ -1903,8 +1898,6 @@ goto|;
 block|}
 name|end
 label|:
-name|sc
-operator|->
 name|called
 operator|=
 literal|0
