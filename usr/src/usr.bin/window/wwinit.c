@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.31 (Berkeley) %G%"
+literal|"@(#)wwinit.c	3.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,6 +754,40 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|wwupd
+operator|=
+operator|(
+expr|struct
+name|ww_update
+operator|*
+operator|)
+name|malloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|wwnrow
+operator|*
+sizeof|sizeof
+expr|*
+name|wwupd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wwupd
+operator|==
+literal|0
+condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_NOMEM
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|wwindex
 index|[
 name|WWX_NOBODY

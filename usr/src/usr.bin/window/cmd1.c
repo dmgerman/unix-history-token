@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	3.33 (Berkeley) %G%"
+literal|"@(#)cmd1.c	3.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,9 +262,6 @@ argument_list|,
 name|xcol
 argument_list|)
 expr_stmt|;
-name|wwflush
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|wwpeekc
@@ -382,7 +379,7 @@ name|col
 operator|+
 literal|1
 argument_list|,
-name|nbufline
+name|default_nline
 argument_list|,
 operator|(
 name|char
@@ -394,9 +391,9 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|shellfile
+name|default_shellfile
 argument_list|,
-name|shell
+name|default_shell
 argument_list|)
 expr_stmt|;
 block|}

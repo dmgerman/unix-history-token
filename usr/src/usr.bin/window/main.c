@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.33 (Berkeley) %G%"
+literal|"@(#)main.c	3.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,10 +122,6 @@ name|tflag
 init|=
 literal|0
 decl_stmt|;
-name|nbufline
-operator|=
-name|NLINE
-expr_stmt|;
 name|escapec
 operator|=
 name|ESCAPEC
@@ -307,7 +303,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|shellfile
+name|default_shellfile
 operator|=
 name|str_cpy
 argument_list|(
@@ -326,7 +322,7 @@ name|p
 operator|=
 name|rindex
 argument_list|(
-name|shellfile
+name|default_shellfile
 argument_list|,
 literal|'/'
 argument_list|)
@@ -337,21 +333,29 @@ expr_stmt|;
 else|else
 name|p
 operator|=
-name|shellfile
+name|default_shellfile
 expr_stmt|;
-name|shell
+name|default_shell
 index|[
 literal|0
 index|]
 operator|=
 name|p
 expr_stmt|;
-name|shell
+name|default_shell
 index|[
 literal|1
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|default_nline
+operator|=
+name|NLINE
+expr_stmt|;
+name|default_smooth
+operator|=
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -704,7 +708,6 @@ condition|(
 operator|!
 name|fflag
 condition|)
-block|{
 if|if
 condition|(
 name|dflag
@@ -728,7 +731,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|mloop
 argument_list|()
 expr_stmt|;

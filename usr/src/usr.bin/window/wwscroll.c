@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwscroll.c	3.20 (Berkeley) %G%"
+literal|"@(#)wwscroll.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -998,8 +998,6 @@ operator|*
 name|p
 operator|++
 operator||=
-name|WWU_MAJOR
-operator||
 name|WWU_TOUCHED
 expr_stmt|;
 block|}
@@ -1185,8 +1183,6 @@ operator|*
 name|p
 operator|++
 operator||=
-name|WWU_MAJOR
-operator||
 name|WWU_TOUCHED
 expr_stmt|;
 block|}
@@ -1256,8 +1252,6 @@ operator|*
 name|p
 operator|++
 operator||=
-name|WWU_MAJOR
-operator||
 name|WWU_TOUCHED
 expr_stmt|;
 block|}

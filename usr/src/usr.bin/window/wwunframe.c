@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwunframe.c	3.17 (Berkeley) %G%"
+literal|"@(#)wwunframe.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,22 +218,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|nchanged
-operator|>
-literal|4
-condition|)
-name|wwtouched
-index|[
-name|i
-index|]
-operator||=
-name|WWU_MAJOR
-operator||
-name|WWU_TOUCHED
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|nchanged

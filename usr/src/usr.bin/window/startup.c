@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	3.21 (Berkeley) %G%"
+literal|"@(#)startup.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +179,7 @@ literal|2
 argument_list|,
 name|wwncol
 argument_list|,
-name|nbufline
+name|default_nline
 argument_list|,
 operator|(
 name|char
@@ -191,9 +191,9 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|shellfile
+name|default_shellfile
 argument_list|,
-name|shell
+name|default_shell
 argument_list|)
 operator|==
 literal|0
@@ -216,7 +216,7 @@ name|r
 argument_list|,
 name|wwncol
 argument_list|,
-name|nbufline
+name|default_nline
 argument_list|,
 operator|(
 name|char
@@ -228,9 +228,9 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|shellfile
+name|default_shellfile
 argument_list|,
-name|shell
+name|default_shell
 argument_list|)
 operator|)
 operator|==

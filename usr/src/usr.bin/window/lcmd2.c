@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.15 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,14 +176,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"wwupdat\tline\tmiss\tmajor\tmiss\n"
+literal|"wwupdat\tline\tmiss\tscan\tclreol\tclreos\tmiss\tline\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|wwnupdate
 argument_list|,
@@ -191,9 +191,15 @@ name|wwnupdline
 argument_list|,
 name|wwnupdmiss
 argument_list|,
-name|wwnmajline
+name|wwnupdscan
 argument_list|,
-name|wwnmajmiss
+name|wwnupdclreol
+argument_list|,
+name|wwnupdclreos
+argument_list|,
+name|wwnupdclreosmiss
+argument_list|,
+name|wwnupdclreosline
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -1172,7 +1178,7 @@ end_block
 begin_decl_stmt
 name|struct
 name|lcmd_arg
-name|arg_shell
+name|arg_def_shell
 index|[]
 init|=
 block|{
@@ -1192,7 +1198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|l_shell
+name|l_def_shell
 argument_list|(
 argument|v
 argument_list|,
@@ -1243,7 +1249,7 @@ name|v_str
 operator|=
 name|str_cpy
 argument_list|(
-name|shellfile
+name|default_shellfile
 argument_list|)
 operator|)
 operator|!=
@@ -1263,7 +1269,7 @@ name|v
 operator|->
 name|v_str
 operator|=
-name|shellfile
+name|default_shellfile
 condition|)
 block|{
 name|v
@@ -1276,7 +1282,7 @@ for|for
 control|(
 name|pp
 operator|=
-name|shell
+name|default_shell
 operator|+
 literal|1
 init|;
@@ -1304,7 +1310,7 @@ for|for
 control|(
 name|pp
 operator|=
-name|shell
+name|default_shell
 operator|,
 name|vp
 operator|=
@@ -1319,14 +1325,14 @@ operator|&&
 name|pp
 operator|<
 operator|&
-name|shell
+name|default_shell
 index|[
 sizeof|sizeof
-name|shell
+name|default_shell
 operator|/
 sizeof|sizeof
 expr|*
-name|shell
+name|default_shell
 operator|-
 literal|1
 expr|]
@@ -1367,7 +1373,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* just leave shell[] the way it is */
+comment|/* just leave default_shell[] the way it is */
 name|p_memerror
 argument_list|()
 expr_stmt|;
@@ -1375,34 +1381,34 @@ break|break;
 block|}
 if|if
 condition|(
-name|shellfile
+name|default_shellfile
 operator|=
 operator|*
-name|shell
+name|default_shell
 condition|)
 if|if
 condition|(
 operator|*
-name|shell
+name|default_shell
 operator|=
 name|rindex
 argument_list|(
-name|shellfile
+name|default_shellfile
 argument_list|,
 literal|'/'
 argument_list|)
 condition|)
 operator|(
 operator|*
-name|shell
+name|default_shell
 operator|)
 operator|++
 expr_stmt|;
 else|else
 operator|*
-name|shell
+name|default_shell
 operator|=
-name|shellfile
+name|default_shellfile
 expr_stmt|;
 block|}
 end_block

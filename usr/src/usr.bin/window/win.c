@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.20 (Berkeley) %G%"
+literal|"@(#)win.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,12 +273,6 @@ name|setselwin
 argument_list|(
 name|w
 argument_list|)
-expr_stmt|;
-name|wwupdate
-argument_list|()
-expr_stmt|;
-name|wwflush
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -721,9 +715,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|reframe
-argument_list|()
-expr_stmt|;
-name|wwupdate
 argument_list|()
 expr_stmt|;
 return|return

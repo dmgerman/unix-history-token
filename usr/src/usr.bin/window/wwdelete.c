@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwdelete.c	3.16 (Berkeley) %G%"
+literal|"@(#)wwdelete.c	3.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,22 +161,6 @@ name|nchanged
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|nchanged
-operator|>
-literal|4
-condition|)
-name|wwtouched
-index|[
-name|i
-index|]
-operator||=
-name|WWU_MAJOR
-operator||
-name|WWU_TOUCHED
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|nchanged
@@ -585,22 +569,6 @@ name|nvis
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|nchanged
-operator|>
-literal|4
-condition|)
-name|wwtouched
-index|[
-name|i
-index|]
-operator||=
-name|WWU_MAJOR
-operator||
-name|WWU_TOUCHED
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|nchanged

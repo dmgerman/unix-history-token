@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ww.h	3.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ww.h	3.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -369,6 +369,27 @@ value|c_un.C_m
 end_define
 
 begin_comment
+comment|/* for display update */
+end_comment
+
+begin_struct
+struct|struct
+name|ww_update
+block|{
+name|int
+name|best_gain
+decl_stmt|;
+name|int
+name|best_col
+decl_stmt|;
+name|int
+name|gain
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* parts of ww_char */
 end_comment
 
@@ -723,7 +744,7 @@ comment|/* dumb terminal */
 end_comment
 
 begin_comment
-comment|/* wwtouched[] bits */
+comment|/* wwtouched[] bits, there used to be more than one */
 end_comment
 
 begin_define
@@ -735,17 +756,6 @@ end_define
 
 begin_comment
 comment|/* touched */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWU_MAJOR
-value|0x02
-end_define
-
-begin_comment
-comment|/* major change */
 end_comment
 
 begin_comment
@@ -950,6 +960,18 @@ comment|/* wwns changed flags */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|ww_update
+modifier|*
+name|wwupd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for display update */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|wwbaudmap
@@ -1028,10 +1050,20 @@ decl_stmt|,
 name|wwnupdline
 decl_stmt|,
 name|wwnupdmiss
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwnupdscan
 decl_stmt|,
-name|wwnmajline
+name|wwnupdclreol
 decl_stmt|,
-name|wwnmajmiss
+name|wwnupdclreos
+decl_stmt|,
+name|wwnupdclreosmiss
+decl_stmt|,
+name|wwnupdclreosline
 decl_stmt|;
 end_decl_stmt
 

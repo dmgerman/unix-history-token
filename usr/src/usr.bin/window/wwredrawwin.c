@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwredrawwin.c	3.13 (Berkeley) %G%"
+literal|"@(#)wwredrawwin.c	3.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,22 +226,6 @@ operator|=
 name|x
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|nchanged
-operator|>
-literal|4
-condition|)
-name|wwtouched
-index|[
-name|row
-index|]
-operator||=
-name|WWU_MAJOR
-operator||
-name|WWU_TOUCHED
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|nchanged
