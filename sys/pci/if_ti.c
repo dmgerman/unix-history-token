@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ti.c,v 1.12 1999/07/23 18:46:24 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ti.c,v 1.13 1999/07/25 06:46:19 peter Exp $  */
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_ti.c,v 1.12 1999/07/23 18:46:24 wpaul Exp $"
+literal|"$Id: if_ti.c,v 1.13 1999/07/25 06:46:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1775,7 +1775,7 @@ call|)
 argument_list|(
 name|sc
 operator|->
-name|ti_bhandle
+name|ti_vhandle
 operator|+
 name|TI_WINDOW
 argument_list|)
@@ -6342,7 +6342,7 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|ti_bhandle
+name|ti_vhandle
 operator|+
 name|TI_GCR_CMDRING
 operator|)
@@ -6758,7 +6758,7 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|ti_bhandle
+name|ti_vhandle
 operator|+
 name|TI_WINDOW
 operator|)
@@ -7319,6 +7319,69 @@ operator|->
 name|ti_res
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ti_vhandle
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|rman_get_virtual
+argument_list|(
+name|sc
+operator|->
+name|ti_res
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX FIXME: rman_get_virtual() on the alpha is currently 	 * broken and returns a physical address instead of a kernel 	 * virtual address. Consequently, we need to do a little 	 * extra mangling of the vhandle on the alpha. This should 	 * eventually be fixed! The whole idea here is to get rid 	 * of platform dependencies. 	 */
+ifdef|#
+directive|ifdef
+name|__alpha__
+if|if
+condition|(
+name|pci_cvt_to_bwx
+argument_list|(
+name|sc
+operator|->
+name|ti_vhandle
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|ti_vhandle
+operator|=
+name|pci_cvt_to_bwx
+argument_list|(
+name|sc
+operator|->
+name|ti_vhandle
+argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|ti_vhandle
+operator|=
+name|pci_cvt_to_dense
+argument_list|(
+name|sc
+operator|->
+name|ti_vhandle
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|ti_vhandle
+operator|=
+name|ALPHA_PHYS_TO_K0SEG
+argument_list|(
+name|sc
+operator|->
+name|ti_vhandle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allocate interrupt */
 name|rid
 operator|=
