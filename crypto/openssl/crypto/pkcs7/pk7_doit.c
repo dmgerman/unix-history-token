@@ -1024,6 +1024,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|PKCS7_type_is_signed
+argument_list|(
+name|p7
+argument_list|)
+condition|)
+block|{
 name|ASN1_OCTET_STRING
 modifier|*
 name|os
@@ -1064,6 +1072,7 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bio
