@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.13 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.14 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.13 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.14 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1534,6 +1534,10 @@ operator|&
 name|sinlen
 argument_list|)
 operator|<
+literal|0
+operator|||
+name|sinlen
+operator|<=
 literal|0
 condition|)
 return|return

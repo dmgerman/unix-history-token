@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.9 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.10 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.9 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.10 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1536,20 +1536,41 @@ block|}
 if|if
 condition|(
 name|h_errno
-operator|==
+operator|!=
 name|HOST_NOT_FOUND
 condition|)
 block|{
-comment|/* definitely no data for this address */
-name|dp
-operator|++
-expr_stmt|;
+comment|/* might have another type of interest */
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_ANY
+condition|)
+block|{
 name|qtype
 operator|=
-name|T_ANY
+name|T_A
 expr_stmt|;
-comment|/* just in case */
 continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_A
+operator|&&
+operator|!
+name|gotmx
+condition|)
+block|{
+name|qtype
+operator|=
+name|T_MX
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -1561,6 +1582,14 @@ block|{
 comment|/* we matched before -- use that one */
 break|break;
 block|}
+comment|/* otherwise, try the next name */
+name|dp
+operator|++
+expr_stmt|;
+name|qtype
+operator|=
+name|T_ANY
+expr_stmt|;
 continue|continue;
 block|}
 elseif|else
