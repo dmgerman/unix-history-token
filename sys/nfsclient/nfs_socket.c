@@ -4869,24 +4869,7 @@ operator|&
 name|nfs_callout
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|nfs_reqq_mtx
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Decrement the outstanding request count. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|nfs_reqq_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rep
@@ -4915,6 +4898,11 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there was a successful reply and a tprintf msg. 	 * tprintf a response. 	 */
@@ -7187,7 +7175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	nfs_realign:  *  *	Check for badly aligned mbuf data and realign by copying the unaligned  *	portion of the data into a new mbuf chain and freeing the portions  *	of the old chain that were replaced.  *  *	We cannot simply realign the data within the existing mbuf chain  *	because the underlying buffers may contain other rpc commands and  *	we cannot afford to overwrite them.  *  *	We would prefer to avoid this situation entirely.  The situation does  *	not occur with NFS/UDP and is supposed to only occassionally occur  *	with TCP.  Use vfs.nfs.realign_count and realign_test to check this.  *  * XXX - This still looks buggy. If there are multiple mbufs in the mbuf chain  * passed in that are unaligned, the first loop will allocate multiple new  * mbufs. But then, it doesn't seem to chain these together. So, if there are  * multiple unaligned mbufs, we're looking at a pretty serious mbuf leak.  * But, this has been how it is, perhaps the misalignment only happens in the head  * of the chain.  */
+comment|/*  *	nfs_realign:  *  *	Check for badly aligned mbuf data and realign by copying the unaligned  *	portion of the data into a new mbuf chain and freeing the portions  *	of the old chain that were replaced.  *  *	We cannot simply realign the data within the existing mbuf chain  *	because the underlying buffers may contain other rpc commands and  *	we cannot afford to overwrite them.  *  *	We would prefer to avoid this situation entirely.  The situation does  *	not occur with NFS/UDP and is supposed to only occassionally occur  *	with TCP.  Use vfs.nfs.realign_count and realign_test to check this.  *  */
 end_comment
 
 begin_function
