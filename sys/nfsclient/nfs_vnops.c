@@ -15779,7 +15779,11 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_NFS, fileid %ld fsid 0x%x"
+literal|"tag %s fileid %ld fsid 0x%x"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 name|np
 operator|->

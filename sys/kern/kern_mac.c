@@ -4209,13 +4209,13 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_tag
+name|v_type
 operator|!=
-name|VT_NON
+name|VNON
 condition|)
 name|printf
 argument_list|(
-literal|"vn_refreshlabel: null v_mount with non-VT_NON\n"
+literal|"vn_refreshlabel: null v_mount with non-VNON\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11899,13 +11899,13 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_tag
+name|v_type
 operator|!=
-name|VT_NON
+name|VNON
 condition|)
 name|printf
 argument_list|(
-literal|"vn_setlabel: null v_mount with non-VT_NON\n"
+literal|"vn_setlabel: null v_mount with non-VNON\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -910,7 +910,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NFS
+literal|"nfs"
 argument_list|,
 name|mntp
 argument_list|,

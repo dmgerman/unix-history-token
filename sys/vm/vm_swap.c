@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -837,11 +843,19 @@ name|v_type
 operator|==
 name|VREG
 operator|&&
+operator|(
 name|vp
 operator|->
-name|v_tag
-operator|==
-name|VT_NFS
+name|v_mount
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_flags
+operator|&
+name|VFCF_NETWORK
+operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|error
@@ -974,7 +988,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NON
+literal|"none"
 argument_list|,
 name|NULL
 argument_list|,

@@ -460,7 +460,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_PORTAL
+literal|"portal"
 argument_list|,
 name|mp
 argument_list|,

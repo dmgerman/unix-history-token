@@ -229,7 +229,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NULL
+literal|"lomacfs"
 argument_list|,
 name|mp
 argument_list|,

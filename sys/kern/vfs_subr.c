@@ -3263,8 +3263,9 @@ name|vops
 parameter_list|,
 name|vpp
 parameter_list|)
-name|enum
-name|vtagtype
+specifier|const
+name|char
+modifier|*
 name|tag
 decl_stmt|;
 name|struct
@@ -7145,7 +7146,7 @@ operator|==
 name|vp
 condition|)
 block|{
-comment|/* 				 * Note: v_tag VT_VFS vps can remain on the 				 * worklist too with no dirty blocks, but 				 * since sync_fsync() moves it to a different 				 * slot we are safe. 				 */
+comment|/* 				 * Note: VFS vnodes can remain on the 				 * worklist too with no dirty blocks, but 				 * since sync_fsync() moves it to a different 				 * slot we are safe. 				 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -7164,9 +7165,11 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
 name|panic
 argument_list|(
-literal|"sched_sync: fsync failed vp %p tag %d"
+literal|"sched_sync: fsync failed "
+literal|"vp %p tag %s"
 argument_list|,
 name|vp
 argument_list|,
@@ -7175,6 +7178,7 @@ operator|->
 name|v_tag
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 				 * Put us back on the worklist.  The worklist 				 * routine will remove us from our current 				 * position and then add us back in at a later 				 * position. 				 */
 name|VI_LOCK
 argument_list|(
@@ -7848,7 +7852,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NON
+literal|"none"
 argument_list|,
 operator|(
 expr|struct
@@ -9934,7 +9938,7 @@ name|vp
 operator|->
 name|v_tag
 operator|=
-name|VT_NON
+literal|"none"
 expr_stmt|;
 name|vp
 operator|->
@@ -13498,7 +13502,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_VFS
+literal|"vfs"
 argument_list|,
 name|mp
 argument_list|,

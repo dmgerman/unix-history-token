@@ -3284,7 +3284,11 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_HPFS, ino 0x%x"
+literal|"tag %s, ino 0x%x"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 name|hp
 operator|->

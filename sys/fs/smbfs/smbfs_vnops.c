@@ -4146,7 +4146,11 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"tag VT_SMBFS, name = %s, parent = %p, opencount = %d"
+literal|"tag %s, name = %s, parent = %p, opencount = %d"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 name|np
 operator|->

@@ -3203,7 +3203,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_ISOFS
+literal|"isofs"
 argument_list|,
 name|mp
 argument_list|,

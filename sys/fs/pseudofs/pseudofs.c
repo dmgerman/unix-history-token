@@ -251,6 +251,25 @@ name|pn_nodes
 operator|=
 name|node
 expr_stmt|;
+comment|/* Propagate flag to all child nodes (and thus their vnodes) */
+if|if
+condition|(
+operator|(
+name|parent
+operator|->
+name|pn_flags
+operator|&
+name|PFS_PROCDEP
+operator|)
+operator|!=
+literal|0
+condition|)
+name|node
+operator|->
+name|pn_flags
+operator||=
+name|PFS_PROCDEP
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -533,9 +552,6 @@ operator|->
 name|pn_flags
 operator|=
 name|flags
-operator|&
-operator|~
-name|PFS_PROCDEP
 expr_stmt|;
 if|if
 condition|(

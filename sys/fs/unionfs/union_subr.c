@@ -1577,9 +1577,9 @@ name|scan
 operator|&&
 name|scan
 operator|->
-name|v_tag
+name|v_op
 operator|==
-name|VT_UNION
+name|union_vnodeop_p
 operator|&&
 name|scan
 operator|!=
@@ -1979,7 +1979,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_UNION
+literal|"union"
 argument_list|,
 name|mp
 argument_list|,

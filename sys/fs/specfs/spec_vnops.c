@@ -2927,7 +2927,13 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag VT_NON, dev %s\n"
+literal|"tag %s, dev %s\n"
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|,
 name|devtoname
 argument_list|(

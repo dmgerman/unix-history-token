@@ -3108,7 +3108,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"union %p, tag %d, data[0] %08x, data[1] %08x\n"
+literal|"union %p, tag %s, data[0] %08x, data[1] %08x\n"
 argument_list|,
 name|vp
 operator|->

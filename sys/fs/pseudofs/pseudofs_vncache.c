@@ -499,7 +499,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_PSEUDOFS
+literal|"pseudofs"
 argument_list|,
 name|mp
 argument_list|,
@@ -639,6 +639,28 @@ name|pn_type
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Propagate flag through to vnode so users know it can change 	 * if the process changes (i.e. execve) 	 */
+if|if
+condition|(
+operator|(
+name|pn
+operator|->
+name|pn_flags
+operator|&
+name|PFS_PROCDEP
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_vflag
+operator||=
+name|VV_PROCDEP
+expr_stmt|;
 name|pvd
 operator|->
 name|pvd_vnode

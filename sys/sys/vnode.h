@@ -113,71 +113,6 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Vnode tag types.  * These are for the benefit of external programs only (e.g., pstat)  * and should NEVER be inspected by the kernel.  */
-end_comment
-
-begin_enum
-enum|enum
-name|vtagtype
-block|{
-name|VT_NON
-block|,
-name|VT_UFS
-block|,
-name|VT_NFS
-block|,
-name|VT_UNUSED
-block|,
-name|VT_PC
-block|,
-name|VT_LFS
-block|,
-name|VT_LOFS
-block|,
-name|VT_FDESC
-block|,
-name|VT_PORTAL
-block|,
-name|VT_NULL
-block|,
-name|VT_UMAP
-block|,
-name|VT_KERNFS
-block|,
-name|VT_PROCFS
-block|,
-name|VT_AFS
-block|,
-name|VT_ISOFS
-block|,
-name|VT_UNION
-block|,
-name|VT_MSDOSFS
-block|,
-name|VT_DEVFS
-block|,
-name|VT_TFS
-block|,
-name|VT_VFS
-block|,
-name|VT_CODA
-block|,
-name|VT_NTFS
-block|,
-name|VT_HPFS
-block|,
-name|VT_NWFS
-block|,
-name|VT_PSEUDOFS
-block|,
-name|VT_SMBFS
-block|,
-name|VT_UDF
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is freed in getnewvnode().  */
 end_comment
 
@@ -414,8 +349,9 @@ modifier|*
 name|v_vnlock
 decl_stmt|;
 comment|/* pointer to vnode lock */
-name|enum
-name|vtagtype
+specifier|const
+name|char
+modifier|*
 name|v_tag
 decl_stmt|;
 comment|/* type of underlying data */
@@ -885,6 +821,17 @@ end_define
 
 begin_comment
 comment|/* vnode being used by kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_PROCDEP
+value|0x0100
+end_define
+
+begin_comment
+comment|/* vnode is process dependent */
 end_comment
 
 begin_comment
@@ -2704,8 +2651,9 @@ begin_function_decl
 name|int
 name|getnewvnode
 parameter_list|(
-name|enum
-name|vtagtype
+specifier|const
+name|char
+modifier|*
 name|tag
 parameter_list|,
 name|struct

@@ -921,7 +921,13 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag VT_NON, dead vnode\n"
+literal|"tag %s, dead vnode\n"
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|)
 expr_stmt|;
 return|return

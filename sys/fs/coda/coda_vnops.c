@@ -8686,7 +8686,7 @@ name|err
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_CODA
+literal|"coda"
 argument_list|,
 name|vfsp
 argument_list|,

@@ -511,7 +511,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_FDESC
+literal|"fdesc"
 argument_list|,
 name|mp
 argument_list|,
@@ -2350,7 +2350,13 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag VT_NON, fdesc vnode\n"
+literal|"tag %s, fdesc vnode\n"
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|)
 expr_stmt|;
 return|return

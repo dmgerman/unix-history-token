@@ -3476,7 +3476,13 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag VT_ISOFS, isofs vnode\n"
+literal|"tag %s, isofs vnode\n"
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|)
 expr_stmt|;
 return|return

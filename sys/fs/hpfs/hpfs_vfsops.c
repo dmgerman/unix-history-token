@@ -2200,7 +2200,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_HPFS
+literal|"hpfs"
 argument_list|,
 name|hpmp
 operator|->

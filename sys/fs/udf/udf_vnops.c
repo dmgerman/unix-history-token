@@ -897,7 +897,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_UDF
+literal|"udf"
 argument_list|,
 name|mp
 argument_list|,

@@ -680,7 +680,11 @@ name|a_vp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\ttag VT_LOMACFS, vp=%p, lowervp=%p\n"
+literal|"\ttag %s, vp=%p, lowervp=%p\n"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 name|vp
 argument_list|,

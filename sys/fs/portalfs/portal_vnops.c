@@ -474,7 +474,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_PORTAL
+literal|"portal"
 argument_list|,
 name|dvp
 operator|->
@@ -2170,7 +2170,13 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag VT_PORTAL, portal vnode\n"
+literal|"tag %s, portal vnode\n"
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|)
 expr_stmt|;
 return|return

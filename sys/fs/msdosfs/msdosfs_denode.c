@@ -840,7 +840,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_MSDOSFS
+literal|"msdosfs"
 argument_list|,
 name|mntp
 argument_list|,

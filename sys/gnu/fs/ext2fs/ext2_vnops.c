@@ -7399,7 +7399,11 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_UFS, ino %lu, on dev %s (%d, %d)"
+literal|"tag %s, ino %lu, on dev %s (%d, %d)"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 operator|(
 name|u_long

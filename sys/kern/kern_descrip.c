@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -6486,7 +6492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For setugid programs, we don't want to people to use that setugidness  * to generate error messages which write to a file which otherwise would  * otherwise be off-limits to the process.  *  * This is a gross hack to plug the hole.  A better solution would involve  * a special vop or other form of generalized access control mechanism.  We  * go ahead and just reject all procfs filesystems accesses as dangerous.  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't for check setugidness since we know we are.  */
+comment|/*  * For setugid programs, we don't want to people to use that setugidness  * to generate error messages which write to a file which otherwise would  * otherwise be off-limits to the process.  We check for filesystems where  * the vnode can change out from under us after execve (like [lin]procfs).  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't for check setugidness since we know we are.  */
 end_comment
 
 begin_function
@@ -6507,29 +6513,40 @@ operator|->
 name|f_type
 operator|==
 name|DTYPE_VNODE
-operator|&&
-operator|(
+condition|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
 operator|(
 expr|struct
 name|vnode
 operator|*
 operator|)
-operator|(
 name|fp
 operator|->
 name|f_data
-operator|)
-operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|vp
 operator|->
-name|v_tag
-operator|==
-name|VT_PROCFS
+name|v_vflag
+operator|&
+name|VV_PROCDEP
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0

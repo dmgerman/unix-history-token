@@ -3329,7 +3329,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NTFS
+literal|"ntfs"
 argument_list|,
 name|ntmp
 operator|->

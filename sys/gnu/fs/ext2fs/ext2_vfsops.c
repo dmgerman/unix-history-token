@@ -5277,7 +5277,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_UFS
+literal|"ext2fs"
 argument_list|,
 name|mp
 argument_list|,

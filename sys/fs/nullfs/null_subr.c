@@ -653,7 +653,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_NULL
+literal|"null"
 argument_list|,
 name|mp
 argument_list|,

@@ -8062,7 +8062,13 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_MSDOSFS, startcluster %lu, dircluster %lu, diroffset %lu "
+literal|"tag %s, startcluster %lu, dircluster %lu, diroffset %lu "
+argument_list|,
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_tag
 argument_list|,
 name|dep
 operator|->
