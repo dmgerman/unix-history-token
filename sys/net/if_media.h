@@ -804,6 +804,105 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_IEEE80211_ODFM6
+value|10
+end_define
+
+begin_comment
+comment|/* ODFM 6Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM9
+value|11
+end_define
+
+begin_comment
+comment|/* ODFM 9Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM12
+value|12
+end_define
+
+begin_comment
+comment|/* ODFM 12Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM18
+value|13
+end_define
+
+begin_comment
+comment|/* ODFM 18Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM24
+value|14
+end_define
+
+begin_comment
+comment|/* ODFM 24Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM36
+value|15
+end_define
+
+begin_comment
+comment|/* ODFM 36Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM48
+value|16
+end_define
+
+begin_comment
+comment|/* ODFM 48Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM54
+value|17
+end_define
+
+begin_comment
+comment|/* ODFM 54Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ODFM72
+value|18
+end_define
+
+begin_comment
+comment|/* ODFM 72Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_IEEE80211_ADHOC
 value|0x00000100
 end_define
@@ -1204,14 +1303,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_DESCRIPTIONS
-value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ IFM_IEEE80211_ODFM6, "ODFM/6Mbps" },				\ 	{ IFM_IEEE80211_ODFM9, "ODFM/9Mbps" },				\ 	{ IFM_IEEE80211_ODFM12, "ODFM/12Mbps" },			\ 	{ IFM_IEEE80211_ODFM18, "ODFM/18Mbps" },			\ 	{ IFM_IEEE80211_ODFM24, "ODFM/24Mbps" },			\ 	{ IFM_IEEE80211_ODFM36, "ODFM/36Mbps" },			\ 	{ IFM_IEEE80211_ODFM48, "ODFM/48Mbps" },			\ 	{ IFM_IEEE80211_ODFM54, "ODFM/54Mbps" },			\ 	{ IFM_IEEE80211_ODFM72, "ODFM/72Mbps" },			\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_ALIASES
-value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ IFM_IEEE80211_ODFM6, "ODFM6" },				\ 	{ IFM_IEEE80211_ODFM9, "ODFM9" },				\ 	{ IFM_IEEE80211_ODFM12, "ODFM12" },				\ 	{ IFM_IEEE80211_ODFM18, "ODFM18" },				\ 	{ IFM_IEEE80211_ODFM24, "ODFM24" },				\ 	{ IFM_IEEE80211_ODFM36, "ODFM36" },				\ 	{ IFM_IEEE80211_ODFM48, "ODFM48" },				\ 	{ IFM_IEEE80211_ODFM54, "ODFM54" },				\ 	{ IFM_IEEE80211_ODFM72, "ODFM72" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
