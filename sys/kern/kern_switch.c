@@ -1263,10 +1263,10 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
+name|SLOT_RELEASE
+argument_list|(
 name|kg
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Add the thread to the ksegrp's run queue at 	 * the appropriate place. 	 */
@@ -2992,6 +2992,15 @@ modifier|*
 name|kg
 parameter_list|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"kg %p init slots and concurrency to 1"
+argument_list|,
+name|kg
+argument_list|)
+expr_stmt|;
 name|kg
 operator|->
 name|kg_concurrency
@@ -3024,7 +3033,33 @@ name|int
 name|concurrency
 parameter_list|)
 block|{
-comment|/* Handle the case for a declining concurrency */
+name|CTR4
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"kg %p set concurrency to %d, slots %d -> %d"
+argument_list|,
+name|kg
+argument_list|,
+name|concurrency
+argument_list|,
+name|kg
+operator|->
+name|kg_avail_opennings
+argument_list|,
+name|kg
+operator|->
+name|kg_avail_opennings
+operator|+
+operator|(
+name|concurrency
+operator|-
+name|kg
+operator|->
+name|kg_concurrency
+operator|)
+argument_list|)
+expr_stmt|;
 name|kg
 operator|->
 name|kg_avail_opennings
@@ -3060,12 +3095,12 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|SLOT_RELEASE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 name|slot_fill
 argument_list|(
