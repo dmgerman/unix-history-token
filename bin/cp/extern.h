@@ -51,6 +51,13 @@ name|vflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|info
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int

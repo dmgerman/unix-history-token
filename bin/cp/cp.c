@@ -199,6 +199,24 @@ name|rflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|info
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|siginfo
+parameter_list|(
+name|int
+name|notused
+name|__unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_enum
 enum|enum
 name|op
@@ -551,6 +569,16 @@ operator||
 name|FTS_COMFOLLOW
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|siginfo
+argument_list|)
+expr_stmt|;
 comment|/* Save the target base in "to". */
 name|target
 operator|=
@@ -1969,6 +1997,23 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|siginfo
+parameter_list|(
+name|int
+name|notused
+name|__unused
+parameter_list|)
+block|{
+name|info
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
