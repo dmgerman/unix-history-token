@@ -10711,6 +10711,8 @@ operator|)
 name|ficlMalloc
 argument_list|(
 name|count
+operator|+
+literal|1
 argument_list|)
 decl_stmt|;
 comment|/*      ** Since we don't have an output primitive for a counted string     ** (oops), make sure the string is null terminated. If not, copy     ** and terminate it.     */
@@ -10746,7 +10748,7 @@ name|vmTextOut
 argument_list|(
 name|pVM
 argument_list|,
-name|cp
+name|pDest
 argument_list|,
 literal|0
 argument_list|)
