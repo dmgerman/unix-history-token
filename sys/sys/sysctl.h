@@ -602,6 +602,33 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_han
 end_define
 
 begin_comment
+comment|/* Oid for an unsigned int.  If ptr is NULL, val is returned. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_UINT
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_int, "IU", descr)
+end_define
+
+begin_comment
 comment|/* Oid for a long.  The pointer must be non NULL. */
 end_comment
 
@@ -620,10 +647,39 @@ name|access
 parameter_list|,
 name|ptr
 parameter_list|,
+name|val
+parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, 0, sysctl_handle_long, "L", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
+end_define
+
+begin_comment
+comment|/* Oid for a long.  The pointer must be non NULL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ULONG
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_comment

@@ -223,9 +223,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX This should be vm_size_t. */
+end_comment
+
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|ps_strings
 init|=
 name|PS_STRINGS
@@ -233,7 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -246,14 +250,20 @@ argument_list|,
 operator|&
 name|ps_strings
 argument_list|,
+literal|0
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX This should be vm_size_t. */
+end_comment
+
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|usrstack
 init|=
 name|USRSTACK
@@ -261,7 +271,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -273,6 +283,8 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|usrstack
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)
@@ -302,6 +314,8 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ps_arg_cache_limit
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)

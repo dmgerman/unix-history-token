@@ -241,6 +241,8 @@ argument_list|,
 operator|&
 name|chipset_ports
 argument_list|,
+literal|0
+argument_list|,
 literal|"PCI chipset port address"
 argument_list|)
 expr_stmt|;
@@ -259,6 +261,8 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|chipset_memory
+argument_list|,
+literal|0
 argument_list|,
 literal|"PCI chipset memory address"
 argument_list|)
@@ -279,6 +283,8 @@ argument_list|,
 operator|&
 name|chipset_dense
 argument_list|,
+literal|0
+argument_list|,
 literal|"PCI chipset dense memory address"
 argument_list|)
 expr_stmt|;
@@ -297,6 +303,8 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|chipset_hae_mask
+argument_list|,
+literal|0
 argument_list|,
 literal|"PCI chipset mask for HAE register"
 argument_list|)
