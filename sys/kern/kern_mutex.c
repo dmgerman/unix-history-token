@@ -300,6 +300,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|kg
+operator|=
+name|td
+operator|->
+name|td_ksegrp
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|td
