@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)trace.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)trace.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -91,7 +91,17 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|tracing
+name|traceactions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* on/off */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tracehistory
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +120,17 @@ begin_comment
 comment|/* output trace file */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|curtime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current timestamp string */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -119,7 +140,19 @@ name|action
 parameter_list|,
 name|route
 parameter_list|)
-value|{ \ 	  if (tracing) \ 		traceaction(ftrace, "action", route); \ 	}
+value|{ \ 	  if (traceactions) \ 		traceaction(ftrace, action, route); \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_NEWMETRIC
+parameter_list|(
+name|route
+parameter_list|,
+name|newmetric
+parameter_list|)
+value|{ \ 	  if (traceactions) \ 		tracenewmetric(ftrace, route, newmetric); \ 	}
 end_define
 
 begin_define
@@ -133,7 +166,7 @@ name|src
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "from", src, packet, size); \ 	}
+value|{ \ 	  if (tracehistory) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) { \ 		time_t t; \ 		t = time(0); \ 		dumppacket(stdout, "from", src, packet, size,&t); \ 	  } \ 	}
 end_define
 
 begin_define
@@ -147,7 +180,7 @@ name|dst
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing&& ifp) \ 		trace(&ifp->int_output, dst, packet, size, ifp->int_metric); \ 	  if (tracepackets) \ 		dumppacket(stdout, "to", dst, packet, size); \ 	}
+value|{ \ 	  if (tracehistory&& ifp) \ 		trace(&ifp->int_output, dst, packet, size, ifp->int_metric); \ 	  if (tracepackets) { \ 		time_t t; \ 		t = time(0); \ 		dumppacket(stdout, "to", dst, packet, size,&t); \ 	  } \ 	}
 end_define
 
 end_unit
