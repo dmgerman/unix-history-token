@@ -246,7 +246,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_LISTENER_QUERY
+name|MLD_LISTENER_QUERY
 value|130
 end_define
 
@@ -268,7 +268,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 value|131
 end_define
 
@@ -290,13 +290,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_LISTENER_DONE
+name|MLD_LISTENER_DONE
 value|132
 end_define
 
 begin_comment
 comment|/* multicast listener done */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/* the followings are for backward compatibility to old KAME apps. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLD6_LISTENER_QUERY
+value|MLD_LISTENER_QUERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLD6_LISTENER_REPORT
+value|MLD_LISTENER_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLD6_LISTENER_DONE
+value|MLD_LISTENER_DONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -437,18 +473,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_MTRACE_RESP
+name|MLD_MTRACE_RESP
 value|200
 end_define
 
 begin_comment
-comment|/* mtrace response(to sender) */
+comment|/* mtrace resp (to sender) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MLD6_MTRACE
+name|MLD_MTRACE
 value|201
 end_define
 
@@ -477,6 +513,31 @@ end_define
 begin_comment
 comment|/* XXX To be defined */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MLD6_MTRACE_RESP
+value|MLD_MTRACE_RESP
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLD6_MTRACE
+value|MLD_MTRACE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -748,15 +809,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|mld6_hdr
+name|mld_hdr
 block|{
 name|struct
 name|icmp6_hdr
-name|mld6_hdr
+name|mld_icmp6_hdr
 decl_stmt|;
 name|struct
 name|in6_addr
-name|mld6_addr
+name|mld_addr
 decl_stmt|;
 comment|/* multicast address */
 block|}
@@ -769,39 +830,107 @@ argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|/* definitions to provide backward compatibility to old KAME applications */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|mld6_hdr
+value|mld_hdr
+end_define
+
 begin_define
 define|#
 directive|define
 name|mld6_type
-value|mld6_hdr.icmp6_type
+value|mld_type
 end_define
 
 begin_define
 define|#
 directive|define
 name|mld6_code
-value|mld6_hdr.icmp6_code
+value|mld_code
 end_define
 
 begin_define
 define|#
 directive|define
 name|mld6_cksum
-value|mld6_hdr.icmp6_cksum
+value|mld_cksum
 end_define
 
 begin_define
 define|#
 directive|define
 name|mld6_maxdelay
-value|mld6_hdr.icmp6_data16[0]
+value|mld_maxdelay
 end_define
 
 begin_define
 define|#
 directive|define
 name|mld6_reserved
-value|mld6_hdr.icmp6_data16[1]
+value|mld_reserved
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld6_addr
+value|mld_addr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* shortcut macro definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mld_type
+value|mld_icmp6_hdr.icmp6_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_code
+value|mld_icmp6_hdr.icmp6_code
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_cksum
+value|mld_icmp6_hdr.icmp6_cksum
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_maxdelay
+value|mld_icmp6_hdr.icmp6_data16[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_reserved
+value|mld_icmp6_hdr.icmp6_data16[1]
 end_define
 
 begin_comment
@@ -3022,7 +3151,7 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|do { \ 		icmp6_ifstat_inc(ifp, ifs6_out_msg); \  		if (type< ICMP6_INFOMSG_MASK) \  			icmp6_ifstat_inc(ifp, ifs6_out_error); \ 		switch(type) { \ 		 case ICMP6_DST_UNREACH: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_dstunreach); \ 			 if (code == ICMP6_DST_UNREACH_ADMIN) \ 				 icmp6_ifstat_inc(ifp, ifs6_out_adminprohib); \ 			 break; \ 		 case ICMP6_PACKET_TOO_BIG: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_pkttoobig); \ 			 break; \ 		 case ICMP6_TIME_EXCEEDED: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_timeexceed); \ 			 break; \ 		 case ICMP6_PARAM_PROB: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_paramprob); \ 			 break; \ 		 case ICMP6_ECHO_REQUEST: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echo); \ 			 break; \ 		 case ICMP6_ECHO_REPLY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echoreply); \ 			 break; \ 		 case MLD6_LISTENER_QUERY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldquery); \ 			 break; \ 		 case MLD6_LISTENER_REPORT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldreport); \ 			 break; \ 		 case MLD6_LISTENER_DONE: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mlddone); \ 			 break; \ 		 case ND_ROUTER_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routersolicit); \ 			 break; \ 		 case ND_ROUTER_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routeradvert); \ 			 break; \ 		 case ND_NEIGHBOR_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighborsolicit); \ 			 break; \ 		 case ND_NEIGHBOR_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighboradvert); \ 			 break; \ 		 case ND_REDIRECT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_redirect); \ 			 break; \ 		} \ } while (0)
+value|do { \ 		icmp6_ifstat_inc(ifp, ifs6_out_msg); \  		if (type< ICMP6_INFOMSG_MASK) \  			icmp6_ifstat_inc(ifp, ifs6_out_error); \ 		switch(type) { \ 		 case ICMP6_DST_UNREACH: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_dstunreach); \ 			 if (code == ICMP6_DST_UNREACH_ADMIN) \ 				 icmp6_ifstat_inc(ifp, ifs6_out_adminprohib); \ 			 break; \ 		 case ICMP6_PACKET_TOO_BIG: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_pkttoobig); \ 			 break; \ 		 case ICMP6_TIME_EXCEEDED: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_timeexceed); \ 			 break; \ 		 case ICMP6_PARAM_PROB: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_paramprob); \ 			 break; \ 		 case ICMP6_ECHO_REQUEST: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echo); \ 			 break; \ 		 case ICMP6_ECHO_REPLY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echoreply); \ 			 break; \ 		 case MLD_LISTENER_QUERY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldquery); \ 			 break; \ 		 case MLD_LISTENER_REPORT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldreport); \ 			 break; \ 		 case MLD_LISTENER_DONE: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mlddone); \ 			 break; \ 		 case ND_ROUTER_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routersolicit); \ 			 break; \ 		 case ND_ROUTER_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routeradvert); \ 			 break; \ 		 case ND_NEIGHBOR_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighborsolicit); \ 			 break; \ 		 case ND_NEIGHBOR_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighboradvert); \ 			 break; \ 		 case ND_REDIRECT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_redirect); \ 			 break; \ 		} \ } while (0)
 end_define
 
 begin_decl_stmt
