@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -380,6 +380,16 @@ name|char
 modifier|*
 name|p_wmesg
 decl_stmt|;
+name|struct
+name|timeval
+name|p_utime
+decl_stmt|;
+comment|/* user time */
+name|struct
+name|timeval
+name|p_stime
+decl_stmt|;
+comment|/* system time */
 if|#
 directive|if
 name|defined
@@ -823,12 +833,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SULOCK
+name|SSINTR
 value|0x0000040
 end_define
 
 begin_comment
-comment|/* user settable lock in core */
+comment|/* sleep is interruptible */
 end_comment
 
 begin_define
@@ -1016,6 +1026,17 @@ end_define
 
 begin_comment
 comment|/* process called exec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SULOCK
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* locked in core after swap error XXX */
 end_comment
 
 begin_define
