@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -634,11 +634,13 @@ endif|#
 directive|endif
 name|inp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|pcbinfo
 operator|->
 name|ipi_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -709,7 +711,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|pcbinfo
 operator|->
@@ -2922,7 +2924,7 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|ipi
 operator|->

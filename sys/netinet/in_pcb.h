@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_define
@@ -290,10 +290,6 @@ directive|define
 name|inc6_route
 value|inc_dependroute.inc6_route
 end_define
-
-begin_comment
-comment|/*  * NB: the zone allocator is type-stable EXCEPT FOR THE FIRST TWO LONGS  * of the structure.  Therefore, it is important that the members in  * that position not contain any information which is required to be  * stable.  */
-end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -698,7 +694,7 @@ decl_stmt|;
 name|u_short
 name|lasthi
 decl_stmt|;
-name|vm_zone_t
+name|uma_zone_t
 name|ipi_zone
 decl_stmt|;
 comment|/* zone to allocate pcbs from */
