@@ -45,6 +45,7 @@ comment|/*  *  * Some numerical conventions:  *  *	Arrays have white's value in 
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|EXEC
 index|[]
@@ -56,6 +57,7 @@ comment|/* object for main program */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|TEACH
 index|[]
@@ -475,6 +477,7 @@ comment|/* input line of current move 				   (used for reconstructing input afte
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|color
