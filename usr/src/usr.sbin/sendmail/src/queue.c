@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.41 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.42 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.41 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.42 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3376,18 +3376,6 @@ name|e
 argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_FATALERRS
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-condition|)
 name|sendall
 argument_list|(
 name|e
@@ -3448,10 +3436,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|qf
-decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
@@ -3468,6 +3452,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|bp
+decl_stmt|;
+name|char
+name|qf
+index|[
+literal|20
+index|]
 decl_stmt|;
 name|char
 name|buf
@@ -3504,13 +3494,16 @@ name|sendto
 parameter_list|()
 function_decl|;
 comment|/* 	**  Read and process the file. 	*/
+name|strcpy
+argument_list|(
 name|qf
-operator|=
+argument_list|,
 name|queuename
 argument_list|(
 name|e
 argument_list|,
 literal|'q'
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|qfp
