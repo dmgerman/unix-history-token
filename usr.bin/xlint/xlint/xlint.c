@@ -1860,7 +1860,7 @@ argument_list|(
 operator|&
 name|cflags
 argument_list|,
-literal|"-Wp,-CC"
+literal|"-Wp,-C"
 argument_list|)
 expr_stmt|;
 name|appcstrg
