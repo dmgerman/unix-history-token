@@ -2552,6 +2552,13 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+name|drvp
+operator|->
+name|unit
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|p
 operator|=
 name|drvp
