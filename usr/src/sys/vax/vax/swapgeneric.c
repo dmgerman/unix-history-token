@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -438,6 +438,10 @@ condition|)
 goto|goto
 name|doswap
 goto|;
+name|unit
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|boothowto
@@ -542,10 +546,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|unit
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -581,10 +581,6 @@ name|swaponroot
 operator|++
 expr_stmt|;
 block|}
-name|unit
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|gc
