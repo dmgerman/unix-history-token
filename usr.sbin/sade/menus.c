@@ -5944,6 +5944,29 @@ name|DIST_SRC_RELEASE
 block|}
 block|,
 block|{
+literal|" rescue"
+block|,
+literal|"/usr/src/rescue (static rescue tools)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_RESCUE
+block|}
+block|,
+block|{
 literal|" bin"
 block|,
 literal|"/usr/src/bin (system binaries)"

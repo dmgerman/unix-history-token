@@ -333,8 +333,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_SRC_RESCUE
+value|0x80000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_SRC_ALL
-value|0x7FFFF
+value|0xFFFFF
 end_define
 
 begin_comment
