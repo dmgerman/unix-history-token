@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.    *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *  * $Id: swap_pager.c,v 1.114 1999/02/18 19:57:33 dillon Exp $  */
+comment|/*  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.    *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *  * $Id: swap_pager.c,v 1.115 1999/02/21 08:30:49 dillon Exp $  */
 end_comment
 
 begin_include
@@ -316,23 +316,6 @@ begin_comment
 comment|/* maximum in-progress async I/O's	*/
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|swap_cluster_max
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum VOP I/O allowed		*/
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DISALLOW_SWAP_TUNE
-end_ifndef
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -353,79 +336,6 @@ literal|"Maximum running async swap ops"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|swap_cluster_max
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|swap_cluster_max
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum swap I/O cluster (pages)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|swap_async_max
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|swap_async_max
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|swap_cluster_max
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|swap_cluster_max
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * "named" and "unnamed" anon region objects.  Try to reduce the overhead  * of searching a named list by hashing it just a little.  */
@@ -915,7 +825,7 @@ name|int
 name|n
 decl_stmt|;
 comment|/* 	 * Number of in-transit swap bp operations.  Don't 	 * exhaust the pbufs completely.  Make sure we 	 * initialize workable values (0 will work for hysteresis 	 * but it isn't very efficient). 	 * 	 * The nsw_cluster_max is constrained by the bp->b_pages[] 	 * array (MAXPHYS/PAGE_SIZE) and our locally defined 	 * MAX_PAGEOUT_CLUSTER.   Also be aware that swap ops are 	 * constrained by the swap device interleave stripe size. 	 * 	 * Currently we hardwire nsw_wcount_async to 4.  This limit is  	 * designed to prevent other I/O from having high latencies due to 	 * our pageout I/O.  The value 4 works well for one or two active swap 	 * devices but is probably a little low if you have more.  Even so, 	 * a higher value would probably generate only a limited improvement 	 * with three or four active swap devices since the system does not 	 * typically have to pageout at extreme bandwidths.   We will want 	 * at least 2 per swap devices, and 4 is a pretty good value if you 	 * have one NFS swap device due to the command/ack latency over NFS. 	 * So it all works out pretty well. 	 */
-name|swap_cluster_max
+name|nsw_cluster_max
 operator|=
 name|min
 argument_list|(
@@ -955,10 +865,6 @@ expr_stmt|;
 name|nsw_wcount_async_max
 operator|=
 name|nsw_wcount_async
-expr_stmt|;
-name|nsw_cluster_max
-operator|=
-name|swap_cluster_max
 expr_stmt|;
 comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill. 	 */
 name|n
@@ -2721,10 +2627,7 @@ name|sync
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Step 2 	 * 	 * Update nsw parameters from swap_async_max and swap_cluster_max  	 * sysctl values.  Do not let the sysop crash the machine with bogus 	 * numbers. 	 */
-ifndef|#
-directive|ifndef
-name|DISALLOW_SWAP_TUNE
+comment|/* 	 * Step 2 	 * 	 * Update nsw parameters from swap_async_max sysctl values. 	 * Do not let the sysop crash the machine with bogus numbers. 	 */
 if|if
 condition|(
 name|swap_async_max
@@ -2811,69 +2714,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|swap_cluster_max
-operator|!=
-name|nsw_cluster_max
-condition|)
-block|{
-name|int
-name|n
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|n
-operator|=
-name|swap_cluster_max
-operator|)
-operator|<
-literal|1
-condition|)
-name|n
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-name|min
-argument_list|(
-operator|(
-name|MAXPHYS
-operator|/
-name|PAGE_SIZE
-operator|)
-argument_list|,
-name|MAX_PAGEOUT_CLUSTER
-argument_list|)
-condition|)
-name|n
-operator|=
-name|min
-argument_list|(
-operator|(
-name|MAXPHYS
-operator|/
-name|PAGE_SIZE
-operator|)
-argument_list|,
-name|MAX_PAGEOUT_CLUSTER
-argument_list|)
-expr_stmt|;
-name|swap_cluster_max
-operator|=
-name|n
-expr_stmt|;
-name|nsw_cluster_max
-operator|=
-name|n
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Step 3 	 * 	 * Assign swap blocks and issue I/O.  We reallocate swap on the fly. 	 * The page is left dirty until the pageout operation completes 	 * successfully. 	 */
 for|for
 control|(
@@ -3391,12 +3231,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (bp->b_flags& B_ERROR) { 			grv = VM_PAGER_ERROR; 		}
-endif|#
-directive|endif
 for|for
 control|(
 name|j
@@ -3419,12 +3253,6 @@ index|]
 operator|=
 name|VM_PAGER_PEND
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (bp->b_flags& B_ERROR) { 			grv = VM_PAGER_ERROR; 		}
-endif|#
-directive|endif
 comment|/* 		 * Now that we are through with the bp, we can call the 		 * normal async completion, which frees everything up. 		 */
 name|swp_pager_async_iodone
 argument_list|(
