@@ -813,21 +813,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|__cursig
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Machine-dependent functions:  */
 end_comment
@@ -874,7 +859,7 @@ comment|/*  * Determine signal that should be delivered to process p, the curren
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline
 name|int
 name|__cursig
