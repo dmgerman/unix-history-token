@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.44 1997/10/16 10:48:12 phk Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.45 1997/10/16 20:32:24 phk Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5184,17 +5184,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_islocked_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_noislocked
-block|}
-block|,
-block|{
-operator|&
 name|vop_link_desc
 block|,
 operator|(
@@ -5202,17 +5191,6 @@ name|vop_t
 operator|*
 operator|)
 name|devfs_link
-block|}
-block|,
-block|{
-operator|&
-name|vop_lock_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_nolock
 block|}
 block|,
 block|{
@@ -5334,17 +5312,6 @@ name|vop_t
 operator|*
 operator|)
 name|devfs_symlink
-block|}
-block|,
-block|{
-operator|&
-name|vop_unlock_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_nounlock
 block|}
 block|,
 block|{
