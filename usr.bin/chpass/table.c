@@ -154,6 +154,24 @@ block|,
 name|NULL
 block|, }
 block|,
+ifdef|#
+directive|ifdef
+name|RESTRICT_FULLNAME_CHANGE
+comment|/* do not allow fullname changes */
+block|{
+literal|"full name"
+block|,
+name|p_gecos
+block|,
+literal|1
+block|,
+literal|9
+block|,
+name|e2
+block|,   }
+block|,
+else|#
+directive|else
 block|{
 literal|"full name"
 block|,
@@ -166,6 +184,8 @@ block|,
 name|e2
 block|,   }
 block|,
+endif|#
+directive|endif
 block|{
 literal|"office phone"
 block|,

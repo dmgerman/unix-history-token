@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chpass.c,v 1.9 1996/07/01 19:38:07 guido Exp $"
+literal|"$Id: chpass.c,v 1.10 1996/07/14 16:42:33 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,8 @@ block|,
 name|EDITENTRY
 block|,
 name|NEWPW
+block|,
+name|NEWEXP
 block|}
 name|op
 enum|;
@@ -331,7 +333,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:p:s:d:h:oly"
+literal|"a:p:s:e:d:h:oly"
 argument_list|)
 operator|)
 operator|!=
@@ -350,7 +352,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:p:s:"
+literal|"a:p:s:e:"
 argument_list|)
 operator|)
 operator|!=
@@ -393,6 +395,18 @@ case|:
 name|op
 operator|=
 name|NEWPW
+expr_stmt|;
+name|arg
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|op
+operator|=
+name|NEWEXP
 expr_stmt|;
 name|arg
 operator|=
@@ -543,6 +557,10 @@ operator|||
 name|op
 operator|==
 name|NEWPW
+operator|||
+name|op
+operator|==
+name|NEWEXP
 condition|)
 switch|switch
 condition|(
@@ -675,6 +693,50 @@ expr_stmt|;
 if|if
 condition|(
 name|p_shell
+argument_list|(
+name|arg
+argument_list|,
+name|pw
+argument_list|,
+operator|(
+name|ENTRY
+operator|*
+operator|)
+name|NULL
+argument_list|)
+condition|)
+name|pw_error
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|op
+operator|==
+name|NEWEXP
+condition|)
+block|{
+if|if
+condition|(
+name|uid
+condition|)
+comment|/* only root can change expire */
+name|baduser
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|p_expire
 argument_list|(
 name|arg
 argument_list|,
@@ -935,12 +997,12 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|YP
-literal|"usage: chpass [-l] [-y] [-d domain [-h host]] [-a list] [-p encpass] [-s shell] [user]\n"
+literal|"usage: chpass [-l] [-y] [-d domain [-h host]] [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|"usage: chpass [-a list] [-p encpass] [-s shell] [user]\n"
+literal|"usage: chpass [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
 block|)
 function|;
 end_function
