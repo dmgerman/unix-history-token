@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cdcontrol.c,v 1.16 1997/09/04 11:52:28 charnier Exp $"
+literal|"$Id: cdcontrol.c,v 1.18 1999/01/31 15:30:21 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -998,7 +998,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cdcontrol [-vs] [-f disc] [command args ...]\n"
+literal|"usage: cdcontrol [-sv] [-f device] [command ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
