@@ -65,6 +65,12 @@ begin_comment
 comment|/* Period must be matched by period. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -73,8 +79,13 @@ value|-1
 end_define
 
 begin_comment
-comment|/* Reserved */
+comment|/* Reserved. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
