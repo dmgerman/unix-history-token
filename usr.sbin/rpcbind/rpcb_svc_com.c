@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rpcb_svc_com.c,v 1.6 2000/08/03 00:07:22 fvdl Exp $	*/
+comment|/*	$NetBSD: rpcb_svc_com.c,v 1.9 2002/11/08 00:16:39 fvdl Exp $	*/
 end_comment
 
 begin_comment
@@ -5426,6 +5426,21 @@ name|MASKVAL
 value|(POLLIN | POLLPRI | POLLRDNORM | POLLRDBAND)
 end_define
 
+begin_function_decl
+specifier|extern
+name|bool_t
+name|__svc_clean_idle
+parameter_list|(
+name|fd_set
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|bool_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|my_svc_run
@@ -5462,6 +5477,9 @@ name|struct
 name|pollfd
 modifier|*
 name|p
+decl_stmt|;
+name|fd_set
+name|cleanfds
 decl_stmt|;
 for|for
 control|(
@@ -5597,7 +5615,9 @@ name|pollfds
 argument_list|,
 name|nfds
 argument_list|,
-name|INFTIM
+literal|30
+operator|*
+literal|1000
 argument_list|)
 condition|)
 block|{
@@ -5609,6 +5629,20 @@ comment|/* 			 * We ignore all errors, continuing with the assumption 			 * that
 case|case
 literal|0
 case|:
+name|cleanfds
+operator|=
+name|svc_fdset
+expr_stmt|;
+name|__svc_clean_idle
+argument_list|(
+operator|&
+name|cleanfds
+argument_list|,
+literal|30
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 continue|continue;
 default|default:
 ifdef|#

@@ -127,6 +127,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/pmap_clnt.h>
 end_include
 
@@ -1560,6 +1566,11 @@ decl_stmt|,
 name|s
 decl_stmt|;
 name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
+name|int
 name|one
 init|=
 literal|1
@@ -2018,6 +2029,14 @@ argument_list|(
 literal|"tcp"
 argument_list|)
 expr_stmt|;
+name|rpc_control
+argument_list|(
+name|RPC_SVC_CONNMAXREC_SET
+argument_list|,
+operator|&
+name|maxrec
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2327,9 +2346,9 @@ name|svc_vc_create
 argument_list|(
 name|tcpsock
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2554,9 +2573,9 @@ name|svc_vc_create
 argument_list|(
 name|tcp6sock
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 expr_stmt|;
 if|if
