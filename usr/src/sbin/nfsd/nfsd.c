@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.1 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,61 +50,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -129,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
 end_include
 
 begin_include
@@ -237,6 +183,66 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/* Global defs */
 end_comment
@@ -293,13 +299,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
@@ -325,13 +324,6 @@ end_decl_stmt
 begin_comment
 comment|/* end of argv */
 end_comment
-
-begin_function_decl
-name|void
-name|reapchild
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -374,27 +366,61 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* KERBEROS */
-end_comment
-
-begin_comment
-comment|/*  * Nfs server daemon mostly just a user context for nfssvc()  * 1 - do file descriptor and signal cleanup  * 2 - fork the nfsd(s)  * 3 - create server socket(s)  * 4 - register socket with portmap  * For connectionless protocols, just pass the socket into the kernel via.  * nfssvc().  * For connection based sockets, loop doing accepts. When you get a new socket  * from accept, pass the msgsock into the kernel via. nfssvc().  * The arguments are:  * -u - support udp nfs clients  * -t - support tcp nfs clients  * -c - support iso cltp clients  * -r - reregister with portmapper  * followed by "n" which is the number of nfsds' to fork off  */
-end_comment
-
-begin_expr_stmt
-expr|main
+begin_decl_stmt
+name|void
+name|reapchild
+name|__P
+argument_list|(
 operator|(
-name|argc
-operator|,
-name|argv
-operator|,
-name|envp
+name|int
 operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setproctitle
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Nfs server daemon mostly just a user context for nfssvc()  *  * 1 - do file descriptor and signal cleanup  * 2 - fork the nfsd(s)  * 3 - create server socket(s)  * 4 - register socket with portmap  *  * For connectionless protocols, just pass the socket into the kernel via.  * nfssvc().  * For connection based sockets, loop doing accepts. When you get a new  * socket from accept, pass the msgsock into the kernel via. nfssvc().  * The arguments are:  *	-c - support iso cltp clients  *	-r - reregister with portmapper  *	-t - support tcp nfs clients  *	-u - support udp nfs clients  * followed by "n" which is the number of nfsds' to fork off  */
+end_comment
+
+begin_decl_stmt
+name|int
+decl|main
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|envp
+argument_list|)
 name|int
 name|argc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -410,29 +436,18 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+specifier|extern
 name|int
-name|i
+name|optind
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-modifier|*
-name|cpp
-decl_stmt|;
-specifier|register
 name|struct
-name|ucred
+name|group
 modifier|*
-name|cr
-init|=
-operator|&
-name|nsd
-operator|.
-name|nsd_cr
+name|grp
+decl_stmt|;
+name|struct
+name|nfsd_args
+name|nfsdargs
 decl_stmt|;
 name|struct
 name|passwd
@@ -440,69 +455,9 @@ modifier|*
 name|pwd
 decl_stmt|;
 name|struct
-name|group
+name|ucred
 modifier|*
-name|grp
-decl_stmt|;
-name|int
-name|sock
-decl_stmt|,
-name|msgsock
-decl_stmt|,
-name|tcpflag
-init|=
-literal|0
-decl_stmt|,
-name|udpflag
-init|=
-literal|0
-decl_stmt|,
-name|ret
-decl_stmt|,
-name|len
-decl_stmt|;
-name|int
-name|cltpflag
-init|=
-literal|0
-decl_stmt|,
-name|tp4flag
-init|=
-literal|0
-decl_stmt|,
-name|tpipflag
-init|=
-literal|0
-decl_stmt|,
-name|connect_type_cnt
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|maxsock
-decl_stmt|,
-name|tcpsock
-decl_stmt|,
-name|tp4sock
-decl_stmt|,
-name|tpipsock
-decl_stmt|,
-name|nfsdcnt
-init|=
-literal|4
-decl_stmt|;
-name|int
-name|nfssvc_flag
-decl_stmt|,
-name|opt
-decl_stmt|,
-name|on
-init|=
-literal|1
-decl_stmt|,
-name|reregister
-init|=
-literal|0
+name|cr
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -521,25 +476,65 @@ name|isopeer
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|nfsd_args
-name|nfsdargs
-decl_stmt|;
 name|fd_set
 name|ready
 decl_stmt|,
 name|sockbits
 decl_stmt|;
-specifier|extern
 name|int
-name|optind
+name|ch
+decl_stmt|,
+name|cltpflag
+decl_stmt|,
+name|connect_type_cnt
+decl_stmt|,
+name|i
+decl_stmt|,
+name|len
+decl_stmt|,
+name|maxsock
+decl_stmt|,
+name|msgsock
 decl_stmt|;
-specifier|extern
+name|int
+name|nfsdcnt
+decl_stmt|,
+name|nfssvc_flag
+decl_stmt|,
+name|on
+decl_stmt|,
+name|reregister
+decl_stmt|,
+name|sock
+decl_stmt|,
+name|tcpflag
+decl_stmt|,
+name|tcpsock
+decl_stmt|;
+name|int
+name|tp4cnt
+decl_stmt|,
+name|tp4flag
+decl_stmt|,
+name|tp4sock
+decl_stmt|,
+name|tpipcnt
+decl_stmt|,
+name|tpipflag
+decl_stmt|,
+name|tpipsock
+decl_stmt|,
+name|udpflag
+decl_stmt|;
 name|char
 modifier|*
-name|optarg
+name|cp
+decl_stmt|,
+modifier|*
+modifier|*
+name|cpp
 decl_stmt|;
-comment|/* 	 *  Save start and extent of argv for setproctitle. 	 */
+comment|/* Save start and extent of argv for setproctitle. */
 name|Argv
 operator|=
 name|argv
@@ -584,10 +579,49 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|nfsdcnt
+operator|=
+literal|4
+expr_stmt|;
+name|cltpflag
+operator|=
+name|reregister
+operator|=
+name|tcpflag
+operator|=
+name|tp4cnt
+operator|=
+name|tp4flag
+operator|=
+name|tpipcnt
+operator|=
+literal|0
+expr_stmt|;
+name|tpipflag
+operator|=
+name|udpflag
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
+define|#
+directive|define
+name|FLAGS
+value|"crtu"
+else|#
+directive|else
+define|#
+directive|define
+name|FLAGS
+value|"rtu"
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
-name|opt
+name|ch
 operator|=
 name|getopt
 argument_list|(
@@ -595,7 +629,11 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"utcr"
+operator|&
+name|FLAGS
+index|[
+literal|1
+index|]
 argument_list|)
 operator|)
 operator|!=
@@ -603,28 +641,31 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-name|opt
+name|ch
 condition|)
 block|{
 case|case
-literal|'u'
+literal|'r'
 case|:
-name|udpflag
-operator|++
+name|reregister
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'t'
 case|:
 name|tcpflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'u'
 case|:
-name|reregister
-operator|++
+name|udpflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -634,7 +675,8 @@ case|case
 literal|'c'
 case|:
 name|cltpflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -644,14 +686,16 @@ case|case
 literal|'i'
 case|:
 name|tp4cnt
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'p'
 case|:
 name|tpipcnt
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 endif|#
@@ -669,12 +713,31 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+comment|/* Trailing number is the count of daemons. */
 if|if
 condition|(
-name|optind
-operator|<
 name|argc
+operator|>
+literal|1
 condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+block|{
 name|nfsdcnt
 operator|=
 name|atoi
@@ -695,10 +758,20 @@ name|nfsdcnt
 operator|>
 literal|20
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"nfsd count %d; reset to 4"
+argument_list|,
+name|nfsdcnt
+argument_list|)
+expr_stmt|;
 name|nfsdcnt
 operator|=
 literal|4
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|debug
@@ -713,6 +786,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -720,6 +796,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -727,6 +806,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -734,6 +816,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -742,6 +827,9 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -770,20 +858,13 @@ argument_list|,
 name|NFS_PORT
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't register with portmap for UDP\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't register with portmap for UDP."
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tcpflag
@@ -800,20 +881,13 @@ argument_list|,
 name|NFS_PORT
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't register with portmap for TCP\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't register with portmap for TCP."
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -842,14 +916,36 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
+block|{
+switch|switch
 condition|(
 name|fork
 argument_list|()
-operator|==
-literal|0
 condition|)
 block|{
+case|case
+operator|-
+literal|1
+case|:
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fork: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+case|case
+literal|0
+case|:
+break|break;
+default|default:
+continue|continue;
+block|}
 name|setproctitle
 argument_list|(
 literal|"nfsd-srv"
@@ -863,12 +959,7 @@ name|nsd
 operator|.
 name|nsd_nfsd
 operator|=
-operator|(
-expr|struct
-name|nfsd
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -893,9 +984,6 @@ name|nfssvc
 argument_list|(
 name|nfssvc_flag
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nsd
 argument_list|)
@@ -906,17 +994,28 @@ block|{
 if|if
 condition|(
 name|errno
-operator|==
+operator|!=
 name|ENEEDAUTH
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"nfssvc: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|nfssvc_flag
 operator|=
-operator|(
 name|NFSSVC_NFSD
 operator||
 name|NFSSVC_AUTHINFAIL
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -935,6 +1034,9 @@ name|mbz
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|inst
@@ -983,8 +1085,17 @@ argument_list|(
 name|lnam
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
+name|cr
+operator|=
+operator|&
+name|nsd
+operator|.
+name|nsd_cr
+expr_stmt|;
 name|cr
 operator|->
 name|cr_uid
@@ -1015,10 +1126,14 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|grp
 operator|=
 name|getgrent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1035,18 +1150,22 @@ literal|0
 index|]
 condition|)
 continue|continue;
+for|for
+control|(
 name|cpp
 operator|=
 name|grp
 operator|->
 name|gr_mem
-expr_stmt|;
-while|while
-condition|(
+init|;
 operator|*
 name|cpp
-condition|)
-block|{
+operator|!=
+name|NULL
+condition|;
+operator|++
+name|cpp
+control|)
 if|if
 condition|(
 operator|!
@@ -1059,16 +1178,14 @@ name|lnam
 argument_list|)
 condition|)
 break|break;
-name|cpp
-operator|++
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
 name|cpp
+operator|==
+name|NULL
 condition|)
-block|{
+continue|continue;
 name|cr
 operator|->
 name|cr_groups
@@ -1093,44 +1210,27 @@ name|NGROUPS
 condition|)
 break|break;
 block|}
-block|}
 name|endgrent
 argument_list|()
 expr_stmt|;
 name|nfssvc_flag
 operator|=
-operator|(
 name|NFSSVC_NFSD
 operator||
 name|NFSSVC_AUTHIN
-operator|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
 comment|/* KERBEROS */
 block|}
-else|else
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Nfsd died %m"
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|exit
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* 	 * If we are serving udp, set up the socket. 	 */
+comment|/* If we are serving udp, set up the socket. */
 if|if
 condition|(
 name|udpflag
@@ -1158,7 +1258,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create udp socket"
+literal|"can't create udp socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1226,7 +1326,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't bind udp addr"
+literal|"can't bind udp addr"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1254,7 +1354,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register with udp portmap"
+literal|"can't register with udp portmap"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1273,10 +1373,7 @@ name|nfsdargs
 operator|.
 name|name
 operator|=
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|nfsdargs
 operator|.
@@ -1301,7 +1398,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't Add UDP socket"
+literal|"can't Add UDP socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1310,16 +1407,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we are serving cltp, set up the socket. 	 */
 ifdef|#
 directive|ifdef
 name|ISO
+comment|/* If we are serving cltp, set up the socket. */
 if|if
 condition|(
 name|cltpflag
@@ -1347,7 +1447,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create cltp socket"
+literal|"can't create cltp socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1356,13 +1456,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isoaddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1445,7 +1544,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't bind cltp addr"
+literal|"can't bind cltp addr"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1457,7 +1556,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * Someday this should probably use "rpcbind", the son of 		 * portmap. 		 */
+comment|/* 		 * XXX 		 * Someday this should probably use "rpcbind", the son of 		 * portmap. 		 */
 if|if
 condition|(
 operator|!
@@ -1477,7 +1576,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register with udp portmap"
+literal|"can't register with udp portmap"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1499,10 +1598,7 @@ name|nfsdargs
 operator|.
 name|name
 operator|=
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|nfsdargs
 operator|.
@@ -1527,11 +1623,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't Add UDP socket"
+literal|"can't add UDP socket"
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|close
@@ -1543,12 +1641,20 @@ block|}
 endif|#
 directive|endif
 comment|/* ISO */
-comment|/* 	 * Now set up the master server socket waiting for tcp connections. 	 */
+comment|/* Now set up the master server socket waiting for tcp connections. */
+name|on
+operator|=
+literal|1
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
 name|sockbits
 argument_list|)
+expr_stmt|;
+name|connect_type_cnt
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1577,7 +1683,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create tcp socket"
+literal|"can't create tcp socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1677,7 +1783,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't bind tcp addr"
+literal|"can't bind tcp addr"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1702,7 +1808,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Listen failed"
+literal|"listen failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1730,7 +1836,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register tcp with portmap"
+literal|"can't register tcp with portmap"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1758,7 +1864,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 	 * Now set up the master server socket waiting for tp4 connections. 	 */
+comment|/* Now set up the master server socket waiting for tp4 connections. */
 if|if
 condition|(
 name|tp4flag
@@ -1786,7 +1892,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create tp4 socket"
+literal|"can't create tp4 socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1827,13 +1933,12 @@ argument_list|,
 literal|"setsockopt SO_REUSEADDR: %m"
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|isoaddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1916,7 +2021,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't bind tp4 addr"
+literal|"can't bind tp4 addr"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1941,7 +2046,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Listen failed"
+literal|"listen failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1950,7 +2055,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Someday this should probably use "rpcbind". 		 */
+comment|/* 		 * XXX 		 * Someday this should probably use "rpcbind", the son of 		 * portmap. 		 */
 if|if
 condition|(
 operator|!
@@ -1970,7 +2075,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register tcp with portmap"
+literal|"can't register tcp with portmap"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1995,7 +2100,7 @@ name|connect_type_cnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Now set up the master server socket waiting for tpip connections. 	 */
+comment|/* Now set up the master server socket waiting for tpip connections. */
 if|if
 condition|(
 name|tpipflag
@@ -2023,7 +2128,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create tpip socket"
+literal|"can't create tpip socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2123,7 +2228,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't bind tcp addr"
+literal|"can't bind tcp addr"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2148,7 +2253,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Listen failed"
+literal|"listen failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2157,7 +2262,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Someday this should use "rpcbind" 		 */
+comment|/* 		 * XXX 		 * Someday this should probably use "rpcbind", the son of 		 * portmap. 		 */
 if|if
 condition|(
 operator|!
@@ -2177,7 +2282,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register tcp with portmap"
+literal|"can't register tcp with portmap"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2212,7 +2317,9 @@ operator|==
 literal|0
 condition|)
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -2248,24 +2355,11 @@ argument_list|,
 operator|&
 name|ready
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|1
@@ -2275,7 +2369,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Select failed"
+literal|"select failed: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2334,7 +2428,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Accept failed: %m"
+literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2343,15 +2437,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|inetpeer
 operator|.
 name|sin_zero
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2426,6 +2518,9 @@ operator|&
 name|nfsdargs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|msgsock
@@ -2484,7 +2579,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Accept failed: %m"
+literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2555,6 +2650,9 @@ operator|&
 name|nfsdargs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|msgsock
@@ -2681,6 +2779,9 @@ operator|&
 name|nfsdargs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|msgsock
@@ -2694,18 +2795,21 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsd [-u] [-t] [-c] [-r] [num_nfsds]\n"
+literal|"nfsd [%s] [num_nfsds]\n"
+argument_list|,
+name|FLAGS
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2714,30 +2818,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|reapchild
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 while|while
 condition|(
 name|wait3
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|WNOHANG
 argument_list|,
-operator|(
-expr|struct
-name|rusage
-operator|*
-operator|)
 name|NULL
 argument_list|)
 condition|)
@@ -2745,21 +2845,16 @@ empty_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|setproctitle
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|)
 name|char
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2782,9 +2877,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -2825,7 +2925,7 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
