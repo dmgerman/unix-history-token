@@ -87,10 +87,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
 name|initscr
 argument_list|()
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
 comment|/* Init curses */
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|keypad
 argument_list|(
 name|stdscr
