@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.8 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,10 +389,10 @@ literal|1
 decl_stmt|;
 comment|/* true if there is source line info */
 name|Boolean
-specifier|inline
-operator|:
+name|inlne
+range|:
 literal|1
-expr_stmt|;
+decl_stmt|;
 comment|/* true if no separate act. rec. */
 name|Boolean
 name|intern
@@ -565,7 +565,7 @@ name|isinline
 parameter_list|(
 name|f
 parameter_list|)
-value|((f)->symvalue.funcv.inline)
+value|((f)->symvalue.funcv.inlne)
 end_define
 
 begin_define

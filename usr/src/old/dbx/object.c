@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c	5.4 (Berkeley) %G%"
+literal|"@(#)object.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,7 +1357,7 @@ name|symvalue
 operator|.
 name|funcv
 operator|.
-expr|inline
+name|inlne
 operator|=
 name|false
 expr_stmt|;
@@ -2028,7 +2028,7 @@ name|symvalue
 operator|.
 name|funcv
 operator|.
-expr|inline
+name|inlne
 operator|=
 name|false
 expr_stmt|;
@@ -3126,7 +3126,7 @@ name|symvalue
 operator|.
 name|funcv
 operator|.
-expr|inline
+name|inlne
 operator|=
 name|false
 expr_stmt|;
@@ -3502,7 +3502,7 @@ name|symvalue
 operator|.
 name|funcv
 operator|.
-expr|inline
+name|inlne
 operator|=
 name|true
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stabstring.c	5.5 (Berkeley) %G%"
+literal|"@(#)stabstring.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2358,7 +2358,7 @@ name|symvalue
 operator|.
 name|funcv
 operator|.
-expr|inline
+name|inlne
 operator|=
 name|false
 expr_stmt|;
