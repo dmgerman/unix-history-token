@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.6 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1714,11 +1714,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* temporary space for rebuild */
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|OpMode
@@ -2026,8 +2021,7 @@ default|default:
 comment|/* must have exact match */
 if|if
 condition|(
-operator|!
-name|sameword
+name|strcasecmp
 argument_list|(
 name|rp
 argument_list|,
@@ -3000,11 +2994,6 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|a
@@ -3063,7 +3052,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 operator|*
 name|tv
@@ -3187,7 +3177,8 @@ control|)
 block|{
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|m
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.7 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.8 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.7 (Berkeley) %G%"
+literal|"@(#)domain.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,7 +822,8 @@ name|n
 expr_stmt|;
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|bp
 argument_list|,

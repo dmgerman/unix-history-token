@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.7 (Berkeley) %G%"
+literal|"@(#)headers.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,11 +1713,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|i
@@ -1734,7 +1729,8 @@ control|)
 block|{
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|p
 argument_list|,

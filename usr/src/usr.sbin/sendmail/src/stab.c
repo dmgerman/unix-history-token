@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	5.2 (Berkeley) %G%"
+literal|"@(#)stab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,11 +86,6 @@ modifier|*
 modifier|*
 name|ps
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|hfunc
@@ -212,8 +207,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|!
-name|sameword
+name|strcasecmp
 argument_list|(
 name|name
 argument_list|,

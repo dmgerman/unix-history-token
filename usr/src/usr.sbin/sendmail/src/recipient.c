@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.9 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1743,11 +1743,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 name|char
 name|buf
 index|[
@@ -1772,7 +1767,8 @@ argument_list|)
 operator|!=
 name|NULL
 operator|&&
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|buf
 argument_list|,
@@ -2265,11 +2261,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 operator|(
@@ -2299,7 +2290,8 @@ index|]
 operator|!=
 name|NULL
 operator|&&
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|argv
 index|[

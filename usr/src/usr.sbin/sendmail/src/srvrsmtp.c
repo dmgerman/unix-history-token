@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.19 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.20 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.19 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,11 +486,6 @@ modifier|*
 name|skipword
 parameter_list|()
 function_decl|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 name|bool
 name|hasmail
 decl_stmt|;
@@ -795,7 +790,8 @@ control|)
 block|{
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|c
 operator|->
@@ -833,7 +829,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sameword
+operator|!
+name|strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -859,8 +856,7 @@ name|RealHostName
 operator|!=
 name|NULL
 operator|&&
-operator|!
-name|sameword
+name|strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -1800,11 +1796,6 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameword
-parameter_list|()
-function_decl|;
 comment|/* find beginning of word */
 while|while
 condition|(
@@ -1904,8 +1895,7 @@ expr_stmt|;
 comment|/* see if the input word matches desired word */
 if|if
 condition|(
-operator|!
-name|sameword
+name|strcasecmp
 argument_list|(
 name|q
 argument_list|,
