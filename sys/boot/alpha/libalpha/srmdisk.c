@@ -842,13 +842,12 @@ literal|"bd_open: no disklabel\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENOENT
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+if|#
+directive|if
+literal|0
+block|error = ENOENT; 	    goto out;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
