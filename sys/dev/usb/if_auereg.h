@@ -1021,9 +1021,6 @@ decl_stmt|;
 name|u_int8_t
 name|aue_link
 decl_stmt|;
-name|u_int8_t
-name|aue_gone
-decl_stmt|;
 name|int
 name|aue_if_flags
 decl_stmt|;
@@ -1038,6 +1035,9 @@ decl_stmt|;
 name|struct
 name|mtx
 name|aue_mtx
+decl_stmt|;
+name|char
+name|aue_dying
 decl_stmt|;
 block|}
 struct|;

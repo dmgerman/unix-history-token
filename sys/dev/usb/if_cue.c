@@ -721,7 +721,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -842,7 +842,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -961,7 +961,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -1087,7 +1087,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -1219,7 +1219,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -1350,7 +1350,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return
 operator|(
@@ -1818,7 +1818,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 condition|)
 return|return;
 name|req
@@ -2488,7 +2488,7 @@ argument_list|()
 expr_stmt|;
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 operator|=
 literal|0
 expr_stmt|;
@@ -2544,7 +2544,7 @@ name|ac_if
 expr_stmt|;
 name|sc
 operator|->
-name|cue_gone
+name|cue_dying
 operator|=
 literal|1
 expr_stmt|;

@@ -1298,7 +1298,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 condition|)
 return|return
 operator|(
@@ -1421,7 +1421,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 condition|)
 return|return
 operator|(
@@ -1542,7 +1542,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 condition|)
 return|return
 operator|(
@@ -1664,7 +1664,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 condition|)
 return|return
 operator|(
@@ -3592,7 +3592,7 @@ argument_list|()
 expr_stmt|;
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 operator|=
 literal|0
 expr_stmt|;
@@ -3648,7 +3648,7 @@ name|ac_if
 expr_stmt|;
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 operator|=
 literal|1
 expr_stmt|;
@@ -4580,7 +4580,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 condition|)
 return|return;
 name|AUE_LOCK
@@ -7348,7 +7348,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|aue_gone
+name|aue_dying
 operator|++
 expr_stmt|;
 name|AUE_LOCK

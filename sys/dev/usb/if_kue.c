@@ -809,7 +809,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|kue_gone
+name|kue_dying
 condition|)
 return|return
 operator|(
@@ -937,7 +937,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|kue_gone
+name|kue_dying
 condition|)
 return|return
 operator|(
@@ -2089,7 +2089,7 @@ argument_list|()
 expr_stmt|;
 name|sc
 operator|->
-name|kue_gone
+name|kue_dying
 operator|=
 literal|0
 expr_stmt|;
@@ -2145,7 +2145,7 @@ name|ac_if
 expr_stmt|;
 name|sc
 operator|->
-name|kue_gone
+name|kue_dying
 operator|=
 literal|1
 expr_stmt|;
