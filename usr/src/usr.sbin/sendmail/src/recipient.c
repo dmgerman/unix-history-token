@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.24 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2612,6 +2612,8 @@ name|SF_NOSLINK
 argument_list|,
 name|S_IWRITE
 argument_list|)
+operator|==
+literal|0
 return|;
 block|}
 end_function
