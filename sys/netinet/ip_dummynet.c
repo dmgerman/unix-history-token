@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.2 1998/12/14 18:09:13 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.3 1998/12/31 07:35:49 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -308,6 +308,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|rt_unref
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|dummynet
 parameter_list|(
 name|void
@@ -434,6 +446,49 @@ expr_stmt|;
 return|return ;
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rt_unref
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+name|rt
+parameter_list|)
+block|{
+if|if
+condition|(
+name|rt
+operator|==
+name|NULL
+condition|)
+return|return ;
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_refcnt
+operator|<=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"-- warning, refcnt now %d, decreasing\n"
+argument_list|,
+name|rt
+operator|->
+name|rt_refcnt
+argument_list|)
+expr_stmt|;
+name|RTFREE
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -866,16 +921,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|rt_unref
+argument_list|(
 name|tmp_rt
-condition|)
-name|tmp_rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
-comment|/* XXX return a reference count */
 block|}
 break|break ;
 case|case
@@ -1302,6 +1352,17 @@ literal|0
 return|;
 comment|/* XXX error */
 block|}
+name|bzero
+argument_list|(
+name|pkt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pkt
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* build and enqueue packet */
 name|pkt
 operator|->
@@ -1526,8 +1587,8 @@ name|pkt
 condition|;
 control|)
 block|{
-if|if
-condition|(
+name|rt_unref
+argument_list|(
 name|tmp_rt
 operator|=
 name|pkt
@@ -1535,13 +1596,8 @@ operator|->
 name|ro
 operator|.
 name|ro_rt
-condition|)
-name|tmp_rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
-comment|/* XXX return a reference count */
 name|m_freem
 argument_list|(
 name|pkt
@@ -1586,8 +1642,8 @@ name|pkt
 condition|;
 control|)
 block|{
-if|if
-condition|(
+name|rt_unref
+argument_list|(
 name|tmp_rt
 operator|=
 name|pkt
@@ -1595,13 +1651,8 @@ operator|->
 name|ro
 operator|.
 name|ro_rt
-condition|)
-name|tmp_rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
-comment|/* XXX return a reference count */
 name|m_freem
 argument_list|(
 name|pkt
@@ -1730,8 +1781,6 @@ name|struct
 name|dn_pipe
 modifier|*
 name|p
-init|=
-name|all_pipes
 decl_stmt|;
 name|int
 name|matches
