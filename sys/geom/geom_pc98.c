@@ -513,7 +513,7 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * XXX: Some sources indicate this is a magic sequence, but appearantly 	 * XXX: it is not universal. Documentation would be wonderfule to have. 	 */
+comment|/* 	 * XXX: Some sources indicate this is a magic sequence, but appearantly 	 * XXX: it is not universal. Documentation would be wonderful to have. 	 */
 block|if (sec[4] != 'I' || sec[5] != 'P' || sec[6] != 'L' || sec[7] != '1') 		return (EBUSY);
 endif|#
 directive|endif
@@ -742,6 +742,27 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s
+index|[
+name|i
+index|]
+operator|<
+literal|0
+operator|||
+name|l
+index|[
+name|i
+index|]
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|g_slice_config
@@ -1687,11 +1708,13 @@ name|fwsectors
 operator|=
 literal|17
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"g_pc98_taste: error %d guessing %d sectors\n"
-argument_list|,
-name|error
+literal|"g_pc98_taste: guessing %d sectors\n"
 argument_list|,
 name|fwsectors
 argument_list|)
@@ -1722,11 +1745,13 @@ name|fwheads
 operator|=
 literal|8
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"g_pc98_taste: error %d guessing %d heads\n"
-argument_list|,
-name|error
+literal|"g_pc98_taste: guessing %d heads\n"
 argument_list|,
 name|fwheads
 argument_list|)
