@@ -225,6 +225,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/freebsd32/freebsd32_syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ia32/ia32_signal.h>
 end_include
 
@@ -439,7 +445,7 @@ name|sysentvec
 name|ia32_freebsd_sysvec
 init|=
 block|{
-name|SYS_MAXSYSCALL
+name|FREEBSD32_SYS_MAXSYSCALL
 block|,
 name|freebsd32_sysent
 block|,
