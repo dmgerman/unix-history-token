@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.11	82/10/13	*/
+comment|/*	tty_tty.c	4.12	82/10/17	*/
 end_comment
 
 begin_comment
@@ -68,6 +68,18 @@ argument|flag
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -78,15 +90,13 @@ name|u_ttyp
 operator|==
 name|NULL
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
+return|return
+operator|(
 operator|(
 operator|*
 name|cdevsw
@@ -108,7 +118,8 @@ name|u_ttyd
 operator|,
 name|flag
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -322,7 +333,11 @@ name|p_pgrp
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -332,15 +347,13 @@ name|u_ttyp
 operator|==
 name|NULL
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
+return|return
+operator|(
 operator|(
 operator|*
 name|cdevsw
@@ -366,7 +379,8 @@ name|addr
 operator|,
 name|flag
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
