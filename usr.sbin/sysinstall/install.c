@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.115 1996/07/16 17:11:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.116 1996/07/31 06:20:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -118,6 +118,9 @@ begin_function
 name|Boolean
 name|checkLabels
 parameter_list|(
+name|Boolean
+name|whinge
+parameter_list|,
 name|Chunk
 modifier|*
 modifier|*
@@ -360,6 +363,10 @@ condition|(
 name|rootdev
 condition|)
 block|{
+if|if
+condition|(
+name|whinge
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one root device set?!\n"
@@ -417,6 +424,10 @@ condition|(
 name|usrdev
 condition|)
 block|{
+if|if
+condition|(
+name|whinge
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one /usr filesystem.\n"
@@ -474,6 +485,10 @@ condition|(
 name|vardev
 condition|)
 block|{
+if|if
+condition|(
+name|whinge
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one /var filesystem.\n"
@@ -686,6 +701,8 @@ if|if
 condition|(
 operator|!
 name|rootdev
+operator|&&
+name|whinge
 condition|)
 block|{
 name|msgConfirm
@@ -703,6 +720,8 @@ if|if
 condition|(
 operator|!
 name|swapdev
+operator|&&
+name|whinge
 condition|)
 block|{
 name|msgConfirm
@@ -720,6 +739,8 @@ if|if
 condition|(
 operator|!
 name|usrdev
+operator|&&
+name|whinge
 condition|)
 block|{
 name|msgConfirm
@@ -735,6 +756,8 @@ if|if
 condition|(
 operator|!
 name|vardev
+operator|&&
+name|whinge
 condition|)
 block|{
 name|msgConfirm
@@ -2668,6 +2691,8 @@ condition|(
 operator|!
 name|checkLabels
 argument_list|(
+name|TRUE
+argument_list|,
 operator|&
 name|rootdev
 argument_list|,
