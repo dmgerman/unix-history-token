@@ -46,7 +46,7 @@ name|prexit
 parameter_list|(
 name|s
 parameter_list|)
-value|{ strcpy(np, s); return (NULL); }
+value|{ strcpy(esave, (s)); return (NULL); }
 end_define
 
 begin_decl_stmt
@@ -108,6 +108,12 @@ name|rdev
 decl_stmt|;
 name|ino_t
 name|rino
+decl_stmt|;
+name|char
+modifier|*
+name|esave
+init|=
+name|np
 decl_stmt|;
 name|off
 operator|=
@@ -242,6 +248,7 @@ goto|goto
 name|done
 goto|;
 do|do
+block|{
 if|if
 condition|(
 operator|(
@@ -260,6 +267,7 @@ argument_list|(
 literal|"getwd: read error in .."
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 name|dir
