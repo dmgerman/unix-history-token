@@ -1674,7 +1674,7 @@ name|DEVSTAT_TYPE_CDROM
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-name|DEVSTAT_PRIORITY_WCD
+name|DEVSTAT_PRIORITY_CD
 argument_list|)
 expr_stmt|;
 block|}
@@ -1703,7 +1703,7 @@ name|DEVSTAT_TYPE_CDROM
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-name|DEVSTAT_PRIORITY_WCD
+name|DEVSTAT_PRIORITY_CD
 argument_list|)
 expr_stmt|;
 block|}

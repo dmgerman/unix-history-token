@@ -3826,7 +3826,7 @@ name|pd_type
 operator||
 name|DEVSTAT_TYPE_IF_SCSI
 argument_list|,
-name|DEVSTAT_PRIORITY_DA
+name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register this media as a disk 	 */

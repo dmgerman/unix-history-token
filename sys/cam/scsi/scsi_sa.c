@@ -5755,7 +5755,7 @@ name|pd_type
 operator||
 name|DEVSTAT_TYPE_IF_SCSI
 argument_list|,
-name|DEVSTAT_PRIORITY_SA
+name|DEVSTAT_PRIORITY_TAPE
 argument_list|)
 expr_stmt|;
 name|softc

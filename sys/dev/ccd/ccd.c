@@ -2160,11 +2160,11 @@ name|ccg_secsize
 argument_list|,
 name|DEVSTAT_ALL_SUPPORTED
 argument_list|,
-name|DEVSTAT_TYPE_ASC0
+name|DEVSTAT_TYPE_STORARRAY
 operator||
 name|DEVSTAT_TYPE_IF_OTHER
 argument_list|,
-name|DEVSTAT_PRIORITY_CCD
+name|DEVSTAT_PRIORITY_ARRAY
 argument_list|)
 expr_stmt|;
 name|cs

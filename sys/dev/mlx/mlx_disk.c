@@ -1131,11 +1131,11 @@ name|MLX_BLKSIZE
 argument_list|,
 name|DEVSTAT_NO_ORDERED_TAGS
 argument_list|,
-name|DEVSTAT_TYPE_DIRECT
+name|DEVSTAT_TYPE_STORARRAY
 operator||
 name|DEVSTAT_TYPE_IF_OTHER
 argument_list|,
-name|DEVSTAT_PRIORITY_DA
+name|DEVSTAT_PRIORITY_ARRAY
 argument_list|)
 expr_stmt|;
 name|dsk
