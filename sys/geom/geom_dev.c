@@ -1919,7 +1919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  It is our responsibility  * to get the access counts back to zero, until we do so the stack below will  * not unravel.  We must clear the kernel-dump settings, if this is the  * current dumpdev.  We call destroy_dev(9) to send our dev_t the way of  * punched cards and if we have non-zero access counts, we call down with  * them negated before we detattch and selfdestruct.  */
+comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Destroy the dev_t to prevent any more request from coming in.  The  *   provider is already marked with an error, so anything which comes in  *   in the interrim will be returned immediately.  * - Wait for any outstanding I/O to finish.  * - Set our access counts to zero, whatever they were.  * - Detach and self-destruct.  */
 end_comment
 
 begin_function
@@ -1941,11 +1941,20 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+name|g_topology_assert
+argument_list|()
+expr_stmt|;
 name|gp
 operator|=
 name|cp
 operator|->
 name|geom
+expr_stmt|;
+name|dev
+operator|=
+name|gp
+operator|->
+name|softc
 expr_stmt|;
 name|g_trace
 argument_list|(
@@ -1960,31 +1969,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|->
-name|stat
-operator|->
-name|nop
-operator|!=
-name|cp
-operator|->
-name|stat
-operator|->
-name|nend
-condition|)
-comment|/* XXX ? */
-return|return;
-name|dev
-operator|=
-name|gp
-operator|->
-name|softc
-expr_stmt|;
+comment|/* Reset any dump-area set on this device */
 if|if
 condition|(
 name|dev
@@ -1998,10 +1983,35 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* XXX: we may need Giant for now */
+comment|/* Destroy the dev_t so we get no more requests */
 name|destroy_dev
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* Wait for the cows to come home */
+while|while
+condition|(
+name|cp
+operator|->
+name|nstart
+operator|!=
+name|cp
+operator|->
+name|nend
+condition|)
+name|msleep
+argument_list|(
+operator|&
+name|dev
+argument_list|,
+name|NULL
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"gdevorphan"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
