@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.22 1997/02/22 09:40:46 peter Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.23 1997/02/26 14:23:11 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2691,19 +2691,11 @@ index|]
 operator|==
 name|SLOT_DELETED
 condition|)
-name|vrecycle
-argument_list|(
 name|vp
-argument_list|,
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|p
-argument_list|)
+operator|->
+name|v_flag
+operator||=
+name|VAGE
 expr_stmt|;
 return|return
 name|error
