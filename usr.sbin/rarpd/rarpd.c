@@ -56,7 +56,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -dfsv ] [ hostname ]  *		rarpd [ -dfsv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -dfsv ] [-t directory] [ hostname ]  *		rarpd [ -dfsv ] [-t directory] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -2062,7 +2062,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [-adfsv] [interface]\n"
+literal|"usage: rarpd [-adfsv] [-t directory] [interface]\n"
 argument_list|)
 expr_stmt|;
 name|exit
