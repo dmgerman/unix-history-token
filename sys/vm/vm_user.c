@@ -57,6 +57,27 @@ begin_comment
 comment|/*  * BSD style syscall interfaces to MACH calls  * All return MACH return values.  */
 end_comment
 
+begin_struct
+struct|struct
+name|svm_allocate_args
+block|{
+name|vm_map_t
+name|map
+decl_stmt|;
+name|vm_offset_t
+modifier|*
+name|addr
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+name|boolean_t
+name|anywhere
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -80,28 +101,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|vm_map_t
-name|map
-decl_stmt|;
-name|vm_offset_t
-modifier|*
-name|addr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-name|boolean_t
-name|anywhere
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|svm_allocate_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -221,6 +227,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|svm_deallocate_args
+block|{
+name|vm_map_t
+name|map
+decl_stmt|;
+name|vm_offset_t
+name|addr
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -244,24 +267,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|vm_map_t
-name|map
-decl_stmt|;
-name|vm_offset_t
-name|addr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|svm_deallocate_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -312,6 +324,26 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|svm_inherit_args
+block|{
+name|vm_map_t
+name|map
+decl_stmt|;
+name|vm_offset_t
+name|addr
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+name|vm_inherit_t
+name|inherit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -335,27 +367,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|vm_map_t
-name|map
-decl_stmt|;
-name|vm_offset_t
-name|addr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-name|vm_inherit_t
-name|inherit
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|svm_inherit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -410,6 +428,29 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|svm_protect_args
+block|{
+name|vm_map_t
+name|map
+decl_stmt|;
+name|vm_offset_t
+name|addr
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+name|boolean_t
+name|setmax
+decl_stmt|;
+name|vm_prot_t
+name|prot
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -433,30 +474,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|vm_map_t
-name|map
-decl_stmt|;
-name|vm_offset_t
-name|addr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-name|boolean_t
-name|setmax
-decl_stmt|;
-name|vm_prot_t
-name|prot
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|svm_protect_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

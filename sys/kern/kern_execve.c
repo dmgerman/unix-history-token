@@ -135,6 +135,28 @@ begin_comment
 comment|/*  * execve() system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|execve_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|envp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -158,30 +180,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envp
-decl_stmt|;
-block|}
+name|struct
+name|execve_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

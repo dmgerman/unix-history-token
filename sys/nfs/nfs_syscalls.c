@@ -279,6 +279,22 @@ begin_comment
 comment|/*  * Get file handle system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|getfh_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|fhandle_t
+modifier|*
+name|fhp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -302,24 +318,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|fhandle_t
-modifier|*
-name|fhp
-decl_stmt|;
-block|}
+name|struct
+name|getfh_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -512,6 +518,29 @@ begin_comment
 comment|/*  * Nfs server psuedo system call for the nfsd's  * Never returns unless it fails or gets killed  */
 end_comment
 
+begin_struct
+struct|struct
+name|nfssvc_args
+block|{
+name|int
+name|s
+decl_stmt|;
+name|caddr_t
+name|mskval
+decl_stmt|;
+name|int
+name|msklen
+decl_stmt|;
+name|caddr_t
+name|mtchval
+decl_stmt|;
+name|int
+name|mtchlen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -535,31 +564,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|s
-decl_stmt|;
-name|caddr_t
-name|mskval
-decl_stmt|;
-name|int
-name|msklen
-decl_stmt|;
-name|caddr_t
-name|mtchval
-decl_stmt|;
-name|int
-name|mtchlen
-decl_stmt|;
-block|}
+name|struct
+name|nfssvc_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

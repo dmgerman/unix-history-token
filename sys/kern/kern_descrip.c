@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/kern/kern_descrip.c,v 1.1.1.1 1993/06/12 14:57:34 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/kern_descrip.c,v 1.2 1993/06/29 13:57:17 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,17 @@ begin_comment
 comment|/*  * Duplicate a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|dup_args
+block|{
+name|int
+name|i
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -231,18 +242,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|i
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|dup_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -419,6 +425,20 @@ begin_comment
 comment|/*  * Duplicate a file descriptor to a particular value.  */
 end_comment
 
+begin_struct
+struct|struct
+name|dup2_args
+block|{
+name|u_int
+name|from
+decl_stmt|;
+name|u_int
+name|to
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -442,21 +462,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|u_int
-name|from
-decl_stmt|;
-name|u_int
-name|to
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|dup2_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -705,6 +717,23 @@ begin_comment
 comment|/*  * The file control system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fcntl_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -728,25 +757,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-block|}
+name|struct
+name|fcntl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1717,6 +1735,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
+begin_struct
+struct|struct
+name|close_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|close
 argument_list|(
@@ -1736,18 +1765,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|close_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1916,6 +1940,22 @@ begin_comment
 comment|/*  * Return status information about a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fstat_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|stat
+modifier|*
+name|sb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1939,24 +1979,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
 name|struct
-name|stat
-modifier|*
-name|sb
-decl_stmt|;
-block|}
+name|fstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3879,6 +3909,20 @@ begin_comment
 comment|/*  * Apply an advisory lock on a file descriptor.  *  * Just attempt to get a record lock of the requested type on  * the entire file (l_whence = SEEK_SET, l_start = 0, l_len = 0).  */
 end_comment
 
+begin_struct
+struct|struct
+name|flock_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|how
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -3902,22 +3946,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|how
-decl_stmt|;
-block|}
+name|struct
+name|flock_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

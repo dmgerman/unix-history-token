@@ -37,6 +37,18 @@ directive|include
 file|"vm.h"
 end_include
 
+begin_struct
+struct|struct
+name|obreak_args
+block|{
+name|char
+modifier|*
+name|nsiz
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -60,19 +72,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|nsiz
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|obreak_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -433,6 +439,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ovadvise_args
+block|{
+name|int
+name|anom
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -456,18 +473,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|anom
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|ovadvise_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

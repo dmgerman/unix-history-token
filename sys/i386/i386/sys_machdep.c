@@ -81,6 +81,20 @@ name|nvualarm
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|vtrace_args
+block|{
+name|int
+name|request
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|vtrace
 argument_list|(
@@ -100,22 +114,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|request
-decl_stmt|;
-name|int
-name|value
-decl_stmt|;
-block|}
+name|struct
+name|vtrace_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

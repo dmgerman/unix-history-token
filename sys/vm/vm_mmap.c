@@ -179,6 +179,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|sbrk_args
+block|{
+name|int
+name|incr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -202,18 +213,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|incr
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sbrk_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -232,6 +238,17 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|sstk_args
+block|{
+name|int
+name|incr
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -256,18 +273,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|incr
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sstk_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -287,29 +299,9 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|smmap
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
-specifier|register
 struct|struct
-name|args
+name|smmap_args
 block|{
 name|caddr_t
 name|addr
@@ -330,10 +322,36 @@ name|off_t
 name|pos
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
+
+begin_macro
+name|smmap
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|smmap_args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -835,6 +853,20 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|msync_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|msync
 argument_list|(
@@ -854,21 +886,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|msync_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1196,6 +1220,20 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|munmap_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|munmap
 argument_list|(
@@ -1213,22 +1251,14 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|munmap_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1446,6 +1476,23 @@ expr_stmt|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|mprotect_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|prot
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|mprotect
 argument_list|(
@@ -1465,24 +1512,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|prot
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|mprotect_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1661,6 +1697,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|madvise_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|behav
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1684,24 +1737,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|behav
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|madvise_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1720,6 +1762,24 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|mincore_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|char
+modifier|*
+name|vec
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1744,25 +1804,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|char
-modifier|*
-name|vec
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|mincore_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

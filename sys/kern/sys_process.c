@@ -215,6 +215,27 @@ begin_comment
 comment|/*  * Process debugging system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ptrace_args
+block|{
+name|int
+name|req
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ptrace
 argument_list|(
@@ -234,29 +255,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|req
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|addr
-decl_stmt|;
-name|int
-name|data
-decl_stmt|;
-block|}
+name|struct
+name|ptrace_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1937,6 +1943,31 @@ begin_comment
 comment|/*  * Enable process profiling system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|profil_args
+block|{
+name|short
+modifier|*
+name|bufbase
+decl_stmt|;
+comment|/* base of data buffer */
+name|unsigned
+name|bufsize
+decl_stmt|;
+comment|/* size of data buffer */
+name|unsigned
+name|pcoffset
+decl_stmt|;
+comment|/* pc offset (for subtraction) */
+name|unsigned
+name|pcscale
+decl_stmt|;
+comment|/* scaling factor for offset pc */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1960,33 +1991,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|short
-modifier|*
-name|bufbase
-decl_stmt|;
-comment|/* base of data buffer */
-name|unsigned
-name|bufsize
-decl_stmt|;
-comment|/* size of data buffer */
-name|unsigned
-name|pcoffset
-decl_stmt|;
-comment|/* pc offset (for subtraction) */
-name|unsigned
-name|pcscale
-decl_stmt|;
-comment|/* scaling factor for offset pc */
-block|}
+name|struct
+name|profil_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

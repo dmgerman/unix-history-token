@@ -37,6 +37,24 @@ begin_comment
 comment|/*   * Time of day and interval timer support.  *  * These routines provide the kernel entry points to get and set  * the time-of-day and per-process interval timers.  Subroutines  * here provide support for adding and subtracting timeval structures  * and decrementing interval timers, optionally reloading the interval  * timers when they expire.  */
 end_comment
 
+begin_struct
+struct|struct
+name|gettimeofday_args
+block|{
+name|struct
+name|timeval
+modifier|*
+name|tp
+decl_stmt|;
+name|struct
+name|timezone
+modifier|*
+name|tzp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -60,26 +78,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|timeval
-modifier|*
-name|tp
-decl_stmt|;
-name|struct
-name|timezone
-modifier|*
-name|tzp
-decl_stmt|;
-block|}
+name|gettimeofday_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -180,6 +186,24 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|settimeofday_args
+block|{
+name|struct
+name|timeval
+modifier|*
+name|tv
+decl_stmt|;
+name|struct
+name|timezone
+modifier|*
+name|tzp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -203,25 +227,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
+begin_decl_stmt
 name|struct
-name|timeval
-modifier|*
-name|tv
-decl_stmt|;
-name|struct
-name|timezone
-modifier|*
-name|tzp
-decl_stmt|;
-block|}
+name|settimeofday_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -423,6 +435,24 @@ begin_comment
 comment|/* use 10x skew above bigadj us. */
 end_comment
 
+begin_struct
+struct|struct
+name|adjtime_args
+block|{
+name|struct
+name|timeval
+modifier|*
+name|delta
+decl_stmt|;
+name|struct
+name|timeval
+modifier|*
+name|olddelta
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -446,26 +476,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|timeval
-modifier|*
-name|delta
-decl_stmt|;
-name|struct
-name|timeval
-modifier|*
-name|olddelta
-decl_stmt|;
-block|}
+name|adjtime_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -673,6 +691,22 @@ begin_comment
 comment|/*  * Get value of an interval timer.  The process virtual and  * profiling virtual time timers are kept in the p_stats area, since  * they can be swapped out.  These are kept internally in the  * way they are specified externally: in time until they expire.  *  * The real time interval timer is kept in the process table slot  * for the process, and its value (it_value) is kept as an  * absolute time rather than as a delta, so that it is easy to keep  * periodic real-time signals from drifting.  *  * Virtual time timers are processed in the hardclock() routine of  * kern_clock.c.  The real time timer is processed by a timeout  * routine, called from the softclock() routine.  Since a callout  * may be delayed in real time due to interrupt processing in the system,  * it is possible for the real time timeout routine (realitexpire, given below),  * to be delayed in real time past when it is supposed to occur.  It  * does not suffice, therefore, to reload the real timer .it_value from the  * real time timers .it_interval.  Rather, we compute the next time in  * absolute time the timer should go off.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getitimer_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|itimerval
+modifier|*
+name|itv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -696,24 +730,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|itimerval
-modifier|*
-name|itv
-decl_stmt|;
-block|}
+name|getitimer_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -858,6 +882,25 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setitimer_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|itimerval
+modifier|*
+name|itv
+decl_stmt|,
+modifier|*
+name|oitv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -881,27 +924,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|itimerval
-modifier|*
-name|itv
-decl_stmt|,
-modifier|*
-name|oitv
-decl_stmt|;
-block|}
+name|setitimer_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

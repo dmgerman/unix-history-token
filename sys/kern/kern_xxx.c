@@ -85,6 +85,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|sethostid_args
+block|{
+name|long
+name|hostid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -108,18 +119,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|long
-name|hostid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sethostid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -168,6 +174,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|gethostname_args
+block|{
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -191,22 +212,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|gethostname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -260,6 +272,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|sethostname_args
+block|{
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -283,23 +310,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|sethostname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -391,6 +409,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|reboot_args
+block|{
+name|int
+name|opt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -414,18 +443,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|opt
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|reboot_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

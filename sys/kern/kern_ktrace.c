@@ -846,6 +846,27 @@ begin_comment
 comment|/*  * ktrace system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|ktrace_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|ops
+decl_stmt|;
+name|int
+name|facs
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -869,29 +890,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|ops
-decl_stmt|;
-name|int
-name|facs
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-block|}
+name|struct
+name|ktrace_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

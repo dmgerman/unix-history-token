@@ -283,6 +283,17 @@ begin_comment
 comment|/*  * Entry point for all SHM calls  */
 end_comment
 
+begin_struct
+struct|struct
+name|shmsys_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|shmsys
 argument_list|(
@@ -302,18 +313,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|shmsys_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -379,6 +385,23 @@ begin_comment
 comment|/*  * Get a shared memory segment  */
 end_comment
 
+begin_struct
+struct|struct
+name|shmget_args
+block|{
+name|key_t
+name|key
+decl_stmt|;
+name|int
+name|size
+decl_stmt|;
+name|int
+name|shmflg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|shmget
 argument_list|(
@@ -398,25 +421,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|key_t
-name|key
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-name|int
-name|shmflg
-decl_stmt|;
-block|}
+name|struct
+name|shmget_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1010,6 +1022,23 @@ begin_comment
 comment|/*  * Shared memory control  */
 end_comment
 
+begin_struct
+struct|struct
+name|shmctl_args
+block|{
+name|int
+name|shmid
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|caddr_t
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1033,25 +1062,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|shmid
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|caddr_t
-name|buf
-decl_stmt|;
-block|}
+name|struct
+name|shmctl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1429,6 +1447,23 @@ begin_comment
 comment|/*  * Attach to shared memory segment.  */
 end_comment
 
+begin_struct
+struct|struct
+name|shmat_args
+block|{
+name|int
+name|shmid
+decl_stmt|;
+name|caddr_t
+name|shmaddr
+decl_stmt|;
+name|int
+name|shmflg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|shmat
 argument_list|(
@@ -1448,25 +1483,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|shmid
-decl_stmt|;
-name|caddr_t
-name|shmaddr
-decl_stmt|;
-name|int
-name|shmflg
-decl_stmt|;
-block|}
+name|struct
+name|shmat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1917,6 +1941,17 @@ begin_comment
 comment|/*  * Detach from shared memory segment.  */
 end_comment
 
+begin_struct
+struct|struct
+name|shmdt_args
+block|{
+name|caddr_t
+name|shmaddr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1940,18 +1975,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|shmaddr
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|shmdt_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

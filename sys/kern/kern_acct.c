@@ -160,6 +160,18 @@ begin_comment
 comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
 
+begin_struct
+struct|struct
+name|sysacct_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -183,19 +195,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sysacct_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

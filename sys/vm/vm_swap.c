@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/vm/RCS/vm_swap.c,v 1.3 92/01/21 21:58:25 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/vm/vm_swap.c,v 1.1.1.1 1993/06/12 14:57:39 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,6 +616,18 @@ begin_comment
 comment|/*  * System call swapon(name) enables swapping on device name,  * which must be in the swdevsw.  Return EBUSY  * if already swapping on this device.  */
 end_comment
 
+begin_struct
+struct|struct
+name|swapon_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -639,19 +651,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|swapon_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
