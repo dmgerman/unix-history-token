@@ -1694,6 +1694,8 @@ argument_list|,
 name|e
 operator|->
 name|reg
+operator|+
+literal|1
 argument_list|,
 name|right
 operator|<<
