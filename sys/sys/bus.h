@@ -470,6 +470,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Print all resources of a specified type, for use in bus_print_child.  * The name is printed if at least one resource of the given type is available.  * The format ist used to print resource start and end.  */
+end_comment
+
+begin_function_decl
+name|int
+name|resource_list_print_type
+parameter_list|(
+name|struct
+name|resource_list
+modifier|*
+name|rl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The root bus, to which all top-level busses are attached.  */
 end_comment
 
