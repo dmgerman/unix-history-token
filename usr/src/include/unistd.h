@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -139,7 +139,6 @@ end_comment
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
-specifier|volatile
 name|_exit
 name|__P
 argument_list|(
