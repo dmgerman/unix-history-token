@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5619,6 +5619,8 @@ end_decl_stmt
 
 begin_block
 block|{
+name|USES_VOP_FSYNC
+expr_stmt|;
 specifier|register
 name|struct
 name|nfsnode
@@ -6037,11 +6039,18 @@ operator|&
 name|NQNFSEVICTED
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
 name|TRUE
+argument_list|,
+name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|np
@@ -6063,11 +6072,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|vflushbuf
+operator|(
+name|void
+operator|)
+name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|B_SYNC
+name|cred
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
