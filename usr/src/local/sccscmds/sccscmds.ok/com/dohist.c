@@ -348,6 +348,10 @@ name|line
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
 decl_stmt|;
 specifier|register
 name|int
@@ -409,9 +413,11 @@ condition|)
 block|{
 name|p
 operator|=
-name|strend
+name|index
 argument_list|(
 name|line
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 if|if

@@ -234,7 +234,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|pkt
 operator|->
@@ -270,7 +270,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|pkt
 operator|->
@@ -324,7 +324,7 @@ name|Pgmr
 argument_list|)
 expr_stmt|;
 comment|/* for rmchg */
-name|zero
+name|bzero
 argument_list|(
 name|sidp
 argument_list|,
@@ -854,7 +854,7 @@ name|i_cnt
 operator|=
 name|cnt
 expr_stmt|;
-name|move
+name|bcopy
 argument_list|(
 name|v
 argument_list|,

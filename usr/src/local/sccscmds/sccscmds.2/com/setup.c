@@ -168,7 +168,7 @@ if|if
 condition|(
 name|first_app
 condition|)
-name|move
+name|bcopy
 argument_list|(
 operator|&
 name|pkt

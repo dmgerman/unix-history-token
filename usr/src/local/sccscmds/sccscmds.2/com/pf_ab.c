@@ -15,7 +15,7 @@ operator|)
 name|pf_ab
 operator|.
 name|c
-literal|1.2
+literal|1.3
 operator|%
 name|G
 operator|%
@@ -153,13 +153,13 @@ expr_stmt|;
 operator|++
 name|p
 expr_stmt|;
-name|i
+name|xp
 operator|=
 name|index
 argument_list|(
 name|p
 argument_list|,
-literal|" "
+literal|' '
 argument_list|)
 expr_stmt|;
 name|pp
@@ -173,17 +173,21 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
+call|(
 name|unsigned
-operator|)
+call|)
+argument_list|(
 name|i
-operator|)
+operator|=
+name|xp
+operator|-
+name|p
+argument_list|)
 operator|<
 name|SZLNAM
 condition|)
 block|{
-name|move
+name|bcopy
 argument_list|(
 name|p
 argument_list|,
@@ -212,9 +216,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|p
-operator|+
-name|i
+name|xp
 operator|+
 literal|1
 expr_stmt|;

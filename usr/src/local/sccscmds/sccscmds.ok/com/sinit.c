@@ -60,7 +60,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|pkt
 argument_list|,
