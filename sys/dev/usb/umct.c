@@ -247,10 +247,17 @@ decl_stmt|;
 name|uint8_t
 name|sc_mcr
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|void
 modifier|*
 name|sc_swicookie
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -579,6 +586,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_decl_stmt
 name|Static
 name|struct
@@ -587,6 +602,11 @@ modifier|*
 name|umct_ithd
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|USB_MATCH
@@ -1265,6 +1285,11 @@ argument_list|(
 name|ucom
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|swi_add
 argument_list|(
 operator|&
@@ -1286,6 +1311,8 @@ operator|->
 name|sc_swicookie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|devinfo
@@ -1375,6 +1402,11 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|ithread_remove_handler
 argument_list|(
 name|sc
@@ -1382,6 +1414,8 @@ operator|->
 name|sc_swicookie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rv
 operator|=
 name|ucom_detach
@@ -1621,6 +1655,11 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* 	 * Defer notifying the ucom layer as it doesn't like to be bothered          * from an interrupt context. 	 */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|swi_sched
 argument_list|(
 name|sc
@@ -1630,6 +1669,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|umct_notify
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
