@@ -21892,7 +21892,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<URL:http://www.gnu.org/software/gcc/faq.html#bugreport>.\n"
+literal|"%s.\n"
+argument_list|,
+name|GCCBUGURL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -22646,7 +22648,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<URL:http://www.gnu.org/software/gcc/faq.html#bugreport>\n"
+literal|"%s\n"
+argument_list|,
+name|GCCBUGURL
 argument_list|)
 expr_stmt|;
 block|}

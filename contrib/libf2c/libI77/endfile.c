@@ -655,6 +655,12 @@ name|bad1
 goto|;
 name|b
 operator|->
+name|uwrt
+operator|=
+literal|1
+expr_stmt|;
+name|b
+operator|->
 name|urw
 operator|=
 literal|2

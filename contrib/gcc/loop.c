@@ -31993,11 +31993,9 @@ name|v
 operator|->
 name|dest_reg
 argument_list|,
-name|XEXP
+name|PATTERN
 argument_list|(
-name|loop_store_mems
-argument_list|,
-literal|0
+name|first_loop_store_insn
 argument_list|)
 argument_list|)
 operator|&&

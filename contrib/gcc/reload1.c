@@ -21926,6 +21926,19 @@ name|copy
 init|=
 literal|0
 decl_stmt|;
+comment|/* ??? reload_reg_used is abused to hold the registers that are not      available as spill registers, including hard registers that are      earlyclobbered in asms.  As a temporary measure, reject anything      in reload_reg_used.  */
+if|if
+condition|(
+name|TEST_HARD_REG_BIT
+argument_list|(
+name|reload_reg_used
+argument_list|,
+name|regno
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|out
@@ -26262,6 +26275,14 @@ name|j
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|reload_spill_index
+index|[
+name|j
+index|]
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 comment|/* Record which pseudos and which spill regs have output reloads.  */

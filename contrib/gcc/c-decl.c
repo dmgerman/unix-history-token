@@ -7281,6 +7281,16 @@ argument_list|(
 name|olddecl
 argument_list|)
 expr_stmt|;
+name|DECL_MODE
+argument_list|(
+name|newdecl
+argument_list|)
+operator|=
+name|DECL_MODE
+argument_list|(
+name|olddecl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE

@@ -3173,6 +3173,7 @@ name|valarray
 operator|<
 name|_Tp
 operator|>
+operator|&
 name|__e1
 argument_list|,
 specifier|const
@@ -5585,7 +5586,7 @@ parameter_list|(
 name|_Name
 parameter_list|)
 define|\
-value|template<class _Dom>                                                    \ inline _Expr<_UnFunClos<_Expr,_Dom>,typename _Dom::value_type>          \ _Name(const _Expr<_Dom,typename _Dom::value_type>& __e)                 \ {                                                                       \     typedef typename _Dom::value_type _Tp;                              \     typedef _UnFunClos<_Expr,_Dom> _Closure;                            \     return _Expr<_Closure,_Tp> (_Closure (__e, (_Tp(*)(_Tp))(&_Name))); \ }                                                                       \                                                                         \ template<typename _Tp>                                                  \ inline _Expr<_UnFunClos<_ValArray,_Tp>,_Tp>                             \ _Name(const valarray<_Tp>& __v)                                         \ {                                                                       \     typedef _UnFunClos<_ValArray,_Tp> _Closure;                         \     return _Expr<_Closure,_Tp> (_Closure (__v, (_Tp(*)(_Tp))(&_Name))); \ }
+value|template<class _Dom>                                                    \ inline _Expr<_UnFunClos<_Expr,_Dom>,typename _Dom::value_type>          \ _Name(const _Expr<_Dom,typename _Dom::value_type>& __e)                 \ {                                                                       \     typedef typename _Dom::value_type _Tp;                              \     typedef _UnFunClos<_Expr,_Dom> _Closure;                            \     return _Expr<_Closure,_Tp>(_Closure(__e(), (_Tp(*)(_Tp))(&_Name))); \ }                                                                       \                                                                         \ template<typename _Tp>                                                  \ inline _Expr<_UnFunClos<_ValArray,_Tp>,_Tp>                             \ _Name(const valarray<_Tp>& __v)                                         \ {                                                                       \     typedef _UnFunClos<_ValArray,_Tp> _Closure;                         \     return _Expr<_Closure,_Tp> (_Closure (__v, (_Tp(*)(_Tp))(&_Name))); \ }
 name|_DEFINE_EXPR_UNARY_FUNCTION
 argument_list|(
 argument|abs
@@ -5617,6 +5618,10 @@ argument_list|)
 name|_DEFINE_EXPR_UNARY_FUNCTION
 argument_list|(
 argument|tan
+argument_list|)
+name|_DEFINE_EXPR_UNARY_FUNCTION
+argument_list|(
+argument|tanh
 argument_list|)
 name|_DEFINE_EXPR_UNARY_FUNCTION
 argument_list|(

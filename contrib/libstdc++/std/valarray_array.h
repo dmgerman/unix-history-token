@@ -320,7 +320,7 @@ name|__s
 control|)
 operator|*
 name|__b
-operator|+=
+operator|=
 operator|*
 name|__a
 expr_stmt|;
