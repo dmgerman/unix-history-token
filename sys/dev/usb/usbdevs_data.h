@@ -451,6 +451,18 @@ literal|"CT-0405-U Tablet"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_QTRONIX
+block|,
+name|USB_PRODUCT_QTRONIX_KEYB_PS2
+block|,
+literal|0
+block|,
+literal|"QTronix"
+block|,
+literal|"USB Keyboard with PS/2 mouse"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_EIZO
 block|,
 name|USB_PRODUCT_EIZO_HUB
@@ -1262,6 +1274,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Apple Computer"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_QTRONIX
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"QTronix"
 block|,
 name|NULL
 block|, 	}

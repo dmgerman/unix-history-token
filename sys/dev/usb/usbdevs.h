@@ -436,6 +436,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_QTRONIX
+value|0x05c7
+end_define
+
+begin_comment
+comment|/* QTronix */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_EIZONANAO
 value|0x05e7
 end_define
@@ -1079,6 +1090,21 @@ end_define
 
 begin_comment
 comment|/* CT-0405-U Tablet */
+end_comment
+
+begin_comment
+comment|/* QTronix products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_QTRONIX_KEYB_PS2
+value|0x2011
+end_define
+
+begin_comment
+comment|/* USB Keyboard with PS/2 mouse */
 end_comment
 
 begin_comment
