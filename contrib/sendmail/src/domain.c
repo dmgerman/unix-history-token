@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_ifndef
@@ -24,10 +24,10 @@ end_if
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)domain.c	8.81 (Berkeley) 1/21/1999 (with name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.3 2000/06/13 18:00:08 gshapiro Exp $ (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,13 +36,17 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* NAMED_BIND */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)domain.c	8.81 (Berkeley) 1/21/1999 (without name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.3 2000/06/13 18:00:08 gshapiro Exp $ (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,13 +55,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* NAMED_BIND */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_if
@@ -65,18 +73,6 @@ if|#
 directive|if
 name|NAMED_BIND
 end_if
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<resolv.h>
-end_include
 
 begin_include
 include|#
@@ -109,6 +105,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! MAXPACKET */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -146,6 +146,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MXHOSTBUFSIZE */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -178,6 +182,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAXDNSRCH */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RES_DNSRCH_VARIABLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RES_DNSRCH_VARIABLE
+value|_res.dnsrch
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! RES_DNSRCH_VARIABLE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -201,6 +231,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAX */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -218,6 +252,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! NO_DATA */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -240,6 +278,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! HFIXEDSZ */
+end_comment
 
 begin_define
 define|#
@@ -279,6 +321,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* defined(__RES)&& (__RES>= 19940415) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -291,11 +337,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(__RES)&& (__RES>= 19940415) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|gethostalias
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mxrand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		droplocalhost -- If TRUE, all MX records less preferred **			than the local host (as determined by $=w) will **			be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
+comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		mxprefs -- a pointer to a return buffer of MX preferences. **			If NULL, don't try to populate. **		droplocalhost -- If TRUE, all MX records less preferred **			than the local host (as determined by $=w) will **			be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
 end_comment
 
 begin_function
@@ -305,6 +384,8 @@ parameter_list|(
 name|host
 parameter_list|,
 name|mxhosts
+parameter_list|,
+name|mxprefs
 parameter_list|,
 name|droplocalhost
 parameter_list|,
@@ -318,6 +399,10 @@ name|char
 modifier|*
 modifier|*
 name|mxhosts
+decl_stmt|;
+name|u_short
+modifier|*
+name|mxprefs
 decl_stmt|;
 name|bool
 name|droplocalhost
@@ -393,6 +478,10 @@ name|trycanon
 init|=
 name|FALSE
 decl_stmt|;
+name|u_short
+modifier|*
+name|prefs
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -400,14 +489,6 @@ name|resfunc
 function_decl|)
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|res_query
-argument_list|()
-decl_stmt|,
-name|res_search
-argument_list|()
-decl_stmt|;
 name|u_short
 name|prefer
 index|[
@@ -422,14 +503,11 @@ index|]
 decl_stmt|;
 specifier|extern
 name|int
-name|mxrand
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
+name|res_query
+argument_list|()
+decl_stmt|,
+name|res_search
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -440,7 +518,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getmxrr(%s, droplocalhost=%d)\n"
 argument_list|,
@@ -475,6 +553,21 @@ operator|*
 name|rcode
 operator|=
 name|EX_OK
+expr_stmt|;
+if|if
+condition|(
+name|mxprefs
+operator|!=
+name|NULL
+condition|)
+name|prefs
+operator|=
+name|mxprefs
+expr_stmt|;
+else|else
+name|prefs
+operator|=
+name|prefer
 expr_stmt|;
 comment|/* efficiency hack -- numeric or non-MX lookups */
 if|if
@@ -561,7 +654,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getmxrr: res_search(%s) failed (errno=%d, h_errno=%d)\n"
 argument_list|,
@@ -592,7 +685,7 @@ name|trycanon
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|NO_RECOVERY
 case|:
@@ -612,6 +705,7 @@ case|:
 comment|/* Ultrix resolver retns failure w/ h_errno=0 */
 endif|#
 directive|endif
+comment|/* BROKEN_RES_SEARCH */
 comment|/* host doesn't exist in DNS; might be in /etc/hosts */
 name|trycanon
 operator|=
@@ -641,6 +735,34 @@ name|NULL
 condition|)
 block|{
 comment|/* name server is hosed -- push to fallback */
+if|if
+condition|(
+name|nmx
+operator|>
+literal|0
+condition|)
+name|prefs
+index|[
+name|nmx
+index|]
+operator|=
+name|prefs
+index|[
+name|nmx
+operator|-
+literal|1
+index|]
+operator|+
+literal|1
+expr_stmt|;
+else|else
+name|prefs
+index|[
+name|nmx
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|mxhosts
 index|[
 name|nmx
@@ -679,10 +801,8 @@ break|break;
 block|}
 comment|/* irreconcilable differences */
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 comment|/* avoid problems after truncation in tcp packets */
@@ -740,6 +860,9 @@ name|qdcount
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|hp
 operator|->
 name|qdcount
@@ -754,6 +877,7 @@ name|n
 operator|+
 name|QFIXEDSZ
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -772,6 +896,7 @@ condition|)
 goto|goto
 name|punt
 goto|;
+block|}
 name|buflen
 operator|=
 sizeof|sizeof
@@ -789,6 +914,9 @@ name|ancount
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|hp
 operator|->
 name|ancount
@@ -888,7 +1016,7 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"unexpected answer type %d, size %d\n"
 argument_list|,
@@ -963,7 +1091,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"found localhost (%s) in MX list, pref=%d\n"
 argument_list|,
@@ -1015,7 +1143,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|prefer
+name|prefs
 index|[
 name|nmx
 index|]
@@ -1108,23 +1236,23 @@ control|)
 block|{
 if|if
 condition|(
-name|prefer
+name|prefs
 index|[
 name|i
 index|]
 operator|>
-name|prefer
+name|prefs
 index|[
 name|j
 index|]
 operator|||
 operator|(
-name|prefer
+name|prefs
 index|[
 name|i
 index|]
 operator|==
-name|prefer
+name|prefs
 index|[
 name|j
 index|]
@@ -1152,22 +1280,22 @@ name|temp1
 decl_stmt|;
 name|temp
 operator|=
-name|prefer
+name|prefs
 index|[
 name|i
 index|]
 expr_stmt|;
-name|prefer
+name|prefs
 index|[
 name|i
 index|]
 operator|=
-name|prefer
+name|prefs
 index|[
 name|j
 index|]
 expr_stmt|;
-name|prefer
+name|prefs
 index|[
 name|j
 index|]
@@ -1228,7 +1356,7 @@ if|if
 condition|(
 name|seenlocal
 operator|&&
-name|prefer
+name|prefs
 index|[
 name|i
 index|]
@@ -1298,6 +1426,7 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 name|mxhosts
 index|[
 name|j
@@ -1310,6 +1439,19 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
+name|prefs
+index|[
+name|j
+index|]
+operator|=
+name|prefs
+index|[
+name|j
+operator|+
+literal|1
+index|]
+expr_stmt|;
+block|}
 name|nmx
 operator|--
 expr_stmt|;
@@ -1327,21 +1469,141 @@ label|:
 if|if
 condition|(
 name|seenlocal
-operator|&&
-operator|(
-operator|!
+condition|)
+block|{
+name|struct
+name|hostent
+modifier|*
+name|h
+init|=
+name|NULL
+decl_stmt|;
+comment|/* 			**  If we have deleted all MX entries, this is 			**  an error -- we should NEVER send to a host that 			**  has an MX, and this should have been caught 			**  earlier in the config file. 			** 			**  Some sites prefer to go ahead and try the 			**  A record anyway; that case is handled by 			**  setting TryNullMXList.  I believe this is a 			**  bad idea, but it's up to you.... 			*/
+if|if
+condition|(
 name|TryNullMXList
-operator|||
+condition|)
+block|{
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|=
 name|sm_gethostbyname
 argument_list|(
 name|host
+argument_list|,
+name|AF_INET
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
 operator|==
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ETIMEDOUT
+operator|||
+name|h_errno
+operator|==
+name|TRY_AGAIN
+operator|||
+operator|(
+name|errno
+operator|==
+name|ECONNREFUSED
+operator|&&
+name|UseNameServer
 operator|)
 condition|)
 block|{
-comment|/* 			**  If we have deleted all MX entries, this is 			**  an error -- we should NEVER send to a host that 			**  has an MX, and this should have been caught 			**  earlier in the config file. 			** 			**  Some sites prefer to go ahead and try the 			**  A record anyway; that case is handled by 			**  setting TryNullMXList.  I believe this is a 			**  bad idea, but it's up to you.... 			*/
+operator|*
+name|rcode
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|#
+directive|if
+name|NETINET6
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|=
+name|sm_gethostbyname
+argument_list|(
+name|host
+argument_list|,
+name|AF_INET6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ETIMEDOUT
+operator|||
+name|h_errno
+operator|==
+name|TRY_AGAIN
+operator|||
+operator|(
+name|errno
+operator|==
+name|ECONNREFUSED
+operator|&&
+name|UseNameServer
+operator|)
+operator|)
+condition|)
+block|{
+operator|*
+name|rcode
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* NETINET6 */
+block|}
+block|}
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+condition|)
+block|{
 operator|*
 name|rcode
 operator|=
@@ -1360,6 +1622,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1416,6 +1679,13 @@ index|]
 operator|=
 name|MXHostBuf
 expr_stmt|;
+name|prefs
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|host
@@ -1431,6 +1701,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|struct
+name|sockaddr_in6
+name|tmp6
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 comment|/* this may be an MX suppression-style address */
 name|p
 operator|=
@@ -1476,6 +1756,43 @@ operator|=
 literal|']'
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|inet_pton
+argument_list|(
+name|AF_INET6
+argument_list|,
+operator|&
+name|MXHostBuf
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|tmp6
+operator|.
+name|sin6_addr
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|nmx
+operator|++
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|']'
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NETINET6 */
 else|else
 block|{
 name|trycanon
@@ -1561,6 +1878,35 @@ operator|&&
 operator|!
 name|seenlocal
 condition|)
+block|{
+if|if
+condition|(
+name|nmx
+operator|>
+literal|0
+condition|)
+name|prefs
+index|[
+name|nmx
+index|]
+operator|=
+name|prefs
+index|[
+name|nmx
+operator|-
+literal|1
+index|]
+operator|+
+literal|1
+expr_stmt|;
+else|else
+name|prefs
+index|[
+name|nmx
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|mxhosts
 index|[
 name|nmx
@@ -1569,10 +1915,9 @@ index|]
 operator|=
 name|fallbackMX
 expr_stmt|;
+block|}
 return|return
-operator|(
 name|nmx
-operator|)
 return|;
 block|}
 end_function
@@ -1585,6 +1930,7 @@ comment|/* **  MXRAND -- create a randomizer for equal MX preferences ** **	If t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mxrand
 parameter_list|(
@@ -1640,7 +1986,7 @@ argument_list|,
 literal|9
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mxrand(%s)"
 argument_list|,
@@ -1716,7 +2062,7 @@ argument_list|,
 literal|9
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|" = %d\n"
 argument_list|,
@@ -1827,6 +2173,8 @@ argument_list|(
 name|name
 argument_list|,
 name|mxhosts
+argument_list|,
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|,
@@ -2009,7 +2357,10 @@ name|len
 operator|++
 expr_stmt|;
 block|}
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|p
 argument_list|,
@@ -2017,6 +2368,11 @@ name|mxhosts
 index|[
 name|i
 index|]
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
+name|len
 argument_list|)
 expr_stmt|;
 name|p
@@ -2047,7 +2403,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DNS_GETCANONNAME -- get the canonical name for named host using DNS ** **	This algorithm tries to be smart about wildcard MX records. **	This is hard to do because DNS doesn't tell is if we matched **	against a wildcard or a specific MX. **	 **	We always prefer A& CNAME records, since these are presumed **	to be specific. ** **	If we match an MX in one pass and lose it in the next, we use **	the old one.  For example, consider an MX matching *.FOO.BAR.COM. **	A hostname bletch.foo.bar.com will match against this MX, but **	will stop matching when we try bletch.bar.com -- so we know **	that bletch.foo.bar.com must have been right.  This fails if **	there was also an MX record matching *.BAR.COM, but there are **	some things that just can't be fixed. ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. **		trymx -- if set, try MX records as well as A and CNAME. **		statp -- pointer to place to store status. ** **	Returns: **		TRUE -- if the host matched. **		FALSE -- otherwise. */
+comment|/* **  DNS_GETCANONNAME -- get the canonical name for named host using DNS ** **	This algorithm tries to be smart about wildcard MX records. **	This is hard to do because DNS doesn't tell is if we matched **	against a wildcard or a specific MX. ** **	We always prefer A& CNAME records, since these are presumed **	to be specific. ** **	If we match an MX in one pass and lose it in the next, we use **	the old one.  For example, consider an MX matching *.FOO.BAR.COM. **	A hostname bletch.foo.bar.com will match against this MX, but **	will stop matching when we try bletch.bar.com -- so we know **	that bletch.foo.bar.com must have been right.  This fails if **	there was also an MX record matching *.BAR.COM, but there are **	some things that just can't be fixed. ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. **		trymx -- if set, try MX records as well as A and CNAME. **		statp -- pointer to place to store status. ** **	Returns: **		TRUE -- if the host matched. **		FALSE -- otherwise. */
 end_comment
 
 begin_function
@@ -2168,18 +2524,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|gethostalias
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2189,7 +2533,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dns_getcanonname(%s, trymx=%d)\n"
 argument_list|,
@@ -2226,7 +2570,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU). 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
+comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU).  Note that there is no 	**  longer a country named Czechoslovakia but this type of problem 	**  is still present. 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
 name|loopcnt
 operator|=
 literal|0
@@ -2262,7 +2606,7 @@ condition|)
 name|n
 operator|++
 expr_stmt|;
-comment|/* 	**  If this is a simple name, determine whether it matches an  	**  alias in the file defined by the environment variable HOSTALIASES. 	*/
+comment|/* 	**  If this is a simple name, determine whether it matches an 	**  alias in the file defined by the environment variable HOSTALIASES. 	*/
 if|if
 condition|(
 name|n
@@ -2297,7 +2641,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|host
 argument_list|,
@@ -2306,21 +2653,12 @@ argument_list|,
 name|hbsize
 argument_list|)
 expr_stmt|;
-name|host
-index|[
-name|hbsize
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 goto|goto
 name|cnameloop
 goto|;
 block|}
 block|}
-comment|/* 	**  Build the search list.   	**	If there is at least one dot in name, start with a null 	**	domain to search the unmodified name first. 	**	If name does not end with a dot and search up local domain 	**	tree desired, append each local domain component to the 	**	search list; if name contains no dots and default domain 	**	name is desired, append default domain name to search list; 	**	else if name ends in a dot, remove that dot. 	*/
+comment|/* 	**  Build the search list. 	**	If there is at least one dot in name, start with a null 	**	domain to search the unmodified name first. 	**	If name does not end with a dot and search up local domain 	**	tree desired, append each local domain component to the 	**	search list; if name contains no dots and default domain 	**	name is desired, append default domain name to search list; 	**	else if name ends in a dot, remove that dot. 	*/
 name|dp
 operator|=
 name|searchlist
@@ -2359,19 +2697,28 @@ name|options
 argument_list|)
 condition|)
 block|{
+comment|/* make sure there are less than MAXDNSRCH domains */
 for|for
 control|(
 name|domain
 operator|=
-name|_res
-operator|.
-name|dnsrch
+name|RES_DNSRCH_VARIABLE
+operator|,
+name|ret
+operator|=
+literal|0
 init|;
 operator|*
 name|domain
 operator|!=
 name|NULL
+operator|&&
+name|ret
+operator|<
+name|MAXDNSRCH
 condition|;
+name|ret
+operator|++
 control|)
 operator|*
 name|dp
@@ -2469,7 +2816,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dns_getcanonname: trying %s.%s (%s)\n"
 argument_list|,
@@ -2484,6 +2831,18 @@ name|T_ANY
 condition|?
 literal|"ANY"
 else|:
+if|#
+directive|if
+name|NETINET6
+name|qtype
+operator|==
+name|T_AAAA
+condition|?
+literal|"AAAA"
+else|:
+endif|#
+directive|endif
+comment|/* NETINET6 */
 name|qtype
 operator|==
 name|T_A
@@ -2540,7 +2899,7 @@ argument_list|,
 literal|7
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\tNO: errno=%d, h_errno=%d\n"
 argument_list|,
@@ -2570,6 +2929,13 @@ name|statp
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
+comment|/* 				**  If the ANY query is larger than the 				**  UDP packet size, the resolver will 				**  fall back to TCP.  However, some 				**  misconfigured firewalls block 53/TCP 				**  so the ANY lookup fails whereas an MX 				**  or A record might work.  Therefore, 				**  don't fail on ANY queries. 				** 				**  The ANY query is really meant to prime 				**  the cache so this isn't dangerous. 				*/
+if|if
+condition|(
+name|qtype
+operator|!=
+name|T_ANY
+condition|)
 return|return
 name|FALSE
 return|;
@@ -2589,12 +2955,45 @@ operator|==
 name|T_ANY
 condition|)
 block|{
+if|#
+directive|if
+name|NETINET6
+name|qtype
+operator|=
+name|T_AAAA
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
+name|qtype
+operator|=
+name|T_A
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+continue|continue;
+block|}
+if|#
+directive|if
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_AAAA
+condition|)
+block|{
 name|qtype
 operator|=
 name|T_A
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
+comment|/* NETINET6 */
 elseif|else
 if|if
 condition|(
@@ -2643,7 +3042,7 @@ argument_list|,
 literal|7
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\tYES\n"
 argument_list|)
@@ -2704,6 +3103,9 @@ name|qdcount
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|hp
 operator|->
 name|qdcount
@@ -2744,12 +3146,15 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"qdcount failure (%d)\n"
 argument_list|,
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|hp
 operator|->
 name|qdcount
@@ -2777,6 +3182,9 @@ name|ancount
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|hp
 operator|->
 name|ancount
@@ -2874,7 +3282,7 @@ operator|&&
 name|HasWildcardMX
 condition|)
 block|{
-comment|/* 					**  If we are using MX matches and have 					**  not yet gotten one, save this one 					**  but keep searching for an A or  					**  CNAME match. 					*/
+comment|/* 					**  If we are using MX matches and have 					**  not yet gotten one, save this one 					**  but keep searching for an A or 					**  CNAME match. 					*/
 if|if
 condition|(
 name|trymx
@@ -2891,6 +3299,23 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 				**  If we did not append a domain name, this 				**  must have been a canonical name to start 				**  with.  Even if we did append a domain name, 				**  in the absence of a wildcard MX this must 				**  still be a real MX match. 				**  Such MX matches are as good as an A match, 				**  fall through. 				*/
+comment|/* FALLTHROUGH */
+if|#
+directive|if
+name|NETINET6
+case|case
+name|T_AAAA
+case|:
+comment|/* Flag that a good match was found */
+name|amatch
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* continue in case a CNAME also exists */
+continue|continue;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 case|case
 name|T_A
 case|:
@@ -3019,7 +3444,7 @@ break|break;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|host
 argument_list|,
@@ -3027,16 +3452,6 @@ name|nbuf
 argument_list|,
 name|hbsize
 argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|host
-index|[
-name|hbsize
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* 				**  RFC 1034 section 3.6 specifies that CNAME 				**  should point at the canonical name -- but 				**  urges software to try again anyway. 				*/
 goto|goto
@@ -3052,7 +3467,7 @@ condition|(
 name|amatch
 condition|)
 block|{
-comment|/*  			**  Got a good match -- either an A, CNAME, or an 			**  exact MX record.  Save it and get out of here. 			*/
+comment|/* 			**  Got a good match -- either an A, CNAME, or an 			**  exact MX record.  Save it and get out of here. 			*/
 name|mxmatch
 operator|=
 operator|*
@@ -3067,10 +3482,42 @@ name|qtype
 operator|==
 name|T_ANY
 condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|qtype
+operator|=
+name|T_AAAA
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
 name|qtype
 operator|=
 name|T_A
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+block|}
+if|#
+directive|if
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_AAAA
+condition|)
+name|qtype
+operator|=
+name|T_A
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 elseif|else
 if|if
 condition|(
@@ -3154,7 +3601,10 @@ argument_list|,
 name|mxmatch
 argument_list|)
 expr_stmt|;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|host
 argument_list|,
@@ -3162,15 +3612,6 @@ name|nbuf
 argument_list|,
 name|hbsize
 argument_list|)
-expr_stmt|;
-name|host
-index|[
-name|hbsize
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3181,7 +3622,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dns_getcanonname: %s\n"
 argument_list|,
@@ -3200,6 +3641,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|gethostalias
@@ -3226,7 +3668,7 @@ name|p
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|long
 name|sff
 init|=
 name|SFF_REGONLY
@@ -3368,6 +3810,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* no match */
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -3377,6 +3822,9 @@ return|return
 name|NULL
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -3439,7 +3887,10 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|hbuf
 argument_list|,
@@ -3447,19 +3898,7 @@ name|host
 argument_list|,
 sizeof|sizeof
 name|hbuf
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|hbuf
-index|[
-sizeof|sizeof
-name|hbuf
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 return|return
 name|hbuf

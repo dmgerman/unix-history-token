@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)collect.c	8.93 (Berkeley) 1/26/1999"
+literal|"@(#)$Id: collect.c,v 8.136.4.3 2000/06/22 22:13:45 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,31 +25,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sendmail.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
-end_include
-
-begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|jmp_buf
-name|CtxCollectTimeout
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -61,6 +44,59 @@ operator|(
 name|time_t
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dferror
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+specifier|volatile
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|eatfrom
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+specifier|volatile
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|CtxCollectTimeout
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +256,7 @@ specifier|register
 name|FILE
 modifier|*
 specifier|volatile
-name|tf
+name|df
 decl_stmt|;
 specifier|volatile
 name|bool
@@ -282,15 +318,36 @@ specifier|volatile
 name|int
 name|mstate
 decl_stmt|;
-name|u_char
-modifier|*
 specifier|volatile
-name|pbp
-decl_stmt|;
 name|int
 name|hdrslen
 init|=
 literal|0
+decl_stmt|;
+specifier|volatile
+name|int
+name|numhdrs
+init|=
+literal|0
+decl_stmt|;
+specifier|volatile
+name|int
+name|dfd
+decl_stmt|;
+specifier|volatile
+name|int
+name|afd
+decl_stmt|;
+specifier|volatile
+name|int
+name|rstat
+init|=
+name|EX_OK
+decl_stmt|;
+name|u_char
+modifier|*
+specifier|volatile
+name|pbp
 decl_stmt|;
 name|u_char
 name|peekbuf
@@ -299,9 +356,21 @@ literal|8
 index|]
 decl_stmt|;
 name|char
+name|hsize
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|hnum
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
 name|dfname
 index|[
-name|MAXQFNAME
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
@@ -309,32 +378,6 @@ name|bufbuf
 index|[
 name|MAXLINE
 index|]
-decl_stmt|;
-specifier|extern
-name|bool
-name|isheader
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|tferror
-name|__P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-specifier|volatile
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 name|headeronly
 operator|=
@@ -349,14 +392,14 @@ operator|!
 name|headeronly
 condition|)
 block|{
-name|int
-name|tfd
-decl_stmt|;
 name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|dfname
 argument_list|,
@@ -366,41 +409,87 @@ name|e
 argument_list|,
 literal|'d'
 argument_list|)
+argument_list|,
+sizeof|sizeof
+name|dfname
 argument_list|)
 expr_stmt|;
-name|tfd
+if|#
+directive|if
+name|_FFR_QUEUE_FILE_MODE
+block|{
+name|MODE_T
+name|oldumask
+decl_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|S_IWGRP
+argument_list|,
+name|QueueFileMode
+argument_list|)
+condition|)
+name|oldumask
 operator|=
-name|dfopen
+name|umask
+argument_list|(
+literal|002
+argument_list|)
+expr_stmt|;
+name|df
+operator|=
+name|bfopen
 argument_list|(
 name|dfname
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
+name|QueueFileMode
 argument_list|,
-name|FileMode
+name|DataFileBufferSize
 argument_list|,
-name|SFF_ANYFILE
+name|SFF_OPENASROOT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tfd
-operator|<
-literal|0
-operator|||
-operator|(
-name|tf
-operator|=
-name|fdopen
+name|bitset
 argument_list|(
-name|tfd
+name|S_IWGRP
 argument_list|,
-literal|"w"
+name|QueueFileMode
 argument_list|)
+condition|)
+operator|(
+name|void
 operator|)
+name|umask
+argument_list|(
+name|oldumask
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* _FFR_QUEUE_FILE_MODE */
+name|df
+operator|=
+name|bfopen
+argument_list|(
+name|dfname
+argument_list|,
+name|FileMode
+argument_list|,
+name|DataFileBufferSize
+argument_list|,
+name|SFF_OPENASROOT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_FILE_MODE */
+if|if
+condition|(
+name|df
 operator|==
 name|NULL
 condition|)
@@ -425,15 +514,24 @@ argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
-if|if
-condition|(
-name|fstat
-argument_list|(
+name|dfd
+operator|=
 name|fileno
 argument_list|(
-name|tf
+name|df
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dfd
+operator|<
+literal|0
+operator|||
+name|fstat
+argument_list|(
+name|dfd
 argument_list|,
 operator|&
 name|stbuf
@@ -503,7 +601,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"collect\n"
 argument_list|)
@@ -587,7 +685,7 @@ literal|0
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"451 timeout waiting for input during message collect"
+literal|"451 4.4.1 timeout waiting for input during message collect"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -621,7 +719,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"top, istate=%d, mstate=%d\n"
 argument_list|,
@@ -709,6 +807,9 @@ name|istate
 operator|==
 name|IS_BOL
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|TrafficLogFile
@@ -728,6 +829,9 @@ name|c
 operator|==
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|TrafficLogFile
@@ -736,6 +840,9 @@ literal|"[EOF]\n"
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -781,12 +888,15 @@ argument_list|,
 literal|94
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"istate=%d, c=%c (0x%x)\n"
 argument_list|,
 name|istate
 argument_list|,
+operator|(
+name|char
+operator|)
 name|c
 argument_list|,
 name|c
@@ -948,6 +1058,9 @@ name|IS_BOL
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|c
@@ -1050,14 +1163,17 @@ name|e_msgsize
 operator|<=
 name|MaxMessageSize
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
 argument_list|,
-name|tf
+name|df
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|MS_DISCARD
 case|:
@@ -1115,11 +1231,11 @@ argument_list|(
 name|buflen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|obuf
-argument_list|,
 name|buf
+argument_list|,
+name|obuf
 argument_list|,
 name|bp
 operator|-
@@ -1162,10 +1278,15 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* causes complaints -- figure out something for 8.9 */
+comment|/* causes complaints -- figure out something for 8.11 */
 block|usrerr("Illegal character 0x%x in header", c);
+else|#
+directive|else
+comment|/* 0 */
+comment|/* EMPTY */
 endif|#
 directive|endif
+comment|/* 0 */
 block|}
 elseif|else
 if|if
@@ -1230,8 +1351,12 @@ name|e_status
 operator|=
 literal|"5.6.0"
 expr_stmt|;
-name|usrerr
+name|usrerrenh
 argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
 literal|"552 Headers too large (%d max)"
 argument_list|,
 name|MaxHeadersLength
@@ -1267,7 +1392,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"nextstate, istate=%d, mstate=%d, line = \"%s\"\n"
 argument_list|,
@@ -1307,21 +1432,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|extern
-name|void
-name|eatfrom
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-specifier|volatile
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 name|bp
 operator|=
 name|buf
@@ -1337,7 +1447,8 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* fall through */
+comment|/* ! NOTUNIX */
+comment|/* FALLTHROUGH */
 case|case
 name|MS_HEADER
 case|:
@@ -1391,6 +1502,9 @@ name|c
 operator|!=
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|c
@@ -1445,7 +1559,9 @@ name|chompheader
 argument_list|(
 name|buf
 argument_list|,
-name|FALSE
+name|CHHDR_CHECK
+operator||
+name|CHHDR_USER
 argument_list|,
 name|hdrp
 argument_list|,
@@ -1462,6 +1578,9 @@ goto|goto
 name|nextstate
 goto|;
 block|}
+name|numhdrs
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|MS_BODY
@@ -1475,7 +1594,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"EOH\n"
 argument_list|)
@@ -1487,6 +1606,68 @@ condition|)
 goto|goto
 name|readerr
 goto|;
+comment|/* call the end-of-header check ruleset */
+name|snprintf
+argument_list|(
+name|hnum
+argument_list|,
+sizeof|sizeof
+name|hnum
+argument_list|,
+literal|"%d"
+argument_list|,
+name|numhdrs
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|hsize
+argument_list|,
+sizeof|sizeof
+name|hsize
+argument_list|,
+literal|"%d"
+argument_list|,
+name|hdrslen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|30
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"collect: rscheck(\"check_eoh\", \"%s $| %s\")\n"
+argument_list|,
+name|hnum
+argument_list|,
+name|hsize
+argument_list|)
+expr_stmt|;
+name|rstat
+operator|=
+name|rscheck
+argument_list|(
+literal|"check_eoh"
+argument_list|,
+name|hnum
+argument_list|,
+name|hsize
+argument_list|,
+name|e
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|buf
@@ -1563,13 +1744,16 @@ name|bp
 operator|!=
 literal|'\0'
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 operator|*
 name|bp
 operator|++
 argument_list|,
-name|tf
+name|df
 argument_list|)
 expr_stmt|;
 block|}
@@ -1618,7 +1802,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"collect: premature EOM: %s\n"
 argument_list|,
@@ -1662,49 +1846,35 @@ condition|)
 return|return;
 if|if
 condition|(
-name|tf
-operator|!=
+name|df
+operator|==
 name|NULL
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/* skip next few clauses */
+comment|/* EMPTY */
+block|}
+elseif|else
+if|if
+condition|(
 name|fflush
 argument_list|(
-name|tf
+name|df
 argument_list|)
 operator|!=
 literal|0
 operator|||
 name|ferror
 argument_list|(
-name|tf
+name|df
 argument_list|)
-operator|||
-operator|(
-name|SuperSafe
-operator|&&
-name|fsync
-argument_list|(
-name|fileno
-argument_list|(
-name|tf
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-operator|)
-operator|||
-name|fclose
-argument_list|(
-name|tf
-argument_list|)
-operator|<
-literal|0
-operator|)
 condition|)
 block|{
-name|tferror
+name|dferror
 argument_list|(
-name|tf
+name|df
+argument_list|,
+literal|"fflush||ferror"
 argument_list|,
 name|e
 argument_list|)
@@ -1720,6 +1890,229 @@ name|TRUE
 argument_list|,
 name|ExitStat
 argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|SuperSafe
+condition|)
+block|{
+comment|/* skip next few clauses */
+comment|/* EMPTY */
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|afd
+operator|=
+name|fileno
+argument_list|(
+name|df
+argument_list|)
+operator|)
+operator|>=
+literal|0
+operator|&&
+name|fsync
+argument_list|(
+name|afd
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"fsync"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
+name|bfcommit
+argument_list|(
+name|df
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+if|if
+condition|(
+name|save_errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+name|char
+modifier|*
+name|dfile
+decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|dfile
+operator|=
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'d'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|dfile
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|st
+operator|.
+name|st_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|errno
+operator|=
+name|EEXIST
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"collect: bfcommit(%s): already on disk, size = %ld"
+argument_list|,
+name|dfile
+argument_list|,
+name|st
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+name|dfd
+operator|=
+name|fileno
+argument_list|(
+name|df
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dfd
+operator|>=
+literal|0
+condition|)
+name|dumpfd
+argument_list|(
+name|dfd
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"bfcommit"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|save_errno
+operator|!=
+name|EEXIST
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bfclose
+argument_list|(
+name|df
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"bfclose"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+else|else
+block|{
+comment|/* everything is happily flushed to disk */
+name|df
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* An EOF when running SMTP is an error */
@@ -1839,7 +2232,7 @@ argument_list|)
 condition|)
 name|usrerr
 argument_list|(
-literal|"451 collect: %s on connection from %s, from=%s"
+literal|"451 4.4.1 collect: %s on connection from %s, from=%s"
 argument_list|,
 name|problem
 argument_list|,
@@ -1860,7 +2253,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"451 collect: %s on connection from %s, from=%s"
+literal|"451 4.4.1 collect: %s on connection from %s, from=%s"
 argument_list|,
 name|problem
 argument_list|,
@@ -1914,6 +2307,7 @@ argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
 name|eatheader
@@ -1958,9 +2352,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_DSN_RRT_OPTION
 comment|/* 	**  If we have a Return-Receipt-To:, turn it into a DSN. 	*/
 if|if
 condition|(
@@ -2021,8 +2412,6 @@ operator||
 name|QPINGONSUCCESS
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
 if|if
 condition|(
@@ -2127,6 +2516,8 @@ literal|"Bcc"
 argument_list|,
 literal|" "
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -2142,6 +2533,8 @@ argument_list|(
 literal|"To"
 argument_list|,
 literal|"undisclosed-recipients:;"
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|e
@@ -2195,7 +2588,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"Adding %s: %s\n"
 argument_list|,
@@ -2213,6 +2606,8 @@ argument_list|,
 name|q
 operator|->
 name|q_paddr
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|e
@@ -2251,8 +2646,12 @@ name|e_status
 operator|=
 literal|"5.2.3"
 expr_stmt|;
-name|usrerr
+name|usrerrenh
 argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
 literal|"552 Message exceeds maximum fixed size (%ld)"
 argument_list|,
 name|MaxMessageSize
@@ -2323,8 +2722,12 @@ name|e_status
 operator|=
 literal|"5.6.1"
 expr_stmt|;
-name|usrerr
+name|usrerrenh
 argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
 literal|"554 Eight bit data not allowed"
 argument_list|)
 expr_stmt|;
@@ -2361,6 +2764,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SuperSafe
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|e
 operator|->
@@ -2392,7 +2800,29 @@ argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
+block|}
+else|else
+name|e
+operator|->
+name|e_dfp
+operator|=
+name|df
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"!collect: no e_dfp"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2439,25 +2869,29 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  TFERROR -- signal error on writing the temporary file. ** **	Parameters: **		tf -- the file pointer for the temporary file. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */
+comment|/* **  DFERROR -- signal error on writing the data file. ** **	Parameters: **		df -- the file pointer for the data file. **		msg -- detailed message. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|tferror
+name|dferror
 parameter_list|(
-name|tf
+name|df
+parameter_list|,
+name|msg
 parameter_list|,
 name|e
 parameter_list|)
 name|FILE
 modifier|*
 specifier|volatile
-name|tf
+name|df
+decl_stmt|;
+name|char
+modifier|*
+name|msg
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -2465,6 +2899,19 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|dfname
+decl_stmt|;
+name|dfname
+operator|=
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'d'
+argument_list|)
+expr_stmt|;
 name|setstat
 argument_list|(
 name|EX_IOERR
@@ -2488,31 +2935,19 @@ name|st
 decl_stmt|;
 else|#
 directive|else
+comment|/* STAT64> 0 */
 name|struct
 name|stat
 name|st
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* STAT64> 0 */
 name|long
 name|avail
 decl_stmt|;
 name|long
 name|bsize
-decl_stmt|;
-specifier|extern
-name|long
-name|freediskspace
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|long
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 name|e
 operator|->
@@ -2529,17 +2964,18 @@ operator|>
 literal|0
 name|fstat64
 argument_list|(
-argument|fileno(tf)
+argument|fileno(df)
 argument_list|,
 argument|&st
 argument_list|)
 else|#
 directive|else
+comment|/* STAT64> 0 */
 name|fstat
 argument_list|(
 name|fileno
 argument_list|(
-name|tf
+name|df
 argument_list|)
 argument_list|,
 operator|&
@@ -2547,6 +2983,7 @@ name|st
 argument_list|)
 endif|#
 directive|endif
+comment|/* STAT64> 0 */
 operator|<
 literal|0
 condition|)
@@ -2561,16 +2998,11 @@ name|void
 operator|)
 name|freopen
 argument_list|(
-name|queuename
-argument_list|(
-name|e
-argument_list|,
-literal|'d'
-argument_list|)
+name|dfname
 argument_list|,
 literal|"w"
 argument_list|,
-name|tf
+name|df
 argument_list|)
 expr_stmt|;
 if|if
@@ -2583,11 +3015,12 @@ literal|0
 condition|)
 name|fprintf
 argument_list|(
-name|tf
+name|df
 argument_list|,
 literal|"\n*** Mail could not be accepted"
 argument_list|)
 expr_stmt|;
+comment|/*CONSTCOND*/
 elseif|else
 if|if
 condition|(
@@ -2603,7 +3036,7 @@ argument_list|)
 condition|)
 name|fprintf
 argument_list|(
-name|tf
+name|df
 argument_list|,
 literal|"\n*** Mail of at least %s bytes could not be accepted\n"
 argument_list|,
@@ -2618,7 +3051,7 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|tf
+name|df
 argument_list|,
 literal|"\n*** Mail of at least %lu bytes could not be accepted\n"
 argument_list|,
@@ -2633,7 +3066,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|tf
+name|df
 argument_list|,
 literal|"*** at %s due to lack of disk space for temp file.\n"
 argument_list|,
@@ -2644,7 +3077,12 @@ name|avail
 operator|=
 name|freediskspace
 argument_list|(
-name|QueueDir
+name|qid_printqueue
+argument_list|(
+name|e
+operator|->
+name|e_queuedir
+argument_list|)
 argument_list|,
 operator|&
 name|bsize
@@ -2684,7 +3122,7 @@ name|bsize
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|tf
+name|df
 argument_list|,
 literal|"*** Currently, %ld kilobytes are available for mail temp files.\n"
 argument_list|,
@@ -2698,8 +3136,12 @@ name|e_status
 operator|=
 literal|"4.3.1"
 expr_stmt|;
-name|usrerr
+name|usrerrenh
 argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
 literal|"452 Out of disk space for temp file"
 argument_list|)
 expr_stmt|;
@@ -2707,11 +3149,14 @@ block|}
 else|else
 name|syserr
 argument_list|(
-literal|"collect: Cannot write tf%s"
+literal|"collect: Cannot write %s (%s, uid=%d)"
 argument_list|,
-name|e
-operator|->
-name|e_id
+name|dfname
+argument_list|,
+name|msg
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -2722,7 +3167,7 @@ literal|"/dev/null"
 argument_list|,
 literal|"w"
 argument_list|,
-name|tf
+name|df
 argument_list|)
 operator|==
 name|NULL
@@ -2735,7 +3180,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"tferror: freopen(\"/dev/null\") failed: %s"
+literal|"dferror: freopen(\"/dev/null\") failed: %s"
 argument_list|,
 name|errstring
 argument_list|(
@@ -2760,6 +3205,7 @@ name|NOTUNIX
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|DowList
@@ -2786,6 +3232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|MonthList
@@ -2822,6 +3269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|eatfrom
 parameter_list|(
@@ -2860,7 +3308,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"eatfrom(%s)\n"
 argument_list|,
@@ -3048,7 +3496,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|q
 argument_list|,
@@ -3056,13 +3504,6 @@ name|p
 argument_list|,
 literal|25
 argument_list|)
-expr_stmt|;
-name|q
-index|[
-literal|24
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|q
 operator|=
@@ -3093,7 +3534,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NOTUNIX */
+comment|/* ! NOTUNIX */
 end_comment
 
 end_unit
