@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.10 1999/01/22 23:50:14 msmith Exp $  */
+comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.11 1999/01/28 06:33:03 jkh Exp $  */
 end_comment
 
 begin_include
@@ -109,6 +109,13 @@ begin_decl_stmt
 name|FICL_VM
 modifier|*
 name|bf_vm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FICL_WORD
+modifier|*
+name|pInterp
 decl_stmt|;
 end_decl_stmt
 
@@ -516,11 +523,9 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* ** Let's deal with it elsewhere ** 	if(result != 0) { 		vmTextOut(vm,argv[0],0); 		vmTextOut(vm,": ",0); 		vmTextOut(vm,command_errmsg,1); 	} 	*/
 block|}
 else|else
 block|{
-comment|/* ** Let's deal with it elsewhere ** 	vmTextOut(vm, "parse error\n", 1); 	*/
 name|result
 operator|=
 name|BF_PARSE
@@ -545,7 +550,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Replace a word definition (a builtin command) with another  * one that:  *  *        - Throw error results instead of returning them on the stack  *        - Pass a flag indicating whether the word was compiled or is  *          being interpreted.  *  * There is one major problem with builtins that cannot be overcome  * in anyway, except by outlawing it, such as done below. We want  * builtins to behave differently depending on whether they have been  * compiled or they are being interpreted. Notice that this is *not*  * the current state. For example:  *  * : example ls ; immediate  * : problem example ;  * example  *  * Notice that the current state is different in the two invocations  * of "example", but, in both cases, "ls" has been *compiled in*, which  * is what we really want.  *  * The problem arises when you tick the builtin. For example:  *  * : example-1 ['] ls postpone literal ; immediate  * : example-2 example-1 execute ; immediate  * : problem example-2 ;  * example-2  *  * We have no way, when we get EXECUTEd, of knowing what our behavior  * should be. Thus, our only alternative is to "outlaw" this. See RFI  * 0007, and ANS Forth Standard's appendix D, item 6.7.  *  * The problem is compounded by the fact that ' builtin CATCH is valid  * and desirable. The only solution is to create an intermediary word.  * For example:  *  * : my-ls ls ;  * : example ['] my-ls catch ;  *  * As the this definition is particularly tricky, and it's side effects  * must be well understood by those playing with it, I'll be heavy on  * the comments.  *  * (if you edit this definition, pay attention to trailing spaces after  *  each word -- I warned you! :-) )  */
+comment|/*  * Replace a word definition (a builtin command) with another  * one that:  *  *        - Throw error results instead of returning them on the stack  *        - Pass a flag indicating whether the word was compiled or is  *          being interpreted.  *  * There is one major problem with builtins that cannot be overcome  * in anyway, except by outlawing it. We want builtins to behave  * differently depending on whether they have been compiled or they  * are being interpreted. Notice that this is *not* the interpreter's  * current state. For example:  *  * : example ls ; immediate  * : problem example ;		\ "ls" gets executed while compiling  * example			\ "ls" gets executed while interpreting  *  * Notice that, though the current state is different in the two  * invocations of "example", in both cases "ls" has been  * *compiled in*, which is what we really want.  *  * The problem arises when you tick the builtin. For example:  *  * : example-1 ['] ls postpone literal ; immediate  * : example-2 example-1 execute ; immediate  * : problem example-2 ;  * example-2  *  * We have no way, when we get EXECUTEd, of knowing what our behavior  * should be. Thus, our only alternative is to "outlaw" this. See RFI  * 0007, and ANS Forth Standard's appendix D, item 6.7 for a related  * problem, concerning compile semantics.  *  * The problem is compounded by the fact that "' builtin CATCH" is valid  * and desirable. The only solution is to create an intermediary word.  * For example:  *  * : my-ls ls ;  * : example ['] my-ls catch ;  *  * So, with the below implementation, here is a summary of the behavior  * of builtins:  *  * ls -l				\ "interpret" behavior, ie,  *					\ takes parameters from TIB  * : ex-1 s" -l" 1 ls ;			\ "compile" behavior, ie,  *					\ takes parameters from the stack  * : ex-2 ['] ls catch ; immediate	\ undefined behavior  * : ex-3 ['] ls catch ;		\ undefined behavior  * ex-2 ex-3				\ "interpret" behavior,  *					\ catch works  * : ex-4 ex-2 ;			\ "compile" behavior,  *					\ catch does not work  * : ex-5 ex-3 ; immediate		\ same as ex-2  * : ex-6 ex-3 ;			\ same as ex-3  * : ex-7 ['] ex-1 catch ;		\ "compile" behavior,  *					\ catch works  * : ex-8 postpone ls ;	immediate	\ same as ex-2  * : ex-9 postpone ls ;			\ same as ex-3  *  * As the definition below is particularly tricky, and it's side effects  * must be well understood by those playing with it, I'll be heavy on  * the comments.  *  * (if you edit this definition, pay attention to trailing spaces after  *  each word -- I warned you! :-) )  */
 end_comment
 
 begin_define
@@ -749,6 +754,14 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Do this last, so /boot/boot.4th can change it */
+name|pInterp
+operator|=
+name|ficlLookup
+argument_list|(
+literal|"interpret"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -757,7 +770,7 @@ comment|/*  * Feed a line of user input to the Forth interpreter  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|bf_run
 parameter_list|(
 name|char
@@ -768,6 +781,32 @@ block|{
 name|int
 name|result
 decl_stmt|;
+name|CELL
+name|id
+decl_stmt|;
+name|id
+operator|=
+name|bf_vm
+operator|->
+name|sourceID
+expr_stmt|;
+name|bf_vm
+operator|->
+name|sourceID
+operator|.
+name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|vmPushIP
+argument_list|(
+name|bf_vm
+argument_list|,
+operator|&
+name|pInterp
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|ficlExec
@@ -779,6 +818,17 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|vmPopIP
+argument_list|(
+name|bf_vm
+argument_list|)
+expr_stmt|;
+name|bf_vm
+operator|->
+name|sourceID
+operator|=
+name|id
 expr_stmt|;
 name|DEBUG
 argument_list|(
@@ -870,6 +920,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+name|result
+return|;
 block|}
 end_function
 
