@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	1.1 (Berkeley) %G%"
+literal|"@(#)options.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:cdf:iklno:p:rs:tuvwx:B:E:G:HLT:U:XZ"
+literal|"ab:cdf:iklno:p:rs:tuvwx:B:DE:G:HLT:U:XYZ"
 argument_list|)
 operator|)
 operator|!=
@@ -1159,6 +1159,19 @@ name|CBF
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+comment|/* 			 * On extraction check file inode change time before the 			 * modification of the file name. Non standard option. 			 */
+name|Dflag
+operator|=
+literal|1
+expr_stmt|;
+name|flg
+operator||=
+name|CDF
+expr_stmt|;
+break|break;
+case|case
 literal|'E'
 case|:
 comment|/* 			 * non-standard limit on read faults 			 * 0 indicates stop after first error, values 			 * indicate a limit, "NONE" try forever 			 */
@@ -1321,9 +1334,22 @@ name|CXF
 expr_stmt|;
 break|break;
 case|case
+literal|'Y'
+case|:
+comment|/* 			 * On extraction check file inode change time after the 			 * modification of the file name. Non standard option. 			 */
+name|Yflag
+operator|=
+literal|1
+expr_stmt|;
+name|flg
+operator||=
+name|CYF
+expr_stmt|;
+break|break;
+case|case
 literal|'Z'
 case|:
-comment|/* 			 * On extraction check file time after the modification 			 * of the file name. Non standard option. 			 */
+comment|/* 			 * On extraction check modification time after the 			 * modification of the file name. Non standard option. 			 */
 name|Zflag
 operator|=
 literal|1
