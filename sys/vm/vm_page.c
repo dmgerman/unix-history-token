@@ -130,14 +130,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
-name|vm_page_buckets_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
 name|vm_page
 modifier|*
 modifier|*
@@ -640,18 +632,6 @@ argument_list|,
 name|end
 operator|-
 name|new_end
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|vm_page_buckets_mtx
-argument_list|,
-literal|"vm page buckets mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|vm_page_buckets
