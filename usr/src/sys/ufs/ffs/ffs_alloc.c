@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_alloc.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_alloc.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1674,11 +1674,6 @@ argument_list|,
 name|ipp
 argument_list|)
 expr_stmt|;
-name|ip
-operator|=
-operator|*
-name|ipp
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1699,6 +1694,11 @@ name|error
 operator|)
 return|;
 block|}
+name|ip
+operator|=
+operator|*
+name|ipp
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -1759,6 +1759,31 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * Set up a new generation number for this inode. 	 */
+if|if
+condition|(
+operator|++
+name|nextgennumber
+operator|<
+operator|(
+name|u_long
+operator|)
+name|time
+operator|.
+name|tv_sec
+condition|)
+name|nextgennumber
+operator|=
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
+name|ip
+operator|->
+name|i_gen
+operator|=
+name|nextgennumber
+expr_stmt|;
 return|return
 operator|(
 literal|0
