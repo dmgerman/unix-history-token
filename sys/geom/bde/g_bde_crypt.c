@@ -613,7 +613,7 @@ operator|&
 name|ki
 argument_list|,
 sizeof|sizeof
-name|ci
+name|ki
 argument_list|)
 expr_stmt|;
 block|}
