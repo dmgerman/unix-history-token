@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.17 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,12 +576,6 @@ name|fso
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|time_t
-name|utime
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|daddr_t
 name|alloc
@@ -673,6 +667,9 @@ name|int
 name|ppid
 decl_stmt|,
 name|status
+decl_stmt|;
+name|time_t
+name|utime
 decl_stmt|;
 name|void
 name|started
@@ -3725,6 +3722,8 @@ block|{
 name|initcg
 argument_list|(
 name|cylno
+argument_list|,
+name|utime
 argument_list|)
 expr_stmt|;
 if|if
@@ -3789,7 +3788,9 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Now construct the initial file system, 	 * then write out the super-block. 	 */
 name|fsinit
-argument_list|()
+argument_list|(
+name|utime
+argument_list|)
 expr_stmt|;
 name|sblock
 operator|.
@@ -4018,12 +4019,20 @@ begin_macro
 name|initcg
 argument_list|(
 argument|cylno
+argument_list|,
+argument|utime
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|cylno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|utime
 decl_stmt|;
 end_decl_stmt
 
@@ -5144,8 +5153,16 @@ end_decl_stmt
 
 begin_macro
 name|fsinit
-argument_list|()
+argument_list|(
+argument|utime
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|time_t
+name|utime
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
