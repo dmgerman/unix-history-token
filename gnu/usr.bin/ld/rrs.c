@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rrs.c,v 1.3 1993/11/17 01:33:24 ache Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rrs.c,v 1.4 1993/11/22 19:04:44 jkh Exp $  */
 end_comment
 
 begin_include
@@ -495,8 +495,15 @@ begin_function
 name|void
 name|alloc_rrs_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|sp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|symbol
 modifier|*
 name|sp
@@ -507,11 +514,16 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"alloc_rrs_reloc: %s\n"
+literal|"alloc_rrs_reloc: %s in %s\n"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -526,8 +538,15 @@ begin_function
 name|void
 name|alloc_rrs_segment_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|r
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -539,11 +558,16 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"alloc_rrs_segment_reloc at %#x\n"
+literal|"alloc_rrs_segment_reloc at %#x in %s\n"
 argument_list|,
 name|r
 operator|->
 name|r_address
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -558,8 +582,15 @@ begin_function
 name|void
 name|alloc_rrs_jmpslot
 parameter_list|(
+name|entry
+parameter_list|,
 name|sp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|symbol
 modifier|*
 name|sp
@@ -615,10 +646,17 @@ begin_function
 name|void
 name|alloc_rrs_gotslot
 parameter_list|(
+name|entry
+parameter_list|,
 name|r
 parameter_list|,
 name|lsp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -653,11 +691,24 @@ name|sp
 operator|!=
 name|NULL
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
-literal|"internal error: lsp->symbol not NULL"
+literal|"%s: relocation for internal symbol expected at %#x"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|RELOC_ADDRESS
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -714,17 +765,32 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|sp
-operator|->
-name|gotslot_offset
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
+name|error
+argument_list|(
+literal|"%s: relocation must refer to global symbol at %#x"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|RELOC_ADDRESS
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|sp
@@ -737,6 +803,16 @@ name|sp
 operator|->
 name|alias
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|gotslot_offset
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return;
 comment|/* 		 * External symbols always get a relocation entry 		 */
 name|sp
 operator|->
@@ -765,8 +841,15 @@ begin_function
 name|void
 name|alloc_rrs_cpy_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|sp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|symbol
 modifier|*
 name|sp
@@ -784,11 +867,16 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"alloc_rrs_copy: %s\n"
+literal|"alloc_rrs_copy: %s in %s\n"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -852,12 +940,19 @@ begin_function
 name|int
 name|claim_rrs_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|rp
 parameter_list|,
 name|sp
 parameter_list|,
 name|relocation
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -892,7 +987,12 @@ name|text_size
 condition|)
 name|error
 argument_list|(
-literal|"RRS text relocation at %#x (symbol %s)"
+literal|"%s: RRS text relocation at %#x for \"%s\""
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|rp
 operator|->
@@ -908,11 +1008,16 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrs_reloc: %s\n"
+literal|"claim_rrs_reloc: %s in %s\n"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -949,11 +1054,16 @@ name|defined
 condition|)
 name|error
 argument_list|(
-literal|"Cannot reduce symbol %s"
+literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|RELOC_EXTERN_P
@@ -1017,12 +1127,19 @@ begin_function
 name|long
 name|claim_rrs_jmpslot
 parameter_list|(
+name|entry
+parameter_list|,
 name|rp
 parameter_list|,
 name|sp
 parameter_list|,
 name|addend
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -1061,7 +1178,12 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrs_jmpslot: %s(%d) -> offset %x (textreloc %#x)\n"
+literal|"claim_rrs_jmpslot: %s: %s(%d) -> offset %x (textreloc %#x)\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -1091,7 +1213,12 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: claim_rrs_jmpslot: %s: jmpslot_offset == -1\n"
+literal|"internal error: %s: claim_rrs_jmpslot: %s: jmpslot_offset == -1\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -1120,11 +1247,16 @@ name|defined
 condition|)
 name|error
 argument_list|(
-literal|"Cannot reduce symbol %s"
+literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|md_fix_jmpslot
@@ -1308,12 +1440,19 @@ begin_function
 name|long
 name|claim_rrs_gotslot
 parameter_list|(
+name|entry
+parameter_list|,
 name|rp
 parameter_list|,
 name|lsp
 parameter_list|,
 name|addend
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -1346,6 +1485,17 @@ name|reloc_type
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|sp
@@ -1393,7 +1543,12 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: claim_rrs_gotslot: %s: gotslot_offset == -1\n"
+literal|"internal error: %s: claim_rrs_gotslot: %s: gotslot_offset == -1\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -1479,11 +1634,16 @@ block|{
 comment|/* 		 * SYMBOLIC: all symbols must be known. 		 * RRS_PARTIAL: we don't link against shared objects, 		 * so again all symbols must be known. 		 */
 name|error
 argument_list|(
-literal|"Cannot reduce symbol %s"
+literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1526,11 +1686,16 @@ name|defined
 condition|)
 name|error
 argument_list|(
-literal|"Cannot reduce symbol %s"
+literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1669,7 +1834,12 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrsinternal__gotslot: slot offset %#x, addend = %#x\n"
+literal|"claim_rrs_internal_gotslot: %s: slot offset %#x, addend = %#x\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|lsp
 operator|->
@@ -1691,7 +1861,17 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: claim_rrs_internal_gotslot: slot_offset == -1\n"
+literal|"internal error: %s: claim_rrs_internal_gotslot at %#x: slot_offset == -1\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|RELOC_ADDRESS
+argument_list|(
+name|rp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1790,10 +1970,17 @@ begin_function
 name|void
 name|claim_rrs_cpy_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|rp
 parameter_list|,
 name|sp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -1825,7 +2012,12 @@ name|cpyreloc_reserved
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: claim_cpy_reloc: %s: no reservation\n"
+literal|"internal error: %s: claim_cpy_reloc: %s: no reservation\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -1837,7 +2029,12 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrs_copy: %s -> %x\n"
+literal|"claim_rrs_copy: %s: %s -> %x\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -1902,8 +2099,15 @@ begin_function
 name|void
 name|claim_rrs_segment_reloc
 parameter_list|(
+name|entry
+parameter_list|,
 name|rp
 parameter_list|)
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|struct
 name|relocation_info
 modifier|*
@@ -1923,7 +2127,12 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrs_segment_reloc: %x\n"
+literal|"claim_rrs_segment_reloc: %s at %#x\n"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|rp
 operator|->
@@ -3921,13 +4130,15 @@ name|local_sym_name
 decl_stmt|;
 if|if
 condition|(
-name|shp
-operator|==
-name|NULL
+name|i
+operator|>=
+name|number_of_shobjs
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: shp == NULL"
+literal|"internal error: # of link objects exceeds %d"
+argument_list|,
+name|number_of_shobjs
 argument_list|)
 expr_stmt|;
 name|lo
@@ -4053,13 +4264,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|shp
-operator|!=
-name|NULL
+name|i
+operator|<
+name|number_of_shobjs
 condition|)
 name|fatal
 argument_list|(
-literal|"internal error: shp != NULL"
+literal|"internal error: # of link objects less then expected %d"
+argument_list|,
+name|number_of_shobjs
 argument_list|)
 expr_stmt|;
 name|md_swapout_link_object

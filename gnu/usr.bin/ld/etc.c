@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: etc.c,v 1.2 1993/10/21 00:52:52 pk Exp $  */
+comment|/*  * $Id: etc.c,v 1.2 1993/11/09 04:18:52 paul Exp $  */
 end_comment
 
 begin_include
@@ -318,7 +318,7 @@ expr_stmt|;
 if|if
 condition|(
 name|outdesc
-operator|>=
+operator|>
 literal|0
 condition|)
 name|unlink

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md.c,v 1.2 1993/11/09 04:19:33 paul Exp $  */
+comment|/*  * $Id: md.c,v 1.3 1993/11/22 19:05:30 jkh Exp $  */
 end_comment
 
 begin_include
@@ -1120,7 +1120,7 @@ operator|*
 operator|)
 name|where
 operator|=
-name|BPT
+name|TRAP
 expr_stmt|;
 block|}
 end_function

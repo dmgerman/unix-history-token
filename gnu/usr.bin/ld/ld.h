@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.3 1993/11/18 20:52:34 jkh Exp $	*/
+comment|/*	$Id: ld.h,v 1.5 1993/11/10 21:53:42 pk Exp $	*/
 end_comment
 
 begin_comment
@@ -1065,6 +1065,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Count number of nlist entries for global symbols */
+end_comment
+
+begin_decl_stmt
+name|int
+name|global_sym_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Count number of N_SIZE nlist entries for output (relocatable_output only) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|size_sym_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Count the number of nlist entries that are for local symbols.    This count and the three following counts    are incremented as as symbols are entered in the symbol table.  */
 end_comment
 
@@ -1332,10 +1352,13 @@ name|struct
 name|exec
 name|header
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Offset in file of GDB symbol segment, or 0 if there is none.  */
-name|int
-name|symseg_offset
-decl_stmt|;
+block|int             symseg_offset;
+endif|#
+directive|endif
 comment|/* Describe data from the file loaded into core */
 comment|/* 	 * Symbol table of the file. 	 * We need access to the global symbol early, ie. before 	 * symbols are asssigned there final values. gotslot_offset is 	 * here because GOT entries may be generated for local symbols. 	 */
 struct|struct
@@ -1360,6 +1383,12 @@ name|gotslot_offset
 decl_stmt|;
 name|char
 name|gotslot_claimed
+decl_stmt|;
+name|char
+name|write
+decl_stmt|;
+name|char
+name|is_L_symbol
 decl_stmt|;
 name|char
 name|rename
@@ -1421,10 +1450,13 @@ comment|/* Start of this file's bss seg in the output file core image.  */
 name|int
 name|bss_start_address
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 	 * Offset in bytes in the output file symbol table of the first local 	 * symbol for this file. Set by `write_file_symbols'. 	 */
-name|int
-name|local_syms_offset
-decl_stmt|;
+block|int             local_syms_offset;
+endif|#
+directive|endif
 comment|/* For library members only */
 comment|/* For a library, points to chain of entries for the library members. */
 name|struct
@@ -1452,6 +1484,17 @@ name|file_entry
 modifier|*
 name|chain
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SUN_COMPAT
+comment|/* For shared libraries which have a .sa companion */
+name|struct
+name|file_entry
+modifier|*
+name|silly_archive
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 1 if file is a library. */
 name|char
 name|library_flag
@@ -1566,6 +1609,17 @@ end_define
 
 begin_comment
 comment|/* Build a shared object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SILLYARCHIVE
+value|16
+end_define
+
+begin_comment
+comment|/* Process .sa companions, if any */
 end_comment
 
 begin_decl_stmt
@@ -2433,6 +2487,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2500,6 +2556,10 @@ name|alloc_rrs_reloc
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
 name|symbol
 operator|*
 operator|)
@@ -2514,6 +2574,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
 name|relocation_info
 operator|*
 operator|)
@@ -2527,6 +2591,10 @@ name|alloc_rrs_jmpslot
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
 name|symbol
 operator|*
 operator|)
@@ -2541,6 +2609,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
 name|relocation_info
 operator|*
 operator|,
@@ -2553,11 +2625,149 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|alloc_rrs_copy_reloc
+name|alloc_rrs_cpy_reloc
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
 name|symbol
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|claim_rrs_reloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
+operator|*
+operator|,
+name|symbol
+operator|*
+operator|,
+name|long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|claim_rrs_jmpslot
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
+operator|*
+operator|,
+name|symbol
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|claim_rrs_gotslot
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
+operator|*
+operator|,
+expr|struct
+name|localsymbol
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|claim_rrs_internal_gotslot
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
+operator|*
+operator|,
+expr|struct
+name|localsymbol
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|claim_rrs_cpy_reloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
+operator|*
+operator|,
+name|symbol
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|claim_rrs_segment_reloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|,
+expr|struct
+name|relocation_info
 operator|*
 operator|)
 argument_list|)
