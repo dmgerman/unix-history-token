@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -445,6 +445,12 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|cc
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -456,10 +462,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|s
-decl_stmt|;
-specifier|register
+decl_stmt|,
 name|nc
-expr_stmt|;
+decl_stmt|;
 name|char
 modifier|*
 name|acp
@@ -780,12 +785,18 @@ name|q
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
-name|cc
-expr_stmt|;
 name|int
+name|cc
+decl_stmt|,
 name|s
 decl_stmt|;
 name|s
@@ -951,11 +962,12 @@ name|q
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|register
+name|int
 name|cc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1228,20 +1240,29 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|putc
 argument_list|(
-name|c
+argument|c
 argument_list|,
-name|p
+argument|p
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
-expr|struct
+name|struct
 name|clist
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1257,8 +1278,9 @@ modifier|*
 name|cp
 decl_stmt|;
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1512,10 +1534,11 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
+name|int
 name|s
-operator|,
+decl_stmt|,
 name|nc
-expr_stmt|;
+decl_stmt|;
 name|int
 name|acc
 decl_stmt|;
@@ -2196,10 +2219,11 @@ decl_stmt|;
 endif|#
 directive|endif
 specifier|register
+name|int
 name|s
-operator|,
+decl_stmt|,
 name|c
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -2704,8 +2728,9 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|struct
 name|cblock
