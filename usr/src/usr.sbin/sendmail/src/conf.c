@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.139 (Berkeley) %G%"
+literal|"@(#)conf.c	8.140 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1213,16 +1213,29 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 ifdef|#
 directive|ifdef
 name|USERDB
 comment|/* user database */
-block|MAPDEF("udb", ".db", 0, 		udb_map_parse, null_map_open, null_map_close, 		udb_map_lookup, null_map_store);
-endif|#
-directive|endif
+name|MAPDEF
+argument_list|(
+literal|"userdb"
+argument_list|,
+literal|".db"
+argument_list|,
+literal|0
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|udb_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* sequenced maps */
