@@ -6384,6 +6384,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|reg54
+operator||=
+literal|0x0400
+expr_stmt|;
 if|if
 condition|(
 name|mode
