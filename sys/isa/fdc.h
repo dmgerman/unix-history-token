@@ -172,6 +172,9 @@ name|device
 modifier|*
 name|fdc_dev
 decl_stmt|;
+name|int
+name|fdc_ispnp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -246,6 +249,49 @@ name|s
 parameter_list|)
 value|((s)&077)
 end_define
+
+begin_comment
+comment|/*  * fdc maintains a set (1!) of ivars per child of each controller.  */
+end_comment
+
+begin_enum
+enum|enum
+name|fdc_device_ivars
+block|{
+name|FDC_IVAR_FDUNIT
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Simple access macros for the ivars.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDC_ACCESSOR
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|static __inline T fdc_get_ ## A(device_t dev)				\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev, FDC_IVAR_ ## B,&v);	\ 	return (T) v;							\ }
+end_define
+
+begin_macro
+name|FDC_ACCESSOR
+argument_list|(
+argument|fdunit
+argument_list|,
+argument|FDUNIT
+argument_list|,
+argument|int
+argument_list|)
+end_macro
 
 end_unit
 
