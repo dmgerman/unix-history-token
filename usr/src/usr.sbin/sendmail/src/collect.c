@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.17 (Berkeley) %G%"
+literal|"@(#)collect.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1433,6 +1433,98 @@ argument_list|(
 literal|"552 Message exceeds maximum fixed size (%ld)"
 argument_list|,
 name|MaxMessageSize
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* check for illegal 8-bit data */
+if|if
+condition|(
+name|HasEightBits
+condition|)
+block|{
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_HAS8BIT
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MM_MIME8BIT
+argument_list|,
+name|MimeMode
+argument_list|)
+condition|)
+block|{
+comment|/* convert it to MIME */
+if|if
+condition|(
+name|hvalue
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|char
+name|mimebuf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|mimebuf
+argument_list|,
+literal|"MIME-Version: 1.0"
+argument_list|)
+expr_stmt|;
+name|chompheader
+argument_list|(
+name|mimebuf
+argument_list|,
+name|FALSE
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|e_bodytype
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_bodytype
+operator|=
+literal|"8BITMIME"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MM_PASS8BIT
+argument_list|,
+name|MimeMode
+argument_list|)
+condition|)
+name|usrerr
+argument_list|(
+literal|"554 Eight bit data not allowed"
 argument_list|)
 expr_stmt|;
 block|}

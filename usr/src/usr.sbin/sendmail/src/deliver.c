@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.88 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.89 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3463,6 +3463,49 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* check for 8-bit available */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+name|bitnset
+argument_list|(
+name|M_7BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MM_MIME8BIT
+argument_list|,
+name|MimeMode
+argument_list|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"554 Cannot send 8-bit data to 7-bit destination"
+argument_list|)
+expr_stmt|;
+name|rcode
+operator|=
+name|EX_DATAERR
+expr_stmt|;
+goto|goto
+name|give_up
+goto|;
+block|}
 comment|/* check for Local Person Communication -- not for mortals!!! */
 if|if
 condition|(
@@ -5353,6 +5396,32 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+name|bitnset
+argument_list|(
+name|M_7BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_CVT8TO7
+expr_stmt|;
 comment|/* 	**  If we are in SMTP opening state, send initial protocol. 	*/
 if|if
 condition|(
@@ -5509,13 +5578,6 @@ operator|->
 name|e_header
 argument_list|,
 name|e
-argument_list|)
-expr_stmt|;
-name|putline
-argument_list|(
-literal|"\n"
-argument_list|,
-name|mci
 argument_list|)
 expr_stmt|;
 call|(
@@ -9204,14 +9266,6 @@ operator|->
 name|e_header
 argument_list|,
 name|e
-argument_list|)
-expr_stmt|;
-name|putline
-argument_list|(
-literal|"\n"
-argument_list|,
-operator|&
-name|mcibuf
 argument_list|)
 expr_stmt|;
 call|(

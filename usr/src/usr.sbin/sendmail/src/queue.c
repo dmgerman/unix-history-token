@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.42 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.43 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.42 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.43 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -877,6 +877,26 @@ name|p
 operator|++
 operator|=
 literal|'r'
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'8'
 expr_stmt|;
 end_if
 
@@ -4752,6 +4772,17 @@ operator|->
 name|e_flags
 operator||=
 name|EF_RESPONSE
+expr_stmt|;
+break|break;
+case|case
+literal|'8'
+case|:
+comment|/* has 8 bit data */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_HAS8BIT
 expr_stmt|;
 break|break;
 block|}

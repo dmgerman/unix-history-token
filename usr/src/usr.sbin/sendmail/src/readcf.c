@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.26 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3974,16 +3974,16 @@ block|{
 case|case
 literal|'r'
 case|:
-comment|/* reject all 8-bit */
+comment|/* reject 8-bit, don't convert MIME */
 name|MimeMode
 operator|=
 literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|'m'
 case|:
-comment|/* convert all 8-bit */
+comment|/* convert 8-bit, convert MIME */
 name|MimeMode
 operator|=
 name|MM_CVTMIME
@@ -3992,9 +3992,9 @@ name|MM_MIME8BIT
 expr_stmt|;
 break|break;
 case|case
-literal|'m'
+literal|'j'
 case|:
-comment|/* minimal encoding */
+comment|/* "just send 8" */
 name|MimeMode
 operator|=
 name|MM_PASS8BIT
@@ -4021,7 +4021,7 @@ name|MM_CVTMIME
 expr_stmt|;
 break|break;
 case|case
-literal|'e'
+literal|'a'
 case|:
 comment|/* encode 8 bit if available */
 name|MimeMode
@@ -4031,6 +4031,15 @@ operator||
 name|MM_PASS8BIT
 operator||
 name|MM_CVTMIME
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* convert 8 bit to MIME, never 7 bit */
+name|MimeMode
+operator|=
+name|MM_MIME8BIT
 expr_stmt|;
 break|break;
 default|default:

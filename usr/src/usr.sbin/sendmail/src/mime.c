@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.1 (Berkeley) %G%"
+literal|"@(#)mime.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,17 @@ end_define
 
 begin_comment
 comment|/* final boundary (trailing -- included) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|MimeBoundaryType
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* internal linkage */
 end_comment
 
 begin_escape
@@ -651,6 +662,9 @@ name|p
 operator|++
 control|)
 block|{
+comment|/* count bytes with the high bit set */
+comment|/* XXX should this count any character that will */
+comment|/* XXX have to be encoded in quoted-printable? */
 name|sectionsize
 operator|++
 expr_stmt|;
@@ -668,6 +682,20 @@ name|sectionhighbits
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		**  Heuristic: if 1/4 of the first 4K bytes are 8-bit, 		**  assume base64.  This heuristic avoids double-reading 		**  large graphics or video files. 		*/
+if|if
+condition|(
+name|sectionsize
+operator|>=
+literal|4096
+operator|&&
+name|sectionhighbits
+operator|>
+name|sectionsize
+operator|/
+literal|4
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -683,6 +711,7 @@ operator|=
 name|MBT_FINAL
 expr_stmt|;
 comment|/* return to the original offset for processing */
+comment|/* XXX use relative seeks to handle>31 bit file sizes? */
 if|if
 condition|(
 name|fseek
@@ -707,7 +736,7 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
-comment|/* heuristically determine encoding method */
+comment|/* 	**  Heuristically determine encoding method. 	**	If more than 1/8 of the total characters have the 	**	eighth bit set, use base64; else use quoted-printable. 	*/
 if|if
 condition|(
 name|tTd
@@ -1165,11 +1194,11 @@ operator|!=
 literal|'\t'
 operator|)
 operator|||
-name|c2
+name|c1
 operator|>=
-literal|0xff
+literal|0x7f
 operator|||
-name|c2
+name|c1
 operator|==
 literal|'='
 condition|)
@@ -1261,7 +1290,7 @@ name|mci_out
 argument_list|)
 expr_stmt|;
 return|return
-name|bt
+name|MimeBoundaryType
 return|;
 block|}
 end_function
@@ -1444,14 +1473,18 @@ name|bp
 operator|=
 literal|'\0'
 expr_stmt|;
-switch|switch
-condition|(
+name|MimeBoundaryType
+operator|=
 name|mimeboundary
 argument_list|(
 name|buf
 argument_list|,
 name|boundary
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|MimeBoundaryType
 condition|)
 block|{
 case|case
