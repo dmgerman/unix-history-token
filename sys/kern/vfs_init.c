@@ -546,18 +546,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|opv_desc_vector_p
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"no memory for vop_t ** vector"
-argument_list|)
-expr_stmt|;
 comment|/* Fill in, with slot 0 being to return EOPNOTSUPP */
 name|opv_desc_vector
 operator|=
@@ -771,17 +759,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|newopv
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_add_vnodeops: no memory"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|vnodeopv_descs
 condition|)
 block|{
@@ -923,17 +900,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newop
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_add_vnodeops: no memory for desc"
-argument_list|)
-expr_stmt|;
 comment|/* new reference count (for unload) */
 name|MALLOC
 argument_list|(
@@ -957,17 +923,6 @@ argument_list|,
 name|M_VNODE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newref
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_add_vnodeops: no memory for refs"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1291,17 +1246,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newop
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_remove_vnodeops: no memory for desc"
-argument_list|)
-expr_stmt|;
 comment|/* new reference count (for unload) */
 name|MALLOC
 argument_list|(
@@ -1325,17 +1269,6 @@ argument_list|,
 name|M_VNODE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newref
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_remove_vnodeops: no memory for refs"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1560,17 +1493,6 @@ argument_list|,
 name|M_VNODE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newopv
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"vfs_remove_vnodeops: no memory"
 argument_list|)
 expr_stmt|;
 name|bcopy
