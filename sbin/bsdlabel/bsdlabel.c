@@ -1686,8 +1686,18 @@ block|{
 name|grq
 operator|=
 name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
 argument_list|(
-name|GCTL_CONFIG_GEOM
+name|grq
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"write label"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -1712,18 +1722,6 @@ operator|-
 literal|1
 argument_list|,
 name|dkname
-argument_list|)
-expr_stmt|;
-name|gctl_ro_param
-argument_list|(
-name|grq
-argument_list|,
-literal|"verb"
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"write label"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -1788,8 +1786,18 @@ block|{
 name|grq
 operator|=
 name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
 argument_list|(
-name|GCTL_CONFIG_GEOM
+name|grq
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"write bootcode"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -1814,18 +1822,6 @@ operator|-
 literal|1
 argument_list|,
 name|dkname
-argument_list|)
-expr_stmt|;
-name|gctl_ro_param
-argument_list|(
-name|grq
-argument_list|,
-literal|"verb"
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"write bootcode"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -2053,8 +2049,18 @@ expr_stmt|;
 name|grq
 operator|=
 name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
 argument_list|(
-name|GCTL_CONFIG_GEOM
+name|grq
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"read mbroffset"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -2079,18 +2085,6 @@ operator|-
 literal|1
 argument_list|,
 name|dkname
-argument_list|)
-expr_stmt|;
-name|gctl_ro_param
-argument_list|(
-name|grq
-argument_list|,
-literal|"verb"
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"read mbroffset"
 argument_list|)
 expr_stmt|;
 name|gctl_rw_param

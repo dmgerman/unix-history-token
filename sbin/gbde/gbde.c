@@ -882,8 +882,18 @@ decl_stmt|;
 name|r
 operator|=
 name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
 argument_list|(
-name|GCTL_CREATE_GEOM
+name|r
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"create geom"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
@@ -1045,8 +1055,18 @@ decl_stmt|;
 name|r
 operator|=
 name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
 argument_list|(
-name|GCTL_DESTROY_GEOM
+name|r
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"destroy geom"
 argument_list|)
 expr_stmt|;
 name|gctl_ro_param
