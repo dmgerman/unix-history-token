@@ -9269,6 +9269,12 @@ operator|)
 return|;
 name|fdc
 operator|->
+name|fdu
+operator|=
+name|ftu
+expr_stmt|;
+name|fdc
+operator|->
 name|flags
 operator||=
 name|FDC_TAPE_BUSY
