@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	6.8	85/03/19	*/
+comment|/*	route.c	6.9	85/05/27	*/
 end_comment
 
 begin_include
@@ -724,11 +724,6 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Changing from route to net => route to host. 			 * Create new route, rather than smashing route to net. 			 */
-name|rtfree
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|rtinit
 argument_list|(
 name|dst
@@ -749,11 +744,6 @@ operator|=
 operator|*
 name|gateway
 expr_stmt|;
-name|rtfree
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 block|}
 name|rtstat
 operator|.
@@ -761,6 +751,11 @@ name|rts_newgateway
 operator|++
 expr_stmt|;
 block|}
+name|rtfree
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
