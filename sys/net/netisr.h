@@ -48,17 +48,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_NS
-value|6
-end_define
-
-begin_comment
-comment|/* same as AF_NS */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_AARP
 value|15
 end_define

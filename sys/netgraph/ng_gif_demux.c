@@ -194,12 +194,6 @@ name|AF_NATM
 block|,
 name|NG_GIF_DEMUX_HOOK_NATM
 block|}
-block|,
-block|{
-name|AF_NS
-block|,
-name|NG_GIF_DEMUX_HOOK_NS
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

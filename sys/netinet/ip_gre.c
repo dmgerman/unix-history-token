@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ns.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_atalk.h"
 end_include
 
@@ -187,29 +181,6 @@ error|#
 directive|error
 error|ip_gre input without IP?
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netns/ns.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netns/ns_if.h>
-end_include
 
 begin_endif
 endif|#
@@ -617,19 +588,6 @@ operator|=
 name|NETISR_IP
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|NS
-case|case
-name|ETHERTYPE_NS
-case|:
-name|isr
-operator|=
-name|NETISR_NS
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|NETATALK

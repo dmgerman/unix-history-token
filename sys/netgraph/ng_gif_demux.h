@@ -86,13 +86,6 @@ name|NG_GIF_DEMUX_HOOK_NATM
 value|"natm"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_GIF_DEMUX_HOOK_NS
-value|"ns"
-end_define
-
 begin_endif
 endif|#
 directive|endif

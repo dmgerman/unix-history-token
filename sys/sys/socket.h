@@ -782,12 +782,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_NS
+name|AF_NETBIOS
 value|6
 end_define
 
 begin_comment
-comment|/* XEROX NS protocols */
+comment|/* SMB protocols */
 end_comment
 
 begin_define
@@ -1342,8 +1342,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_NS
-value|AF_NS
+name|PF_NETBIOS
+value|AF_NETBIOS
 end_define
 
 begin_define
@@ -1475,10 +1475,6 @@ directive|define
 name|PF_IPX
 value|AF_IPX
 end_define
-
-begin_comment
-comment|/* same format as AF_NS */
-end_comment
 
 begin_define
 define|#

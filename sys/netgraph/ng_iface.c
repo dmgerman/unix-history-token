@@ -254,12 +254,6 @@ name|AF_NATM
 block|,
 name|NG_IFACE_HOOK_NATM
 block|}
-block|,
-block|{
-name|AF_NS
-block|,
-name|NG_IFACE_HOOK_NS
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3165,19 +3159,6 @@ case|:
 name|isr
 operator|=
 name|NETISR_IPX
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|NS
-case|case
-name|AF_NS
-case|:
-name|isr
-operator|=
-name|NETISR_NS
 expr_stmt|;
 break|break;
 endif|#

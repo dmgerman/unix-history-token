@@ -101,13 +101,6 @@ name|NG_IFACE_HOOK_NATM
 value|"natm"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_IFACE_HOOK_NS
-value|"ns"
-end_define
-
 begin_comment
 comment|/* MTU bounds */
 end_comment

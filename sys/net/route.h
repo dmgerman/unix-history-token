@@ -1189,9 +1189,6 @@ name|int
 name|ipx_count
 decl_stmt|;
 name|int
-name|ns_count
-decl_stmt|;
-name|int
 name|any_count
 decl_stmt|;
 block|}

@@ -56,24 +56,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|AF_NETBIOS
-value|AF_NS
-end_define
-
-begin_comment
-comment|/* XXX: should go to socket.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_NETBIOS
-value|AF_NETBIOS
-end_define
-
-begin_define
-define|#
-directive|define
 name|NBPROTO_TCPSSN
 value|1
 end_define
