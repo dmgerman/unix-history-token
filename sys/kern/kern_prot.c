@@ -5445,6 +5445,23 @@ operator|->
 name|cr_mtx
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cr
+operator|->
+name|cr_ref
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"bad ucred refcount: %d"
+operator|,
+name|cr
+operator|->
+name|cr_ref
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--
