@@ -386,12 +386,7 @@ argument_list|)
 condition|)
 name|vsystem
 argument_list|(
-literal|"ldconfig /usr/lib /usr/local/lib /usr/X11R6/lib"
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"/sbin/ldconfig -aout /usr/lib/compat/aout /usr/lib/aout /usr/X11R6/lib/aout /usr/local/lib/aout"
+literal|"ldconfig /usr/lib /usr/lib/compat /usr/local/lib /usr/X11R6/lib"
 argument_list|)
 expr_stmt|;
 comment|/* Be initially optimistic */

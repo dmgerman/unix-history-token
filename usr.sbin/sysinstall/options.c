@@ -869,7 +869,7 @@ init|=
 name|savescr
 argument_list|()
 decl_stmt|;
-name|dialog_clear_norefresh
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|clear

@@ -2864,11 +2864,6 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"/sbin/ldconfig -aout /usr/lib/compat/aout /usr/lib/aout /usr/X11R6/lib/aout /usr/local/lib/aout"
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
 literal|"/sbin/ifconfig lo0 127.0.0.1"
 argument_list|)
 expr_stmt|;
