@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ parameter_list|(
 name|np
 parameter_list|)
 define|\
-value|((((np)->n_flag& NMODIFIED) || \ 	 5 * (time.tv_sec - (np)->n_mtime)< NFS_MINATTRTIMO) ? NFS_MINATTRTIMO : \ 	 (5 * (time.tv_sec - (np)->n_mtime)> NFS_MAXATTRTIMO ? NFS_MAXATTRTIMO : \ 	  5 * (time.tv_sec - (np)->n_mtime)))
+value|((((np)->n_flag& NMODIFIED) || \ 	 (time.tv_sec - (np)->n_mtime) / 10< NFS_MINATTRTIMO) ? NFS_MINATTRTIMO : \ 	 ((time.tv_sec - (np)->n_mtime) / 10> NFS_MAXATTRTIMO ? NFS_MAXATTRTIMO : \ 	  (time.tv_sec - (np)->n_mtime) / 10))
 end_define
 
 begin_comment
