@@ -3506,7 +3506,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|m
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
