@@ -438,8 +438,6 @@ specifier|register
 name|char
 name|ch
 decl_stmt|,
-name|first
-decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
