@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.17 (Berkeley) %G%"
+literal|"@(#)parse.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4631,7 +4631,9 @@ operator|(
 name|void
 operator|)
 name|ParseEOF
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4645,7 +4647,12 @@ begin_function
 specifier|static
 name|int
 name|ParseEOF
-parameter_list|()
+parameter_list|(
+name|opened
+parameter_list|)
+name|int
+name|opened
+decl_stmt|;
 block|{
 name|IFile
 modifier|*
@@ -4694,6 +4701,13 @@ name|ifile
 operator|->
 name|lineno
 expr_stmt|;
+if|if
+condition|(
+name|opened
+condition|)
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|curFILE
@@ -5990,7 +6004,9 @@ block|}
 do|while
 condition|(
 name|ParseEOF
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 operator|==
 name|CONTINUE
 condition|)
