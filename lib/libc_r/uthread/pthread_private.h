@@ -4808,22 +4808,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sys_sigaltstack
-parameter_list|(
-specifier|const
-name|struct
-name|sigaltstack
-modifier|*
-parameter_list|,
-name|struct
-name|sigaltstack
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|__sys_sigprocmask
 parameter_list|(
 name|int
