@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.1 (Berkeley) %G%"
+literal|"@(#)tty.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,9 +123,9 @@ operator|=
 operator|(
 name|origtermio
 operator|.
-name|c_iflag
+name|c_oflag
 operator|&
-name|ICRNL
+name|ONLCR
 operator|)
 operator|==
 literal|0
@@ -470,6 +470,18 @@ name|c_oflag
 operator||=
 name|ONLCR
 expr_stmt|;
+name|norawt
+operator|.
+name|c_iflag
+operator||=
+name|ICRNL
+expr_stmt|;
+name|norawt
+operator|.
+name|c_oflag
+operator||=
+name|ONLCR
+expr_stmt|;
 name|__pfast
 operator|=
 name|__rawmode
@@ -521,6 +533,20 @@ operator|~
 name|ICRNL
 expr_stmt|;
 name|rawt
+operator|.
+name|c_oflag
+operator|&=
+operator|~
+name|ONLCR
+expr_stmt|;
+name|norawt
+operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|ICRNL
+expr_stmt|;
+name|norawt
 operator|.
 name|c_oflag
 operator|&=
