@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.88 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.89 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2467,6 +2467,10 @@ operator|->
 name|a_waitfor
 operator|==
 name|MNT_WAIT
+condition|?
+name|LFS_SYNC
+else|:
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -2785,7 +2789,7 @@ name|SET_DIROP
 parameter_list|(
 name|fs
 parameter_list|)
-value|{							\ 	int __s;							\ 	__s = splbio();							\ 	if ((fs)->lfs_writer)						\ 		tsleep(&(fs)->lfs_dirops, PRIBIO + 1, "lfs dirop", 0);	\ 	++(fs)->lfs_dirops;						\ 	(fs)->lfs_doifile = 1;						\ 	splx(__s);							\ }
+value|{							\ 	if ((fs)->lfs_writer)						\ 		tsleep(&(fs)->lfs_dirops, PRIBIO + 1, "lfs_dirop", 0);	\ 	++(fs)->lfs_dirops;						\ 	(fs)->lfs_doifile = 1;						\ }
 end_define
 
 begin_define
@@ -2795,7 +2799,7 @@ name|SET_ENDOP
 parameter_list|(
 name|fs
 parameter_list|)
-value|{							\ 	int __s;							\ 	__s = splbio();							\ 	--(fs)->lfs_dirops;						\ 	if (!(fs)->lfs_dirops)						\ 		wakeup(&(fs)->lfs_writer);				\ 	splx(__s);							\ }
+value|{							\ 	--(fs)->lfs_dirops;						\ 	if (!(fs)->lfs_dirops)						\ 		wakeup(&(fs)->lfs_writer);				\ }
 end_define
 
 begin_define
