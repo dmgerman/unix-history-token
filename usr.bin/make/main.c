@@ -3287,16 +3287,6 @@ name|Lst_Destroy
 argument_list|(
 name|create
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
 name|free
 argument_list|)
 expr_stmt|;

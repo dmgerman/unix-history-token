@@ -59,16 +59,9 @@ parameter_list|(
 name|Lst
 name|list
 parameter_list|,
-name|void
-modifier|*
-function_decl|(
+name|DuplicateProc
 modifier|*
 name|copyProc
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|)
 block|{
 name|Lst

@@ -59,15 +59,9 @@ parameter_list|(
 name|Lst
 name|list
 parameter_list|,
-name|void
-function_decl|(
+name|FreeProc
 modifier|*
 name|freeProc
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|)
 block|{
 name|LstNode
