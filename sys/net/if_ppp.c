@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.14 1995/06/11 19:31:41 rgrimes Exp $ */
+comment|/* $Id: if_ppp.c,v 1.19 1995/07/31 21:54:46 bde Exp $ */
 end_comment
 
 begin_comment
@@ -526,7 +526,7 @@ name|pppinput
 block|,
 name|pppstart
 block|,
-name|nullmodem
+name|ttymodem
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1706,17 +1706,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -1797,13 +1787,10 @@ name|ttysleep
 argument_list|(
 name|tp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|TSA_HUP_OR_INPUT
+argument_list|(
 name|tp
-operator|->
-name|t_rawq
+argument_list|)
 argument_list|,
 name|TTIPRI
 operator||
@@ -2001,17 +1988,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -4597,17 +4574,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -4656,19 +4623,9 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 	 * If there is more in the output queue, just send it now. 	 * We are being called in lieu of ttstart and must do what 	 * it would. 	 */
+comment|/* 	 * Call output process whether or not there is any output. 	 * We are being called in lieu of ttstart and must do what 	 * it would. 	 */
 if|if
 condition|(
-name|CCOUNT
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-operator|!=
-literal|0
-operator|&&
 name|tp
 operator|->
 name|t_oproc
@@ -6333,23 +6290,15 @@ name|sc_bytesrcvd
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
+name|TS_CONNECTED
 operator|)
-operator|&&
-operator|!
-operator|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if

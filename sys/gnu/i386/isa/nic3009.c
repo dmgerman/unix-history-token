@@ -5,12 +5,12 @@ name|char
 name|nic39_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3009.c,v 1.5 1995/03/28 07:54:33 bde Exp $"
+literal|"@(#)$Id: nic3009.c,v 1.7 1995/09/08 11:06:47 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.5 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  * Revision 1.5  1995/03/28  07:54:33  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.4  1995/02/16  08:06:21  jkh  * Fix a few bogons introduced when config lost the 3 char limitation.  *  * Revision 1.3  1995/02/15  11:59:41  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.2  1995/02/15  06:28:20  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:14  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.7 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  * Revision 1.7  1995/09/08  11:06:47  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/11  19:25:56  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.5  1995/03/28  07:54:33  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.4  1995/02/16  08:06:21  jkh  * Fix a few bogons introduced when config lost the 3 char limitation.  *  * Revision 1.3  1995/02/15  11:59:41  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.2  1995/02/15  06:28:20  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:14  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2893,7 +2893,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -2976,7 +2984,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -3022,7 +3038,12 @@ name|caddr_t
 name|data
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|pr
 parameter_list|)
 block|{
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.13 1995/05/05 06:15:11 davidg Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.14 1995/05/30 08:03:09 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1935,9 +1935,26 @@ name|int
 name|spkropen
 parameter_list|(
 name|dev
+parameter_list|,
+name|flags
+parameter_list|,
+name|fmt
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|fmt
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 ifdef|#
@@ -2026,6 +2043,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|ioflag
 parameter_list|)
 name|dev_t
 name|dev
@@ -2034,6 +2053,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|ioflag
 decl_stmt|;
 block|{
 ifdef|#
@@ -2145,9 +2167,26 @@ name|int
 name|spkrclose
 parameter_list|(
 name|dev
+parameter_list|,
+name|flags
+parameter_list|,
+name|fmt
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|fmt
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 ifdef|#
@@ -2227,6 +2266,10 @@ parameter_list|,
 name|cmd
 parameter_list|,
 name|cmdarg
+parameter_list|,
+name|flags
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2236,6 +2279,14 @@ name|cmd
 decl_stmt|;
 name|caddr_t
 name|cmdarg
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 ifdef|#

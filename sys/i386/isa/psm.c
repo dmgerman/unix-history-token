@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -626,6 +620,9 @@ name|dvp
 operator|->
 name|id_unit
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PSM_NO_RESET
 name|psm_write_dev
 argument_list|(
 name|ioport
@@ -637,6 +634,8 @@ comment|/* Reset aux device */
 name|psm_poll_status
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|ioport
@@ -1540,11 +1539,11 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
 name|int
 name|cmd
+parameter_list|,
+name|caddr_t
+name|addr
 parameter_list|,
 name|int
 name|flag

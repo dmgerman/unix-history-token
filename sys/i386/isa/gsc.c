@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
@@ -323,6 +317,7 @@ value|7
 end_define
 
 begin_struct
+specifier|static
 specifier|const
 struct|struct
 name|gsc_geom
@@ -1924,7 +1919,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2116,7 +2119,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2275,6 +2286,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|int

@@ -41,6 +41,26 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|u_short
+name|csd_ascii
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pcvt_tbl.h */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_short
+name|csd_supplemental
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -2925,17 +2945,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|u_short
-name|csd_ascii
-index|[]
-decl_stmt|;
-comment|/* pcvt_tbl.h */
-specifier|extern
-name|u_short
-name|csd_supplemental
-index|[]
-decl_stmt|;
 name|u_short
 specifier|volatile
 modifier|*

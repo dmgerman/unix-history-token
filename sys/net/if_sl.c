@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.20 1995/05/30 08:08:11 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.28 1995/07/31 21:01:36 bde Exp $  */
 end_comment
 
 begin_comment
@@ -407,7 +407,7 @@ name|slinput
 block|,
 name|slstart
 block|,
-name|nullmodem
+name|ttymodem
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -970,13 +970,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|ttywflush
-argument_list|(
-name|tp
-argument_list|)
-condition|)
 name|ttyflush
 argument_list|(
 name|tp
@@ -1566,19 +1559,7 @@ name|sc_ttyp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|sc
-operator|->
-name|sc_ttyp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -1831,7 +1812,17 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * If there is more in the output queue, just send it now. 		 * We are being called in lieu of ttstart and must do what 		 * it would. 		 */
+comment|/* 		 * Call output process whether or not there is more in the 		 * output queue.  We are being called in lieu of ttstart 		 * and must do what it would. 		 */
+call|(
+modifier|*
+name|tp
+operator|->
+name|t_oproc
+call|)
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -1855,16 +1846,6 @@ name|sc_flags
 operator|&=
 operator|~
 name|SC_OUTWAIT
-expr_stmt|;
-call|(
-modifier|*
-name|tp
-operator|->
-name|t_oproc
-call|)
-argument_list|(
-name|tp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2745,26 +2726,14 @@ operator|&
 name|TTY_ERRORMASK
 operator|||
 operator|(
-operator|(
 name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|CLOCAL
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 name|sc

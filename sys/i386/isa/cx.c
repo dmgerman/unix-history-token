@@ -257,6 +257,16 @@ parameter_list|)
 value|getc(&q)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TSA_CARR_ON
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD 2.x before not long after 2.0.5 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -276,6 +286,11 @@ name|q
 parameter_list|)
 value|((caddr_t)&(q)->t_out)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1129,11 +1144,22 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
+operator|(
+operator|*
+name|linesw
+index|[
 name|tp
 operator|->
-name|t_state
-operator||=
-name|TS_CARR_ON
+name|t_line
+index|]
+operator|.
+name|l_modem
+operator|)
+operator|(
+name|tp
+operator|,
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3366,6 +3392,17 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* FreeBSD 2.x and BSDI */
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* FreeBSD some time after 2.0.5 */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|RB_LEN
@@ -3414,6 +3451,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Enable TXMPTY interrupt, 	 * to catch the case when the second buffer is empty. 	 */

@@ -1120,6 +1120,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|start
+parameter_list|(
+name|struct
+name|ctlr
+modifier|*
+name|ctlr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -1195,16 +1208,6 @@ name|int
 name|err
 parameter_list|)
 block|{
-specifier|static
-name|void
-name|start
-argument_list|(
-expr|struct
-name|ctlr
-operator|*
-name|ctlr
-argument_list|)
-decl_stmt|;
 name|bp
 operator|->
 name|b_resid

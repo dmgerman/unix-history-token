@@ -3656,20 +3656,6 @@ name|struct
 name|timeval
 name|now
 decl_stmt|;
-comment|/* from sys/kern/kern_time.c */
-specifier|extern
-name|void
-name|timevalsub
-argument_list|(
-expr|struct
-name|timeval
-operator|*
-argument_list|,
-expr|struct
-name|timeval
-operator|*
-argument_list|)
-decl_stmt|;
 name|dev_t
 name|dummy
 init|=

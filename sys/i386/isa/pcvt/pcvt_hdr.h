@@ -6928,18 +6928,21 @@ comment|/* PCVT_SHOWKEYS */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|cursor_pos_valid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|critical_scroll
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|switch_page
 decl_stmt|;
@@ -6952,12 +6955,14 @@ name|PCVT_SCREENSAVER
 end_if
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|reset_screen_saver
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|scrnsv_active
 decl_stmt|;

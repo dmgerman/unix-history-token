@@ -1360,14 +1360,10 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-operator|(
-name|PCVT_FREEBSD
-operator|>
-literal|114
-operator|)
+ifdef|#
+directive|ifdef
+name|TS_WOPEN
+comment|/* not (FreeBSD-1.1.5 or FreeBSD some time after 2.0.5) */
 name|tp
 operator|->
 name|t_state
@@ -1376,7 +1372,6 @@ name|TS_WOPEN
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !(PCVT_FREEBSD> 114) */
 name|ttychars
 argument_list|(
 name|tp
@@ -1431,6 +1426,29 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_modem
+operator|)
+operator|(
+name|tp
+operator|,
+literal|1
+operator|)
+expr_stmt|;
+comment|/* fake connection */
+name|winsz
+operator|=
+literal|1
+expr_stmt|;
+comment|/* set winsize later */
 block|}
 elseif|else
 if|if
@@ -1454,37 +1472,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_CARR_ON
-expr_stmt|;
-name|tp
-operator|->
-name|t_cflag
-operator||=
-name|CLOCAL
-expr_stmt|;
-comment|/* cannot be a modem (:-) */
-if|if
-condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* is this a "cold" open ? */
-name|winsz
-operator|=
-literal|1
-expr_stmt|;
-comment|/* yes, set winsize later  */
 if|#
 directive|if
 name|PCVT_NETBSD
@@ -3505,6 +3492,17 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* FreeBSD some time after 2.0.5 */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|rbp
@@ -3550,6 +3548,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|out
 label|:
 name|splx

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.11 1995/04/12 20:47:59 wollman Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.14 1995/09/08 11:07:50 bde Exp $  */
 end_comment
 
 begin_comment
@@ -65,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/tty.h>
 end_include
 
 begin_include
@@ -976,13 +970,25 @@ name|mseopen
 parameter_list|(
 name|dev
 parameter_list|,
-name|flag
+name|flags
+parameter_list|,
+name|fmt
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|flag
+name|flags
+decl_stmt|;
+name|int
+name|fmt
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -1117,13 +1123,25 @@ name|mseclose
 parameter_list|(
 name|dev
 parameter_list|,
-name|flag
+name|flags
+parameter_list|,
+name|fmt
+parameter_list|,
+name|p
 parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|flag
+name|flags
+decl_stmt|;
+name|int
+name|fmt
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -1203,6 +1221,8 @@ parameter_list|(
 name|dev
 parameter_list|,
 name|uio
+parameter_list|,
+name|ioflag
 parameter_list|)
 name|dev_t
 name|dev
@@ -1211,6 +1231,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|int
+name|ioflag
 decl_stmt|;
 block|{
 specifier|register

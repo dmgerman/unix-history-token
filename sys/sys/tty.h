@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.h	8.6 (Berkeley) 1/21/94  * $Id: tty.h,v 1.17 1995/04/11 17:53:14 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.h	8.6 (Berkeley) 1/21/94  * $Id: tty.h,v 1.31 1995/07/31 22:50:08 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -209,25 +209,25 @@ modifier|*
 name|t_sc
 decl_stmt|;
 comment|/* XXX: net/if_sl.c:sl_softc. */
-name|short
+name|int
 name|t_column
 decl_stmt|;
 comment|/* Tty output column. */
-name|short
+name|int
 name|t_rocount
 decl_stmt|,
 name|t_rocol
 decl_stmt|;
 comment|/* Tty. */
-name|short
+name|int
 name|t_hiwat
 decl_stmt|;
 comment|/* High water mark. */
-name|short
+name|int
 name|t_lowat
 decl_stmt|;
 comment|/* Low water mark. */
-name|short
+name|int
 name|t_gen
 decl_stmt|;
 comment|/* Generation number. */
@@ -342,12 +342,23 @@ name|OBUFSIZ
 value|100
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TTYHOG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|TTYHOG
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -395,12 +406,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TS_ASLEEP
+name|TS_SO_OLOWAT
 value|0x00001
 end_define
 
 begin_comment
-comment|/* Process waiting for tty. */
+comment|/* Wake up when output<= low water. */
 end_comment
 
 begin_define
@@ -491,6 +502,12 @@ begin_comment
 comment|/* Output paused. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -501,6 +518,11 @@ end_define
 begin_comment
 comment|/* Open in progress. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -580,34 +602,111 @@ value|(TS_BKSL | TS_CNTTB | TS_ERASE | TS_LNCH | TS_TYPEN)
 end_define
 
 begin_comment
-comment|/*  * Snoop state,we need this as we have no other indication of  * begin snoopped.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_SNOOP
-value|0x10000
-end_define
-
-begin_comment
-comment|/* There is snoop on device */
-end_comment
-
-begin_comment
-comment|/*  * States for serial devices  */
+comment|/* Extras. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TS_CAN_BYPASS_L_RINT
-value|0x20000
+value|0x010000
 end_define
 
 begin_comment
-comment|/* device in "raw" mode */
+comment|/* Device in "raw" mode. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_CONNECTED
+value|0x020000
+end_define
+
+begin_comment
+comment|/* Connection open. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_SNOOP
+value|0x040000
+end_define
+
+begin_comment
+comment|/* Device is being snooped on. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_SO_OCOMPLETE
+value|0x080000
+end_define
+
+begin_comment
+comment|/* Wake up when output completes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_ZOMBIE
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Connection lost. */
+end_comment
+
+begin_comment
+comment|/* Hardware flow-control-invoked bits. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_CAR_OFLOW
+value|0x200000
+end_define
+
+begin_comment
+comment|/* For MDMBUF (XXX handle in driver). */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TS_CTS_OFLOW
+value|0x400000
+end_define
+
+begin_comment
+comment|/* For CCTS_OFLOW. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_DSR_OFLOW
+value|0x800000
+end_define
+
+begin_comment
+comment|/* For CDSR_OFLOW. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Character type information. */
@@ -825,6 +924,80 @@ define|\
 value|(isctty((p), (tp))&& (p)->p_pgrp != (tp)->t_pgrp)
 end_define
 
+begin_comment
+comment|/* Unique sleep addresses. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSA_CARR_ON
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_rawq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_HUP_OR_INPUT
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_rawq.c_cf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_OCOMPLETE
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_outq.c_cl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_OLOWAT
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_outq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_PTC_READ
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_outq.c_cf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_PTC_WRITE
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_rawq.c_cl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSA_PTS_READ
+parameter_list|(
+name|tp
+parameter_list|)
+value|((void *)&(tp)->t_canq)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -843,41 +1016,6 @@ end_decl_stmt
 begin_comment
 comment|/* Temporary virtual console. */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ttychars
-name|ttydefaults
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Symbolic sleep message strings. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ttyin
-index|[]
-decl_stmt|,
-name|ttyout
-index|[]
-decl_stmt|,
-name|ttopen
-index|[]
-decl_stmt|,
-name|ttclos
-index|[]
-decl_stmt|,
-name|ttybg
-index|[]
-decl_stmt|,
-name|ttybuf
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1147,18 +1285,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|nullmodem
+name|void
+name|termioschars
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|tty
+name|termios
 operator|*
-name|tp
-operator|,
-name|int
-name|flag
+name|t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1376,6 +1511,36 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ttwwakeup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ttyblock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|ttychars
 name|__P
 argument_list|(
@@ -1529,72 +1694,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ttyoutput
-name|__P
-argument_list|(
-operator|(
-name|int
-name|c
-operator|,
-expr|struct
-name|tty
-operator|*
-name|tp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ttypend
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|tty
-operator|*
-name|tp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ttyretype
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|tty
-operator|*
-name|tp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ttyrub
-name|__P
-argument_list|(
-operator|(
-name|int
-name|c
-operator|,
-expr|struct
-name|tty
-operator|*
-name|tp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ttysleep
 name|__P
 argument_list|(
@@ -1682,6 +1781,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* From tty_tty.c. */
+end_comment
+
+begin_comment
+comment|/*  * XXX misplaced - these are just the cdev functions for a particular  * driver.  */
 end_comment
 
 begin_decl_stmt
