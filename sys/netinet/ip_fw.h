@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.27 1997/06/02 05:02:36 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.28 1997/08/08 14:36:29 alex Exp $  */
 end_comment
 
 begin_ifndef
@@ -627,14 +627,17 @@ begin_comment
 comment|/*  * Function definitions.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|ip_fw_init
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

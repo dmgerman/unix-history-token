@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.h,v 1.8 1997/02/22 09:45:20 peter Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -59,31 +59,35 @@ name|gz_private
 decl_stmt|;
 comment|/* Fetch next character to be uncompressed */
 name|int
-function_decl|(
-modifier|*
-name|gz_input
-function_decl|)
-parameter_list|(
+argument_list|(
+argument|*gz_input
+argument_list|)
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Dispose of uncompressed characters */
 name|int
-function_decl|(
-modifier|*
-name|gz_output
-function_decl|)
-parameter_list|(
+argument_list|(
+argument|*gz_output
+argument_list|)
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|u_char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|u_long
-parameter_list|)
-function_decl|;
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Private part */
 name|u_long
 name|gz_bb

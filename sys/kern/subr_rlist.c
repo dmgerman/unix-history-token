@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.21 1997/02/22 09:39:18 peter Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.22 1997/09/02 20:05:51 bde Exp $  */
 end_comment
 
 begin_include
@@ -82,6 +82,23 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|inline
+name|void
+name|rlist_mfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|rlist
+operator|*
+name|rl
 operator|)
 argument_list|)
 decl_stmt|;
@@ -212,16 +229,18 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 specifier|static
+specifier|inline
 name|void
 name|rlist_mfree
 parameter_list|(
+name|rl
+parameter_list|)
 name|struct
 name|rlist
 modifier|*
 name|rl
-parameter_list|)
+decl_stmt|;
 block|{
 name|rl
 operator|->
