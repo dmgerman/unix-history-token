@@ -3619,7 +3619,7 @@ name|RQ_FILE
 argument_list|,
 name|ctrl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|fromhost
