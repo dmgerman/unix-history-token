@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.15 1997/02/22 15:46:27 peter Exp $  */
+comment|/*  * $Id: warnings.c,v 1.16 1998/06/30 20:48:39 bde Exp $  */
 end_comment
 
 begin_include
@@ -1047,6 +1047,24 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|,
+expr|struct
+name|line_debug_entry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|address_to_line
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
 operator|,
 expr|struct
 name|line_debug_entry
