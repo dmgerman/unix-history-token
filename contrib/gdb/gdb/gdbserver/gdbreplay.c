@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -57,6 +51,18 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/* Sort of a hack... */
 end_comment
@@ -90,20 +96,6 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|char
 modifier|*
 name|err
@@ -114,18 +106,10 @@ name|combined
 decl_stmt|;
 name|err
 operator|=
-operator|(
+name|strerror
+argument_list|(
 name|errno
-operator|<
-name|sys_nerr
-operator|)
-condition|?
-name|sys_errlist
-index|[
-name|errno
-index|]
-else|:
-literal|"unknown error"
+argument_list|)
 expr_stmt|;
 name|combined
 operator|=
@@ -285,10 +269,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|struct
-name|sgttyb
-name|sg
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
