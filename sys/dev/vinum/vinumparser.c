@@ -127,12 +127,6 @@ directive|include
 file|<dev/vinum/vinumext.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -146,26 +140,6 @@ end_define
 begin_comment
 comment|/* check for white space */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* get it from the headers */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* enum keyword is defined in vinumvar.h */
