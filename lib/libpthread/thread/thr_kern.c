@@ -1369,8 +1369,6 @@ name|ts
 decl_stmt|;
 name|struct
 name|timeval
-name|tod
-decl_stmt|,
 name|timeout
 decl_stmt|;
 for|for
@@ -1385,7 +1383,7 @@ operator|&
 name|_kern_idle_timeout
 argument_list|,
 operator|&
-name|tod
+name|_sched_tod
 argument_list|,
 operator|&
 name|timeout
