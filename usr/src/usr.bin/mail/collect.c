@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.18 (Berkeley) %G%"
+literal|"@(#)collect.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2214,7 +2214,7 @@ name|tabst
 operator|=
 name|value
 argument_list|(
-literal|"tabstr"
+literal|"indentprefix"
 argument_list|)
 operator|)
 operator|==
