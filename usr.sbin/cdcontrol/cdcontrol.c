@@ -1057,6 +1057,45 @@ block|}
 end_function
 
 begin_function
+name|char
+modifier|*
+name|use_cdrom_instead
+parameter_list|(
+name|char
+modifier|*
+name|old_envvar
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|device
+decl_stmt|;
+name|device
+operator|=
+name|getenv
+argument_list|(
+name|old_envvar
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|device
+condition|)
+name|warnx
+argument_list|(
+literal|"%s environment variable deprecated, "
+literal|"please use CDROM in the future."
+argument_list|,
+name|old_envvar
+argument_list|)
+expr_stmt|;
+return|return
+name|device
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -1078,7 +1117,7 @@ name|arg
 decl_stmt|;
 name|cdname
 operator|=
-name|getenv
+name|use_cdrom_instead
 argument_list|(
 literal|"MUSIC_CD"
 argument_list|)
@@ -1090,7 +1129,7 @@ name|cdname
 condition|)
 name|cdname
 operator|=
-name|getenv
+name|use_cdrom_instead
 argument_list|(
 literal|"CD_DRIVE"
 argument_list|)
@@ -1102,7 +1141,7 @@ name|cdname
 condition|)
 name|cdname
 operator|=
-name|getenv
+name|use_cdrom_instead
 argument_list|(
 literal|"DISC"
 argument_list|)
@@ -1114,7 +1153,7 @@ name|cdname
 condition|)
 name|cdname
 operator|=
-name|getenv
+name|use_cdrom_instead
 argument_list|(
 literal|"CDPLAY"
 argument_list|)
