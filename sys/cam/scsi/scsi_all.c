@@ -9815,13 +9815,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|asc
-operator|||
-name|ascq
-condition|)
-block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -9837,7 +9830,6 @@ argument_list|,
 name|asc_desc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sense
