@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.1	83/09/07	*/
+comment|/*	defs.h	4.2	83/09/27	*/
 end_comment
 
 begin_include
@@ -90,58 +90,98 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARROW
+name|LP
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LP
+name|RP
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|RP
+name|ARROW
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|NAME
+name|DCOLON
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|INSTALL
+name|NAME
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|VERIFY
+name|INSTALL
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTIFY
+name|VERIFY
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCEPT
+name|NOTIFY
 value|9
 end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEPT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR
+value|11
+end_define
+
+begin_comment
+comment|/* lexical definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUOTE
+value|0200
+end_define
+
+begin_comment
+comment|/* used internally for quoted characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRIM
+value|0177
+end_define
+
+begin_comment
+comment|/* Mask to strip quote bit */
+end_comment
 
 begin_comment
 comment|/* table sizes */
@@ -159,6 +199,27 @@ define|#
 directive|define
 name|INMAX
 value|3500
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCARGS
+value|10240
+end_define
+
+begin_define
+define|#
+directive|define
+name|GAVSIZ
+value|NCARGS / 6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSTAMPS
+value|15
 end_define
 
 begin_define
@@ -311,8 +372,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|tmpfile
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -402,6 +463,15 @@ begin_function_decl
 name|struct
 name|block
 modifier|*
+name|makeblock
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|block
+modifier|*
 name|expand
 parameter_list|()
 function_decl|;
@@ -411,6 +481,14 @@ begin_function_decl
 name|char
 modifier|*
 name|rindex
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|index
 parameter_list|()
 function_decl|;
 end_function_decl
