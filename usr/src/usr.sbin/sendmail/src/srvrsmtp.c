@@ -33,7 +33,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.2 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.3 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.2 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1475,6 +1475,9 @@ modifier|*
 name|crypt
 parameter_list|()
 function_decl|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|seed

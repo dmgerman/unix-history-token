@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	5.3 (Berkeley) %G%"
+literal|"@(#)util.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,6 +603,9 @@ name|av
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|' '
@@ -616,6 +619,9 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -709,6 +715,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'"'
@@ -736,6 +745,9 @@ name|c
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\\'
@@ -757,6 +769,9 @@ operator|>=
 literal|0177
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'^'
@@ -767,12 +782,18 @@ operator|^=
 literal|0100
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'"'
@@ -1550,7 +1571,10 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
-name|fputc
+operator|(
+name|void
+operator|)
+name|putc
 argument_list|(
 literal|'.'
 argument_list|,
@@ -1564,7 +1588,10 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fputc
+operator|(
+name|void
+operator|)
+name|putc
 argument_list|(
 literal|'!'
 argument_list|,
@@ -1619,7 +1646,10 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
-name|fputc
+operator|(
+name|void
+operator|)
+name|putc
 argument_list|(
 literal|'.'
 argument_list|,
@@ -2137,6 +2167,9 @@ name|i
 operator|!=
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|i
@@ -2186,6 +2219,9 @@ name|i
 operator|!=
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|i

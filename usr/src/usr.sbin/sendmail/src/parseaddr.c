@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	4.16 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,6 +818,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1272,6 +1275,9 @@ argument_list|(
 name|tok
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -3434,6 +3440,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf

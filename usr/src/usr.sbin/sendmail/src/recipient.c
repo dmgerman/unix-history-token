@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.2 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,6 +1669,9 @@ name|pw
 operator|)
 return|;
 comment|/* search for a matching full name instead */
+operator|(
+name|void
+operator|)
 name|setpwent
 argument_list|()
 expr_stmt|;

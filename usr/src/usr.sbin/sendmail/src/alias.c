@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.2 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.3 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.2 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.3 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -908,6 +908,9 @@ name|LOCK_EX
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|af

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	5.1 (Berkeley) %G%"
+literal|"@(#)collect.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,6 +1199,9 @@ argument_list|(
 literal|25
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|q
