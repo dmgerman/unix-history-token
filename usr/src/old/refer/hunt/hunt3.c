@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt3.c	4.1 (Berkeley) %G%"
+literal|"@(#)hunt3.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,23 @@ operator|*
 name|p
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|>
+name|buff
+operator|+
+name|BSIZ
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"query long than %d characters\n"
+argument_list|,
+name|BSIZ
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
