@@ -1545,12 +1545,6 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* Sanitize the FP state in case the user has trashed it. */
-name|ia64_set_fpsr
-argument_list|(
-name|IA64_FPSR_DEFAULT
-argument_list|)
-expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1580,6 +1574,11 @@ condition|(
 name|user
 condition|)
 block|{
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
 name|sticks
 operator|=
 name|td
@@ -2626,13 +2625,7 @@ name|char
 modifier|*
 name|ip
 decl_stmt|;
-if|if
-condition|(
-name|fpswa_interface
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/* Always fatal in kernel. Should never happen. */
 if|if
 condition|(
 operator|!
@@ -2645,6 +2638,13 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fpswa_interface
+operator|==
+name|NULL
+condition|)
+block|{
 name|sig
 operator|=
 name|SIGFPE
@@ -2689,11 +2689,6 @@ name|ip
 operator|-=
 literal|16
 expr_stmt|;
-if|if
-condition|(
-name|user
-condition|)
-block|{
 name|error
 operator|=
 name|copyin
@@ -2723,18 +2718,6 @@ expr_stmt|;
 comment|/* exception summary */
 break|break;
 block|}
-block|}
-else|else
-name|bcopy
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|bundle
-argument_list|,
-literal|16
-argument_list|)
-expr_stmt|;
 comment|/* f6-f15 are saved in exception_save */
 name|fp_state
 operator|.
@@ -3013,11 +2996,7 @@ literal|"fpswa fatal error on fp fault"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|user
-condition|)
+else|else
 block|{
 name|sig
 operator|=
@@ -3030,10 +3009,6 @@ expr_stmt|;
 comment|/* XXX exception summary */
 break|break;
 block|}
-else|else
-goto|goto
-name|out
-goto|;
 block|}
 case|case
 name|IA64_VEC_IA32_EXCEPTION
@@ -3622,6 +3597,11 @@ decl_stmt|;
 name|u_int
 name|sticks
 decl_stmt|;
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
 name|code
 operator|=
 name|tf
