@@ -157,16 +157,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|dec_2100_a50_intr_route
+name|void
+name|dec_2100_a50_intr_map
 name|__P
 argument_list|(
 operator|(
-name|device_t
-operator|,
-name|device_t
-operator|,
-name|int
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -392,9 +389,9 @@ name|dec_2100_a50_cons_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_route
+name|pci_intr_map
 operator|=
-name|dec_2100_a50_intr_route
+name|dec_2100_a50_intr_map
 expr_stmt|;
 block|}
 end_function
@@ -569,17 +566,12 @@ comment|/* PIRQ0 Route Control */
 end_comment
 
 begin_function
-name|int
-name|dec_2100_a50_intr_route
+name|void
+name|dec_2100_a50_intr_map
 parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
+name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|u_int8_t
@@ -591,17 +583,55 @@ decl_stmt|;
 name|int
 name|pirq
 decl_stmt|;
+name|pcicfgregs
+modifier|*
+name|cfg
+decl_stmt|;
 name|pirq
 operator|=
-literal|255
+literal|0
+expr_stmt|;
+comment|/* gcc -Wuninitialized XXX */
+name|cfg
+operator|=
+operator|(
+name|pcicfgregs
+operator|*
+operator|)
+name|arg
 expr_stmt|;
 comment|/* 	 * Slot->interrupt translation.  Taken from NetBSD. 	 */
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|>
+literal|4
+condition|)
+name|panic
+argument_list|(
+literal|"dec_2100_a50_intr_map: bad intpin %d"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
+name|cfg
+operator|->
+name|slot
 condition|)
 block|{
 case|case
@@ -623,7 +653,9 @@ case|:
 comment|/* slot 3 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -658,7 +690,9 @@ name|panic
 argument_list|(
 literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
 argument_list|,
-name|pin
+name|cfg
+operator|->
+name|intpin
 argument_list|)
 expr_stmt|;
 block|}
@@ -669,7 +703,9 @@ case|:
 comment|/* slot 2 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -704,7 +740,9 @@ name|panic
 argument_list|(
 literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
 argument_list|,
-name|pin
+name|cfg
+operator|->
+name|intpin
 argument_list|)
 expr_stmt|;
 block|}
@@ -716,7 +754,9 @@ case|:
 comment|/* slot 3 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -754,10 +794,9 @@ name|printf
 argument_list|(
 literal|"dec_2100_a50_intr_map: weird slot %d\n"
 argument_list|,
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
+name|cfg
+operator|->
+name|slot
 argument_list|)
 expr_stmt|;
 comment|/* return; */
@@ -815,11 +854,12 @@ name|pirqline
 operator|&=
 literal|0xf
 expr_stmt|;
-return|return
-operator|(
+name|cfg
+operator|->
+name|intline
+operator|=
 name|pirqline
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

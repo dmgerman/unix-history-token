@@ -295,12 +295,6 @@ name|dec_2100_a500_cons_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_route
-operator|=
-name|t2_intr_route
-expr_stmt|;
-name|platform
-operator|.
 name|pci_intr_init
 operator|=
 name|dec_2100_a500_intr_init

@@ -349,7 +349,7 @@ expr_stmt|;
 comment|/* SRM handles PCI interrupt mapping */
 name|platform
 operator|.
-name|pci_intr_route
+name|pci_intr_map
 operator|=
 name|NULL
 expr_stmt|;

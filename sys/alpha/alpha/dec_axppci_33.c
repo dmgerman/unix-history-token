@@ -153,16 +153,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|dec_axppci_33_intr_route
+name|void
+name|dec_axppci_33_intr_map
 name|__P
 argument_list|(
 operator|(
-name|device_t
-operator|,
-name|device_t
-operator|,
-name|int
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -379,9 +376,9 @@ name|dec_axppci_33_cons_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_route
+name|pci_intr_map
 operator|=
-name|dec_axppci_33_intr_route
+name|dec_axppci_33_intr_map
 expr_stmt|;
 name|lca_init
 argument_list|()
@@ -613,20 +610,18 @@ comment|/* PIRQ0 Route Control */
 end_comment
 
 begin_function
-specifier|static
-name|int
-name|dec_axppci_33_intr_route
+name|void
+name|dec_axppci_33_intr_map
 parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
+name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
+name|pcicfgregs
+modifier|*
+name|cfg
+decl_stmt|;
 name|int
 name|pirq
 decl_stmt|;
@@ -636,6 +631,14 @@ decl_stmt|;
 name|u_int8_t
 name|pirqline
 decl_stmt|;
+name|cfg
+operator|=
+operator|(
+name|pcicfgregs
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DIAGNOSTIC
@@ -647,12 +650,43 @@ comment|/* XXX gcc -Wuninitialized */
 endif|#
 directive|endif
 comment|/* 	 * Slot->interrupt translation.  Taken from NetBSD. 	 */
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* No IRQ used. */
+return|return;
+block|}
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|>
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dec_axppci_33_intr_map: bad interrupt pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 switch|switch
 condition|(
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
+name|cfg
+operator|->
+name|slot
 condition|)
 block|{
 case|case
@@ -670,7 +704,9 @@ case|:
 comment|/* slot 1 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -700,6 +736,22 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+default|default:
+comment|/* XXX gcc -Wuninitialized */
+name|panic
+argument_list|(
+literal|"dec_axppci_33_intr_map: bogus PCI pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 break|break;
@@ -709,7 +761,9 @@ case|:
 comment|/* slot 2 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -739,6 +793,22 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+default|default:
+comment|/* XXX gcc -Wuninitialized */
+name|panic
+argument_list|(
+literal|"dec_axppci_33_intr_map: bogus PCI pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 break|break;
@@ -748,7 +818,9 @@ case|:
 comment|/* slot 3 */
 switch|switch
 condition|(
-name|pin
+name|cfg
+operator|->
+name|intpin
 condition|)
 block|{
 case|case
@@ -778,25 +850,36 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+default|default:
+comment|/* XXX gcc -Wuninitialized */
+name|panic
+argument_list|(
+literal|"dec_axppci_33_intr_map bogus: PCI pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"dec_axppci_33_intr_map: weird slot number %d\n"
+literal|"dec_axppci_33_intr_map: weird device number %d\n"
 argument_list|,
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
+name|cfg
+operator|->
+name|slot
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|255
-operator|)
-return|;
+return|return;
 block|}
 name|pirqreg
 operator|=
@@ -815,6 +898,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("dec_axppci_33_intr_map: device %d pin %c: pirq %d, reg = %x\n", 		device, '@' + cfg->intpin, pirq, pirqreg);
+endif|#
+directive|endif
 name|pirqline
 operator|=
 operator|(
@@ -850,11 +939,18 @@ name|pirqline
 operator|&=
 literal|0xf
 expr_stmt|;
-return|return
-operator|(
+if|#
+directive|if
+literal|0
+block|printf("dec_axppci_33_intr_map: device %d pin %c: mapped to line %d\n", 	    device, '@' + cfg->intpin, pirqline);
+endif|#
+directive|endif
+name|cfg
+operator|->
+name|intline
+operator|=
 name|pirqline
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
