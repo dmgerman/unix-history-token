@@ -12,7 +12,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-error|isa.h is included from PC-9801 source
+error|isareg.h is included from PC-9801 source
 end_error
 
 begin_endif
