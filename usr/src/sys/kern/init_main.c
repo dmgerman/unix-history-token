@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.41	82/10/31	*/
+comment|/*	init_main.c	4.42	82/11/02	*/
 end_comment
 
 begin_include
@@ -475,7 +475,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|clockstart
+name|startrtclock
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
@@ -566,8 +566,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* initialize wall clock */
-name|clockinit
+name|inittodr
 argument_list|(
 name|fs
 operator|->
@@ -749,9 +748,9 @@ directive|else
 name|pageout
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
 endif|#
 directive|endif
-comment|/*NOTREACHED*/
 block|}
 comment|/* 	 * make init process and 	 * enter scheduling loop 	 */
 name|mpid
