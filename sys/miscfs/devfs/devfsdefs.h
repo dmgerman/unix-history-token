@@ -1,15 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DEVFS_DEBUG
 end_ifdef
 
 begin_define
@@ -42,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /sys/miscfs/devfs/RCS/devfsdefs.h,v 1.2 1994/12/28 02:43:47 root Exp root $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.2 1995/04/20 07:34:55 julian Exp $  */
 end_comment
 
 begin_comment
