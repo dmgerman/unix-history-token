@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -967,14 +967,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|QueueDir
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* clear out old WorkQ */
 end_comment
@@ -1037,7 +1029,7 @@ name|f
 operator|=
 name|opendir
 argument_list|(
-name|QueueDir
+literal|"."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1052,7 +1044,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"orderq: cannot open %s"
+literal|"orderq: cannot open \"%s\" as \".\""
 argument_list|,
 name|QueueDir
 argument_list|)
@@ -1085,12 +1077,6 @@ name|NULL
 condition|)
 block|{
 name|char
-name|cbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-name|char
 name|lbuf
 index|[
 name|MAXNAME
@@ -1099,11 +1085,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|cf
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 comment|/* is this an interesting entry? */
 if|if
@@ -1127,56 +1108,14 @@ operator|!=
 literal|'f'
 condition|)
 continue|continue;
-comment|/* yes -- find the control file location */
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|cbuf
-argument_list|,
-name|QueueDir
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-operator|&
-name|cbuf
-index|[
-name|strlen
-argument_list|(
-name|cbuf
-argument_list|)
-index|]
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|p
-argument_list|,
-name|d
-operator|->
-name|d_name
-argument_list|)
-expr_stmt|;
-comment|/* open control file */
+comment|/* yes -- open control file */
 name|cf
 operator|=
 name|fopen
 argument_list|(
-name|cbuf
+name|d
+operator|->
+name|d_name
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1205,7 +1144,9 @@ name|w_name
 operator|=
 name|newstr
 argument_list|(
-name|cbuf
+name|d
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 comment|/* extract useful information */
@@ -1625,7 +1566,7 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-comment|/* 		**  CHILD 		**	Change the name of the control file to avoid 		**		duplicate deliveries.   Then run the file 		**		as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
+comment|/* 		**  CHILD 		**	Lock the control file to avoid duplicate deliveries. 		**		Then run the file as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
 comment|/* set basic modes, etc. */
 operator|(
 name|void
@@ -1664,12 +1605,7 @@ name|w
 operator|->
 name|w_name
 index|[
-name|strlen
-argument_list|(
-name|QueueDir
-argument_list|)
-operator|+
-literal|3
+literal|2
 index|]
 expr_stmt|;
 ifdef|#
