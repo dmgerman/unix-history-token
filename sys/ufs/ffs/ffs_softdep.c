@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -26384,7 +26390,7 @@ name|b_vp
 operator|==
 name|NULL
 condition|)
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 if|if
