@@ -1178,6 +1178,28 @@ begin_comment
 comment|/* Variable bit rate              */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_ATM_ABR
+value|0x03
+end_define
+
+begin_comment
+comment|/* Available bit rate		  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ATM_UBR
+value|0x04
+end_define
+
+begin_comment
+comment|/* Unspecified bit rate		  */
+end_comment
+
 begin_comment
 comment|/* timing_requirements */
 end_comment
