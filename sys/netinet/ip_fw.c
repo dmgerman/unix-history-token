@@ -3748,36 +3748,13 @@ name|dyn_fin_lifetime
 expr_stmt|;
 break|break ;
 default|default:
-comment|/* reset or some invalid combination */
-if|if
-condition|(
-operator|(
-name|q
-operator|->
-name|state
-operator|&
-operator|(
-operator|(
-name|TH_RST
-operator|<<
-literal|8
-operator|)
-operator||
-name|TH_RST
-operator|)
-operator|)
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"invalid state: 0x%x\n"
-argument_list|,
-name|q
-operator|->
-name|state
-argument_list|)
-expr_stmt|;
+comment|/* reset or some invalid combination */
+block|if ( (q->state& ((TH_RST<< 8)|TH_RST)) == 0) 		printf("invalid state: 0x%x\n", q->state);
+endif|#
+directive|endif
 name|q
 operator|->
 name|expire
