@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.31.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -981,7 +981,6 @@ condition|;
 name|cp
 operator|++
 control|)
-block|{
 name|ndp
 operator|->
 name|ni_hash
@@ -993,47 +992,6 @@ operator|)
 operator|*
 name|cp
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|*
-name|cp
-operator|&
-literal|0200
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|(
-operator|*
-name|cp
-operator|&
-literal|0377
-operator|)
-operator|==
-operator|(
-literal|'/'
-operator||
-literal|0200
-operator|)
-operator|||
-name|flag
-operator|!=
-name|DELETE
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-block|}
 name|ndp
 operator|->
 name|ni_namelen
