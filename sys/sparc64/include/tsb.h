@@ -18,8 +18,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|TSB_PAGES_SHIFT
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSB_PAGES
+value|(1<< TSB_PAGES_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TSB_BSHIFT
-value|PAGE_SHIFT_8K
+value|(TSB_PAGES_SHIFT + PAGE_SHIFT)
 end_define
 
 begin_define
