@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.10 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -791,6 +791,10 @@ operator|->
 name|lk_lockholder
 operator|==
 name|pid
+operator|&&
+name|pid
+operator|!=
+name|LK_KERNPROC
 condition|)
 block|{
 comment|/* 			 *	Recursive lock. 			 */
@@ -1453,6 +1457,46 @@ operator|==
 literal|1
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|lockpausetime
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug2
+init|=
+block|{
+literal|"lockpausetime"
+block|,
+operator|&
+name|lockpausetime
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Simple lock functions so that the debugger can see from whence  * they are being called.  */
 end_comment
@@ -1499,11 +1543,54 @@ name|lock_data
 operator|==
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|lockpausetime
+operator|==
+operator|-
+literal|1
+condition|)
 name|panic
 argument_list|(
 literal|"simple_lock: lock held"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"simple_lock: lock held..."
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|lockpausetime
+argument_list|,
+name|PCATCH
+operator||
+name|PPAUSE
+argument_list|,
+literal|"slock"
+argument_list|,
+name|lockpausetime
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" continuing\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|alp
 operator|->
 name|lock_data
@@ -1534,11 +1621,54 @@ name|lock_data
 operator|==
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|lockpausetime
+operator|==
+operator|-
+literal|1
+condition|)
 name|panic
 argument_list|(
-literal|"simple_lock: lock held"
+literal|"simple_lock_try: lock held"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"simple_lock_try: lock held..."
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|lockpausetime
+argument_list|,
+name|PCATCH
+operator||
+name|PPAUSE
+argument_list|,
+literal|"slock"
+argument_list|,
+name|lockpausetime
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" continuing\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|alp
 operator|->
 name|lock_data
@@ -1574,11 +1704,54 @@ name|lock_data
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|lockpausetime
+operator|==
+operator|-
+literal|1
+condition|)
 name|panic
 argument_list|(
-literal|"simple_lock: lock not held"
+literal|"simple_unlock: lock not held"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"simple_unlock: lock not held..."
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|lockpausetime
+argument_list|,
+name|PCATCH
+operator||
+name|PPAUSE
+argument_list|,
+literal|"sunlock"
+argument_list|,
+name|lockpausetime
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" continuing\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|alp
 operator|->
 name|lock_data
