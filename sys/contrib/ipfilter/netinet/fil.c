@@ -798,22 +798,11 @@ parameter_list|)
 value|ipflog(a, c, d, e)
 end_define
 
-begin_if
-if|#
-directive|if
-name|SOLARIS
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|||
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|500043
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -839,7 +828,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SOLARIS || __sgi || __FreeBSD_version */
+comment|/* USE_MUTEX */
 end_comment
 
 begin_endif
@@ -5911,35 +5900,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _KERNEL */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-comment|/* 	 * Be careful here: ip_id is in network byte order when called 	 * from ip_output() 	 */
-if|if
-condition|(
-operator|(
-name|out
-operator|)
-operator|&&
-operator|(
-name|v
-operator|==
-literal|4
-operator|)
-condition|)
-name|ip
-operator|->
-name|ip_id
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|changed
 operator|=
 literal|0
@@ -7343,34 +7303,6 @@ block|}
 endif|#
 directive|endif
 comment|/* IPFILTER_LOG */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-if|if
-condition|(
-operator|(
-name|out
-operator|)
-operator|&&
-operator|(
-name|v
-operator|==
-literal|4
-operator|)
-condition|)
-name|ip
-operator|->
-name|ip_id
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL

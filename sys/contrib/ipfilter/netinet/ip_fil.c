@@ -1268,29 +1268,16 @@ name|tcp_mtudisc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|kmutex_t
-name|ipf_rw
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_decl_stmt
-specifier|extern
-name|KRWLOCK_T
-name|ipf_mutex
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|500043
-operator|)
-end_elif
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
