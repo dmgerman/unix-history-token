@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)gprof.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)gprof.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|short
+name|u_short
 name|UNIT
 typedef|;
 end_typedef
@@ -467,7 +467,6 @@ comment|/*      * Each discretized pc sample has      * a count of the number of
 end_comment
 
 begin_decl_stmt
-name|unsigned
 name|UNIT
 modifier|*
 name|samples
@@ -799,11 +798,9 @@ begin_comment
 comment|/*      *	function declarations      */
 end_comment
 
-begin_expr_stmt
-name|addarc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		addarc(); */
+end_comment
 
 begin_function_decl
 name|int
@@ -820,29 +817,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|asgnsamples
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printblurb
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|cyclelink
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|dfn
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		asgnsamples(); 		printblurb(); 		cyclelink(); 		dfn(); */
+end_comment
 
 begin_function_decl
 name|bool
@@ -851,11 +828,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|dfn_findcycle
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		dfn_findcycle(); */
+end_comment
 
 begin_function_decl
 name|bool
@@ -864,23 +839,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|dfn_post_visit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|dfn_pre_visit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|dfn_self_cycle
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		dfn_post_visit(); 		dfn_pre_visit(); 		dfn_self_cycle(); */
+end_comment
 
 begin_function_decl
 name|nltype
@@ -891,29 +852,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|done
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|findcalls
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|flatprofheader
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|flatprofline
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		done(); 		findcalls(); 		flatprofheader(); 		flatprofline(); */
+end_comment
 
 begin_function_decl
 name|bool
@@ -922,53 +863,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|getnfile
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|getpfile
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|getstrtab
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|getsymtab
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|gettextspace
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|gprofheader
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|gprofline
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
-name|main
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* 		getnfile(); 		getpfile(); 		getstrtab(); 		getsymtab(); 		gettextspace(); 		gprofheader(); 		gprofline(); 		main(); */
+end_comment
 
 begin_function_decl
 name|unsigned
@@ -1031,53 +928,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|printchildren
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printcycle
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printgprof
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printmembers
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printname
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printparents
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|printprof
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|readsamples
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		printchildren(); 		printcycle(); 		printgprof(); 		printmembers(); 		printname(); 		printparents(); 		printprof(); 		readsamples(); */
+end_comment
 
 begin_function_decl
 name|unsigned
@@ -1087,41 +940,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|sortchildren
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|sortmembers
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|sortparents
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|tally
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|timecmp
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|topcmp
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		sortchildren(); 		sortmembers(); 		sortparents(); 		tally(); 		timecmp(); 		topcmp(); */
+end_comment
 
 begin_function_decl
 name|int
@@ -1130,11 +951,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|valcmp
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 		valcmp(); */
+end_comment
 
 begin_define
 define|#
