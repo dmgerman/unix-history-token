@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.18 1996/10/08 04:51:03 vixie Exp $"
+literal|"$Id: db_update.c,v 8.19 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,21 +107,6 @@ include|#
 directive|include
 file|"named.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|fixttl
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|databuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* int  * isRefByNS(name, htp)  *	recurse through all of `htp' looking for NS RR's that refer to `name'.  * returns:  *	nonzero if at least one such NS RR exists  * cautions:  *	this is very expensive; probably you only want to use on fcachetab.  */
@@ -2398,7 +2383,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|void
 name|fixttl
 parameter_list|(

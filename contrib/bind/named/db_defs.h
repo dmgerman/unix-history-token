@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.5 1996/08/27 08:33:23 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.6 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -72,6 +72,17 @@ modifier|*
 name|d_next
 decl_stmt|;
 comment|/* linked list */
+ifdef|#
+directive|ifdef
+name|STATS
+name|struct
+name|nameser
+modifier|*
+name|d_ns
+decl_stmt|;
+comment|/* NS from whence this came */
+endif|#
+directive|endif
 name|u_int32_t
 name|d_ttl
 decl_stmt|;
@@ -110,6 +121,9 @@ name|int16_t
 name|d_size
 decl_stmt|;
 comment|/* size of data area */
+name|u_int32_t
+name|d_rcnt
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NCACHE
@@ -119,22 +133,6 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* rcode added for negative caching */
-endif|#
-directive|endif
-name|unsigned
-name|d_rcnt
-range|:
-literal|12
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|STATS
-name|struct
-name|nameser
-modifier|*
-name|d_ns
-decl_stmt|;
-comment|/* NS from whence this came */
 endif|#
 directive|endif
 name|u_int16_t

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.1 1994/12/15 06:24:31 vixie Exp $"
+literal|"$Id: send.c,v 8.2 1997/06/01 20:34:40 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,11 +1252,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"timeout (%d secs)\n"
-argument_list|,
-name|timeout
-operator|.
-name|tv_sec
+literal|"timeout\n"
 argument_list|)
 expr_stmt|;
 if|#

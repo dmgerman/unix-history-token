@@ -2517,7 +2517,13 @@ decl_stmt|;
 name|u_char
 name|data
 index|[
-name|BUFSIZ
+name|MAXDNAME
+operator|*
+literal|2
+operator|+
+name|INT32SZ
+operator|*
+literal|5
 index|]
 decl_stmt|;
 specifier|register

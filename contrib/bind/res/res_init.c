@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 8.7 1996/09/28 06:51:07 vixie Exp $"
+literal|"$Id: res_init.c,v 8.8 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,7 +379,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|;
 name|int

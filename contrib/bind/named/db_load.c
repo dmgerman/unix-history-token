@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 8.31 1996/12/18 04:09:48 vixie Exp $"
+literal|"$Id: db_load.c,v 8.32 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1366,6 +1366,32 @@ name|cp
 argument_list|)
 condition|)
 do|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|errs
+operator|++
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: Line %d: bad TTL: %s.\n"
+argument_list|,
+name|filename
+argument_list|,
+name|lineno
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|zp
@@ -8692,7 +8718,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|,
 modifier|*

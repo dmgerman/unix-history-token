@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 8.12 1996/09/22 00:13:10 vixie Exp $  */
+comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 8.13 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -63,6 +63,22 @@ name|np
 operator|,
 name|int
 name|class
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fixttl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|databuf
+operator|*
+name|dp
 operator|)
 argument_list|)
 decl_stmt|;

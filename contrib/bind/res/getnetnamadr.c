@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 8.7 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: getnetnamadr.c,v 8.8 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,9 +415,7 @@ index|]
 decl_stmt|,
 name|netbuf
 index|[
-name|BUFSIZ
-operator|+
-literal|1
+name|PACKETSZ
 index|]
 decl_stmt|;
 comment|/* 	 * find first satisfactory answer 	 * 	 *      answer --> +------------+  ( MESSAGE ) 	 *		   |   Header   | 	 *		   +------------+ 	 *		   |  Question  | the question for the name server 	 *		   +------------+ 	 *		   |   Answer   | RRs answering the question 	 *		   +------------+ 	 *		   | Authority  | RRs pointing toward an authority 	 *		   | Additional | RRs holding additional information 	 *		   +------------+ 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* portability.h - include or define things that aren't present on all systems  * vixie@decwrl 26dec92 [new]  *  * $Id: portability.h,v 8.20 1996/11/26 10:11:16 vixie Exp $  */
+comment|/* portability.h - include or define things that aren't present on all systems  * vixie@decwrl 26dec92 [new]  *  * $Id: portability.h,v 8.21 1997/06/01 20:34:27 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -729,9 +729,15 @@ literal|199103
 operator|)
 operator|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__m88k__
 argument_list|)
 end_if
 
@@ -3545,6 +3551,53 @@ begin_define
 define|#
 directive|define
 name|__BIND_RES_TEXT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Motorola FH40.43 and FH40.44 need specific macros for  * get/settimeofday as only one argument seems to be accepted  * by the compiler. NULL generates compile errors  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__m88k__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__unix__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|gettimeofday
+parameter_list|(
+name|tp
+parameter_list|,
+name|tzp
+parameter_list|)
+value|gettimeofday(tp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|settimeofday
+parameter_list|(
+name|tp
+parameter_list|,
+name|tzp
+parameter_list|)
+value|settimeofday(tp)
 end_define
 
 begin_endif

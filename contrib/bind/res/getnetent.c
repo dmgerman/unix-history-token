@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetent.c,v 8.3 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: getnetent.c,v 8.4 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,7 +359,8 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|line
 argument_list|,
 name|netf
 argument_list|)
