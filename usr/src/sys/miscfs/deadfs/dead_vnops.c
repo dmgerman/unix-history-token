@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -370,13 +370,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|dead_vget
-value|((int (*) __P((struct  vop_vget_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
 name|dead_valloc
 value|((int (*) __P((struct  vop_valloc_args *)))dead_badop)
 end_define
@@ -708,14 +701,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|dead_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|dead_valloc
@@ -805,6 +790,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -842,6 +828,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -875,6 +862,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_read_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -938,6 +926,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_write_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -985,6 +974,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_ioctl_args
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -992,8 +982,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_IOCTL
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1043,6 +1031,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_select_args
+comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1073,6 +1062,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_strategy_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1080,8 +1070,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 if|if
 condition|(
 name|ap
@@ -1151,6 +1139,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1158,8 +1147,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1209,6 +1196,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1216,8 +1204,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1276,6 +1262,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
