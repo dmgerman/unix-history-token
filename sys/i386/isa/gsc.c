@@ -1876,12 +1876,6 @@ name|unittab
 operator|+
 name|unit
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|scu
 operator|->
 name|flags

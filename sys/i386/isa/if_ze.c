@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.28 1996/01/26 09:27:33 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.29 1996/02/06 18:50:50 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2163,16 +2163,6 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
-decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
 decl_stmt|;
 name|int
 name|pl

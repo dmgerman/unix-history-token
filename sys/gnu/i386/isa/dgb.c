@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.16 1996/03/28 14:27:26 scrappy Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.17 1996/03/29 11:39:08 bde Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -616,20 +616,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|void
-name|dgbintr
-name|__P
-argument_list|(
-operator|(
-name|int
-name|unit
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|dgbpoll
 name|__P
 argument_list|(
@@ -983,24 +969,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
-name|dgb_events
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input chars + weighted output completions */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dgbmajor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|speedtab
 name|dgbspeedtab
@@ -1128,15 +1096,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|polltimeout
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1519,20 +1478,11 @@ name|int
 name|i
 decl_stmt|,
 name|v
-decl_stmt|,
-name|t
 decl_stmt|;
 name|u_long
 name|win_size
 decl_stmt|;
 comment|/* size of vizible memory window */
-name|u_char
-modifier|*
-name|mem
-decl_stmt|;
-name|int
-name|addr
-decl_stmt|;
 name|int
 name|unit
 init|=
@@ -2220,11 +2170,6 @@ name|struct
 name|board_chan
 modifier|*
 name|bc
-decl_stmt|;
-name|struct
-name|global_data
-modifier|*
-name|gd
 decl_stmt|;
 name|int
 name|shrinkmem
@@ -5889,9 +5834,6 @@ name|port
 operator|->
 name|brdchan
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|setwin
 argument_list|(
 name|sc
@@ -7373,19 +7315,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|dgbintr
-parameter_list|(
-name|unit
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{ }
-end_function
-
-begin_function
-specifier|static
 name|int
 name|dgbioctl
 parameter_list|(
@@ -8735,15 +8664,6 @@ name|port
 decl_stmt|;
 block|{
 name|struct
-name|tty
-modifier|*
-name|tp
-init|=
-name|port
-operator|->
-name|tty
-decl_stmt|;
-name|struct
 name|dgb_softc
 modifier|*
 name|sc
@@ -9260,14 +9180,6 @@ init|=
 name|tp
 operator|->
 name|t_dev
-decl_stmt|;
-name|int
-name|mynor
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|unit

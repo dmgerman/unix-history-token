@@ -635,6 +635,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|nrc_tty
 init|=
@@ -1401,8 +1402,6 @@ decl_stmt|;
 block|{
 specifier|register
 name|int
-name|i
-decl_stmt|,
 name|chan
 decl_stmt|,
 name|nec
@@ -3399,10 +3398,6 @@ modifier|*
 name|eptr
 decl_stmt|;
 specifier|register
-name|int
-name|s
-decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -3413,8 +3408,6 @@ name|int
 name|chan
 decl_stmt|,
 name|icnt
-decl_stmt|,
-name|c
 decl_stmt|,
 name|nec
 decl_stmt|,
@@ -6546,8 +6539,6 @@ name|rce
 decl_stmt|;
 specifier|register
 name|int
-name|i
-decl_stmt|,
 name|nec
 decl_stmt|;
 name|nec
@@ -7399,10 +7390,6 @@ decl_stmt|;
 block|{
 name|int
 name|chan
-init|=
-literal|0
-decl_stmt|,
-name|nopt
 init|=
 literal|0
 decl_stmt|;
@@ -8586,9 +8573,6 @@ modifier|*
 name|chan
 decl_stmt|;
 block|{
-name|int
-name|unit
-decl_stmt|;
 name|timeout
 argument_list|(
 name|rc_wakeup

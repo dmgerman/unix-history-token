@@ -284,6 +284,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -321,6 +327,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -976,6 +987,12 @@ begin_comment
 comment|/*  * iBCS2 semsys call  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1087,6 +1104,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

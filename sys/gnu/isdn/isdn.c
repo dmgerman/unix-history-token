@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|_isdnid
-index|[]
-init|=
-literal|"@(#)$Id: isdn.c,v 1.11 1995/12/10 15:54:17 bde Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.11 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: isdn.c,v 1.12 1995/12/17 21:17:48 phk Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.12 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_comment
@@ -236,20 +226,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|isdn_stat
-name|__P
-argument_list|(
-operator|(
-name|int
-name|cn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|passout
 name|__P
@@ -287,13 +263,6 @@ begin_decl_stmt
 specifier|static
 name|d_read_t
 name|isdnread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_write_t
-name|isdnwrite
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,9 +1084,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 if|if
 condition|(
 name|minor
@@ -1382,8 +1348,6 @@ name|int
 name|err
 decl_stmt|,
 name|x
-decl_stmt|,
-name|i
 decl_stmt|;
 name|isdn_appl_t
 modifier|*
@@ -1392,16 +1356,6 @@ decl_stmt|;
 name|isdn_ctrl_t
 modifier|*
 name|ctrl
-decl_stmt|;
-name|short
-modifier|*
-name|val
-init|=
-operator|(
-name|short
-operator|*
-operator|)
-name|data
 decl_stmt|;
 name|unsigned
 name|ab
@@ -2354,41 +2308,6 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|isdn_stat
-parameter_list|(
-name|int
-name|cn
-parameter_list|)
-block|{
-name|isdn_ctrl_t
-modifier|*
-name|ctrl
-init|=
-operator|&
-name|isdn_ctrl
-index|[
-name|cn
-index|]
-decl_stmt|;
-return|return
-operator|(
-call|(
-modifier|*
-name|ctrl
-operator|->
-name|state
-call|)
-argument_list|(
-name|cn
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 

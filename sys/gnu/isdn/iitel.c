@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|_itelid
-index|[]
-init|=
-literal|"@(#)$Id: iitel.c,v 1.12 1996/03/28 14:27:51 scrappy Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.12 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: iitel.c,v 1.13 1996/04/07 13:20:40 bde Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.13 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -733,9 +723,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|struct
 name|itel_data
 modifier|*
@@ -931,14 +918,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd

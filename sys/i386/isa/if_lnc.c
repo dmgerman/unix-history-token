@@ -311,6 +311,12 @@ index|]
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LNC_MULTICAST
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -326,6 +332,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

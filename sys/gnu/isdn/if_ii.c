@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|_if_iiid
-index|[]
-init|=
-literal|"@(#)$Id: if_ii.c,v 1.4 1995/11/16 10:10:50 bde Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.4 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: if_ii.c,v 1.5 1995/12/17 21:17:41 phk Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.5 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_comment
@@ -364,16 +354,6 @@ parameter_list|)
 block|{
 name|int
 name|s
-decl_stmt|,
-name|isr
-decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|ifq
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -514,11 +494,6 @@ name|int
 name|dir
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*

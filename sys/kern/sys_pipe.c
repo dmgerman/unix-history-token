@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.14 1996/03/17 04:52:10 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.15 1996/03/25 01:48:28 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -406,22 +406,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|pipebufferinit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pipe
-operator|*
-name|cpipe
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|pipeinit
 name|__P
 argument_list|(
@@ -564,22 +548,6 @@ expr|struct
 name|pipe
 operator|*
 name|wpipe
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|pipe_mark_pages_clean
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pipe
-operator|*
-name|cpipe
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4429,11 +4397,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|pipe
 modifier|*

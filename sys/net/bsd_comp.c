@@ -4,7 +4,7 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * from: Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp  * $Id$  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * from: Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp  * $Id: bsd_comp.c,v 1.3 1995/10/31 20:51:22 peter Exp $  */
 end_comment
 
 begin_include
@@ -2067,11 +2067,6 @@ name|ent
 decl_stmt|,
 name|ilen
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|np
-decl_stmt|;
 name|u_char
 modifier|*
 name|rptr
@@ -2090,10 +2085,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-modifier|*
-name|mnp
 decl_stmt|;
 define|#
 directive|define
@@ -3526,11 +3517,6 @@ decl_stmt|,
 name|codelen
 decl_stmt|,
 name|extra
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|last
 decl_stmt|;
 comment|/*      * Save the address/control from the PPP header      * and then get the sequence number.      */
 operator|*

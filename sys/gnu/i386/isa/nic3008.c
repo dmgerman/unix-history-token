@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|nic38_id
-index|[]
-init|=
-literal|"@(#)$Id: nic3008.c,v 1.14 1995/12/17 21:14:34 phk Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.14 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.14  1995/12/17 21:14:34  phk  * Staticize.  *  * Revision 1.13  1995/12/08  23:19:29  phk  * Julian forgot to make the *devsw structures static.  *  * Revision 1.12  1995/12/08  11:12:45  julian  * Pass 3 of the great devsw changes  * most devsw referenced functions are now static, as they are  * in the same file as their devsw structure. I've also added DEVFS  * support for nearly every device in the system, however  * many of the devices have 'incorrect' names under DEVFS  * because I couldn't quickly work out the correct naming conventions.  * (but devfs won't be coming on line for a month or so anyhow so that doesn't  * matter)  *  * If you "OWN" a device which would normally have an entry in /dev  * then search for the devfs_add_devsw() entries and munge to make them right..  * check out similar devices to see what I might have done in them in you  * can't see what's going on..  * for a laugh compare conf.c conf.h defore and after... :)  * I have not doen DEVFS entries for any DISKSLICE devices yet as that will be  * a much more complicated job.. (pass 5 :)  *  * pass 4 will be to make the devsw tables of type (cdevsw * )  * rather than (cdevsw)  * seems to work here..  * complaints to the usual places.. :)  *  * Revision 1.11  1995/11/29  14:39:07  julian  * If you're going to mechanically replicate something in 50 files  * it's best to not have a (compiles cleanly) typo in it! (sigh)  *  * Revision 1.10  1995/11/29  10:47:04  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.9  1995/11/21  14:56:01  bde  * Completed function declarations, added prototypes and removed redundant  * declarations.  *  * Revision 1.8  1995/11/18  04:19:44  bde  * Fixed the type of nic_listen().  A trailing arg was missing.  *  * Fixed calls to s_intr().  There was sometimes an extra trailing arg.  *  * Revision 1.7  1995/09/08  11:06:46  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/* @(#)$Id: nic3008.c,v 1.15 1996/03/28 14:27:27 scrappy Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.15 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.15  1996/03/28 14:27:27  scrappy  * Switched from using devfs_add_sw() to using devfs_add_swf()  *  * Reviewed by:	julian@freebsd.org  *  * Revision 1.14  1995/12/17 21:14:34  phk  * Staticize.  *  * Revision 1.13  1995/12/08  23:19:29  phk  * Julian forgot to make the *devsw structures static.  *  * Revision 1.12  1995/12/08  11:12:45  julian  * Pass 3 of the great devsw changes  * most devsw referenced functions are now static, as they are  * in the same file as their devsw structure. I've also added DEVFS  * support for nearly every device in the system, however  * many of the devices have 'incorrect' names under DEVFS  * because I couldn't quickly work out the correct naming conventions.  * (but devfs won't be coming on line for a month or so anyhow so that doesn't  * matter)  *  * If you "OWN" a device which would normally have an entry in /dev  * then search for the devfs_add_devsw() entries and munge to make them right..  * check out similar devices to see what I might have done in them in you  * can't see what's going on..  * for a laugh compare conf.c conf.h defore and after... :)  * I have not doen DEVFS entries for any DISKSLICE devices yet as that will be  * a much more complicated job.. (pass 5 :)  *  * pass 4 will be to make the devsw tables of type (cdevsw * )  * rather than (cdevsw)  * seems to work here..  * complaints to the usual places.. :)  *  * Revision 1.11  1995/11/29  14:39:07  julian  * If you're going to mechanically replicate something in 50 files  * it's best to not have a (compiles cleanly) typo in it! (sigh)  *  * Revision 1.10  1995/11/29  10:47:04  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.9  1995/11/21  14:56:01  bde  * Completed function declarations, added prototypes and removed redundant  * declarations.  *  * Revision 1.8  1995/11/18  04:19:44  bde  * Fixed the type of nic_listen().  A trailing arg was missing.  *  * Fixed calls to s_intr().  There was sometimes an extra trailing arg.  *  * Revision 1.7  1995/09/08  11:06:46  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2936,8 +2926,6 @@ name|mb
 index|]
 decl_stmt|;
 name|int
-name|r
-decl_stmt|,
 name|l
 decl_stmt|;
 name|u_char
@@ -3912,12 +3900,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|u_char
-name|unit
-decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|x
 decl_stmt|;
 name|struct
@@ -5453,9 +5436,6 @@ name|u_char
 operator|*
 operator|)
 name|dpr
-decl_stmt|;
-name|u_char
-name|mno
 decl_stmt|;
 name|b
 operator|+=

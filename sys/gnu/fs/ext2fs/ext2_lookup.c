@@ -3724,15 +3724,6 @@ name|count
 decl_stmt|,
 name|namlen
 decl_stmt|;
-name|int
-name|DIRBLKSIZ
-init|=
-name|ip
-operator|->
-name|i_e2fs
-operator|->
-name|s_blocksize
-decl_stmt|;
 define|#
 directive|define
 name|MINDIRSIZ

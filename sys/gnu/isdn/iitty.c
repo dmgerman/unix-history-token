@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|_ittyid
-index|[]
-init|=
-literal|"@(#)$Id: iitty.c,v 1.20 1996/03/28 14:27:52 scrappy Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.20 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: iitty.c,v 1.21 1996/04/02 22:06:23 gpalmer Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.21 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -1651,12 +1641,7 @@ name|t
 decl_stmt|;
 block|{
 specifier|register
-name|ity
-expr_stmt|;
-specifier|register
 name|int
-name|cfcr
-decl_stmt|,
 name|cflag
 init|=
 name|t

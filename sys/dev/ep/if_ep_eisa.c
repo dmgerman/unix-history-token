@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.1 1996/02/26 01:01:37 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.2 1996/02/28 17:18:55 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -464,11 +464,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|stat
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|count
 decl_stmt|;
 name|count
@@ -761,9 +756,6 @@ name|eisa_ioport
 decl_stmt|;
 name|u_char
 name|level_intr
-decl_stmt|;
-name|u_short
-name|conf
 decl_stmt|;
 name|int
 name|i

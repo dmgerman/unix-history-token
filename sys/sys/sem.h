@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.6 1995/08/30 00:33:34 bde Exp $ */
+comment|/* $Id: sem.h,v 1.7 1995/12/27 15:25:30 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -633,19 +633,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* semaphore pool */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|map
-modifier|*
-name|semmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* semaphore allocation map */
 end_comment
 
 begin_decl_stmt

@@ -303,19 +303,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ext2_mountroot
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ext2_reload
 name|__P
 argument_list|(
@@ -568,17 +555,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Called by main() when ufs is going to be mounted as root.  *  * Name is updated by mount(8) after booting.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROOTNAME
-value|"root_device"
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -604,6 +580,36 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ext2_mountroot
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Called by main() when ext2fs is going to be mounted as root.  *  * Name is updated by mount(8) after booting.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROOTNAME
+value|"root_device"
+end_define
 
 begin_function
 specifier|static
@@ -982,6 +988,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.11 1996/05/13 08:38:15 asami Exp $ */
+comment|/* $Id: ccd.c,v 1.12 1996/05/13 09:17:42 asami Exp $ */
 end_comment
 
 begin_comment
@@ -783,6 +783,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CCD_DEBUG
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -795,6 +801,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3129,13 +3140,7 @@ name|unit
 index|]
 decl_stmt|;
 specifier|register
-name|daddr_t
-name|bn
-decl_stmt|;
-specifier|register
 name|int
-name|sz
-decl_stmt|,
 name|s
 decl_stmt|;
 name|int
@@ -5018,6 +5023,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CCD_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -5092,6 +5103,11 @@ name|k
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -7015,7 +7031,6 @@ name|sc_dkdev
 operator|.
 name|dk_label
 decl_stmt|;
-comment|/*	struct cpu_disklabel *clp =&cs->sc_dkdev.dk_cpulabel; */
 name|struct
 name|ccdgeom
 modifier|*
@@ -7025,14 +7040,6 @@ operator|&
 name|cs
 operator|->
 name|sc_geom
-decl_stmt|;
-name|struct
-name|dos_partition
-name|dos_partdummy
-decl_stmt|;
-name|struct
-name|dkbad
-name|dkbaddummy
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -7045,7 +7052,6 @@ name|lp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*	bzero(clp, sizeof(*clp)); */
 name|lp
 operator|->
 name|d_secperunit
@@ -7257,10 +7263,8 @@ operator|->
 name|sc_dkdev
 operator|.
 name|dk_label
-comment|/*,&dos_partdummy,&dkbaddummy*/
 argument_list|)
 condition|)
-comment|/*,&cs->sc_dkdev.dk_cpulabel)) */
 name|ccdmakedisklabel
 argument_list|(
 name|cs

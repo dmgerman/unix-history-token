@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-name|_ispyid
-index|[]
-init|=
-literal|"@(#)$Id: iispy.c,v 1.10 1995/12/17 21:17:43 phk Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.10 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: iispy.c,v 1.11 1996/03/28 14:27:51 scrappy Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.11 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -139,8 +129,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|dir
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -548,9 +541,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|struct
 name|ispy_data
 modifier|*
@@ -698,14 +688,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd

@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.43 1996/02/28 17:19:03 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.44 1996/05/24 15:22:36 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -912,8 +912,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|io_base
-decl_stmt|,
 name|id_port
 init|=
 name|ELINK_ID_PORT
@@ -1664,9 +1662,6 @@ name|epb
 decl_stmt|;
 name|u_short
 name|k
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2549,8 +2544,6 @@ name|int
 name|s
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 comment|/*     if (ifp->if_addrlist == (struct ifaddr *) 0) 	return; 	*/
 name|s

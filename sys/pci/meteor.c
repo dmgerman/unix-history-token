@@ -3612,6 +3612,12 @@ parameter_list|)
 value|((x)& 0x07)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -3722,6 +3728,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Meteor character device driver routines ** **--------------------------------------------------------- */
@@ -3972,9 +3983,14 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_DEALLOC_ABOVE
 name|int
 name|temp
 decl_stmt|;
+endif|#
+directive|endif
 name|unit
 operator|=
 name|UNIT

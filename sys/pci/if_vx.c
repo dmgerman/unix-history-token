@@ -762,16 +762,6 @@ decl_stmt|;
 name|u_long
 name|j
 decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
-decl_stmt|;
 if|if
 condition|(
 name|unit
