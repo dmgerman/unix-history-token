@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: output.c,v 1.9 1999/05/30 18:06:56 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,7 +547,14 @@ break|break;
 case|case
 literal|'\b'
 case|:
-comment|/* markup() before putbs() ? */
+comment|/* 			 * column must be at least one greater than 			 * eff_horiz_off (ie. we must be in the second or 			 * beyond screen column) or we'll just end-up 			 * backspacing up to the previous line. 			 */
+if|if
+condition|(
+name|column
+operator|>
+name|eff_horiz_off
+condition|)
+block|{
 name|column
 operator|+=
 name|markup
@@ -565,6 +572,7 @@ expr_stmt|;
 name|column
 operator|--
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'\r'
