@@ -4169,9 +4169,9 @@ name|a_bp
 expr_stmt|;
 name|vp
 operator|=
-name|bp
+name|a
 operator|->
-name|b_vp
+name|a_vp
 expr_stmt|;
 name|node
 operator|=

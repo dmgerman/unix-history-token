@@ -368,12 +368,6 @@ name|b_flags
 operator|&
 name|B_INVAL
 operator|)
-operator|||
-name|ep
-operator|->
-name|b_vp
-operator|==
-name|NULLVP
 condition|)
 continue|continue;
 name|vp
