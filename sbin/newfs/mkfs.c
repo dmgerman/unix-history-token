@@ -831,7 +831,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"increasing fragment size from %d to sectorsize (%d)\n"
+literal|"increasing fragment size from %d to sector size (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -887,7 +887,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"increasing block size from %d to fragsize (%d)\n"
+literal|"increasing block size from %d to fragment size (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -922,7 +922,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"increasing fragsize from %d to block size / %d (%d)\n"
+literal|"increasing fragment size from %d to block size / %d (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -1050,7 +1050,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SYSERR: fragsize too small %d (block/frag ratio)\n"
+literal|"fragment size %d is still too small (can't happen)\n"
 argument_list|,
 name|sblock
 operator|.
