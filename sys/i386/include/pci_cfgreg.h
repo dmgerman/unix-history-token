@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|CONF1_ENABLE_MSK
-value|0x7ff00000ul
+value|0x7f000000ul
 end_define
 
 begin_define
