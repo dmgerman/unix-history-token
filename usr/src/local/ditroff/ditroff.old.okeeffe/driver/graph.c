@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.2	83/07/05  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.3	83/07/05  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
@@ -279,7 +279,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************************************  *  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  *	This routine draws regular ellipses given the major diagonals.  *	It does so by drawing many small lines, every one pixels.  *  *	The ellipse formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1  *	is used, converting to y = f(x) and duplicating the lines about  *	the vertical axis.  *  * Results:	The current position is at the rightmost point of the ellipse  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  *	This routine draws regular ellipses given the major diagonals.  *	It does so by drawing many small lines, every other pixel.  *  *	The ellipse formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1  *	is used, converting to y = f(x) and duplicating the lines about  *	the vertical axis.  *  * Results:	The current position is at the rightmost point of the ellipse  *  ******************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -446,7 +446,7 @@ name|HGtline
 argument_list|(
 name|x
 operator|-
-literal|1
+literal|2
 argument_list|,
 name|oldy1
 argument_list|,
@@ -468,7 +468,7 @@ name|HGtline
 argument_list|(
 name|x
 operator|-
-literal|1
+literal|2
 argument_list|,
 name|oldy2
 argument_list|,
@@ -489,8 +489,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-operator|--
 name|hd
+operator|-=
+literal|2
 condition|)
 do|;
 block|}
