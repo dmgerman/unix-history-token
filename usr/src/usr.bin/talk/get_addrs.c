@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_addrs.c	5.4 (Berkeley) %G%"
+literal|"@(#)get_addrs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,21 +93,25 @@ if|if
 condition|(
 name|hp
 operator|==
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"talk: %s: Can't figure out network address.\n"
+literal|"talk: %s: "
 argument_list|,
 name|my_machine_name
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -157,21 +161,25 @@ if|if
 condition|(
 name|hp
 operator|==
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"talk: %s: Can't figure out network address.\n"
+literal|"talk: %s: "
 argument_list|,
 name|his_machine_name
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
