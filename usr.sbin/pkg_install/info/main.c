@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: /usr1/cvs/jkh/pkg_install/info/main.c,v 1.5 1993/09/04 05:06:41 jkh Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
