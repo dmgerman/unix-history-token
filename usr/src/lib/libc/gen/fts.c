@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.39 (Berkeley) %G%"
+literal|"@(#)fts.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +153,22 @@ name|FTS
 operator|*
 operator|,
 name|FTSENT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|fts_maxarglen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+specifier|const
 operator|*
 operator|)
 argument_list|)
@@ -376,8 +392,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|nitems
-decl_stmt|,
-name|maxlen
 decl_stmt|;
 name|FTSENT
 modifier|*
@@ -468,7 +482,7 @@ argument_list|(
 name|FTS_NOCHDIR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start out with more than 1K of path space, and enough, in any 	 * case, to hold the user's paths. 	 */
+comment|/* 	 * Start out with 1K of path space, and enough, in any case, 	 * to hold the user's paths. 	 */
 if|if
 condition|(
 name|fts_palloc
@@ -477,7 +491,10 @@ name|sp
 argument_list|,
 name|MAX
 argument_list|(
-name|maxlen
+name|fts_maxarglen
+argument_list|(
+name|argv
+argument_list|)
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -520,8 +537,6 @@ name|root
 operator|=
 name|NULL
 operator|,
-name|maxlen
-operator|=
 name|nitems
 operator|=
 literal|0
@@ -560,16 +575,6 @@ goto|goto
 name|mem3
 goto|;
 block|}
-if|if
-condition|(
-name|maxlen
-operator|<
-name|len
-condition|)
-name|maxlen
-operator|=
-name|len
-expr_stmt|;
 name|p
 operator|=
 name|fts_alloc
@@ -1142,7 +1147,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(p->fts_level == FTS_ROOTLEVEL&& p->fts_pathlen == 1&& \ 	    p->fts_path[0] == '/' ? 0 : p->fts_pathlen)
+value|(p->fts_level == FTS_ROOTLEVEL&& p->fts_pathlen == 1&&	\ 	    p->fts_path[0] == '/' ? 0 : p->fts_pathlen)
 end_define
 
 begin_function
@@ -3945,7 +3950,7 @@ name|ADJUST
 parameter_list|(
 name|p
 parameter_list|)
-value|{ \ 	(p)->fts_accpath = addr + ((p)->fts_accpath - (p)->fts_path); \ 	(p)->fts_path = addr; \ }
+value|{							\ 	(p)->fts_accpath = addr + ((p)->fts_accpath - (p)->fts_path);	\ 	(p)->fts_path = addr;						\ }
 comment|/* Adjust the current set of children. */
 for|for
 control|(
@@ -4005,6 +4010,63 @@ operator|->
 name|fts_parent
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|size_t
+name|fts_maxarglen
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|size_t
+name|len
+decl_stmt|,
+name|max
+decl_stmt|;
+for|for
+control|(
+name|max
+operator|=
+literal|0
+init|;
+operator|*
+name|argv
+condition|;
+operator|++
+name|argv
+control|)
+if|if
+condition|(
+operator|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+operator|)
+operator|>
+name|max
+condition|)
+name|max
+operator|=
+name|len
+expr_stmt|;
+return|return
+operator|(
+name|max
+operator|)
+return|;
 block|}
 end_function
 
