@@ -1813,7 +1813,7 @@ comment|/* someone waiting for data */
 block|if (sc->state& UMS_ASLEEP) { 		sc->state&= ~UMS_ASLEEP; 		wakeup(sc); 	} 	if (sc->state& UMS_SELECT) { 		sc->state&= ~UMS_SELECT; 		selwakeup(&sc->rsel); 	}
 endif|#
 directive|endif
-name|remove_dev
+name|destroy_dev
 argument_list|(
 name|sc
 operator|->

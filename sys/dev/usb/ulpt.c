@@ -1407,14 +1407,14 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 comment|/* XXX not implemented yet */
-name|remove_dev
+name|destroy_dev
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|remove_dev
+name|destroy_dev
 argument_list|(
 name|sc
 operator|->

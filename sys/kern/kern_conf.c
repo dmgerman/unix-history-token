@@ -1427,7 +1427,7 @@ end_function
 
 begin_function
 name|void
-name|remove_dev
+name|destroy_dev
 parameter_list|(
 name|dev_t
 name|dev
