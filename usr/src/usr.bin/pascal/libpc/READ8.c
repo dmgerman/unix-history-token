@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ8.c 1.7 %G%"
+literal|"@(#)READ8.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	given a file pointer, read a sequence of characters of the  *	syntax of section 6.1.5 and form them into a double.  *  *	the syntax of a signed-real is:  *	    [-|+] digit {digit} e [+|-] digit {digit}  *	or  *	    [-|+] digit {digit} . digit {digit} [e [+|-] digit {digit}]  *  *	returns:  *		1	for success (with value in *doublep)  *		0	on error (with *doublep unchanged)  *	       -1	on end-of-file during read (with *doublep unchanged)  *	side effects:  *	      errno	may be set to ERANGE if atof() sets it.  */
+comment|/*  *	given a file pointer, read a sequence of characters of the  *	syntax of section 6.1.5 and form them into a double.  *  *	the syntax of a signed-real is:  *	    [-|+] digit {digit} [ . digit {digit} ] [ e [+|-] digit {digit} ]  *  *	returns:  *		1	for success (with value in *doublep)  *		0	on error (with *doublep unchanged)  *	       -1	on end-of-file during read (with *doublep unchanged)  *	side effects:  *	      errno	may be set to ERANGE if atof() sets it.  */
 end_comment
 
 begin_macro
@@ -273,6 +273,22 @@ name|sequencep
 parameter_list|)
 define|\
 value|while (*sequencep) \ 		sequencep++;
+comment|/* general reader of the next character */
+define|#
+directive|define
+name|NEXT_CHAR
+parameter_list|(
+name|read
+parameter_list|,
+name|filep
+parameter_list|,
+name|format
+parameter_list|,
+name|sequencep
+parameter_list|)
+define|\
+value|read = fscanf(filep, "%c", sequencep); \ 	RETURN_ON_EOF(read); \ 	*++sequencep = '\0';
+comment|/* e.g. use %[0123456789] for {digit}, and check read */
 define|#
 directive|define
 name|SOME
@@ -287,6 +303,7 @@ name|sequencep
 parameter_list|)
 define|\
 value|read = fscanf(filep, format, sequencep); \ 	RETURN_ON_EOF(read); \ 	PUSH_TO_NULL(sequencep);
+comment|/* e.g. use %[0123456789] for digit {digit} */
 define|#
 directive|define
 name|AT_LEAST_ONE
@@ -303,7 +320,7 @@ define|\
 value|read = fscanf(filep, format, sequencep); \ 	RETURN_ON_EOF(read); \ 	if (strlen(sequencep)< 1) \ 		return (0); \ 	PUSH_TO_NULL(sequencep);
 define|#
 directive|define
-name|EXACTLY_ONE
+name|ANY_ONE_OF
 parameter_list|(
 name|read
 parameter_list|,
@@ -342,7 +359,7 @@ name|sequencep
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * skip leading whitespace 	 */
+comment|/* 	 *	skip leading whitespace 	 */
 name|SOME
 argument_list|(
 name|read
@@ -354,7 +371,7 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	[ "+" | "-" ] digit {digits} 	 */
+comment|/* 	 *	this much is required: 	 *	[ "+" | "-" ] digit {digits} 	 */
 name|AT_MOST_ONE
 argument_list|(
 name|read
@@ -364,6 +381,15 @@ argument_list|,
 literal|"%[+-]"
 argument_list|,
 name|sequencep
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"leading sign<%s>\n"
+argument_list|,
+name|sequence
 argument_list|)
 expr_stmt|;
 name|AT_LEAST_ONE
@@ -377,8 +403,50 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	either 	 *		"." digit {digit} [ "e" [ "+" | "-" ] digit {digits} ] 	 *	or 	 *		"e" [ "+" | "-" ] digit {digits} 	 */
-name|AT_MOST_ONE
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"leading digits<%s>\n"
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
+comment|/* 	 *	any of this is optional: 	 *	[ `.' digit {digit} ] [ `e' [ `+' | `-' ] digit {digits} ] 	 */
+operator|*
+name|sequencep
+operator|=
+name|getc
+argument_list|(
+name|filep
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"before [.e]		0x%x\n"
+argument_list|,
+operator|*
+name|sequencep
+argument_list|)
+expr_stmt|;
+name|ungetc
+argument_list|(
+operator|*
+name|sequencep
+argument_list|,
+name|filep
+argument_list|)
+expr_stmt|;
+operator|*
+name|sequencep
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* ANY_ONE_OF(read, filep, "%c", sequencep);*/
+comment|/* read = fscanf(filep, "%c", sequencep); 	 * *++sequencep = '\0'; 	 */
+name|NEXT_CHAR
 argument_list|(
 name|read
 argument_list|,
@@ -387,6 +455,17 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[.e] (read %d)<%s>\n"
+argument_list|,
+name|read
+argument_list|,
+name|sequence
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -423,6 +502,15 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"trailing digits<%s>\n"
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -440,7 +528,8 @@ goto|goto
 name|convert
 goto|;
 block|}
-name|AT_MOST_ONE
+comment|/* AT_MOST_ONE(read, filep, "%c", sequencep); */
+name|NEXT_CHAR
 argument_list|(
 name|read
 argument_list|,
@@ -449,6 +538,15 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"optional e<%s>\n"
+argument_list|,
+name|sequence
 argument_list|)
 expr_stmt|;
 if|if
@@ -477,7 +575,8 @@ comment|/* fall through */
 case|case
 literal|'e'
 case|:
-name|AT_MOST_ONE
+comment|/* ANY_ONE_OF(read, filep, "%c", sequencep); */
+name|NEXT_CHAR
 argument_list|(
 name|read
 argument_list|,
@@ -486,6 +585,15 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"exponent sign<%s>\n"
+argument_list|,
+name|sequence
 argument_list|)
 expr_stmt|;
 if|if
@@ -525,6 +633,15 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"signed exponent<%s>\n"
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -552,6 +669,15 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unsigned exponent<%s>\n"
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -577,6 +703,15 @@ block|}
 name|convert
 label|:
 comment|/* 	 * convert sequence to double 	 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"convert<%s>\n"
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
 operator|*
 name|doublep
 operator|=
