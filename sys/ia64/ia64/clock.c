@@ -263,7 +263,7 @@ comment|/* counter_mask */
 literal|0
 block|,
 comment|/* frequency */
-literal|"IA64 ITC"
+literal|"ITC"
 comment|/* name */
 block|}
 decl_stmt|;
