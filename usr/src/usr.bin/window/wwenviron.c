@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.20 (Berkeley) %G%"
+literal|"@(#)wwenviron.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,10 @@ name|ww_socket
 operator|)
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|i
 operator|=
@@ -150,6 +153,29 @@ condition|)
 goto|goto
 name|bad
 goto|;
+if|if
+condition|(
+name|wwsettty
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|wwwintty
+argument_list|,
+operator|(
+expr|struct
+name|ww_tty
+operator|*
+operator|)
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+block|}
 operator|(
 name|void
 operator|)

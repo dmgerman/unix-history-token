@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwopen.c	3.25 (Berkeley) %G%"
+literal|"@(#)wwopen.c	3.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,30 +429,6 @@ condition|(
 name|wwgetpty
 argument_list|(
 name|w
-argument_list|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|bad
-goto|;
-if|if
-condition|(
-name|wwsettty
-argument_list|(
-name|w
-operator|->
-name|ww_pty
-argument_list|,
-operator|&
-name|wwwintty
-argument_list|,
-operator|(
-expr|struct
-name|ww_tty
-operator|*
-operator|)
-literal|0
 argument_list|)
 operator|<
 literal|0
