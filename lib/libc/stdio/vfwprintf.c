@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.51 2003/03/12 20:30:00 das Exp");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.52 2003/03/14 04:48:09 das Exp");
 endif|#
 directive|endif
 end_endif
@@ -6380,10 +6380,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|digits
 operator|==
 literal|'0'
+operator|||
+operator|*
+name|digits
+operator|==
+literal|'\0'
+operator|)
 operator|&&
 name|value
 condition|)
