@@ -92,7 +92,7 @@ name|exclude
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|exclude
+argument|struct exclude
 argument_list|)
 name|link
 expr_stmt|;
@@ -113,7 +113,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|exclude
+argument|struct exclude
 argument_list|)
 name|excludes
 expr_stmt|;

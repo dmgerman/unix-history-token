@@ -25,7 +25,7 @@ name|callback
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|callback
+argument|struct callback
 argument_list|)
 name|chain
 expr_stmt|;
@@ -48,7 +48,7 @@ name|LIST_HEAD
 argument_list|(
 argument|cbhead
 argument_list|,
-argument|callback
+argument|struct callback
 argument_list|)
 end_macro
 

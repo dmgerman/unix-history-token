@@ -752,7 +752,7 @@ name|intr_config_hook
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|intr_config_hook
+argument|struct intr_config_hook
 argument_list|)
 name|ich_links
 expr_stmt|;

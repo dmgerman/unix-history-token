@@ -55,7 +55,7 @@ name|fdescnode
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|fdescnode
+argument|struct fdescnode
 argument_list|)
 name|fd_hash
 expr_stmt|;

@@ -59,7 +59,7 @@ name|fullblock
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|usb_dma_block
+argument|struct usb_dma_block
 argument_list|)
 name|next
 expr_stmt|;

@@ -27,7 +27,7 @@ name|eventhandler_entry
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|eventhandler_entry
+argument|struct eventhandler_entry
 argument_list|)
 name|ee_link
 expr_stmt|;
@@ -48,7 +48,7 @@ name|eventhandler_list
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|eventhandler_list
+argument|struct eventhandler_list
 argument_list|)
 name|el_link
 expr_stmt|;
@@ -66,7 +66,7 @@ value|(1<<0)
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|eventhandler_entry
+argument|struct eventhandler_entry
 argument_list|)
 name|el_entries
 expr_stmt|;

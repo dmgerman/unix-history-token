@@ -90,7 +90,7 @@ name|nwnode
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|nwnode
+argument|struct nwnode
 argument_list|)
 name|n_hash
 expr_stmt|;

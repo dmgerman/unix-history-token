@@ -324,7 +324,7 @@ name|ip_fw_chain
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|ip_fw_chain
+argument|struct ip_fw_chain
 argument_list|)
 name|chain
 expr_stmt|;

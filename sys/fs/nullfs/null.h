@@ -51,7 +51,7 @@ name|null_node
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|null_node
+argument|struct null_node
 argument_list|)
 name|null_hash
 expr_stmt|;

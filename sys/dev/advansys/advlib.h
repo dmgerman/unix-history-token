@@ -197,7 +197,7 @@ name|ccb
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|adv_ccb_info
+argument|struct adv_ccb_info
 argument_list|)
 name|links
 expr_stmt|;
@@ -2319,7 +2319,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;
@@ -2331,7 +2331,7 @@ decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|adv_ccb_info
+argument|struct adv_ccb_info
 argument_list|)
 name|free_ccb_infos
 expr_stmt|;

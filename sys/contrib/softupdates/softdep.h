@@ -102,7 +102,7 @@ comment|/*  * The workitem queue.  *   * It is sometimes useful and/or necessary
 end_comment
 
 begin_comment
-comment|/* LIST_HEAD(workhead, worklist);	-- declared in buf.h */
+comment|/* LIST_HEAD(workhead, struct worklist);	-- declared in buf.h */
 end_comment
 
 begin_comment
@@ -115,7 +115,7 @@ name|worklist
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|worklist
+argument|struct worklist
 argument_list|)
 name|wk_list
 expr_stmt|;
@@ -283,6 +283,7 @@ name|LIST_HEAD
 argument_list|(
 name|dirremhd
 argument_list|,
+expr|struct
 name|dirrem
 argument_list|)
 expr_stmt|;
@@ -293,6 +294,7 @@ name|LIST_HEAD
 argument_list|(
 name|diraddhd
 argument_list|,
+expr|struct
 name|diradd
 argument_list|)
 expr_stmt|;
@@ -303,6 +305,7 @@ name|LIST_HEAD
 argument_list|(
 name|newblkhd
 argument_list|,
+expr|struct
 name|newblk
 argument_list|)
 expr_stmt|;
@@ -313,6 +316,7 @@ name|LIST_HEAD
 argument_list|(
 name|inodedephd
 argument_list|,
+expr|struct
 name|inodedep
 argument_list|)
 expr_stmt|;
@@ -323,6 +327,7 @@ name|LIST_HEAD
 argument_list|(
 name|allocindirhd
 argument_list|,
+expr|struct
 name|allocindir
 argument_list|)
 expr_stmt|;
@@ -333,6 +338,7 @@ name|LIST_HEAD
 argument_list|(
 name|allocdirecthd
 argument_list|,
+expr|struct
 name|allocdirect
 argument_list|)
 expr_stmt|;
@@ -343,6 +349,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|allocdirectlst
 argument_list|,
+expr|struct
 name|allocdirect
 argument_list|)
 expr_stmt|;
@@ -385,7 +392,7 @@ value|pd_list.wk_state
 comment|/* check for multiple I/O starts */
 name|LIST_ENTRY
 argument_list|(
-argument|pagedep
+argument|struct pagedep
 argument_list|)
 name|pd_hash
 expr_stmt|;
@@ -446,7 +453,7 @@ value|id_list.wk_state
 comment|/* inode dependency state */
 name|LIST_ENTRY
 argument_list|(
-argument|inodedep
+argument|struct inodedep
 argument_list|)
 name|id_hash
 expr_stmt|;
@@ -473,7 +480,7 @@ decl_stmt|;
 comment|/* saved dinode contents */
 name|LIST_ENTRY
 argument_list|(
-argument|inodedep
+argument|struct inodedep
 argument_list|)
 name|id_deps
 expr_stmt|;
@@ -527,7 +534,7 @@ name|newblk
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|newblk
+argument|struct newblk
 argument_list|)
 name|nb_hash
 expr_stmt|;
@@ -548,7 +555,7 @@ decl_stmt|;
 comment|/* state of bitmap dependency */
 name|LIST_ENTRY
 argument_list|(
-argument|newblk
+argument|struct newblk
 argument_list|)
 name|nb_deps
 expr_stmt|;
@@ -626,7 +633,7 @@ value|ad_list.wk_state
 comment|/* block pointer state */
 name|TAILQ_ENTRY
 argument_list|(
-argument|allocdirect
+argument|struct allocdirect
 argument_list|)
 name|ad_next
 expr_stmt|;
@@ -653,7 +660,7 @@ decl_stmt|;
 comment|/* size of old block */
 name|LIST_ENTRY
 argument_list|(
-argument|allocdirect
+argument|struct allocdirect
 argument_list|)
 name|ad_deps
 expr_stmt|;
@@ -742,7 +749,7 @@ value|ai_list.wk_state
 comment|/* indirect block pointer state */
 name|LIST_ENTRY
 argument_list|(
-argument|allocindir
+argument|struct allocindir
 argument_list|)
 name|ai_next
 expr_stmt|;
@@ -773,7 +780,7 @@ decl_stmt|;
 comment|/* address of associated indirdep */
 name|LIST_ENTRY
 argument_list|(
-argument|allocindir
+argument|struct allocindir
 argument_list|)
 name|ai_deps
 expr_stmt|;
@@ -954,7 +961,7 @@ value|da_list.wk_state
 comment|/* state of the new directory entry */
 name|LIST_ENTRY
 argument_list|(
-argument|diradd
+argument|struct diradd
 argument_list|)
 name|da_pdlist
 expr_stmt|;
@@ -1034,7 +1041,7 @@ decl_stmt|;
 comment|/* MKDIR_BODY: buffer holding dir */
 name|LIST_ENTRY
 argument_list|(
-argument|mkdir
+argument|struct mkdir
 argument_list|)
 name|md_mkdirs
 expr_stmt|;
@@ -1048,7 +1055,7 @@ name|LIST_HEAD
 argument_list|(
 argument|mkdirlist
 argument_list|,
-argument|mkdir
+argument|struct mkdir
 argument_list|)
 end_macro
 
@@ -1077,7 +1084,7 @@ value|dm_list.wk_state
 comment|/* state of the old directory entry */
 name|LIST_ENTRY
 argument_list|(
-argument|dirrem
+argument|struct dirrem
 argument_list|)
 name|dm_next
 expr_stmt|;

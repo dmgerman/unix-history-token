@@ -140,6 +140,7 @@ name|LIST_HEAD
 argument_list|(
 name|nfsrvhash
 argument_list|,
+expr|struct
 name|nfsrvcache
 argument_list|)
 operator|*
@@ -153,7 +154,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|nfsrvlru
 argument_list|,
-argument|nfsrvcache
+argument|struct nfsrvcache
 argument_list|)
 name|nfsrvlruhead
 expr_stmt|;

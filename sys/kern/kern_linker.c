@@ -215,7 +215,7 @@ typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|modlist
+argument|struct modlist
 argument_list|)
 name|modlisthead_t
 expr_stmt|;
@@ -227,7 +227,7 @@ name|modlist
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|modlist
+argument|struct modlist
 argument_list|)
 name|link
 expr_stmt|;
@@ -2264,6 +2264,7 @@ name|common
 argument_list|,
 name|cp
 argument_list|,
+expr|struct
 name|common_symbol
 argument_list|,
 name|link

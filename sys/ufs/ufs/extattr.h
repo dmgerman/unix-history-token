@@ -228,6 +228,7 @@ name|LIST_HEAD
 argument_list|(
 name|ufs_extattr_list_head
 argument_list|,
+expr|struct
 name|ufs_extattr_list_entry
 argument_list|)
 expr_stmt|;
@@ -239,7 +240,7 @@ name|ufs_extattr_list_entry
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|ufs_extattr_list_entry
+argument|struct ufs_extattr_list_entry
 argument_list|)
 name|uele_entries
 expr_stmt|;

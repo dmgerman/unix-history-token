@@ -1938,6 +1938,7 @@ name|pg_sigiolst
 argument_list|,
 name|sigio
 argument_list|,
+expr|struct
 name|sigio
 argument_list|,
 name|sio_pgsigio
@@ -1958,6 +1959,7 @@ name|p_sigiolst
 argument_list|,
 name|sigio
 argument_list|,
+expr|struct
 name|sigio
 argument_list|,
 name|sio_pgsigio

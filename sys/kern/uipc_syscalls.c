@@ -380,7 +380,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|sf_buf
+argument|struct sf_buf
 argument_list|)
 name|sf_freelist
 expr_stmt|;

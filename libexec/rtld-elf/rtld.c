@@ -5569,6 +5569,7 @@ name|list
 argument_list|,
 name|elm
 argument_list|,
+expr|struct
 name|Struct_Objlist_Entry
 argument_list|,
 name|link

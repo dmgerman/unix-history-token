@@ -21,7 +21,7 @@ name|ipflow
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|ipflow
+argument|struct ipflow
 argument_list|)
 name|ipf_next
 expr_stmt|;

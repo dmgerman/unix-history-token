@@ -429,14 +429,14 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|pl_head
 expr_stmt|;
 comment|/* list of threads at this priority */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pq_list
+argument|struct pq_list
 argument_list|)
 name|pl_link
 expr_stmt|;
@@ -462,7 +462,7 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pq_list
+argument|struct pq_list
 argument_list|)
 name|pq_queue
 expr_stmt|;
@@ -526,7 +526,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|mutex_head
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|m_queue
 expr_stmt|;
@@ -555,7 +555,7 @@ decl_stmt|;
 comment|/* 	 * Link for list of all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pthread_mutex
+argument|struct pthread_mutex
 argument_list|)
 name|m_qe
 expr_stmt|;
@@ -652,7 +652,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|cond_head
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|c_queue
 expr_stmt|;
@@ -1088,7 +1088,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|r_queue
 expr_stmt|;
@@ -1096,7 +1096,7 @@ comment|/* Read queue.                        */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|w_queue
 expr_stmt|;
@@ -1259,14 +1259,14 @@ decl_stmt|;
 comment|/* Queue entry for list of all threads: */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|tle
 expr_stmt|;
 comment|/* Queue entry for list of dead threads: */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|dle
 expr_stmt|;
@@ -1453,7 +1453,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|join_head
 argument_list|,
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|join_queue
 expr_stmt|;
@@ -1461,14 +1461,14 @@ comment|/* 	 * The current thread can belong to only one scheduling queue at 	 *
 comment|/* Priority queue entry for this thread: */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|pqe
 expr_stmt|;
 comment|/* Queue entry for this thread: */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pthread
+argument|struct pthread
 argument_list|)
 name|qe
 expr_stmt|;
@@ -1570,7 +1570,7 @@ comment|/* 	 * Queue of currently owned mutexes. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pthread_mutex
+argument|struct pthread_mutex
 argument_list|)
 name|mutexq
 expr_stmt|;
@@ -1616,7 +1616,7 @@ name|stack
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|stack
+argument|struct stack
 argument_list|)
 name|qe
 expr_stmt|;
@@ -1750,6 +1750,7 @@ begin_decl_stmt
 name|SCLASS
 name|TAILQ_HEAD
 argument_list|(,
+expr|struct
 name|pthread
 argument_list|)
 name|_thread_list
@@ -1913,6 +1914,7 @@ begin_decl_stmt
 name|SCLASS
 name|TAILQ_HEAD
 argument_list|(,
+expr|struct
 name|pthread
 argument_list|)
 name|_dead_list
@@ -2337,6 +2339,7 @@ begin_decl_stmt
 name|SCLASS
 name|TAILQ_HEAD
 argument_list|(,
+expr|struct
 name|pthread
 argument_list|)
 name|_waitingq
@@ -2351,6 +2354,7 @@ begin_decl_stmt
 name|SCLASS
 name|TAILQ_HEAD
 argument_list|(,
+expr|struct
 name|pthread
 argument_list|)
 name|_workq
@@ -2421,6 +2425,7 @@ begin_decl_stmt
 name|SCLASS
 name|SLIST_HEAD
 argument_list|(,
+expr|struct
 name|stack
 argument_list|)
 name|_stackq

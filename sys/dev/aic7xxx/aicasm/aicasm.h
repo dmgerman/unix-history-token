@@ -59,7 +59,7 @@ name|quoted_includes_only
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|path_entry
+argument|struct path_entry
 argument_list|)
 name|links
 expr_stmt|;
@@ -88,6 +88,7 @@ name|SLIST_HEAD
 argument_list|(
 name|path_list
 argument_list|,
+expr|struct
 name|path_entry
 argument_list|)
 expr_stmt|;

@@ -90,7 +90,7 @@ name|nfsdmap
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|nfsdmap
+argument|struct nfsdmap
 argument_list|)
 name|ndm_list
 expr_stmt|;
@@ -117,14 +117,14 @@ name|nfsnode
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|nfsnode
+argument|struct nfsnode
 argument_list|)
 name|n_hash
 expr_stmt|;
 comment|/* Hash chain */
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|nfsnode
+argument|struct nfsnode
 argument_list|)
 name|n_timer
 expr_stmt|;
@@ -233,7 +233,7 @@ comment|/* Ptr to silly rename struct */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|nfsdmap
+argument|struct nfsdmap
 argument_list|)
 name|nd_cook
 expr_stmt|;
@@ -470,7 +470,7 @@ end_comment
 begin_extern
 extern|extern TAILQ_HEAD(nfs_bufq
 operator|,
-extern|buf
+extern|struct buf
 end_extern
 
 begin_expr_stmt

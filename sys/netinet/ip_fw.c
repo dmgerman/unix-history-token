@@ -391,7 +391,7 @@ name|LIST_HEAD
 argument_list|(
 argument|ip_fw_head
 argument_list|,
-argument|ip_fw_chain
+argument|struct ip_fw_chain
 argument_list|)
 end_macro
 

@@ -24,6 +24,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|isa_config_list
 argument_list|,
+expr|struct
 name|isa_config_entry
 argument_list|)
 expr_stmt|;
@@ -35,7 +36,7 @@ name|isa_config_entry
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|isa_config_entry
+argument|struct isa_config_entry
 argument_list|)
 name|ice_link
 expr_stmt|;

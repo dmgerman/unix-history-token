@@ -672,7 +672,7 @@ name|hscb
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|scb
+argument|struct scb
 argument_list|)
 name|links
 expr_stmt|;
@@ -1239,7 +1239,7 @@ name|sg_vaddr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|sg_map_node
+argument|struct sg_map_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -1266,7 +1266,7 @@ comment|/* Array of kernel SCBs */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|scb
+argument|struct scb
 argument_list|)
 name|free_scbs
 expr_stmt|;
@@ -1304,7 +1304,7 @@ comment|/* dmat for our sg segments */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|sg_map_node
+argument|struct sg_map_node
 argument_list|)
 name|sg_maps
 expr_stmt|;
@@ -1346,7 +1346,7 @@ comment|/* 	 * CCBs that have been send to the controller 	 */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;

@@ -329,7 +329,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;
@@ -354,7 +354,7 @@ name|device_stats
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|cd_softc
+argument|struct cd_softc
 argument_list|)
 name|changer_links
 expr_stmt|;
@@ -1352,7 +1352,7 @@ name|flags
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|cdchanger
+argument|struct cdchanger
 argument_list|)
 name|changer_links
 expr_stmt|;
@@ -1360,7 +1360,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|chdevlist
 argument_list|,
-argument|cd_softc
+argument|struct cd_softc
 argument_list|)
 name|chluns
 expr_stmt|;
@@ -1374,7 +1374,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|changerlist
 argument_list|,
-argument|cdchanger
+argument|struct cdchanger
 argument_list|)
 name|changerq
 expr_stmt|;
@@ -1976,6 +1976,7 @@ name|softc
 operator|->
 name|changer
 argument_list|,
+expr|struct
 name|cdchanger
 argument_list|,
 name|changer_links

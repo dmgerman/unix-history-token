@@ -527,6 +527,7 @@ name|SLIST_HEAD
 argument_list|(
 name|ncp_conn_head
 argument_list|,
+expr|struct
 name|ncp_conn
 argument_list|)
 expr_stmt|;
@@ -554,7 +555,7 @@ name|ncp_handle
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|ncp_handle
+argument|struct ncp_handle
 argument_list|)
 name|nh_next
 expr_stmt|;
@@ -592,7 +593,7 @@ name|ncp_conn
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|ncp_conn
+argument|struct ncp_conn
 argument_list|)
 name|nc_next
 expr_stmt|;
@@ -642,7 +643,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|ncp_ref_hd
 argument_list|,
-argument|ncp_ref
+argument|struct ncp_ref
 argument_list|)
 name|ref_list
 expr_stmt|;

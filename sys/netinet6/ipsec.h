@@ -85,7 +85,7 @@ name|secpolicy
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|secpolicy
+argument|struct secpolicy
 argument_list|)
 name|chain
 expr_stmt|;

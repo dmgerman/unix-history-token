@@ -772,7 +772,7 @@ decl_stmt|;
 comment|/* AIO proc flags */
 name|TAILQ_ENTRY
 argument_list|(
-argument|aioproclist
+argument|struct aioproclist
 argument_list|)
 name|list
 expr_stmt|;
@@ -786,7 +786,7 @@ comment|/* The AIO thread */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|jobtorun
 expr_stmt|;
@@ -825,7 +825,7 @@ decl_stmt|;
 comment|/* signal on all I/O done */
 name|TAILQ_ENTRY
 argument_list|(
-argument|aio_liojob
+argument|struct aio_liojob
 argument_list|)
 name|lioj_list
 expr_stmt|;
@@ -913,7 +913,7 @@ comment|/* process that uses this kaio block */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aio_liojob
+argument|struct aio_liojob
 argument_list|)
 name|kaio_liojoblist
 expr_stmt|;
@@ -921,7 +921,7 @@ comment|/* list of lio jobs */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|kaio_jobqueue
 expr_stmt|;
@@ -929,7 +929,7 @@ comment|/* job queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|kaio_jobdone
 expr_stmt|;
@@ -937,7 +937,7 @@ comment|/* done queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|kaio_bufqueue
 expr_stmt|;
@@ -945,7 +945,7 @@ comment|/* buffer job queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|kaio_bufdone
 expr_stmt|;
@@ -953,7 +953,7 @@ comment|/* buffer done queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|kaio_sockqueue
 expr_stmt|;
@@ -989,7 +989,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aioproclist
+argument|struct aioproclist
 argument_list|)
 name|aio_freeproc
 operator|,
@@ -1002,7 +1002,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|aio_jobs
 expr_stmt|;
@@ -1017,7 +1017,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|aio_bufjobs
 expr_stmt|;
@@ -1032,7 +1032,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|aio_freejobs
 expr_stmt|;
@@ -11556,6 +11556,7 @@ name|klist
 argument_list|,
 name|kn
 argument_list|,
+expr|struct
 name|knote
 argument_list|,
 name|kn_selnext

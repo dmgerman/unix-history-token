@@ -3736,6 +3736,7 @@ name|LIST_HEAD
 argument_list|(
 name|pagedep_hashhead
 argument_list|,
+expr|struct
 name|pagedep
 argument_list|)
 operator|*
@@ -4118,6 +4119,7 @@ name|LIST_HEAD
 argument_list|(
 name|inodedep_hashhead
 argument_list|,
+expr|struct
 name|inodedep
 argument_list|)
 operator|*
@@ -4534,6 +4536,7 @@ name|LIST_HEAD
 argument_list|(
 name|newblk_hashhead
 argument_list|,
+expr|struct
 name|newblk
 argument_list|)
 operator|*

@@ -146,6 +146,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|buflists
 argument_list|,
+expr|struct
 name|buf
 argument_list|)
 expr_stmt|;
@@ -210,14 +211,14 @@ decl_stmt|;
 comment|/* vnode operations vector */
 name|TAILQ_ENTRY
 argument_list|(
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|v_freelist
 expr_stmt|;
 comment|/* vnode freelist */
 name|LIST_ENTRY
 argument_list|(
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|v_mntvnodes
 expr_stmt|;
@@ -234,7 +235,7 @@ decl_stmt|;
 comment|/* dirty blocklist head */
 name|LIST_ENTRY
 argument_list|(
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|v_synclist
 expr_stmt|;
@@ -272,7 +273,7 @@ decl_stmt|;
 comment|/* device (VCHR, VBLK) */
 name|SLIST_ENTRY
 argument_list|(
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|vu_specnext
 expr_stmt|;
@@ -340,7 +341,7 @@ comment|/* private data for fs */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|v_cache_src
 expr_stmt|;
@@ -348,7 +349,7 @@ comment|/* Cache entries from us */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|v_cache_dst
 expr_stmt|;
@@ -3219,7 +3220,7 @@ end_decl_stmt
 begin_extern
 extern|extern TAILQ_HEAD(tobefreelist
 operator|,
-extern|vnode
+extern|struct vnode
 end_extern
 
 begin_expr_stmt

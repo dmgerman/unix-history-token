@@ -983,6 +983,7 @@ name|si_note
 argument_list|,
 name|kn
 argument_list|,
+expr|struct
 name|knote
 argument_list|,
 name|kn_selnext
@@ -1210,6 +1211,7 @@ name|p_klist
 argument_list|,
 name|kn
 argument_list|,
+expr|struct
 name|knote
 argument_list|,
 name|kn_selnext
@@ -4594,6 +4596,7 @@ name|list
 argument_list|,
 name|kn
 argument_list|,
+expr|struct
 name|knote
 argument_list|,
 name|kn_link

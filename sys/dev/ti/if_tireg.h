@@ -4340,7 +4340,7 @@ name|mc_addr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|ti_mc_entry
+argument|struct ti_mc_entry
 argument_list|)
 name|mc_entries
 expr_stmt|;
@@ -4357,7 +4357,7 @@ name|slot
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|ti_jpool_entry
+argument|struct ti_jpool_entry
 argument_list|)
 name|jpool_entries
 expr_stmt|;
@@ -4465,7 +4465,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__ti_mchead
 argument_list|,
-argument|ti_mc_entry
+argument|struct ti_mc_entry
 argument_list|)
 name|ti_mc_listhead
 expr_stmt|;
@@ -4473,7 +4473,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__ti_jfreehead
 argument_list|,
-argument|ti_jpool_entry
+argument|struct ti_jpool_entry
 argument_list|)
 name|ti_jfree_listhead
 expr_stmt|;
@@ -4481,7 +4481,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__ti_jinusehead
 argument_list|,
-argument|ti_jpool_entry
+argument|struct ti_jpool_entry
 argument_list|)
 name|ti_jinuse_listhead
 expr_stmt|;

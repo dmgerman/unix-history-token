@@ -92,7 +92,7 @@ comment|/* back pointer to accept socket */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|socket
+argument|struct socket
 argument_list|)
 name|so_incomp
 expr_stmt|;
@@ -100,14 +100,14 @@ comment|/* queue of partial unaccepted connections */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|socket
+argument|struct socket
 argument_list|)
 name|so_comp
 expr_stmt|;
 comment|/* queue of complete unaccepted connections */
 name|TAILQ_ENTRY
 argument_list|(
-argument|socket
+argument|struct socket
 argument_list|)
 name|so_list
 expr_stmt|;
@@ -145,7 +145,7 @@ comment|/* chars to oob mark */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|struct aiocblist
 argument_list|)
 name|so_aiojobq
 expr_stmt|;
@@ -758,7 +758,7 @@ name|sf_buf
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|sf_buf
+argument|struct sf_buf
 argument_list|)
 name|free_list
 expr_stmt|;

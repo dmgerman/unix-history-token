@@ -3408,6 +3408,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|dadq_head
 argument_list|,
+expr|struct
 name|dadq
 argument_list|)
 expr_stmt|;
@@ -3419,7 +3420,7 @@ name|dadq
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|dadq
+argument|struct dadq
 argument_list|)
 name|dad_list
 expr_stmt|;

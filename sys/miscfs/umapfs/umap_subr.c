@@ -84,6 +84,7 @@ name|LIST_HEAD
 argument_list|(
 name|umap_node_hashhead
 argument_list|,
+expr|struct
 name|umap_node
 argument_list|)
 operator|*

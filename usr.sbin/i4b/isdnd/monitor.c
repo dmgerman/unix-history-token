@@ -117,7 +117,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|rights_q
 argument_list|,
-argument|monitor_rights
+argument|struct monitor_rights
 argument_list|)
 name|rights
 operator|=
@@ -153,7 +153,7 @@ name|monitor_connection
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|monitor_connection
+argument|struct monitor_connection
 argument_list|)
 name|connections
 expr_stmt|;
@@ -185,7 +185,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|connections_tq
 argument_list|,
-argument|monitor_connection
+argument|struct monitor_connection
 argument_list|)
 name|connections
 operator|=

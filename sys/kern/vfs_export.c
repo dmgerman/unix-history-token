@@ -380,7 +380,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|freelst
 argument_list|,
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|vnode_free_list
 expr_stmt|;
@@ -934,6 +934,7 @@ name|LIST_HEAD
 argument_list|(
 name|synclist
 argument_list|,
+expr|struct
 name|vnode
 argument_list|)
 expr_stmt|;
@@ -2363,7 +2364,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|freelst
 argument_list|,
-argument|vnode
+argument|struct vnode
 argument_list|)
 name|vnode_tmp_list
 expr_stmt|;
@@ -7883,6 +7884,7 @@ name|v_hashchain
 argument_list|,
 name|vp
 argument_list|,
+expr|struct
 name|vnode
 argument_list|,
 name|v_specnext

@@ -166,7 +166,7 @@ name|LIST_HEAD
 argument_list|(
 argument|unhead
 argument_list|,
-argument|union_node
+argument|struct union_node
 argument_list|)
 name|unhead
 index|[

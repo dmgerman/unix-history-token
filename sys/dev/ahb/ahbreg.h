@@ -995,7 +995,7 @@ index|]
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|ecb
+argument|struct ecb
 argument_list|)
 name|links
 expr_stmt|;
@@ -1037,14 +1037,14 @@ decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|ecb
+argument|struct ecb
 argument_list|)
 name|free_ecbs
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;

@@ -1121,7 +1121,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|gtag_q
 argument_list|,
-argument|gtag
+argument|struct gtag
 argument_list|)
 end_macro
 
@@ -1136,7 +1136,7 @@ name|gtag
 block|{
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|gtag
+argument|struct gtag
 argument_list|)
 name|ptrs
 expr_stmt|;

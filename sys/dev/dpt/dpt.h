@@ -4233,7 +4233,7 @@ name|data
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|dpt_ccb
+argument|struct dpt_ccb
 argument_list|)
 name|links
 expr_stmt|;
@@ -4664,7 +4664,7 @@ name|sg_vaddr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|sg_map_node
+argument|struct sg_map_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -4741,14 +4741,14 @@ decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|dpt_ccb
+argument|struct dpt_ccb
 argument_list|)
 name|free_dccb_list
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|pending_ccb_list
 expr_stmt|;
@@ -4769,7 +4769,7 @@ comment|/* dmat for our sg maps */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|sg_map_node
+argument|struct sg_map_node
 argument_list|)
 name|sg_maps
 expr_stmt|;
@@ -4814,7 +4814,7 @@ name|dma_channel
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|dpt_softc
+argument|struct dpt_softc
 argument_list|)
 name|links
 expr_stmt|;
@@ -5400,7 +5400,7 @@ end_function
 begin_extern
 extern|extern TAILQ_HEAD(dpt_softc_list
 operator|,
-extern|dpt_softc
+extern|struct dpt_softc
 end_extern
 
 begin_expr_stmt

@@ -742,7 +742,7 @@ comment|/* use iff nzones< 0 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|zone
+argument|struct zone
 argument_list|)
 name|zones
 expr_stmt|;
@@ -762,7 +762,7 @@ name|zone
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|zone
+argument|struct zone
 argument_list|)
 name|link
 expr_stmt|;

@@ -572,7 +572,7 @@ end_comment
 begin_extern
 extern|extern LIST_HEAD (ip_fw_head
 operator|,
-extern|ip_fw_chain
+extern|struct ip_fw_chain
 end_extern
 
 begin_expr_stmt

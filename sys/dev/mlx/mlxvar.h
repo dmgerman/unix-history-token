@@ -150,7 +150,7 @@ name|mlx_command
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|mlx_command
+argument|struct mlx_command
 argument_list|)
 name|mc_link
 expr_stmt|;
@@ -328,7 +328,7 @@ comment|/* controller queues and arrays */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|mlx_command
+argument|struct mlx_command
 argument_list|)
 name|mlx_freecmds
 expr_stmt|;
@@ -336,7 +336,7 @@ comment|/* command structures available for reuse */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|mlx_command
+argument|struct mlx_command
 argument_list|)
 name|mlx_work
 expr_stmt|;

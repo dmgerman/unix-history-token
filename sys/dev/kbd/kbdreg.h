@@ -832,7 +832,7 @@ name|keyboard_driver
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|keyboard_driver
+argument|struct keyboard_driver
 argument_list|)
 name|link
 expr_stmt|;

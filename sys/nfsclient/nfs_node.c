@@ -94,6 +94,7 @@ name|LIST_HEAD
 argument_list|(
 name|nfsnodehashhead
 argument_list|,
+expr|struct
 name|nfsnode
 argument_list|)
 operator|*

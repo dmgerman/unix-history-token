@@ -66,7 +66,7 @@ decl_stmt|;
 comment|/* to recognize net broadcasts */
 name|TAILQ_ENTRY
 argument_list|(
-argument|in_ifaddr
+argument|struct in_ifaddr
 argument_list|)
 name|ia_link
 expr_stmt|;
@@ -171,7 +171,7 @@ end_ifdef
 begin_extern
 extern|extern	TAILQ_HEAD(in_ifaddrhead
 operator|,
-extern|in_ifaddr
+extern|struct in_ifaddr
 end_extern
 
 begin_expr_stmt
@@ -295,7 +295,7 @@ name|in_multi
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|in_multi
+argument|struct in_multi
 argument_list|)
 name|inm_link
 expr_stmt|;
@@ -371,7 +371,7 @@ end_endif
 begin_extern
 extern|extern LIST_HEAD(in_multihead
 operator|,
-extern|in_multi
+extern|struct in_multi
 end_extern
 
 begin_expr_stmt

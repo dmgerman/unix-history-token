@@ -191,7 +191,7 @@ name|function
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|forklist
+argument|struct forklist
 argument_list|)
 name|next
 expr_stmt|;
@@ -204,6 +204,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|forklist_head
 argument_list|,
+expr|struct
 name|forklist
 argument_list|)
 expr_stmt|;

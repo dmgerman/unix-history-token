@@ -70,7 +70,7 @@ decl_stmt|;
 comment|/* Inode lock.>Keep this first< */
 name|LIST_ENTRY
 argument_list|(
-argument|inode
+argument|struct inode
 argument_list|)
 name|i_hash
 expr_stmt|;

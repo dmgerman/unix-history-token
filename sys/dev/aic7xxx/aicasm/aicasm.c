@@ -76,7 +76,7 @@ name|patch
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|patch
+argument|struct patch
 argument_list|)
 name|links
 expr_stmt|;
@@ -102,7 +102,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|patch_list
 argument_list|,
-argument|patch
+argument|struct patch
 argument_list|)
 end_macro
 
@@ -277,7 +277,7 @@ specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|instruction
+argument|struct instruction
 argument_list|)
 name|seq_program
 expr_stmt|;

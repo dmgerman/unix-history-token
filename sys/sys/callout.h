@@ -26,6 +26,7 @@ name|SLIST_HEAD
 argument_list|(
 name|callout_list
 argument_list|,
+expr|struct
 name|callout
 argument_list|)
 expr_stmt|;
@@ -36,6 +37,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|callout_tailq
 argument_list|,
+expr|struct
 name|callout
 argument_list|)
 expr_stmt|;
@@ -49,13 +51,13 @@ union|union
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|callout
+argument|struct callout
 argument_list|)
 name|sle
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|callout
+argument|struct callout
 argument_list|)
 name|tqe
 expr_stmt|;

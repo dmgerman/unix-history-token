@@ -75,7 +75,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|devstatlist
 argument_list|,
-argument|devstat
+argument|struct devstat
 argument_list|)
 name|device_statq
 expr_stmt|;
@@ -424,6 +424,7 @@ name|devstat_head
 argument_list|,
 name|ds
 argument_list|,
+expr|struct
 name|devstat
 argument_list|,
 name|dev_links

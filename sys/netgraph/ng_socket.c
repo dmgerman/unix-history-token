@@ -432,7 +432,7 @@ begin_macro
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ngpcb
+argument|struct ngpcb
 argument_list|)
 end_macro
 

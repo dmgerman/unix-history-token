@@ -396,7 +396,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|dns_qhead
 argument_list|,
-argument|circleq_dnsentry
+argument|struct circleq_dnsentry
 argument_list|)
 name|qhead
 expr_stmt|;
@@ -453,7 +453,7 @@ name|addr
 decl_stmt|;
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|circleq_dnsentry
+argument|struct circleq_dnsentry
 argument_list|)
 name|links
 expr_stmt|;

@@ -757,7 +757,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pv_entry
+argument|struct pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
@@ -781,7 +781,7 @@ comment|/* Container for pte's */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pv_entry
+argument|struct pv_entry
 argument_list|)
 name|pm_pvlist
 expr_stmt|;
@@ -865,13 +865,13 @@ decl_stmt|;
 comment|/* virtual address for mapping */
 name|TAILQ_ENTRY
 argument_list|(
-argument|pv_entry
+argument|struct pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|pv_entry
+argument|struct pv_entry
 argument_list|)
 name|pv_plist
 expr_stmt|;

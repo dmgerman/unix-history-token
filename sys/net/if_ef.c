@@ -317,7 +317,7 @@ name|ef_link
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|ef_link
+argument|struct ef_link
 argument_list|)
 name|el_next
 expr_stmt|;
@@ -346,7 +346,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|ef_link_head
 argument_list|,
-argument|ef_link
+argument|struct ef_link
 argument_list|)
 name|efdev
 operator|=

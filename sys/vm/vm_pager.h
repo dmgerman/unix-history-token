@@ -30,6 +30,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|pagerlst
 argument_list|,
+expr|struct
 name|vm_object
 argument_list|)
 expr_stmt|;

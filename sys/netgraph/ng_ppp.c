@@ -493,7 +493,7 @@ decl_stmt|;
 comment|/* Fragment meta */
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|ng_ppp_frag
+argument|struct ng_ppp_frag
 argument_list|)
 name|f_qent
 expr_stmt|;
@@ -728,7 +728,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|ng_ppp_fraglist
 argument_list|,
-argument|ng_ppp_frag
+argument|struct ng_ppp_frag
 argument_list|)
 comment|/* fragment queue */
 name|frags

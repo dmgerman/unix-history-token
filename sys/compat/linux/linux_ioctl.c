@@ -357,7 +357,7 @@ name|handler_element
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|handler_element
+argument|struct handler_element
 argument_list|)
 name|list
 expr_stmt|;
@@ -392,7 +392,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|handler_element
+argument|struct handler_element
 argument_list|)
 name|handlers
 operator|=

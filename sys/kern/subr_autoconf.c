@@ -34,7 +34,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|intr_config_hook
+argument|struct intr_config_hook
 argument_list|)
 name|intr_config_hook_list
 operator|=

@@ -141,7 +141,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|specinfo
+argument|struct specinfo
 argument_list|)
 name|dev_hash
 index|[
@@ -155,7 +155,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|specinfo
+argument|struct specinfo
 argument_list|)
 name|dev_free
 expr_stmt|;

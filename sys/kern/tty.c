@@ -1435,7 +1435,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|tty
+argument|struct tty
 argument_list|)
 name|tty_list
 expr_stmt|;

@@ -79,21 +79,21 @@ name|namecache
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|nc_hash
 expr_stmt|;
 comment|/* hash chain */
 name|LIST_ENTRY
 argument_list|(
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|nc_src
 expr_stmt|;
 comment|/* source vnode list */
 name|TAILQ_ENTRY
 argument_list|(
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|nc_dst
 expr_stmt|;
@@ -156,6 +156,7 @@ name|LIST_HEAD
 argument_list|(
 name|nchashhead
 argument_list|,
+expr|struct
 name|namecache
 argument_list|)
 operator|*
@@ -172,7 +173,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|namecache
+argument|struct namecache
 argument_list|)
 name|ncneg
 expr_stmt|;

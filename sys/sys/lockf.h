@@ -36,6 +36,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|locklist
 argument_list|,
+expr|struct
 name|lockf
 argument_list|)
 expr_stmt|;
@@ -91,7 +92,7 @@ decl_stmt|;
 comment|/* List of requests blocked on this lock */
 name|TAILQ_ENTRY
 argument_list|(
-argument|lockf
+argument|struct lockf
 argument_list|)
 name|lf_block
 expr_stmt|;

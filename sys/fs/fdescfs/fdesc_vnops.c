@@ -155,6 +155,7 @@ name|LIST_HEAD
 argument_list|(
 name|fdhashhead
 argument_list|,
+expr|struct
 name|fdescnode
 argument_list|)
 operator|*

@@ -419,6 +419,7 @@ name|SLIST_HEAD
 argument_list|(
 name|klist
 argument_list|,
+expr|struct
 name|knote
 argument_list|)
 expr_stmt|;
@@ -516,21 +517,21 @@ name|knote
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|knote
+argument|struct knote
 argument_list|)
 name|kn_link
 expr_stmt|;
 comment|/* for fd */
 name|SLIST_ENTRY
 argument_list|(
-argument|knote
+argument|struct knote
 argument_list|)
 name|kn_selnext
 expr_stmt|;
 comment|/* for struct selinfo */
 name|TAILQ_ENTRY
 argument_list|(
-argument|knote
+argument|struct knote
 argument_list|)
 name|kn_tqe
 expr_stmt|;

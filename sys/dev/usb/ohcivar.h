@@ -71,7 +71,7 @@ name|physaddr
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|ohci_soft_td
+argument|struct ohci_soft_td
 argument_list|)
 name|hnext
 expr_stmt|;
@@ -244,7 +244,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|ohci_soft_td
+argument|struct ohci_soft_td
 argument_list|)
 name|sc_hash_tds
 index|[
@@ -277,7 +277,7 @@ decl_stmt|;
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
-argument|usbd_xfer
+argument|struct usbd_xfer
 argument_list|)
 name|sc_free_xfers
 expr_stmt|;

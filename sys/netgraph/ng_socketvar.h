@@ -38,7 +38,7 @@ decl_stmt|;
 comment|/* netgraph info */
 name|LIST_ENTRY
 argument_list|(
-argument|ngpcb
+argument|struct ngpcb
 argument_list|)
 name|socks
 expr_stmt|;

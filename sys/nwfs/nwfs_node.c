@@ -154,6 +154,7 @@ name|LIST_HEAD
 argument_list|(
 name|nwnode_hash_head
 argument_list|,
+expr|struct
 name|nwnode
 argument_list|)
 operator|*

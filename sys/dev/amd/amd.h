@@ -446,7 +446,7 @@ name|amd_srb
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|amd_srb
+argument|struct amd_srb
 argument_list|)
 name|links
 expr_stmt|;
@@ -556,6 +556,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|srb_queue
 argument_list|,
+expr|struct
 name|amd_srb
 argument_list|)
 expr_stmt|;

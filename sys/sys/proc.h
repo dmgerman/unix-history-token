@@ -163,7 +163,7 @@ name|pgrp
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|pgrp
+argument|struct pgrp
 argument_list|)
 name|pg_hash
 expr_stmt|;
@@ -171,7 +171,7 @@ comment|/* Hash chain. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|proc
+argument|struct proc
 argument_list|)
 name|pg_members
 expr_stmt|;
@@ -311,14 +311,14 @@ name|proc
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_procq
 expr_stmt|;
 comment|/* run/sleep queue. */
 name|LIST_ENTRY
 argument_list|(
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_list
 expr_stmt|;
@@ -399,14 +399,14 @@ decl_stmt|;
 comment|/* Process identifier. */
 name|LIST_ENTRY
 argument_list|(
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_hash
 expr_stmt|;
 comment|/* Hash chain. */
 name|LIST_ENTRY
 argument_list|(
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_pglist
 expr_stmt|;
@@ -419,7 +419,7 @@ decl_stmt|;
 comment|/* Pointer to parent process. */
 name|LIST_ENTRY
 argument_list|(
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_sibling
 expr_stmt|;
@@ -427,7 +427,7 @@ comment|/* List of sibling processes. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|proc
+argument|struct proc
 argument_list|)
 name|p_children
 expr_stmt|;
@@ -1343,7 +1343,7 @@ end_define
 begin_extern
 extern|extern LIST_HEAD(pidhashhead
 operator|,
-extern|proc
+extern|struct proc
 end_extern
 
 begin_expr_stmt
@@ -1373,7 +1373,7 @@ end_define
 begin_extern
 extern|extern LIST_HEAD(pgrphashhead
 operator|,
-extern|pgrp
+extern|struct pgrp
 end_extern
 
 begin_expr_stmt
@@ -1532,6 +1532,7 @@ name|LIST_HEAD
 argument_list|(
 name|proclist
 argument_list|,
+expr|struct
 name|proc
 argument_list|)
 expr_stmt|;
@@ -1596,6 +1597,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|rq
 argument_list|,
+expr|struct
 name|proc
 argument_list|)
 expr_stmt|;

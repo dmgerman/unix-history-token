@@ -122,7 +122,7 @@ name|amr_command
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|amr_command
+argument|struct amr_command
 argument_list|)
 name|ac_link
 expr_stmt|;
@@ -354,7 +354,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|amr_command
+argument|struct amr_command
 argument_list|)
 name|amr_work
 expr_stmt|;
@@ -364,7 +364,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|amr_command
+argument|struct amr_command
 argument_list|)
 name|amr_freecmds
 expr_stmt|;

@@ -78,7 +78,7 @@ name|file
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|file
+argument|struct file
 argument_list|)
 name|f_list
 expr_stmt|;
@@ -343,6 +343,7 @@ name|LIST_HEAD
 argument_list|(
 name|filelist
 argument_list|,
+expr|struct
 name|file
 argument_list|)
 expr_stmt|;

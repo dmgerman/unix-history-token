@@ -1095,6 +1095,7 @@ name|LIST_HEAD
 argument_list|(
 name|alpha_intr_list
 argument_list|,
+expr|struct
 name|alpha_intr
 argument_list|)
 expr_stmt|;
@@ -1106,7 +1107,7 @@ name|alpha_intr
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|alpha_intr
+argument|struct alpha_intr
 argument_list|)
 name|list
 expr_stmt|;

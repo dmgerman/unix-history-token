@@ -70,7 +70,7 @@ typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|linker_file
+argument|struct linker_file
 argument_list|)
 name|linker_file_list_t
 expr_stmt|;
@@ -129,7 +129,7 @@ name|common_symbol
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|common_symbol
+argument|struct common_symbol
 argument_list|)
 name|link
 expr_stmt|;
@@ -168,7 +168,7 @@ value|0x1
 comment|/* file has been fully linked */
 name|TAILQ_ENTRY
 argument_list|(
-argument|linker_file
+argument|struct linker_file
 argument_list|)
 name|link
 expr_stmt|;
@@ -202,7 +202,7 @@ comment|/* list of dependancies */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|common_symbol
+argument|struct common_symbol
 argument_list|)
 name|common
 expr_stmt|;
@@ -210,14 +210,14 @@ comment|/* list of common symbols */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|module
+argument|struct module
 argument_list|)
 name|modules
 expr_stmt|;
 comment|/* modules in this file */
 name|TAILQ_ENTRY
 argument_list|(
-argument|linker_file
+argument|struct linker_file
 argument_list|)
 name|loaded
 expr_stmt|;
@@ -244,7 +244,7 @@ typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|linker_class
+argument|struct linker_class
 argument_list|)
 name|linker_class_list_t
 expr_stmt|;
@@ -258,7 +258,7 @@ name|KOBJ_CLASS_FIELDS
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|linker_class
+argument|struct linker_class
 argument_list|)
 name|link
 expr_stmt|;

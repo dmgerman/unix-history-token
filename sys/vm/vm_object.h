@@ -67,7 +67,7 @@ name|vm_object
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|vm_object
+argument|struct vm_object
 argument_list|)
 name|object_list
 expr_stmt|;
@@ -75,14 +75,14 @@ comment|/* list of all objects */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|vm_object
+argument|struct vm_object
 argument_list|)
 name|shadow_head
 expr_stmt|;
 comment|/* objects that this is a shadow for */
 name|TAILQ_ENTRY
 argument_list|(
-argument|vm_object
+argument|struct vm_object
 argument_list|)
 name|shadow_list
 expr_stmt|;
@@ -90,7 +90,7 @@ comment|/* chain of shadow objects */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|vm_page
+argument|struct vm_page
 argument_list|)
 name|memq
 expr_stmt|;
@@ -147,7 +147,7 @@ decl_stmt|;
 comment|/* Offset in backing object */
 name|TAILQ_ENTRY
 argument_list|(
-argument|vm_object
+argument|struct vm_object
 argument_list|)
 name|pager_object_list
 expr_stmt|;
@@ -173,7 +173,7 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|vm_page
+argument|struct vm_page
 argument_list|)
 name|devp_pglist
 expr_stmt|;
@@ -186,7 +186,7 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|vm_page
+argument|struct vm_page
 argument_list|)
 name|physp_pglist
 expr_stmt|;
@@ -372,6 +372,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|object_q
 argument_list|,
+expr|struct
 name|vm_object
 argument_list|)
 expr_stmt|;

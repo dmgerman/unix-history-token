@@ -194,7 +194,7 @@ name|async_node
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|async_node
+argument|struct async_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -238,6 +238,7 @@ name|SLIST_HEAD
 argument_list|(
 name|async_list
 argument_list|,
+expr|struct
 name|async_node
 argument_list|)
 expr_stmt|;
@@ -248,6 +249,7 @@ name|SLIST_HEAD
 argument_list|(
 name|periph_list
 argument_list|,
+expr|struct
 name|cam_periph
 argument_list|)
 expr_stmt|;
@@ -259,7 +261,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|highpowerlist
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|highpowerq
 expr_stmt|;
@@ -330,7 +332,7 @@ name|cam_ed
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|cam_ed
+argument|struct cam_ed
 argument_list|)
 name|links
 expr_stmt|;
@@ -469,13 +471,13 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|cam_ed
+argument|struct cam_ed
 argument_list|)
 name|ed_entries
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|cam_et
+argument|struct cam_et
 argument_list|)
 name|links
 expr_stmt|;
@@ -512,13 +514,13 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|cam_et
+argument|struct cam_et
 argument_list|)
 name|et_entries
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|cam_eb
+argument|struct cam_eb
 argument_list|)
 name|links
 expr_stmt|;
@@ -1641,7 +1643,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|cam_isrq
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|cam_isrq_t
 expr_stmt|;
@@ -1670,7 +1672,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|ccb_freeq
 expr_stmt|;
@@ -1877,7 +1879,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|cam_eb
+argument|struct cam_eb
 argument_list|)
 name|xpt_busses
 expr_stmt|;
@@ -5462,6 +5464,7 @@ name|periph_head
 argument_list|,
 name|periph
 argument_list|,
+expr|struct
 name|cam_periph
 argument_list|,
 name|periph_links
@@ -13011,6 +13014,7 @@ name|async_head
 argument_list|,
 name|cur_entry
 argument_list|,
+expr|struct
 name|async_node
 argument_list|,
 name|links
@@ -21198,7 +21202,7 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|request_ccbs
 expr_stmt|;

@@ -33,7 +33,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct name {								\ 	struct type *slh_first;
+value|struct name {								\ 	type *slh_first;
 comment|/* first element */
 value|\ }
 end_define
@@ -57,7 +57,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|struct {								\ 	struct type *sle_next;
+value|struct {								\ 	type *sle_next;
 comment|/* next element */
 value|\ }
 end_define
@@ -164,7 +164,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = SLIST_FIRST((head));		\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_NEXT(curelm, field) =				\ 		    SLIST_NEXT(SLIST_NEXT(curelm, field), field);	\ 	}								\ } while (0)
+value|do {			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		type *curelm = SLIST_FIRST((head));			\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_NEXT(curelm, field) =				\ 		    SLIST_NEXT(SLIST_NEXT(curelm, field), field);	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -193,9 +193,9 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct name {								\ 	struct type *stqh_first;
+value|struct name {								\ 	type *stqh_first;
 comment|/* first element */
-value|\ 	struct type **stqh_last;
+value|\ 	type **stqh_last;
 comment|/* addr of last next element */
 value|\ }
 end_define
@@ -219,7 +219,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|struct {								\ 	struct type *stqe_next;
+value|struct {								\ 	type *stqe_next;
 comment|/* next element */
 value|\ }
 end_define
@@ -352,7 +352,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD(head, field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		if ((STAILQ_NEXT(curelm, field) =			\ 		     STAILQ_NEXT(STAILQ_NEXT(curelm, field), field)) == NULL)\ 			(head)->stqh_last =&STAILQ_NEXT((curelm), field);\ 	}								\ } while (0)
+value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD(head, field);			\ 	}								\ 	else {								\ 		type *curelm = STAILQ_FIRST((head));			\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		if ((STAILQ_NEXT(curelm, field) =			\ 		     STAILQ_NEXT(STAILQ_NEXT(curelm, field), field)) == NULL)\ 			(head)->stqh_last =&STAILQ_NEXT((curelm), field);\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -395,7 +395,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct name {								\ 	struct type *lh_first;
+value|struct name {								\ 	type *lh_first;
 comment|/* first element */
 value|\ }
 end_define
@@ -419,9 +419,9 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|struct {								\ 	struct type *le_next;
+value|struct {								\ 	type *le_next;
 comment|/* next element */
-value|\ 	struct type **le_prev;
+value|\ 	type **le_prev;
 comment|/* address of previous next element */
 value|\ }
 end_define
@@ -555,9 +555,9 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct name {								\ 	struct type *tqh_first;
+value|struct name {								\ 	type *tqh_first;
 comment|/* first element */
-value|\ 	struct type **tqh_last;
+value|\ 	type **tqh_last;
 comment|/* addr of last next element */
 value|\ }
 end_define
@@ -581,9 +581,9 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|struct {								\ 	struct type *tqe_next;
+value|struct {								\ 	type *tqe_next;
 comment|/* next element */
-value|\ 	struct type **tqe_prev;
+value|\ 	type **tqe_prev;
 comment|/* address of previous next element */
 value|\ }
 end_define
@@ -780,9 +780,9 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct name {								\ 	struct type *cqh_first;
+value|struct name {								\ 	type *cqh_first;
 comment|/* first element */
-value|\ 	struct type *cqh_last;
+value|\ 	type *cqh_last;
 comment|/* last element */
 value|\ }
 end_define
@@ -806,9 +806,9 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|struct {								\ 	struct type *cqe_next;
+value|struct {								\ 	type *cqe_next;
 comment|/* next element */
-value|\ 	struct type *cqe_prev;
+value|\ 	type *cqe_prev;
 comment|/* previous element */
 value|\ }
 end_define

@@ -5990,7 +5990,7 @@ name|slot
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|sk_jpool_entry
+argument|struct sk_jpool_entry
 argument_list|)
 name|jpool_entries
 expr_stmt|;
@@ -6296,7 +6296,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__sk_jfreehead
 argument_list|,
-argument|sk_jpool_entry
+argument|struct sk_jpool_entry
 argument_list|)
 name|sk_jfree_listhead
 expr_stmt|;
@@ -6304,7 +6304,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__sk_jinusehead
 argument_list|,
-argument|sk_jpool_entry
+argument|struct sk_jpool_entry
 argument_list|)
 name|sk_jinuse_listhead
 expr_stmt|;

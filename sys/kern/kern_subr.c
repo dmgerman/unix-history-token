@@ -1492,6 +1492,7 @@ name|LIST_HEAD
 argument_list|(
 name|generic
 argument_list|,
+expr|struct
 name|generic
 argument_list|)
 operator|*
@@ -1693,6 +1694,7 @@ name|LIST_HEAD
 argument_list|(
 name|generic
 argument_list|,
+expr|struct
 name|generic
 argument_list|)
 operator|*

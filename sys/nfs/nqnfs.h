@@ -293,14 +293,14 @@ name|nqlease
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|nqlease
+argument|struct nqlease
 argument_list|)
 name|lc_hash
 expr_stmt|;
 comment|/* Fhandle hash list */
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|nqlease
+argument|struct nqlease
 argument_list|)
 name|lc_timer
 expr_stmt|;
@@ -576,7 +576,7 @@ end_comment
 begin_extern
 extern|extern CIRCLEQ_HEAD(nqtimerhead
 operator|,
-extern|nqlease
+extern|struct nqlease
 end_extern
 
 begin_expr_stmt
@@ -603,7 +603,7 @@ end_define
 begin_extern
 extern|extern LIST_HEAD(nqfhhashhead
 operator|,
-extern|nqlease
+extern|struct nqlease
 end_extern
 
 begin_expr_stmt

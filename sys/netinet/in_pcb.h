@@ -62,6 +62,7 @@ name|LIST_HEAD
 argument_list|(
 name|inpcbhead
 argument_list|,
+expr|struct
 name|inpcb
 argument_list|)
 expr_stmt|;
@@ -72,6 +73,7 @@ name|LIST_HEAD
 argument_list|(
 name|inpcbporthead
 argument_list|,
+expr|struct
 name|inpcbport
 argument_list|)
 expr_stmt|;
@@ -122,7 +124,7 @@ name|inpcb
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|inpcb
+argument|struct inpcb
 argument_list|)
 name|inp_hash
 expr_stmt|;
@@ -137,7 +139,7 @@ decl_stmt|;
 comment|/* local port */
 name|LIST_ENTRY
 argument_list|(
-argument|inpcb
+argument|struct inpcb
 argument_list|)
 name|inp_list
 expr_stmt|;
@@ -325,7 +327,7 @@ name|inp_depend6
 struct|;
 name|LIST_ENTRY
 argument_list|(
-argument|inpcb
+argument|struct inpcb
 argument_list|)
 name|inp_portlist
 expr_stmt|;
@@ -501,7 +503,7 @@ name|inpcbport
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|inpcbport
+argument|struct inpcbport
 argument_list|)
 name|phd_hash
 expr_stmt|;

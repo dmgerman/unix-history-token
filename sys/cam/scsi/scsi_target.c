@@ -7911,6 +7911,7 @@ name|done_ccb
 operator|->
 name|ccb_h
 argument_list|,
+expr|struct
 name|ccb_hdr
 argument_list|,
 name|periph_links

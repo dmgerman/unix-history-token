@@ -31,7 +31,7 @@ name|rawcb
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|rawcb
+argument|struct rawcb
 argument_list|)
 name|list
 expr_stmt|;
@@ -99,7 +99,7 @@ end_ifdef
 begin_extern
 extern|extern LIST_HEAD(rawcb_list_head
 operator|,
-extern|rawcb
+extern|struct rawcb
 end_extern
 
 begin_expr_stmt

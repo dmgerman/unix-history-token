@@ -468,7 +468,7 @@ begin_macro
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|uhci_intr_info
+argument|struct uhci_intr_info
 argument_list|)
 end_macro
 

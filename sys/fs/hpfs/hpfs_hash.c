@@ -79,6 +79,7 @@ name|LIST_HEAD
 argument_list|(
 name|hphashhead
 argument_list|,
+expr|struct
 name|hpfsnode
 argument_list|)
 operator|*

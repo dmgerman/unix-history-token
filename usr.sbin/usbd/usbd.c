@@ -443,7 +443,7 @@ name|detach
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|action_s
+argument|struct action_s
 argument_list|)
 name|next
 expr_stmt|;
@@ -457,7 +457,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|action_list
 argument_list|,
-argument|action_s
+argument|struct action_s
 argument_list|)
 end_macro
 

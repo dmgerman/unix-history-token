@@ -309,6 +309,7 @@ name|LIST_HEAD
 argument_list|(
 name|vnodelst
 argument_list|,
+expr|struct
 name|vnode
 argument_list|)
 expr_stmt|;
@@ -320,7 +321,7 @@ name|mount
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|mount
+argument|struct mount
 argument_list|)
 name|mnt_list
 expr_stmt|;
@@ -2166,7 +2167,7 @@ end_decl_stmt
 begin_extern
 extern|extern	TAILQ_HEAD(mntlist
 operator|,
-extern|mount
+extern|struct mount
 end_extern
 
 begin_expr_stmt

@@ -152,7 +152,7 @@ comment|/* Reg file attr cache max lifetime */
 name|CIRCLEQ_HEAD
 argument_list|(
 argument_list|,
-argument|nfsnode
+argument|struct nfsnode
 argument_list|)
 name|nm_timerhead
 expr_stmt|;
@@ -206,7 +206,7 @@ comment|/* Number of nfsuid mappings */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|nfsuid
+argument|struct nfsuid
 argument_list|)
 name|nm_uidlruhead
 expr_stmt|;
@@ -214,7 +214,7 @@ comment|/* Lists of nfsuid mappings */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|nfsuid
+argument|struct nfsuid
 argument_list|)
 name|nm_uidhashtbl
 index|[
@@ -224,7 +224,7 @@ expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|buf
+argument|struct buf
 argument_list|)
 name|nm_bufq
 expr_stmt|;

@@ -1666,7 +1666,7 @@ name|monitor_rights
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|monitor_rights
+argument|struct monitor_rights
 argument_list|)
 name|list
 expr_stmt|;

@@ -86,6 +86,7 @@ name|LIST_HEAD
 argument_list|(
 name|ihashhead
 argument_list|,
+expr|struct
 name|inode
 argument_list|)
 operator|*

@@ -1218,7 +1218,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|slpquehead
 argument_list|,
-argument|proc
+argument|struct proc
 argument_list|)
 name|slpque
 index|[

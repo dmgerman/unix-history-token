@@ -265,14 +265,14 @@ name|dquot
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|dquot
+argument|struct dquot
 argument_list|)
 name|dq_hash
 expr_stmt|;
 comment|/* hash list */
 name|TAILQ_ENTRY
 argument_list|(
-argument|dquot
+argument|struct dquot
 argument_list|)
 name|dq_freelist
 expr_stmt|;

@@ -44,7 +44,7 @@ name|driver
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|driverlink
+argument|struct driverlink
 argument_list|)
 name|link
 expr_stmt|;
@@ -63,7 +63,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|devclass_list
 argument_list|,
-argument|devclass
+argument|struct devclass
 argument_list|)
 name|devclass_list_t
 expr_stmt|;
@@ -75,7 +75,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|driver_list
 argument_list|,
-argument|driverlink
+argument|struct driverlink
 argument_list|)
 name|driver_list_t
 expr_stmt|;
@@ -87,7 +87,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|device_list
 argument_list|,
-argument|device
+argument|struct device
 argument_list|)
 name|device_list_t
 expr_stmt|;
@@ -99,7 +99,7 @@ name|devclass
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|devclass
+argument|struct devclass
 argument_list|)
 name|link
 expr_stmt|;
@@ -210,7 +210,7 @@ expr_stmt|;
 comment|/*      * Device hierarchy.      */
 name|TAILQ_ENTRY
 argument_list|(
-argument|device
+argument|struct device
 argument_list|)
 name|link
 expr_stmt|;

@@ -83,7 +83,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|cam_periph
+argument|struct cam_periph
 argument_list|)
 name|units
 expr_stmt|;
@@ -274,20 +274,20 @@ decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|ccb_hdr
+argument|struct ccb_hdr
 argument_list|)
 name|ccb_list
 expr_stmt|;
 comment|/* For "immediate" requests */
 name|SLIST_ENTRY
 argument_list|(
-argument|cam_periph
+argument|struct cam_periph
 argument_list|)
 name|periph_links
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|cam_periph
+argument|struct cam_periph
 argument_list|)
 name|unit_links
 expr_stmt|;

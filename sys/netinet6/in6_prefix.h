@@ -13,7 +13,7 @@ name|rp_ifpr
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|rr_prefix
+argument|struct rr_prefix
 argument_list|)
 name|rp_entry
 expr_stmt|;
@@ -21,7 +21,7 @@ name|LIST_HEAD
 argument_list|(
 argument|rp_addrhead
 argument_list|,
-argument|rp_addr
+argument|struct rp_addr
 argument_list|)
 name|rp_addrhead
 expr_stmt|;
@@ -159,7 +159,7 @@ name|rp_addr
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|rp_addr
+argument|struct rp_addr
 argument_list|)
 name|ra_entry
 expr_stmt|;
@@ -229,6 +229,7 @@ name|LIST_HEAD
 argument_list|(
 name|rr_prhead
 argument_list|,
+expr|struct
 name|rr_prefix
 argument_list|)
 expr_stmt|;
