@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/_timeval.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -26,26 +32,6 @@ include|#
 directive|include
 file|<sys/timespec.h>
 end_include
-
-begin_comment
-comment|/*  * Structure returned by gettimeofday(2) system call,  * and used in other calls.  */
-end_comment
-
-begin_struct
-struct|struct
-name|timeval
-block|{
-name|long
-name|tv_sec
-decl_stmt|;
-comment|/* seconds */
-name|long
-name|tv_usec
-decl_stmt|;
-comment|/* and microseconds */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
