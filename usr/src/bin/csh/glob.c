@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.13 (Berkeley) %G%"
+literal|"@(#)glob.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * globbing is now done in two stages. In the first pass we expand  * csh globbing idioms ~`{ and then we proceed doing the normal   * globbing if needed ?*[  *  * Csh type globbing is handled in globexpand() and the rest is  * handled in glob() which is part of the 4.4BSD libc. To do the  * 'No match' checking, we try to glob everything without checking  * and then we look if the string still contains globbing characters.  * If it does, then globbing failed for at least one component of the  * block.  *   */
+comment|/*  * globbing is now done in two stages. In the first pass we expand  * csh globbing idioms ~`{ and then we proceed doing the normal   * globbing if needed ?*[  *  * Csh type globbing is handled in globexpand() and the rest is  * handled in glob() which is part of the 4.4BSD libc.  *   */
 end_comment
 
 begin_function
@@ -163,12 +163,21 @@ name|char
 modifier|*
 name|globtilde
 parameter_list|(
+name|nv
+parameter_list|,
 name|s
 parameter_list|)
 name|char
 modifier|*
+modifier|*
+name|nv
+decl_stmt|,
+decl|*
 name|s
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|char
 name|gbuf
@@ -207,16 +216,15 @@ name|b
 operator|=
 name|gstart
 init|;
-name|alnum
-argument_list|(
 operator|*
 name|s
-argument_list|)
-operator|||
+operator|!=
+literal|'\0'
+operator|&&
 operator|*
 name|s
-operator|==
-literal|'-'
+operator|!=
+literal|'/'
 condition|;
 operator|*
 name|b
@@ -271,6 +279,12 @@ argument_list|(
 name|gstart
 argument_list|)
 condition|)
+block|{
+name|blkfree
+argument_list|(
+name|nv
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Unknown user: %s"
@@ -278,6 +292,7 @@ argument_list|,
 name|gstart
 argument_list|)
 expr_stmt|;
+block|}
 name|b
 operator|=
 operator|&
@@ -317,7 +332,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -1043,7 +1058,7 @@ operator|(
 name|nv
 operator|)
 return|;
-comment|/* 	 * Step 2: expand tilde and braces 	 */
+comment|/* 	 * Step 2: expand braces 	 */
 name|el
 operator|=
 name|vl
@@ -1081,28 +1096,6 @@ modifier|*
 modifier|*
 name|bp
 decl_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|'~'
-condition|)
-block|{
-operator|*
-name|vl
-operator|=
-name|globtilde
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|b
@@ -1353,13 +1346,53 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Step 3 expand tilde 	 */
 name|vl
 operator|=
 name|nv
 expr_stmt|;
+for|for
+control|(
+name|s
+operator|=
+operator|*
+name|vl
+init|;
+name|s
+condition|;
+name|s
+operator|=
+operator|*
+operator|++
+name|vl
+control|)
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'~'
+condition|)
+block|{
+operator|*
+name|vl
+operator|=
+name|globtilde
+argument_list|(
+name|nv
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|vl
+name|nv
 operator|)
 return|;
 block|}
