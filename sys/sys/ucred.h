@@ -16,6 +16,16 @@ name|_SYS_UCRED_H_
 end_define
 
 begin_comment
+comment|/*  * XXXMAC: Recursively include mac.h due to an API assumption that it  * it is sufficient to include types.h and ucred.h to have a defined  * struct ucred.  This should be changed so that struct ucred is not  * exported to userland via _KERNEL.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
+end_include
+
+begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
 end_comment
 
@@ -83,7 +93,12 @@ comment|/* jail(4) */
 define|#
 directive|define
 name|cr_endcopy
-value|cr_mtxp
+value|cr_label
+name|struct
+name|label
+name|cr_label
+decl_stmt|;
+comment|/* MAC label */
 name|struct
 name|mtx
 modifier|*
