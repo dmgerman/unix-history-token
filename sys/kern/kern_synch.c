@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -3306,7 +3300,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 * If over max, kill it. 	 * 	 * XXX drop sched_lock, pickup Giant 	 */
-block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_unlock_spin(&sched_lock); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_lock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			psignal(p, SIGXCPU); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK_NOSWITCH(p); 			if (rlim->rlim_cur< rlim->rlim_max) {
+block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK_NOSWITCH(p); 		} else { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			psignal(p, SIGXCPU); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK_NOSWITCH(p); 			if (rlim->rlim_cur< rlim->rlim_max) {
 comment|/* XXX: we should make a private copy */
 block|rlim->rlim_cur += 5; 			} 		} 	}
 endif|#
