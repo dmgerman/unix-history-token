@@ -2675,9 +2675,17 @@ name|psf
 operator|.
 name|psf_valid
 operator|||
+operator|(
 name|curthread
 operator|->
 name|check_pending
+operator|&&
+operator|!
+name|THR_IN_CRITICAL
+argument_list|(
+name|curthread
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
