@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * snd/sound.c  *   * Main sound driver for FreeBSD. This file provides the main  * entry points for probe/attach and all i/o demultiplexing, including  * default routines for generic devices.  *   * (C) 1997 Luigi Rizzo (luigi@iet.unipi.it)  *   * Redistribution and use in source and binary forms, with or  * without modification, are permitted provided that the following  * conditions are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS  * IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * For each card type a template "snddev_info" structure contains  * all the relevant parameters, both for configuration and runtime.  *  * In this file we build tables of pointers to the descriptors for  * the various supported cards. The generic probe routine scans  * the table(s) looking for a matching entry, then invokes the  * board-specific probe routine. If successful, a pointer to the  * correct snddev_info is stored in snddev_last_probed, for subsequent  * use in the attach routine. The generic attach routine copies  * the template to a permanent descriptor (pcm_info[unit] and  * friends), initializes all generic parameters, and calls the  * board-specific attach routine.  *  * On device calls, the generic routines do the checks on unit and  * device parameters, then call the board-specific routines if  * available, or try to perform the task using the default code.  *  */
 end_comment
 
@@ -4282,6 +4286,13 @@ argument_list|(
 name|d
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|d
+operator|->
+name|play_fmt
+condition|)
 operator|*
 operator|(
 name|int
@@ -4293,6 +4304,24 @@ name|d
 operator|->
 name|play_fmt
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|rec_fmt
+condition|)
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|d
+operator|->
+name|rec_fmt
+expr_stmt|;
+block|}
 break|break ;
 case|case
 name|SNDCTL_DSP_SUBDIVIDE
