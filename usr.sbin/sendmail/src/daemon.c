@@ -5258,6 +5258,22 @@ decl_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
+comment|/* need to make sure _res.retry is initialized before using it */
+if|if
+condition|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_INIT
+operator|)
+operator|==
+literal|0
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
 comment|/* shorten name server timeout to avoid higher level timeouts */
 name|saveretry
 operator|=
