@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.34 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1101,11 +1101,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
 specifier|extern
 name|struct
 name|hostent
@@ -1339,7 +1334,7 @@ name|sprintf
 argument_list|(
 name|qbuf
 argument_list|,
-literal|"%d.%d.%d.%d.in-addr.arpa"
+literal|"%u.%u.%u.%u.in-addr.arpa"
 argument_list|,
 operator|(
 operator|(
