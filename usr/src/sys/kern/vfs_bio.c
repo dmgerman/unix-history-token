@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.45	83/05/18	*/
+comment|/*	vfs_bio.c	4.46	83/05/21	*/
 end_comment
 
 begin_include
@@ -1704,11 +1704,10 @@ name|last
 operator|=
 name|start
 operator|+
-operator|(
+name|btodb
+argument_list|(
 name|size
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1788,13 +1787,12 @@ name|ep
 operator|->
 name|b_blkno
 operator|+
-operator|(
+name|btodb
+argument_list|(
 name|ep
 operator|->
 name|b_bcount
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|<=
 name|start
 condition|)
@@ -3179,11 +3177,10 @@ name|last
 operator|=
 name|start
 operator|+
-operator|(
+name|btodb
+argument_list|(
 name|size
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -3253,13 +3250,12 @@ name|ep
 operator|->
 name|b_blkno
 operator|+
-operator|(
+name|btodb
+argument_list|(
 name|ep
 operator|->
 name|b_bcount
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|<=
 name|start
 condition|)
