@@ -1746,7 +1746,7 @@ index|[
 operator|(
 name|c
 operator|&
-literal|0x34
+literal|0x38
 operator|)
 operator|>>
 literal|3
@@ -1806,7 +1806,7 @@ index|[
 operator|(
 name|c
 operator|&
-literal|0x34
+literal|0x38
 operator|)
 operator|>>
 literal|3
@@ -1826,7 +1826,7 @@ comment|/* not yet */
 end_comment
 
 begin_endif
-unit|static u_int32_t * reg32(u_int8_t c, regcontext_t *REGS) {     u_int32_t *r32[] = {&R_EAX,&R_ECX,&R_EDX,&R_EBX,&R_ESP,&R_EBP,&R_ESI,&R_EDI};      return r32[(c& 0x34)>> 3]; }
+unit|static u_int32_t * reg32(u_int8_t c, regcontext_t *REGS) {     u_int32_t *r32[] = {&R_EAX,&R_ECX,&R_EDX,&R_EBX,&R_ESP,&R_EBP,&R_ESI,&R_EDI};      return r32[(c& 0x38)>> 3]; }
 endif|#
 directive|endif
 end_endif
