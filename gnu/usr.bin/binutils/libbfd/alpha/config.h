@@ -82,14 +82,6 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -572,7 +564,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "000427" */
+comment|/* #define VERSION "2.11" */
 end_comment
 
 begin_comment
@@ -670,6 +662,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if<sys/procfs.h> has prstatus32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRSTATUS32_T */
+end_comment
+
+begin_comment
 comment|/* Define if<sys/procfs.h> has prstatus_t.pr_who. */
 end_comment
 
@@ -678,11 +678,35 @@ comment|/* #undef HAVE_PRSTATUS_T_PR_WHO */
 end_comment
 
 begin_comment
+comment|/* Define if<sys/procfs.h> has prstatus32_t.pr_who. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRSTATUS32_T_PR_WHO */
+end_comment
+
+begin_comment
 comment|/* Define if<sys/procfs.h> has pstatus_t. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_PSTATUS_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pxstatus_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PXSTATUS_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pstatus32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PSTATUS32_T */
 end_comment
 
 begin_comment
@@ -697,6 +721,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if<sys/procfs.h> has prpsinfo32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRPSINFO32_T */
+end_comment
+
+begin_comment
 comment|/* Define if<sys/procfs.h> has psinfo_t. */
 end_comment
 
@@ -705,11 +737,27 @@ comment|/* #undef HAVE_PSINFO_T */
 end_comment
 
 begin_comment
+comment|/* Define if<sys/procfs.h> has psinfo32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PSINFO32_T */
+end_comment
+
+begin_comment
 comment|/* Define if<sys/procfs.h> has lwpstatus_t. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LWPSTATUS_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has lwpxstatus_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LWPXSTATUS_T */
 end_comment
 
 begin_comment

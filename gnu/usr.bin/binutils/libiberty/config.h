@@ -20,6 +20,14 @@ comment|/* #undef C_ALLOCA */
 end_comment
 
 begin_comment
+comment|/* Define to empty if the keyword does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
 comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
 end_comment
 
@@ -47,6 +55,17 @@ comment|/* #undef HAVE_ALLOCA_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have a working `mmap' system call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have<sys/wait.h> that is POSIX.1 compatible.  */
 end_comment
 
@@ -63,6 +82,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_VFORK_H */
+end_comment
+
+begin_comment
+comment|/* Define as __inline if that's what the C compiler calls it.  */
+end_comment
+
+begin_comment
+comment|/* #undef inline */
 end_comment
 
 begin_comment
@@ -101,56 +128,23 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you can safely include both<sys/time.h> and<time.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIME_WITH_SYS_TIME
+value|1
+end_define
+
+begin_comment
 comment|/* Define vfork as fork if vfork does not work.  */
 end_comment
 
 begin_comment
 comment|/* #undef vfork */
 end_comment
-
-begin_comment
-comment|/* Define if you have the sys_errlist variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_ERRLIST
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the sys_nerr variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_NERR
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the sys_siglist variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_SIGLIST
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the strerror function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRERROR
-value|1
-end_define
 
 begin_comment
 comment|/* Define if you have the asprintf function.  */
@@ -178,9 +172,12 @@ begin_comment
 comment|/* Define if you have the basename function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_BASENAME */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BASENAME
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the bcmp function.  */
@@ -201,6 +198,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_BCOPY
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the bsearch function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BSEARCH
 value|1
 end_define
 
@@ -672,6 +680,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<fcntl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<limits.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<stdlib.h> header file.  */
 end_comment
 
@@ -712,6 +742,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_FILE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/mman.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MMAN_H
 value|1
 end_define
 
@@ -760,6 +801,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<time.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -767,6 +819,47 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if errno must be declared even when<errno.h> is included. */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_DECLARATION_ERRNO */
+end_comment
+
+begin_comment
+comment|/* Define if you have the sys_errlist variable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_ERRLIST
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sys_nerr variable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_NERR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sys_siglist variable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SIGLIST
 value|1
 end_define
 
