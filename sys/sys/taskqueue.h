@@ -111,6 +111,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|taskqueue_drain
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|taskqueue
 modifier|*
@@ -191,7 +208,7 @@ name|func
 parameter_list|,
 name|context
 parameter_list|)
-value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
+value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ 	(task)->ta_flags = 0;				\ } while (0)
 end_define
 
 begin_comment

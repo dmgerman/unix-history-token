@@ -69,9 +69,24 @@ modifier|*
 name|ta_context
 decl_stmt|;
 comment|/* argument for handler */
+name|int
+name|ta_flags
+decl_stmt|;
+comment|/* Flags */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TAF_PENDING
+value|0x1
+end_define
+
+begin_comment
+comment|/* Task is being run now */
+end_comment
 
 begin_endif
 endif|#
