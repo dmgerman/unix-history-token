@@ -4098,7 +4098,7 @@ name|timer_freq
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_opaque
+name|sysctl_handle_int
 argument_list|(
 name|oidp
 argument_list|,
@@ -4106,7 +4106,9 @@ operator|&
 name|freq
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|freq
+argument_list|)
 argument_list|,
 name|req
 argument_list|)
@@ -4207,8 +4209,11 @@ name|freq
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|tsc_present
+name|tsc_timecounter
+operator|.
+name|tc_frequency
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -4221,7 +4226,7 @@ name|tsc_freq
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_opaque
+name|sysctl_handle_int
 argument_list|(
 name|oidp
 argument_list|,
@@ -4229,7 +4234,9 @@ operator|&
 name|freq
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|freq
+argument_list|)
 argument_list|,
 name|req
 argument_list|)
