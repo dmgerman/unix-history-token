@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ethernet address conversion and lookup routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  * This code is public domain. There is no copyright. There are no  * distribution or usage restrictions. There are no strings attached.  *  * Have a party.  *  *	$Id: ether_addr.c,v 1.2 1995/03/03 22:20:15 wpaul Exp $  */
+comment|/*  * ethernet address conversion and lookup routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  * This code is public domain. There is no copyright. There are no  * distribution or usage restrictions. There are no strings attached.  *  * Have a party.  *  *	$Id: ether_addr.c,v 1.4 1995/03/05 22:03:58 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -570,11 +570,18 @@ operator|&
 name|resultlen
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -602,6 +609,11 @@ operator|&
 name|local_host
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -609,11 +621,18 @@ operator|)
 return|;
 block|}
 else|else
+block|{
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -845,11 +864,18 @@ operator|&
 name|resultlen
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -894,6 +920,11 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -901,11 +932,18 @@ operator|)
 return|;
 block|}
 else|else
+block|{
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
