@@ -1945,51 +1945,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|termios
-name|tsave_in
-decl_stmt|,
-name|tsave_out
-decl_stmt|;
-if|if
-condition|(
-name|tcgetattr
-argument_list|(
-name|STDIN_FILENO
-argument_list|,
-operator|&
-name|tsave_in
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|||
-name|tcgetattr
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-operator|&
-name|tsave_out
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"tcgetattr() failed in chat: %m"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-literal|2
-expr_stmt|;
-block|}
-else|else
-block|{
 name|int
 name|i
 init|=
@@ -2009,37 +1964,7 @@ name|struct
 name|termios
 name|tneed
 decl_stmt|;
-comment|/* We need to be in raw mode for all this                         	 */
-name|tneed
-operator|=
-name|tsave_in
-expr_stmt|;
-name|cfmakeraw
-argument_list|(
-operator|&
-name|tneed
-argument_list|)
-expr_stmt|;
-name|tcsetattr
-argument_list|(
-name|STDIN_FILENO
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|tneed
-argument_list|)
-expr_stmt|;
-name|tcsetattr
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|tneed
-argument_list|)
-expr_stmt|;
+comment|/* 			 * We need to be in raw mode for all this 			 * Rely on caller...                          */
 name|old_alarm
 operator|=
 name|signal
@@ -2053,7 +1978,7 @@ name|chat_unalarm
 argument_list|()
 expr_stmt|;
 comment|/* Force blocking mode at start */
-comment|/* 				 * This is the send/expect loop 				 */
+comment|/* 			 * This is the send/expect loop 			 */
 while|while
 condition|(
 name|r
@@ -2119,7 +2044,7 @@ argument_list|(
 name|scrstr
 argument_list|)
 expr_stmt|;
-comment|/* Restore flags& previous termios settings                         	 */
+comment|/* 			 * Ensure stdin is in blocking mode 			 */
 name|ioctl
 argument_list|(
 name|STDIN_FILENO
@@ -2130,27 +2055,6 @@ operator|&
 name|off
 argument_list|)
 expr_stmt|;
-name|tcsetattr
-argument_list|(
-name|STDIN_FILENO
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|tsave_in
-argument_list|)
-expr_stmt|;
-name|tcsetattr
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|tsave_out
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
