@@ -5596,16 +5596,15 @@ name|nodeid
 condition|)
 name|printf
 argument_list|(
-literal|" (me)\n"
+literal|" (me)"
 argument_list|)
 expr_stmt|;
-else|else
+block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|try_bmr

@@ -4349,7 +4349,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|u_int32_t
+name|vm_offset_t
 operator|)
 name|sc
 operator|->
