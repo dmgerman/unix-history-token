@@ -7551,7 +7551,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"log_trim: fclose:"
+literal|"log_trim: fclose"
 argument_list|)
 expr_stmt|;
 return|return
