@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.9 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,24 +624,24 @@ operator|*
 operator|(
 name|np
 operator|->
-name|time
+name|propself
 operator|+
 name|np
 operator|->
-name|childtime
+name|propchild
 operator|)
 operator|/
 name|printtime
 argument_list|,
 name|np
 operator|->
-name|time
+name|propself
 operator|/
 name|HZ
 argument_list|,
 name|np
 operator|->
-name|childtime
+name|propchild
 operator|/
 name|HZ
 argument_list|)
@@ -744,7 +744,7 @@ name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-comment|/* 	 *	Now, sort by time + childtime. 	 *	sorting both the regular function names 	 *	and cycle headers. 	 */
+comment|/* 	 *	Now, sort by propself + propchild. 	 *	sorting both the regular function names 	 *	and cycle headers. 	 */
 name|timesortnlp
 operator|=
 operator|(
@@ -940,13 +940,13 @@ literal|0
 operator|&&
 name|parentp
 operator|->
-name|time
+name|propself
 operator|==
 literal|0
 operator|&&
 name|parentp
 operator|->
-name|childtime
+name|propchild
 operator|==
 literal|0
 condition|)
@@ -1028,7 +1028,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	sort by decreasing total time (time+childtime)      *	if times are equal, but one is a cycle header,      *		say that's first (e.g. less, i.e. -1).      *	if one's name doesn't have an underscore and the other does,      *		say the one is first.      *	all else being equal, sort by names.      */
+comment|/*      *	sort by decreasing propagated time      *	if times are equal, but one is a cycle header,      *		say that's first (e.g. less, i.e. -1).      *	if one's name doesn't have an underscore and the other does,      *		say the one is first.      *	all else being equal, sort by names.      */
 end_comment
 
 begin_function
@@ -1074,21 +1074,21 @@ operator|=
 operator|(
 name|np1
 operator|->
-name|time
+name|propself
 operator|+
 name|np1
 operator|->
-name|childtime
+name|propchild
 operator|)
 operator|-
 operator|(
 name|np2
 operator|->
-name|time
+name|propself
 operator|+
 name|np2
 operator|->
-name|childtime
+name|propchild
 operator|)
 expr_stmt|;
 if|if
@@ -1211,6 +1211,33 @@ name|name
 operator|)
 operator|!=
 literal|'_'
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|np1
+operator|->
+name|ncall
+operator|>
+name|np2
+operator|->
+name|ncall
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|np1
+operator|->
+name|ncall
+operator|<
+name|np2
+operator|->
+name|ncall
 condition|)
 return|return
 literal|1
@@ -1653,6 +1680,23 @@ name|toporder
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|debug
+operator|&
+name|PROPDEBUG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%5.2f%% "
+argument_list|,
+name|selfp
+operator|->
+name|propfraction
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -2022,24 +2066,24 @@ operator|*
 operator|(
 name|cyclep
 operator|->
-name|time
+name|propself
 operator|+
 name|cyclep
 operator|->
-name|childtime
+name|propchild
 operator|)
 operator|/
 name|printtime
 argument_list|,
 name|cyclep
 operator|->
-name|time
+name|propself
 operator|/
 name|HZ
 argument_list|,
 name|cyclep
 operator|->
-name|childtime
+name|propchild
 operator|/
 name|HZ
 argument_list|,
@@ -2149,13 +2193,13 @@ literal|""
 argument_list|,
 name|memberp
 operator|->
-name|time
+name|propself
 operator|/
 name|HZ
 argument_list|,
 name|memberp
 operator|->
-name|childtime
+name|propchild
 operator|/
 name|HZ
 argument_list|,
@@ -2335,7 +2379,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	major sort is on time + childtime,      *	next is sort on ncalls + selfcalls.      */
+comment|/*      *	major sort is on propself + propchild,      *	next is sort on ncalls + selfcalls.      */
 end_comment
 
 begin_function
@@ -2360,22 +2404,22 @@ name|thistime
 init|=
 name|this
 operator|->
-name|time
+name|propself
 operator|+
 name|this
 operator|->
-name|childtime
+name|propchild
 decl_stmt|;
 name|double
 name|thattime
 init|=
 name|that
 operator|->
-name|time
+name|propself
 operator|+
 name|that
 operator|->
-name|childtime
+name|propchild
 decl_stmt|;
 name|long
 name|thiscalls
@@ -2450,7 +2494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*      *	compare two arcs to/from the same child/parent.      *	- if one arc is a self arc, it's least.      *	- if one arc is within a cycle, it's less than.      *	- if both arcs are within a cycle, compare arc counts.      *	- if neither arc is within a cycle, compare with      *		time + childtime as major key      *		arc count as minor key      */
+comment|/*      *	compare two arcs to/from the same child/parent.      *	- if one arc is a self arc, it's least.      *	- if one arc is within a cycle, it's less than.      *	- if both arcs are within a cycle, compare arc counts.      *	- if neither arc is within a cycle, compare with      *		arc_time + arc_childtime as major key      *		arc count as minor key      */
 end_comment
 
 begin_function

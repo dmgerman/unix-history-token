@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.12 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.13 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -244,6 +244,18 @@ name|long
 name|selfcalls
 decl_stmt|;
 comment|/* how many calls to self */
+name|double
+name|propfraction
+decl_stmt|;
+comment|/* what % of time propagates */
+name|double
+name|propself
+decl_stmt|;
+comment|/* how much self time propagates */
+name|double
+name|propchild
+decl_stmt|;
+comment|/* how much child time propagates */
 name|bool
 name|printflag
 decl_stmt|;
@@ -604,12 +616,32 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|Eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* functions excluded with time */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|fflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* specific functions requested */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* functions requested with time */
 end_comment
 
 begin_decl_stmt
@@ -631,6 +663,59 @@ end_decl_stmt
 begin_comment
 comment|/* zero time/called functions, too */
 end_comment
+
+begin_comment
+comment|/*      *	structure for various string lists      */
+end_comment
+
+begin_struct
+struct|struct
+name|stringlist
+block|{
+name|struct
+name|stringlist
+modifier|*
+name|next
+decl_stmt|;
+name|char
+modifier|*
+name|string
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|elist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|Elist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|flist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|Flist
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*      *	register for pc relative addressing      */
@@ -1145,8 +1230,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ANYDEBUG
+name|PROPDEBUG
 value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANYDEBUG
+value|1024
 end_define
 
 end_unit

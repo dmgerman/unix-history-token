@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vax.c	1.2 (Berkeley) %G%"
+literal|"@(#)vax.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,24 @@ operator|)
 literal|0
 block|,
 comment|/* how many calls to self */
+operator|(
+name|double
+operator|)
+literal|1.0
+block|,
+comment|/* propagation fraction */
+operator|(
+name|double
+operator|)
+literal|0.0
+block|,
+comment|/* self propagation time */
+operator|(
+name|double
+operator|)
+literal|0.0
+block|,
+comment|/* child propagation time */
 operator|(
 name|bool
 operator|)
