@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sendmail.h"
 end_include
 
@@ -45,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.4 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.5 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.4 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.5 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,7 +530,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGCHLD
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_comment
@@ -366,12 +372,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
 end_comment
 
 begin_define
@@ -424,12 +441,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LOCKF
+name|HASINITGROUPS
 value|1
 end_define
 
 begin_comment
-comment|/* use System V lockf instead of flock */
+comment|/* has initgroups(3) call */
 end_comment
 
 begin_define
@@ -466,7 +483,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
 end_comment
 
 begin_define
@@ -533,7 +561,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
 end_comment
 
 begin_ifdef
@@ -627,6 +666,10 @@ begin_comment
 comment|/* has the statfs(2) syscall */
 end_comment
 
+begin_comment
+comment|/* #  define HASFLOCK	1	/* has flock(2) call */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -672,7 +715,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
 end_comment
 
 begin_define
@@ -695,6 +738,21 @@ end_define
 
 begin_comment
 comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_comment
+comment|/* # define HASFLOCK	1	/* has flock(2) call */
 end_comment
 
 begin_define
@@ -762,7 +820,22 @@ value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_comment
+comment|/* # define HASFLOCK	1	/* has flock(2) call */
 end_comment
 
 begin_define
@@ -797,6 +870,28 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|sleep
 value|sleepX
 end_define
@@ -807,6 +902,13 @@ directive|define
 name|LA_TYPE
 value|LA_ZERO
 end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -966,6 +1068,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASSTATFS
 value|1
 end_define
@@ -1035,17 +1148,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOCKF
-value|1
-end_define
-
-begin_comment
-comment|/* use System V locking instead of flock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSTATFS
 value|1
 end_define
@@ -1063,17 +1165,6 @@ end_define
 
 begin_comment
 comment|/* has POSIX setsid(2) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASINITGROUPS
-value|1
-end_define
-
-begin_comment
-comment|/* has initgroups(2) call */
 end_comment
 
 begin_define
@@ -1135,6 +1226,10 @@ end_define
 
 begin_comment
 comment|/* has unsetenv(3) call */
+end_comment
+
+begin_comment
+comment|/* # define HASFLOCK	1	/* has flock(2) call */
 end_comment
 
 begin_define
@@ -1211,7 +1306,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* we have getdtablesize(2) call */
+comment|/* has getdtablesize(2) call */
 end_comment
 
 begin_define
@@ -1222,7 +1317,29 @@ value|1
 end_define
 
 begin_comment
-comment|/* have setreuid(2) call */
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* has flock(2) call */
 end_comment
 
 begin_ifndef
@@ -1257,17 +1374,6 @@ ifdef|#
 directive|ifdef
 name|SYSTEM5
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOCKF
-value|1
-end_define
-
-begin_comment
-comment|/* use System V locking instead of flock */
-end_comment
 
 begin_define
 define|#
@@ -1939,8 +2045,19 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOCKF
+name|HASFLOCK
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1986,16 +2103,23 @@ begin_comment
 comment|/* unlock */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIG_ERR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIG_ERR
+value|((void (*)()) -1)
+end_define
 
 begin_endif
 endif|#

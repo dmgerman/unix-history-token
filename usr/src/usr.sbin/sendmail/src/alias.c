@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -33,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.5 (Berkeley) %G%"
+literal|"@(#)alias.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1500,7 +1494,7 @@ return|return;
 block|}
 name|oldsigint
 operator|=
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1610,7 +1604,7 @@ comment|/* restore the old signal */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,

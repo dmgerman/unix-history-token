@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.4 (Berkeley) %G%"
+literal|"@(#)clock.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifndef
@@ -332,7 +326,7 @@ comment|/* find the parent event */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -443,7 +437,7 @@ directive|endif
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -560,7 +554,7 @@ comment|/* we must be careful in here because ev_func may not return */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -726,7 +720,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,

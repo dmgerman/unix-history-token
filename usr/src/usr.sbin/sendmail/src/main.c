@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.10 (Berkeley) %G%"
+literal|"@(#)main.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -1458,7 +1452,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1470,7 +1464,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1482,7 +1476,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|signal
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -1494,7 +1488,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -1507,7 +1501,7 @@ begin_expr_stmt
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -1520,7 +1514,7 @@ begin_expr_stmt
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -5881,7 +5875,7 @@ comment|/* be sure we don't get nasty signals */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -5891,7 +5885,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -5901,7 +5895,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGQUIT
 argument_list|,

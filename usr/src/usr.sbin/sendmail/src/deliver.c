@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.7 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -4041,7 +4035,7 @@ name|SIGCHLD
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -4191,7 +4185,7 @@ comment|/* make diagnostic output be standard output */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -4201,7 +4195,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -4211,7 +4205,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -7383,7 +7377,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -7393,7 +7387,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -7403,7 +7397,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGTERM
 argument_list|,

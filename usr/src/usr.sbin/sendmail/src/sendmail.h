@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.8		%G%"
+literal|"@(#)sendmail.h	8.9		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5175,6 +5175,36 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*setsig_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|setsig_t
+name|setsignal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|setsig_t
 operator|)
 argument_list|)
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.11 (Berkeley) %G%"
+literal|"@(#)conf.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -1457,6 +1451,90 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SETSIGNAL -- set a signal handler ** **	This is essentially old BSD "signal(3)". */
+end_comment
+
+begin_function
+name|setsig_t
+name|setsignal
+parameter_list|(
+name|sig
+parameter_list|,
+name|handler
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+name|setsig_t
+name|handler
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|SYS5SIGNALS
+return|return
+name|signal
+argument_list|(
+name|sig
+argument_list|,
+name|handler
+argument_list|)
+return|;
+else|#
+directive|else
+name|struct
+name|sigaction
+name|n
+decl_stmt|,
+name|o
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|n
+argument_list|,
+sizeof|sizeof
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|.
+name|sa_handler
+operator|=
+name|handler
+expr_stmt|;
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|sig
+argument_list|,
+operator|&
+name|n
+argument_list|,
+operator|&
+name|o
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|SIG_ERR
+return|;
+return|return
+name|o
+operator|.
+name|sa_handler
+return|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_escape
 end_escape
@@ -3014,11 +3092,11 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|SYSTEM5
+name|SYS5SIGNALS
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -3648,43 +3726,6 @@ end_escape
 begin_comment
 comment|/* **  INITGROUPS -- initialize groups ** **	Stub implementation for System V style systems */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASINITGROUPS
-end_ifndef
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SYSTEM5
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__hpux
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HASINITGROUPS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -5286,7 +5327,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOCKFILE -- lock a file using flock or (shudder) lockf ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
 end_comment
 
 begin_function
@@ -5310,9 +5351,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|LOCKF
+ifndef|#
+directive|ifndef
+name|HASFLOCK
 name|int
 name|action
 decl_stmt|;
