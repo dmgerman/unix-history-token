@@ -6770,7 +6770,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" (%p) locked @ %s:%d\n"
+literal|" r = %d (%p) locked @ %s:%d\n"
+argument_list|,
+name|instance
+operator|->
+name|li_flags
+operator|&
+name|LI_RECURSEMASK
 argument_list|,
 name|lock
 argument_list|,
