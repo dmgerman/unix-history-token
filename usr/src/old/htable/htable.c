@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	4.9 (Berkeley) %G%"
+literal|"@(#)htable.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1158,13 +1158,6 @@ specifier|register
 name|int
 name|net
 decl_stmt|;
-if|if
-condition|(
-name|al
-operator|==
-name|connect_addr
-condition|)
-continue|continue;
 comment|/* suppress duplicates -- not optimal */
 name|net
 operator|=
@@ -1177,6 +1170,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|connectedto
+argument_list|(
+name|net
+argument_list|)
+operator|||
 name|gatewayto
 argument_list|(
 name|net
