@@ -2604,6 +2604,15 @@ name|i
 operator|==
 name|VR_TIMEOUT
 condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|vr_revid
+operator|<
+name|REV_ID_VT3065_A
+condition|)
 name|printf
 argument_list|(
 literal|"vr%d: reset never completed!\n"
@@ -2613,6 +2622,29 @@ operator|->
 name|vr_unit
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* Use newer force reset command */
+name|printf
+argument_list|(
+literal|"vr%d: Using force reset command.\n"
+argument_list|,
+name|sc
+operator|->
+name|vr_unit
+argument_list|)
+expr_stmt|;
+name|VR_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_MISC_CR1
+argument_list|,
+name|VR_MISCCR1_FORSRST
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Wait a little while for the chip to get its brains in order. */
 name|DELAY
 argument_list|(
@@ -2974,6 +3006,21 @@ name|PCIR_COMMAND
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vr_revid
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|VR_PCI_REVID
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+literal|0x000000FF
 expr_stmt|;
 ifdef|#
 directive|ifdef
