@@ -213,11 +213,6 @@ literal|8
 expr_stmt|;
 block|}
 name|sz
-operator|/=
-literal|8
-expr_stmt|;
-comment|/* #bits -> #bytes */
-name|sz
 operator|=
 name|sr
 operator|*
@@ -225,6 +220,11 @@ name|nc
 operator|*
 name|sz
 expr_stmt|;
+name|sz
+operator|/=
+literal|8
+expr_stmt|;
+comment|/* #bits -> #bytes */
 comment|/*          * Compute a buffer size for time not exeeding 1 second.          * Usually this algorithm gives a buffer size for 0.5 to 1.0 seconds          * of sound (using the current speed, sample size and #channels).        */
 name|bsz
 operator|=
@@ -277,6 +277,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Init to default value */
+else|else
 name|bsz
 operator|/=
 name|dmap
@@ -287,11 +288,11 @@ if|if
 condition|(
 name|bsz
 operator|<
-literal|64
+literal|16
 condition|)
 name|bsz
 operator|=
-literal|4096
+literal|16
 expr_stmt|;
 comment|/* Just a sanity check */
 while|while
@@ -330,23 +331,31 @@ name|dmap
 operator|->
 name|fragment_size
 operator|>
+operator|(
 name|audio_devs
 index|[
 name|dev
 index|]
 operator|->
 name|buffsize
+operator|/
+literal|2
+operator|)
 condition|)
 name|dmap
 operator|->
 name|fragment_size
 operator|=
+operator|(
 name|audio_devs
 index|[
 name|dev
 index|]
 operator|->
 name|buffsize
+operator|/
+literal|2
+operator|)
 expr_stmt|;
 name|bsz
 operator|=
@@ -355,6 +364,12 @@ operator|->
 name|fragment_size
 expr_stmt|;
 block|}
+name|bsz
+operator|&=
+operator|~
+literal|0x03
+expr_stmt|;
+comment|/* Force size which is multiple of 4 bytes */
 comment|/*    * Now computing addresses for the logical buffers    */
 name|n
 operator|=
@@ -563,6 +578,23 @@ operator|->
 name|qtail
 operator|=
 literal|0
+expr_stmt|;
+name|dmap
+operator|->
+name|nbufs
+operator|=
+literal|1
+expr_stmt|;
+name|dmap
+operator|->
+name|bytes_in_use
+operator|=
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|buffsize
 expr_stmt|;
 name|dmap
 operator|->
@@ -2562,39 +2594,6 @@ return|return
 name|err
 return|;
 block|}
-if|if
-condition|(
-name|dontblock
-operator|&&
-operator|!
-name|space_in_queue
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-comment|/* XXX */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-return|return
-name|RET_ERROR
-argument_list|(
-name|EWOULDBLOCK
-argument_list|)
-return|;
-else|#
-directive|else
-return|return
-name|RET_ERROR
-argument_list|(
-name|EAGAIN
-argument_list|)
-return|;
-endif|#
-directive|endif
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -2616,6 +2615,23 @@ operator|!
 name|abort
 condition|)
 block|{
+if|if
+condition|(
+name|dontblock
+condition|)
+block|{
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_ERROR
+argument_list|(
+name|EAGAIN
+argument_list|)
+return|;
+block|}
 comment|/*        * Wait for free space        */
 name|DO_SLEEP
 argument_list|(

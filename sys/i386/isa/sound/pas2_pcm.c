@@ -1657,8 +1657,6 @@ index|]
 operator|->
 name|buffsize
 operator|=
-literal|2
-operator|*
 name|DSP_BUFFSIZE
 expr_stmt|;
 block|}

@@ -5328,8 +5328,6 @@ operator|->
 name|buffsize
 operator|=
 name|DSP_BUFFSIZE
-operator|*
-literal|2
 expr_stmt|;
 name|audio_devs
 index|[
