@@ -2570,6 +2570,19 @@ operator|&
 name|MTX_FLAGMASK
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ADAPTIVE_GIANT
+if|if
+condition|(
+name|TD_IS_RUNNING
+argument_list|(
+name|owner
+argument_list|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|m
@@ -2583,6 +2596,8 @@ name|owner
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|turnstile_release
 argument_list|(
 operator|&
@@ -2756,13 +2771,7 @@ endif|#
 directive|endif
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * _mtx_lock_spin: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
-end_comment
-
-begin_function
 name|void
 name|_mtx_lock_spin
 parameter_list|(
@@ -2969,13 +2978,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * _mtx_unlock_sleep: the tougher part of releasing an MTX_DEF lock.  *  * We are only called here if the lock is recursed or contested (i.e. we  * need to wake up a blocked thread).  */
-end_comment
-
-begin_function
 name|void
 name|_mtx_unlock_sleep
 parameter_list|(
@@ -3441,23 +3444,11 @@ endif|#
 directive|endif
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.  */
-end_comment
-
-begin_comment
 comment|/*  * The backing function for the INVARIANTS-enabled mtx_assert()  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|INVARIANT_SUPPORT
-end_ifdef
-
-begin_function
 name|void
 name|_mtx_assert
 parameter_list|(
@@ -3627,35 +3618,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * The MUTEX_DEBUG-enabled mtx_validate()  *  * Most of these checks have been moved off into the LO_INITIALIZED flag  * maintained by the witness code.  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|MUTEX_DEBUG
-end_ifdef
-
-begin_function_decl
 name|void
 name|mtx_validate
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|mtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
+operator|*
+argument_list|)
+decl_stmt|;
 name|void
 name|mtx_validate
 parameter_list|(
@@ -3711,18 +3687,9 @@ directive|endif
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * General init routine used by the MTX_SYSINIT() macro.  */
-end_comment
-
-begin_function
 name|void
 name|mtx_sysinit
 parameter_list|(
@@ -3756,13 +3723,7 @@ name|ma_opts
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Mutex initialization routine; initialize lock `m' of type contained in  * `opts' with options contained in `opts' and name `name.'  The optional  * lock type `type' is used as a general lock category name for use with  * witness.  */
-end_comment
-
-begin_function
 name|void
 name|mtx_init
 parameter_list|(
@@ -3972,13 +3933,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Remove lock `m' from all_mtx queue.  We don't allow MTX_QUIET to be  * passed in as a flag here because if the corresponding mtx_init() was  * called with MTX_QUIET set, then it will already be set in the mutex's  * flags.  */
-end_comment
-
-begin_function
 name|void
 name|mtx_destroy
 parameter_list|(
@@ -4058,13 +4013,7 @@ name|mtx_object
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Intialize the mutex code and system mutexes.  This is called from the MD  * startup code prior to mi_startup().  The per-CPU data space needs to be  * setup before this is called.  */
-end_comment
-
-begin_function
 name|void
 name|mutex_init
 parameter_list|(
