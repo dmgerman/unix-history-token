@@ -3576,15 +3576,14 @@ block|{
 comment|/* 			 * No need to check for TH_FIN here because 			 * the TF_SENTFIN flag handles that case. 			 */
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|TH_SYN
+operator|)
+operator|==
+literal|0
 condition|)
-name|tp
-operator|->
-name|snd_nxt
-operator|--
-expr_stmt|;
 name|tp
 operator|->
 name|snd_nxt
