@@ -3781,7 +3781,7 @@ literal|0
 condition|)
 name|desc
 operator|=
-literal|"YENTA PCI-CARDBUS Bridge"
+literal|"YENTA PCI-CardBus Bridge"
 expr_stmt|;
 if|if
 condition|(
