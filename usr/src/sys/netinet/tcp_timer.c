@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.8 81/12/19 */
+comment|/* tcp_timer.c 4.9 81/12/20 */
 end_comment
 
 begin_include
@@ -456,6 +456,18 @@ argument_list|,
 name|TCPTV_MIN
 argument_list|,
 name|TCPTV_MAX
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rexmt set to %d\n"
+argument_list|,
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_REXMT
+index|]
 argument_list|)
 expr_stmt|;
 name|tp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.43 81/12/20 */
+comment|/* tcp_usrreq.c 1.44 81/12/20 */
 end_comment
 
 begin_include
@@ -565,11 +565,39 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SO_LETDATADRAIN
+operator|)
+operator|==
+literal|0
+condition|)
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 name|soisdisconnecting
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|sbflush
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 name|tcp_usrclosed

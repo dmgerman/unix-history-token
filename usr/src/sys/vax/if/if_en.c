@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.22	81/12/12	*/
+comment|/*	if_en.c	4.23	81/12/20	*/
 end_comment
 
 begin_include
@@ -1178,6 +1178,14 @@ name|en_ostat
 operator|&
 name|EN_OERROR
 condition|)
+block|{
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_oerrors
+operator|++
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"en%d: output error\n"
@@ -1185,6 +1193,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|es
@@ -1198,13 +1207,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|es
-operator|->
-name|es_if
-operator|.
-name|if_oerrors
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|es
@@ -2141,11 +2143,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|en_softc
@@ -2164,6 +2161,11 @@ argument_list|(
 name|ifp
 operator|->
 name|if_unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return

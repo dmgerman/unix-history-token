@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.24	81/12/20	*/
+comment|/*	tcp_output.c	4.25	81/12/20	*/
 end_comment
 
 begin_include
@@ -828,6 +828,13 @@ expr_stmt|;
 comment|/* 	 * If this transmission closes the window, 	 * start persistance timer at 2 round trip times 	 * but at least TCPTV_PERSMIN ticks. 	 */
 if|if
 condition|(
+name|TCPS_HAVERCVDSYN
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+operator|&&
 name|SEQ_GT
 argument_list|(
 name|tp
