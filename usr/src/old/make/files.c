@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.14 (Berkeley) 86/10/13"
+literal|"@(#)files.c	4.15 (Berkeley) 87/05/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -713,12 +713,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|cp
 operator|->
 name|varval
 operator|==
-literal|0
+name|NULL
 condition|)
 name|path
 operator|=
