@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anlwrk.c	5.4 (Berkeley) %G%"
+literal|"@(#)anlwrk.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
 comment|/*  *	create a vector of command arguments  *  *	return codes:  *		0  -  no more work in this file  *		positive number  -  number of arguments  */
 end_comment
 
@@ -166,6 +170,13 @@ name|nstr
 index|[
 name|MAXRQST
 index|]
+decl_stmt|,
+name|lastfile
+index|[
+name|MAXFULLNAME
+index|]
+init|=
+literal|""
 decl_stmt|;
 specifier|static
 name|FILE
@@ -217,6 +228,42 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|file
+argument_list|,
+name|lastfile
+argument_list|,
+name|MAXFULLNAME
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"Workfilename repeated: %s\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|strncpy
+argument_list|(
+name|lastfile
+argument_list|,
+name|file
+argument_list|,
+name|MAXFULLNAME
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -280,7 +327,10 @@ argument_list|)
 expr_stmt|;
 name|logent
 argument_list|(
+name|subfile
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 literal|"CMD FILE UNREADABLE"
 argument_list|)
@@ -410,6 +460,13 @@ operator|=
 literal|0
 expr_stmt|;
 name|file
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|nstr
 index|[
 literal|0
 index|]
