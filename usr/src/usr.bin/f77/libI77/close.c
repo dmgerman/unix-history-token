@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_close[] = "@(#)close.c	1.1";  *  * close.c  -  f77 file close, flush, exit routines  */
+comment|/* char id_close[] = "@(#)close.c	1.2";  *  * close.c  -  f77 file close, flush, exit routines  */
 end_comment
 
 begin_include
@@ -71,7 +71,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|101
+name|F_ERUNIT
 argument_list|,
 literal|"close"
 argument_list|)
@@ -100,7 +100,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|101
+name|F_ERUNIT
 argument_list|,
 literal|"can't close stderr"
 argument_list|)
@@ -124,7 +124,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|114
+name|F_ERNOPEN
 argument_list|,
 literal|"close"
 argument_list|)
@@ -357,7 +357,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|114
+name|F_ERNOPEN
 operator|)
 return|;
 block|}

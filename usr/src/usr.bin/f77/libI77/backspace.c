@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_backspace[] = "@(#)backspace.c	1.1";  *  * Backspace records  */
+comment|/* char id_backspace[] = "@(#)backspace.c	1.2";  *  * Backspace records  */
 end_comment
 
 begin_include
@@ -90,7 +90,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 argument|bksp
 argument_list|)
@@ -191,7 +191,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|106
+argument|F_ERNOBKSP
 argument_list|,
 argument|bksp
 argument_list|)
