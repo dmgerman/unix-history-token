@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	1.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1199,10 +1199,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|key
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;

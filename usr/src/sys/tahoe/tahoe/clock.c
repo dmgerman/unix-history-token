@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)clock.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,25 +24,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/clock.h"
+file|"mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cp.h"
+file|"clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cp.h"
 end_include
 
 begin_comment
@@ -177,18 +183,8 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
-name|vtoph
+name|kvtophys
 argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|(
-name|unsigned
-operator|)
 operator|&
 name|cpclock
 argument_list|)

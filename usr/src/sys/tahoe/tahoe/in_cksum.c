@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)in_cksum.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)in_cksum.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ name|ADDCARRY
 parameter_list|(
 name|x
 parameter_list|)
-value|(x> 65535 ? x -= 65535 : x)
+value|{ if ((x)> 65535) (x) -= 65535; }
 end_define
 
 begin_define
@@ -103,13 +103,18 @@ name|mlen
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|lint
 specifier|register
 name|int
 name|ClearCarry
 init|=
 literal|0
 decl_stmt|;
-comment|/* On CCI, known to be r7 */
+comment|/* On CCI, known to be r7; see BOTCH */
+endif|#
+directive|endif
 name|int
 name|byte_swapped
 init|=

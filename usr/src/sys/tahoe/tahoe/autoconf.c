@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	1.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -615,12 +615,10 @@ name|caddr_t
 name|valloc
 decl_stmt|;
 specifier|extern
-name|long
+name|quad
 name|catcher
 index|[
 name|SCB_LASTIV
-operator|*
-literal|2
 index|]
 decl_stmt|;
 ifdef|#
@@ -654,6 +652,9 @@ name|caddr_t
 operator|)
 name|VBIOBASE
 argument_list|,
+operator|(
+name|int
+operator|)
 name|VBIOSIZE
 argument_list|)
 expr_stmt|;
@@ -694,13 +695,16 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
+operator|(
+operator|(
+name|int
+operator|)
 operator|&
 name|catcher
 index|[
 name|i
-operator|*
-literal|2
 index|]
+operator|)
 expr_stmt|;
 comment|/* 	 * Set last free interrupt vector for devices with 	 * programmable interrupt vectors.  Use is to decrement 	 * this number and use result as interrupt vector. 	 */
 name|vhp
@@ -742,7 +746,12 @@ name|caddr_t
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|VMAPSIZE
+argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,

@@ -1,49 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	1.6 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/trap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/psl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/cp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mem.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoemath/fp.h"
-end_include
 
 begin_include
 include|#
@@ -132,7 +90,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoemath/fp.h"
 end_include
 
 begin_comment
@@ -208,10 +214,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|quad
 name|catcher
 index|[
-literal|191
+name|SCB_LASTIV
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -225,19 +231,13 @@ name|char
 name|version
 index|[]
 init|=
-literal|"4.2 BSD UNIX ...."
+literal|"4.3 BSD UNIX ...."
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|etext
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -261,9 +261,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GPROF
+argument_list|)
 name|caddr_t
 name|cp
 decl_stmt|;
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|dumpmag
@@ -285,16 +294,6 @@ name|struct
 name|domain
 name|unixdomain
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PUP
-specifier|extern
-name|struct
-name|domain
-name|pupdomain
-decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET
@@ -342,22 +341,6 @@ operator|=
 operator|&
 name|unixdomain
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PUP
-name|pupdomain
-operator|.
-name|dom_next
-operator|=
-name|domains
-expr_stmt|;
-name|domains
-operator|=
-operator|&
-name|pupdomain
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET
@@ -678,6 +661,10 @@ operator|)
 operator|&
 name|etext
 expr_stmt|;
+name|cp
+operator|=
+name|cp
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -947,14 +934,22 @@ name|kmempt
 index|[
 literal|100
 index|]
+decl_stmt|,
+name|ekmempt
+index|[
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|kmembase
-decl_stmt|,
-name|kmemlimit
+index|[
+literal|100
+operator|*
+name|NBPG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1773,7 +1768,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|,
@@ -1783,7 +1778,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_char
 name|mask
 decl_stmt|;
 end_decl_stmt

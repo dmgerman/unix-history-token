@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)ns_cksum.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)ns_cksum.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ name|ADDCARRY
 parameter_list|(
 name|x
 parameter_list|)
-value|(x> 65535 ? x -= 65535 : x)
+value|{ if ((x)> 65535) (x) -= 65535; }
 end_define
 
 begin_define
@@ -36,7 +36,7 @@ name|FOLD
 parameter_list|(
 name|x
 parameter_list|)
-value|{l_util.l = x; x = l_util.s[0] + l_util.s[1]; ADDCARRY(x);}
+value|{l_util.l = (x); (x) = l_util.s[0] + l_util.s[1]; ADDCARRY(x);}
 end_define
 
 begin_function
