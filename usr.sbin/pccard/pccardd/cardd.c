@@ -1714,12 +1714,14 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|assign_io
 argument_list|(
 name|sp
 argument_list|)
+operator|)
 condition|)
 block|{
 name|char
@@ -4039,6 +4041,9 @@ operator|&
 name|rw_flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|RESET_MAY_BE_HARMFUL
 name|lseek
 argument_list|(
 name|sp
@@ -4121,6 +4126,8 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lseek
 argument_list|(
 name|sp
