@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.11	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.12	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -908,7 +908,7 @@ argument|np1 = lnp; 		lprt( p->in.left, down1, use1 ); 		np2 = lnp; 		lprt( p->i
 literal|0
 argument|); 		return;  	case SCONV: 	case PCONV: 	case COLON: 		down1 = down2 = down; 		break;  	case CALL: 	case STCALL: 	case FORTCALL: 		acount = ctargs( p->in.right ); 	case UNARY CALL: 	case UNARY STCALL: 	case UNARY FORTCALL: 		if( p->in.left->in.op == ICON&& (id=p->in.left->tn.rval) != NONAME ){
 comment|/* used to be&name */
-argument|struct symtab *sp =&stab[id]; 			int lty;  			fsave( ftitle ); 			if (hflag&& !nflag) 				doform(p, sp, acount);
+argument|struct symtab *sp =&stab[id]; 			int lty;  			fsave( ftitle ); 			if (!nflag) 				doform(p, sp, acount);
 comment|/* 			 * if we're generating a library -C then 			 * we don't want to output references to functions 			 */
 argument|if( Cflag ) break;
 comment|/*  if a function used in an effects context is 			 *  cast to type  void  then consider its value 			 *  to have been disposed of properly 			 *  thus a call of type  undef  in an effects 			 *  context is construed to be used in a value 			 *  context 			 */
@@ -934,7 +934,7 @@ endif|#
 directive|endif
 argument|q->sflags |= SSET; 						} 					} 				} 			if( uses& VALASGOP ) break;
 comment|/* not a real use */
-argument|if( uses& VALSET ) q->sflags |= SSET; 			if( uses& VALUSED ) q->sflags |= SREF; 			if( uses& VALADDR ) q->sflags |= (SREF|SSET); 			if( p->tn.lval ==
+argument|if( uses& VALSET ) q->sflags |= SSET; 			if( uses& VALUSED ) q->sflags |= SREF; 			if( uses& VALADDR ) q->sflags |= (SREF|SSET); 			if (uses& (VALSET | VALADDR)) 				q->suse = -lineno; 			if( p->tn.lval ==
 literal|0
 argument|){ 				lnp->lid = id; 				lnp->flgs = (uses&VALADDR)?
 literal|0
@@ -1267,7 +1267,7 @@ value|unsigned
 endif|#
 directive|endif
 comment|/* !size_t */
-argument|static char *	strings[SBUFSIZE]; static NODE *	strnodes[SBUFSIZE]; static int	didstr; static int	subscr; static int	strapped;  bycode(t, i) { 	extern char *	calloc(); 	extern char *	realloc();  	if (!hflag || nflag || strapped) 		return; 	if (i ==
+argument|static char *	strings[SBUFSIZE]; static NODE *	strnodes[SBUFSIZE]; static int	didstr; static int	subscr; static int	strapped;  bycode(t, i) { 	extern char *	calloc(); 	extern char *	realloc();  	if (nflag || strapped) 		return; 	if (i ==
 literal|0
 argument|) 		if (subscr< (SBUFSIZE -
 literal|1
@@ -1696,7 +1696,7 @@ argument|;  static struct entry * findlc(ep, lchar, cchar) register struct entry
 literal|0
 argument|) 			return ep; 	return NULL; }  static char * subform(p, sp, acount) register NODE *			p; register struct symtab *	sp; { 	register int		i, j, isscan; 	register NODE *		tp; 	register char *		cp; 	register struct entry *	basep; 	register struct entry *	ep; 	register struct item *	ip; 	register int		lchar; 	register int		cchar; 	register int		t; 	register int		suppressed; 	static char		errbuf[
 literal|132
-argument|];  	if (!hflag || nflag || strapped) 		return NULL; 	cp = sp->sname; 	for (ip = items; ; ++ip) 		if (ip->name == NULL) 			return NULL;
+argument|];  	if (nflag || strapped) 		return NULL; 	cp = sp->sname; 	for (ip = items; ; ++ip) 		if (ip->name == NULL) 			return NULL;
 comment|/* not a print/scan function */
 argument|else if (strcmp(ip->name, sp->sname) ==
 literal|0
@@ -1714,7 +1714,8 @@ argument|; j<= subscr; ++j) 		if (tp == strnodes[j]) 			break; 	if (j> subscr) 	
 comment|/* oh well. . . */
 argument|cp = strings[j];
 comment|/* 	** cp now points to format string. 	*/
-argument|basep = pflag ? ip->ptable : ip->btable; 	for ( ; ; ) { 		if (*cp ==
+comment|/* 	** For now, ALWAYS use "portable" table, rather than doing this: 	**	basep = pflag ? ip->ptable : ip->btable; 	*/
+argument|basep = ip->ptable; 	for ( ; ; ) { 		if (*cp ==
 literal|'\0'
 argument|) 			return (i == acount) ? NULL : pfacm; 		if (*cp++ !=
 literal|'%'
