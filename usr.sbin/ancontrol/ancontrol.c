@@ -824,6 +824,13 @@ name|ACT_ENABLE_TX_KEY
 value|36
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACT_SET_MONITOR_MODE
+value|37
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1561,6 +1568,15 @@ operator|->
 name|an_cur_signal_quality
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nSignal strength:\t[ %d%% ]"
+argument_list|,
+name|sts
+operator|->
+name|an_normalized_rssi
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: This uses the old definition of the rate field (units of 	 * 500kbps).  Technically the new definition is that this field 	 * contains arbitrary values, but no devices which need this 	 * support exist and the IEEE seems to intend to use the old 	 * definition until they get something big so we'll keep using 	 * it as well because this will work with new cards with 	 * rate<= 63.5Mbps. 	 */
@@ -4824,6 +4840,15 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t%s -i iface -M 0-15 (set monitor mode)\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ANCACHE
@@ -5453,6 +5478,26 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ACT_SET_MONITOR_MODE
+case|:
+name|areq
+operator|.
+name|an_type
+operator|=
+name|AN_RID_MONITOR_MODE
+expr_stmt|;
+name|cfg
+operator|->
+name|an_len
+operator|=
+name|atoi
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+comment|/* mode is put in length */
 break|break;
 default|default:
 name|errx
@@ -7111,7 +7156,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+literal|5
 condition|;
 name|i
 operator|++
@@ -7135,6 +7180,15 @@ operator|&
 name|areq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|k
+operator|->
+name|kindex
+operator|==
+literal|0xffff
+condition|)
+break|break;
 switch|switch
 condition|(
 name|k
@@ -7149,7 +7203,9 @@ name|printf
 argument_list|(
 literal|"\tKey %d is unset\n"
 argument_list|,
-name|i
+name|k
+operator|->
+name|kindex
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7160,7 +7216,9 @@ name|printf
 argument_list|(
 literal|"\tKey %d is set  40 bits\n"
 argument_list|,
-name|i
+name|k
+operator|->
+name|kindex
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7171,7 +7229,9 @@ name|printf
 argument_list|(
 literal|"\tKey %d is set 128 bits\n"
 argument_list|,
-name|i
+name|k
+operator|->
+name|kindex
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7533,7 +7593,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ANISCTht:a:e:o:s:n:v:d:j:b:c:r:p:w:m:l:k:K:W:QZ"
+literal|"ANISCTht:a:e:o:s:n:v:d:j:b:c:r:p:w:m:l:k:K:W:QZM:"
 argument_list|)
 operator|)
 operator|!=
@@ -8010,6 +8070,18 @@ case|:
 name|act
 operator|=
 name|ACT_SET_WAKE_DURATION
+expr_stmt|;
+name|arg
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|act
+operator|=
+name|ACT_SET_MONITOR_MODE
 expr_stmt|;
 name|arg
 operator|=
