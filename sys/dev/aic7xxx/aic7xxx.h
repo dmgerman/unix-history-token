@@ -322,12 +322,19 @@ init|=
 literal|0x2000
 block|,
 comment|/* Multi-Function Twin Channel Device */
+name|AHC_TARG_DMABUG
+init|=
+literal|0x4000
+block|,
+comment|/* WideOdd Data-In bug in TMODE */
 name|AHC_AIC7770_FE
 init|=
-name|AHC_FENONE
+name|AHC_TARG_DMABUG
 block|,
 name|AHC_AIC7850_FE
 init|=
+name|AHC_TARG_DMABUG
+operator||
 name|AHC_SPIOCAP
 block|,
 name|AHC_AIC7855_FE
@@ -346,10 +353,12 @@ name|AHC_AIC7859_FE
 block|,
 name|AHC_AIC7870_FE
 init|=
-name|AHC_FENONE
+name|AHC_TARG_DMABUG
 block|,
 name|AHC_AIC7880_FE
 init|=
+name|AHC_TARG_DMABUG
+operator||
 name|AHC_ULTRA
 block|,
 name|AHC_AIC7890_FE
@@ -1524,6 +1533,9 @@ name|shared_data_dmamap
 decl_stmt|;
 name|bus_addr_t
 name|shared_data_busaddr
+decl_stmt|;
+name|bus_addr_t
+name|dma_bug_buf
 decl_stmt|;
 comment|/* Number of enabled target mode device on this card */
 name|u_int
