@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.4 1993/09/04 05:06:33 jkh Exp $"
+literal|"$Id: main.c,v 1.4 1993/09/12 20:45:29 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,22 @@ case|:
 name|Verbose
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|AutoAnswer
+operator|=
+name|NO
+expr_stmt|;
+break|break;
+case|case
+literal|'Y'
+case|:
+name|AutoAnswer
+operator|=
+name|YES
 expr_stmt|;
 break|break;
 case|case
