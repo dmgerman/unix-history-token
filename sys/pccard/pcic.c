@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/i82365.h>
 end_include
 
@@ -1389,9 +1395,14 @@ name|int
 name|irq
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NOT_YET_XXX
 name|u_int32_t
 name|reg
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sp
