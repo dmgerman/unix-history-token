@@ -41,6 +41,13 @@ name|phandle_t
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|phandle_t
+name|chosen
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This isn't actually an OpenFirmware function, but it seemed like the right  * place for it to go.  */
 end_comment

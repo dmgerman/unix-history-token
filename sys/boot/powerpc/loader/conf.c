@@ -12,7 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bootstrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libofw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openfirm.h"
 end_include
 
 begin_if
@@ -161,14 +173,6 @@ comment|/*   * Sort formats so that those that can detect based on arguments  * 
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|file_format
-name|powerpc_elf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|file_format
 modifier|*
@@ -176,7 +180,9 @@ name|file_formats
 index|[]
 init|=
 block|{
-comment|/*&powerpc_elf,*/
+operator|&
+name|ofw_elf
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -207,6 +213,18 @@ name|ofwconsole
 block|,
 name|NULL
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * reloc - our load address  */
+end_comment
+
+begin_decl_stmt
+name|vm_offset_t
+name|reloc
+init|=
+name|RELOC
 decl_stmt|;
 end_decl_stmt
 

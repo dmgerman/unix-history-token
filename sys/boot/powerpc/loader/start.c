@@ -49,20 +49,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|int
-name|stack
-index|[
-literal|8192
-operator|/
-literal|4
-operator|+
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -79,7 +65,7 @@ directive|endif
 end_endif
 
 begin_asm
-asm|asm(" 	.text 	.globl	_start _start: 	li	8,0 	li	9,0x100 	mtctr	9 1: 	dcbf	0,8 	icbi	0,8 	addi	8,8,0x20 	bdnz	1b 	sync 	isync  	lis	1,stack@ha 	addi	1,1,stack@l 	addi	1,1,8192  	mfmsr	8 	li	0,0 	mtmsr	0 	isync  	mtibatu	0,0 	mtibatu	1,0 	mtibatu	2,0 	mtibatu	3,0 	mtdbatu	0,0 	mtdbatu	1,0 	mtdbatu	2,0 	mtdbatu	3,0  	li	9,0x12		/* BATL(0, BAT_M, BAT_PP_RW) */ 	mtibatl	0,9 	mtdbatl	0,9 	li	9,0x1ffe	/* BATU(0, BAT_BL_256M, BAT_Vs) */ 	mtibatu	0,9 	mtdbatu	0,9 	isync  	mtmsr	8 	isync  	b	startup ");
+asm|__asm(" 	.data stack: 	.space	16388  	.text 	.globl	_start _start: 	li	8,0 	li	9,0x100 	mtctr	9 1: 	dcbf	0,8 	icbi	0,8 	addi	8,8,0x20 	bdnz	1b 	sync 	isync  	lis	1,stack@ha 	addi	1,1,stack@l 	addi	1,1,8192  	mfmsr	8 	li	0,0 	mtmsr	0 	isync  	mtibatu	0,0 	mtibatu	1,0 	mtibatu	2,0 	mtibatu	3,0 	mtdbatu	0,0 	mtdbatu	1,0 	mtdbatu	2,0 	mtdbatu	3,0  	li	9,0x12		/* BATL(0, BAT_M, BAT_PP_RW) */ 	mtibatl	0,9 	mtdbatl	0,9 	li	9,0x1ffe	/* BATU(0, BAT_BL_256M, BAT_Vs) */ 	mtibatu	0,9 	mtdbatu	0,9 	isync  	mtmsr	8 	isync  	b	startup ");
 end_asm
 
 begin_function
