@@ -1597,7 +1597,6 @@ name|ch
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
