@@ -1,7 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - simple floppy tape filter  *  *  06/07/94 v1.0 ++sg  *  Added support for tape retension.  Added retries for ecc failures.  *  Moved to release.  *  *  01/28/94 v0.3b (Jim Babb)  *  Fixed bug when all sectors in a segment are marked bad.  *  *  10/30/93 v0.3  *  Minor revisions.  Seems pretty stable.  *  *  09/02/93 v0.2 pl01  *  Initial revision.  *  *  usage: ft [ -f tape ] [ description ]  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - simple floppy tape filter  *  *  06/07/94 v1.0 ++sg  *  Added support for tape retension.  Added retries for ecc failures.  *  Moved to release.  *  *  01/28/94 v0.3b (Jim Babb)  *  Fixed bug when all sectors in a segment are marked bad.  *  *  10/30/93 v0.3  *  Minor revisions.  Seems pretty stable.  *  *  09/02/93 v0.2 pl01  *  Initial revision.  *  *  usage: ft [ -f tape ] [ -r ] [ description ]  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_include
 include|#
@@ -24,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -277,7 +315,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ft [ -r ] [ -f device ] [ \"description\" ]\n"
+literal|"usage: ft [-f device] [-r] [\"description\"]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -304,8 +342,6 @@ name|wr
 parameter_list|)
 block|{
 name|int
-name|r
-decl_stmt|,
 name|s
 decl_stmt|;
 name|int
@@ -329,11 +365,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"could not get drive status\n"
+literal|"could not get drive status"
 argument_list|)
 expr_stmt|;
 return|return
@@ -360,11 +394,9 @@ operator|!
 name|sawit
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"waiting for drive to become ready...\n"
+literal|"waiting for drive to become ready"
 argument_list|)
 expr_stmt|;
 name|sawit
@@ -392,11 +424,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"could not get drive status\n"
+literal|"could not get drive status"
 argument_list|)
 expr_stmt|;
 return|return
@@ -417,11 +447,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tape is not formatted\n"
+literal|"tape is not formatted"
 argument_list|)
 expr_stmt|;
 return|return
@@ -443,11 +471,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tape is write protected\n"
+literal|"tape is write protected"
 argument_list|)
 expr_stmt|;
 return|return
@@ -777,8 +803,6 @@ name|int
 name|r
 decl_stmt|,
 name|sn
-decl_stmt|,
-name|bytes
 decl_stmt|;
 name|QIC_Segment
 name|s
@@ -803,11 +827,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"couldn't determine tape geometry\n"
+literal|"couldn't determine tape geometry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -947,11 +969,9 @@ operator|!
 name|gothdr
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"using secondary header\n"
+literal|"using secondary header"
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1000,11 +1020,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"too many errors in primary header\n"
+literal|"too many errors in primary header"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1016,11 +1034,9 @@ operator|!
 name|gothdr
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"couldn't read header segment\n"
+literal|"couldn't read header segment"
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1048,19 +1064,14 @@ begin_comment
 comment|/*  *  Open /dev/tty and ask for next volume.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ask_vol
-argument_list|(
-argument|int vn
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|vn
+parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|inp
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -1082,20 +1093,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"argh!! can't open /dev/tty\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"argh!! can't open /dev/tty"
 argument_list|)
 expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -1121,7 +1125,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  Return the name of the tape only.  */
@@ -1206,8 +1210,6 @@ decl_stmt|,
 name|vno
 decl_stmt|,
 name|sbytes
-decl_stmt|,
-name|r
 decl_stmt|,
 name|eccfails
 decl_stmt|;
@@ -1540,11 +1542,9 @@ operator|<=
 literal|5
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ft: retry %d at segment %d byte %ld\n"
+literal|"retry %d at segment %d byte %ld"
 argument_list|,
 name|eccfails
 argument_list|,
@@ -1556,11 +1556,9 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ft: *** ecc failure in segment %d at byte %ld\n"
+literal|"*** ecc failure in segment %d at byte %ld"
 argument_list|,
 name|sno
 argument_list|,
@@ -1648,8 +1646,6 @@ decl_stmt|,
 name|sbytes
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|maxseg
 decl_stmt|,
 name|r
@@ -1950,11 +1946,9 @@ if|if
 condition|(
 name|r
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"** warning: ecc problem !!\n"
+literal|"** warning: ecc problem !!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1971,18 +1965,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"QIOWRITE"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|tvsize
 operator|+=
 name|amt
@@ -2096,11 +2085,9 @@ if|if
 condition|(
 name|r
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"** warning: header ecc problem !!\n"
+literal|"** warning: header ecc problem !!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2117,18 +2104,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"QIOWRITE"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2190,11 +2172,9 @@ if|if
 condition|(
 name|r
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"** warning: duphdr ecc problem !!\n"
+literal|"** warning: duphdr ecc problem !!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2211,18 +2191,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"QIOWRITE"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|ioctl
 argument_list|(
@@ -2251,7 +2226,7 @@ comment|/*  *  Entry.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
@@ -2264,10 +2239,6 @@ index|[]
 parameter_list|)
 block|{
 name|int
-name|r
-decl_stmt|,
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 name|char
@@ -2440,18 +2411,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|tape
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
