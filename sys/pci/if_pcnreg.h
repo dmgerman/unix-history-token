@@ -2375,6 +2375,9 @@ decl_stmt|;
 name|u_int8_t
 name|pcn_link
 decl_stmt|;
+name|u_int8_t
+name|pcn_phyaddr
+decl_stmt|;
 name|int
 name|pcn_if_flags
 decl_stmt|;
