@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.1.1.1 1997/03/23 18:55:20 joerg Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.2 1997/04/19 20:28:50 peter Exp $  */
 end_comment
 
 begin_include
@@ -469,7 +469,7 @@ name|char
 name|header
 index|[]
 init|=
-literal|"  PID X        PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
+literal|"  PID X                PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,7 +489,7 @@ define|#
 directive|define
 name|Proc_format
 define|\
-value|"%5d %-8.8s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.14s"
+value|"%5d %-16.16s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.6s"
 end_define
 
 begin_else
@@ -507,7 +507,7 @@ name|char
 name|header
 index|[]
 init|=
-literal|"  PID X        PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID X                PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,7 +527,7 @@ define|#
 directive|define
 name|Proc_format
 define|\
-value|"%5d %-8.8s%3d %3d%7s %6s %-6.6s%7s %5.2f%% %5.2f%% %.14s"
+value|"%5d %-16.16s%3d %3d%7s %6s %-6.6s%7s %5.2f%% %5.2f%% %.6s"
 end_define
 
 begin_endif
