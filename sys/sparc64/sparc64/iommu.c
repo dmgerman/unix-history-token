@@ -2492,12 +2492,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamem_alloc
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -2519,7 +2517,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -2532,7 +2530,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|sparc64_dmamem_alloc_map
+name|sparc64_dma_alloc_map
 argument_list|(
 name|dt
 argument_list|,
@@ -2580,7 +2578,7 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|sparc64_dmamem_free_map
+name|sparc64_dma_free_map
 argument_list|(
 name|dt
 argument_list|,
@@ -2627,12 +2625,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iommu_dvmamem_free
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -2649,7 +2645,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -2660,7 +2656,7 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-name|sparc64_dmamem_free_map
+name|sparc64_dma_free_map
 argument_list|(
 name|dt
 argument_list|,
@@ -2678,12 +2674,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamap_create
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -2700,7 +2694,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -2723,15 +2717,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|sparc64_dmamap_create
+name|sparc64_dma_alloc_map
 argument_list|(
-name|pt
-operator|->
-name|dt_parent
-argument_list|,
 name|dt
-argument_list|,
-name|flags
 argument_list|,
 name|mapp
 argument_list|)
@@ -2917,12 +2905,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamap_destroy
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -2935,7 +2921,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -2946,18 +2932,16 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|sparc64_dmamap_destroy
+name|sparc64_dma_free_map
 argument_list|(
-name|pt
-operator|->
-name|dt_parent
-argument_list|,
 name|dt
 argument_list|,
 name|map
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -3335,12 +3319,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamap_load
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -3371,7 +3353,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -3524,12 +3506,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamap_load_mbuf
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -3558,7 +3538,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -3793,12 +3773,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iommu_dvmamap_load_uio
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -3827,7 +3805,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -4116,12 +4094,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iommu_dvmamap_unload
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -4134,7 +4110,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -4159,27 +4135,20 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|sparc64_dmamap_unload
-argument_list|(
-name|pt
-operator|->
-name|dt_parent
-argument_list|,
-name|dt
-argument_list|,
 name|map
-argument_list|)
+operator|->
+name|dm_loaded
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iommu_dvmamap_sync
 parameter_list|(
-name|bus_dma_tag_t
-name|pt
-parameter_list|,
 name|bus_dma_tag_t
 name|dt
 parameter_list|,
@@ -4195,7 +4164,7 @@ name|iommu_state
 modifier|*
 name|is
 init|=
-name|pt
+name|dt
 operator|->
 name|dt_cookie
 decl_stmt|;
@@ -4511,6 +4480,33 @@ end_endif
 begin_comment
 comment|/* IOMMU_DIAG */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|bus_dma_methods
+name|iommu_dma_methods
+init|=
+block|{
+name|iommu_dvmamap_create
+block|,
+name|iommu_dvmamap_destroy
+block|,
+name|iommu_dvmamap_load
+block|,
+name|iommu_dvmamap_load_mbuf
+block|,
+name|iommu_dvmamap_load_uio
+block|,
+name|iommu_dvmamap_unload
+block|,
+name|iommu_dvmamap_sync
+block|,
+name|iommu_dvmamem_alloc
+block|,
+name|iommu_dvmamem_free
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
