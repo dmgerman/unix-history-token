@@ -6719,7 +6719,11 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|==
 literal|0
@@ -6868,6 +6872,9 @@ specifier|register
 name|pt_entry_t
 modifier|*
 name|pte
+decl_stmt|;
+name|int
+name|managed
 decl_stmt|;
 comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
 if|if
@@ -7049,6 +7056,27 @@ literal|0
 return|;
 block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory. Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
+name|managed
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pmap_insert_entry
 argument_list|(
 name|pmap
@@ -7060,6 +7088,17 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|managed
+operator|=
+name|PG_MANAGED
+operator||
+name|PG_FOR
+operator||
+name|PG_FOW
+operator||
+name|PG_FOE
+expr_stmt|;
+block|}
 comment|/* 	 * Increment counters 	 */
 name|pmap
 operator|->
@@ -7086,13 +7125,7 @@ name|PG_KRE
 operator||
 name|PG_URE
 operator||
-name|PG_MANAGED
-operator||
-name|PG_FOR
-operator||
-name|PG_FOE
-operator||
-name|PG_FOW
+name|managed
 expr_stmt|;
 name|alpha_pal_imb
 argument_list|()
