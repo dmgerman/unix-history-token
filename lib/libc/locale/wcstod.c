@@ -73,6 +73,9 @@ name|buf
 decl_stmt|,
 modifier|*
 name|end
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 specifier|const
 name|wchar_t
@@ -233,6 +236,11 @@ name|void
 operator|)
 name|clen
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|p
+expr_stmt|;
 else|#
 directive|else
 comment|/* Slow, conservative approach. */
@@ -249,9 +257,13 @@ operator|*
 operator|)
 name|nptr
 expr_stmt|;
+name|p
+operator|=
+name|buf
+expr_stmt|;
 while|while
 condition|(
-name|buf
+name|p
 operator|<
 name|end
 operator|&&
@@ -260,11 +272,11 @@ name|clen
 operator|=
 name|mbrlen
 argument_list|(
-name|buf
+name|p
 argument_list|,
 name|end
 operator|-
-name|buf
+name|p
 argument_list|,
 operator|&
 name|state
@@ -274,7 +286,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|buf
+name|p
 operator|+=
 name|clen
 expr_stmt|;
