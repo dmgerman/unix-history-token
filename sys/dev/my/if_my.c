@@ -1719,7 +1719,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* now program new ones */
-comment|/* 	 * Add by Surfer for (ifma = ifp->if_multiaddrs.lh_first; ifma != 	 * NULL; ifma = ifma->ifma_link.le_next) { if 	 * (ifma->ifma_addr->sa_family != AF_LINK) continue; h = 	 * my_calchash(LLADDR((struct sockaddr_dl *)ifma->ifma_addr)); if (h 	 *< 32) hashes[0] |= (1<< h); else hashes[1] |= (1<< (h - 32)); 	 * mcnt++; } 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
