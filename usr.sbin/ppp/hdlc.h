@@ -180,8 +180,8 @@ comment|/* Urgent (LQR packets) */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|char
+specifier|extern
+name|u_char
 name|EscMap
 index|[
 literal|33

@@ -85,7 +85,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     set up signal_recorder, and record handler as the function to ultimately     call in handle_signal() */
+comment|/*  * Set up signal_recorder, and record handler as the function to ultimately  * call in handle_signal() */
 end_comment
 
 begin_function

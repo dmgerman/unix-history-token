@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.31 1997/07/01 21:33:44 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.70 1997/08/21 16:21:34 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -524,11 +524,9 @@ begin_function
 name|void
 name|TtyCommandMode
 parameter_list|(
-name|prompt
-parameter_list|)
 name|int
 name|prompt
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|termios
@@ -766,11 +764,9 @@ begin_function
 name|void
 name|Cleanup
 parameter_list|(
-name|excode
-parameter_list|)
 name|int
 name|excode
-decl_stmt|;
+parameter_list|)
 block|{
 name|OsLinkdown
 argument_list|()
@@ -912,11 +908,9 @@ specifier|static
 name|void
 name|CloseConnection
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* NOTE, these are manual, we've done a setsid() */
 name|LogPrintf
@@ -953,11 +947,9 @@ specifier|static
 name|void
 name|CloseSession
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1041,11 +1033,9 @@ specifier|static
 name|void
 name|TerminalStop
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|pending_signal
 argument_list|(
@@ -1080,11 +1070,9 @@ specifier|static
 name|void
 name|SetUpServer
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|res
@@ -1500,18 +1488,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -2757,7 +2741,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/*    *  We are in terminal mode, decode special sequences    */
+comment|/*    * We are in terminal mode, decode special sequences    */
 name|n
 operator|=
 name|read
@@ -2970,17 +2954,13 @@ name|u_char
 modifier|*
 name|HdlcDetect
 parameter_list|(
-name|cp
-parameter_list|,
-name|n
-parameter_list|)
 name|u_char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3096,11 +3076,9 @@ specifier|static
 name|void
 name|StartRedialTimer
 parameter_list|(
-name|Timeout
-parameter_list|)
 name|int
 name|Timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|StopTimer
 argument_list|(
@@ -3370,7 +3348,7 @@ operator|&
 name|efds
 argument_list|)
 expr_stmt|;
-comment|/*       * If the link is down and we're in DDIAL mode, bring it back      * up.      */
+comment|/*      * If the link is down and we're in DDIAL mode, bring it back up.      */
 if|if
 condition|(
 name|mode
@@ -3387,7 +3365,7 @@ name|dial_up
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/*      * If we lost carrier and want to re-establish the connection      * due to the "set reconnect" value, we'd better bring the line      * back up.      */
+comment|/*      * If we lost carrier and want to re-establish the connection due to the      * "set reconnect" value, we'd better bring the line back up.      */
 if|if
 condition|(
 name|LcpFsm
@@ -3474,7 +3452,7 @@ name|RECON_ENVOKED
 expr_stmt|;
 block|}
 block|}
-comment|/*     * If Ip packet for output is enqueued and require dial up,      * Just do it!     */
+comment|/*      * If Ip packet for output is enqueued and require dial up, Just do it!      */
 if|if
 condition|(
 name|dial_up
@@ -3601,7 +3579,7 @@ block|{
 name|tries
 operator|++
 expr_stmt|;
-comment|/* Tries are per number, not per list of numbers. */
+comment|/* Tries are per number, not per list of 				 * numbers. */
 if|if
 condition|(
 operator|!
@@ -3882,7 +3860,7 @@ name|rfds
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *** IMPORTANT ***      *      *  CPU is serviced every TICKUNIT micro seconds.      *	This value must be chosen with great care. If this values is      *  too big, it results loss of characters from modem and poor responce.      *  If this values is too small, ppp process eats many CPU time.      */
+comment|/*      * *** IMPORTANT ***      *       * CPU is serviced every TICKUNIT micro seconds. This value must be chosen      * with great care. If this values is too big, it results loss of      * characters from modem and poor responce. If this values is too small,      * ppp process eats many CPU time.      */
 ifndef|#
 directive|ifndef
 name|SIGALRM
@@ -3977,7 +3955,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|SIGALRM
-comment|/*      *  Normally, select() will not block because modem is writable.      *  In AUTO mode, select will block until we find packet from tun      */
+comment|/*      * Normally, select() will not block because modem is writable. In AUTO      * mode, select will block until we find packet from tun      */
 name|tp
 operator|=
 operator|(
@@ -4013,7 +3991,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/*      * When SIGALRM timer is running, a select function will be      * return -1 and EINTR after a Time Service signal hundler      * is done.  If the redial timer is not running and we are      * trying to dial, poll with a 0 value timer.      */
+comment|/*      * When SIGALRM timer is running, a select function will be return -1 and      * EINTR after a Time Service signal hundler is done.  If the redial      * timer is not running and we are trying to dial, poll with a 0 value      * timer.      */
 name|tp
 operator|=
 operator|(
@@ -4439,7 +4417,7 @@ operator|<=
 name|ST_CLOSED
 condition|)
 block|{
-comment|/* 	   *  In dedicated mode, we just discard input until LCP is started. 	   */
+comment|/* 	   * In dedicated mode, we just discard input until LCP is started. 	   */
 if|if
 condition|(
 operator|!
@@ -4545,7 +4523,7 @@ name|rfds
 argument_list|)
 condition|)
 block|{
-comment|/* something to read from tun */
+comment|/* something to read 							 * from tun */
 name|n
 operator|=
 name|read
@@ -4709,7 +4687,7 @@ literal|"Oops - forwarding packet addressed to myself\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*        *  Process on-demand dialup. Output packets are queued within tunnel        *  device until IPCP is opened.        */
+comment|/*        * Process on-demand dialup. Output packets are queued within tunnel        * device until IPCP is opened.        */
 if|if
 condition|(
 name|LcpFsm

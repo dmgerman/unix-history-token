@@ -14,7 +14,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* syslog(LOG_INFO, ....)	*/
+comment|/* syslog(LOG_INFO, ....)	 */
 end_comment
 
 begin_define
@@ -60,7 +60,7 @@ value|(7)
 end_define
 
 begin_comment
-comment|/* syslog(LOG_DEBUG, ....)	*/
+comment|/* syslog(LOG_DEBUG, ....)	 */
 end_comment
 
 begin_define
@@ -160,7 +160,7 @@ value|(18)
 end_define
 
 begin_comment
-comment|/* syslog(LOG_ALERT, ....)	*/
+comment|/* syslog(LOG_ALERT, ....)	 */
 end_comment
 
 begin_define

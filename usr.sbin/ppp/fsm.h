@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.5.2.1 1997/06/10 09:43:25 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.9 1997/08/20 23:47:43 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -206,7 +206,7 @@ name|pppTimer
 name|FsmTimer
 decl_stmt|;
 comment|/* Restart Timer */
-comment|/*    * This timer times the ST_STOPPED state out after the given value    * (specified via "set stopped ...").  Although this isn't    * specified in the rfc, the rfc *does* say that "the application    * may use higher level timers to avoid deadlock".    * The StoppedTimer takes effect when the other side ABENDs rather    * than going into ST_ACKSENT (and sending the ACK), causing ppp to    * time out and drop into ST_STOPPED.  At this point, nothing will    * change this state :-(    */
+comment|/*    * This timer times the ST_STOPPED state out after the given value    * (specified via "set stopped ...").  Although this isn't specified in the    * rfc, the rfc *does* say that "the application may use higher level    * timers to avoid deadlock". The StoppedTimer takes effect when the other    * side ABENDs rather than going into ST_ACKSENT (and sending the ACK),    * causing ppp to time out and drop into ST_STOPPED.  At this point,    * nothing will change this state :-(    */
 name|struct
 name|pppTimer
 name|StoppedTimer

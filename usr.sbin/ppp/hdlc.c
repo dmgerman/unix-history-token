@@ -752,6 +752,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_char
+name|EscMap
+index|[
+literal|33
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|HdlcInit
@@ -976,7 +985,7 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-comment|/*    *  If possible, compress protocol field.    */
+comment|/*    * If possible, compress protocol field.    */
 if|if
 condition|(
 name|LcpInfo
@@ -1920,7 +1929,7 @@ operator|.
 name|want_acfcomp
 condition|)
 block|{
-comment|/*      *  We expect that packet is not compressed.      */
+comment|/*      * We expect that packet is not compressed.      */
 name|addr
 operator|=
 operator|*
@@ -2032,7 +2041,7 @@ operator|==
 name|HDLC_UI
 condition|)
 block|{
-comment|/*      *  We can receive compressed packet, but peer still send      *  uncompressed packet to me.      */
+comment|/*      * We can receive compressed packet, but peer still send uncompressed      * packet to me.      */
 name|cp
 operator|+=
 literal|2

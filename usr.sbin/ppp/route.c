@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.9.2.6 1997/06/20 23:45:01 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.17 1997/07/28 01:02:27 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -159,29 +159,21 @@ begin_function
 name|void
 name|OsSetRoute
 parameter_list|(
-name|cmd
-parameter_list|,
-name|dst
-parameter_list|,
-name|gateway
-parameter_list|,
-name|mask
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 name|dst
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 name|gateway
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|rtmsg
@@ -611,18 +603,14 @@ specifier|static
 name|void
 name|p_sockaddr
 parameter_list|(
-name|sa
-parameter_list|,
-name|width
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|,
 name|int
 name|width
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -766,18 +754,13 @@ specifier|static
 name|void
 name|p_flags
 parameter_list|(
-name|f
-parameter_list|,
-name|format
-parameter_list|)
-specifier|register
 name|int
 name|f
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1364,11 +1347,9 @@ begin_function
 name|void
 name|DeleteIfRoutes
 parameter_list|(
-name|all
-parameter_list|)
 name|int
 name|all
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|rt_msghdr
@@ -1954,12 +1935,10 @@ begin_function
 name|int
 name|GetIfIndex
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2047,7 +2026,7 @@ operator|=
 name|bufsize
 expr_stmt|;
 comment|/* Initial setting */
-comment|/*    * Iterate through here until we don't get many more data     */
+comment|/*    * Iterate through here until we don't get many more data    */
 do|do
 block|{
 name|oldbufsize

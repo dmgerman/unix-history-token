@@ -7,7 +7,7 @@ name|char
 modifier|*
 function_decl|(
 modifier|*
-name|GetNextFragmentPtr
+name|PacketAliasGetFragment
 function_decl|)
 parameter_list|(
 name|char
@@ -17,7 +17,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|InitPacketAlias
+name|PacketAliasInit
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -89,7 +89,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|SaveFragmentPtr
+name|PacketAliasSaveFragment
 function_decl|)
 parameter_list|(
 name|char
@@ -99,7 +99,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|SetPacketAliasAddress
+name|PacketAliasSetAddress
 function_decl|)
 parameter_list|(
 name|struct
@@ -109,7 +109,7 @@ function_decl|;
 name|unsigned
 function_decl|(
 modifier|*
-name|SetPacketAliasMode
+name|PacketAliasSetMode
 function_decl|)
 parameter_list|(
 name|unsigned
@@ -120,7 +120,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|FragmentAliasIn
+name|PacketAliasFragmentIn
 function_decl|)
 parameter_list|(
 name|char

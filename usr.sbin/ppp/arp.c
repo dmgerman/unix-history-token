@@ -267,21 +267,17 @@ begin_function
 name|int
 name|sifproxyarp
 parameter_list|(
-name|unit
-parameter_list|,
-name|hisaddr
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|hisaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|routes
 decl_stmt|;
-comment|/*      * Get the hardware address of an interface on the same subnet      * as our local address.      */
+comment|/*    * Get the hardware address of an interface on the same subnet as our local    * address.    */
 name|memset
 argument_list|(
 operator|&
@@ -541,16 +537,12 @@ begin_function
 name|int
 name|cifproxyarp
 parameter_list|(
-name|unit
-parameter_list|,
-name|hisaddr
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|hisaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|routes
@@ -686,16 +678,12 @@ begin_function
 name|int
 name|sifproxyarp
 parameter_list|(
-name|unit
-parameter_list|,
-name|hisaddr
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|hisaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|arpreq
@@ -727,7 +715,7 @@ name|arpreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the hardware address of an interface on the same subnet      * as our local address.      */
+comment|/*    * Get the hardware address of an interface on the same subnet as our local    * address.    */
 if|if
 condition|(
 operator|!
@@ -876,16 +864,12 @@ begin_function
 name|int
 name|cifproxyarp
 parameter_list|(
-name|unit
-parameter_list|,
-name|hisaddr
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|hisaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|arpreq
@@ -988,23 +972,17 @@ begin_function
 name|int
 name|get_ether_addr
 parameter_list|(
-name|s
-parameter_list|,
-name|ipaddr
-parameter_list|,
-name|hwaddr
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|ipaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_dl
 modifier|*
 name|hwaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifreq
@@ -1083,7 +1061,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*      * Scan through looking for an interface with an Internet      * address on the same subnet as `ipaddr'.      */
+comment|/*    * Scan through looking for an interface with an Internet address on the    * same subnet as `ipaddr'.    */
 name|ifend
 operator|=
 operator|(
@@ -1178,7 +1156,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * Check that the interface is up, and not point-to-point 	     * or loopback. 	     */
+comment|/*        * Check that the interface is up, and not point-to-point or loopback.        */
 if|if
 condition|(
 name|ioctl
@@ -1223,7 +1201,7 @@ condition|)
 goto|goto
 name|nextif
 goto|;
-comment|/* 	     * Get its netmask and check that it's on the right subnet. 	     */
+comment|/*        * Get its netmask and check that it's on the right subnet.        */
 if|if
 condition|(
 name|ioctl
@@ -1323,7 +1301,7 @@ operator|->
 name|ifr_name
 argument_list|)
 expr_stmt|;
-comment|/*      * Now scan through again looking for a link-level address      * for this interface.      */
+comment|/*    * Now scan through again looking for a link-level address for this    * interface.    */
 name|ifp
 operator|=
 name|ifr
@@ -1366,7 +1344,7 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
-comment|/* 	     * Found the link-level address - copy it out 	     */
+comment|/*        * Found the link-level address - copy it out        */
 name|dla
 operator|=
 operator|(
@@ -1494,22 +1472,16 @@ begin_function
 name|int
 name|kread
 parameter_list|(
-name|addr
-parameter_list|,
-name|buf
-parameter_list|,
-name|size
-parameter_list|)
 name|u_long
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1551,31 +1523,19 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|kmemgetether
-argument_list|(
-argument|ifname
-argument_list|,
-argument|dlo
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|ifname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|struct
 name|sockaddr_dl
 modifier|*
 name|dlo
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -2024,7 +1984,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

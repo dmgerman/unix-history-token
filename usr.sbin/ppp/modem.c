@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24.2.15 1997/08/14 01:49:12 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.48 1997/08/23 23:14:23 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -229,20 +229,16 @@ begin_function
 name|void
 name|Enqueue
 parameter_list|(
-name|queue
-parameter_list|,
-name|bp
-parameter_list|)
 name|struct
 name|mqueue
 modifier|*
 name|queue
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -302,13 +298,11 @@ name|mbuf
 modifier|*
 name|Dequeue
 parameter_list|(
-name|queue
-parameter_list|)
 name|struct
 name|mqueue
 modifier|*
 name|queue
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -419,7 +413,7 @@ block|{
 literal|50
 block|,
 name|B50
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -430,7 +424,7 @@ block|{
 literal|75
 block|,
 name|B75
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -441,7 +435,7 @@ block|{
 literal|110
 block|,
 name|B110
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -452,7 +446,7 @@ block|{
 literal|134
 block|,
 name|B134
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -463,7 +457,7 @@ block|{
 literal|150
 block|,
 name|B150
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -474,7 +468,7 @@ block|{
 literal|200
 block|,
 name|B200
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -485,7 +479,7 @@ block|{
 literal|300
 block|,
 name|B300
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -496,7 +490,7 @@ block|{
 literal|600
 block|,
 name|B600
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -507,7 +501,7 @@ block|{
 literal|1200
 block|,
 name|B1200
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -518,7 +512,7 @@ block|{
 literal|1800
 block|,
 name|B1800
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -529,7 +523,7 @@ block|{
 literal|2400
 block|,
 name|B2400
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -540,7 +534,7 @@ block|{
 literal|4800
 block|,
 name|B4800
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -551,7 +545,7 @@ block|{
 literal|9600
 block|,
 name|B9600
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -562,7 +556,7 @@ block|{
 literal|19200
 block|,
 name|B19200
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -573,7 +567,7 @@ block|{
 literal|38400
 block|,
 name|B38400
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -587,7 +581,7 @@ block|{
 literal|7200
 block|,
 name|B7200
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -598,7 +592,7 @@ block|{
 literal|14400
 block|,
 name|B14400
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -609,7 +603,7 @@ block|{
 literal|28800
 block|,
 name|B28800
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -620,7 +614,7 @@ block|{
 literal|57600
 block|,
 name|B57600
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -631,7 +625,7 @@ block|{
 literal|76800
 block|,
 name|B76800
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -642,7 +636,7 @@ block|{
 literal|115200
 block|,
 name|B115200
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -653,7 +647,7 @@ block|{
 literal|230400
 block|,
 name|B230400
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -664,7 +658,7 @@ block|{
 literal|19200
 block|,
 name|EXTA
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
@@ -675,13 +669,13 @@ block|{
 literal|38400
 block|,
 name|EXTB
-block|, }
+block|,   }
 block|,
 endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/*_POSIX_SOURCE */
+comment|/* _POSIX_SOURCE */
 block|{
 literal|0
 block|,
@@ -695,11 +689,9 @@ begin_function
 name|int
 name|SpeedToInt
 parameter_list|(
-name|speed
-parameter_list|)
 name|speed_t
 name|speed
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|speeds
@@ -748,11 +740,9 @@ begin_function
 name|speed_t
 name|IntToSpeed
 parameter_list|(
-name|nspeed
-parameter_list|)
 name|int
 name|nspeed
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|speeds
@@ -986,7 +976,7 @@ expr_stmt|;
 name|connect_count
 operator|++
 expr_stmt|;
-comment|/*          * In dedicated mode, start packet mode immediate          * after we detected carrier.          */
+comment|/* 	 * In dedicated mode, start packet mode immediate after we detected 	 * carrier. 	 */
 if|if
 condition|(
 name|mode
@@ -1159,12 +1149,10 @@ begin_function
 name|int
 name|GetParityValue
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|parity
@@ -1232,12 +1220,10 @@ begin_function
 name|int
 name|ChangeParity
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|termios
@@ -1325,20 +1311,14 @@ begin_function
 name|int
 name|OpenConnection
 parameter_list|(
-name|host
-parameter_list|,
-name|port
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|port
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
@@ -1586,7 +1566,7 @@ name|sock
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1600,11 +1580,9 @@ begin_function
 name|int
 name|OpenModem
 parameter_list|(
-name|mode
-parameter_list|)
 name|int
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|termios
@@ -1905,7 +1883,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*    * If we are working on tty device, change it's mode into    * the one desired for further operation. In this implementation,    * we assume that modem is configuted to use CTS/RTS flow control.    */
+comment|/*    * If we are working on tty device, change it's mode into the one desired    * for further operation. In this implementation, we assume that modem is    * configuted to use CTS/RTS flow control.    */
 name|dev_is_modem
 operator|=
 name|isatty
@@ -2245,11 +2223,9 @@ begin_function
 name|int
 name|RawModem
 parameter_list|(
-name|modem
-parameter_list|)
 name|int
 name|modem
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|termios
@@ -2413,11 +2389,9 @@ begin_function
 name|void
 name|UnrawModem
 parameter_list|(
-name|modem
-parameter_list|)
 name|int
 name|modem
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|oldflag
@@ -2484,11 +2458,9 @@ begin_function
 name|void
 name|HangupModem
 parameter_list|(
-name|flag
-parameter_list|)
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|termios
@@ -2599,7 +2571,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * If we are working as dedicated mode, never close it    * until we are directed to quit program.    */
+comment|/*    * If we are working as dedicated mode, never close it until we are    * directed to quit program.    */
 if|if
 condition|(
 name|modem
@@ -2629,7 +2601,7 @@ name|ModemTimer
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* ModemTimeout() may call DownConection() to close the modem      * resulting in modem == 0.     */
+comment|/*      * ModemTimeout() may call DownConection() to close the modem resulting      * in modem == 0.      */
 if|if
 condition|(
 name|modem
@@ -2812,22 +2784,16 @@ begin_function
 name|void
 name|WriteModem
 parameter_list|(
-name|pri
-parameter_list|,
-name|ptr
-parameter_list|,
-name|count
-parameter_list|)
 name|int
 name|pri
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -2855,7 +2821,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* Should be NORMAL and LINK only.    * All IP frames get here marked NORMAL.   */
+comment|/*    * Should be NORMAL and LINK only. All IP frames get here marked NORMAL.    */
 name|Enqueue
 argument_list|(
 operator|&
@@ -2874,18 +2840,14 @@ begin_function
 name|void
 name|ModemOutput
 parameter_list|(
-name|pri
-parameter_list|,
-name|bp
-parameter_list|)
 name|int
 name|pri
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -3001,11 +2963,9 @@ begin_function
 name|void
 name|ModemStartOutput
 parameter_list|(
-name|fd
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mqueue

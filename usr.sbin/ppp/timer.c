@@ -111,13 +111,11 @@ begin_function
 name|void
 name|StartTimer
 parameter_list|(
-name|tp
-parameter_list|)
 name|struct
 name|pppTimer
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pppTimer
@@ -341,13 +339,11 @@ begin_function
 name|void
 name|StopTimerNoBlock
 parameter_list|(
-name|tp
-parameter_list|)
 name|struct
 name|pppTimer
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pppTimer
@@ -357,7 +353,7 @@ decl_stmt|,
 modifier|*
 name|pt
 decl_stmt|;
-comment|/*    * A Running Timer should be removing TimerList,    * But STOPPED/EXPIRED is already removing TimerList.    * So just marked as TIMER_STOPPED.    * Do not change tp->enext!! (Might be Called by expired proc)    */
+comment|/*    * A Running Timer should be removing TimerList, But STOPPED/EXPIRED is    * already removing TimerList. So just marked as TIMER_STOPPED. Do not    * change tp->enext!! (Might be Called by expired proc)    */
 name|LogPrintf
 argument_list|(
 name|LogDEBUG
@@ -676,7 +672,7 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/*          * Just Removing each item from expired list          * And exp->enext will be intialized at next expire          * in this funtion.          */
+comment|/* 	 * Just Removing each item from expired list And exp->enext will be 	 * intialized at next expire in this funtion. 	 */
 name|exp
 operator|=
 name|exp

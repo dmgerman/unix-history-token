@@ -81,13 +81,11 @@ begin_function
 name|void
 name|SendPppFrame
 parameter_list|(
-name|bp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|type
@@ -244,18 +242,14 @@ name|mbuf
 modifier|*
 name|VjUncompressTcp
 parameter_list|(
-name|bp
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|u_char
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -298,7 +292,7 @@ operator|==
 name|TYPE_UNCOMPRESSED_TCP
 condition|)
 block|{
-comment|/*      * Uncompressed packet does NOT change its size, so that we can      * use mbuf space for uncompression job.      */
+comment|/*      * Uncompressed packet does NOT change its size, so that we can use mbuf      * space for uncompression job.      */
 name|bufp
 operator|=
 name|MBUF_CTOP
@@ -344,7 +338,7 @@ name|bp
 operator|)
 return|;
 block|}
-comment|/*    *  Handle compressed packet.    *    1) Read upto MAX_VJHEADER bytes into work space.    *	2) Try to uncompress it.    *    3) Compute amount of necesary space.    *    4) Copy unread data info there.    */
+comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necesary space. 4)    * Copy unread data info there.    */
 if|if
 condition|(
 name|len
@@ -456,18 +450,14 @@ name|mbuf
 modifier|*
 name|VjCompInput
 parameter_list|(
-name|bp
-parameter_list|,
-name|proto
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|int
 name|proto
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 name|type
