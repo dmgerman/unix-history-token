@@ -5930,7 +5930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * detect the voltage for the card, and set it.  Since the power  * used is the square of the voltage, lower voltages is a big win  * and what Windows does (and what Microsoft prefers).  The MS paper  * also talks about preferring the CIS entry as well.  */
+comment|/*  * detect the voltage for the card, and set it.  Since the power  * used is the square of the voltage, lower voltages is a big win  * and what Windows does (and what Microsoft prefers).  The MS paper  * also talks about preferring the CIS entry as well.  In addition,  * we power up with OE disabled.  We'll set it later in the power  * up sequence.  */
 end_comment
 
 begin_function
@@ -5945,6 +5945,19 @@ block|{
 name|int
 name|voltage
 decl_stmt|;
+comment|/* Don't enable OE */
+name|exca_clrb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|exca
+argument_list|,
+name|EXCA_PWRCTL
+argument_list|,
+name|EXCA_PWRCTL_OE
+argument_list|)
+expr_stmt|;
 comment|/* Prefer lowest voltage supported */
 name|voltage
 operator|=
