@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -519,7 +525,7 @@ name|sb_hiwat
 argument_list|,
 name|head
 operator|->
-name|so_snd
+name|so_rcv
 operator|.
 name|sb_hiwat
 argument_list|)
@@ -937,7 +943,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -1027,24 +1032,41 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Wakeup processes waiting on a socket buffer.  */
+comment|/*  * Wakeup processes waiting on a socket buffer.  * Do asynchronous notification via SIGIO  * if the socket has the SS_ASYNC flag set.  */
 end_comment
 
 begin_expr_stmt
-name|sbwakeup
+name|sowakeup
 argument_list|(
+name|so
+argument_list|,
 name|sb
 argument_list|)
 specifier|register
 expr|struct
-name|sockbuf
+name|socket
 operator|*
-name|sb
+name|so
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|register
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|sb
@@ -1107,49 +1129,6 @@ name|sb_cc
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * Wakeup socket readers and writers.  * Do asynchronous notification via SIGIO  * if the socket has the SS_ASYNC flag set.  */
-end_comment
-
-begin_expr_stmt
-name|sowakeup
-argument_list|(
-name|so
-argument_list|,
-name|sb
-argument_list|)
-specifier|register
-expr|struct
-name|socket
-operator|*
-name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|struct
-name|sockbuf
-modifier|*
-name|sb
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|sbwakeup
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -1211,7 +1190,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_act field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space  * should be released by calling sbrelease() when the socket is destroyed.  */
+comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_nextpkt field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space  * should be released by calling sbrelease() when the socket is destroyed.  */
 end_comment
 
 begin_expr_stmt
@@ -1338,14 +1317,14 @@ name|u_long
 operator|)
 name|SB_MAX
 operator|*
-name|CLBYTES
+name|MCLBYTES
 operator|/
 operator|(
 literal|2
 operator|*
 name|MSIZE
 operator|+
-name|CLBYTES
+name|MCLBYTES
 operator|)
 condition|)
 return|return
@@ -1480,13 +1459,13 @@ while|while
 condition|(
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 condition|)
 name|n
 operator|=
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 while|while
 condition|(
@@ -1568,13 +1547,13 @@ while|while
 condition|(
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 condition|)
 name|m
 operator|=
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 comment|/* 	 * Put the first mbuf on the queue. 	 * Note this permits zero length records. 	 */
 name|sballoc
@@ -1590,7 +1569,7 @@ name|m
 condition|)
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 operator|=
 name|m0
 expr_stmt|;
@@ -1626,7 +1605,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Append address and data, and optionally, rights  * to the receive queue of a socket.  Return 0 if  * no space in sockbuf or insufficient mbufs.  */
+comment|/*  * Append address and data, and optionally, rights  * to the receive queue of a socket.  If present,  * m0 Return 0 if  * no space in sockbuf or insufficient mbufs.  */
 end_comment
 
 begin_expr_stmt
@@ -1660,10 +1639,10 @@ begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
-name|rights0
+name|m0
 decl_stmt|,
 modifier|*
-name|m0
+name|rights0
 decl_stmt|;
 end_decl_stmt
 
@@ -1687,25 +1666,36 @@ operator|*
 name|asa
 argument_list|)
 decl_stmt|;
-for|for
-control|(
-name|m
-operator|=
+if|if
+condition|(
 name|m0
-init|;
-name|m
-condition|;
-name|m
-operator|=
-name|m
+operator|&&
+operator|(
+name|m0
 operator|->
-name|m_next
-control|)
+name|m_flags
+operator|&
+name|M_PKTHDR
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"sbappendaddr"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m0
+condition|)
 name|space
 operator|+=
-name|m
+name|m0
 operator|->
-name|m_len
+name|m_pkthdr
+operator|.
+name|len
 expr_stmt|;
 if|if
 condition|(
@@ -1848,17 +1838,17 @@ while|while
 condition|(
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 condition|)
 name|n
 operator|=
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 operator|=
 name|m
 expr_stmt|;
@@ -2044,17 +2034,17 @@ while|while
 condition|(
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 condition|)
 name|n
 operator|=
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 name|n
 operator|->
-name|m_act
+name|m_nextpkt
 operator|=
 name|m
 expr_stmt|;
@@ -2149,22 +2139,20 @@ if|if
 condition|(
 name|n
 operator|&&
+operator|(
 name|n
 operator|->
-name|m_off
-operator|<=
-name|MMAXOFF
-operator|&&
-name|m
-operator|->
-name|m_off
-operator|<=
-name|MMAXOFF
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|n
 operator|->
-name|m_off
+name|m_data
 operator|+
 name|n
 operator|->
@@ -2174,8 +2162,14 @@ name|m
 operator|->
 name|m_len
 operator|)
-operator|<=
-name|MMAXOFF
+operator|<
+operator|&
+name|n
+operator|->
+name|m_dat
+index|[
+name|MLEN
+index|]
 operator|&&
 name|n
 operator|->
@@ -2409,7 +2403,7 @@ operator|)
 condition|?
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 else|:
 literal|0
 expr_stmt|;
@@ -2446,7 +2440,7 @@ name|next
 operator|=
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 continue|continue;
 block|}
@@ -2467,7 +2461,7 @@ name|len
 expr_stmt|;
 name|m
 operator|->
-name|m_off
+name|m_data
 operator|+=
 name|len
 expr_stmt|;
@@ -2547,7 +2541,7 @@ name|m
 expr_stmt|;
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 operator|=
 name|next
 expr_stmt|;
@@ -2607,7 +2601,7 @@ name|sb_mb
 operator|=
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 do|do
 block|{
