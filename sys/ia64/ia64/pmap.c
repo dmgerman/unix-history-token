@@ -3438,6 +3438,8 @@ argument_list|,
 name|nkpt
 argument_list|,
 name|VM_ALLOC_SYSTEM
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3452,17 +3454,6 @@ argument_list|)
 expr_stmt|;
 name|nkpt
 operator|++
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_wire
-argument_list|(
-name|nkpg
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|ptepage
 operator|=
