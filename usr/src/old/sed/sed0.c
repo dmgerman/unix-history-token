@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sed0.c	4.1	85/04/05	*/
+comment|/*	sed0.c	4.2	85/06/19	*/
 end_comment
 
 begin_include
@@ -1974,12 +1974,31 @@ operator|->
 name|re1
 condition|)
 block|{
+if|if
+condition|(
+name|op
+condition|)
 name|rep
 operator|->
 name|re1
 operator|=
 name|op
 expr_stmt|;
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"First RE may not be null\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
