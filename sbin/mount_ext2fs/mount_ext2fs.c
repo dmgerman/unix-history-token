@@ -128,6 +128,8 @@ init|=
 block|{
 name|MOPT_STDOPTS
 block|,
+name|MOPT_ASYNC
+block|,
 name|MOPT_FORCE
 block|,
 name|MOPT_SYNC
