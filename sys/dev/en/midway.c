@@ -4786,17 +4786,6 @@ name|vci
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"loadvc %u\n"
-argument_list|,
-name|vc
-operator|->
-name|vcc
-operator|.
-name|vci
-argument_list|)
-expr_stmt|;
 name|reg
 operator|=
 name|MIDV_SETMODE
@@ -6566,11 +6555,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"Re-loading vc's\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|vc
@@ -6595,14 +6579,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"re-loading %u\n"
-argument_list|,
-name|vc
-argument_list|)
-expr_stmt|;
 name|en_loadvc
 argument_list|(
 name|sc
@@ -6615,7 +6591,6 @@ name|vc
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * enable! 	 */
 name|en_write
 argument_list|(
@@ -7165,15 +7140,6 @@ case|:
 name|EN_LOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"if_flags=%x\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -14335,19 +14301,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"freeing %p\n"
-argument_list|,
-name|sc
-operator|->
-name|vccs
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|en_vcc_zone
@@ -14360,7 +14313,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|sc
