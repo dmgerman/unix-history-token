@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	1.5 (Berkeley) %G%"
+literal|"@(#)kdump.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ name|fancy
 init|=
 literal|1
 decl_stmt|,
-name|loop
+name|tail
 decl_stmt|,
 name|maxdata
 decl_stmt|;
@@ -99,7 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* initial size of buffer - will grow as needed */
+comment|/* initial size of buffer - grow as needed */
 end_comment
 
 begin_define
@@ -107,7 +107,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: kdump [-dnlT] [-t facilitystring] [-f tracefile] [-m maxdata]\n\ 	facilities: c = syscalls, n = namei, g = generic-i/o, a = everything\n"
+value|"usage: kdump [-dnlT] [-t trops] [-f trfile] [-m maxdata]\n\ 	trops: c = syscalls, n = namei, g = generic-i/o, a = everything\n"
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ decl_stmt|;
 name|int
 name|facs
 init|=
-name|DEF_FACS
+name|ALL_FACS
 decl_stmt|;
 while|while
 condition|(
@@ -244,7 +244,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|loop
+name|tail
 operator|=
 literal|1
 expr_stmt|;
@@ -389,7 +389,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|myfread
+name|fread_t
 argument_list|(
 operator|&
 name|ktr_header
@@ -403,6 +403,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|stdin
+argument_list|,
+name|tail
 argument_list|)
 condition|)
 block|{
@@ -484,7 +486,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: ain't gots no memory\n"
+literal|"kdump: out of memory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -500,7 +502,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|myfread
+name|ktrlen
+operator|&&
+name|fread_t
 argument_list|(
 name|m
 argument_list|,
@@ -509,6 +513,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|stdin
+argument_list|,
+name|tail
 argument_list|)
 operator|==
 literal|0
@@ -518,7 +524,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: out of data\n"
+literal|"kdump: data too short\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -613,7 +619,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|loop
+name|tail
 condition|)
 name|fflush
 argument_list|(
@@ -625,7 +631,7 @@ block|}
 end_function
 
 begin_macro
-name|myfread
+name|fread_t
 argument_list|(
 argument|buf
 argument_list|,
@@ -634,6 +640,8 @@ argument_list|,
 argument|num
 argument_list|,
 argument|stream
+argument_list|,
+argument|tail
 argument_list|)
 end_macro
 
@@ -656,10 +664,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|again
-label|:
-if|if
+while|while
 condition|(
+operator|(
 name|i
 operator|=
 name|fread
@@ -672,17 +679,11 @@ name|num
 argument_list|,
 name|stream
 argument_list|)
-condition|)
-return|return
-operator|(
-name|i
 operator|)
-return|;
-else|else
-block|{
-if|if
-condition|(
-name|loop
+operator|==
+literal|0
+operator|&&
+name|tail
 condition|)
 block|{
 name|sleep
@@ -695,15 +696,12 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
-else|else
 return|return
-literal|0
+operator|(
+name|i
+operator|)
 return|;
-block|}
 block|}
 end_block
 
@@ -850,7 +848,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"/sys/sys/syscalls.c"
+file|"/sys/kern/syscalls.c"
 end_include
 
 begin_undef
