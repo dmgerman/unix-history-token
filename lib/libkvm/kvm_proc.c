@@ -4115,7 +4115,7 @@ if|if
 condition|(
 name|ps_strings
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|len
