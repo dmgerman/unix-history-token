@@ -2451,7 +2451,7 @@ argument_list|,
 operator|(
 name|u_int
 operator|)
-name|inlen
+name|recvlen
 argument_list|,
 name|XDR_DECODE
 argument_list|)
