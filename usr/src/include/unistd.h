@@ -127,6 +127,7 @@ end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+name|__dead
 name|void
 name|_exit
 name|__P
@@ -1142,6 +1143,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__pure
 name|int
 name|getpagesize
 name|__P
