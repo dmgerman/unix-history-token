@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remote.c	5.2 (Berkeley) %G%"
+literal|"@(#)remote.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,10 +689,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|RE
 operator|==
-name|NULL
+name|NOSTR
 condition|)
 name|RE
 operator|=
@@ -704,10 +703,9 @@ literal|"tip.record"
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|EX
 operator|==
-name|NULL
+name|NOSTR
 condition|)
 name|EX
 operator|=
