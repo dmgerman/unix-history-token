@@ -44,7 +44,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: strip.c,v 1.2 1994/09/03 12:58:05 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,6 +349,8 @@ operator|*
 name|argv
 operator|++
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -841,7 +843,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|u_int
+name|size_t
 operator|)
 operator|*
 operator|(
@@ -854,9 +856,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|err
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -866,6 +869,20 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|munmap
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ep
+argument_list|,
+name|sb
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|nstr
 operator|=
 name|nstrbase
@@ -986,9 +1003,7 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 continue|continue;
-block|}
 name|len
 operator|=
 name|strlen
