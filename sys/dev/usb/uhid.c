@@ -1639,7 +1639,7 @@ name|sc_q
 argument_list|,
 name|UHID_BSIZE
 argument_list|,
-literal|0
+name|UHID_BSIZE
 argument_list|)
 operator|==
 operator|-
