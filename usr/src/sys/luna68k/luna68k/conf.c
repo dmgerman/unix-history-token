@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	8.2 (Berkeley) 11/14/93  *  *	@(#)conf.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	8.2 (Berkeley) 11/14/93  *  *	@(#)conf.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1075,7 +1075,7 @@ argument_list|,
 name|kbd
 argument_list|)
 block|,
-comment|/* 14: kyeboard */
+comment|/* 14: keyboard */
 name|cdev_notdef
 argument_list|()
 block|,
@@ -1247,6 +1247,69 @@ operator|==
 literal|12
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Routine to determine if a device is a tty.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_macro
+name|istty
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+case|case
+literal|1
+case|:
+case|case
+literal|4
+case|:
+case|case
+literal|5
+case|:
+case|case
+literal|12
+case|:
+case|case
+literal|13
+case|:
+case|case
+literal|14
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1592,6 +1592,66 @@ operator|==
 literal|12
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Routine to determine if a device is a tty.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_macro
+name|istty
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+case|case
+literal|1
+case|:
+case|case
+literal|2
+case|:
+case|case
+literal|8
+case|:
+case|case
+literal|9
+case|:
+case|case
+literal|11
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 end_block
 
