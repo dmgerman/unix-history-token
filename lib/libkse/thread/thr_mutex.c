@@ -296,6 +296,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|mutex_lock_backout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -319,6 +331,16 @@ end_decl_stmt
 begin_comment
 comment|/* Single underscore versions provided for libc internal usage: */
 end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__pthread_mutex_init
+argument_list|,
+name|pthread_mutex_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|__weak_reference
@@ -357,16 +379,6 @@ end_comment
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_pthread_mutex_init
-argument_list|,
-name|pthread_mutex_init
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
 name|_pthread_mutex_destroy
 argument_list|,
 name|pthread_mutex_destroy
@@ -386,7 +398,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|_pthread_mutex_init
+name|__pthread_mutex_init
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -786,6 +798,87 @@ block|}
 end_function
 
 begin_function
+name|int
+name|_pthread_mutex_init
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|,
+specifier|const
+name|pthread_mutexattr_t
+modifier|*
+name|mutex_attr
+parameter_list|)
+block|{
+name|struct
+name|pthread_mutex_attr
+name|mattr
+decl_stmt|,
+modifier|*
+name|mattrp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|mutex_attr
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+operator|*
+name|mutex_attr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|__pthread_mutex_init
+argument_list|(
+name|mutex
+argument_list|,
+operator|&
+name|static_mattr
+argument_list|)
+operator|)
+return|;
+else|else
+block|{
+name|mattr
+operator|=
+operator|*
+operator|*
+name|mutex_attr
+expr_stmt|;
+name|mattr
+operator|.
+name|m_flags
+operator||=
+name|MUTEX_FLAGS_PRIVATE
+expr_stmt|;
+name|mattrp
+operator|=
+operator|&
+name|mattr
+expr_stmt|;
+return|return
+operator|(
+name|__pthread_mutex_init
+argument_list|(
+name|mutex
+argument_list|,
+operator|&
+name|mattrp
+argument_list|)
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_function
 name|void
 name|_thr_mutex_reinit
 parameter_list|(
@@ -1175,6 +1268,9 @@ name|mutex
 parameter_list|)
 block|{
 name|int
+name|private
+decl_stmt|;
+name|int
 name|ret
 init|=
 literal|0
@@ -1210,6 +1306,17 @@ operator|)
 operator|->
 name|m_lock
 argument_list|)
+expr_stmt|;
+name|private
+operator|=
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_flags
+operator|&
+name|MUTEX_FLAGS_PRIVATE
 expr_stmt|;
 comment|/* 	 * If the mutex was statically allocated, properly 	 * initialize the tail queue. 	 */
 if|if
@@ -1639,6 +1746,19 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|private
+condition|)
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
 argument_list|(
@@ -1834,6 +1954,9 @@ name|abstime
 parameter_list|)
 block|{
 name|int
+name|private
+decl_stmt|;
+name|int
 name|ret
 init|=
 literal|0
@@ -1908,6 +2031,17 @@ name|tv_sec
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|private
+operator|=
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_flags
+operator|&
+name|MUTEX_FLAGS_PRIVATE
 expr_stmt|;
 comment|/* 	 * Enter a loop waiting to become the mutex owner.  We need a 	 * loop in case the waiting thread is interrupted by a signal 	 * to execute a signal handler.  It is not (currently) possible 	 * to remain in the waiting queue while running a handler. 	 * Instead, the thread is interrupted and backed out of the 	 * waiting queue prior to executing the signal handler. 	 */
 do|do
@@ -2029,6 +2163,15 @@ argument_list|,
 name|m_qe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|private
+condition|)
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
 argument_list|(
@@ -2129,6 +2272,12 @@ operator|=
 operator|*
 name|m
 expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|mutex_lock_backout
+expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
 name|THR_SCHED_LOCK
 argument_list|(
@@ -2170,14 +2319,6 @@ name|_thr_sched_switch
 argument_list|(
 name|curthread
 argument_list|)
-expr_stmt|;
-name|curthread
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2222,6 +2363,21 @@ name|m_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 				 * Only clear these after assuring the 				 * thread is dequeued. 				 */
+name|curthread
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
+expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 break|break;
 comment|/* POSIX priority inheritence mutex: */
@@ -2327,6 +2483,15 @@ argument_list|,
 name|m_qe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|private
+condition|)
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
 argument_list|(
@@ -2427,6 +2592,12 @@ operator|=
 operator|*
 name|m
 expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|mutex_lock_backout
+expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
 if|if
 condition|(
@@ -2491,14 +2662,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|THR_IN_MUTEXQ
@@ -2542,6 +2705,21 @@ name|m_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 				 * Only clear these after assuring the 				 * thread is dequeued. 				 */
+name|curthread
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
+expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 break|break;
 comment|/* POSIX priority protection mutex: */
@@ -2682,6 +2860,15 @@ argument_list|,
 name|m_qe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|private
+condition|)
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
 argument_list|(
@@ -2782,6 +2969,12 @@ operator|=
 operator|*
 name|m
 expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|mutex_lock_backout
+expr_stmt|;
 comment|/* Clear any previous error: */
 name|curthread
 operator|->
@@ -2831,14 +3024,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|THR_IN_MUTEXQ
@@ -2882,6 +3067,21 @@ name|m_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 				 * Only clear these after assuring the 				 * thread is dequeued. 				 */
+name|curthread
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
+expr_stmt|;
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 				 * The threads priority may have changed while 				 * waiting for the mutex causing a ceiling 				 * violation. 				 */
 name|ret
 operator|=
@@ -3663,6 +3863,20 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Don't allow evil recursive mutexes for private use 	 * in libc and libpthread. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|MUTEX_FLAGS_PRIVATE
+condition|)
+name|PANIC
+argument_list|(
+literal|"Recurse on a private mutex."
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|m
@@ -4284,6 +4498,31 @@ operator|)
 operator|->
 name|m_refcount
 operator|++
+expr_stmt|;
+comment|/* Leave the critical region if this is a private mutex. */
+if|if
+condition|(
+operator|(
+name|ret
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_flags
+operator|&
+name|MUTEX_FLAGS_PRIVATE
+operator|)
+condition|)
+name|THR_CRITICAL_LEAVE
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
@@ -5273,15 +5512,27 @@ comment|/*  * This is called by the current thread when it wants to back out of 
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|_mutex_lock_backout
+name|mutex_lock_backout
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|pthread
 modifier|*
 name|curthread
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|pthread
+operator|*
+operator|)
+name|arg
+decl_stmt|;
 name|struct
 name|pthread_mutex
 modifier|*
@@ -5380,6 +5631,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* No need to call this again. */
+name|curthread
+operator|->
+name|sigbackout
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -5671,13 +5929,6 @@ name|critical_yield
 operator|=
 literal|1
 expr_stmt|;
-name|THR_SCHED_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mutex
@@ -5686,9 +5937,37 @@ name|m_owner
 operator|==
 name|pthread
 condition|)
+block|{
 comment|/* We're done; a valid owner was found. */
+if|if
+condition|(
+name|mutex
+operator|->
+name|m_flags
+operator|&
+name|MUTEX_FLAGS_PRIVATE
+condition|)
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 break|break;
-else|else
+block|}
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* Get the next thread from the waiting queue: */
 name|pthread
 operator|=

@@ -126,7 +126,7 @@ file|"libc_private.h"
 end_include
 
 begin_comment
-comment|/*#define DEBUG_THREAD_KERN */
+comment|/* #define DEBUG_THREAD_KERN */
 end_comment
 
 begin_ifdef
@@ -826,11 +826,6 @@ parameter_list|,
 name|ucontext_t
 modifier|*
 name|ucp
-parameter_list|,
-name|struct
-name|pthread_sigframe
-modifier|*
-name|psf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1676,6 +1671,15 @@ operator|.
 name|flags
 operator||=
 name|PTHREAD_SCOPE_SYSTEM
+expr_stmt|;
+comment|/* After a fork(), there child should have no pending signals. */
+name|sigemptyset
+argument_list|(
+operator|&
+name|curthread
+operator|->
+name|sigpend
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore signal mask early, so any memory problems could 	 * dump core. 	 */
 name|sigprocmask
@@ -2650,10 +2654,6 @@ name|curthread
 parameter_list|)
 block|{
 name|struct
-name|pthread_sigframe
-name|psf
-decl_stmt|;
-name|struct
 name|kse
 modifier|*
 name|curkse
@@ -2671,8 +2671,9 @@ decl_stmt|;
 comment|/* We're in the scheduler, 5 by 5: */
 name|curkse
 operator|=
-name|_get_curkse
-argument_list|()
+name|curthread
+operator|->
+name|kse
 expr_stmt|;
 name|curthread
 operator|->
@@ -2694,20 +2695,6 @@ operator|->
 name|lock_switch
 operator|=
 literal|1
-expr_stmt|;
-comment|/* 	 * The signal frame is allocated off the stack because 	 * a thread can be interrupted by other signals while 	 * it is running down pending signals. 	 */
-name|psf
-operator|.
-name|psf_valid
-operator|=
-literal|0
-expr_stmt|;
-name|curthread
-operator|->
-name|curframe
-operator|=
-operator|&
-name|psf
 expr_stmt|;
 if|if
 condition|(
@@ -2780,21 +2767,13 @@ name|k_kcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * It is ugly we must increase critical count, because we 	 * have a frame saved, we must backout state in psf 	 * before we can process signals.  	 */
-name|curthread
-operator|->
-name|critical_count
-operator|+=
-name|psf
-operator|.
-name|psf_valid
-expr_stmt|;
 comment|/* 	 * Unlock the scheduling queue and leave the 	 * critical region. 	 */
 comment|/* Don't trust this after a switch! */
 name|curkse
 operator|=
-name|_get_curkse
-argument_list|()
+name|curthread
+operator|->
+name|kse
 expr_stmt|;
 name|curthread
 operator|->
@@ -2824,30 +2803,16 @@ expr_stmt|;
 comment|/* 	 * This thread is being resumed; check for cancellations. 	 */
 if|if
 condition|(
-operator|(
-name|psf
-operator|.
-name|psf_valid
-operator|||
-operator|(
-operator|(
-name|curthread
-operator|->
-name|check_pending
-operator|||
 name|THR_NEED_ASYNC_CANCEL
 argument_list|(
 name|curthread
 argument_list|)
-operator|)
 operator|&&
 operator|!
 name|THR_IN_CRITICAL
 argument_list|(
 name|curthread
 argument_list|)
-operator|)
-operator|)
 condition|)
 block|{
 name|uc
@@ -2891,9 +2856,6 @@ argument_list|(
 name|curthread
 argument_list|,
 name|uc
-argument_list|,
-operator|&
-name|psf
 argument_list|)
 expr_stmt|;
 block|}
@@ -3610,13 +3572,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Remove the frame reference. */
-name|curthread
-operator|->
-name|curframe
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -3762,11 +3717,6 @@ name|curthread
 decl_stmt|,
 modifier|*
 name|td_wait
-decl_stmt|;
-name|struct
-name|pthread_sigframe
-modifier|*
-name|curframe
 decl_stmt|;
 name|int
 name|ret
@@ -3928,6 +3878,13 @@ operator|->
 name|blocked
 operator|=
 literal|1
+expr_stmt|;
+name|DBG_MSG
+argument_list|(
+literal|"Running thread %p is now blocked in kernel.\n"
+argument_list|,
+name|curthread
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Check for any unblocked threads in the kernel. */
@@ -4302,35 +4259,20 @@ name|active
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Remove the frame reference. */
-name|curframe
-operator|=
-name|curthread
-operator|->
-name|curframe
-expr_stmt|;
-name|curthread
-operator|->
-name|curframe
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	 * The thread's current signal frame will only be NULL if it 	 * is being resumed after being blocked in the kernel.  In 	 * this case, and if the thread needs to run down pending 	 * signals or needs a cancellation check, we need to add a 	 * signal frame to the thread's context. 	 */
 if|if
 condition|(
-operator|(
-name|curframe
+name|curthread
+operator|->
+name|lock_switch
 operator|==
-name|NULL
-operator|)
+literal|0
 operator|&&
-operator|(
 name|curthread
 operator|->
 name|state
 operator|==
 name|PS_RUNNING
-operator|)
 operator|&&
 operator|(
 name|curthread
@@ -4517,8 +4459,6 @@ argument_list|(
 name|curthread
 argument_list|,
 name|ucp
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|errno
@@ -4530,8 +4470,9 @@ argument_list|()
 expr_stmt|;
 name|curkse
 operator|=
-name|_get_curkse
-argument_list|()
+name|curthread
+operator|->
+name|kse
 expr_stmt|;
 name|curthread
 operator|->
@@ -4589,11 +4530,6 @@ parameter_list|,
 name|ucontext_t
 modifier|*
 name|ucp
-parameter_list|,
-name|struct
-name|pthread_sigframe
-modifier|*
-name|psf
 parameter_list|)
 block|{
 name|_thr_sig_rundown
@@ -4601,8 +4537,6 @@ argument_list|(
 name|curthread
 argument_list|,
 name|ucp
-argument_list|,
-name|psf
 argument_list|)
 expr_stmt|;
 if|if

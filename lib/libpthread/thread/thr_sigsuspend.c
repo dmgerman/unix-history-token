@@ -179,6 +179,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|curthread
+operator|->
+name|check_pending
+operator|=
+literal|1
+expr_stmt|;
 name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread

@@ -21,6 +21,12 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|errno
+end_undef
+
 begin_decl_stmt
 specifier|extern
 name|int

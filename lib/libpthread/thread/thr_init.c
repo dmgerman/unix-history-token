@@ -1444,6 +1444,12 @@ literal|0
 expr_stmt|;
 name|thread
 operator|->
+name|sigbackout
+operator|=
+name|NULL
+expr_stmt|;
+name|thread
+operator|->
 name|continuation
 operator|=
 name|NULL

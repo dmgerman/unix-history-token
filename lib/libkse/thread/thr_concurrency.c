@@ -254,6 +254,24 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* 	 * Turn on threaded mode, if failed, it is unnecessary to 	 * do further work. 	 */
+if|if
+condition|(
+name|_kse_isthreaded
+argument_list|()
+operator|==
+literal|0
+operator|&&
+name|_kse_setthreaded
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
 name|ret
 operator|=
 literal|0

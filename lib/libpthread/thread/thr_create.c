@@ -592,13 +592,6 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Initialize the signal frame: */
-name|new_thread
-operator|->
-name|curframe
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 			 * Initialize the machine context. 			 * Enter a critical region to get consistent context. 			 */
 name|crit
 operator|=
@@ -853,6 +846,12 @@ operator|->
 name|tlflags
 operator|=
 literal|0
+expr_stmt|;
+name|new_thread
+operator|->
+name|sigbackout
+operator|=
+name|NULL
 expr_stmt|;
 name|new_thread
 operator|->

@@ -122,6 +122,12 @@ name|routine_arg
 expr_stmt|;
 name|new
 operator|->
+name|onstack
+operator|=
+literal|0
+expr_stmt|;
+name|new
+operator|->
 name|next
 operator|=
 name|curthread
@@ -195,6 +201,14 @@ name|routine_arg
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|old
+operator|->
+name|onstack
+operator|==
+literal|0
+condition|)
 name|free
 argument_list|(
 name|old

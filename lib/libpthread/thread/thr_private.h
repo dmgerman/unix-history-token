@@ -1150,9 +1150,39 @@ name|void
 modifier|*
 name|routine_arg
 decl_stmt|;
+name|int
+name|onstack
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|THR_CLEANUP_PUSH
+parameter_list|(
+name|td
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+value|{		\ 	struct pthread_cleanup __cup;			\ 							\ 	__cup.routine = func;				\ 	__cup.routine_arg = arg;			\ 	__cup.onstack = 1;				\ 	__cup.next = (td)->cleanup;			\ 	(td)->cleanup =&__cup;
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_CLEANUP_POP
+parameter_list|(
+name|td
+parameter_list|,
+name|exec
+parameter_list|)
+define|\
+value|(td)->cleanup = __cup.next;			\ 	if ((exec) != 0)				\ 		__cup.routine(__cup.routine_arg);	\ }
+end_define
 
 begin_struct
 struct|struct
@@ -1584,6 +1614,9 @@ decl_stmt|;
 name|int
 name|psf_seqno
 decl_stmt|;
+name|thread_continuation_t
+name|psf_continuation
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1782,14 +1815,12 @@ name|int
 name|need_switchout
 decl_stmt|;
 comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
-name|struct
-name|pthread_sigframe
-modifier|*
-name|curframe
-decl_stmt|;
 name|siginfo_t
 modifier|*
 name|siginfo
+decl_stmt|;
+name|thread_continuation_t
+name|sigbackout
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -2825,17 +2856,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|_cond_wait_backout
-parameter_list|(
-name|struct
-name|pthread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|kse
 modifier|*
@@ -2991,17 +3011,6 @@ name|int
 name|_mutex_cv_unlock
 parameter_list|(
 name|pthread_mutex_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_mutex_lock_backout
-parameter_list|(
-name|struct
-name|pthread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3813,10 +3822,6 @@ name|pthread
 modifier|*
 parameter_list|,
 name|ucontext_t
-modifier|*
-parameter_list|,
-name|struct
-name|pthread_sigframe
 modifier|*
 parameter_list|)
 function_decl|;
