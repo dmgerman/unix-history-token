@@ -1339,7 +1339,7 @@ block|}
 comment|/* 		 * If underlying interface can do VLAN tag insertion itself, 		 * just pass the packet along. However, we need some way to 		 * tell the interface where the packet came from so that it 		 * knows how to find the VLAN tag to use, so we attach a 		 * packet tag that holds it. 		 */
 if|if
 condition|(
-name|ifp
+name|p
 operator|->
 name|if_capabilities
 operator|&
@@ -1783,14 +1783,11 @@ argument_list|)
 expr_stmt|;
 name|tag
 operator|=
-name|EVL_VLANOFTAG
-argument_list|(
 name|ntohs
 argument_list|(
 name|evl
 operator|->
 name|evl_tag
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Restore the original ethertype.  We'll remove 			 * the encapsulation after we've found the vlan 			 * interface corresponding to the tag. 			 */
