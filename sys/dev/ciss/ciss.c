@@ -8768,11 +8768,15 @@ expr_stmt|;
 comment|/* check that unmapping is necessary */
 if|if
 condition|(
+operator|(
 name|cr
 operator|->
 name|cr_flags
 operator|&
 name|CISS_REQ_MAPPED
+operator|)
+operator|==
+literal|0
 condition|)
 return|return;
 name|bus_dmamap_sync
@@ -10335,14 +10339,6 @@ name|ciss_cam_sim
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator||=
-name|CAM_REQUEUE_REQ
 expr_stmt|;
 if|if
 condition|(
