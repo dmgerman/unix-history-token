@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)siglist.c	4.2 (Berkeley) %G%	*/
+comment|/*	@(#)siglist.c	4.3 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -101,13 +101,16 @@ comment|/* SIGVTALRM */
 literal|"Profiling timer expired"
 block|,
 comment|/* SIGPROF */
-literal|"Signal 28"
+literal|"Window size changes"
 block|,
+comment|/* SIGWINCH */
 literal|"Signal 29"
 block|,
-literal|"Signal 30"
+literal|"User defined signal 1"
 block|,
-literal|"Signal 31"
+comment|/* SIGUSR1 */
+literal|"User defined signal 2"
+comment|/* SIGUSR2 */
 block|}
 decl_stmt|;
 end_decl_stmt
