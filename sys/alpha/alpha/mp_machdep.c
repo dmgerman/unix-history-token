@@ -1038,7 +1038,7 @@ name|cpuid_to_globaldata
 index|[
 name|globaldata
 operator|->
-name|cpuid
+name|gd_cpuid
 index|]
 operator|=
 name|globaldata
@@ -3386,46 +3386,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|u_int64_t
-name|atomic_readandclear
-parameter_list|(
-name|u_int64_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|u_int64_t
-name|v
-decl_stmt|,
-name|temp
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 	"wmb\n"
-comment|/* ensure pending writes have drained */
-asm|"1:\tldq_l %0,%3\n\t"
-comment|/* load current value, asserting lock */
-asm|"ldiq %1,0\n\t"
-comment|/* value to store */
-asm|"stq_c %1,%2\n\t"
-comment|/* attempt to store */
-asm|"beq %1,2f\n\t"
-comment|/* if the store failed, spin */
-asm|"br 3f\n"
-comment|/* it worked, exit */
-asm|"2:\tbr 1b\n"
-comment|/* *p not updated, loop */
-asm|"3:\tmb\n"
-comment|/* it worked */
-asm|: "=&r"(v), "=&r"(temp), "=m" (*p) 	: "m"(*p) 	: "memory");
-return|return
-name|v
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Handle an IPI sent to this processor.  */
 end_comment
@@ -3443,7 +3403,7 @@ block|{
 name|u_int64_t
 name|ipis
 init|=
-name|atomic_readandclear
+name|atomic_readandclear_64
 argument_list|(
 name|PCPU_PTR
 argument_list|(
@@ -3587,7 +3547,10 @@ name|ALPHA_PSL_USERMODE
 condition|)
 name|checkstate_cpustate
 index|[
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 index|]
 operator|=
 name|CHECKSTATE_USER
@@ -3603,7 +3566,10 @@ literal|1
 condition|)
 name|checkstate_cpustate
 index|[
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 index|]
 operator|=
 name|CHECKSTATE_SYS
@@ -3611,20 +3577,23 @@ expr_stmt|;
 else|else
 name|checkstate_cpustate
 index|[
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 index|]
 operator|=
 name|CHECKSTATE_INTR
 expr_stmt|;
 name|checkstate_curproc
 index|[
-name|cpuid
-index|]
-operator|=
 name|PCPU_GET
 argument_list|(
-name|curproc
+name|cpuid
 argument_list|)
+index|]
+operator|=
+name|curproc
 expr_stmt|;
 name|atomic_set_int
 argument_list|(
@@ -3716,67 +3685,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
-end_comment
-
-begin_comment
-unit|u_int64_t atomic_cmpset_64(volatile u_int64_t* p, u_int64_t cmpval, u_int64_t newval) { 	u_int64_t ret, temp;   	printf("atomic_cmpset_64: *p=%lx, cmpval=%lx, newval=%lx\n", 	       *p, cmpval, newval); 	__asm __volatile ( 		"1:\tldq_l %1, %5\n\t"
-comment|/* load old value */
-end_comment
-
-begin_comment
-unit|"cmpeq %1, %3, %0\n\t"
-comment|/* compare */
-end_comment
-
-begin_comment
-unit|"beq %0, 2f\n\t"
-comment|/* exit if not equal */
-end_comment
-
-begin_comment
-unit|"mov %4, %1\n\t"
-comment|/* value to store */
-end_comment
-
-begin_comment
-unit|"stq_c %1, %2\n\t"
-comment|/* attempt to store */
-end_comment
-
-begin_comment
-unit|"beq %1, 3f\n\t"
-comment|/* if it failed, spin */
-end_comment
-
-begin_comment
-unit|"2:\n"
-comment|/* done */
-end_comment
-
-begin_comment
-unit|".section .text3,\"ax\"\n"
-comment|/* improve branch prediction */
-end_comment
-
-begin_comment
-unit|"3:\tbr 1b\n"
-comment|/* try again */
-end_comment
-
-begin_endif
-unit|".previous\n" 		: "=&r" (ret), "=r" (temp), "=m" (*p) 		: "r" (cmpval), "r" (newval), "m" (*p) 		: "memory"); 	printf("atomic_cmpset_64: *p=%lx\n", *p);  	return ret; }
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
