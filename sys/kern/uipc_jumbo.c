@@ -817,6 +817,9 @@ comment|/*		if(vm_page_lookup(jumbo_vm_object, atop(addr - jumbo_basekva))) 			p
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|pg
@@ -827,6 +830,9 @@ name|vm_page_free
 argument_list|(
 name|pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 name|mtx_lock

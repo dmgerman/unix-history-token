@@ -377,6 +377,9 @@ operator|+
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|user_pg
@@ -386,6 +389,9 @@ name|vm_page_free
 argument_list|(
 name|user_pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 if|if
