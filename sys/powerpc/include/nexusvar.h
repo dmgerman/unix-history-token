@@ -99,6 +99,19 @@ directive|undef
 name|NEXUS_ACCESSOR
 end_undef
 
+begin_comment
+comment|/*  * Install the interrupt controller device  */
+end_comment
+
+begin_function_decl
+name|int
+name|nexus_install_intcntlr
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
