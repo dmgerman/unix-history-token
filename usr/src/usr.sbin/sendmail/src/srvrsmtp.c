@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.37 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.38 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.37 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.38 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -618,6 +618,26 @@ argument_list|,
 name|CurHostName
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|4
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"lost input channel from %s"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|finis
 argument_list|()
 expr_stmt|;
