@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	4.1 (Berkeley) %G%"
+literal|"@(#)res_init.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,8 +113,12 @@ specifier|extern
 name|char
 modifier|*
 name|index
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getenv
+argument_list|()
+decl_stmt|;
 name|_res
 operator|.
 name|options
@@ -147,10 +151,9 @@ name|sin_port
 operator|=
 name|HTONS
 argument_list|(
-literal|53
+name|NAMESERVER_PORT
 argument_list|)
 expr_stmt|;
-comment|/* well known port number */
 comment|/* first try reading the config file */
 if|if
 condition|(
@@ -176,7 +179,12 @@ name|_res
 operator|.
 name|defdname
 argument_list|,
-name|MAXDNAME
+sizeof|sizeof
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -231,15 +239,6 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|_res
 operator|.
 name|nsaddr
@@ -253,12 +252,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -268,8 +261,36 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* next, try getting the address of this host */
-comment|/* finally, try broadcast */
+comment|/* Allow user to override the local domain definition */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"LOCALDOMAIN"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|strncpy
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|,
+name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
