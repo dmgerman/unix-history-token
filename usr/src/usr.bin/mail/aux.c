@@ -37,7 +37,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	1.4 %G%"
+literal|"@(#)aux.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2076,7 +2076,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Fetch the sender's name from the passed message.  */
+comment|/*  * Fetch the sender's name from the passed message.  * If fetching this name for replying purposes, do not  * return sender:  */
 end_comment
 
 begin_function
@@ -2085,6 +2085,8 @@ modifier|*
 name|nameof
 parameter_list|(
 name|mp
+parameter_list|,
+name|reply
 parameter_list|)
 specifier|register
 name|struct
@@ -2130,7 +2132,42 @@ name|cp
 operator|=
 name|hfield
 argument_list|(
-literal|"reply-to"
+literal|"from"
+argument_list|,
+name|mp
+argument_list|)
+operator|)
+operator|!=
+name|NOSTR
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|namebuf
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|savestr
+argument_list|(
+name|namebuf
+argument_list|)
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|reply
+operator|&&
+operator|(
+name|cp
+operator|=
+name|hfield
+argument_list|(
+literal|"sender"
 argument_list|,
 name|mp
 argument_list|)
