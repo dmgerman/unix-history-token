@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -48,6 +48,25 @@ end_include
 begin_decl_stmt
 name|char
 name|cwaiting
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cblock
+modifier|*
+name|cfree
+decl_stmt|,
+modifier|*
+name|cfreelist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cfreecount
+decl_stmt|,
+name|nclist
 decl_stmt|;
 end_decl_stmt
 
