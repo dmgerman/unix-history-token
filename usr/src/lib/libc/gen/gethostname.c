@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostname.c	5.1 (Berkeley) %G%"
+literal|"@(#)gethostname.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,8 +104,8 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|mib
@@ -121,6 +121,19 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
