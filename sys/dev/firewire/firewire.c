@@ -5700,11 +5700,12 @@ name|status
 operator|=
 name|FWBUSPHYCONF
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100000
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DELAY(100000);
+endif|#
+directive|endif
 name|xfer
 operator|=
 name|fw_xfer_alloc

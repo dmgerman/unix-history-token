@@ -2023,7 +2023,7 @@ operator|++
 control|)
 name|DELAY
 argument_list|(
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 name|bm
@@ -2186,7 +2186,7 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -2197,6 +2197,10 @@ operator|>=
 name|MAX_RETRY
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -2205,16 +2209,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"cannot read phy\n"
+literal|"phy read failed(1).\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|return 0;
-comment|/* XXX */
-else|#
-directive|else
 if|if
 condition|(
 operator|++
@@ -2225,15 +2222,13 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 goto|goto
 name|again
 goto|;
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* Make sure that SCLK is started */
 name|stat
@@ -2270,6 +2265,21 @@ condition|)
 block|{
 if|if
 condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
+literal|"phy read failed(2).\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|++
 name|retry
 operator|<
@@ -2278,7 +2288,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8592,6 +8602,22 @@ operator|&=
 operator|~
 literal|0xf
 expr_stmt|;
+comment|/* OHCI 1.1 and above */
+name|db_tr
+operator|->
+name|db
+index|[
+literal|0
+index|]
+operator|.
+name|db
+operator|.
+name|desc
+operator|.
+name|cmd
+operator||=
+name|OHCI_INTERRUPT_ALWAYS
+expr_stmt|;
 block|}
 block|}
 name|db_tr
@@ -9639,6 +9665,25 @@ name|OHCI_CNTL_DMA_ACTIVE
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|printf
+argument_list|(
+literal|"fwohci_itxbuf_enable: kick 0x%08x\n"
+argument_list|,
+name|OREAD
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_ITCTL
+argument_list|(
+name|dmach
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fw_tbuf_update
 argument_list|(
 operator|&
@@ -12012,8 +12057,7 @@ name|sc
 argument_list|,
 name|OHCI_IR_STATCLR
 argument_list|,
-operator|~
-literal|0
+name|irstat
 argument_list|)
 expr_stmt|;
 for|for
@@ -12130,8 +12174,7 @@ name|sc
 argument_list|,
 name|OHCI_IT_STATCLR
 argument_list|,
-operator|~
-literal|0
+name|itstat
 argument_list|)
 expr_stmt|;
 for|for
@@ -13217,6 +13260,10 @@ expr_stmt|;
 if|if
 condition|(
 name|firewire_debug
+operator|||
+name|diff
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -14299,14 +14346,14 @@ argument|].db.immed[
 literal|3
 argument|]); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((db[i].db.desc.cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((db[i].db.desc.cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((db[i].db.desc.cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	u_int32_t fun;  	sc = (struct fwohci_softc *)fc;
 comment|/* 	 * Set root hold-off bit so that non cyclemaster capable node 	 * shouldn't became the root node. 	 */
-argument|fun = fwphy_rddata(sc, FW_PHY_RHB_REG); 	fun |= FW_PHY_RHB; 	fun = fwphy_wrdata(sc, FW_PHY_RHB_REG, fun);
 if|#
 directive|if
 literal|1
-argument|fun = fwphy_rddata(sc, FW_PHY_IBR_REG); 	fun |= FW_PHY_IBR; 	fun = fwphy_wrdata(sc, FW_PHY_IBR_REG, fun);
+argument|fun = fwphy_rddata(sc, FW_PHY_IBR_REG); 	fun |= FW_PHY_IBR | FW_PHY_RHB; 	fun = fwphy_wrdata(sc, FW_PHY_IBR_REG, fun);
 else|#
 directive|else
-argument|fun = fwphy_rddata(sc, FW_PHY_ISBR_REG); 	fun |= FW_PHY_ISBR; 	fun = fwphy_wrdata(sc, FW_PHY_ISBR_REG, fun);
+comment|/* Short bus reset */
+argument|fun = fwphy_rddata(sc, FW_PHY_ISBR_REG); 	fun |= FW_PHY_ISBR | FW_PHY_RHB; 	fun = fwphy_wrdata(sc, FW_PHY_ISBR_REG, fun);
 endif|#
 directive|endif
 argument|}  void fwohci_txbufdb(struct fwohci_softc *sc, int dmach, struct fw_bulkxfer *bulkxfer) { 	struct fwohcidb_tr *db_tr
@@ -14355,15 +14402,11 @@ argument|; 		db_tr->db[
 literal|2
 argument|].db.desc.count =
 literal|0
-argument|; 		if(dbch->xferq.flag& FWXFERQ_DV){ 			db_tr->db[
+argument|; 		db_tr->db[
 literal|0
-argument|].db.desc.depend 				= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 			db_tr->db[dbch->ndesc -
+argument|].db.desc.depend 			= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 		db_tr->db[dbch->ndesc -
 literal|1
-argument|].db.desc.depend 				= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 		}else{ 			db_tr->db[
-literal|0
-argument|].db.desc.depend 				= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 			db_tr->db[dbch->ndesc -
-literal|1
-argument|].db.desc.depend 				= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 		} 		bulkxfer->end = (caddr_t)db_tr; 		db_tr = STAILQ_NEXT(db_tr, link); 	} 	db_tr = (struct fwohcidb_tr *)bulkxfer->end; 	db_tr->db[
+argument|].db.desc.depend 			= vtophys(STAILQ_NEXT(db_tr, link)->db) | dbch->ndesc; 		bulkxfer->end = (caddr_t)db_tr; 		db_tr = STAILQ_NEXT(db_tr, link); 	} 	db_tr = (struct fwohcidb_tr *)bulkxfer->end; 	db_tr->db[
 literal|0
 argument|].db.desc.depend&= ~
 literal|0xf
@@ -14372,15 +14415,20 @@ literal|1
 argument|].db.desc.depend&= ~
 literal|0xf
 argument|;
+if|#
+directive|if
+literal|0
 comment|/**/
+argument|db_tr->db[dbch->ndesc - 1].db.desc.cmd&= ~OHCI_BRANCH_ALWAYS; 	db_tr->db[dbch->ndesc - 1].db.desc.cmd |= OHCI_BRANCH_NEVER;
+comment|/**/
+endif|#
+directive|endif
 argument|db_tr->db[dbch->ndesc -
 literal|1
-argument|].db.desc.cmd&= ~OHCI_BRANCH_ALWAYS; 	db_tr->db[dbch->ndesc -
-literal|1
-argument|].db.desc.cmd |= OHCI_BRANCH_NEVER;
-comment|/**/
-argument|db_tr->db[dbch->ndesc -
-literal|1
+argument|].db.desc.cmd |= OHCI_INTERRUPT_ALWAYS;
+comment|/* OHCI 1.1 and above */
+argument|db_tr->db[
+literal|0
 argument|].db.desc.cmd |= OHCI_INTERRUPT_ALWAYS;  	db_tr = (struct fwohcidb_tr *)bulkxfer->start; 	fdb_tr = (struct fwohcidb_tr *)bulkxfer->end;
 comment|/* device_printf(sc->fc.dev, "DB %08x %3d %08x %08x\n", bulkxfer, bulkxfer->npacket, vtophys(db_tr->db), vtophys(fdb_tr->db)); */
 argument|return; }  static int fwohci_add_tx_buf(struct fwohcidb_tr *db_tr, unsigned short size, 	int mode, void *buf) { 	volatile struct fwohcidb *db = db_tr->db; 	int err =
