@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwpty.c	3.12 %G%"
+literal|"@(#)wwpty.c	3.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,10 +29,6 @@ include|#
 directive|include
 file|"ww.h"
 end_include
-
-begin_comment
-comment|/*  * To satisfy Chris, we allocate pty's backwards, and if  * there are more than the ptyp's (i.e. the ptyq's)  * on the machine, we don't use the p's.  */
-end_comment
 
 begin_expr_stmt
 name|wwgetpty
@@ -52,10 +48,9 @@ block|{
 specifier|register
 name|char
 name|c
-decl_stmt|;
-specifier|register
-name|int
-name|i
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|tty
@@ -64,11 +59,6 @@ name|int
 name|on
 init|=
 literal|1
-decl_stmt|;
-name|char
-name|hasq
-init|=
-literal|0
 decl_stmt|;
 define|#
 directive|define
@@ -102,14 +92,14 @@ for|for
 control|(
 name|c
 operator|=
-literal|'s'
+literal|'p'
 init|;
 name|c
-operator|>=
-literal|'p'
+operator|<=
+literal|'u'
 condition|;
 name|c
-operator|--
+operator|++
 control|)
 block|{
 name|w
@@ -152,35 +142,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-continue|continue;
-if|if
-condition|(
-name|c
-operator|!=
-literal|'p'
-condition|)
-name|hasq
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|hasq
-condition|)
 break|break;
 for|for
 control|(
-name|i
+name|p
 operator|=
-literal|15
+literal|"0123456789abcdef"
 init|;
-name|i
-operator|>=
-literal|0
+operator|*
+name|p
 condition|;
-name|i
-operator|--
+name|p
+operator|++
 control|)
 block|{
 name|w
@@ -199,10 +172,8 @@ index|[
 name|_0_9
 index|]
 operator|=
-literal|"0123456789abcdef"
-index|[
-name|i
-index|]
+operator|*
+name|p
 expr_stmt|;
 if|if
 condition|(
