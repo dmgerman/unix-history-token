@@ -47,23 +47,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SYS_TIME_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_UNISTD_H
 end_ifdef
 
@@ -829,6 +812,10 @@ argument_list|()
 operator|)
 operator|!=
 literal|'\n'
+operator|&&
+name|c
+operator|!=
+literal|'\r'
 operator|)
 condition|;
 name|i

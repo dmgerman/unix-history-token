@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_stdlib.h"
+file|"ntp_syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ntp_syslog.h"
+file|"ntp_stdlib.h"
 end_include
 
 begin_include

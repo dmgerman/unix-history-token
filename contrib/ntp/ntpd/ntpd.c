@@ -23,7 +23,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"ntpd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
 end_include
 
 begin_ifdef
@@ -127,12 +139,6 @@ end_endif
 begin_comment
 comment|/* HAVE_SYS_IOCTL_H */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -400,25 +406,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ntpd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"recvbuff.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_cmdargs.h"
 end_include
 
 begin_if
@@ -512,6 +506,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PUBKEY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_crypto.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PUBKEY */
+end_comment
 
 begin_comment
 comment|/*  * Signals we catch for debugging.	If not debugging we ignore them.  */
@@ -668,6 +683,30 @@ directive|define
 name|NTPD_PRIO
 value|(-12)
 end_define
+
+begin_decl_stmt
+name|int
+name|priority_done
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0 - Set priority */
+end_comment
+
+begin_comment
+comment|/* 1 - priority is OK where it is */
+end_comment
+
+begin_comment
+comment|/* 2 - Don't set priority */
+end_comment
+
+begin_comment
+comment|/* 1 and 2 are pretty much the same */
+end_comment
 
 begin_comment
 comment|/*  * Debugging flag  */
@@ -1002,156 +1041,44 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|done
-init|=
-literal|0
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>
+literal|1
+condition|)
+name|msyslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"set_process_priority: %s: priority_done is<%d>"
+argument_list|,
+operator|(
+operator|(
+name|priority_done
+operator|)
+condition|?
+literal|"Leave priority alone"
+else|:
+literal|"Attempt to set priority"
+operator|)
+argument_list|,
+name|priority_done
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
-name|DWORD
-name|SingleCPUMask
-init|=
-literal|0
-decl_stmt|;
-name|DWORD
-name|ProcessAffinityMask
-decl_stmt|,
-name|SystemAffinityMask
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|GetProcessAffinityMask
-argument_list|(
-name|GetCurrentProcess
+name|priority_done
+operator|+=
+name|NT_set_process_priority
 argument_list|()
-argument_list|,
-operator|&
-name|ProcessAffinityMask
-argument_list|,
-operator|&
-name|SystemAffinityMask
-argument_list|)
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"GetProcessAffinityMask: %m"
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|SingleCPUMask
-operator|=
-literal|1
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|msyslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"System AffinityMask = %x"
-argument_list|,
-name|SystemAffinityMask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-while|while
-condition|(
-name|SingleCPUMask
-operator|&&
-operator|!
-operator|(
-name|SingleCPUMask
-operator|&
-name|SystemAffinityMask
-operator|)
-condition|)
-block|{
-name|SingleCPUMask
-operator|=
-name|SingleCPUMask
-operator|<<
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|SingleCPUMask
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Can't set Processor Affinity Mask"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|SetProcessAffinityMask
-argument_list|(
-name|GetCurrentProcess
-argument_list|()
-argument_list|,
-name|SingleCPUMask
-argument_list|)
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"SetProcessAffinityMask: %m"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-else|else
-name|msyslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"ProcessorAffinity Mask: %x"
-argument_list|,
-name|SingleCPUMask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-operator|!
-name|SetPriorityClass
-argument_list|(
-name|GetCurrentProcess
-argument_list|()
-argument_list|,
-operator|(
-name|DWORD
-operator|)
-name|REALTIME_PRIORITY_CLASS
-argument_list|)
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"SetPriorityClass: %m"
-argument_list|)
-expr_stmt|;
-else|else
-operator|++
-name|done
 expr_stmt|;
 endif|#
 directive|endif
@@ -1164,7 +1091,7 @@ argument_list|)
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 block|{
 specifier|extern
@@ -1264,7 +1191,7 @@ argument_list|)
 expr_stmt|;
 else|else
 operator|++
-name|done
+name|priority_done
 expr_stmt|;
 block|}
 endif|#
@@ -1282,7 +1209,7 @@ name|RTP_SET
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 block|{
 name|struct
@@ -1327,7 +1254,7 @@ argument_list|)
 expr_stmt|;
 else|else
 operator|++
-name|done
+name|priority_done
 expr_stmt|;
 block|}
 else|#
@@ -1336,7 +1263,7 @@ comment|/* not RTP_SET */
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 block|{
 if|if
@@ -1359,7 +1286,7 @@ argument_list|)
 expr_stmt|;
 else|else
 operator|++
-name|done
+name|priority_done
 expr_stmt|;
 block|}
 endif|#
@@ -1384,7 +1311,7 @@ name|HAVE_ATT_NICE
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 block|{
 name|errno
@@ -1414,7 +1341,7 @@ argument_list|)
 expr_stmt|;
 else|else
 operator|++
-name|done
+name|priority_done
 expr_stmt|;
 block|}
 endif|#
@@ -1426,7 +1353,7 @@ name|HAVE_BSD_NICE
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 block|{
 if|if
@@ -1452,7 +1379,7 @@ argument_list|)
 expr_stmt|;
 else|else
 operator|++
-name|done
+name|priority_done
 expr_stmt|;
 block|}
 endif|#
@@ -1464,7 +1391,7 @@ comment|/* NTPD_PRIO&& NTPD_PRIO != 0 */
 if|if
 condition|(
 operator|!
-name|done
+name|priority_done
 condition|)
 name|msyslog
 argument_list|(
@@ -1500,6 +1427,21 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+name|u_int
+name|n
+decl_stmt|;
+name|char
+name|hostname
+index|[
+name|MAXFILENAME
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AUTOKEY */
 name|struct
 name|recvbuf
 modifier|*
@@ -1539,8 +1481,7 @@ ifdef|#
 directive|ifdef
 name|HAVE_UMASK
 block|{
-name|unsigned
-name|int
+name|mode_t
 name|uv
 decl_stmt|;
 name|uv
@@ -1654,6 +1595,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|getstartup
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+comment|/* startup configuration, may set debug */
+comment|/* 	 * Initialize random generator and public key pair 	 */
 name|get_systime
 argument_list|(
 operator|&
@@ -1676,14 +1626,6 @@ name|l_uf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|getstartup
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/* startup configuration, may set debug */
 if|#
 directive|if
 operator|!
@@ -2217,6 +2159,21 @@ name|recvbuf
 modifier|*
 name|rbuf
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+name|u_int
+name|n
+decl_stmt|;
+name|char
+name|hostname
+index|[
+name|MAXFILENAME
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AUTOKEY */
 if|if
 condition|(
 operator|!
@@ -2929,6 +2886,7 @@ expr_stmt|;
 name|init_proto
 argument_list|()
 expr_stmt|;
+comment|/* Call at high priority */
 name|init_io
 argument_list|()
 expr_stmt|;
@@ -2942,7 +2900,16 @@ argument_list|)
 expr_stmt|;
 comment|/* monitor on by default now	  */
 comment|/* turn off in config if unwanted */
-comment|/* 	 * Get configuration.  This (including argument list parsing) is 	 * done in a separate module since this will definitely be different 	 * for the gizmo board. 	 */
+comment|/* 	 * Get configuration.  This (including argument list parsing) is 	 * done in a separate module since this will definitely be different 	 * for the gizmo board. While at it, save the host name for later 	 * along with the length. The crypto needs this. 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|debug
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|getconfig
 argument_list|(
 name|argc
@@ -2950,6 +2917,53 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+name|MAXFILENAME
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|hostname
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|sys_hostname
+operator|=
+name|emalloc
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|sys_hostname
+argument_list|,
+name|hostname
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PUBKEY
+name|crypto_setup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PUBKEY */
+endif|#
+directive|endif
+comment|/* AUTOKEY */
 name|initializing
 operator|=
 literal|0
@@ -3463,18 +3477,10 @@ elseif|else
 if|if
 condition|(
 name|debug
+operator|>
+literal|2
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-name|SYS_VXWORKS
-operator|&&
-operator|!
-name|defined
-name|SCO5_CLOCK
-comment|/* to unclutter log */
 name|msyslog
 argument_list|(
 name|LOG_DEBUG
@@ -3484,8 +3490,6 @@ argument_list|,
 name|nfound
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|#
 directive|else

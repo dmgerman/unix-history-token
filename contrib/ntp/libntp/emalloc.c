@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_stdlib.h"
+file|"ntp_syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ntp_syslog.h"
+file|"ntp_stdlib.h"
 end_include
 
 begin_if
@@ -106,7 +106,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"No more memory!"
+literal|"Exiting: No more memory!"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -161,7 +161,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"No more memory!"
+literal|"Exiting: No more memory!"
 argument_list|)
 expr_stmt|;
 name|exit

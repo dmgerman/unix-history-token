@@ -111,11 +111,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CLOCK_TRAK
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PPS
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -307,7 +315,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|PPS
+name|HAVE_PPSAPI
 argument_list|)
 end_if
 
@@ -964,11 +972,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CLOCK_ONCORE
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_PPSAPI
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -1195,6 +1211,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_HOPF_SERIAL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_hopfser
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_hopfser
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_HOPF_PCI
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_hopfpci
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_hopfpci
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Order is clock_start(), clock_shutdown(), clock_poll(),  * clock_control(), clock_init(), clock_buginfo, clock_flags;  *  * Types are defined in ntp.h.  The index must match this.  */
 end_comment
@@ -1357,7 +1435,15 @@ block|,
 comment|/* 36 REFCLOCK_WWV_AUDIO */
 operator|&
 name|refclock_fg
+block|,
 comment|/* 37 REFCLOCK_FG */
+operator|&
+name|refclock_hopfser
+block|,
+comment|/* 38 REFCLK_HOPF_SERIAL */
+operator|&
+name|refclock_hopfpci
+comment|/* 39 REFCLK_HOPF_PCI */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -37,23 +37,6 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TM_IN_SYS_TIME
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const

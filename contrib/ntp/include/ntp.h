@@ -28,11 +28,7 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/* common definitions for Y2K repairs			[ Y2KFixes */
-end_comment
-
-begin_comment
-comment|/* (this might better be put in ntp_calendar.h) */
+comment|/*  * Calendar arithmetic - contributed by G. Healton  */
 end_comment
 
 begin_define
@@ -43,11 +39,7 @@ value|500
 end_define
 
 begin_comment
-comment|/* assume years< this are tm_year values: */
-end_comment
-
-begin_comment
-comment|/*    Break< AnyFourDigitYear&& Break> Anytm_yearYear */
+comment|/* years< this are tm_year values: 				 * Break< AnyFourDigitYear&& Break> 				 * Anytm_yearYear */
 end_comment
 
 begin_define
@@ -58,15 +50,11 @@ value|98
 end_define
 
 begin_comment
-comment|/* 97/98: assume years< this are year 2000+ */
+comment|/* 97/98: years< this are year 2000+ 				 * FYI: official UNIX pivot year is 				 * 68/69 */
 end_comment
 
 begin_comment
-comment|/* FYI: official UNIX pivot year is 68/69 */
-end_comment
-
-begin_comment
-comment|/* Number of Days since (mythical) 1.BC Gregorian to 1 January of given year*/
+comment|/*  * Number of Days since 1 BC Gregorian to 1 January of given year  */
 end_comment
 
 begin_define
@@ -76,12 +64,11 @@ name|julian0
 parameter_list|(
 name|year
 parameter_list|)
-define|\
-value|(	\ 	  ( (year) * 365 ) + ( (year)> 0  	\ 		? ( ((year)+3) / 4 - ((year-1) / 100) + ((year-1) / 400) )  \ 		: 0 ) \ 	)
+value|(((year) * 365 ) + ((year)> 0 ? (((year) + 3) \ 			    / 4 - ((year - 1) / 100) + ((year - 1) / \ 			    400)) : 0))
 end_define
 
 begin_comment
-comment|/* Number of days since start of NTP time to 1 January of given year */
+comment|/*  * Number of days since start of NTP time to 1 January of given year  */
 end_comment
 
 begin_define
@@ -91,11 +78,11 @@ name|ntp0
 parameter_list|(
 name|year
 parameter_list|)
-value|( julian0(year) - julian0(1900) )
+value|(julian0(year) - julian0(1900))
 end_define
 
 begin_comment
-comment|/* Number of days since start of UNIX time to 1 January of given year */
+comment|/*  * Number of days since start of UNIX time to 1 January of given year  */
 end_comment
 
 begin_define
@@ -105,11 +92,11 @@ name|unix0
 parameter_list|(
 name|year
 parameter_list|)
-value|( julian0(year) - julian0(1970) )
+value|(julian0(year) - julian0(1970))
 end_define
 
 begin_comment
-comment|/* LEAP YEAR test for full 4-digit years (e.g, 1999, 2010) */
+comment|/*  * LEAP YEAR test for full 4-digit years (e.g, 1999, 2010)  */
 end_comment
 
 begin_define
@@ -119,17 +106,11 @@ name|isleap_4
 parameter_list|(
 name|y
 parameter_list|)
-comment|/* a TRUE and PROPER leap year test */
-define|\
-value|((y)%4 == 0&& !((y)%100 == 0&& !(y%400 == 0)))
+value|((y) % 4 == 0&& !((y) % 100 == 0&& !(y % \ 			    400 == 0)))
 end_define
 
 begin_comment
-comment|/* NOTE: year 2000 TRULY IS A LEAP YEAR!!! */
-end_comment
-
-begin_comment
-comment|/* LEAP YEAR test for tm_year (struct tm) years (e.g, 99, 110) */
+comment|/*  * LEAP YEAR test for tm_year (struct tm) years (e.g, 99, 110)  */
 end_comment
 
 begin_define
@@ -139,17 +120,15 @@ name|isleap_tm
 parameter_list|(
 name|y
 parameter_list|)
-comment|/* a TRUE and PROPER leap year test */
-define|\
-value|((y)%4 == 0&& !((y)%100 == 0&& !(((y)+1900)%400 == 0)))
+value|((y) % 4 == 0&& !((y) % 100 == 0&& !(((y) \ 			    + 1900) % 400 == 0)))
 end_define
 
 begin_comment
-comment|/* to convert simple two-digit years to tm_year style years: 	if ( year< YEAR_PIVOT ) year += 100;     * to convert either two-digit OR tm_year years to four-digit years: 	if ( year< YEAR_PIVOT ) year += 100; 	if ( year< YEAR_BREAK ) year += 1900;   CALL TO STANDARD:    * As the Internet is an INTERNATIONAL network, it makes SENSE to use      the international standard ISO 8601 to format dates and times.      Basically this is yyyy-mm-dd for years and hh:mm:ss for times      (joining the two togeather in computer readable media calls for      yyyy-mm-ddThh:mm:ss, though yyyy-mm-dd hh:mm:ss is often used      for human readable forms even though it is not not strictly      valid ISO 8601). Standard time-zone offsets ([+-]hh:mm) are allowed. 					ghealton	         ] Y2KFixes */
+comment|/*  * to convert simple two-digit years to tm_year style years:  *  *	if (year< YEAR_PIVOT)  *		year += 100;  *  * to convert either two-digit OR tm_year years to four-digit years:  *  *	if (year< YEAR_PIVOT)  *		year += 100;  *  *	if (year< YEAR_BREAK)  *		year += 1900;  */
 end_comment
 
 begin_comment
-comment|/*  * How to get signed characters.  On machines where signed char works,  * use it.  On machines where signed char doesn't work, char had better  * be signed.  */
+comment|/*  * How to get signed characters.  On machines where signed char works,  * use it. On machines where signed char doesn't work, char had better  * be signed.  */
 end_comment
 
 begin_ifdef
@@ -305,28 +284,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTP_MAXSTRATUM
-value|((u_char)15)
-end_define
-
-begin_comment
-comment|/* max stratum, infinity a la Bellman-Ford */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_MAXAGE
-value|86400
-end_define
-
-begin_comment
-comment|/* one day in seconds */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NTP_UNREACH
 value|16
 end_define
@@ -393,34 +350,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTP_CANCLOCK
-value|6
-end_define
-
-begin_comment
-comment|/* minimum candidates */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NTP_MAXCLOCK
 value|10
 end_define
 
 begin_comment
 comment|/* maximum candidates */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_WINDOW
-value|8
-end_define
-
-begin_comment
-comment|/* reachability register size */
 end_comment
 
 begin_define
@@ -453,14 +388,14 @@ value|100
 end_define
 
 begin_comment
-comment|/* maximum entries on session key list */
+comment|/* maximum session key list entries */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NTP_AUTOMAX
-value|12
+value|13
 end_define
 
 begin_comment
@@ -492,19 +427,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTP_SWEIGHT
-value|.75
-end_define
-
-begin_comment
-comment|/* select weight */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CLOCK_SGATE
-value|10.
+value|4.
 end_define
 
 begin_comment
@@ -533,8 +457,19 @@ begin_comment
 comment|/* succeeding interburst intervals (log2) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HUFFPUFF
+value|900
+end_define
+
 begin_comment
-comment|/*  * Operations for jitter (variance) calculations (these use doubles).  * Note that we carefully separate the jitter component from the dispersion  * component (frequency error plus precision). The frequency error  * component is computed as CLOCK_PHI times the difference between the epoch  * of the time measurement and the reference time. The precision componen  * is computed as the square root of the mean of the squares of a zero-  * mean, uniform distribution of unit maximum amplitude. Whether this  * makes statistical sense may be arguable.  */
+comment|/* huff-n'-puff sample interval (s) */
+end_comment
+
+begin_comment
+comment|/*  * Operations for jitter calculations (these use doubles).  *  * Note that we carefully separate the jitter component from the  * dispersion component (frequency error plus precision). The frequency  * error component is computed as CLOCK_PHI times the difference between  * the epoch of the time measurement and the reference time. The  * precision componen is computed as the square root of the mean of the  * squares of a zero-mean, uniform distribution of unit maximum  * amplitude. Whether this makes statistical sense may be arguable.  */
 end_comment
 
 begin_define
@@ -644,21 +579,6 @@ begin_comment
 comment|/* max root distance */
 end_comment
 
-begin_comment
-comment|/*  * Loop filter parameters.  See section 5.1 of the specification.  *  * Note that these are appropriate for a crystal time base.  If your  * system clock is line frequency controlled you should read the  * specification for appropriate modifications.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOCK_PHI
-value|15e-6
-end_define
-
-begin_comment
-comment|/* max frequency wander */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -668,6 +588,145 @@ end_define
 
 begin_comment
 comment|/* one second, that is */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_comment
+comment|/*  * The following structures are used in the autokey protocol.  *  * The autokey structure holds the values used to authenticate key IDs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|autokey
+block|{
+comment|/* network byte order */
+name|tstamp_t
+name|tstamp
+decl_stmt|;
+comment|/* timestamp */
+name|keyid_t
+name|key
+decl_stmt|;
+comment|/* key ID */
+name|int32
+name|seq
+decl_stmt|;
+comment|/* key number */
+name|u_int32
+name|siglen
+decl_stmt|;
+comment|/* signature length */
+name|u_int32
+name|pkt
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* start of signature field */
+name|u_char
+modifier|*
+name|sig
+decl_stmt|;
+comment|/* signature */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The cookie structure holds the current private value used to  * construct session keys.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cookie
+block|{
+comment|/* network byte order */
+name|tstamp_t
+name|tstamp
+decl_stmt|;
+comment|/* timestamp */
+name|keyid_t
+name|key
+decl_stmt|;
+comment|/* key ID */
+name|u_int32
+name|siglen
+decl_stmt|;
+comment|/* signature length */
+name|u_int32
+name|pkt
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* start of signature field */
+name|u_char
+modifier|*
+name|sig
+decl_stmt|;
+comment|/* signature */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The value structure holds variable length data such as public  * key, agreement parameters, public valule and leapsecond table.  */
+end_comment
+
+begin_struct
+struct|struct
+name|value
+block|{
+comment|/* network byte order */
+name|tstamp_t
+name|tstamp
+decl_stmt|;
+comment|/* timestamp */
+name|tstamp_t
+name|fstamp
+decl_stmt|;
+comment|/* filestamp */
+name|u_int32
+name|vallen
+decl_stmt|;
+comment|/* value length */
+name|u_int32
+name|pkt
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* start of value field */
+name|u_char
+modifier|*
+name|ptr
+decl_stmt|;
+comment|/* data pointer */
+name|u_int32
+name|siglen
+decl_stmt|;
+comment|/* signature length */
+name|u_char
+modifier|*
+name|sig
+decl_stmt|;
+comment|/* signature */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOKEY */
 end_comment
 
 begin_comment
@@ -782,7 +841,7 @@ comment|/* multicasting enabled */
 end_comment
 
 begin_comment
-comment|/*  * Define flasher bits (tests 1 through 8 in packet procedure)  * These reveal the state at the last grumble from the peer and are  * most handy for diagnosing problems, even if not strictly a state  * variable in the spec. These are recorded in the peer structure.  */
+comment|/*  * Define flasher bits (tests 1 through 11 in packet procedure)  * These reveal the state at the last grumble from the peer and are  * most handy for diagnosing problems, even if not strictly a state  * variable in the spec. These are recorded in the peer structure.  */
 end_comment
 
 begin_define
@@ -826,7 +885,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* peer delay/dispersion bounds check */
+comment|/* access denied */
 end_comment
 
 begin_define
@@ -837,7 +896,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* peer authentication failed */
+comment|/* authentication failed */
 end_comment
 
 begin_define
@@ -881,7 +940,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* peer not authenticated */
+comment|/* peer delay/dispersion bounds check */
 end_comment
 
 begin_define
@@ -892,11 +951,22 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* access denied */
+comment|/* autokey failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEST11
+value|0x0400
+end_define
+
+begin_comment
+comment|/* proventic not confirmed */
 end_comment
 
 begin_comment
-comment|/*  * The peer structure.  Holds state information relating to the guys  * we are peering with.  Most of this stuff is from section 3.2 of the  * spec.  */
+comment|/*  * The peer structure. Holds state information relating to the guys  * we are peering with. Most of this stuff is from section 3.2 of the  * spec.  */
 end_comment
 
 begin_struct
@@ -908,6 +978,7 @@ name|peer
 modifier|*
 name|next
 decl_stmt|;
+comment|/* pointer to next association */
 name|struct
 name|peer
 modifier|*
@@ -925,68 +996,69 @@ modifier|*
 name|dstadr
 decl_stmt|;
 comment|/* pointer to address on local host */
+name|associd_t
+name|associd
+decl_stmt|;
+comment|/* association ID */
+name|u_char
+name|version
+decl_stmt|;
+comment|/* version number */
+name|u_char
+name|hmode
+decl_stmt|;
+comment|/* local association mode */
+name|u_char
+name|hpoll
+decl_stmt|;
+comment|/* local poll interval */
+name|u_char
+name|kpoll
+decl_stmt|;
+comment|/* last poll interval */
+name|u_char
+name|minpoll
+decl_stmt|;
+comment|/* min poll interval */
+name|u_char
+name|maxpoll
+decl_stmt|;
+comment|/* max poll interval */
+name|u_char
+name|burst
+decl_stmt|;
+comment|/* packets remaining in burst */
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* association flags */
+name|u_char
+name|cast_flags
+decl_stmt|;
+comment|/* additional flags */
+name|u_int
+name|flash
+decl_stmt|;
+comment|/* protocol error test tally bits */
+name|u_char
+name|last_event
+decl_stmt|;
+comment|/* last peer error code */
+name|u_char
+name|num_events
+decl_stmt|;
+comment|/* number of error events */
+name|u_char
+name|ttlmax
+decl_stmt|;
+comment|/* max ttl/refclock mode */
+comment|/* 	 * Variables used by reference clock support 	 */
 name|struct
 name|refclockproc
 modifier|*
 name|procptr
 decl_stmt|;
-comment|/* pointer to reference clock stuff */
-name|u_char
-name|leap
-decl_stmt|;
-comment|/* leap indicator */
-name|u_char
-name|hmode
-decl_stmt|;
-comment|/* association mode with this peer */
-name|u_char
-name|pmode
-decl_stmt|;
-comment|/* peer's association mode */
-name|u_char
-name|stratum
-decl_stmt|;
-comment|/* stratum of remote peer */
-name|s_char
-name|precision
-decl_stmt|;
-comment|/* peer's clock precision */
-name|u_char
-name|ppoll
-decl_stmt|;
-comment|/* peer poll interval */
-name|u_char
-name|hpoll
-decl_stmt|;
-comment|/* local host poll interval */
-name|u_char
-name|minpoll
-decl_stmt|;
-comment|/* min local host poll interval */
-name|u_char
-name|maxpoll
-decl_stmt|;
-comment|/* max local host poll interval */
-name|u_char
-name|burst
-decl_stmt|;
-comment|/* packets remaining in burst */
-name|u_char
-name|version
-decl_stmt|;
-comment|/* version number */
-name|u_int
-name|flags
-decl_stmt|;
-comment|/* peer flags */
-name|u_char
-name|cast_flags
-decl_stmt|;
-comment|/* flags MDF_?CAST */
-name|u_int
-name|flash
-decl_stmt|;
-comment|/* protocol error tally bits */
+comment|/* refclock structure pointer */
 name|u_char
 name|refclktype
 decl_stmt|;
@@ -999,53 +1071,124 @@ name|u_char
 name|sstclktype
 decl_stmt|;
 comment|/* clock type for system status word */
+comment|/* 	 * Variables set by received packet 	 */
+name|u_char
+name|leap
+decl_stmt|;
+comment|/* local leap indicator */
+name|u_char
+name|pmode
+decl_stmt|;
+comment|/* remote association mode */
+name|u_char
+name|stratum
+decl_stmt|;
+comment|/* remote stratum */
+name|s_char
+name|precision
+decl_stmt|;
+comment|/* remote clock precision */
+name|u_char
+name|ppoll
+decl_stmt|;
+comment|/* remote poll interval */
 name|u_int32
 name|refid
 decl_stmt|;
-comment|/* peer reference ID */
+comment|/* remote reference ID */
 name|l_fp
 name|reftime
 decl_stmt|;
 comment|/* update epoch */
-name|u_long
+comment|/* 	 * Variables used by authenticated client 	 */
+name|keyid_t
 name|keyid
 decl_stmt|;
 comment|/* current key ID */
-name|u_long
-name|pkeyid
-decl_stmt|;
-comment|/* previous key ID (autokey) */
-name|u_long
-modifier|*
-name|keylist
-decl_stmt|;
-comment|/* session key identifier list */
-name|int
-name|keynumber
-decl_stmt|;
-comment|/* session key identifier number */
-name|u_short
-name|associd
-decl_stmt|;
-comment|/* association ID, a unique integer */
-name|u_char
-name|ttl
-decl_stmt|;
-comment|/* time to live (multicast) */
-comment|/* **Start of clear-to-zero area.*** */
-comment|/* Everything that is cleared to zero goes below here */
-name|u_char
-name|valid
-decl_stmt|;
-comment|/* valid counter */
+ifdef|#
+directive|ifdef
+name|AUTOKEY
 define|#
 directive|define
 name|clear_to_zero
-value|valid
-name|double
-name|estbdelay
+value|assoc
+name|associd_t
+name|assoc
 decl_stmt|;
-comment|/* broadcast offset */
+comment|/* peer association ID */
+name|u_int32
+name|crypto
+decl_stmt|;
+comment|/* peer status word */
+ifdef|#
+directive|ifdef
+name|PUBKEY
+name|struct
+name|value
+name|pubkey
+decl_stmt|;
+comment|/* public key */
+name|struct
+name|value
+name|certif
+decl_stmt|;
+comment|/* certificate */
+name|u_char
+modifier|*
+name|keystr
+decl_stmt|;
+comment|/* host name */
+endif|#
+directive|endif
+comment|/* PUBKEY */
+name|keyid_t
+name|pkeyid
+decl_stmt|;
+comment|/* previous key ID */
+name|keyid_t
+name|hcookie
+decl_stmt|;
+comment|/* host cookie */
+name|struct
+name|cookie
+name|pcookie
+decl_stmt|;
+comment|/* peer cookie */
+name|struct
+name|autokey
+name|recauto
+decl_stmt|;
+comment|/* autokey */
+name|u_int32
+name|cmmd
+decl_stmt|;
+comment|/* peer command */
+comment|/* 	 * Variables used by authenticated server 	 */
+name|keyid_t
+modifier|*
+name|keylist
+decl_stmt|;
+comment|/* session key ID list */
+name|int
+name|keynumber
+decl_stmt|;
+comment|/* current key number */
+name|struct
+name|autokey
+name|sndauto
+decl_stmt|;
+comment|/* autokey */
+else|#
+directive|else
+comment|/* AUTOKEY */
+define|#
+directive|define
+name|clear_to_zero
+value|status
+endif|#
+directive|endif
+comment|/* AUTOKEY */
+comment|/* 	 * Ephemeral state variables 	 */
 name|u_char
 name|status
 decl_stmt|;
@@ -1055,13 +1198,21 @@ name|pollsw
 decl_stmt|;
 comment|/* what it says */
 name|u_char
+name|ttl
+decl_stmt|;
+comment|/* ttl for manycast mode */
+name|u_char
 name|reach
 decl_stmt|;
-comment|/* reachability, NTP_WINDOW bits */
+comment|/* reachability register */
 name|u_char
 name|unreach
 decl_stmt|;
 comment|/* unreachable count */
+name|u_long
+name|epoch
+decl_stmt|;
+comment|/* reference epoch */
 name|u_short
 name|filter_nextpt
 decl_stmt|;
@@ -1072,35 +1223,35 @@ index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
-comment|/* delay part of shift register */
+comment|/* delay shift register */
 name|double
 name|filter_offset
 index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
-comment|/* offset part of shift register */
+comment|/* offset shift register */
 name|double
 name|filter_disp
 index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
-comment|/* dispersion part of shift register */
+comment|/* dispersion shift register */
 name|u_long
 name|filter_epoch
 index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
-comment|/* epoch part of shift register */
+comment|/* epoch shift register */
 name|u_char
 name|filter_order
 index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
-comment|/* we keep the filter sorted here */
+comment|/* filter sort index */
 name|l_fp
 name|org
 decl_stmt|;
@@ -1122,13 +1273,18 @@ name|delay
 decl_stmt|;
 comment|/* peer roundtrip delay */
 name|double
-name|variance
+name|jitter
 decl_stmt|;
-comment|/* peer variance (jitter) */
+comment|/* peer jitter (squares) */
 name|double
 name|disp
 decl_stmt|;
 comment|/* peer dispersion */
+name|double
+name|estbdelay
+decl_stmt|;
+comment|/* clock offset to broadcast server */
+comment|/* 	 * Variables set by received packet 	 */
 name|double
 name|rootdelay
 decl_stmt|;
@@ -1137,12 +1293,7 @@ name|double
 name|rootdispersion
 decl_stmt|;
 comment|/* dispersion to primary clock */
-name|u_long
-name|epoch
-decl_stmt|;
-comment|/* reference epoch */
-comment|/* ***End of clear-to-zero area.*** */
-comment|/* Everything that is cleared to zero goes above here */
+comment|/* 	 * End of clear-to-zero area 	 */
 name|u_long
 name|update
 decl_stmt|;
@@ -1177,63 +1328,51 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* action timeout function */
-comment|/* 	 * statistic counters 	 */
+comment|/* 	 * Statistic counters 	 */
 name|u_long
 name|timereset
 decl_stmt|;
 comment|/* time stat counters were reset */
 name|u_long
-name|sent
-decl_stmt|;
-comment|/* number of updates sent */
-name|u_long
-name|received
-decl_stmt|;
-comment|/* number of frames received */
-name|u_long
 name|timereceived
 decl_stmt|;
-comment|/* last time a frame received */
+comment|/* last packet received time */
 name|u_long
 name|timereachable
 decl_stmt|;
-comment|/* last reachable/unreachable event */
+comment|/* last reachable/unreachable time */
+name|u_long
+name|sent
+decl_stmt|;
+comment|/* packets sent */
+name|u_long
+name|received
+decl_stmt|;
+comment|/* packets received */
 name|u_long
 name|processed
 decl_stmt|;
-comment|/* processed by the protocol */
+comment|/* packets processed by the protocol */
 name|u_long
 name|badauth
 decl_stmt|;
-comment|/* bad credentials detected */
+comment|/* packets cryptosum failed */
 name|u_long
 name|bogusorg
 decl_stmt|;
-comment|/* rejected due to bogus origin */
+comment|/* packets bogus origin */
 name|u_long
 name|oldpkt
 decl_stmt|;
-comment|/* rejected as duplicate packet */
+comment|/* packets duplicate packet */
 name|u_long
 name|seldisptoolarge
 decl_stmt|;
-comment|/* too much dispersion for selection */
+comment|/* packets dispersion to large*/
 name|u_long
 name|selbroken
 decl_stmt|;
-comment|/* broken NTP detected in selection */
-name|u_long
-name|seltooold
-decl_stmt|;
-comment|/* too long since sync in selection */
-name|u_char
-name|last_event
-decl_stmt|;
-comment|/* set to code for last peer error */
-name|u_char
-name|num_events
-decl_stmt|;
-comment|/* num. of events which have occurred */
+comment|/* not used */
 block|}
 struct|;
 end_struct
@@ -1386,18 +1525,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* a pseudo mode, used internally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_MCLIENT
-value|9
-end_define
-
-begin_comment
-comment|/* multicast mode, used internally */
+comment|/* broadcast client mode */
 end_comment
 
 begin_comment
@@ -1413,28 +1541,6 @@ end_define
 
 begin_comment
 comment|/* stratum claimed by primary clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRATUM_PRIMARY
-value|((u_char)1)
-end_define
-
-begin_comment
-comment|/* host has a primary clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRATUM_INFIN
-value|((u_char)NTP_MAXSTRATUM)
-end_define
-
-begin_comment
-comment|/* infinity a la Bellman-Ford */
 end_comment
 
 begin_comment
@@ -1456,7 +1562,7 @@ begin_define
 define|#
 directive|define
 name|STRATUM_UNSPEC
-value|((u_char)(NTP_MAXSTRATUM+(u_char)1))
+value|((u_char)16)
 end_define
 
 begin_comment
@@ -1471,7 +1577,7 @@ begin_define
 define|#
 directive|define
 name|FLAG_CONFIG
-value|0x1
+value|0x0001
 end_define
 
 begin_comment
@@ -1482,40 +1588,18 @@ begin_define
 define|#
 directive|define
 name|FLAG_AUTHENABLE
-value|0x2
+value|0x0002
 end_define
 
 begin_comment
-comment|/* this guy needs authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLAG_MCAST1
-value|0x4
-end_define
-
-begin_comment
-comment|/* multicast client/server mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLAG_MCAST2
-value|0x8
-end_define
-
-begin_comment
-comment|/* multicast client mode */
+comment|/* authentication required */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLAG_AUTHENTIC
-value|0x10
+value|0x0004
 end_define
 
 begin_comment
@@ -1525,8 +1609,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAG_SKEY
+value|0x0008
+end_define
+
+begin_comment
+comment|/* autokey authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_MCAST
+value|0x0010
+end_define
+
+begin_comment
+comment|/* multicast client mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FLAG_REFCLOCK
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -1537,7 +1643,7 @@ begin_define
 define|#
 directive|define
 name|FLAG_SYSPEER
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -1548,7 +1654,7 @@ begin_define
 define|#
 directive|define
 name|FLAG_PREFER
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -1559,7 +1665,7 @@ begin_define
 define|#
 directive|define
 name|FLAG_BURST
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -1569,23 +1675,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FLAG_SKEY
-value|0x200
+name|FLAG_IBURST
+value|0x0200
 end_define
 
 begin_comment
-comment|/* autokey authentication */
+comment|/* initial burst mode */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLAG_NOSELECT
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
 comment|/* this is a "noselect" peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_AUTOKEY
+value|0x0800
+end_define
+
+begin_comment
+comment|/* autokey confirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_ASSOC
+value|0x1000
+end_define
+
+begin_comment
+comment|/* autokey reqeust */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_PROVEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* proventic confirmed */
 end_comment
 
 begin_comment
@@ -1617,6 +1756,33 @@ define|#
 directive|define
 name|LEN_CLEAR_TO_ZERO
 value|(END_CLEAR_TO_ZERO((struct peer *)0) \ 				    - CLEAR_TO_ZERO((struct peer *)0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_TO_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|((char *)&((p)->clear_to_zero))
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_CRYPTO_TO_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|((char *)&((p)->end_clear_to_zero))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEN_CRYPTO_TO_ZERO
+value|(END_CRYPTO_TO_ZERO((struct peer *)0) \ 				    - CRYPTO_TO_ZERO((struct peer *)0))
 end_define
 
 begin_comment
@@ -2048,8 +2214,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REFCLK_HOPF_SERIAL
+value|38
+end_define
+
+begin_comment
+comment|/* hopf DCF77/GPS serial line receiver  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_HOPF_PCI
+value|39
+end_define
+
+begin_comment
+comment|/* hopf DCF77/GPS PCI receiver  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REFCLK_MAX
-value|37
+value|39
 end_define
 
 begin_comment
@@ -2191,15 +2379,15 @@ block|{
 name|u_char
 name|li_vn_mode
 decl_stmt|;
-comment|/* contains leap indicator, version and mode */
+comment|/* leap indicator, version and mode */
 name|u_char
 name|stratum
 decl_stmt|;
-comment|/* peer's stratum */
+comment|/* peer stratum */
 name|u_char
 name|ppoll
 decl_stmt|;
-comment|/* the peer polling interval */
+comment|/* peer poll interval */
 name|s_char
 name|precision
 decl_stmt|;
@@ -2234,27 +2422,66 @@ decl_stmt|;
 comment|/* transmit time stamp */
 define|#
 directive|define
+name|LEN_PKT_NOMAC
+value|12 * sizeof(u_int32)
+comment|/* min header length */
+define|#
+directive|define
+name|LEN_PKT_MAC
+value|LEN_PKT_NOMAC +  sizeof(u_int32)
+define|#
+directive|define
 name|MIN_MAC_LEN
-value|(sizeof(u_int32) + 8)
+value|3 * sizeof(u_int32)
 comment|/* DES */
 define|#
 directive|define
 name|MAX_MAC_LEN
-value|(sizeof(u_int32) + 16)
+value|5 * sizeof(u_int32)
 comment|/* MD5 */
-comment|/* 	 * The length of the packet less MAC must be a multiple of 64 	 * bits. For normal private-key cryptography, the cryptosum 	 * covers only the raw NTP header. For autokey cryptography, 	 * the heade is incresed by 64 bits to contain the field length 	 * and private value. 	 */
+comment|/* 	 * The length of the packet less MAC must be a multiple of 64 	 * with an RSA modulus and Diffie-Hellman prime of 64 octets 	 * and maximum host name of 128 octets, the maximum autokey 	 * command is 152 octets and maximum autokey response is 460 	 * octets. A packet can contain no more than one command and one 	 * response, so the maximum total extension field length is 672 	 * octets. But, to handle humungus certificates, the bank must 	 * be broke. 	 */
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+ifdef|#
+directive|ifdef
+name|PUBKEY
 name|u_int32
-name|keyid1
+name|exten
+index|[
+literal|5000
+operator|/
+literal|4
+index|]
 decl_stmt|;
-comment|/* key identifier 1 */
+comment|/* max extension field */
+else|#
+directive|else
 name|u_int32
-name|keyid2
+name|exten
+index|[
+literal|672
+operator|/
+literal|4
+index|]
 decl_stmt|;
-comment|/* key identifier 2 */
+comment|/* max extension field */
+endif|#
+directive|endif
+comment|/* PUBKEY */
+else|#
+directive|else
+comment|/* AUTOKEY */
 name|u_int32
-name|keyid3
+name|exten
+index|[
+literal|1
+index|]
 decl_stmt|;
-comment|/* key identifier 3 */
+comment|/* misused */
+endif|#
+directive|endif
+comment|/* AUTOKEY */
 name|u_char
 name|mac
 index|[
@@ -2265,28 +2492,6 @@ comment|/* mac */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Packets can come in two flavours, one with a mac and one without.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEN_PKT_NOMAC
-value|(sizeof(struct pkt) - MAX_MAC_LEN - 3 * sizeof(u_int32))
-end_define
-
-begin_comment
-comment|/*  * Minimum size of packet with a MAC: has to include at least a key number.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEN_PKT_MAC
-value|(LEN_PKT_NOMAC + sizeof(u_int32))
-end_define
 
 begin_comment
 comment|/*  * Stuff for extracting things from li_vn_mode  */
@@ -2366,7 +2571,7 @@ value|((u_char)(((s) == (STRATUM_UNSPEC)) ?\ 				(STRATUM_PKT_UNSPEC) : (s)))
 end_define
 
 begin_comment
-comment|/*  * Event codes.  Used for reporting errors/events to the control module  */
+comment|/*  * Event codes. Used for reporting errors/events to the control module  */
 end_comment
 
 begin_define
@@ -2380,12 +2585,20 @@ begin_comment
 comment|/* this is a peer event */
 end_comment
 
+begin_comment
+comment|/*  * System event codes  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EVNT_UNSPEC
 value|0
 end_define
+
+begin_comment
+comment|/* unspecified */
+end_comment
 
 begin_define
 define|#
@@ -2394,12 +2607,20 @@ name|EVNT_SYSRESTART
 value|1
 end_define
 
+begin_comment
+comment|/* system restart */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EVNT_SYSFAULT
 value|2
 end_define
+
+begin_comment
+comment|/* wsystem or hardware fault */
+end_comment
 
 begin_define
 define|#
@@ -2408,12 +2629,20 @@ name|EVNT_SYNCCHG
 value|3
 end_define
 
+begin_comment
+comment|/* new leap or synch change */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EVNT_PEERSTCHG
 value|4
 end_define
+
+begin_comment
+comment|/* new source or stratum */
+end_comment
 
 begin_define
 define|#
@@ -2422,12 +2651,20 @@ name|EVNT_CLOCKRESET
 value|5
 end_define
 
+begin_comment
+comment|/* clock reset */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EVNT_BADDATETIM
 value|6
 end_define
+
+begin_comment
+comment|/* invalid time or date */
+end_comment
 
 begin_define
 define|#
@@ -2436,40 +2673,68 @@ name|EVNT_CLOCKEXCPT
 value|7
 end_define
 
+begin_comment
+comment|/* reference clock exception */
+end_comment
+
+begin_comment
+comment|/*  * Peer event codes  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EVNT_PEERIPERR
-value|(1|PEER_EVENT)
+value|(1 | PEER_EVENT)
 end_define
+
+begin_comment
+comment|/* IP error */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|EVNT_PEERAUTH
-value|(2|PEER_EVENT)
+value|(2 | PEER_EVENT)
 end_define
+
+begin_comment
+comment|/* authentication failure */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|EVNT_UNREACH
-value|(3|PEER_EVENT)
+value|(3 | PEER_EVENT)
 end_define
+
+begin_comment
+comment|/* change to unreachable */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|EVNT_REACH
-value|(4|PEER_EVENT)
+value|(4 | PEER_EVENT)
 end_define
+
+begin_comment
+comment|/* change to reachable */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|EVNT_PEERCLOCK
-value|(5|PEER_EVENT)
+value|(5 | PEER_EVENT)
 end_define
+
+begin_comment
+comment|/* clock exception */
+end_comment
 
 begin_comment
 comment|/*  * Clock event codes  */
@@ -2482,12 +2747,20 @@ name|CEVNT_NOMINAL
 value|0
 end_define
 
+begin_comment
+comment|/* unspecified */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CEVNT_TIMEOUT
 value|1
 end_define
+
+begin_comment
+comment|/* poll timeout */
+end_comment
 
 begin_define
 define|#
@@ -2496,12 +2769,20 @@ name|CEVNT_BADREPLY
 value|2
 end_define
 
+begin_comment
+comment|/* bad reply format */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CEVNT_FAULT
 value|3
 end_define
+
+begin_comment
+comment|/* hardware or software fault */
+end_comment
 
 begin_define
 define|#
@@ -2510,6 +2791,10 @@ name|CEVNT_PROP
 value|4
 end_define
 
+begin_comment
+comment|/* propagation failure */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2517,12 +2802,20 @@ name|CEVNT_BADDATE
 value|5
 end_define
 
+begin_comment
+comment|/* bad date format or value */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CEVNT_BADTIME
 value|6
 end_define
+
+begin_comment
+comment|/* bad time format or value */
+end_comment
 
 begin_define
 define|#
@@ -2543,7 +2836,7 @@ value|18447
 end_define
 
 begin_comment
-comment|/*  * To speed lookups, peers are hashed by the low order bits of the remote  * IP address.  These definitions relate to that.  */
+comment|/*  * To speed lookups, peers are hashed by the low order bits of the  * remote IP address. These definitions relate to that.  */
 end_comment
 
 begin_define
@@ -2600,14 +2893,10 @@ parameter_list|)
 value|(srand48(x))
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_RANDOM
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -2624,28 +2913,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(srandom(x))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RANDOM
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SRANDOM
-parameter_list|(
-name|x
-parameter_list|)
-value|(0)
 end_define
 
 begin_endif
@@ -2816,6 +3083,20 @@ name|PROTO_FILEGEN
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_PPS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_CAL
+value|13
+end_define
+
 begin_comment
 comment|/*  * Configuration items for the loop filter  */
 end_comment
@@ -2845,23 +3126,78 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOOP_PPSDELAY
+name|LOOP_MAX
 value|3
 end_define
 
 begin_comment
-comment|/* set pps delay */
+comment|/* set step offset */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOOP_PPSBAUD
+name|LOOP_PANIC
 value|4
 end_define
 
 begin_comment
-comment|/* set pps baud rate */
+comment|/* set panic offseet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_PHI
+value|5
+end_define
+
+begin_comment
+comment|/* set dispersion rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_MINSTEP
+value|6
+end_define
+
+begin_comment
+comment|/* set step timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_MINPOLL
+value|7
+end_define
+
+begin_comment
+comment|/* set min poll interval (log2 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_ALLAN
+value|8
+end_define
+
+begin_comment
+comment|/* set minimum Allan intercept */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_HUFFPUFF
+value|9
+end_define
+
+begin_comment
+comment|/* set huff-n'-puff filter length */
 end_comment
 
 begin_comment
@@ -3022,48 +3358,52 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Values for cast_flags  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MDF_UCAST
-value|0x1
+value|0x01
 end_define
 
 begin_comment
-comment|/* unicast packet */
+comment|/* unicast */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MDF_MCAST
-value|0x2
+value|0x02
 end_define
 
 begin_comment
-comment|/* multicast packet */
+comment|/* multicast */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MDF_BCAST
-value|0x4
+value|0x04
 end_define
 
 begin_comment
-comment|/* broadcast packet */
+comment|/* broadcast */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MDF_LCAST
-value|0x8
+value|0x08
 end_define
 
 begin_comment
-comment|/* local packet */
+comment|/* localcast */
 end_comment
 
 begin_define
@@ -3074,7 +3414,18 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* manycast packet */
+comment|/* manycast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDF_BCLNT
+value|0x20
+end_define
+
+begin_comment
+comment|/* broadcast client */
 end_comment
 
 begin_comment
@@ -3160,7 +3511,7 @@ begin_define
 define|#
 directive|define
 name|RES_IGNORE
-value|0x1
+value|0x001
 end_define
 
 begin_comment
@@ -3171,7 +3522,7 @@ begin_define
 define|#
 directive|define
 name|RES_DONTSERVE
-value|0x2
+value|0x002
 end_define
 
 begin_comment
@@ -3182,7 +3533,7 @@ begin_define
 define|#
 directive|define
 name|RES_DONTTRUST
-value|0x4
+value|0x004
 end_define
 
 begin_comment
@@ -3193,7 +3544,7 @@ begin_define
 define|#
 directive|define
 name|RES_NOQUERY
-value|0x8
+value|0x008
 end_define
 
 begin_comment
@@ -3204,7 +3555,7 @@ begin_define
 define|#
 directive|define
 name|RES_NOMODIFY
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -3215,7 +3566,7 @@ begin_define
 define|#
 directive|define
 name|RES_NOPEER
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -3226,7 +3577,7 @@ begin_define
 define|#
 directive|define
 name|RES_NOTRAP
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -3237,7 +3588,7 @@ begin_define
 define|#
 directive|define
 name|RES_LPTRAP
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -3258,9 +3609,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RES_VERSION
+value|0x200
+end_define
+
+begin_comment
+comment|/* serve only current version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_DEMOBILIZE
+value|0x400
+end_define
+
+begin_comment
+comment|/* demobilize association */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RES_ALLFLAGS
 define|\
-value|(RES_IGNORE|RES_DONTSERVE|RES_DONTTRUST|RES_NOQUERY\     |RES_NOMODIFY|RES_NOPEER|RES_NOTRAP|RES_LPTRAP|RES_LIMITED)
+value|(RES_IGNORE | RES_DONTSERVE | RES_DONTTRUST | RES_NOQUERY | \      RES_NOMODIFY | RES_NOPEER | RES_NOTRAP | RES_LPTRAP | \      RES_LIMITED | RES_VERSION | RES_DEMOBILIZE)
 end_define
 
 begin_comment

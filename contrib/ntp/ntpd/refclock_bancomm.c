@@ -37,42 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -98,6 +62,24 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_comment
@@ -288,21 +270,6 @@ comment|/* END OF STUFF FROM RES */
 end_comment
 
 begin_comment
-comment|/*  * Definitions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXUNITS
-value|2
-end_define
-
-begin_comment
-comment|/* max number of VME units */
-end_comment
-
-begin_comment
 comment|/*  * VME interface parameters.   */
 end_comment
 
@@ -428,40 +395,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Keep the fudge factors separately so they can be set even  * when no clock is configured.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|double
-name|fudgefactor
-index|[
-name|MAXUNITS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|stratumtouse
-index|[
-name|MAXUNITS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|sloppyclockflag
-index|[
-name|MAXUNITS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
@@ -555,19 +488,24 @@ init|=
 block|{
 name|vme_start
 block|,
+comment|/* start up driver */
 name|vme_shutdown
 block|,
+comment|/* shut down driver */
 name|vme_poll
 block|,
+comment|/* transmit poll message */
 name|noentry
 block|,
 comment|/* not used (old vme_control) */
-name|vme_init
+name|noentry
 block|,
+comment|/* initialize driver */
 name|noentry
 block|,
 comment|/* not used (old vme_buginfo) */
 name|NOFLAGS
+comment|/* not used */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -587,62 +525,6 @@ name|int
 name|regvalue
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * vme_init - initialize internal vme driver data  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|vme_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-comment|/* 	 * Initialize fudge factors to default. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAXUNITS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|fudgefactor
-index|[
-name|i
-index|]
-operator|=
-literal|0.0
-expr_stmt|;
-name|stratumtouse
-index|[
-name|i
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|sloppyclockflag
-index|[
-name|i
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_comment
 comment|/*  * vme_start - open the VME device and initialize data for processing  */
@@ -682,29 +564,6 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* 	 * Check configuration info. 	 */
-if|if
-condition|(
-name|unit
-operator|>=
-name|MAXUNITS
-condition|)
-block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vme_start: unit %d invalid"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * Open VME device 	 */
 ifdef|#
 directive|ifdef
@@ -884,50 +743,22 @@ operator|=
 name|fd_vme
 expr_stmt|;
 comment|/* 	 * All done.  Initialize a few random peer variables, then  	 * return success. Note that root delay and root dispersion are 	 * always zero for this clock. 	 */
-name|pp
-operator|->
-name|leap
-operator|=
-name|LEAP_NOWARNING
-expr_stmt|;
 name|peer
 operator|->
 name|precision
 operator|=
 name|VMEPRECISION
 expr_stmt|;
-name|peer
-operator|->
-name|stratum
-operator|=
-name|stratumtouse
-index|[
-name|unit
-index|]
-expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
-name|peer
+name|pp
 operator|->
 name|refid
 argument_list|,
 name|USNOREFID
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|refid
-operator|=
-name|htonl
-argument_list|(
-name|VMEHSREFID
 argument_list|)
 expr_stmt|;
 return|return
@@ -967,31 +798,13 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
+comment|/* 	 * Tell the I/O module to turn us off.  We're history. 	 */
 name|pp
 operator|=
 name|peer
 operator|->
 name|procptr
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|MAXUNITS
-condition|)
-block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vme_shutdown: unit %d invalid"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Tell the I/O module to turn us off.  We're history. 	 */
 name|vme
 operator|=
 operator|(

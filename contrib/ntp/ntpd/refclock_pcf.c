@@ -37,12 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -71,7 +65,7 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_comment
-comment|/*  * This driver supports the parallel port radio clocks sold by Conrad  * Electronic under order numbers 967602 and 642002.  *  * It requires that the local timezone be CET/CEST and that the pcfclock  * device driver be installed.  A device driver for Linux 2.2 is available  * at http://home.pages.de/~voegele/pcf.html.  */
+comment|/*  * This driver supports the parallel port radio clock sold by Conrad  * Electronic under order numbers 967602 and 642002.  *  * It requires that the local timezone be CET/CEST and that the pcfclock  * device driver be installed.  A device driver for Linux is available at  * http://home.pages.de/~voegele/pcf.html.  Information about a FreeBSD  * driver is available at http://schumann.cx/pcfclock/.  */
 end_comment
 
 begin_comment
@@ -82,6 +76,13 @@ begin_define
 define|#
 directive|define
 name|DEVICE
+value|"/dev/pcfclocks/%d"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLDDEVICE
 value|"/dev/pcfclock%d"
 end_define
 
@@ -239,7 +240,7 @@ decl_stmt|;
 name|char
 name|device
 index|[
-literal|20
+literal|128
 index|]
 decl_stmt|;
 comment|/* 	 * Open device file for reading. 	 */
@@ -255,6 +256,45 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|device
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|device
+argument_list|,
+name|OLDDEVICE
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|device
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -273,16 +313,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|(
 name|fd
-operator|=
-name|open
-argument_list|(
-name|device
-argument_list|,
-name|O_RDONLY
-argument_list|)
-operator|)
 operator|==
 operator|-
 literal|1
@@ -347,6 +378,13 @@ operator|->
 name|clockdesc
 operator|=
 name|DESCRIPTION
+expr_stmt|;
+comment|/* one transmission takes 172.5 milliseconds since the radio clock 	   transmits 69 bits with a period of 2.5 milliseconds per bit */
+name|pp
+operator|->
+name|fudgetime1
+operator|=
+literal|0.1725
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -610,6 +648,28 @@ name|tm
 operator|.
 name|tm_isdst
 operator|=
+operator|(
+name|buf
+index|[
+literal|8
+index|]
+operator|&
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+operator|(
+name|buf
+index|[
+literal|8
+index|]
+operator|&
+literal|2
+operator|)
+condition|?
+literal|0
+else|:
 operator|-
 literal|1
 expr_stmt|;
@@ -953,12 +1013,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|buf
 index|[
 literal|1
 index|]
 operator|&
 literal|1
+operator|)
+operator|&&
+operator|!
+operator|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG2
+operator|)
 condition|)
 name|pp
 operator|->

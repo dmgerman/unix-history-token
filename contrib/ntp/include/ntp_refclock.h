@@ -146,6 +146,16 @@ end_endif
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* If you need that, include ntp_io.h instead */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|STREAM
@@ -166,6 +176,10 @@ argument_list|(
 name|CLK
 argument_list|)
 end_if
+
+begin_comment
+comment|/* This is never defined, except perhaps by a system header file */
+end_comment
 
 begin_include
 include|#
@@ -190,6 +204,11 @@ end_endif
 begin_comment
 comment|/* STREAM */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -241,7 +260,7 @@ name|SAMPLE
 parameter_list|(
 name|x
 parameter_list|)
-value|if ((pp->coderecv + 1) % MAXSTAGE !=		\ 			    pp->codeproc % MAXSTAGE)			\ 				pp->filter[pp->coderecv++ % MAXSTAGE] =	\ 				    (x);
+value|pp->filter[pp->coderecv++ % MAXSTAGE] = (x); \ 			if (pp->coderecv % MAXSTAGE == pp->codeproc % MAXSTAGE) \ 				pp->codeproc++;
 end_define
 
 begin_comment
@@ -850,9 +869,9 @@ name|disp
 decl_stmt|;
 comment|/* sample dispersion */
 name|double
-name|variance
+name|jitter
 decl_stmt|;
-comment|/* sample variance */
+comment|/* jitter (mean squares) */
 name|double
 name|filter
 index|[

@@ -38,6 +38,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -110,8 +116,6 @@ modifier|*
 name|rem
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|incremental
 init|=
 literal|0
@@ -125,9 +129,6 @@ name|timetrim
 decl_stmt|;
 name|double
 name|value
-decl_stmt|,
-name|strtod
-argument_list|()
 decl_stmt|;
 while|while
 condition|(
@@ -143,6 +144,9 @@ literal|'-'
 operator|&&
 name|isalpha
 argument_list|(
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|0
@@ -232,7 +236,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%0.5lf\n"
+literal|"%0.5f\n"
 argument_list|,
 name|SGITONTP
 argument_list|(
@@ -356,6 +360,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

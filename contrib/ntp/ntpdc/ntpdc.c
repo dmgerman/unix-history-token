@@ -12,6 +12,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntpdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_select.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -25,18 +49,6 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -78,29 +90,32 @@ begin_comment
 comment|/* SYS_WINNT */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBREADLINE
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"ntpdc.h"
+file|<readline/readline.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ntp_select.h"
+file|<readline/history.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
+begin_comment
+comment|/* HAVE_LIBREADLINE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2826,6 +2841,9 @@ name|sockfd
 argument_list|,
 name|xdata
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|xdatalen
 argument_list|,
 literal|0
@@ -4600,6 +4618,61 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LIBREADLINE
+name|char
+modifier|*
+name|line
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|line
+operator|=
+name|readline
+argument_list|(
+name|interactive
+condition|?
+name|prompt
+else|:
+literal|""
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+operator|*
+name|line
+condition|)
+name|add_history
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+name|docmd
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* not HAVE_LIBREADLINE */
 name|char
 name|line
 index|[
@@ -4670,6 +4743,9 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* not HAVE_LIBREADLINE */
 block|}
 end_function
 
@@ -6174,6 +6250,9 @@ name|qsort
 argument_list|(
 name|cmdsort
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|,
 sizeof|sizeof
@@ -6195,6 +6274,9 @@ operator|*
 operator|)
 name|cmdsort
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|,
 sizeof|sizeof
@@ -7312,6 +7394,13 @@ operator|.
 name|string
 argument_list|)
 expr_stmt|;
+name|authtrust
+argument_list|(
+name|info_auth_keyid
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7348,6 +7437,7 @@ literal|"Password unchanged\n"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|authusekey
 argument_list|(
 name|info_auth_keyid
@@ -7361,6 +7451,14 @@ operator|)
 name|pass
 argument_list|)
 expr_stmt|;
+name|authtrust
+argument_list|(
+name|info_auth_keyid
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

@@ -3,39 +3,44 @@ begin_comment
 comment|/*  * systime -- routines to fiddle a UNIX clock.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<config.h>
+file|"ntp_proto.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* for MAX_FREQ */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"ntp_machine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"ntp_fp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|"ntp_syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_unixtime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
 end_include
 
 begin_ifdef
@@ -97,36 +102,6 @@ begin_comment
 comment|/* HAVE_UTMPX_H */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"ntp_machine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_fp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_unixtime.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
-
 begin_decl_stmt
 name|int
 name|systime_10ms_ticks
@@ -138,13 +113,6 @@ end_decl_stmt
 begin_comment
 comment|/* adj sysclock in 10ms increments */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXFREQ
-value|500e-6
-end_define
 
 begin_comment
 comment|/*  * These routines (init_systime, get_systime, step_systime, adj_systime)  * implement an interface between the (more or less) system independent  * bits of NTP and the peculiarities of dealing with the Unix system  * clock.  */
@@ -160,18 +128,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* residual from previous adjustment */
-end_comment
-
-begin_decl_stmt
-name|double
-name|sys_maxfreq
-init|=
-name|MAXFREQ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max frequency correction */
 end_comment
 
 begin_comment
@@ -556,11 +512,11 @@ if|if
 condition|(
 name|dtemp
 operator|>
-name|sys_maxfreq
+name|NTP_MAXFREQ
 condition|)
 name|dtemp
 operator|=
-name|sys_maxfreq
+name|NTP_MAXFREQ
 expr_stmt|;
 name|dtemp
 operator|=
@@ -614,7 +570,21 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't adjust time: %m"
+literal|"Can't adjust time (%ld sec, %ld usec): %m"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|adjtv
+operator|.
+name|tv_sec
+argument_list|,
+operator|(
+name|long
+operator|)
+name|adjtv
+operator|.
+name|tv_usec
 argument_list|)
 expr_stmt|;
 return|return

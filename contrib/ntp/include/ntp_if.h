@@ -39,36 +39,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* was: defined(SYS_AIX) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TIME_WITH_SYS_TIME
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* was: (defined(SYS_SOLARIS)&& !defined(bsd)) || defined(SYS_SUNOS4) */
 end_comment
 

@@ -384,6 +384,30 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ntpd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_refclock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -391,12 +415,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_if
@@ -466,30 +484,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"ntpd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_refclock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
 
 begin_comment
 comment|/*  * This driver supports the ARCRON MSF Radio Controlled Clock  */

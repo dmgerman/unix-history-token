@@ -23,36 +23,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_machine.h"
 end_include
 
@@ -67,6 +37,41 @@ include|#
 directive|include
 file|"ntp_stdlib.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -93,6 +98,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PUBKEY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_crypto.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PUBKEY */
+end_comment
 
 begin_comment
 comment|/*  * These routines provide support for the event timer.	The timer is  * implemented by an interrupt routine which sets a flag once every  * 2**EVENT_TIMEOUT seconds (currently 4), and a timer routine which  * is called when the mainline code gets around to seeing the flag.  * The timer routine dispatches the clock adjustment code if its time  * has come, then searches the timer queue for expiries which are  * dispatched to the transmit procedure.  Finally, we call the hourly  * procedure to do cleanup and print a message.  */
@@ -149,6 +175,23 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|u_long
+name|huffpuff_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* huff-n'-puff timer */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|u_long
 name|revoke_timer
 decl_stmt|;
 end_decl_stmt
@@ -161,12 +204,23 @@ begin_decl_stmt
 name|u_long
 name|sys_revoke
 init|=
+literal|1
+operator|<<
 name|KEY_REVOKE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* keys revoke timeout */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOKEY */
 end_comment
 
 begin_comment
@@ -392,6 +446,10 @@ expr_stmt|;
 name|hourly_timer
 operator|=
 name|HOUR
+expr_stmt|;
+name|huffpuff_timer
+operator|=
+literal|0
 expr_stmt|;
 name|current_time
 operator|=
@@ -919,7 +977,7 @@ decl_stmt|,
 modifier|*
 name|next_peer
 decl_stmt|;
-name|int
+name|u_int
 name|n
 decl_stmt|;
 name|current_time
@@ -1065,7 +1123,26 @@ name|auth_agekeys
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Garbage collect revoked keys 	 */
+comment|/* 	 * Huff-n'-puff filter 	 */
+if|if
+condition|(
+name|huffpuff_timer
+operator|<=
+name|current_time
+condition|)
+block|{
+name|huffpuff_timer
+operator|+=
+name|HUFFPUFF
+expr_stmt|;
+name|huffpuff
+argument_list|()
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+comment|/* 	 * Garbage collect old keys and generate new private value 	 */
 if|if
 condition|(
 name|revoke_timer
@@ -1075,15 +1152,33 @@ condition|)
 block|{
 name|revoke_timer
 operator|+=
-name|RANDPOLL
-argument_list|(
 name|sys_revoke
-argument_list|)
 expr_stmt|;
-name|key_expire_all
+name|expire_all
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"key expire: at %lu next %lu\n"
+argument_list|,
+name|current_time
+argument_list|,
+name|revoke_timer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
+endif|#
+directive|endif
+comment|/* AUTOKEY */
 comment|/* 	 * Finally, call the hourly routine. 	 */
 if|if
 condition|(

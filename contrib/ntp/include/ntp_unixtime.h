@@ -9,12 +9,6 @@ directive|include
 file|"ntp_types.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
 begin_comment
 comment|/* gettimeofday() takes two args in BSD and only one in SYSV */
 end_comment

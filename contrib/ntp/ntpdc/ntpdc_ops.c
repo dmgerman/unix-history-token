@@ -29,19 +29,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntpdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_control.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_refclock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_ifdef
@@ -93,30 +105,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"ntpdc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_control.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_refclock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
 
 begin_include
 include|#
@@ -1684,7 +1672,7 @@ literal|"address"
 block|,
 literal|"mask"
 block|,
-literal|"ntpport|ignore|noserve|notrust|noquery|nomodify|nopeer"
+literal|"ntpport|ignore|noserve|notrust|noquery|nomodify|nopeer|version|kod"
 block|,
 literal|"..."
 block|}
@@ -1714,7 +1702,7 @@ literal|"address"
 block|,
 literal|"mask"
 block|,
-literal|"ntpport|ignore|noserve|notrust|noquery|nomodify|nopeer"
+literal|"ntpport|ignore|noserve|notrust|noquery|nomodify|nopeer|version|kod"
 block|,
 literal|"..."
 block|}
@@ -3372,11 +3360,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"valid %d, reach %03o, unreach %d, flash 0x%04x, "
-argument_list|,
-name|pp
-operator|->
-name|valid
+literal|"reach %03o, unreach %d, flash 0x%04x, "
 argument_list|,
 name|pp
 operator|->
@@ -6001,7 +5985,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad packet length:      %ld\n"
+literal|"bad packet format:      %ld\n"
 argument_list|,
 operator|(
 name|u_long
@@ -6072,7 +6056,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"limitation rejects:     %ld\n"
+literal|"packets rejected:       %ld\n"
 argument_list|,
 operator|(
 name|u_long
@@ -7855,14 +7839,14 @@ index|]
 operator|.
 name|string
 argument_list|,
-literal|"auth"
+literal|"pps"
 argument_list|)
 condition|)
 name|sys
 operator|.
 name|flags
 operator||=
-name|SYS_FLAG_AUTHENTICATE
+name|SYS_FLAG_PPS
 expr_stmt|;
 elseif|else
 if|if
@@ -8153,6 +8137,18 @@ block|{
 literal|"limited"
 block|,
 name|RES_LIMITED
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|RES_VERSION
+block|}
+block|,
+block|{
+literal|"kod"
+block|,
+name|RES_DEMOBILIZE
 block|}
 block|,
 block|{

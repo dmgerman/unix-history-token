@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lib_strbuf.h"
 end_include
 

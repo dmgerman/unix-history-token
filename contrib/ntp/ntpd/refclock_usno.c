@@ -37,45 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_IOCTL_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_IOCTL_H */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -108,6 +69,39 @@ include|#
 directive|include
 file|"ntp_control.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_IOCTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_IOCTL_H */
+end_comment
 
 begin_comment
 comment|/*  * This driver supports the Naval Observatory dialup at +1 202 653 0351.  * It is a hacked-up version of the ACTS driver.  *  * This driver does not support the `phone' configuration because that  * is needlessly global; it would clash with the ACTS driver.  *  * The Naval Observatory does not support the echo-delay measurement scheme.  *  * However, this driver *does* support UUCP port locking, allowing the  * line to be shared with other processes when not actually dialing  * for time.  */
@@ -1004,7 +998,7 @@ comment|/* conditional if clause for conditional syslog */
 end_comment
 
 begin_comment
-unit|msyslog(LOG_NOTICE, "clock %s USNO calling %s\n", 				ntoa(&peer->srcadr), PHONE); 		up->state = 2; 		up->pollcnt++; 		pp->polls++; 		peer->nextdate = current_time + ANSWER; 		return; 	} 	switch (peer->ttl) {
+unit|msyslog(LOG_NOTICE, "clock %s USNO calling %s\n", 				ntoa(&peer->srcadr), PHONE); 		up->state = 2; 		up->pollcnt++; 		pp->polls++; 		peer->nextdate = current_time + ANSWER; 		return; 	} 	switch (peer->ttlmax) {
 comment|/* 		 * In manual mode the calling program is activated 		 * by the ntpdc program using the enable flag (fudge 		 * flag1), either manually or by a cron job. 		 */
 end_comment
 

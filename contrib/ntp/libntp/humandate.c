@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"time.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -28,7 +22,7 @@ file|"ntp_unixtime.h"
 end_include
 
 begin_comment
-comment|/* includes<sys/time.h> */
+comment|/* includes<sys/time.h> and<time.h> */
 end_comment
 
 begin_include
@@ -42,23 +36,6 @@ include|#
 directive|include
 file|"ntp_stdlib.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIME_WITH_SYS_TIME
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static

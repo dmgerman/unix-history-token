@@ -37,6 +37,36 @@ end_if
 begin_include
 include|#
 directive|include
+file|"ntpd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_refclock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -44,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -82,36 +106,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ntpd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_refclock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"audio.h"
 end_include
 
@@ -121,6 +115,17 @@ end_comment
 
 begin_comment
 comment|/*  * Interface definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE_AUDIO
+value|"/dev/audio"
+end_define
+
+begin_comment
+comment|/* audio device name */
 end_comment
 
 begin_define
@@ -969,7 +974,9 @@ comment|/* 	 * Open audio device 	 */
 name|fd
 operator|=
 name|audio_init
-argument_list|()
+argument_list|(
+name|DEVICE_AUDIO
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -52,6 +52,17 @@ name|MAXINTERFACES
 value|512
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXFILENAME
+value|128
+end_define
+
+begin_comment
+comment|/* maximum length of a file name */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -146,23 +157,6 @@ end_comment
 begin_comment
 comment|/* ntp_config.c */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|getstartup
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -517,6 +511,34 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|ntp_res_name
+name|P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ntp_res_recv
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|ntp_intres
 name|P
 argument_list|(
@@ -536,7 +558,7 @@ specifier|extern
 name|struct
 name|interface
 modifier|*
-name|findbcastinter
+name|findinterface
 name|P
 argument_list|(
 operator|(
@@ -553,7 +575,7 @@ specifier|extern
 name|struct
 name|interface
 modifier|*
-name|findinterface
+name|findbcastinter
 name|P
 argument_list|(
 operator|(
@@ -873,6 +895,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|huffpuff
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ntp_monitor.c */
 end_comment
@@ -1008,7 +1043,7 @@ name|findpeerbyassoc
 name|P
 argument_list|(
 operator|(
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1039,9 +1074,13 @@ name|int
 operator|,
 name|int
 operator|,
+name|u_int
+operator|,
+name|u_int
+operator|,
 name|int
 operator|,
-name|u_long
+name|keyid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1098,11 +1137,14 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
+name|u_int
 operator|,
 name|int
 operator|,
-name|u_long
+name|keyid_t
+operator|,
+name|u_char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1162,7 +1204,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|key_expire_all
+name|clear_all
 name|P
 argument_list|(
 operator|(
@@ -1171,6 +1213,34 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expire_all
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOKEY */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1181,7 +1251,8 @@ name|findmanycastpeer
 name|P
 argument_list|(
 operator|(
-name|l_fp
+expr|struct
+name|recvbuf
 operator|*
 operator|)
 argument_list|)
@@ -1191,17 +1262,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|peer_config_manycast
+name|resetmanycast
 name|P
 argument_list|(
 operator|(
-expr|struct
-name|peer
-operator|*
-operator|,
-expr|struct
-name|peer
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1258,7 +1323,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|process_packet
 name|P
 argument_list|(
@@ -1617,6 +1682,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_hostname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|l_fp
+name|sys_revoketime
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOKEY */
+end_comment
+
 begin_comment
 comment|/* ntp_util.c */
 end_comment
@@ -1695,7 +1790,15 @@ name|record_loop_stats
 name|P
 argument_list|(
 operator|(
-name|void
+name|double
+operator|,
+name|double
+operator|,
+name|double
+operator|,
+name|double
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1851,7 +1954,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|keyid_t
 name|ctl_auth_keyid
 decl_stmt|;
 end_decl_stmt
@@ -2035,7 +2138,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|keyid_t
 name|req_keyid
 decl_stmt|;
 end_decl_stmt
@@ -2167,7 +2270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointer to default interface */
+comment|/* default interface */
 end_comment
 
 begin_decl_stmt
@@ -2180,7 +2283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* point to loopback interface */
+comment|/* loopback interface */
 end_comment
 
 begin_comment
@@ -2213,7 +2316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* clock frequency (ppm) */
+comment|/* clock frequency (s/s) */
 end_comment
 
 begin_decl_stmt
@@ -2224,7 +2327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* clock stability (ppm) */
+comment|/* clock stability (s/s) */
 end_comment
 
 begin_decl_stmt
@@ -2235,7 +2338,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* max offset allowed before step (s) */
+comment|/* max offset before step (s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|clock_panic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max offset before panic (s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|clock_phi
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dispersion rate (s/s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|clock_minstep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* step timeout (s) */
 end_comment
 
 begin_decl_stmt
@@ -2247,6 +2383,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* last pps sample time */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL_PLL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pll_status
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* status bits for kernel pll */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL_PLL */
 end_comment
 
 begin_comment
@@ -2289,6 +2451,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|pps_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* kernel PPS discipline enabled */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ext_enable
 decl_stmt|;
 end_decl_stmt
@@ -2300,34 +2473,56 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|pps_update
+name|cal_enable
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pps update valid */
+comment|/* refclock calibrate enable */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|allow_set_backward
+name|allow_step
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* step corrections allowed */
+comment|/* allow step correction */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|correct_any
+name|allow_panic
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* corrections> 1000 s allowed */
+comment|/* allow panic correction */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mode_ntpdate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exit on first clock set */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|peer_ntpdate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count of ntpdate peers */
 end_comment
 
 begin_comment
@@ -2342,7 +2537,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* log2 of system poll interval */
+comment|/* system poll interval (log2 s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|sys_minpoll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min system poll interval (log2 s) */
 end_comment
 
 begin_decl_stmt
@@ -2408,7 +2614,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* system standard error (s) */
+comment|/* system RMS error (s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|sys_jitter
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system RMS jitter (s) */
 end_comment
 
 begin_comment
@@ -2678,6 +2895,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|peer
+modifier|*
+name|sys_prefer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our cherished peer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|u_long
 name|sys_automax
 decl_stmt|;
@@ -2737,7 +2967,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|keyid_t
 name|sys_private
 decl_stmt|;
 end_decl_stmt
@@ -2915,7 +3145,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|keyid_t
 name|info_auth_keyid
 decl_stmt|;
 end_decl_stmt

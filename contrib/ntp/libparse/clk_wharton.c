@@ -40,7 +40,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Support for WHARTON 400A Series clock + 404.2 serial interface.  *  * Copyright (C) 1999 by Philippe De Muyter<phdm@macqel.be>  *   * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  *   */
+comment|/*  * Support for WHARTON 400A Series clock + 404.2 serial interface.  *  * Copyright (C) 1999, 2000 by Philippe De Muyter<phdm@macqel.be>  *   * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  *   */
 end_comment
 
 begin_include
@@ -170,6 +170,24 @@ literal|14
 index|]
 operator|!=
 name|ETX
+operator|||
+name|buffer
+index|[
+literal|13
+index|]
+operator|<
+literal|'0'
+operator|||
+name|buffer
+index|[
+literal|13
+index|]
+operator|>
+operator|(
+literal|'0'
+operator|+
+literal|0xf
+operator|)
 condition|)
 return|return
 name|CVT_NONE
@@ -182,7 +200,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|14
+literal|13
 condition|;
 name|i
 operator|+=
@@ -472,16 +490,13 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"inp_wharton_400a(0x%x, 0x%x, ...)\n"
+literal|"inp_wharton_400a(0x%lx, 0x%x, ...)\n"
 operator|,
 operator|(
-name|int
+name|long
 operator|)
 name|parseio
 operator|,
-operator|(
-name|int
-operator|)
 name|ch
 operator|)
 argument_list|)

@@ -39,27 +39,9 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|PPS
+name|HAVE_PPSAPI
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -94,25 +76,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mx4200.h"
+file|<stdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIME_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<ctype.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"mx4200.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -160,7 +137,7 @@ name|ppsclockev
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_TIMESPEC
+name|HAVE_STRUCT_TIMESPEC
 name|struct
 name|timespec
 name|tv
@@ -189,6 +166,45 @@ begin_comment
 comment|/* ! HAVE_STRUCT_PPSCLOCKEV */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TIMEPPS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<timepps.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIMEPPS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/timepps.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This driver supports the Magnavox Model MX 4200 GPS Receiver  * adapted to precision timing applications.  It requires the  * ppsclock line discipline or streams module described in the  * Line Disciplines and Streams Drivers page. It also requires a  * gadget box and 1-PPS level converter, such as described in the  * Pulse-per-second (PPS) Signal Interfacing page.  *  * It's likely that other compatible Magnavox receivers such as the  * MX 4200D, MX 9212, MX 9012R, MX 9112 will be supported by this code.  */
 end_comment
@@ -200,8 +216,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|YEAR_RIGHT_NOW
-value|1998
+name|YEAR_LAST_MODIFIED
+value|2000
 end_define
 
 begin_comment
@@ -290,7 +306,7 @@ comment|/* seconds to wait for reconfig to complete */
 end_comment
 
 begin_comment
-comment|/*  * Position Averaging.  * Reference: Dr. Thomas A. Clark's Totally Accurate Clock (TAC) files at  * ftp://aleph.gsfc.nasa.gov/GPS/totally.accurate.clock/  * For a 6-channel Motorola Oncore, he indicates that good nominal  * HDOP and VDOP are 1.50 and 2.00 respectively.  Given the relationship  * HDOP^2 = NDOP^2 + EDOP^2 and assuming EDOP and NDOP are equal, we  * have a nominal NDOP = EDOP = sqrt((HDOP*HDOP)/2).  An 8-channel  * Oncore does well with HDOP=1.20 and VDOP=1.70.  */
+comment|/*  * Position Averaging.  */
 end_comment
 
 begin_define
@@ -368,29 +384,9 @@ name|central_meridian
 decl_stmt|;
 comment|/* central meridian */
 name|double
-name|filt_lat
+name|N_fixes
 decl_stmt|;
-comment|/* latitude filter length */
-name|double
-name|filt_lon
-decl_stmt|;
-comment|/* longitude filter length */
-name|double
-name|filt_alt
-decl_stmt|;
-comment|/* height filter length */
-name|double
-name|edop
-decl_stmt|;
-comment|/* EDOP (east DOP) */
-name|double
-name|ndop
-decl_stmt|;
-comment|/* NDOP (north DOP) */
-name|double
-name|vdop
-decl_stmt|;
-comment|/* VDOP (vertical DOP) */
+comment|/* Number of position measurements */
 name|int
 name|last_leap
 decl_stmt|;
@@ -415,6 +411,15 @@ name|u_long
 name|log_time
 decl_stmt|;
 comment|/* when to print receiver status */
+name|pps_handle_t
+name|pps_h
+decl_stmt|;
+name|pps_params_t
+name|pps_p
+decl_stmt|;
+name|pps_info_t
+name|pps_i
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -638,22 +643,6 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|mx4200_parse_d
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
 name|mx4200_parse_s
 name|P
 argument_list|(
@@ -724,7 +713,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|mx4200_config
 name|P
 argument_list|(
@@ -997,6 +986,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|perror
+argument_list|(
+literal|"emalloc"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1139,15 +1133,11 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Ensure the receiver is properly configured */
+return|return
 name|mx4200_config
 argument_list|(
 name|peer
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1220,7 +1210,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mx4200_config
 parameter_list|(
 name|struct
@@ -1245,6 +1235,9 @@ name|struct
 name|refclockproc
 modifier|*
 name|pp
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 name|pp
 operator|=
@@ -1350,39 +1343,9 @@ name|NOT_INITIALIZED
 expr_stmt|;
 name|up
 operator|->
-name|filt_lat
+name|N_fixes
 operator|=
 literal|0.0
-expr_stmt|;
-name|up
-operator|->
-name|filt_lon
-operator|=
-literal|0.0
-expr_stmt|;
-name|up
-operator|->
-name|filt_alt
-operator|=
-literal|0.0
-expr_stmt|;
-name|up
-operator|->
-name|edop
-operator|=
-literal|1
-expr_stmt|;
-name|up
-operator|->
-name|ndop
-operator|=
-literal|1
-expr_stmt|;
-name|up
-operator|->
-name|vdop
-operator|=
-literal|1
 expr_stmt|;
 name|up
 operator|->
@@ -1413,6 +1376,192 @@ name|current_time
 operator|+
 name|SLEEPTIME
 expr_stmt|;
+if|if
+condition|(
+name|time_pps_create
+argument_list|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+operator|&
+name|up
+operator|->
+name|pps_h
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"time_pps_create"
+argument_list|)
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mx4200_config: time_pps_create failed: %m"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|time_pps_getcap
+argument_list|(
+name|up
+operator|->
+name|pps_h
+argument_list|,
+operator|&
+name|mode
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mx4200_config: time_pps_getcap failed: %m"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|time_pps_getparams
+argument_list|(
+name|up
+operator|->
+name|pps_h
+argument_list|,
+operator|&
+name|up
+operator|->
+name|pps_p
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mx4200_config: time_pps_getparams failed: %m"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* nb. only turn things on, if someone else has turned something 	 *      on before we get here, leave it alone! 	 */
+name|up
+operator|->
+name|pps_p
+operator|.
+name|mode
+operator|=
+name|PPS_CAPTUREASSERT
+operator||
+name|PPS_TSFMT_TSPEC
+expr_stmt|;
+name|up
+operator|->
+name|pps_p
+operator|.
+name|mode
+operator|&=
+name|mode
+expr_stmt|;
+comment|/* only set what is legal */
+if|if
+condition|(
+name|time_pps_setparams
+argument_list|(
+name|up
+operator|->
+name|pps_h
+argument_list|,
+operator|&
+name|up
+operator|->
+name|pps_p
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"time_pps_setparams"
+argument_list|)
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mx4200_config: time_pps_setparams failed: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|time_pps_kcbind
+argument_list|(
+name|up
+operator|->
+name|pps_h
+argument_list|,
+name|PPS_KC_HARDPPS
+argument_list|,
+name|PPS_CAPTUREASSERT
+argument_list|,
+name|PPS_TSFMT_TSPEC
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"time_pps_kcbind"
+argument_list|)
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mx4200_config: time_pps_kcbind failed: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * "007" Control Port Configuration 	 * Zero the output list (do it twice to flush possible junk) 	 */
 name|mx4200_send
 argument_list|(
@@ -1622,34 +1771,6 @@ literal|1
 expr_stmt|;
 comment|/* add to list */
 block|}
-comment|/* 	 * "007" Control Port Configuration 	 * Output "022" DOPs 	 */
-name|mx4200_send
-argument_list|(
-name|peer
-argument_list|,
-literal|"%s,%03d,%03d,%d,%d,,%d,,,"
-argument_list|,
-name|pmvxg
-argument_list|,
-name|PMVXG_S_PORTCONF
-argument_list|,
-name|PMVXG_D_DOPS
-argument_list|,
-comment|/* control port output block Label */
-literal|0
-argument_list|,
-comment|/* clear current output control list (0=no) */
-name|add_mode
-argument_list|,
-comment|/* add/delete sentences from list (1=add, 2=del) */
-comment|/* must be null */
-name|INTERVAL
-argument_list|)
-expr_stmt|;
-comment|/* sentence output rate (sec) */
-comment|/* precision for position output */
-comment|/* nmea version for cga& gll output */
-comment|/* pass-through control */
 comment|/* 	 * "007" Control Port Configuration 	 * Output "021" position, height, velocity reports 	 */
 name|mx4200_send
 argument_list|(
@@ -1678,6 +1799,11 @@ comment|/* sentence output rate (sec) */
 comment|/* precision for position output */
 comment|/* nmea version for cga& gll output */
 comment|/* pass-through control */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1766,32 +1892,6 @@ name|current_time
 operator|+
 name|SLEEPTIME
 expr_stmt|;
-comment|/* 	 * "007" Control Port Configuration 	 * Stop outputting "022" DOPs 	 */
-name|mx4200_send
-argument_list|(
-name|peer
-argument_list|,
-literal|"%s,%03d,%03d,%d,%d,,,,,"
-argument_list|,
-name|pmvxg
-argument_list|,
-name|PMVXG_S_PORTCONF
-argument_list|,
-name|PMVXG_D_DOPS
-argument_list|,
-comment|/* control port output block Label */
-literal|0
-argument_list|,
-comment|/* clear current output control list (0=no) */
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* add/delete sentences from list (2=delete) */
-comment|/* must be null */
-comment|/* sentence output rate (sec) */
-comment|/* precision for position output */
-comment|/* nmea version for cga& gll output */
-comment|/* pass-through control */
 comment|/* 	 * "007" Control Port Configuration 	 * Stop outputting "021" position, height, velocity reports 	 */
 name|mx4200_send
 argument_list|(
@@ -2108,7 +2208,7 @@ comment|/* Altitude */
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Altitude Reference (0=WGS84 ellipsoid, 1=MSL geoid) */
+comment|/* Altitude Reference (0=WGS84 ellipsoid, 1=MSL geoid)*/
 name|msyslog
 argument_list|(
 name|LOG_DEBUG
@@ -2660,14 +2760,16 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 	 * "000" Status message 	 */
-if|if
+comment|/* 	 * Process the sentence according to its type. 	 */
+switch|switch
 condition|(
 name|sentence_type
-operator|==
-name|PMVXG_D_STATUS
 condition|)
 block|{
+comment|/* 	 * "000" Status message 	 */
+case|case
+name|PMVXG_D_STATUS
+case|:
 comment|/* 		 * XXX 		 * Since we configure the receiver to not give us status 		 * messages and since the receiver outputs status messages by 		 * default after being reset to factory defaults when sent the 		 * "$PMVXG,018,C\r\n" message, any status message we get 		 * indicates the reciever needs to be initialized; thus, it is 		 * not necessary to decode the status message. 		 */
 if|if
 condition|(
@@ -2705,22 +2807,20 @@ argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+break|break;
 comment|/* 	 * "021" Position, Height, Velocity message, 	 *  if we are still averaging our position 	 */
+case|case
+name|PMVXG_D_PHV
+case|:
 if|if
 condition|(
-name|sentence_type
-operator|==
-name|PMVXG_D_PHV
-operator|&&
 operator|!
 name|up
 operator|->
 name|known
 condition|)
 block|{
-comment|/* 		 * Parse the message, calculating our averaged position. 		 */
+comment|/* 			 * Parse the message, calculating our averaged position. 			 */
 if|if
 condition|(
 operator|(
@@ -2750,7 +2850,11 @@ name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_receive: position avg %.9f %.9f %.4f\n"
+literal|"mx4200_receive: position avg %f %.9f %.9f %.4f\n"
+argument_list|,
+name|up
+operator|->
+name|N_fixes
 argument_list|,
 name|up
 operator|->
@@ -2765,45 +2869,7 @@ operator|->
 name|avg_alt
 argument_list|)
 expr_stmt|;
-name|mx4200_debug
-argument_list|(
-name|peer
-argument_list|,
-literal|"mx4200_receive: position len %.4f %.4f %.4f\n"
-argument_list|,
-name|up
-operator|->
-name|filt_lat
-argument_list|,
-name|up
-operator|->
-name|filt_lon
-argument_list|,
-name|up
-operator|->
-name|filt_alt
-argument_list|)
-expr_stmt|;
-name|mx4200_debug
-argument_list|(
-name|peer
-argument_list|,
-literal|"mx4200_receive: position dop %.1f  %.1f  %.1f\n"
-argument_list|,
-name|up
-operator|->
-name|ndop
-argument_list|,
-name|up
-operator|->
-name|edop
-argument_list|,
-name|up
-operator|->
-name|vdop
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Reinitialize as a reference station 		 * if position is well known. 		 */
+comment|/* 			 * Reinitialize as a reference station 			 * if position is well known. 			 */
 if|if
 condition|(
 name|current_time
@@ -2831,64 +2897,18 @@ name|peer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
-comment|/* 	 * "022" DOPs, if we are still averaging our position 	 */
-if|if
-condition|(
-name|sentence_type
-operator|==
-name|PMVXG_D_DOPS
-operator|&&
-operator|!
-name|up
-operator|->
-name|known
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|mx4200_parse_d
-argument_list|(
-name|peer
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|mx4200_debug
-argument_list|(
-name|peer
-argument_list|,
-literal|"mx4200_receive: dop: %s\n"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-return|return;
-block|}
+break|break;
 comment|/* 	 * Print to the syslog: 	 * "004" Mode Data 	 * "030" Software Configuration 	 * "523" Time Recovery Parameters Currently in Use 	 */
-if|if
-condition|(
-name|sentence_type
-operator|==
+case|case
 name|PMVXG_D_MODEDATA
-operator|||
-name|sentence_type
-operator|==
+case|:
+case|case
 name|PMVXG_D_SOFTCONF
-operator|||
-name|sentence_type
-operator|==
+case|:
+case|case
 name|PMVXG_D_TRECOVUSEAGE
-condition|)
-block|{
+case|:
 if|if
 condition|(
 operator|(
@@ -2912,18 +2932,12 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-return|return;
-block|}
+break|break;
 comment|/* 	 * "830" Time Recovery Results message 	 */
-if|if
-condition|(
-name|sentence_type
-operator|==
+case|case
 name|PMVXG_D_TRECOVOUT
-condition|)
-block|{
+case|:
 comment|/* 		 * Capture the last PPS signal. 		 * Precision timestamp is returned in pp->lastrec 		 */
 if|if
 condition|(
@@ -3082,9 +3096,12 @@ name|polled
 operator|=
 literal|0
 expr_stmt|;
-return|return;
-block|}
+break|break;
 comment|/* 	 * Ignore all other sentence types 	 */
+default|default:
+break|break;
+block|}
+comment|/* switch (sentence_type) */
 return|return;
 block|}
 end_function
@@ -3135,7 +3152,8 @@ decl_stmt|,
 name|month
 decl_stmt|,
 name|day_of_month
-decl_stmt|,
+decl_stmt|;
+name|int
 name|hour
 decl_stmt|,
 name|minute
@@ -3406,7 +3424,7 @@ literal|1
 operator|||
 name|year
 operator|<
-name|YEAR_RIGHT_NOW
+name|YEAR_LAST_MODIFIED
 condition|)
 block|{
 name|mx4200_debug
@@ -4059,8 +4077,6 @@ decl_stmt|,
 name|vele
 decl_stmt|,
 name|veln
-decl_stmt|,
-name|weight
 decl_stmt|;
 name|char
 name|north_south
@@ -4384,19 +4400,7 @@ name|lon
 operator|-=
 literal|360.0
 expr_stmt|;
-comment|/* 	 * Calculate running weighted averages 	 */
-name|weight
-operator|=
-literal|1.
-operator|/
-name|up
-operator|->
-name|edop
-expr_stmt|;
-name|weight
-operator|*=
-name|weight
-expr_stmt|;
+comment|/* 	 * Calculate running averages 	 */
 name|up
 operator|->
 name|avg_lon
@@ -4404,48 +4408,14 @@ operator|=
 operator|(
 name|up
 operator|->
-name|filt_lon
+name|N_fixes
 operator|*
 name|up
 operator|->
 name|avg_lon
 operator|)
 operator|+
-operator|(
-name|weight
-operator|*
 name|lon
-operator|)
-expr_stmt|;
-name|up
-operator|->
-name|filt_lon
-operator|+=
-name|weight
-expr_stmt|;
-name|up
-operator|->
-name|avg_lon
-operator|=
-name|up
-operator|->
-name|avg_lon
-operator|/
-name|up
-operator|->
-name|filt_lon
-expr_stmt|;
-name|weight
-operator|=
-literal|1.
-operator|/
-name|up
-operator|->
-name|ndop
-expr_stmt|;
-name|weight
-operator|*=
-name|weight
 expr_stmt|;
 name|up
 operator|->
@@ -4454,48 +4424,14 @@ operator|=
 operator|(
 name|up
 operator|->
-name|filt_lat
+name|N_fixes
 operator|*
 name|up
 operator|->
 name|avg_lat
 operator|)
 operator|+
-operator|(
-name|weight
-operator|*
 name|lat
-operator|)
-expr_stmt|;
-name|up
-operator|->
-name|filt_lat
-operator|+=
-name|weight
-expr_stmt|;
-name|up
-operator|->
-name|avg_lat
-operator|=
-name|up
-operator|->
-name|avg_lat
-operator|/
-name|up
-operator|->
-name|filt_lat
-expr_stmt|;
-name|weight
-operator|=
-literal|1.
-operator|/
-name|up
-operator|->
-name|vdop
-expr_stmt|;
-name|weight
-operator|*=
-name|weight
 expr_stmt|;
 name|up
 operator|->
@@ -4504,42 +4440,54 @@ operator|=
 operator|(
 name|up
 operator|->
-name|filt_alt
+name|N_fixes
 operator|*
 name|up
 operator|->
 name|avg_alt
 operator|)
 operator|+
-operator|(
-name|weight
-operator|*
 name|alt
-operator|)
 expr_stmt|;
 name|up
 operator|->
-name|filt_alt
+name|N_fixes
 operator|+=
-name|weight
+literal|1.0
+expr_stmt|;
+name|up
+operator|->
+name|avg_lon
+operator|/=
+name|up
+operator|->
+name|N_fixes
+expr_stmt|;
+name|up
+operator|->
+name|avg_lat
+operator|/=
+name|up
+operator|->
+name|N_fixes
 expr_stmt|;
 name|up
 operator|->
 name|avg_alt
-operator|=
+operator|/=
 name|up
 operator|->
-name|avg_alt
-operator|/
-name|up
-operator|->
-name|filt_alt
+name|N_fixes
 expr_stmt|;
 name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_receive: position rdg %.9f %.9f %.4f (CM=%.9f)\n"
+literal|"mx4200_receive: position rdg %.0f: %.9f %.9f %.4f (CM=%.9f)\n"
+argument_list|,
+name|up
+operator|->
+name|N_fixes
 argument_list|,
 name|lat
 argument_list|,
@@ -4551,155 +4499,6 @@ name|up
 operator|->
 name|central_meridian
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Parse a mx4200 DOP sentence.  *  * A typical message looks like this.  Checksum has already been stripped.  *  * $PMVXG,022,SSSSSS.SSEE.E,NN.N,VV.V,XX,XX,XX,XX,XX,XX  *  *	Field	Field Contents  *	-----	--------------  *		Block Label: $PMVXG  *		Sentence Type: 022=DOPs.  The DOP values in this sentence  *			correspond to the satellites listed.  The PRNs in  *			the message are listed in receiver channel number order  *	1	UTC measurement time (seconds into week)  *	2	EDOP (east DOP)  *	3	NDOP (north DOP)  *	4	VDOP (vertical DOP)  *	5	PRN on channel 1  *	6	PRN on channel 2  *	7	PRN on channel 3  *	8	PRN on channel 4  *	9	PRN on channel 5  *	10	PRN on channel 6  *	11	PRN on channel 7  (12-channel receivers only)  *	12	PRN on channel 8  (12-channel receivers only)  *	13	PRN on channel 9  (12-channel receivers only)  *	14	PRN on channel 10 (12-channel receivers only)  *	15	PRN on channel 11 (12-channel receivers only)  *	16	PRN on channel 12 (12-channel receivers only)  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|mx4200_parse_d
-parameter_list|(
-name|struct
-name|peer
-modifier|*
-name|peer
-parameter_list|)
-block|{
-name|struct
-name|refclockproc
-modifier|*
-name|pp
-decl_stmt|;
-name|struct
-name|mx4200unit
-modifier|*
-name|up
-decl_stmt|;
-name|int
-name|sentence_type
-decl_stmt|;
-name|double
-name|mtime
-decl_stmt|,
-name|edop
-decl_stmt|,
-name|ndop
-decl_stmt|,
-name|vdop
-decl_stmt|;
-name|pp
-operator|=
-name|peer
-operator|->
-name|procptr
-expr_stmt|;
-name|up
-operator|=
-operator|(
-expr|struct
-name|mx4200unit
-operator|*
-operator|)
-name|pp
-operator|->
-name|unitptr
-expr_stmt|;
-comment|/* Should never happen! */
-if|if
-condition|(
-name|up
-operator|->
-name|moving
-condition|)
-return|return
-operator|(
-literal|"mobile platform - no dop!"
-operator|)
-return|;
-name|sscanf
-argument_list|(
-name|pp
-operator|->
-name|a_lastcode
-argument_list|,
-literal|"$PMVXG,%d,%lf,%lf,%lf,%lf"
-argument_list|,
-operator|&
-name|sentence_type
-argument_list|,
-operator|&
-name|mtime
-argument_list|,
-operator|&
-name|edop
-argument_list|,
-operator|&
-name|ndop
-argument_list|,
-operator|&
-name|vdop
-argument_list|)
-expr_stmt|;
-comment|/* Sentence type */
-if|if
-condition|(
-name|sentence_type
-operator|!=
-name|PMVXG_D_DOPS
-condition|)
-return|return
-operator|(
-literal|"wrong rec-type"
-operator|)
-return|;
-comment|/* Update values */
-if|if
-condition|(
-name|edop
-operator|<=
-literal|0.0
-operator|||
-name|ndop
-operator|<=
-literal|0.0
-operator|||
-name|vdop
-operator|<=
-literal|0.0
-condition|)
-return|return
-operator|(
-literal|"nonpositive dop"
-operator|)
-return|;
-name|up
-operator|->
-name|edop
-operator|=
-name|edop
-expr_stmt|;
-name|up
-operator|->
-name|ndop
-operator|=
-name|ndop
-expr_stmt|;
-name|up
-operator|->
-name|vdop
-operator|=
-name|vdop
 expr_stmt|;
 return|return
 operator|(
@@ -4849,7 +4648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a PPS signal, returning a timestamp.  */
+comment|/*  * Process a PPS signal, placing a timestamp in pp->lastrec.  */
 end_comment
 
 begin_function
@@ -4876,27 +4675,10 @@ name|mx4200unit
 modifier|*
 name|up
 decl_stmt|;
-name|int
-name|request
+name|struct
+name|timespec
+name|timeout
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_CIOGETEV
-name|request
-operator|=
-name|CIOGETEV
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_TIOCGPPSEV
-name|request
-operator|=
-name|TIOCGPPSEV
-expr_stmt|;
-endif|#
-directive|endif
 name|pp
 operator|=
 name|peer
@@ -4919,44 +4701,57 @@ name|temp_serial
 operator|=
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_nsec
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|time_pps_fetch
 argument_list|(
-name|fdpps
-argument_list|,
-name|request
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|up
 operator|->
-name|ppsev
+name|pps_h
+argument_list|,
+name|PPS_TSFMT_TSPEC
+argument_list|,
+operator|&
+operator|(
+name|up
+operator|->
+name|pps_i
+operator|)
+argument_list|,
+operator|&
+name|timeout
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* XXX Actually, if this fails, we're pretty much screwed */
 name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_pps: CIOGETEV/TIOCGPPSEV: serial=%d, fdpps=%d, %s\n"
+literal|"mx4200_pps: time_pps_fetch: serial=%d, %s\n"
 argument_list|,
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
-argument_list|,
-name|fdpps
+name|assert_sequence
 argument_list|,
 name|strerror
 argument_list|(
@@ -4983,22 +4778,22 @@ name|temp_serial
 operator|==
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 condition|)
 block|{
 name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_pps: ppsev serial not incrementing: %d\n"
+literal|"mx4200_pps: assert_sequence serial not incrementing: %d\n"
 argument_list|,
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 argument_list|)
 expr_stmt|;
 name|refclock_report
@@ -5025,9 +4820,9 @@ literal|1
 operator|!=
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 operator|&&
 name|up
 operator|->
@@ -5040,14 +4835,15 @@ if|if
 condition|(
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 operator|==
 name|up
 operator|->
 name|lastserial
 condition|)
+block|{
 name|mx4200_debug
 argument_list|(
 name|peer
@@ -5055,7 +4851,9 @@ argument_list|,
 literal|"mx4200_pps: no new pps event\n"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|mx4200_debug
 argument_list|(
 name|peer
@@ -5064,9 +4862,9 @@ literal|"mx4200_pps: missed %d pps events\n"
 argument_list|,
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 operator|-
 name|up
 operator|->
@@ -5075,6 +4873,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|refclock_report
 argument_list|(
 name|peer
@@ -5089,38 +4888,54 @@ name|lastserial
 operator|=
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|serial
+name|assert_sequence
 expr_stmt|;
 comment|/* 	 * Return the timestamp in pp->lastrec 	 */
+name|pp
+operator|->
+name|lastrec
+operator|.
+name|l_ui
+operator|=
 name|up
 operator|->
-name|ppsev
+name|pps_i
 operator|.
-name|tv
+name|assert_timestamp
 operator|.
 name|tv_sec
-operator|+=
+operator|+
 operator|(
 name|u_int32
 operator|)
 name|JAN_1970
 expr_stmt|;
-name|TVTOTS
-argument_list|(
-operator|&
-name|up
-operator|->
-name|ppsev
-operator|.
-name|tv
-argument_list|,
-operator|&
 name|pp
 operator|->
 name|lastrec
+operator|.
+name|l_uf
+operator|=
+operator|(
+call|(
+name|double
+call|)
+argument_list|(
+name|up
+operator|->
+name|pps_i
+operator|.
+name|assert_timestamp
+operator|.
+name|tv_nsec
 argument_list|)
+operator|*
+literal|4.2949672960
+operator|)
+operator|+
+literal|0.5
 expr_stmt|;
 return|return
 operator|(

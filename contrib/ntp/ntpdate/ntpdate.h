@@ -9,6 +9,21 @@ directive|include
 file|"ntp_malloc.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|loadservers
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|cfgpath
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The server structure is a much simplified version of the  * peer structure, for ntpdate's use.  Since we always send  * in client mode and expect to receive in server mode, this  * leaves only a very limited number of things we need to  * remember about the server.  */
 end_comment
@@ -172,6 +187,17 @@ end_define
 
 begin_comment
 comment|/* 1/2 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXAGE
+value|86400
+end_define
+
+begin_comment
+comment|/* one day in seconds */
 end_comment
 
 begin_comment

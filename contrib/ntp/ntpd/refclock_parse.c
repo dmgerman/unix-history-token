@@ -3655,21 +3655,6 @@ name|COMPUTIME_KEEP
 value|3
 end_define
 
-begin_decl_stmt
-specifier|static
-name|poll_info_t
-name|we400a_pollinfo
-init|=
-block|{
-literal|60
-block|,
-literal|"T"
-block|,
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Varitext Radio Clock Receiver  */
 end_comment
@@ -4643,10 +4628,10 @@ comment|/* mode 15 */
 literal|0
 block|,
 comment|/* operation flags (io modes) */
-name|poll_dpoll
+name|NO_POLL
 block|,
 comment|/* active poll routine */
-name|poll_init
+name|NO_INIT
 block|,
 comment|/* active poll init routine */
 name|NO_EVENT
@@ -4658,24 +4643,16 @@ comment|/* active poll end routine */
 name|NO_MESSAGE
 block|,
 comment|/* process a lower layer message */
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|&
-name|we400a_pollinfo
-operator|)
-operator|)
+name|NO_DATA
 block|,
 comment|/* local data area for "poll" mechanism */
 literal|0
 block|,
 comment|/* rootdelay */
-literal|1.0
+literal|11.0
+comment|/* bits */
 operator|/
-literal|960
+literal|9600
 block|,
 comment|/* current offset by which the RS232 				           	time code is delayed from the actual time */
 name|DCF_ID
@@ -4684,7 +4661,7 @@ comment|/* ID code */
 literal|"WHARTON 400A Series clock"
 block|,
 comment|/* device name */
-literal|"WHARTON 400A Series clock Output Format 5"
+literal|"WHARTON 400A Series clock Output Format 1"
 block|,
 comment|/* fixed format */
 comment|/* Must match a format-name in a libparse/clk_xxx.c file */
@@ -4851,7 +4828,7 @@ name|CLK_REALTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(((x)->ttl)& 0x7F))
+value|((int)(((x)->ttlmax)& 0x7F))
 end_define
 
 begin_define
@@ -4881,7 +4858,7 @@ name|CLK_PPS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)->ttl)& 0x80)
+value|(((x)->ttlmax)& 0x80)
 end_define
 
 begin_comment
@@ -21886,24 +21863,83 @@ modifier|*
 name|parse
 parameter_list|)
 block|{
+comment|/* fixed 2000 for using with Linux by Wolfram Pienkoss<wp@bszh.de> */
 comment|/* 	 * You can use the RS232 to supply the power for a DCF77 receiver. 	 * Here a voltage between the DTR and the RTS line is used. Unfortunately 	 * the name has changed from CIOCM_DTR to TIOCM_DTR recently. 	 */
+name|int
+name|sl232
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|parse
+operator|->
+name|generic
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+name|TIOCMGET
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sl232
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"PARSE receiver #%d: rawdcf_init_1: WARNING: ioctl(fd, TIOCMGET, [C|T]IOCM_DTR): %m"
+argument_list|,
+name|CLK_UNIT
+argument_list|(
+name|parse
+operator|->
+name|peer
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|TIOCM_DTR
-name|int
 name|sl232
-init|=
+operator|=
+operator|(
+name|sl232
+operator|&
+operator|~
+name|TIOCM_RTS
+operator|)
+operator||
 name|TIOCM_DTR
-decl_stmt|;
-comment|/* turn on DTR for power supply */
+expr_stmt|;
+comment|/* turn on DTR, clear RTS for power supply */
 else|#
 directive|else
-name|int
 name|sl232
-init|=
+operator|=
+operator|(
+name|sl232
+operator|&
+operator|~
+name|CIOCM_RTS
+operator|)
+operator||
 name|CIOCM_DTR
-decl_stmt|;
-comment|/* turn on DTR for power supply */
+expr_stmt|;
+comment|/* turn on DTR, clear RTS for power supply */
 endif|#
 directive|endif
 if|if
@@ -22033,24 +22069,83 @@ modifier|*
 name|parse
 parameter_list|)
 block|{
+comment|/* fixed 2000 for using with Linux by Wolfram Pienkoss<wp@bszh.de> */
 comment|/* 	 * You can use the RS232 to supply the power for a DCF77 receiver. 	 * Here a voltage between the DTR and the RTS line is used. Unfortunately 	 * the name has changed from CIOCM_DTR to TIOCM_DTR recently. 	 */
+name|int
+name|sl232
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|parse
+operator|->
+name|generic
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+name|TIOCMGET
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sl232
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"PARSE receiver #%d: rawdcf_init_2: WARNING: ioctl(fd, TIOCMGET, [C|T]IOCM_RTS): %m"
+argument_list|,
+name|CLK_UNIT
+argument_list|(
+name|parse
+operator|->
+name|peer
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|TIOCM_RTS
-name|int
 name|sl232
-init|=
+operator|=
+operator|(
+name|sl232
+operator|&
+operator|~
+name|TIOCM_DTR
+operator|)
+operator||
 name|TIOCM_RTS
-decl_stmt|;
+expr_stmt|;
 comment|/* turn on RTS, clear DTR for power supply */
 else|#
 directive|else
-name|int
 name|sl232
-init|=
+operator|=
+operator|(
+name|sl232
+operator|&
+operator|~
+name|CIOCM_DTR
+operator|)
+operator||
 name|CIOCM_RTS
-decl_stmt|;
-comment|/* turn on DTR for power supply */
+expr_stmt|;
+comment|/* turn on RTS, clear DTR for power supply */
 endif|#
 directive|endif
 if|if

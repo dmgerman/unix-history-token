@@ -37,24 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -80,6 +62,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_comment
@@ -158,7 +152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Support for Kinemetrics Truetime Receivers  *	GOES  *	GPS/TM-TMD  *	XL-DC		(a 151-602-210, reported by the driver as a GPS/TM-TMD)  *	GPS-800 TCU	(an 805-957 with the RS232 Talker/Listener module)  *	OM-DC:		getting stale ("OMEGA")  *  * Most of this code is originally from refclock_wwvb.c with thanks.  * It has been so mangled that wwvb is not a recognizable ancestor.  *  * Timcode format: ADDD:HH:MM:SSQCL  *	A - control A		(this is stripped before we see it)  *	Q - Quality indication	(see below)  *	C - Carriage return  *	L - Line feed  *  * Quality codes indicate possible error of  *   468-DC GOES Receiver:  *   GPS-TM/TMD Receiver:  *       ?     +/- 500 milliseconds	#     +/- 50 milliseconds  *       *     +/- 5 milliseconds	.     +/- 1 millisecond  *     space   less than 1 millisecond  *   OM-DC OMEGA Receiver:  *>>+- 5 seconds  *       ?>+/- 500 milliseconds    #>+/- 50 milliseconds  *       *>+/- 5 milliseconds      .>+/- 1 millisecond  *      A-H    less than 1 millisecond.  Character indicates which station  *             is being received as follows:  *             A = Norway, B = Liberia, C = Hawaii, D = North Dakota,  *             E = La Reunion, F = Argentina, G = Australia, H = Japan.  *  * The carriage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Notes on 468-DC and OMEGA receiver:  *  * Send the clock a 'R' or 'C' and once per second a timestamp will  * appear.  Send a 'P' to get the satellite position once (GOES only.)  *  * Notes on the 468-DC receiver:  *  * Since the old east/west satellite locations are only historical, you can't  * set your clock propagation delay settings correctly and still use  * automatic mode. The manual says to use a compromise when setting the  * switches. This results in significant errors. The solution; use fudge  * time1 and time2 to incorporate corrections. If your clock is set for  * 50 and it should be 58 for using the west and 46 for using the east,  * use the line  *  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  *  * This corrects the 4 milliseconds advance and 8 milliseconds retard  * needed. The software will ask the clock which satellite it sees.  *  * Ntp.conf parameters:  * time1 - offset applied to samples when reading WEST satellite (default = 0)  * time2 - offset applied to samples when reading EAST satellite (default = 0)  * val1  - stratum to assign to this clock (default = 0)  * val2  - refid assigned to this clock (default = "TRUE", see below)  * flag1 - will silence the clock side of ntpd, just reading the clock  *         without trying to write to it.  (default = 0)  * flag2 - generate a debug file /tmp/true%d.  * flag3 - enable ppsclock streams module  * flag4 - use the PCL-720 (BSD/OS only)  */
+comment|/*  * Support for Kinemetrics Truetime Receivers  *	GOES  *	GPS/TM-TMD  *	XL-DC		(a 151-602-210, reported by the driver as a GPS/TM-TMD)  *	GPS-800 TCU	(an 805-957 with the RS232 Talker/Listener module)  *	OM-DC:		getting stale ("OMEGA")  *  * Most of this code is originally from refclock_wwvb.c with thanks.  * It has been so mangled that wwvb is not a recognizable ancestor.  *  * Timcode format: ADDD:HH:MM:SSQCL  *	A - control A		(this is stripped before we see it)  *	Q - Quality indication	(see below)  *	C - Carriage return  *	L - Line feed  *  * Quality codes indicate possible error of  *   468-DC GOES Receiver:  *   GPS-TM/TMD Receiver: (default quality codes for XL-DC)  *       ?     +/- 1  milliseconds	#     +/- 100 microseconds  *       *     +/- 10 microseconds	.     +/- 1   microsecond  *     space   less than 1 microsecond  *   OM-DC OMEGA Receiver: (default quality codes for OMEGA)  *   WARNING OMEGA navigation system is no longer existent  *>>+- 5 seconds  *       ?>+/- 500 milliseconds    #>+/- 50 milliseconds  *       *>+/- 5 milliseconds      .>+/- 1 millisecond  *      A-H    less than 1 millisecond.  Character indicates which station  *             is being received as follows:  *             A = Norway, B = Liberia, C = Hawaii, D = North Dakota,  *             E = La Reunion, F = Argentina, G = Australia, H = Japan.  *  * The carriage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Notes on 468-DC and OMEGA receiver:  *  * Send the clock a 'R' or 'C' and once per second a timestamp will  * appear.  Send a 'P' to get the satellite position once (GOES only.)  *  * Notes on the 468-DC receiver:  *  * Since the old east/west satellite locations are only historical, you can't  * set your clock propagation delay settings correctly and still use  * automatic mode. The manual says to use a compromise when setting the  * switches. This results in significant errors. The solution; use fudge  * time1 and time2 to incorporate corrections. If your clock is set for  * 50 and it should be 58 for using the west and 46 for using the east,  * use the line  *  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  *  * This corrects the 4 milliseconds advance and 8 milliseconds retard  * needed. The software will ask the clock which satellite it sees.  *  * Ntp.conf parameters:  * time1 - offset applied to samples when reading WEST satellite (default = 0)  * time2 - offset applied to samples when reading EAST satellite (default = 0)  * val1  - stratum to assign to this clock (default = 0)  * val2  - refid assigned to this clock (default = "TRUE", see below)  * flag1 - will silence the clock side of ntpd, just reading the clock  *         without trying to write to it.  (default = 0)  * flag2 - generate a debug file /tmp/true%d.  * flag3 - enable ppsclock streams module  * flag4 - use the PCL-720 (BSD/OS only)  */
 end_comment
 
 begin_comment
@@ -771,12 +765,20 @@ block|{
 name|char
 name|filename
 index|[
-literal|20
+literal|40
 index|]
 decl_stmt|;
-name|sprintf
+name|int
+name|fd
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|filename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filename
+argument_list|)
 argument_list|,
 literal|"/tmp/true%d.debug"
 argument_list|,
@@ -785,22 +787,39 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|debug
+name|fd
 operator|=
-name|fopen
+name|open
 argument_list|(
 name|filename
 argument_list|,
-literal|"w"
+name|O_CREAT
+operator||
+name|O_WRONLY
+operator||
+name|O_EXCL
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fd
+operator|>=
+literal|0
+operator|&&
+operator|(
 name|up
 operator|->
 name|debug
+operator|=
+name|fdopen
+argument_list|(
+name|fd
+argument_list|,
+literal|"r+"
+argument_list|)
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -932,7 +951,7 @@ decl_stmt|;
 name|char
 name|device
 index|[
-literal|20
+literal|40
 index|]
 decl_stmt|;
 name|int
@@ -942,9 +961,14 @@ comment|/* 	 * Open serial port 	 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
@@ -1279,6 +1303,19 @@ decl_stmt|,
 name|off
 decl_stmt|;
 comment|/* GOES Satellite position */
+comment|/* Use these variable to hold data until we decide its worth keeping */
+name|char
+name|rd_lastcode
+index|[
+name|BMAX
+index|]
+decl_stmt|;
+name|l_fp
+name|rd_tmp
+decl_stmt|;
+name|u_short
+name|rd_lencode
+decl_stmt|;
 comment|/* 	 * Get the clock this applies to and pointers to the data. 	 */
 name|peer
 operator|=
@@ -1309,46 +1346,55 @@ operator|->
 name|unitptr
 expr_stmt|;
 comment|/* 	 * Read clock output.  Automatically handles STREAMS, CLKLDISC. 	 */
-name|pp
-operator|->
-name|lencode
+name|rd_lencode
 operator|=
 name|refclock_gtlin
 argument_list|(
 name|rbufp
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|rd_lastcode
 argument_list|,
 name|BMAX
 argument_list|,
 operator|&
-name|pp
-operator|->
-name|lastrec
+name|rd_tmp
 argument_list|)
+expr_stmt|;
+name|rd_lastcode
+index|[
+name|rd_lencode
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * There is a case where<cr><lf> generates 2 timestamps. 	 */
 if|if
 condition|(
-name|pp
-operator|->
-name|lencode
+name|rd_lencode
 operator|==
 literal|0
 condition|)
 return|return;
 name|pp
 operator|->
-name|a_lastcode
-index|[
+name|lencode
+operator|=
+name|rd_lencode
+expr_stmt|;
+name|strcpy
+argument_list|(
 name|pp
 operator|->
-name|lencode
-index|]
+name|a_lastcode
+argument_list|,
+name|rd_lastcode
+argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|lastrec
 operator|=
-literal|'\0'
+name|rd_tmp
 expr_stmt|;
 name|true_debug
 argument_list|(
@@ -1395,6 +1441,17 @@ literal|0
 index|]
 operator|==
 literal|'?'
+operator|||
+name|strcmp
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|"ERROR 05 NO SUCH FUNCTION"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|true_doevent
@@ -1655,7 +1712,7 @@ break|break;
 block|}
 return|return;
 block|}
-comment|/* 	 * Timecode: " TRUETIME Mk III" 	 * (from a TM/TMD clock during initialization.) 	 */
+comment|/* 	 * Timecode: " TRUETIME Mk III" or " TRUETIME XL" 	 * (from a TM/TMD/XL clock during initialization.) 	 */
 if|if
 condition|(
 name|strcmp
@@ -1665,6 +1722,19 @@ operator|->
 name|a_lastcode
 argument_list|,
 literal|" TRUETIME Mk III"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|" TRUETIME XL"
+argument_list|,
+literal|12
 argument_list|)
 operator|==
 literal|0
@@ -1686,7 +1756,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"TM/TMD: %s"
+literal|"TM/TMD/XL: %s"
 argument_list|,
 name|pp
 operator|->
@@ -1840,26 +1910,33 @@ operator|==
 literal|5
 condition|)
 block|{
-comment|/* 		 * Adjust the synchronize indicator according to timecode 		 */
+comment|/* 		 * Adjust the synchronize indicator according to timecode 		 * say were OK, and then say not if we really are not OK 		 */
 if|if
 condition|(
 name|synced
-operator|!=
-literal|' '
-operator|&&
+operator|==
+literal|'>'
+operator|||
 name|synced
-operator|!=
-literal|'.'
-operator|&&
+operator|==
+literal|'#'
+operator|||
 name|synced
-operator|!=
-literal|'*'
+operator|==
+literal|'?'
 condition|)
 name|pp
 operator|->
 name|leap
 operator|=
 name|LEAP_NOTINSYNC
+expr_stmt|;
+else|else
+name|pp
+operator|->
+name|leap
+operator|=
+name|LEAP_NOWARNING
 expr_stmt|;
 name|true_doevent
 argument_list|(
@@ -2051,6 +2128,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * If clock is good we send a NOMINAL message so that 		 * any previous BAD messages are nullified 		 */
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_NOMINAL
+argument_list|)
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer

@@ -42,24 +42,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -91,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -3000,6 +2994,9 @@ operator|*
 operator|)
 name|off
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|NSAMPLES
 argument_list|,
 sizeof|sizeof

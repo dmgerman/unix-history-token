@@ -37,36 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -94,10 +64,28 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 end_ifdef
 
 begin_include
@@ -112,7 +100,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
 
 begin_define
@@ -148,7 +136,7 @@ comment|/* ICOM */
 end_comment
 
 begin_comment
-comment|/*  * Audio CHU demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from Canadian time/frequency station CHU in  * Ottawa, Ontario. Transmissions are made continuously on 3330 kHz,  * 7335 kHz and 14670 kHz in upper sideband, compatible AM mode. An  * ordinary shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the day and night.  *  * The driver receives, demodulates and decodes the radio signals when  * connected to the audio codec of a Sun workstation running SunOS or  * Solaris, and with a little help, other workstations with similar  * codecs or sound cards. In this implementation, only one audio driver  * and codec can be supported on a single machine.  *  * The driver can be compiled to use a Bell 103 compatible modem or  * modem chip to receive the radio signal and demodulate the data.  * Alternatively, the driver can be compiled to use the audio codec of  * the Sun workstation or another with compatible audio drivers. In the  * latter case, the driver implements the modem using DSP routines, so  * the radio can be connected directly to either the microphone on line  * input port. In either case, the driver decodes the data using a  * maximum likelihood technique which exploits the considerable degree  * of redundancy available to maximize accuracy and minimize errors.  *  * The CHU time broadcast includes an audio signal compatible with the  * Bell 103 modem standard (mark = 2225 Hz, space = 2025 Hz). It consist  * of nine, ten-character bursts transmitted at 300 bps and beginning  * each second from second 31 to second 39 of the minute. Each character  * consists of eight data bits plus one start bit and two stop bits to  * encode two hex digits. The burst data consist of five characters (ten  * hex digits) followed by a repeat of these characters. In format A,  * the characters are repeated in the same polarity; in format B, the  * characters are repeated in the opposite polarity.  *  * Format A bursts are sent at seconds 32 through 39 of the minute in  * hex digits  *  *	6dddhhmmss6dddhhmmss  *  * The first ten digits encode a frame marker (6) followed by the day  * (ddd), hour (hh in UTC), minute (mm) and the second (ss). Since  * format A bursts are sent during the third decade of seconds the tens  * digit of ss is always 3. The driver uses this to determine correct  * burst synchronization. These digits are then repeated with the same  * polarity.  *  * Format B bursts are sent at second 31 of the minute in hex digits  *  *	xdyyyyttaaxdyyyyttaa  *  * The first ten digits encode a code (x described below) followed by  * the DUT1 (d in deciseconds), Gregorian year (yyyy), difference TAI -  * UTC (tt) and daylight time indicator (aa) peculiar to Canada. These  * digits are then repeated with inverted polarity.  *  * The x is coded  *  * 1 Sign of DUT (0 = +)  * 2 Leap second warning. One second will be added.  * 4 Leap second warning. One second will be subtracted.  * 8 Even parity bit for this nibble.  *  * By design, the last stop bit of the last character in the burst  * coincides with 0.5 second. Since characters have 11 bits and are  * transmitted at 300 bps, the last stop bit of the first character  * coincides with 0.5 - 10 * 11/300 = 0.133 second. Depending on the  * UART, character interrupts can vary somewhere between the beginning  * of bit 9 and end of bit 11. These eccentricities can be corrected  * along with the radio propagation delay using fudge time 1.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the radio signal and serial  * connections. With debugging enabled (-d -d -d on the ntpd command  * line), the driver produces one line for each burst in two formats  * corresponding to format A and B. Following is format A:  *  *	n b f s m code  *  * where n is the number of characters in the burst (0-11), b the burst  * distance (0-40), f the field alignment (-1, 0, 1), s the  * synchronization distance (0-16), m the burst number (2-9) and code  * the burst characters as received. Note that the hex digits in each  * character are reversed, so the burst  *  *	10 38 0 16 9 06851292930685129293  *  * is interpreted as containing 11 characters with burst distance 38,  * field alignment 0, synchronization distance 16 and burst number 9.  * The nibble-swapped timecode shows day 58, hour 21, minute 29 and  * second 39.  *  * When the audio driver is compiled, format A is preceded by  * the current gain (0-255) and relative signal level (0-9999). The  * receiver folume control should be set so that the gain is somewhere  * near the middle of the range 0-255, which results in a signal level  * near 1000.  *  * Following is format B:  *   *	n b s code  *  * where n is the number of characters in the burst (0-11), b the burst  * distance (0-40), s the synchronization distance (0-40) and code the  * burst characters as received. Note that the hex digits in each  * character are reversed and the last ten digits inverted, so the burst  *  *	11 40 1091891300ef6e76ecff  *  * is interpreted as containing 11 characters with burst distance 40.  * The nibble-swapped timecode shows DUT1 +0.1 second, year 1998 and TAI  * - UTC 31 seconds.  *  * In addition to the above, the reference timecode is updated and  * written to the clockstats file and debug score after the last burst  * received in the minute. The format is  *  *	qq yyyy ddd hh:mm:ss nn dd tt  *  * where qq are the error flags, as described below, yyyy is the year,  * ddd the day, hh:mm:ss the time of day, nn the number of format A  * bursts received during the previous minute, dd the decoding distance  * and tt the number of timestamps. The error flags are cleared after  * every update.  *  * Fudge factors  *  * For accuracies better than the low millisceconds, fudge time1 can be  * set to the radio propagation delay from CHU to the receiver. This can  * be done conviently using the minimuf program. When the modem driver  * is compiled, fudge flag3 enables the ppsclock line discipline. Fudge  * flag4 causes the dubugging output described above to be recorded in  * the clockstats file.  *  * When the audio driver is compiled, fudge flag2 selects the audio  * input port, where 0 is the mike port (default) and 1 is the line-in  * port. It does not seem useful to select the compact disc player port.  * Fudge flag3 enables audio monitoring of the input signal. For this  * purpose, the speaker volume must be set before the driver is started.  *  * The ICOM code is normally compiled in the driver. It isn't used,  * unless the mode keyword on the server configuration command specifies  * a nonzero ICOM ID select code. The C-IV trace is turned on if the  * debug level is greater than one.  */
+comment|/*  * Audio CHU demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from Canadian time/frequency station CHU in  * Ottawa, Ontario. Transmissions are made continuously on 3330 kHz,  * 7335 kHz and 14670 kHz in upper sideband, compatible AM mode. An  * ordinary shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the day and night.  *  * The driver receives, demodulates and decodes the radio signals when  * connected to the audio codec of a Sun workstation running SunOS or  * Solaris, and with a little help, other workstations with similar  * codecs or sound cards. In this implementation, only one audio driver  * and codec can be supported on a single machine.  *  * The driver can be compiled to use a Bell 103 compatible modem or  * modem chip to receive the radio signal and demodulate the data.  * Alternatively, the driver can be compiled to use the audio codec of  * the Sun workstation or another with compatible audio drivers. In the  * latter case, the driver implements the modem using DSP routines, so  * the radio can be connected directly to either the microphone on line  * input port. In either case, the driver decodes the data using a  * maximum likelihood technique which exploits the considerable degree  * of redundancy available to maximize accuracy and minimize errors.  *  * The CHU time broadcast includes an audio signal compatible with the  * Bell 103 modem standard (mark = 2225 Hz, space = 2025 Hz). It consist  * of nine, ten-character bursts transmitted at 300 bps and beginning  * each second from second 31 to second 39 of the minute. Each character  * consists of eight data bits plus one start bit and two stop bits to  * encode two hex digits. The burst data consist of five characters (ten  * hex digits) followed by a repeat of these characters. In format A,  * the characters are repeated in the same polarity; in format B, the  * characters are repeated in the opposite polarity.  *  * Format A bursts are sent at seconds 32 through 39 of the minute in  * hex digits  *  *	6dddhhmmss6dddhhmmss  *  * The first ten digits encode a frame marker (6) followed by the day  * (ddd), hour (hh in UTC), minute (mm) and the second (ss). Since  * format A bursts are sent during the third decade of seconds the tens  * digit of ss is always 3. The driver uses this to determine correct  * burst synchronization. These digits are then repeated with the same  * polarity.  *  * Format B bursts are sent at second 31 of the minute in hex digits  *  *	xdyyyyttaaxdyyyyttaa  *  * The first ten digits encode a code (x described below) followed by  * the DUT1 (d in deciseconds), Gregorian year (yyyy), difference TAI -  * UTC (tt) and daylight time indicator (aa) peculiar to Canada. These  * digits are then repeated with inverted polarity.  *  * The x is coded  *  * 1 Sign of DUT (0 = +)  * 2 Leap second warning. One second will be added.  * 4 Leap second warning. One second will be subtracted.  * 8 Even parity bit for this nibble.  *  * By design, the last stop bit of the last character in the burst  * coincides with 0.5 second. Since characters have 11 bits and are  * transmitted at 300 bps, the last stop bit of the first character  * coincides with 0.5 - 10 * 11/300 = 0.133 second. Depending on the  * UART, character interrupts can vary somewhere between the beginning  * of bit 9 and end of bit 11. These eccentricities can be corrected  * along with the radio propagation delay using fudge time 1.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the radio signal and serial  * connections. With debugging enabled (-d -d -d on the ntpd command  * line), the driver produces one line for each burst in two formats  * corresponding to format A and B. Following is format A:  *  *	n b f s m code  *  * where n is the number of characters in the burst (0-11), b the burst  * distance (0-40), f the field alignment (-1, 0, 1), s the  * synchronization distance (0-16), m the burst number (2-9) and code  * the burst characters as received. Note that the hex digits in each  * character are reversed, so the burst  *  *	10 38 0 16 9 06851292930685129293  *  * is interpreted as containing 11 characters with burst distance 38,  * field alignment 0, synchronization distance 16 and burst number 9.  * The nibble-swapped timecode shows day 58, hour 21, minute 29 and  * second 39.  *  * When the audio driver is compiled, format A is preceded by  * the current gain (0-255) and relative signal level (0-9999). The  * receiver folume control should be set so that the gain is somewhere  * near the middle of the range 0-255, which results in a signal level  * near 1000.  *  * Following is format B:  *   *	n b s code  *  * where n is the number of characters in the burst (0-11), b the burst  * distance (0-40), s the synchronization distance (0-40) and code the  * burst characters as received. Note that the hex digits in each  * character are reversed and the last ten digits inverted, so the burst  *  *	11 40 1091891300ef6e76ecff  *  * is interpreted as containing 11 characters with burst distance 40.  * The nibble-swapped timecode shows DUT1 +0.1 second, year 1998 and TAI  * - UTC 31 seconds.  *  * In addition to the above, the reference timecode is updated and  * written to the clockstats file and debug score after the last burst  * received in the minute. The format is  *  *	qq yyyy ddd hh:mm:ss nn dd tt  *  * where qq are the error flags, as described below, yyyy is the year,  * ddd the day, hh:mm:ss the time of day, nn the number of format A  * bursts received during the previous minute, dd the decoding distance  * and tt the number of timestamps. The error flags are cleared after  * every update.  *  * Fudge factors  *  * For accuracies better than the low millisceconds, fudge time1 can be  * set to the radio propagation delay from CHU to the receiver. This can  * be done conviently using the minimuf program. When the modem driver  * is compiled, fudge flag3 enables the ppsclock line discipline. Fudge  * flag4 causes the dubugging output described above to be recorded in  * the clockstats file.  *  * When the audio driver is compiled, fudge flag2 selects the audio  * input port, where 0 is the mike port (default) and 1 is the line-in  * port. It does not seem useful to select the compact disc player port.  * Fudge flag3 enables audio monitoring of the input signal. For this  * purpose, the speaker volume must be set before the driver is started.  *  * The audio codec code is normally compiled in the driver if the  * architecture supports it (HAVE_AUDIO defined), but is used only if the  * link /dev/chu_audio is defined and valid. The serial port  * code is alwasy compiled in the driver, but is used only if the autdio  * codec is not available and the link /dev/chu%d is defined and valid.  * The ICOM code is normally compiled in the driver if selected (ICOM  * defined), but is used only if the link /dev/icom%d is defined and  * valid and the mode keyword on the server configuration command  * specifies a nonzero mode (ICOM ID select code). The C-IV speed is  * 9600 bps if the high order 0x80 bit of the mode is zero and 1200 bps  * if one. The C-IV trace is turned on if the debug level is greater  * than one.  */
 end_comment
 
 begin_comment
@@ -186,6 +174,28 @@ end_define
 
 begin_comment
 comment|/* reference ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE
+value|"/dev/chu%d"
+end_define
+
+begin_comment
+comment|/* device name and unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232
+value|B300
+end_define
+
+begin_comment
+comment|/* UART speed (300 baud) */
 end_comment
 
 begin_ifdef
@@ -228,19 +238,8 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DESCRIPTION
-value|"CHU Modem Receiver"
-end_define
-
-begin_comment
-comment|/* WRU */
-end_comment
 
 begin_comment
 comment|/*  * Audio demodulator definitions  */
@@ -334,6 +333,28 @@ begin_comment
 comment|/* discriminator lag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEVICE_AUDIO
+value|"/dev/chu_audio"
+end_define
+
+begin_comment
+comment|/* device name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DESCRIPTION
+value|"CHU Audio/Modem Receiver"
+end_define
+
+begin_comment
+comment|/* WRU */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -342,30 +363,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|DEVICE
-value|"/dev/chu%d"
-end_define
-
-begin_comment
-comment|/* device name and unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPEED232
-value|B300
-end_define
-
-begin_comment
-comment|/* UART speed (300 baud) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DESCRIPTION
-value|"CHU Audio Receiver"
+value|"CHU Modem Receiver"
 end_define
 
 begin_comment
@@ -378,7 +377,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
 
 begin_comment
@@ -675,7 +674,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 end_ifdef
 
 begin_struct
@@ -713,7 +712,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
 
 begin_comment
@@ -783,6 +782,10 @@ ifdef|#
 directive|ifdef
 name|ICOM
 name|int
+name|fd_icom
+decl_stmt|;
+comment|/* ICOM file descriptor */
+name|int
 name|chan
 decl_stmt|;
 comment|/* frequency identifier */
@@ -790,10 +793,6 @@ name|int
 name|dwell
 decl_stmt|;
 comment|/* dwell minutes at current frequency */
-name|int
-name|fd_icom
-decl_stmt|;
-comment|/* ICOM file descriptor */
 endif|#
 directive|endif
 comment|/* ICOM */
@@ -852,8 +851,12 @@ decl_stmt|;
 comment|/* Canadian DST code */
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 comment|/* 	 * Audio codec variables 	 */
+name|int
+name|fd_audio
+decl_stmt|;
+comment|/* audio port file descriptor */
 name|double
 name|comp
 index|[
@@ -942,7 +945,7 @@ decl_stmt|;
 comment|/* holdoff counter */
 endif|#
 directive|endif
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 block|}
 struct|;
 end_struct
@@ -1135,7 +1138,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 end_ifdef
 
 begin_decl_stmt
@@ -1187,14 +1190,46 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|chu_audio_receive
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|recvbuf
+operator|*
+name|rbufp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|chu_serial_receive
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|recvbuf
+operator|*
+name|rbufp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Global variables  */
@@ -1311,6 +1346,13 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
+name|char
+name|device
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* device name */
 name|int
 name|fd
 decl_stmt|;
@@ -1333,7 +1375,11 @@ directive|endif
 comment|/* ICOM */
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
+name|int
+name|fd_audio
+decl_stmt|;
+comment|/* audio port file descriptor */
 name|int
 name|i
 decl_stmt|;
@@ -1342,28 +1388,23 @@ name|double
 name|step
 decl_stmt|;
 comment|/* codec adjustment */
-comment|/* 	 * Open audio device 	 */
-name|fd
+comment|/* 	 * Open audio device. 	 */
+name|fd_audio
 operator|=
 name|audio_init
-argument_list|()
+argument_list|(
+name|DEVICE_AUDIO
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
 if|if
 condition|(
+name|fd_audio
+operator|>
+literal|0
+operator|&&
 name|debug
 condition|)
 name|audio_show
@@ -1371,19 +1412,21 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-else|#
-directive|else
-name|char
-name|device
-index|[
-literal|20
-index|]
-decl_stmt|;
-comment|/* device name */
 comment|/* 	 * Open serial port in raw mode. 	 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|fd_audio
+operator|>
+literal|0
+condition|)
+block|{
+name|fd
+operator|=
+name|fd_audio
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sprintf
 argument_list|(
 name|device
@@ -1393,10 +1436,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -1407,18 +1446,46 @@ name|SPEED232
 argument_list|,
 name|LDISC_RAW
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* HAVE_AUDIO */
+comment|/* 	 * Open serial port in raw mode. 	 */
+name|sprintf
+argument_list|(
+name|device
+argument_list|,
+name|DEVICE
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|refclock_open
+argument_list|(
+name|device
+argument_list|,
+name|SPEED232
+argument_list|,
+name|LDISC_RAW
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_AUDIO */
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-endif|#
-directive|endif
-comment|/* AUDIO_CHU */
 comment|/* 	 * Allocate and initialize unit structure 	 */
 if|if
 condition|(
@@ -1442,9 +1509,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
@@ -1535,9 +1599,6 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
@@ -1595,14 +1656,20 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
+comment|/* 	 * The companded samples are encoded sign-magnitude. The table 	 * contains all the 256 values in the interest of speed. We do 	 * this even if the audio codec is not available. C'est la lazy. 	 */
+name|up
+operator|->
+name|fd_audio
+operator|=
+name|fd_audio
+expr_stmt|;
 name|up
 operator|->
 name|gain
 operator|=
 literal|127
 expr_stmt|;
-comment|/* 	 * The companded samples are encoded sign-magnitude. The table 	 * contains all the 256 values in the interest of speed. 	 */
 name|up
 operator|->
 name|comp
@@ -1741,7 +1808,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 name|strcpy
 argument_list|(
 name|up
@@ -1777,7 +1844,7 @@ if|if
 condition|(
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|>
 literal|0
 condition|)
@@ -1786,7 +1853,7 @@ if|if
 condition|(
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|&
 literal|0x80
 condition|)
@@ -1837,7 +1904,7 @@ name|fd_icom
 argument_list|,
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|&
 literal|0x7f
 argument_list|,
@@ -1998,6 +2065,13 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|==
+name|NULL
+condition|)
+return|return;
 name|io_closeclock
 argument_list|(
 operator|&
@@ -2029,20 +2103,115 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUDIO_CHU
-end_ifdef
-
 begin_comment
-comment|/*  * chu_receive - receive data from the audio device  */
+comment|/*  * chu_receive - receive data from the audio or serial device  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|chu_receive
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+name|rbufp
+comment|/* receive buffer structure pointer */
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_AUDIO
+name|struct
+name|chuunit
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|;
+name|peer
+operator|=
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+name|rbufp
+operator|->
+name|recv_srcclock
+expr_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+operator|(
+expr|struct
+name|chuunit
+operator|*
+operator|)
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+comment|/* 	 * If the audio codec is warmed up, the buffer contains codec 	 * samples which need to be demodulated and decoded into CHU 	 * characters using the software UART. Otherwise, the buffer 	 * contains CHU characters from the serial port, so the software 	 * UART is bypassed. In this case the CPU will probably run a 	 * few degrees cooler. 	 */
+if|if
+condition|(
+name|up
+operator|->
+name|fd_audio
+operator|>
+literal|0
+condition|)
+name|chu_audio_receive
+argument_list|(
+name|rbufp
+argument_list|)
+expr_stmt|;
+else|else
+name|chu_serial_receive
+argument_list|(
+name|rbufp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|chu_serial_receive
+argument_list|(
+name|rbufp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_AUDIO */
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AUDIO
+end_ifdef
+
+begin_comment
+comment|/*  * chu_audio_receive - receive data from the audio device  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|chu_audio_receive
 parameter_list|(
 name|struct
 name|recvbuf
@@ -2889,7 +3058,7 @@ literal|0
 condition|)
 name|disc
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|disc
 argument_list|)
@@ -2898,7 +3067,7 @@ else|else
 name|disc
 operator|=
 operator|-
-name|sqrt
+name|SQRT
 argument_list|(
 operator|-
 name|disc
@@ -3930,23 +4099,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
 
 begin_comment
-comment|/*  * chu_receive - receive data from the serial interface  */
+comment|/*  * chu_serial_receive - receive data from the serial device  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|chu_receive
+name|chu_serial_receive
 parameter_list|(
 name|struct
 name|recvbuf
@@ -4034,17 +4203,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* AUDIO_CHU */
-end_comment
-
-begin_comment
-comment|/*  * chu_decode - decode the data  */
+comment|/*  * chu_decode - decode the character data  */
 end_comment
 
 begin_function
@@ -5073,7 +5233,13 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
+if|if
+condition|(
+name|up
+operator|->
+name|fd_audio
+condition|)
 name|sprintf
 argument_list|(
 name|tbuf
@@ -5087,6 +5253,32 @@ argument_list|,
 name|up
 operator|->
 name|maxsignal
+argument_list|,
+name|nchar
+argument_list|,
+name|up
+operator|->
+name|burdist
+argument_list|,
+name|k
+argument_list|,
+name|up
+operator|->
+name|syndist
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|tbuf
+argument_list|,
+literal|"chuA %04x %2d %2d %2d %2d %1d "
+argument_list|,
+name|up
+operator|->
+name|status
 argument_list|,
 name|nchar
 argument_list|,
@@ -5132,7 +5324,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 for|for
 control|(
 name|i
@@ -5751,7 +5943,7 @@ name|fd_icom
 argument_list|,
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|&
 literal|0x7f
 argument_list|,
@@ -5971,7 +6163,13 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
+if|if
+condition|(
+name|up
+operator|->
+name|fd_audio
+condition|)
 name|sprintf
 argument_list|(
 name|pp
@@ -6019,6 +6217,72 @@ argument_list|,
 name|up
 operator|->
 name|gain
+argument_list|,
+name|up
+operator|->
+name|ident
+argument_list|,
+name|up
+operator|->
+name|tai
+argument_list|,
+name|up
+operator|->
+name|burstcnt
+argument_list|,
+name|up
+operator|->
+name|mindist
+argument_list|,
+name|up
+operator|->
+name|ntstamp
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|"%c%1X %4d %3d %02d:%02d:%02d.000 %c%x %+d %d %s %d %d %d %d"
+argument_list|,
+name|synchar
+argument_list|,
+name|qual
+argument_list|,
+name|pp
+operator|->
+name|year
+argument_list|,
+name|pp
+operator|->
+name|day
+argument_list|,
+name|pp
+operator|->
+name|hour
+argument_list|,
+name|pp
+operator|->
+name|minute
+argument_list|,
+name|pp
+operator|->
+name|second
+argument_list|,
+name|leapchar
+argument_list|,
+name|up
+operator|->
+name|dst
+argument_list|,
+name|up
+operator|->
+name|dut
+argument_list|,
+name|minset
 argument_list|,
 name|up
 operator|->
@@ -6110,7 +6374,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 name|pp
 operator|->
 name|lencode
@@ -6652,12 +6916,6 @@ name|lastref
 operator|=
 name|offset
 expr_stmt|;
-name|pp
-operator|->
-name|variance
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -6936,7 +7194,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUDIO_CHU
+name|HAVE_AUDIO
 end_ifdef
 
 begin_comment
@@ -7072,7 +7330,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUDIO_CHU */
+comment|/* HAVE_AUDIO */
 end_comment
 
 begin_else
