@@ -3585,17 +3585,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-operator|->
-name|td_md
-operator|.
-name|md_bspstore
-operator|=
-name|stack_addr
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* vm_ssize and vm_maxsaddr are somewhat antiquated concepts in the 	 * VM_STACK case, but they are still used to monitor the size of the 	 * process stack so we can check the stack rlimit. 	 */

@@ -5506,11 +5506,7 @@ name|tf_special
 operator|.
 name|bspstore
 operator|=
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_bspstore
+name|IA64_BACKINGSTORE
 expr_stmt|;
 comment|/* 		 * Copy the arguments onto the kernel register stack so that 		 * they get loaded by the loadrs instruction. Skip over the 		 * NaT collection points. 		 */
 name|kst
@@ -5637,11 +5633,7 @@ name|tf_special
 operator|.
 name|bspstore
 operator|=
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_bspstore
+name|IA64_BACKINGSTORE
 operator|+
 literal|24
 expr_stmt|;
