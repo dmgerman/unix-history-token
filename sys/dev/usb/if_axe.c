@@ -5061,11 +5061,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|axe_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -5351,6 +5346,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|axe_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Free RX resources. */
 for|for
 control|(
