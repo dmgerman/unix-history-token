@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.16 (Berkeley) %G%"
+literal|"@(#)main.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3009,17 +3009,6 @@ operator|==
 name|MD_TEST
 condition|)
 block|{
-name|bool
-name|terminal
-init|=
-name|isatty
-argument_list|(
-name|fileno
-argument_list|(
-name|stdin
-argument_list|)
-argument_list|)
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -3028,7 +3017,21 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|terminal
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+condition|)
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
 condition|)
 block|{
 name|printf
@@ -3070,7 +3073,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|terminal
+name|Verbose
 condition|)
 name|printf
 argument_list|(
@@ -3105,7 +3108,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|terminal
+name|Verbose
 condition|)
 name|printf
 argument_list|(
