@@ -3356,6 +3356,73 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* Decision Computer Inc, serial ports */
+block|{
+literal|"Decision Computer Inc, PCCOM 4-port serial"
+block|,
+block|{
+literal|0x6666
+block|,
+literal|0x0001
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x10
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x18
+block|,
+name|COM_FREQ
+block|}
+block|,             }
+block|,         }
+block|,
 block|{
 literal|0
 block|}
