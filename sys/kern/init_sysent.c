@@ -1819,7 +1819,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|getfh
 block|}
 block|,
 comment|/* 161 = getfh */
