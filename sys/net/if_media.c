@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.c,v 1.3 1997/08/02 14:32:38 bde Exp $ */
+comment|/*	$Id: if_media.c,v 1.4 1998/02/04 22:33:03 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -14,12 +14,6 @@ end_comment
 begin_comment
 comment|/*  * BSD/OS-compatible network interface media selection.  *  * Where it is safe to do so, this code strays slightly from the BSD/OS  * design.  Software which uses the API (device drivers, basically)  * shouldn't notice any difference.  *  * Many thanks to Matt Thomas for providing the information necessary  * to implement this interface.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_diagnostic.h"
-end_include
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.36 1997/11/07 08:53:00 phk Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.37 1998/02/04 22:32:35 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/*  * This code has two modes of operation, a small write mode and a large  * write mode.  The small write mode acts like conventional pipes with  * a kernel buffer.  If the buffer is less than PIPE_MINDIRECT, then the  * "normal" pipe buffering is done.  If the buffer is between PIPE_MINDIRECT  * and PIPE_SIZE in size, it is fully mapped and wired into the kernel, and  * the receiving process can copy it directly from the pages in the sending  * process.  *  * If the sending process receives a signal, it is possible that it will  * go away, and certainly its address space can change, because control  * is returned back to the user-mode side.  In that case, the pipe code  * arranges to copy the buffer supplied by the user process, to a pageable  * kernel buffer, and the receiving process will grab the data from the  * pageable kernel buffer.  Since signals don't happen all that often,  * the copy operation is normally eliminated.  *  * The constant PIPE_MINDIRECT is chosen to make sure that buffering will  * happen for small transfers so that the system will not spend all of  * its time context switching.  PIPE_SIZE is constrained by the  * amount of kernel virtual memory.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_diagnostic.h"
-end_include
 
 begin_include
 include|#

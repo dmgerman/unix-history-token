@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_diagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pci.h"
 end_include
 
