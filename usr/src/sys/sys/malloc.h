@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -623,7 +623,7 @@ comment|/* 40 M_LOCKF */
 value|\ 	"proc",
 comment|/* 41 M_PROC */
 value|\ 	"subproc",
-comment|/* 42 M_PROC */
+comment|/* 42 M_SUBPROC */
 value|\ 	0, 0, 0, 0, 0, 0, \ 	"temp",
 comment|/* 49 M_TEMP */
 value|\ }
@@ -810,11 +810,19 @@ begin_comment
 comment|/*  * Macro versions for the usual cases of malloc/free  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KMEMSTATS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DIAGNOSTICS
+argument_list|)
+end_if
 
 begin_define
 define|#
