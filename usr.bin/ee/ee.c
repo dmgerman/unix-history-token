@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.3  $Revision: 1.12 $"
+literal|"@(#) ee, version 1.3"
 decl_stmt|;
 end_decl_stmt
 
