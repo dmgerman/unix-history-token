@@ -913,12 +913,12 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|unptr
-argument_list|,
 operator|&
 name|args
 operator|->
 name|arg
+argument_list|,
+name|unptr
 argument_list|,
 sizeof|sizeof
 argument_list|(
