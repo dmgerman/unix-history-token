@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.7 (Berkeley) %G%"
+literal|"@(#)quit.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,10 +116,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|minfo
-decl_stmt|;
-name|char
-modifier|*
-name|id
 decl_stmt|;
 name|char
 modifier|*
@@ -572,6 +568,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|id
+decl_stmt|;
+if|if
+condition|(
+operator|(
 name|id
 operator|=
 name|hfield
@@ -580,10 +583,7 @@ literal|"article-id"
 argument_list|,
 name|mp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|id
+operator|)
 operator|!=
 name|NOSTR
 condition|)
@@ -622,25 +622,19 @@ operator|!
 name|anystat
 condition|)
 block|{
-if|if
-condition|(
+name|printf
+argument_list|(
+literal|"Held %d message%s in %s\n"
+argument_list|,
+name|p
+argument_list|,
 name|p
 operator|==
 literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"Held 1 message in %s\n"
-argument_list|,
-name|mailname
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Held %2d messages in %s\n"
-argument_list|,
-name|p
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|,
 name|mailname
 argument_list|)

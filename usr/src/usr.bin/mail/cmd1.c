@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1875,7 +1875,7 @@ name|NOSTR
 condition|)
 name|printf
 argument_list|(
-literal|"Message %2d:\n"
+literal|"Message %d:\n"
 argument_list|,
 name|mesg
 argument_list|)

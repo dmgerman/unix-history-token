@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2974,9 +2974,7 @@ literal|1
 return|;
 block|}
 name|announce
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 literal|0

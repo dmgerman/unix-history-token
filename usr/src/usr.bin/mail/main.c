@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,6 +776,11 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|extern
+name|char
+modifier|*
+name|version
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -798,11 +803,24 @@ argument_list|,
 name|hdrstop
 argument_list|)
 expr_stmt|;
-name|announce
+if|if
+condition|(
+name|value
 argument_list|(
-operator|!
-literal|0
+literal|"quiet"
 argument_list|)
+operator|==
+name|NOSTR
+condition|)
+name|printf
+argument_list|(
+literal|"Mail version %s.  Type ? for help.\n"
+argument_list|,
+name|version
+argument_list|)
+expr_stmt|;
+name|announce
+argument_list|()
 expr_stmt|;
 name|fflush
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.12 (Berkeley) %G%"
+literal|"@(#)lex.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2093,9 +2093,7 @@ end_comment
 
 begin_macro
 name|announce
-argument_list|(
-argument|pr
-argument_list|)
+argument_list|()
 end_macro
 
 begin_block
@@ -2108,29 +2106,6 @@ index|]
 decl_stmt|,
 name|mdot
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|version
-decl_stmt|;
-if|if
-condition|(
-name|pr
-operator|&&
-name|value
-argument_list|(
-literal|"quiet"
-argument_list|)
-operator|==
-name|NOSTR
-condition|)
-name|printf
-argument_list|(
-literal|"Mail version %s.  Type ? for help.\n"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
 name|mdot
 operator|=
 name|newfileinfo

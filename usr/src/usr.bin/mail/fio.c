@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.7 (Berkeley) %G%"
+literal|"@(#)fio.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,9 +1131,6 @@ name|tempname
 index|[
 literal|30
 index|]
-decl_stmt|,
-modifier|*
-name|id
 decl_stmt|;
 name|char
 modifier|*
@@ -1262,6 +1259,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|id
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1933,9 +1934,10 @@ name|expand
 parameter_list|(
 name|name
 parameter_list|)
+specifier|register
 name|char
+modifier|*
 name|name
-index|[]
 decl_stmt|;
 block|{
 name|char
@@ -1988,8 +1990,6 @@ case|case
 literal|'%'
 case|:
 return|return
-name|cp
-operator|=
 name|savestr
 argument_list|(
 name|findmail
@@ -2039,15 +2039,11 @@ return|return
 name|NOSTR
 return|;
 block|}
-name|cp
-operator|=
+return|return
 name|savestr
 argument_list|(
 name|prevfile
 argument_list|)
-expr_stmt|;
-return|return
-name|cp
 return|;
 case|case
 literal|'&'
@@ -2141,9 +2137,7 @@ literal|"~{[*?$`'\"\\"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|name
-operator|)
 return|;
 if|if
 condition|(
@@ -2161,9 +2155,7 @@ literal|"pipe"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|name
-operator|)
 return|;
 block|}
 name|sprintf
@@ -2287,9 +2279,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NOSTR
-operator|)
 return|;
 block|}
 name|close
@@ -2356,9 +2346,9 @@ argument_list|,
 literal|"\"Echo\" failed\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+name|NOSTR
+return|;
 block|}
 if|if
 condition|(
@@ -2372,9 +2362,9 @@ argument_list|(
 literal|"read"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+name|NOSTR
+return|;
 block|}
 if|if
 condition|(
@@ -2392,9 +2382,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+name|NOSTR
+return|;
 block|}
 if|if
 condition|(
@@ -2412,9 +2402,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+name|NOSTR
+return|;
 block|}
 name|xname
 index|[
@@ -2448,9 +2438,10 @@ name|cp
 operator|--
 control|)
 empty_stmt|;
-operator|*
-operator|++
 name|cp
+index|[
+literal|1
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -2483,24 +2474,15 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+name|NOSTR
+return|;
 block|}
 return|return
-operator|(
 name|savestr
 argument_list|(
 name|xname
 argument_list|)
-operator|)
-return|;
-name|err
-label|:
-return|return
-operator|(
-name|NOSTR
-operator|)
 return|;
 block|}
 end_function
