@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.17 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,7 +439,7 @@ name|bf
 index|[
 sizeof|sizeof
 argument_list|(
-name|uid
+name|keyuid
 argument_list|)
 operator|+
 literal|1
