@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -214,6 +214,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|clock_t
+name|clock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|double
 name|difftime
 parameter_list|(
@@ -307,6 +317,14 @@ name|struct
 name|tm
 modifier|*
 name|localtime
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|clock_t
+name|clock
 parameter_list|()
 function_decl|;
 end_function_decl
