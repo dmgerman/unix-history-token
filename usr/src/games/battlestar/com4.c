@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com4.c	5.2 (Berkeley) %G%"
+literal|"@(#)com4.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,10 +1716,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|n
-decl_stmt|;
 name|int
 name|firstnumber
 decl_stmt|,
@@ -1754,24 +1750,6 @@ index|[
 name|wordnumber
 index|]
 expr_stmt|;
-for|for
-control|(
-name|n
-operator|=
-literal|0
-init|;
-name|objsht
-index|[
-name|value
-index|]
-index|[
-name|n
-index|]
-condition|;
-name|n
-operator|++
-control|)
-empty_stmt|;
 switch|switch
 condition|(
 name|value
@@ -1796,13 +1774,25 @@ name|printf
 argument_list|(
 literal|"You can't eat%s%s!\n"
 argument_list|,
-operator|(
+name|wordtype
+index|[
+name|wordnumber
+index|]
+operator|==
+name|OBJECT
+operator|&&
 name|objsht
 index|[
 name|value
 index|]
 index|[
-name|n
+name|strlen
+argument_list|(
+name|objsht
+index|[
+name|value
+index|]
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -1812,11 +1802,10 @@ condition|?
 literal|" "
 else|:
 literal|" a "
-operator|)
 argument_list|,
-name|objsht
+name|words
 index|[
-name|value
+name|wordnumber
 index|]
 argument_list|)
 expr_stmt|;
