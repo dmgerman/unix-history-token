@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)20b.c	5.4 (Berkeley) %G%"
+literal|"@(#)20b.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+name|bsize
+operator|=
+literal|20
+operator|*
+literal|512
+expr_stmt|;
 name|base
 operator|=
 name|alloca
