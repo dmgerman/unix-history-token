@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.2 1994/09/25 02:31:52 wollman Exp $"
+literal|"$Id: auth.c,v 1.4 1995/08/28 21:30:51 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1738,6 +1738,26 @@ name|UPAP_AUTHNAK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_expire
+operator|&&
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|pw
+operator|->
+name|pw_expire
+condition|)
+return|return
+operator|(
+name|UPAP_AUTHNAK
+operator|)
+return|;
 comment|/*      * XXX If no passwd, let them login without one.      */
 if|if
 condition|(

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: entry.c,v 1.2 1995/04/12 19:04:26 ache Exp $"
+literal|"$Id: entry.c,v 1.4 1995/08/28 21:30:46 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,6 +1142,30 @@ argument|(
 literal|"load_entry()...uid %d, gid %d\n"
 argument|,e->uid,e->gid)
 argument_list|)
+block|}
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_expire
+operator|&&
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|pw
+operator|->
+name|pw_expire
+condition|)
+block|{
+name|ecode
+operator|=
+name|e_username
+expr_stmt|;
+goto|goto
+name|eof
+goto|;
 block|}
 name|e
 operator|->
