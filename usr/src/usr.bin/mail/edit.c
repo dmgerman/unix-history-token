@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)edit.c	2.1 %G%"
+literal|"@(#)edit.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sigint
