@@ -513,7 +513,7 @@ value|EAI_NONAME
 end_define
 
 begin_comment
-comment|/* To be removed on 23 APR 2004 */
+comment|/* to be removed on 23 Apr 2004 */
 end_comment
 
 begin_define
