@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isctype.c	5.5 (Berkeley) %G%"
+literal|"@(#)isctype.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -117,7 +117,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -225,7 +225,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -263,7 +263,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -301,7 +301,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -347,7 +347,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -385,7 +385,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -433,7 +433,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -471,7 +471,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -509,7 +509,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
@@ -547,7 +547,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|_ctype_
+name|__ctype
 operator|+
 literal|1
 operator|)
