@@ -4241,7 +4241,8 @@ name|fprintf
 argument_list|(
 name|code_file
 argument_list|,
-literal|"#ifndef YYDEBUG\n#define YYDEBUG %d\n#endif\n"
+literal|"#ifndef YYDEBUG\n#define YYDEBUG %d\n"
+literal|"#elif YYDEBUG\n#include<stdio.h>\n#endif\n"
 argument_list|,
 name|tflag
 argument_list|)
@@ -4404,7 +4405,8 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"#if YYDEBUG\nchar *%sname[] = {"
+literal|"#if YYDEBUG\n"
+literal|"const char * const %sname[] = {"
 argument_list|,
 name|symbol_prefix
 argument_list|)
