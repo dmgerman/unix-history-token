@@ -2888,6 +2888,17 @@ name|cp
 operator|->
 name|provider
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"access but not attached"
+operator|)
+argument_list|)
+expr_stmt|;
 name|G_VALID_PROVIDER
 argument_list|(
 name|pp
@@ -2910,19 +2921,6 @@ argument_list|,
 name|dcw
 argument_list|,
 name|dce
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|provider
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"access but not attached"
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
