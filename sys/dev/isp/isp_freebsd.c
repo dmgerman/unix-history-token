@@ -224,11 +224,6 @@ operator|.
 name|d_maj
 operator|=
 name|ISP_CDEV_MAJOR
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_TAPE
 block|, }
 decl_stmt|;
 end_decl_stmt
