@@ -828,7 +828,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|switch_trampoline
+name|fork_trampoline
 name|__P
 argument_list|(
 operator|(

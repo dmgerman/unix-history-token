@@ -604,7 +604,7 @@ operator|=
 operator|(
 name|u_int64_t
 operator|)
-name|switch_trampoline
+name|fork_trampoline
 expr_stmt|;
 comment|/* ra: assembly magic */
 block|}
