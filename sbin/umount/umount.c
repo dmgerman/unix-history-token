@@ -883,7 +883,11 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
+name|firstcall
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|firstcall
@@ -895,11 +899,12 @@ argument_list|,
 literal|"fstab reading failure"
 argument_list|)
 expr_stmt|;
-name|firstcall
-operator|=
+else|else
+return|return
+operator|(
 literal|0
-expr_stmt|;
-block|}
+operator|)
+return|;
 do|do
 block|{
 comment|/* Ignore the root. */
