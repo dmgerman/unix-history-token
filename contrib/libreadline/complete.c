@@ -2944,6 +2944,9 @@ block|{
 comment|/* If there is a single match, see if we need to quote it.          This also checks whether the common prefix of several 	 matches needs to be quoted. */
 name|should_quote
 operator|=
+name|rl_filename_quote_characters
+condition|?
+operator|(
 name|rl_strpbrk
 argument_list|(
 name|match
@@ -2951,6 +2954,9 @@ argument_list|,
 name|rl_filename_quote_characters
 argument_list|)
 operator|!=
+literal|0
+operator|)
+else|:
 literal|0
 expr_stmt|;
 name|do_replace
@@ -5941,21 +5947,6 @@ name|char
 modifier|*
 name|scan
 decl_stmt|;
-if|if
-condition|(
-name|string2
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
 for|for
 control|(
 init|;
