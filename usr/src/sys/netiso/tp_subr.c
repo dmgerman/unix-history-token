@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.3 (Berkeley) %G% *  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.4 (Berkeley) %G%  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
 end_comment
 
 begin_ifndef
@@ -1995,13 +1995,13 @@ name|tptraceTPCB
 argument_list|(
 name|TPPTmisc
 argument_list|,
-literal|"tp_send emitting DT lowseq eotsdu_reached"
+literal|"tp_send emitting DT lowseq eotsdu_reached len"
 argument_list|,
 name|lowseq
 argument_list|,
 name|eotsdu_reached
 argument_list|,
-literal|0
+name|len
 argument_list|,
 literal|0
 argument_list|)
