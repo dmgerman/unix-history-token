@@ -154,10 +154,6 @@ name|lockparent
 decl_stmt|;
 comment|/* 1 => lockparent flag is set */
 name|int
-name|wantparent
-decl_stmt|;
-comment|/* 1 => wantparent or lockparent flag */
-name|int
 name|error
 decl_stmt|;
 name|ino_t
@@ -267,16 +263,6 @@ operator|=
 name|flags
 operator|&
 name|LOCKPARENT
-expr_stmt|;
-name|wantparent
-operator|=
-name|flags
-operator|&
-operator|(
-name|LOCKPARENT
-operator||
-name|WANTPARENT
-operator|)
 expr_stmt|;
 name|cnp
 operator|->
