@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strip.c,v 1.6.2.1 1997/08/13 06:37:16 charnier Exp $"
+literal|"$Id: strip.c,v 1.6.2.2 1997/08/29 05:29:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,8 +813,7 @@ operator|(
 name|EXEC
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|warn
