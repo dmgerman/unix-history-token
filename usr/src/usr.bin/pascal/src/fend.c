@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c	5.3 (Berkeley) %G%"
+literal|"@(#)fend.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3839,7 +3839,7 @@ name|putprintf
 argument_list|(
 name|PREFIXFORMAT
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|(
 name|int
@@ -3847,8 +3847,6 @@ operator|)
 name|LABELPREFIX
 argument_list|,
 name|proflabel
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|putprintf
