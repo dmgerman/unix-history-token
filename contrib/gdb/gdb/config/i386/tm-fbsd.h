@@ -3,6 +3,10 @@ begin_comment
 comment|/* Target-dependent definitions for FreeBSD/i386.    Copyright 1997, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -26,6 +30,23 @@ include|#
 directive|include
 file|"i386/tm-i386.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* FreeBSD/ELF uses stabs-in-ELF with the DWARF register numbering    scheme by default, so we must redefine STAB_REG_TO_REGNUM.  This    messes up the floating-point registers for a.out, but there is not    much we can do about that.  */
@@ -78,32 +99,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JB_ELEMENT_SIZE
-value|4
-end_define
-
-begin_comment
-comment|/* Size of elements in jmp_buf.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JB_PC
-value|0
-end_define
-
-begin_comment
-comment|/* Array index of saved PC.  */
-end_comment
-
-begin_comment
-comment|/* Figure out where the longjmp will land.  Store the address that    longjmp will jump to in *ADDR, and return non-zero if successful.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GET_LONGJMP_TARGET
 parameter_list|(
 name|addr
@@ -111,55 +106,24 @@ parameter_list|)
 value|get_longjmp_target (addr)
 end_define
 
-begin_function_decl
-specifier|extern
-name|int
-name|get_longjmp_target
-parameter_list|(
-name|CORE_ADDR
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Support for signal handlers.  */
+comment|/* On FreeBSD, sigtramp has size 0x18 and is immediately below the    ps_strings struct which has size 0x10 and is at the top of the    user stack.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IN_SIGTRAMP
-parameter_list|(
-name|pc
-parameter_list|,
-name|name
-parameter_list|)
-value|i386bsd_in_sigtramp (pc, name)
-end_define
+begin_undef
+undef|#
+directive|undef
+name|SIGTRAMP_START
+end_undef
 
-begin_function_decl
-specifier|extern
-name|int
-name|i386bsd_in_sigtramp
-parameter_list|(
-name|CORE_ADDR
-name|pc
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* These defines allow the recognition of sigtramps as a function name<sigtramp>.     FIXME: kettenis/2001-07-13: These should be added to the target    vector and turned into functions when we go "multi-arch".  */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|SIGTRAMP_END
+end_undef
 
 begin_define
 define|#
@@ -168,7 +132,7 @@ name|SIGTRAMP_START
 parameter_list|(
 name|pc
 parameter_list|)
-value|i386bsd_sigtramp_start
+value|0xbfbfdfd8
 end_define
 
 begin_define
@@ -178,7 +142,7 @@ name|SIGTRAMP_END
 parameter_list|(
 name|pc
 parameter_list|)
-value|i386bsd_sigtramp_end
+value|0xbfbfdff0
 end_define
 
 begin_decl_stmt
@@ -195,6 +159,19 @@ name|i386bsd_sigtramp_end
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|fbsd_kern_frame_saved_pc
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+name|fr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Override FRAME_SAVED_PC to enable the recognition of signal handlers.  */
 end_comment
@@ -205,28 +182,56 @@ directive|undef
 name|FRAME_SAVED_PC
 end_undef
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500032
+end_if
+
 begin_define
 define|#
 directive|define
 name|FRAME_SAVED_PC
 parameter_list|(
-name|frame
+name|FRAME
 parameter_list|)
-value|i386bsd_frame_saved_pc (frame)
+define|\
+value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    ))
 end_define
 
-begin_function_decl
-specifier|extern
-name|CORE_ADDR
-name|i386bsd_frame_saved_pc
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FRAME_SAVED_PC
 parameter_list|(
-name|struct
-name|frame_info
-modifier|*
-name|frame
+name|FRAME
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|(((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Offset to saved PC in sigcontext, from<sys/signal.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGCONTEXT_PC_OFFSET
+value|20
+end_define
 
 begin_escape
 end_escape
