@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|OFW_POLL_HZ
-value|50
+value|4
 end_define
 
 begin_decl_stmt
@@ -1258,7 +1258,7 @@ name|ch
 argument_list|,
 literal|1
 argument_list|)
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
