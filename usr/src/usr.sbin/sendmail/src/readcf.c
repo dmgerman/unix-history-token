@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.16 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5109,6 +5109,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|time_t
+name|convtime
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|val

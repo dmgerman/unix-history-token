@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.14 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.15 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.14 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.15 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,32 @@ end_decl_stmt
 begin_comment
 comment|/* pid of mailer */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_extern
+extern|extern	smtpmessage(char *f
+operator|,
+extern|MAILER *m
+operator|,
+extern|MCI *mci
+operator|,
+extern|...
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
