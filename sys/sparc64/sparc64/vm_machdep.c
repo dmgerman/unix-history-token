@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fsr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -246,30 +252,6 @@ operator|=
 name|pcb
 expr_stmt|;
 comment|/* 	 * Ensure that p1's pcb is up to date. 	 */
-name|td1
-operator|->
-name|td_pcb
-operator|->
-name|pcb_y
-operator|=
-name|rd
-argument_list|(
-name|y
-argument_list|)
-expr_stmt|;
-name|td1
-operator|->
-name|td_pcb
-operator|->
-name|pcb_fpstate
-operator|.
-name|fp_fprs
-operator|=
-name|rd
-argument_list|(
-name|fprs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -277,9 +259,9 @@ name|td1
 operator|->
 name|td_frame
 operator|->
-name|tf_tstate
+name|tf_fprs
 operator|&
-name|TSTATE_PEF
+name|FPRS_FEF
 operator|)
 operator|!=
 literal|0
@@ -370,21 +352,22 @@ index|[
 literal|1
 index|]
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* XXX i386 returns 1 in %edx */
 name|tf
 operator|->
 name|tf_tstate
 operator|&=
 operator|~
-operator|(
 name|TSTATE_XCC_C
-operator||
-name|TSTATE_CWP_MASK
-operator|)
 expr_stmt|;
 comment|/* success */
+name|tf
+operator|->
+name|tf_fprs
+operator|=
+literal|0
+expr_stmt|;
 name|td2
 operator|->
 name|td_frame
