@@ -476,7 +476,7 @@ name|SYSCTL_NODE
 argument_list|(
 name|_net_link
 argument_list|,
-name|IFT_OTHER
+name|IFT_TUNNEL
 argument_list|,
 name|gre
 argument_list|,
@@ -657,7 +657,7 @@ name|sc_if
 operator|.
 name|if_type
 operator|=
-name|IFT_OTHER
+name|IFT_TUNNEL
 expr_stmt|;
 name|sc
 operator|->
