@@ -5377,6 +5377,10 @@ modifier|*
 modifier|*
 name|dt_lockfuncarg
 decl_stmt|;
+name|bus_dma_segment_t
+modifier|*
+name|dt_segments
+decl_stmt|;
 name|struct
 name|bus_dma_methods
 modifier|*
