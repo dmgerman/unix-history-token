@@ -813,8 +813,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|pkt
 operator|->
 name|mode
@@ -822,7 +820,6 @@ operator|.
 name|stream
 operator|.
 name|len
-argument_list|)
 operator|<=
 sizeof|sizeof
 argument_list|(
@@ -1512,15 +1509,12 @@ name|stream
 operator|.
 name|len
 operator|=
-name|htons
-argument_list|(
 name|DSIZE
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ciphdr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pkt
@@ -1575,13 +1569,10 @@ name|stream
 operator|.
 name|len
 operator|=
-name|htons
-argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ciphdr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bzero

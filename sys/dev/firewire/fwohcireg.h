@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2003 Hidetoshi Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
 end_comment
 
 begin_define
@@ -207,6 +207,120 @@ name|fwohcireg_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* for PCI */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_WRITE
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x) = htole32(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_READ
+parameter_list|(
+name|x
+parameter_list|)
+value|le32toh(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_SET
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x) |= htole32(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_CLEAR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)&= htole32(~(y)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_WRITE
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x) = (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_READ
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_SET
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x) |= (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_DMA_CLEAR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)&= ~(y))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|fwohcidb
@@ -217,13 +331,7 @@ struct|struct
 block|{
 specifier|volatile
 name|u_int32_t
-name|reqcount
-range|:
-literal|16
-decl_stmt|,
-name|control
-range|:
-literal|16
+name|cmd
 decl_stmt|;
 specifier|volatile
 name|u_int32_t
@@ -235,13 +343,7 @@ name|depend
 decl_stmt|;
 specifier|volatile
 name|u_int32_t
-name|count
-range|:
-literal|16
-decl_stmt|,
-name|status
-range|:
-literal|16
+name|res
 decl_stmt|;
 block|}
 name|desc
@@ -258,132 +360,140 @@ name|db
 union|;
 define|#
 directive|define
+name|OHCI_STATUS_SHIFT
+value|16
+define|#
+directive|define
+name|OHCI_COUNT_MASK
+value|0xffff
+define|#
+directive|define
 name|OHCI_OUTPUT_MORE
-value|(0<< 12)
+value|(0<< 28)
 define|#
 directive|define
 name|OHCI_OUTPUT_LAST
-value|(1<< 12)
+value|(1<< 28)
 define|#
 directive|define
 name|OHCI_INPUT_MORE
-value|(2<< 12)
+value|(2<< 28)
 define|#
 directive|define
 name|OHCI_INPUT_LAST
-value|(3<< 12)
+value|(3<< 28)
 define|#
 directive|define
 name|OHCI_STORE_QUAD
-value|(4<< 12)
+value|(4<< 28)
 define|#
 directive|define
 name|OHCI_LOAD_QUAD
-value|(5<< 12)
+value|(5<< 28)
 define|#
 directive|define
 name|OHCI_NOP
-value|(6<< 12)
+value|(6<< 28)
 define|#
 directive|define
 name|OHCI_STOP
-value|(7<< 12)
+value|(7<< 28)
 define|#
 directive|define
 name|OHCI_STORE
-value|(8<< 12)
+value|(8<< 28)
 define|#
 directive|define
 name|OHCI_CMD_MASK
-value|(0xf<< 12)
+value|(0xf<< 28)
 define|#
 directive|define
 name|OHCI_UPDATE
-value|(1<< 11)
+value|(1<< 27)
 define|#
 directive|define
 name|OHCI_KEY_ST0
-value|(0<< 8)
+value|(0<< 24)
 define|#
 directive|define
 name|OHCI_KEY_ST1
-value|(1<< 8)
+value|(1<< 24)
 define|#
 directive|define
 name|OHCI_KEY_ST2
-value|(2<< 8)
+value|(2<< 24)
 define|#
 directive|define
 name|OHCI_KEY_ST3
-value|(3<< 8)
+value|(3<< 24)
 define|#
 directive|define
 name|OHCI_KEY_REGS
-value|(5<< 8)
+value|(5<< 24)
 define|#
 directive|define
 name|OHCI_KEY_SYS
-value|(6<< 8)
+value|(6<< 24)
 define|#
 directive|define
 name|OHCI_KEY_DEVICE
-value|(7<< 8)
+value|(7<< 24)
 define|#
 directive|define
 name|OHCI_KEY_MASK
-value|(7<< 8)
+value|(7<< 24)
 define|#
 directive|define
 name|OHCI_INTERRUPT_NEVER
-value|(0<< 4)
+value|(0<< 20)
 define|#
 directive|define
 name|OHCI_INTERRUPT_TRUE
-value|(1<< 4)
+value|(1<< 20)
 define|#
 directive|define
 name|OHCI_INTERRUPT_FALSE
-value|(2<< 4)
+value|(2<< 20)
 define|#
 directive|define
 name|OHCI_INTERRUPT_ALWAYS
-value|(3<< 4)
+value|(3<< 20)
 define|#
 directive|define
 name|OHCI_BRANCH_NEVER
-value|(0<< 2)
+value|(0<< 18)
 define|#
 directive|define
 name|OHCI_BRANCH_TRUE
-value|(1<< 2)
+value|(1<< 18)
 define|#
 directive|define
 name|OHCI_BRANCH_FALSE
-value|(2<< 2)
+value|(2<< 18)
 define|#
 directive|define
 name|OHCI_BRANCH_ALWAYS
-value|(3<< 2)
+value|(3<< 18)
 define|#
 directive|define
 name|OHCI_BRANCH_MASK
-value|(3<< 2)
+value|(3<< 18)
 define|#
 directive|define
 name|OHCI_WAIT_NEVER
-value|(0)
+value|(0<< 16)
 define|#
 directive|define
 name|OHCI_WAIT_TRUE
-value|(1)
+value|(1<< 16)
 define|#
 directive|define
 name|OHCI_WAIT_FALSE
-value|(2)
+value|(2<< 16)
 define|#
 directive|define
 name|OHCI_WAIT_ALWAYS
-value|(3)
+value|(3<< 16)
 block|}
 struct|;
 end_struct
@@ -1087,11 +1197,14 @@ name|fwohcidb
 modifier|*
 name|db
 decl_stmt|;
+name|bus_dmamap_t
+name|dma_map
+decl_stmt|;
 name|caddr_t
 name|buf
 decl_stmt|;
-name|caddr_t
-name|dummy
+name|bus_addr_t
+name|bus_addr
 decl_stmt|;
 name|int
 name|dbcnt
@@ -1118,75 +1231,154 @@ index|]
 decl_stmt|;
 struct|struct
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|u_int32_t
-name|res3
-range|:
-literal|4
-decl_stmt|,
-name|tcode
-range|:
-literal|4
-decl_stmt|,
-name|res2
-range|:
-literal|8
-decl_stmt|,
-name|spd
-range|:
-literal|3
-decl_stmt|,
-name|res1
-range|:
+label|:
 literal|13
-decl_stmt|;
+operator|,
+name|spd
+operator|:
+literal|3
+operator|,
+operator|:
+literal|8
+operator|,
+name|tcode
+operator|:
+literal|4
+operator|,
+operator|:
+literal|4
+expr_stmt|;
+else|#
+directive|else
+name|u_int32_t
+label|:
+literal|4
+operator|,
+name|tcode
+operator|:
+literal|4
+operator|,
+operator|:
+literal|8
+operator|,
+name|spd
+operator|:
+literal|3
+operator|,
+operator|:
+literal|13
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|common
 struct|;
 struct|struct
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|u_int32_t
-name|res3
-range|:
-literal|4
-decl_stmt|,
-name|tcode
-range|:
-literal|4
-decl_stmt|,
-name|tlrt
-range|:
+label|:
 literal|8
-decl_stmt|,
-name|spd
-range|:
-literal|3
-decl_stmt|,
-name|res2
-range|:
-literal|4
-decl_stmt|,
+operator|,
 name|srcbus
-range|:
+operator|:
 literal|1
-decl_stmt|,
-name|res1
-range|:
+operator|,
+operator|:
+literal|4
+operator|,
+name|spd
+operator|:
+literal|3
+operator|,
+name|tlrt
+operator|:
 literal|8
-decl_stmt|;
+operator|,
+name|tcode
+operator|:
+literal|4
+operator|,
+operator|:
+literal|4
+expr_stmt|;
+else|#
+directive|else
 name|u_int32_t
-name|res4
-range|:
-literal|16
-decl_stmt|,
+label|:
+literal|4
+operator|,
+name|tcode
+operator|:
+literal|4
+operator|,
+name|tlrt
+operator|:
+literal|8
+operator|,
+name|spd
+operator|:
+literal|3
+operator|,
+operator|:
+literal|4
+operator|,
+name|srcbus
+operator|:
+literal|1
+operator|,
+operator|:
+literal|8
+expr_stmt|;
+endif|#
+directive|endif
+name|BIT16x2
+argument_list|(
 name|dst
-range|:
-literal|16
-decl_stmt|;
+argument_list|, )
+expr_stmt|;
 block|}
 name|asycomm
 struct|;
 struct|struct
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int32_t
+label|:
+literal|13
+operator|,
+name|spd
+operator|:
+literal|3
+operator|,
+name|chtag
+operator|:
+literal|8
+operator|,
+name|tcode
+operator|:
+literal|4
+operator|,
+name|sy
+operator|:
+literal|4
+expr_stmt|;
+else|#
+directive|else
 name|u_int32_t
 name|sy
 range|:
@@ -1204,19 +1396,16 @@ name|spd
 range|:
 literal|3
 decl_stmt|,
-name|res1
 range|:
 literal|13
 decl_stmt|;
-name|u_int32_t
-name|res2
-range|:
-literal|16
-decl_stmt|,
+endif|#
+directive|endif
+name|BIT16x2
+argument_list|(
 name|len
-range|:
-literal|16
-decl_stmt|;
+argument_list|, )
+expr_stmt|;
 block|}
 name|stream
 struct|;
