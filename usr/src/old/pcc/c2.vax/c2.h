@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	c2.h	4.8	85/01/16	*/
+comment|/*	c2.h	4.9	85/03/19	*/
 end_comment
 
 begin_comment
@@ -720,12 +720,25 @@ begin_struct
 struct|struct
 name|node
 block|{
+union|union
+block|{
+struct|struct
+block|{
 name|char
-name|op
+name|op_op
 decl_stmt|;
 name|char
-name|subop
+name|op_subop
 decl_stmt|;
+block|}
+name|un_op
+struct|;
+name|short
+name|un_combop
+decl_stmt|;
+block|}
+name|op_un
+union|;
 name|short
 name|refc
 decl_stmt|;
@@ -763,15 +776,26 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-block|{
-name|short
+begin_define
+define|#
+directive|define
+name|op
+value|op_un.un_op.op_op
+end_define
+
+begin_define
+define|#
+directive|define
+name|subop
+value|op_un.un_op.op_subop
+end_define
+
+begin_define
+define|#
+directive|define
 name|combop
-decl_stmt|;
-block|}
-struct|;
-end_struct
+value|op_un.un_combop
+end_define
 
 begin_decl_stmt
 name|char
@@ -905,7 +929,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|isn
 decl_stmt|;
 end_decl_stmt
@@ -1029,16 +1053,6 @@ name|LABHS
 value|127
 end_define
 
-begin_struct
-struct|struct
-block|{
-name|char
-name|lbyte
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 name|char
 modifier|*
@@ -1080,6 +1094,49 @@ name|nonlab
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|struct
+name|node
+modifier|*
+name|alloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|decref
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((p)&& --(p)->refc<= 0 ? nrlab++, delnode(p) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|delnode
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((p)->back->forw = (p)->forw, (p)->forw->back = (p)->back)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|notdef
+end_endif
 
 end_unit
 
