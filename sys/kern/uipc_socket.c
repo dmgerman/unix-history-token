@@ -1184,6 +1184,11 @@ literal|"sofree: not queued"
 argument_list|)
 expr_stmt|;
 block|}
+name|head
+operator|->
+name|so_qlen
+operator|--
+expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -8189,6 +8194,10 @@ operator|=
 name|so
 operator|->
 name|so_qlen
+operator|-
+name|so
+operator|->
+name|so_incqlen
 expr_stmt|;
 return|return
 operator|(
