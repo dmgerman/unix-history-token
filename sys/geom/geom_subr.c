@@ -141,12 +141,12 @@ end_include
 
 begin_decl_stmt
 name|struct
-name|method_list_head
-name|g_methods
+name|class_list_head
+name|g_classs
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|g_methods
+name|g_classs
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -196,10 +196,10 @@ end_decl_stmt
 
 begin_function
 name|void
-name|g_add_method
+name|g_add_class
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|)
@@ -224,7 +224,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_add_method(%s)"
+literal|"g_add_class(%s)"
 argument_list|,
 name|mp
 operator|->
@@ -242,11 +242,11 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|g_methods
+name|g_classs
 argument_list|,
 name|mp
 argument_list|,
-name|method
+name|class
 argument_list|)
 expr_stmt|;
 if|if
@@ -257,7 +257,7 @@ literal|0
 condition|)
 name|g_post_event
 argument_list|(
-name|EV_NEW_METHOD
+name|EV_NEW_CLASS
 argument_list|,
 name|mp
 argument_list|,
@@ -281,7 +281,7 @@ modifier|*
 name|g_new_geomf
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -390,7 +390,7 @@ operator|)
 expr_stmt|;
 name|gp
 operator|->
-name|method
+name|class
 operator|=
 name|mp
 expr_stmt|;
@@ -605,18 +605,18 @@ name|KASSERT
 argument_list|(
 name|gp
 operator|->
-name|method
+name|class
 operator|->
 name|orphan
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"g_new_consumer on method(%s) without orphan"
+literal|"g_new_consumer on class(%s) without orphan"
 operator|,
 name|gp
 operator|->
-name|method
+name|class
 operator|->
 name|name
 operator|)
@@ -1824,18 +1824,18 @@ name|pp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|access
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL method->access"
+literal|"NULL class->access"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If our method cares about being spoiled, and we have been, we 	 * are probably just ahead of the event telling us that.  Fail 	 * now rather than having to unravel this later. 	 */
+comment|/* 	 * If our class cares about being spoiled, and we have been, we 	 * are probably just ahead of the event telling us that.  Fail 	 * now rather than having to unravel this later. 	 */
 if|if
 condition|(
 name|cp
@@ -2150,7 +2150,7 @@ name|pp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|access
 argument_list|(
@@ -2661,9 +2661,9 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|g_method
+name|g_class
 modifier|*
-name|g_method_by_name
+name|g_class_by_name
 parameter_list|(
 name|char
 modifier|*
@@ -2671,7 +2671,7 @@ name|name
 parameter_list|)
 block|{
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 decl_stmt|;
@@ -2679,7 +2679,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_method_by_name(%s)"
+literal|"g_class_by_name(%s)"
 argument_list|,
 name|name
 argument_list|)
@@ -2691,9 +2691,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_methods
+argument|&g_classs
 argument_list|,
-argument|method
+argument|class
 argument_list|)
 if|if
 condition|(
@@ -2728,7 +2728,7 @@ name|g_create_geomf
 parameter_list|(
 name|char
 modifier|*
-name|method
+name|class
 parameter_list|,
 name|struct
 name|g_provider
@@ -2755,7 +2755,7 @@ modifier|*
 name|s
 decl_stmt|;
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 decl_stmt|;
@@ -2770,7 +2770,7 @@ name|G_T_TOPOLOGY
 argument_list|,
 literal|"g_create_geom(%s, %p(%s))"
 argument_list|,
-name|method
+name|class
 argument_list|,
 name|pp
 argument_list|,
@@ -2794,9 +2794,9 @@ name|NULL
 expr_stmt|;
 name|mp
 operator|=
-name|g_method_by_name
+name|g_class_by_name
 argument_list|(
-name|method
+name|class
 argument_list|)
 expr_stmt|;
 if|if
@@ -2952,7 +2952,7 @@ name|g_insert_geom
 parameter_list|(
 name|char
 modifier|*
-name|method
+name|class
 parameter_list|,
 name|struct
 name|g_consumer
@@ -2961,7 +2961,7 @@ name|cp
 parameter_list|)
 block|{
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 decl_stmt|;
@@ -2992,7 +2992,7 @@ name|G_T_TOPOLOGY
 argument_list|,
 literal|"g_insert_geomf(%s, %p)"
 argument_list|,
-name|method
+name|class
 argument_list|,
 name|cp
 argument_list|)
@@ -3016,9 +3016,9 @@ expr_stmt|;
 comment|/* XXX: check for events ?? */
 name|mp
 operator|=
-name|g_method_by_name
+name|g_class_by_name
 argument_list|(
-name|method
+name|class
 argument_list|)
 expr_stmt|;
 if|if

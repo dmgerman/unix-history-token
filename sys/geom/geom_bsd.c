@@ -124,8 +124,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|BSD_METHOD_NAME
-value|"BSD-method"
+name|BSD_CLASS_NAME
+value|"BSD-class"
 end_define
 
 begin_struct
@@ -1481,7 +1481,7 @@ modifier|*
 name|g_bsd_taste
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -1583,11 +1583,11 @@ name|pp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|name
 argument_list|,
-name|BSD_METHOD_NAME
+name|BSD_CLASS_NAME
 argument_list|)
 condition|)
 return|return
@@ -2264,11 +2264,11 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|g_method
-name|g_bsd_method
+name|g_class
+name|g_bsd_class
 init|=
 block|{
-name|BSD_METHOD_NAME
+name|BSD_CLASS_NAME
 block|,
 name|g_bsd_taste
 block|,
@@ -2278,15 +2278,15 @@ name|g_slice_orphan
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 argument_list|(
-name|g_bsd_method
+name|g_bsd_class
 argument_list|,
 name|g_bsd
 argument_list|)

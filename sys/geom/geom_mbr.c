@@ -130,15 +130,15 @@ end_include
 begin_define
 define|#
 directive|define
-name|MBR_METHOD_NAME
-value|"MBR-method"
+name|MBR_CLASS_NAME
+value|"MBR-class"
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBREXT_METHOD_NAME
-value|"MBREXT-method"
+name|MBREXT_CLASS_NAME
+value|"MBREXT-class"
 end_define
 
 begin_function
@@ -719,7 +719,7 @@ modifier|*
 name|g_mbr_taste
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -1226,11 +1226,11 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|g_method
-name|g_mbr_method
+name|g_class
+name|g_mbr_class
 init|=
 block|{
-name|MBR_METHOD_NAME
+name|MBR_CLASS_NAME
 block|,
 name|g_mbr_taste
 block|,
@@ -1240,15 +1240,15 @@ name|g_slice_orphan
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 argument_list|(
-name|g_mbr_method
+name|g_mbr_class
 argument_list|,
 name|g_mbr
 argument_list|)
@@ -1574,7 +1574,7 @@ modifier|*
 name|g_mbrext_taste
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -1663,11 +1663,11 @@ name|pp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|name
 argument_list|,
-name|MBR_METHOD_NAME
+name|MBR_CLASS_NAME
 argument_list|)
 condition|)
 return|return
@@ -2084,11 +2084,11 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|g_method
-name|g_mbrext_method
+name|g_class
+name|g_mbrext_class
 init|=
 block|{
-name|MBREXT_METHOD_NAME
+name|MBREXT_CLASS_NAME
 block|,
 name|g_mbrext_taste
 block|,
@@ -2098,15 +2098,15 @@ name|g_slice_orphan
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 argument_list|(
-name|g_mbrext_method
+name|g_mbrext_class
 argument_list|,
 name|g_mbrext
 argument_list|)

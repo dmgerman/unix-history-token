@@ -670,7 +670,7 @@ name|_debug_sizeof
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|g_method
+name|g_class
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -681,7 +681,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|g_method
+name|g_class
 argument_list|)
 argument_list|,
 literal|""

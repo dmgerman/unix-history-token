@@ -410,20 +410,20 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|orphan
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"method %s has no orphan, geom %s"
+literal|"class %s has no orphan, geom %s"
 operator|,
 name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|name
 operator|,
@@ -439,7 +439,7 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|->
 name|orphan
 argument_list|(
@@ -492,7 +492,7 @@ name|tp
 parameter_list|)
 block|{
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 decl_stmt|,
@@ -534,7 +534,7 @@ name|event
 argument_list|,
 name|ep
 operator|->
-name|method
+name|class
 argument_list|,
 name|ep
 operator|->
@@ -560,13 +560,13 @@ name|event
 condition|)
 block|{
 case|case
-name|EV_NEW_METHOD
+name|EV_NEW_CLASS
 case|:
 name|mp2
 operator|=
 name|ep
 operator|->
-name|method
+name|class
 expr_stmt|;
 if|if
 condition|(
@@ -581,9 +581,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_methods
+argument|&g_classs
 argument_list|,
-argument|method
+argument|class
 argument_list|)
 block|{
 if|if
@@ -617,7 +617,7 @@ name|taste
 argument_list|(
 name|ep
 operator|->
-name|method
+name|class
 argument_list|,
 name|pp
 argument_list|,
@@ -653,9 +653,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_methods
+argument|&g_classs
 argument_list|,
-argument|method
+argument|class
 argument_list|)
 block|{
 if|if
@@ -685,7 +685,7 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|==
 name|mp
 condition|)
@@ -973,13 +973,13 @@ if|if
 condition|(
 name|ep
 operator|->
-name|method
+name|class
 operator|!=
 name|NULL
 condition|)
 name|ep
 operator|->
-name|method
+name|class
 operator|->
 name|event
 operator|=
@@ -1115,7 +1115,7 @@ name|g_events
 name|ev
 parameter_list|,
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -1188,7 +1188,7 @@ condition|)
 block|{
 name|ep
 operator|->
-name|method
+name|class
 operator|=
 name|mp
 expr_stmt|;
@@ -1201,7 +1201,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"Double event on method"
+literal|"Double event on class"
 operator|)
 argument_list|)
 expr_stmt|;

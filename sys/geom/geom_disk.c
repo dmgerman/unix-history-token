@@ -102,11 +102,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|g_method
-name|g_disk_method
+name|g_class
+name|g_disk_class
 init|=
 block|{
-literal|"DISK-method"
+literal|"DISK-class"
 block|,
 name|NULL
 block|,
@@ -817,10 +817,10 @@ operator|!
 name|once
 condition|)
 block|{
-name|g_add_method
+name|g_add_class
 argument_list|(
 operator|&
-name|g_disk_method
+name|g_disk_class
 argument_list|)
 expr_stmt|;
 name|once
@@ -879,7 +879,7 @@ operator|=
 name|g_new_geomf
 argument_list|(
 operator|&
-name|g_disk_method
+name|g_disk_class
 argument_list|,
 literal|"%s%d"
 argument_list|,

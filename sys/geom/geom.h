@@ -50,7 +50,7 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
-name|g_method
+name|g_class
 struct_decl|;
 end_struct_decl
 
@@ -99,9 +99,9 @@ end_struct_decl
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
-name|method_list_head
+name|class_list_head
 argument_list|,
-name|g_method
+name|g_class
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -152,7 +152,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 value|{ 0, 0 }, { 0 }, 0
 end_define
 
@@ -164,7 +164,7 @@ modifier|*
 name|g_create_geom_t
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -188,7 +188,7 @@ modifier|*
 name|g_taste_t
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 parameter_list|,
 name|struct
@@ -318,12 +318,12 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The g_method structure describes a transformation method.  In other words  * all BSD disklabel handlers share one g_method, all MBR handlers share  * one common g_method and so on.  * Certain operations are instantiated on the method, most notably the  * taste and create_geom functions.  * XXX: should access and orphan go into g_geom ?  * XXX: would g_class be a better and less confusing name ?  */
+comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and create_geom functions.  * XXX: should access and orphan go into g_geom ?  * XXX: would g_class be a better and less confusing name ?  */
 end_comment
 
 begin_struct
 struct|struct
-name|g_method
+name|g_class
 block|{
 name|char
 modifier|*
@@ -347,9 +347,9 @@ name|create_geom
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|g_method
+argument|g_class
 argument_list|)
-name|method
+name|class
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -368,7 +368,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The g_geom is an instance of a g_method.  */
+comment|/*  * The g_geom is an instance of a g_class.  */
 end_comment
 
 begin_struct
@@ -380,9 +380,9 @@ modifier|*
 name|name
 decl_stmt|;
 name|struct
-name|g_method
+name|g_class
 modifier|*
-name|method
+name|class
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
@@ -591,9 +591,9 @@ begin_enum
 enum|enum
 name|g_events
 block|{
-name|EV_NEW_METHOD
+name|EV_NEW_CLASS
 block|,
-comment|/* method */
+comment|/* class */
 name|EV_NEW_PROVIDER
 block|,
 comment|/* provider */
@@ -620,9 +620,9 @@ argument_list|)
 name|events
 expr_stmt|;
 name|struct
-name|g_method
+name|g_class
 modifier|*
-name|method
+name|class
 decl_stmt|;
 name|struct
 name|g_geom
@@ -665,7 +665,7 @@ modifier|*
 name|g_conf_specific
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -847,7 +847,7 @@ name|g_events
 name|ev
 parameter_list|,
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -947,10 +947,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_add_method
+name|g_add_class
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|)
@@ -982,7 +982,7 @@ name|g_create_geomf
 parameter_list|(
 name|char
 modifier|*
-name|method
+name|class
 parameter_list|,
 name|struct
 name|g_provider
@@ -1129,7 +1129,7 @@ name|g_insert_geom
 parameter_list|(
 name|char
 modifier|*
-name|method
+name|class
 parameter_list|,
 name|struct
 name|g_consumer
@@ -1142,8 +1142,8 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|method_list_head
-name|g_methods
+name|class_list_head
+name|g_classs
 decl_stmt|;
 end_decl_stmt
 
@@ -1168,7 +1168,7 @@ modifier|*
 name|g_new_geomf
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -1628,14 +1628,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 parameter_list|(
-name|method
+name|class
 parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|static void				\ 	name##init(void)			\ 	{					\ 		mtx_unlock(&Giant);		\ 		g_add_method(&method);		\ 		mtx_lock(&Giant);		\ 	}					\ 	SYSINIT(name, SI_SUB_PSEUDO, SI_ORDER_FIRST, name##init, NULL);
+value|static void				\ 	name##init(void)			\ 	{					\ 		mtx_unlock(&Giant);		\ 		g_add_class(&class);		\ 		mtx_lock(&Giant);		\ 	}					\ 	SYSINIT(name, SI_SUB_PSEUDO, SI_ORDER_FIRST, name##init, NULL);
 end_define
 
 begin_endif

@@ -193,11 +193,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|g_method
-name|g_dev_method
+name|g_class
+name|g_dev_class
 init|=
 block|{
-literal|"DEV-method"
+literal|"DEV-class"
 block|,
 name|g_dev_taste
 block|,
@@ -207,7 +207,7 @@ name|g_dev_orphan
 block|,
 name|NULL
 block|,
-name|G_METHOD_INITSTUFF
+name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -264,7 +264,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|gp
 argument_list|,
-argument|&g_dev_method.geom
+argument|&g_dev_class.geom
 argument_list|,
 argument|geom
 argument_list|)
@@ -375,7 +375,7 @@ modifier|*
 name|g_dev_taste
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -455,7 +455,7 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|method
+name|class
 operator|==
 name|mp
 condition|)
@@ -1304,7 +1304,7 @@ name|gp
 operator|=
 name|g_create_geomf
 argument_list|(
-literal|"BSD-method"
+literal|"BSD-class"
 argument_list|,
 name|cp
 operator|->
@@ -1870,9 +1870,9 @@ block|}
 end_function
 
 begin_macro
-name|DECLARE_GEOM_METHOD
+name|DECLARE_GEOM_CLASS
 argument_list|(
-argument|g_dev_method
+argument|g_dev_class
 argument_list|,
 argument|g_dev
 argument_list|)

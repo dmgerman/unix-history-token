@@ -226,7 +226,7 @@ name|gp
 argument_list|,
 name|gp
 operator|->
-name|method
+name|class
 operator|->
 name|name
 argument_list|,
@@ -301,7 +301,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|g_confdot_method
+name|g_confdot_class
 parameter_list|(
 name|struct
 name|sbuf
@@ -309,7 +309,7 @@ modifier|*
 name|sb
 parameter_list|,
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|)
@@ -347,7 +347,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 decl_stmt|;
@@ -385,11 +385,11 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_methods
+argument|&g_classs
 argument_list|,
-argument|method
+argument|class
 argument_list|)
-name|g_confdot_method
+name|g_confdot_class
 argument_list|(
 name|sb
 argument_list|,
@@ -726,11 +726,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<method><ref>%p</ref></method>\n"
+literal|"<class><ref>%p</ref></class>\n"
 argument_list|,
 name|gp
 operator|->
-name|method
+name|class
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -861,7 +861,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|g_conf_method
+name|g_conf_class
 parameter_list|(
 name|struct
 name|sbuf
@@ -869,7 +869,7 @@ modifier|*
 name|sb
 parameter_list|,
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -898,7 +898,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<method>\n"
+literal|"<class>\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -957,7 +957,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"</method>\n"
+literal|"</class>\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -970,7 +970,7 @@ modifier|*
 name|g_conf_specific
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
@@ -991,7 +991,7 @@ name|cp
 parameter_list|)
 block|{
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp2
 decl_stmt|;
@@ -1029,9 +1029,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp2
 argument_list|,
-argument|&g_methods
+argument|&g_classs
 argument_list|,
-argument|method
+argument|class
 argument_list|)
 block|{
 if|if
@@ -1045,7 +1045,7 @@ operator|!=
 name|mp2
 condition|)
 continue|continue;
-name|g_conf_method
+name|g_conf_class
 argument_list|(
 name|sb
 argument_list|,

@@ -1107,7 +1107,7 @@ modifier|*
 name|g_slice_new
 parameter_list|(
 name|struct
-name|g_method
+name|g_class
 modifier|*
 name|mp
 parameter_list|,
