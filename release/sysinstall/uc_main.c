@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id: uc_main.c,v 1.10 1996/10/05 16:33:05 jkh Exp $  */
+comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id: uc_main.c,v 1.11 1996/10/06 02:56:22 jkh Exp $  */
 end_comment
 
 begin_include
@@ -366,6 +366,19 @@ return|return
 name|NULL
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"uc_open: opened /stand/symbols file, reading %d entries.\n"
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|kern
 operator|->
 name|nl
@@ -379,6 +392,23 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|size
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nlist
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|nl
+argument_list|,
 operator|(
 name|size
 operator|+
@@ -512,7 +542,7 @@ operator|&
 name|v1
 argument_list|)
 operator|==
-literal|5
+literal|4
 condition|)
 block|{
 name|nl
@@ -565,7 +595,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"uc_open: for entry %d, decoded: \"%s\", %d %d %hd %ld\n"
+literal|"uc_open: for entry %d, decoded: \"%s\", %u %d %hd %ld\n"
 argument_list|,
 name|i
 argument_list|,
@@ -606,46 +636,16 @@ name|n_value
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|nl
-index|[
-name|i
-index|]
-operator|.
-name|n_type
-operator|=
-literal|0
-expr_stmt|;
-name|nl
-index|[
-name|i
-index|]
-operator|.
-name|n_other
-operator|=
-literal|0
-expr_stmt|;
-name|nl
-index|[
-name|i
-index|]
-operator|.
-name|n_desc
-operator|=
-literal|0
-expr_stmt|;
-name|nl
-index|[
-name|i
-index|]
-operator|.
-name|n_value
-operator|=
-literal|0
-expr_stmt|;
 block|}
-block|}
+name|nl
+index|[
+name|i
+index|]
+operator|.
+name|n_name
+operator|=
+literal|""
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
@@ -745,6 +745,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"uc_open: attempting to open /dev/kmem for incore.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|kd
 operator|=
@@ -764,23 +774,13 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-name|kern
-operator|=
-operator|(
-expr|struct
-name|kernel
-operator|*
-operator|)
-operator|-
-literal|3
-expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"uc_open: Unable to open /dev/kmem.\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|kern
+name|NULL
 return|;
 block|}
 name|kern
@@ -825,16 +825,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-name|kern
-operator|=
-operator|(
-expr|struct
-name|kernel
-operator|*
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"uc_open: Unable to stat %s.\n"
@@ -843,7 +833,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-name|kern
+name|NULL
 return|;
 block|}
 name|kern
@@ -877,16 +867,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-name|kern
-operator|=
-operator|(
-expr|struct
-name|kernel
-operator|*
-operator|)
-operator|-
-literal|2
-expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"uc_open: Unable to chflags %s.\n"
@@ -895,7 +875,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-name|kern
+name|NULL
 return|;
 block|}
 if|if
@@ -933,16 +913,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-name|kern
-operator|=
-operator|(
-expr|struct
-name|kernel
-operator|*
-operator|)
-operator|-
-literal|3
-expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"uc_open: Unable to open %s.\n"
@@ -951,7 +921,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-name|kern
+name|NULL
 return|;
 block|}
 name|fchflags
@@ -1024,16 +994,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-name|kern
-operator|=
-operator|(
-expr|struct
-name|kernel
-operator|*
-operator|)
-operator|-
-literal|4
-expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"uc_open: Unable to mmap from %s.\n"
@@ -1042,7 +1002,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-name|kern
+name|NULL
 return|;
 block|}
 block|}
@@ -1051,16 +1011,6 @@ operator|->
 name|fd
 operator|=
 name|kd
-expr_stmt|;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"uc_open: getting isa information\n"
-argument_list|)
 expr_stmt|;
 name|get_isa_info
 argument_list|(
@@ -1074,7 +1024,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"uc_open: getting pci information\n"
+literal|"uc_open: got isa information\n"
 argument_list|)
 expr_stmt|;
 name|get_pci_info
@@ -1089,7 +1039,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"uc_open: getting eisa information\n"
+literal|"uc_open: got pci information\n"
 argument_list|)
 expr_stmt|;
 name|get_eisa_info
@@ -1104,12 +1054,22 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"uc_open: getting scsi information\n"
+literal|"uc_open: got eisa information\n"
 argument_list|)
 expr_stmt|;
 name|get_scsi_info
 argument_list|(
 name|kern
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"uc_open: got scsi information\n"
 argument_list|)
 expr_stmt|;
 return|return
