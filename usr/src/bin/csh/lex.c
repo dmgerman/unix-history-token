@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c 4.5 %G%"
+literal|"@(#)lex.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -739,22 +739,18 @@ name|c
 operator||=
 name|QUOTE
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|c
 operator|==
 literal|'\n'
-operator|&&
-name|c1
-operator|!=
-literal|'`'
 condition|)
 name|c
-operator||=
-name|QUOTE
+operator|=
+literal|' '
 expr_stmt|;
+else|else
 name|ungetC
 argument_list|(
 name|c
@@ -764,7 +760,6 @@ name|c
 operator|=
 literal|'\\'
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
