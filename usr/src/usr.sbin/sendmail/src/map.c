@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.51 (Berkeley) %G%"
+literal|"@(#)map.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4982,9 +4982,14 @@ operator|->
 name|map_mflags
 argument_list|)
 condition|)
+block|{
 name|syserr
 argument_list|(
-literal|"421 Cannot bind to domain %s: %s"
+literal|"421 Cannot bind to map %s in domain %s: %s"
+argument_list|,
+name|map
+operator|->
+name|map_file
 argument_list|,
 name|map
 operator|->
@@ -4996,6 +5001,7 @@ name|yperr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|FALSE
 return|;
