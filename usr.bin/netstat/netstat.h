@@ -530,6 +530,8 @@ operator|(
 expr|struct
 name|sockaddr
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
