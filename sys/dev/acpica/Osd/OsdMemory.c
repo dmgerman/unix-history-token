@@ -38,7 +38,6 @@ file|<vm/pmap.h>
 end_include
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ACPICA
@@ -180,7 +179,7 @@ modifier|*
 name|PhysicalAddress
 parameter_list|)
 block|{
-comment|/* we can't necessarily do this, so cop out */
+comment|/* We can't necessarily do this, so cop out. */
 return|return
 operator|(
 name|AE_BAD_ADDRESS
@@ -268,13 +267,11 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-block|{
 return|return
 operator|(
 name|AE_NOT_EXIST
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|Width
@@ -419,13 +416,11 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-block|{
 return|return
 operator|(
 name|AE_NOT_EXIST
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|Width

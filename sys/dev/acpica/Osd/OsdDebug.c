@@ -22,18 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -46,31 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/db_output.h>
 end_include
 
 begin_include
@@ -159,6 +123,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* DDB */
 block|}
 end_function
 
@@ -363,6 +328,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ACPI_DEBUGGER */
+end_comment
 
 end_unit
 

@@ -540,6 +540,9 @@ block|{
 name|ACPI_HANDLE
 name|parent
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
@@ -559,7 +562,7 @@ name|subclass
 decl_stmt|,
 name|header
 decl_stmt|;
-comment|/* Try to get the _BBN object of the root, otherwise assume it is 0 */
+comment|/* Try to get the _BBN object of the root, otherwise assume it is 0. */
 name|bus
 operator|=
 literal|0
@@ -571,10 +574,8 @@ operator|==
 name|curr
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|status
+operator|=
 name|acpi_GetInteger
 argument_list|(
 name|root
@@ -584,6 +585,12 @@ argument_list|,
 operator|&
 name|bus
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 operator|&&
 name|bootverbose
@@ -599,10 +606,8 @@ name|bus
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|status
+operator|=
 name|AcpiGetParent
 argument_list|(
 name|curr
@@ -610,6 +615,12 @@ argument_list|,
 operator|&
 name|parent
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 return|return
@@ -617,7 +628,7 @@ operator|(
 name|bus
 operator|)
 return|;
-comment|/* First, recurse up the tree until we find the host bus */
+comment|/* First, recurse up the tree until we find the host bus. */
 name|bus
 operator|=
 name|acpi_bus_number
@@ -629,7 +640,7 @@ argument_list|,
 name|PciId
 argument_list|)
 expr_stmt|;
-comment|/* Validate parent bus device type */
+comment|/* Validate parent bus device type. */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -661,11 +672,9 @@ name|bus
 operator|)
 return|;
 block|}
-comment|/* Get the parent's slot and function */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/* Get the parent's slot and function. */
+name|status
+operator|=
 name|acpi_GetInteger
 argument_list|(
 name|parent
@@ -675,6 +684,12 @@ argument_list|,
 operator|&
 name|adr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -745,7 +760,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Find the header type, masking off the multifunction bit */
+comment|/* Find the header type, masking off the multifunction bit. */
 name|header
 operator|=
 name|pci_cfgregread
@@ -844,6 +859,9 @@ block|{
 name|ACPI_HANDLE
 name|parent
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|int
 name|bus
 decl_stmt|;
@@ -871,10 +889,8 @@ operator|==
 name|chandle
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|status
+operator|=
 name|acpi_GetInteger
 argument_list|(
 name|rhandle
@@ -884,6 +900,12 @@ argument_list|,
 operator|&
 name|bus
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 operator|&&
 name|bootverbose

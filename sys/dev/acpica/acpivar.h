@@ -197,7 +197,7 @@ name|void
 modifier|*
 name|ad_private
 decl_stmt|;
-comment|/* resources */
+comment|/* Resources */
 name|struct
 name|resource_list
 name|ad_rl
