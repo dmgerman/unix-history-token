@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_io.c	1.4 (Berkeley) %G%"
+literal|"@(#)ar_io.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,17 +307,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|phyblk
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of physical block on TAPE */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|wr_trail
 init|=
 literal|1
@@ -428,8 +417,6 @@ operator|-
 literal|1
 expr_stmt|;
 name|can_unlnk
-operator|=
-name|phyblk
 operator|=
 name|did_io
 operator|=
@@ -1706,7 +1693,7 @@ directive|else
 argument|int ar_rev(sksz) 	off_t sksz;
 endif|#
 directive|endif
-argument|{ 	off_t cpos;         struct mtop mb;
+argument|{ 	off_t cpos;         struct mtop mb; 	register int phyblk;
 comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
 argument|if (lstrval<
 literal|0
@@ -1768,7 +1755,7 @@ argument|; 			return(-
 literal|1
 argument|); 		} 		break; 	case ISTAPE:
 comment|/* 	 	 * Calculate and move the proper number of PHYSICAL tape 		 * blocks. If the sksz is not an even multiple of the physical 		 * tape size, we cannot do the move (this should never happen). 		 * (We also cannot handler trailers spread over two vols). 		 * get_phys() also makes sure we are in front of the filemark. 	 	 */
-argument|if (get_phys()<
+argument|if ((phyblk = get_phys())<=
 literal|0
 argument|) { 			lstrval = -
 literal|1
@@ -1807,7 +1794,7 @@ literal|1
 argument|; 	return(
 literal|0
 argument|); }
-comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with   *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	0 if ok, -1 otherwise  */
+comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with   *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
 if|#
 directive|if
 name|__STDC__
@@ -1819,7 +1806,7 @@ endif|#
 directive|endif
 argument|{ 	register int padsz =
 literal|0
-argument|; 	register int res; 	struct mtop mb; 	char scbuf[MAXBLK];
+argument|; 	register int res; 	register int phyblk; 	struct mtop mb; 	char scbuf[MAXBLK];
 comment|/* 	 * move to the file mark, and then back up one record and read it. 	 * this should tell us the physical record size the tape is using. 	 */
 argument|if (lstrval ==
 literal|1
@@ -1897,9 +1884,7 @@ argument|;
 comment|/* 	 * return if there was no padding 	 */
 argument|if (padsz ==
 literal|0
-argument|) 		return(
-literal|0
-argument|);
+argument|) 		return(phyblk);
 comment|/* 	 * make sure we can move backwards over the padding. (this should 	 * never fail). 	 */
 argument|if (padsz % phyblk) { 		warn(
 literal|1
@@ -1917,9 +1902,7 @@ argument|,errno,
 literal|"Unable to backspace tape over %d pad blocks"
 argument|, 		    mb.mt_count); 		return(-
 literal|1
-argument|); 	} 	return(
-literal|0
-argument|); }
+argument|); 	} 	return(phyblk); }
 comment|/*  * ar_next()  *	prompts the user for the next volume in this archive. For some devices  *	we may allow the media to be changed. Otherwise a new archive is  *	prompted for. By pax spec, if there is no controlling tty or an eof is  *	read on tty input, we must quit pax.  * Return:  *	0 when ready to continue, -1 when all done  */
 if|#
 directive|if
