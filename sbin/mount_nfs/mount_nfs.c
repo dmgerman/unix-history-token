@@ -2740,7 +2740,7 @@ literal|0
 condition|)
 name|clnt_pcreateerror
 argument_list|(
-literal|"Cannot MNT PRC"
+literal|"Cannot MNT RPC"
 argument_list|)
 expr_stmt|;
 block|}
