@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.65 2003/08/21 16:43:10 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.66 2003/08/21 17:26:44 imp Exp   */
 end_comment
 
 begin_comment
@@ -246,12 +246,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_MEGAHERTZ2
+name|PCMCIA_VENDOR_DSPSI
 value|0x0128
 end_define
 
 begin_comment
-comment|/* Megahertz Corporation */
+comment|/* DSP Solutions, Inc */
 end_comment
 
 begin_define
@@ -1887,6 +1887,52 @@ value|"D-Link DMF-650TX"
 end_define
 
 begin_comment
+comment|/* DSP Solutions, Inc. (Megahertz OEM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DSPSI_XJEM1144
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DSPSI_XJEM1144
+value|0x0101
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DSPSI_XJEM1144
+value|"Megahertz X-JACK"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DSPSI_XJACK
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DSPSI_XJACK
+value|0x0103
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DSPSI_XJACK
+value|"Megahertz X-JACK Ethernet"
+end_define
+
+begin_comment
 comment|/* Dual */
 end_comment
 
@@ -2976,48 +3022,6 @@ define|#
 directive|define
 name|PCMCIA_STR_MEGAHERTZ_XJ5560
 value|"Megahertz X-JACK 56kbps Modem"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_MEGAHERTZ2_XJEM1144
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_MEGAHERTZ2_XJEM1144
-value|0x0101
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_MEGAHERTZ2_XJEM1144
-value|"Megahertz X-JACK"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_MEGAHERTZ2_XJACK
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_MEGAHERTZ2_XJACK
-value|0x0103
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_MEGAHERTZ2_XJACK
-value|"Megahertz X-JACK Ethernet"
 end_define
 
 begin_comment
