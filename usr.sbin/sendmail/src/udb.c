@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.47 (Berkeley) 12/6/96 (with USERDB)"
+literal|"@(#)udb.c	8.51 (Berkeley) 5/29/97 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.47 (Berkeley) 12/6/96 (without USERDB)"
+literal|"@(#)udb.c	8.51 (Berkeley) 5/29/97 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,8 @@ name|_udbx_init
 name|__P
 argument_list|(
 operator|(
-name|void
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -510,7 +511,9 @@ block|{
 if|if
 condition|(
 name|_udbx_init
-argument_list|()
+argument_list|(
+name|e
+argument_list|)
 operator|==
 name|EX_TEMPFAIL
 condition|)
@@ -913,14 +916,35 @@ block|{
 name|char
 modifier|*
 name|nuser
+decl_stmt|;
+name|int
+name|size
 init|=
+name|MEMCHUNKSIZE
+decl_stmt|;
+if|if
+condition|(
+name|info
+operator|.
+name|size
+operator|>
+name|MEMCHUNKSIZE
+condition|)
+name|size
+operator|=
+name|info
+operator|.
+name|size
+expr_stmt|;
+name|nuser
+operator|=
 name|xalloc
 argument_list|(
 name|usersize
 operator|+
-name|MEMCHUNKSIZE
+name|size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|user
@@ -947,11 +971,11 @@ name|nuser
 expr_stmt|;
 name|usersize
 operator|+=
-name|MEMCHUNKSIZE
+name|size
 expr_stmt|;
 name|userleft
 operator|+=
-name|MEMCHUNKSIZE
+name|size
 expr_stmt|;
 block|}
 name|p
@@ -1050,24 +1074,21 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>=
 literal|10
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
-argument_list|,
-literal|"%s: expand %.100s => %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"expand %.100s => %s"
 argument_list|,
 name|e
 operator|->
@@ -1081,8 +1102,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|naddrs
 operator|=
 name|sendtolist
@@ -1734,24 +1753,21 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>=
 literal|10
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
-argument_list|,
-literal|"%s: hesiod %.100s => %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"hesiod %.100s => %s"
 argument_list|,
 name|e
 operator|->
@@ -1765,8 +1781,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|naddrs
 operator|=
 name|sendtolist
@@ -2243,7 +2257,9 @@ block|{
 if|if
 condition|(
 name|_udbx_init
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 operator|==
 name|EX_TEMPFAIL
 condition|)
@@ -2282,6 +2298,25 @@ return|return
 name|NULL
 return|;
 comment|/* long names can never match and are a pain to deal with */
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|field
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+sizeof|sizeof
+expr|"maildrop"
+condition|)
+name|i
+operator|=
+sizeof|sizeof
+expr|"maildrop"
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2290,10 +2325,7 @@ argument_list|(
 name|user
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|field
-argument_list|)
+name|i
 operator|)
 operator|>
 sizeof|sizeof
@@ -3417,7 +3449,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  _UDBX_INIT -- parse the UDB specification, opening any valid entries. ** **	Parameters: **		none. ** **	Returns: **		EX_TEMPFAIL -- if it appeared it couldn't get hold of a **			database due to a host being down or some similar **			(recoverable) situation. **		EX_OK -- otherwise. ** **	Side Effects: **		Fills in the UdbEnts structure from UdbSpec. */
+comment|/* **  _UDBX_INIT -- parse the UDB specification, opening any valid entries. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		EX_TEMPFAIL -- if it appeared it couldn't get hold of a **			database due to a host being down or some similar **			(recoverable) situation. **		EX_OK -- otherwise. ** **	Side Effects: **		Fills in the UdbEnts structure from UdbSpec. */
 end_comment
 
 begin_define
@@ -3430,7 +3462,13 @@ end_define
 begin_function
 name|int
 name|_udbx_init
-parameter_list|()
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -3799,7 +3837,7 @@ name|errno
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"dbopen(%s): %s"
+literal|"dbopen(%s): %s\n"
 argument_list|,
 name|up
 operator|->
@@ -3827,18 +3865,19 @@ operator|!=
 name|EACCES
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|2
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"dbopen(%s): %s"
 argument_list|,
@@ -3852,8 +3891,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|up
 operator|->
 name|udb_type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.62 (Berkeley) 12/11/96"
+literal|"@(#)collect.c	8.71 (Berkeley) 6/30/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		requeueflag -- this message will be requeued later, so **			don't do final processing on it. **		hdrp -- the location to stash the header. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
 
 begin_decl_stmt
@@ -178,8 +178,6 @@ name|fp
 parameter_list|,
 name|smtpmode
 parameter_list|,
-name|requeueflag
-parameter_list|,
 name|hdrp
 parameter_list|,
 name|e
@@ -190,9 +188,6 @@ name|fp
 decl_stmt|;
 name|bool
 name|smtpmode
-decl_stmt|;
-name|bool
-name|requeueflag
 decl_stmt|;
 name|HDR
 modifier|*
@@ -243,7 +238,7 @@ specifier|volatile
 name|int
 name|c
 init|=
-literal|'\0'
+name|EOF
 decl_stmt|;
 specifier|volatile
 name|bool
@@ -285,7 +280,7 @@ decl_stmt|;
 name|char
 name|dfname
 index|[
-literal|20
+name|MAXQFNAME
 index|]
 decl_stmt|;
 name|char
@@ -322,6 +317,9 @@ operator|!
 name|headeronly
 condition|)
 block|{
+name|int
+name|tfd
+decl_stmt|;
 name|struct
 name|stat
 name|stbuf
@@ -338,10 +336,7 @@ literal|'d'
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tf
+name|tfd
 operator|=
 name|dfopen
 argument_list|(
@@ -354,6 +349,24 @@ operator||
 name|O_TRUNC
 argument_list|,
 name|FileMode
+argument_list|,
+name|SFF_ANYFILE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tfd
+operator|<
+literal|0
+operator|||
+operator|(
+name|tf
+operator|=
+name|fdopen
+argument_list|(
+name|tfd
+argument_list|,
+literal|"w"
 argument_list|)
 operator|)
 operator|==
@@ -509,18 +522,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|2
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"timeout waiting for input from %s during message collect"
 argument_list|,
@@ -531,8 +545,6 @@ else|:
 literal|"<local machine>"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errno
 operator|=
 literal|0
@@ -1499,26 +1511,25 @@ argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>=
 literal|2
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_WARNING
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"collect: premature EOM: %s"
 argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|inputerr
 operator|=
 name|TRUE
@@ -1554,6 +1565,9 @@ argument_list|(
 name|tf
 argument_list|)
 operator|||
+operator|(
+name|SuperSafe
+operator|&&
 name|fsync
 argument_list|(
 name|fileno
@@ -1563,6 +1577,7 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 name|fclose
 argument_list|(
@@ -1655,9 +1670,6 @@ name|problem
 operator|=
 literal|"read timeout"
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -1669,9 +1681,13 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"collect: %s on connection from %.100s, sender=%s: %s"
 argument_list|,
@@ -1696,8 +1712,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|feof
@@ -1827,9 +1841,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|_FFR_DSN_RRT
+if|#
+directive|if
+name|_FFR_DSN_RRT_OPTION
 comment|/* 	**  If we have a Return-Receipt-To:, turn it into a DSN. 	*/
 if|if
 condition|(
@@ -1999,7 +2013,7 @@ name|addheader
 argument_list|(
 literal|"Bcc"
 argument_list|,
-literal|""
+literal|" "
 argument_list|,
 operator|&
 name|e
@@ -2130,24 +2144,21 @@ argument_list|,
 name|MaxMessageSize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|6
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
-argument_list|,
-literal|"%s: message size (%ld) exceeds maximum (%ld)"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"message size (%ld) exceeds maximum (%ld)"
 argument_list|,
 name|e
 operator|->
@@ -2156,8 +2167,6 @@ argument_list|,
 name|MaxMessageSize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* check for illegal 8-bit data */
 if|if

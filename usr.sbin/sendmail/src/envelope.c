@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.101 (Berkeley) 12/16/96"
+literal|"@(#)envelope.c	8.105 (Berkeley) 6/24/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,28 +341,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|84
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: dropenvelope, e_flags=0x%x, OpMode=%c, pid=%d"
+name|id
 argument_list|,
-name|id
-operator|==
-name|NULL
-condition|?
-literal|"[NOQUEUE]"
-else|:
-name|id
+literal|"dropenvelope, e_flags=0x%x, OpMode=%c, pid=%d"
 argument_list|,
 name|e
 operator|->
@@ -374,8 +365,6 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* we must have an id to remove disk files */
 if|if
 condition|(
@@ -566,15 +555,15 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"dropenvelope: %s: q_flags = %x, paddr = %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"dropenvelope: q_flags = %x, paddr = %s"
 argument_list|,
 name|q
 operator|->
@@ -656,7 +645,7 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e
@@ -1336,6 +1325,22 @@ name|rlist
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|50
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"dropenvelope(%s): sending return receipt\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 name|e
 operator|->
 name|e_flags
@@ -1414,6 +1419,22 @@ name|bool
 operator|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|50
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"dropenvelope(%s): saving mail\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 name|savemail
 argument_list|(
 name|e
@@ -1474,6 +1495,22 @@ name|rlist
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|50
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"dropenvelope(%s): sending postmaster copy\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1511,6 +1548,24 @@ block|}
 comment|/* 	**  Instantiate or deinstantiate the queue. 	*/
 name|simpledrop
 label|:
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|50
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"dropenvelope(%s): at simpledrop, queueit=%d\n"
+argument_list|,
+name|id
+argument_list|,
+name|queueit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1578,26 +1633,21 @@ literal|'q'
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|10
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: done"
-argument_list|,
 name|id
+argument_list|,
+literal|"done"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1638,6 +1688,22 @@ directive|endif
 comment|/* QUEUE */
 block|}
 comment|/* now unlock the job */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|50
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"dropenvelope(%s): unlocking job\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 name|closexscript
 argument_list|(
 name|e
@@ -2843,9 +2909,6 @@ name|InclMailer
 condition|)
 block|{
 comment|/* log garbage addresses for traceback */
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|from
@@ -2929,9 +2992,13 @@ operator|=
 name|ebuf
 expr_stmt|;
 block|}
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"setsender: %s: invalid or unparseable, received from %s"
 argument_list|,
@@ -2946,9 +3013,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|from
@@ -3580,18 +3644,19 @@ name|NULL
 condition|)
 block|{
 comment|/* don't need to give error -- prescan did that already */
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|2
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"cannot prescan from (%s)"
 argument_list|,
@@ -3603,8 +3668,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|finis
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (with SMTP)"
+literal|"@(#)usersmtp.c	8.87 (Berkeley) 6/3/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (without SMTP)"
+literal|"@(#)usersmtp.c	8.87 (Berkeley) 6/3/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1504,6 +1504,15 @@ condition|(
 name|bodytype
 operator|!=
 name|NULL
+operator|&&
+name|strlen
+argument_list|(
+name|bodytype
+argument_list|)
+operator|+
+literal|7
+operator|<
+name|l
 condition|)
 block|{
 name|strcat
@@ -2207,6 +2216,23 @@ argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_SIZE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NO_BODY_RETN
+expr_stmt|;
 return|return
 name|EX_UNAVAILABLE
 return|;
@@ -2238,9 +2264,6 @@ return|return
 name|EX_UNAVAILABLE
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -2248,15 +2271,15 @@ operator|>
 literal|1
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
-argument_list|,
-literal|"%s: %.100s: SMTP MAIL protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%.100s: SMTP MAIL protocol error: %s"
 argument_list|,
 name|mci
 operator|->
@@ -2271,8 +2294,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* protocol error -- close up */
 name|mci_setstat
 argument_list|(
@@ -2760,9 +2781,6 @@ return|return
 name|EX_UNAVAILABLE
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -2770,15 +2788,15 @@ operator|>
 literal|1
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
-argument_list|,
-literal|"%s: %.100s: SMTP RCPT protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%.100s: SMTP RCPT protocol error: %s"
 argument_list|,
 name|mci
 operator|->
@@ -2793,8 +2811,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|mci_setstat
 argument_list|(
 name|mci
@@ -2987,9 +3003,6 @@ operator|!=
 literal|354
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -2997,15 +3010,15 @@ operator|>
 literal|1
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
-argument_list|,
-literal|"%s: %.100s: SMTP DATA-1 protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%.100s: SMTP DATA-1 protocol error: %s"
 argument_list|,
 name|mci
 operator|->
@@ -3020,8 +3033,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|smtprset
 argument_list|(
 name|m
@@ -3376,17 +3387,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|r
-operator|==
-literal|552
-condition|)
-name|rstat
-operator|=
-name|EX_UNAVAILABLE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -3443,8 +3443,6 @@ operator|==
 literal|5
 condition|)
 name|rstat
-operator|=
-name|xstat
 operator|=
 name|EX_UNAVAILABLE
 expr_stmt|;
@@ -3504,9 +3502,6 @@ condition|)
 return|return
 name|rstat
 return|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -3514,15 +3509,15 @@ operator|>
 literal|1
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
-argument_list|,
-literal|"%s: %.100s: SMTP DATA-2 protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%.100s: SMTP DATA-2 protocol error: %s"
 argument_list|,
 name|mci
 operator|->
@@ -3537,8 +3532,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 name|rstat
 return|;
@@ -3738,9 +3731,6 @@ argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -3752,15 +3742,15 @@ operator|==
 name|EX_PROTOCOL
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
-argument_list|,
-literal|"%s: %.100s: SMTP DATA-3 protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%.100s: SMTP DATA-3 protocol error: %s"
 argument_list|,
 name|mci
 operator|->
@@ -3775,8 +3765,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 name|stat
 return|;
@@ -3883,13 +3871,7 @@ name|mci_state
 operator|==
 name|MCIS_CLOSED
 condition|)
-block|{
-name|SuprErrs
-operator|=
-name|oldSuprErrs
-expr_stmt|;
 return|return;
-block|}
 block|}
 comment|/* now actually close the connection and pick up the zombie */
 operator|(
@@ -4230,16 +4212,14 @@ literal|"reply\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Read the input line, being careful not to hang. 	*/
-for|for
-control|(
 name|bufp
 operator|=
 name|SmtpReplyBuffer
+expr_stmt|;
+for|for
+control|(
 init|;
 condition|;
-name|bufp
-operator|=
-name|junkbuf
 control|)
 block|{
 specifier|register
@@ -4650,6 +4630,84 @@ argument_list|,
 name|bufp
 argument_list|)
 expr_stmt|;
+comment|/* ignore improperly formated input */
+if|if
+condition|(
+operator|!
+operator|(
+name|isascii
+argument_list|(
+name|bufp
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+name|bufp
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|isascii
+argument_list|(
+name|bufp
+index|[
+literal|1
+index|]
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+name|bufp
+index|[
+literal|1
+index|]
+argument_list|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|isascii
+argument_list|(
+name|bufp
+index|[
+literal|2
+index|]
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+name|bufp
+index|[
+literal|2
+index|]
+argument_list|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|bufp
+index|[
+literal|3
+index|]
+operator|==
+literal|' '
+operator|||
+name|bufp
+index|[
+literal|3
+index|]
+operator|==
+literal|'-'
+operator|)
+condition|)
+continue|continue;
 comment|/* process the line */
 if|if
 condition|(
@@ -4677,40 +4735,6 @@ name|firstline
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* if continuation is required, we can go on */
-if|if
-condition|(
-name|bufp
-index|[
-literal|3
-index|]
-operator|==
-literal|'-'
-condition|)
-continue|continue;
-comment|/* ignore improperly formated input */
-if|if
-condition|(
-operator|!
-operator|(
-name|isascii
-argument_list|(
-name|bufp
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|isdigit
-argument_list|(
-name|bufp
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-condition|)
-continue|continue;
 comment|/* decode the reply code */
 name|r
 operator|=
@@ -4723,10 +4747,26 @@ comment|/* extra semantics: 0xx codes are "informational" */
 if|if
 condition|(
 name|r
-operator|>=
+operator|<
 literal|100
 condition|)
+continue|continue;
+comment|/* if no continuation lines, return this line */
+if|if
+condition|(
+name|bufp
+index|[
+literal|3
+index|]
+operator|!=
+literal|'-'
+condition|)
 break|break;
+comment|/* first line of real reply -- ignore rest */
+name|bufp
+operator|=
+name|junkbuf
+expr_stmt|;
 block|}
 comment|/* 	**  Now look at SmtpReplyBuffer -- only care about the first 	**  line of the response from here on out. 	*/
 comment|/* save temporary failure messages for posterity */

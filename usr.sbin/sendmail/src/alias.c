@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.67 (Berkeley) 1/18/97"
+literal|"@(#)alias.c	8.73 (Berkeley) 5/8/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,9 +99,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|naliases
 decl_stmt|;
 name|char
 modifier|*
@@ -291,32 +288,21 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|9
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: alias %.100s => %s"
+name|e
+operator|->
+name|e_id
 argument_list|,
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"NOQUEUE"
-else|:
-name|e
-operator|->
-name|e_id
+literal|"alias %.100s => %s"
 argument_list|,
 name|a
 operator|->
@@ -330,8 +316,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|a
 operator|->
 name|q_flags
@@ -368,8 +352,9 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
-name|naliases
-operator|=
+operator|(
+name|void
+operator|)
 name|sendtolist
 argument_list|(
 name|p
@@ -920,8 +905,6 @@ name|map
 operator|->
 name|map_mflags
 operator|=
-name|MF_OPTIONAL
-operator||
 name|MF_INCLNULL
 expr_stmt|;
 block|}
@@ -1522,27 +1505,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|3
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"alias database %s out of date"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 name|message
 argument_list|(
 literal|"Warning: alias database %s out of date"
@@ -1598,6 +1577,19 @@ name|nolock
 init|=
 name|FALSE
 decl_stmt|;
+name|int
+name|sff
+init|=
+name|SFF_OPENASROOT
+operator||
+name|SFF_REGONLY
+operator||
+name|SFF_NOLOCK
+operator||
+name|SFF_NOWLINK
+operator||
+name|SFF_NOWFILES
+decl_stmt|;
 name|sigfunc_t
 name|oldsigint
 decl_stmt|,
@@ -1632,13 +1624,17 @@ condition|(
 operator|(
 name|af
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|map
 operator|->
 name|map_file
 argument_list|,
-literal|"r+"
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|,
+name|sff
 argument_list|)
 operator|)
 operator|==
@@ -1666,13 +1662,17 @@ operator|||
 operator|(
 name|af
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|map
 operator|->
 name|map_file
 argument_list|,
-literal|"r"
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|,
+name|sff
 argument_list|)
 operator|)
 operator|==
@@ -1926,9 +1926,6 @@ name|O_RDWR
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -1936,9 +1933,11 @@ operator|>
 literal|7
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"alias database %s %srebuilt by %s"
 argument_list|,
@@ -1957,9 +1956,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* LOG */
 name|map
 operator|->
 name|map_mflags
@@ -2231,6 +2227,62 @@ argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_BACKSLASH_IN_ALIASES
+while|while
+condition|(
+name|p
+operator|!=
+name|NULL
+operator|&&
+name|p
+operator|>
+name|line
+operator|&&
+name|p
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\\'
+condition|)
+block|{
+name|p
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|line
+argument_list|,
+name|p
+argument_list|)
+argument_list|,
+name|af
+argument_list|)
+operator|==
+name|NULL
+condition|)
+break|break;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -2843,9 +2895,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -2854,9 +2903,11 @@ literal|7
 operator|&&
 name|logstats
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"%s: %d aliases, longest %d bytes, %d bytes total"
 argument_list|,
@@ -2871,9 +2922,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 block|}
 end_function
 
@@ -3189,32 +3237,21 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|2
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: forward %s: transient error: %s"
+name|e
+operator|->
+name|e_id
 argument_list|,
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"NOQUEUE"
-else|:
-name|e
-operator|->
-name|e_id
+literal|"forward %s: transient error: %s"
 argument_list|,
 name|buf
 argument_list|,
@@ -3224,8 +3261,6 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if

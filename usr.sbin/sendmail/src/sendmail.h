@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.219 (Berkeley) 1/14/97  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.242 (Berkeley) 8/2/97  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.219		1/14/97"
+literal|"@(#)sendmail.h	8.242		8/2/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,114 @@ include|#
 directive|include
 file|<netccitt/x25.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NAMED_BIND
+end_if
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOERROR
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
+
+begin_comment
+comment|/* avoid<sys/streams.h> conflict */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Following are "sort of" configuration constants, but they should **  be pretty solid on most architectures today.  They have to be **  defined after<arpa/nameser.h> because some versions of that **  file also define them.  In all cases, we can't use sizeof because **  some systems (e.g., Crays) always treat everything as being at **  least 64 bits. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INADDRSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INADDRSZ
+value|4
+end_define
+
+begin_comment
+comment|/* size of an IPv4 address in bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT16SZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT16SZ
+value|2
+end_define
+
+begin_comment
+comment|/* size of a 16 bit integer in bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32SZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32SZ
+value|4
+end_define
+
+begin_comment
+comment|/* size of a 32 bit integer in bytes */
+end_comment
 
 begin_endif
 endif|#
@@ -2442,6 +2550,11 @@ name|u_short
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
+name|char
+modifier|*
+name|hi_ruleset
+decl_stmt|;
+comment|/* validity check ruleset */
 block|}
 struct|;
 end_struct
@@ -2732,7 +2845,6 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
-name|e
 operator|,
 name|bool
 operator|)
@@ -4452,6 +4564,7 @@ operator|(
 name|MAP
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -4576,6 +4689,11 @@ name|int
 name|sv_ruleset
 decl_stmt|;
 comment|/* ruleset index */
+name|struct
+name|hdrinfo
+name|sv_header
+decl_stmt|;
+comment|/* header metainfo */
 name|char
 modifier|*
 name|sv_service
@@ -4738,6 +4856,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ST_HEADER
+value|12
+end_define
+
+begin_comment
+comment|/* special header flags */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ST_MCI
 value|16
 end_define
@@ -4828,6 +4957,13 @@ define|#
 directive|define
 name|s_service
 value|s_value.sv_service
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_header
+value|s_value.sv_header
 end_define
 
 begin_decl_stmt
@@ -5584,6 +5720,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRIV_NOETRN
+value|0x0080
+end_define
+
+begin_comment
+comment|/* disallow ETRN command entirely */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRIV_RESTRICTMAILQ
 value|0x1000
 end_define
@@ -5720,7 +5867,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* **  Flags passed to safefile. */
+comment|/* **  Flags passed to safefile/safedirpath. */
 end_comment
 
 begin_define
@@ -5822,8 +5969,52 @@ begin_comment
 comment|/* regular files only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SFF_SAFEDIRPATH
+value|0x0100
+end_define
+
 begin_comment
-comment|/* flags that are actually specific to safefopen */
+comment|/* no writable directories allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOHLINK
+value|0x0200
+end_define
+
+begin_comment
+comment|/* file cannot have hard links */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOWLINK
+value|0x0400
+end_define
+
+begin_comment
+comment|/* links only in non-writable dirs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOWFILES
+value|0x0800
+end_define
+
+begin_comment
+comment|/* disallow world writable files */
+end_comment
+
+begin_comment
+comment|/* flags that are actually specific to safeopen/safefopen/dfopen */
 end_comment
 
 begin_define
@@ -5836,6 +6027,28 @@ end_define
 begin_comment
 comment|/* open as root instead of real user */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOLOCK
+value|0x2000
+end_define
+
+begin_comment
+comment|/* don't lock the file */
+end_comment
+
+begin_comment
+comment|/* pseudo-flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOLINK
+value|(SFF_NOHLINK|SFF_NOSLINK)
+end_define
 
 begin_comment
 comment|/* functions */
@@ -5865,6 +6078,112 @@ operator|,
 expr|struct
 name|stat
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|safedirpath
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|UID_T
+operator|,
+name|GID_T
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|safeopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|safefopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dfopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|filechanged
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6305,17 +6624,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|Verbose
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if blow-by-blow desired */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|GrabTo
 decl_stmt|;
 end_decl_stmt
@@ -6584,6 +6892,17 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|Verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if blow-by-blow desired */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|Errors
 decl_stmt|;
 end_decl_stmt
@@ -6819,6 +7138,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*  .... but only if we want a quick abort */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|OnlyOneError
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  .... or only want to give one SMTP reply */
 end_comment
 
 begin_decl_stmt
@@ -7275,6 +7605,18 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|char
+modifier|*
+name|RunAsUserName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user to become for bulk of run */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|uid_t
 name|RunAsUid
 decl_stmt|;
@@ -7295,11 +7637,33 @@ begin_comment
 comment|/* GID to become for bulk of run */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_FFR_DSN_RRT
-end_ifdef
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxRcptPerMsg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max recipients per SMTP message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|DoQueueRun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* non-interrupt time queue run needed */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_DSN_RRT_OPTION
+end_if
 
 begin_decl_stmt
 name|EXTERN
@@ -7316,6 +7680,40 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|DeadLetterDrop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path to dead letter office */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|DontProbeInterfaces
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't probe interfaces for names */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|ChownAlwaysSafe
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* treat chown(2) as safe */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -7359,6 +7757,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* force From: header to be one line */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|DontLockReadFiles
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't read lock support files */
 end_comment
 
 begin_decl_stmt
@@ -7614,6 +8023,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|FatalWritableDirs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no writable dirs in map paths */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 modifier|*
 modifier|*
@@ -7827,6 +8247,17 @@ comment|/* **  Miscellaneous information. */
 end_comment
 
 begin_comment
+comment|/* **  The "no queue id" queue id for sm_syslog */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOQID
+value|"*~*"
+end_define
+
+begin_comment
 comment|/* **  Some in-line functions */
 end_comment
 
@@ -7882,25 +8313,6 @@ name|xalloc
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|dfopen
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -8283,27 +8695,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|FILE
-modifier|*
-name|safefopen
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|xputs
 name|__P
@@ -8434,6 +8825,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|size_t
 operator|,
 name|MCI
 operator|*
@@ -8881,25 +9274,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|putxline
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|MCI
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|bool
 name|xtextok
 name|__P
@@ -9108,8 +9482,6 @@ argument_list|(
 operator|(
 name|FILE
 operator|*
-operator|,
-name|bool
 operator|,
 name|bool
 operator|,
@@ -9453,6 +9825,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|drop_privileges
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fill_fd
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -9725,7 +10126,26 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|sm_syslog
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -9781,6 +10201,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|setproctitle
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|sm_syslog
 parameter_list|()
 function_decl|;
 end_function_decl
