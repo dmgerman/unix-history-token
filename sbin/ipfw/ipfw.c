@@ -3851,7 +3851,7 @@ condition|)
 block|{
 name|rule
 operator|.
-name|fw_flag
+name|fw_flg
 operator||=
 name|IP_FW_F_INVSRC
 expr_stmt|;
@@ -3994,7 +3994,7 @@ condition|)
 block|{
 name|rule
 operator|.
-name|fw_flag
+name|fw_flg
 operator||=
 name|IP_FW_F_INVDST
 expr_stmt|;
