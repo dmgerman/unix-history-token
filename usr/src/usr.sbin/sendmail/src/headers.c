@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -2547,7 +2547,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcat
+name|strcpy
 argument_list|(
 name|obp
 argument_list|,
