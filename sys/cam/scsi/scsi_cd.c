@@ -13375,10 +13375,12 @@ argument_list|,
 name|cderror
 argument_list|,
 comment|/*cam_flags*/
-name|CAM_RETRY_SELTO
+literal|0
 argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
+operator||
+name|SF_RETRY_SELTO
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
