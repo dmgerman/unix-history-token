@@ -1552,10 +1552,9 @@ name|key
 operator|<
 literal|0x100
 operator|&&
-name|isprint
-argument_list|(
 name|key
-argument_list|)
+operator|!=
+literal|' '
 operator|&&
 name|toupper
 argument_list|(
