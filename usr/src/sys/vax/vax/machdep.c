@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.43	81/11/07	*/
+comment|/*	machdep.c	4.44	81/11/08	*/
 end_comment
 
 begin_include
@@ -18,37 +18,31 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BBNNET
+name|INET
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_host.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/socket.h"
+file|"../net/inet_host.h"
 end_include
 
 begin_endif
 endif|#
 directive|endif
-endif|BBNNET
+endif|INET
 end_endif
 
 begin_include
@@ -204,7 +198,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/port.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_include
@@ -608,16 +602,6 @@ argument_list|)
 expr_stmt|;
 name|valloc
 argument_list|(
-name|port
-argument_list|,
-expr|struct
-name|port
-argument_list|,
-name|nport
-argument_list|)
-expr_stmt|;
-name|valloc
-argument_list|(
 name|cfree
 argument_list|,
 expr|struct
@@ -670,33 +654,21 @@ argument_list|,
 name|nproc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BBNNET
 name|valloc
 argument_list|(
-name|netmap
+name|mbmap
 argument_list|,
 expr|struct
 name|map
 argument_list|,
-name|nnetpages
+name|nmbpages
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-name|valloclim
-argument_list|(
-name|contab
-argument_list|,
-expr|struct
-name|ucb
-argument_list|,
-name|nnetcon
-argument_list|,
-name|conNCON
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|valloclim
 argument_list|(
 name|host
@@ -711,7 +683,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|BBNNET
+endif|INET
 comment|/* 	 * Now allocate space for core map 	 */
 name|ncmap
 operator|=
@@ -937,30 +909,23 @@ argument_list|,
 name|nproc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BBNNET
-comment|/* 	 * Initialize network buffer management map. 	 */
 name|rminit
 argument_list|(
-name|netmap
+name|mbmap
 argument_list|,
-name|nnetpages
+name|nmbpages
 operator|-
 literal|1
 argument_list|,
 literal|1
 argument_list|,
-literal|"netpage"
+literal|"mbpages"
 argument_list|,
-name|nnetpages
+name|nmbpages
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|BBNNET
 comment|/* 	 * Configure the system. 	 */
 name|configure
 argument_list|()
