@@ -152,7 +152,7 @@ name|int
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|namelen
 parameter_list|)
