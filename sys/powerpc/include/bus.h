@@ -25,6 +25,59 @@ directive|include
 file|<machine/pio.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXSIZE_24BIT
+value|0xFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXSIZE_32BIT
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXSIZE
+value|(128 * 1024)
+end_define
+
+begin_comment
+comment|/* Maximum supported size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXADDR_24BIT
+value|0xFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXADDR_32BIT
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXADDR
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_UNRESTRICTED
+value|(~0)
+end_define
+
 begin_comment
 comment|/*  * Values for the macppc bus space tag, not to be used directly by MI code.  */
 end_comment
@@ -35,32 +88,20 @@ directive|define
 name|__BUS_SPACE_HAS_STREAM_METHODS
 end_define
 
-begin_define
-define|#
-directive|define
-name|MACPPC_BUS_ADDR_MASK
-value|0xfffff000
-end_define
+begin_comment
+comment|/*  * Values for the ppc bus space tag, not to be used directly by MI code.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MACPPC_BUS_STRIDE_MASK
-value|0x0000000f
+name|PPC_BUS_SPACE_MEM
+value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|macppc_make_bus_space_tag
-parameter_list|(
-name|addr
-parameter_list|,
-name|stride
-parameter_list|)
-define|\
-value|(((addr)& MACPPC_BUS_ADDR_MASK) | (stride))
-end_define
+begin_comment
+comment|/* space is mem space */
+end_comment
 
 begin_define
 define|#
@@ -73,7 +114,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|((void *)((h) + ((o)<< ((t)& MACPPC_BUS_STRIDE_MASK))))
+value|((void *)((h) + (o)))
 end_define
 
 begin_comment
@@ -112,107 +153,54 @@ name|bus_space_handle_t
 typedef|;
 end_typedef
 
+begin_function
+specifier|static
+name|__inline
+name|void
+modifier|*
+name|__ppc_ba
+parameter_list|(
+name|bus_space_tag_t
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+name|handle
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|handle
+operator|+
+name|offset
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  *	int bus_space_map(bus_space_tag_t t, bus_addr_t addr,  *	    bus_size_t size, int flags, bus_space_handle_t *bshp));  *  * Map a region of bus space.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BUS_SPACE_MAP_CACHEABLE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUS_SPACE_MAP_LINEAR
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUS_SPACE_MAP_PREFETCHABLE
-value|0x04
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|mapiodev
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|bus_space_map
-parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_addr_t
-name|addr
-parameter_list|,
-name|bus_size_t
-name|size
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|bus_space_handle_t
-modifier|*
-name|bshp
-parameter_list|)
-block|{
-name|vm_offset_t
-name|base
-init|=
-name|t
-operator|&
-name|MACPPC_BUS_ADDR_MASK
-decl_stmt|;
-name|int
-name|stride
-init|=
-name|t
-operator|&
-name|MACPPC_BUS_STRIDE_MASK
-decl_stmt|;
-operator|*
-name|bshp
-operator|=
-operator|(
-name|bus_space_handle_t
-operator|)
-name|mapiodev
-argument_list|(
-name|base
-operator|+
-operator|(
-name|addr
-operator|<<
-name|stride
-operator|)
-argument_list|,
-name|size
-operator|<<
-name|stride
-argument_list|)
-expr_stmt|;
-return|return
+begin_if
+if|#
+directive|if
 literal|0
-return|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|bus_space_map(t, addr, size, flags, bshp) ! not implemented !
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	int bus_space_unmap(bus_space_tag_t t,  *	    bus_space_handle_t bsh, bus_size_t size));  *  * Unmap a region of bus space.  */
@@ -251,7 +239,7 @@ parameter_list|,
 name|bshp
 parameter_list|)
 define|\
-value|((*(bshp) = (bus_space_handle_t)__BA(t, bsh, offset)), 0)
+value|((*(bshp) = (bus_space_handle_t)__ppc_ba(t, bsh, offset)), 0)
 end_define
 
 begin_comment
@@ -339,7 +327,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in8(__BA(t, h, o)))
+value|(in8(__ppc_ba(t, h, o)))
 end_define
 
 begin_define
@@ -353,7 +341,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in16rb(__BA(t, h, o)))
+value|(in16rb(__ppc_ba(t, h, o)))
 end_define
 
 begin_define
@@ -367,7 +355,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in32rb(__BA(t, h, o)))
+value|(in32rb(__ppc_ba(t, h, o)))
 end_define
 
 begin_if
@@ -410,7 +398,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in8(__BA(t, h, o)))
+value|(in8(__ppc_ba(t, h, o)))
 end_define
 
 begin_define
@@ -424,7 +412,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in16(__BA(t, h, o)))
+value|(in16(__ppc_ba(t, h, o)))
 end_define
 
 begin_define
@@ -438,7 +426,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|(in32(__BA(t, h, o)))
+value|(in32(__ppc_ba(t, h, o)))
 end_define
 
 begin_if
@@ -489,7 +477,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		ins8(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {			\ 		ins8(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -507,7 +495,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		ins16rb(__BA(t, h, o), (a), (c));			\ 	} while (0)
+value|do {			\ 		ins16rb(__ppc_ba(t, h, o), (a), (c));			\ 	} while (0)
 end_define
 
 begin_define
@@ -525,7 +513,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		ins32rb(__BA(t, h, o), (a), (c));			\ 	} while (0)
+value|do {			\ 		ins32rb(__ppc_ba(t, h, o), (a), (c));			\ 	} while (0)
 end_define
 
 begin_if
@@ -565,7 +553,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 		ins8(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {		\ 		ins8(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -583,7 +571,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 		ins16(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {		\ 		ins16(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -601,7 +589,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 		ins32(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {		\ 		ins32(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_if
@@ -658,7 +646,7 @@ name|u_int8_t
 modifier|*
 name|s
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -712,7 +700,7 @@ name|u_int16_t
 modifier|*
 name|s
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -775,7 +763,7 @@ name|u_int32_t
 modifier|*
 name|s
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -861,7 +849,7 @@ name|u_int16_t
 modifier|*
 name|s
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -915,7 +903,7 @@ name|u_int32_t
 modifier|*
 name|s
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -980,7 +968,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out8(__BA(t, h, o), (v))
+value|out8(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_define
@@ -996,7 +984,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out16rb(__BA(t, h, o), (v))
+value|out16rb(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_define
@@ -1012,7 +1000,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out32rb(__BA(t, h, o), (v))
+value|out32rb(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_define
@@ -1028,7 +1016,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out8(__BA(t, h, o), (v))
+value|out8(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_define
@@ -1044,7 +1032,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out16(__BA(t, h, o), (v))
+value|out16(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_define
@@ -1060,7 +1048,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|out32(__BA(t, h, o), (v))
+value|out32(__ppc_ba(t, h, o), (v))
 end_define
 
 begin_if
@@ -1104,7 +1092,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		outsb(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {			\ 		outsb(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -1122,7 +1110,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		outsw(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {			\ 		outsw(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -1140,7 +1128,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {			\ 		outsl(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {			\ 		outsl(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_if
@@ -1176,7 +1164,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 		outsw(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {		\ 		outsw(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_define
@@ -1194,7 +1182,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 		outsl(__BA(t, h, o), (a), (c));				\ 	} while (0)
+value|do {		\ 		outsl(__ppc_ba(t, h, o), (a), (c));		       	\ 	} while (0)
 end_define
 
 begin_if
@@ -1248,7 +1236,7 @@ name|u_int8_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1303,7 +1291,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1367,7 +1355,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1450,7 +1438,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1505,7 +1493,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1580,7 +1568,7 @@ name|u_int8_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1630,7 +1618,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1689,7 +1677,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1767,7 +1755,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1817,7 +1805,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1889,7 +1877,7 @@ name|u_int8_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -1940,7 +1928,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -2000,7 +1988,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -2079,7 +2067,7 @@ name|u_int16_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -2130,7 +2118,7 @@ name|u_int32_t
 modifier|*
 name|d
 init|=
-name|__BA
+name|__ppc_ba
 argument_list|(
 name|tag
 argument_list|,
@@ -2338,66 +2326,46 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Operations performed by bus_dmamap_sync().  */
+comment|/*  *      bus_dmasync_op_t  *  *      Operations performed by bus_dmamap_sync().  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|BUS_DMASYNC_PREREAD
-value|0x01
-end_define
-
-begin_comment
-comment|/* pre-read synchronization */
-end_comment
-
-begin_define
-define|#
-directive|define
+block|,
 name|BUS_DMASYNC_POSTREAD
-value|0x02
-end_define
-
-begin_comment
-comment|/* post-read synchronization */
-end_comment
-
-begin_define
-define|#
-directive|define
+block|,
 name|BUS_DMASYNC_PREWRITE
-value|0x04
-end_define
-
-begin_comment
-comment|/* pre-write synchronization */
-end_comment
-
-begin_define
-define|#
-directive|define
+block|,
 name|BUS_DMASYNC_POSTWRITE
-value|0x08
-end_define
+block|}
+name|bus_dmasync_op_t
+typedef|;
+end_typedef
 
 begin_comment
-comment|/* post-write synchronization */
+comment|/*  *      bus_dma_tag_t  *  *      A machine-dependent opaque type describing the characteristics  *      of how to perform DMA mappings.  This structure encapsultes  *      information concerning address and alignment restrictions, number  *      of S/G  segments, amount of data per S/G segment, etc.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|struct
-name|macppc_bus_dma_tag
+name|bus_dma_tag
 modifier|*
 name|bus_dma_tag_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  *      bus_dmamap_t  *  *      DMA mapping instance information.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
-name|macppc_bus_dmamap
+name|bus_dmamap
 modifier|*
 name|bus_dmamap_t
 typedef|;
@@ -2407,9 +2375,10 @@ begin_comment
 comment|/*  *	bus_dma_segment_t  *  *	Describes a single contiguous DMA transaction.  Values  *	are suitable for programming into DMA registers.  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|macppc_bus_dma_segment
+name|bus_dma_segment
 block|{
 name|bus_addr_t
 name|ds_addr
@@ -2420,873 +2389,262 @@ name|ds_len
 decl_stmt|;
 comment|/* length of transfer */
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|macppc_bus_dma_segment
 name|bus_dma_segment_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *	bus_dma_tag_t  *  *	A machine-dependent opaque type describing the implementation of  *	DMA for a given bus.  */
+comment|/*  * A function that returns 1 if the address cannot be accessed by  * a device and 0 if it can be.  */
 end_comment
 
-begin_struct
-struct|struct
-name|macppc_bus_dma_tag
-block|{
-comment|/* 	 * The `bounce threshold' is checked while we are loading 	 * the DMA map.  If the physical address of the segment 	 * exceeds the threshold, an error will be returned.  The 	 * caller can then take whatever action is necessary to 	 * bounce the transfer.  If this value is 0, it will be 	 * ignored. 	 */
-name|bus_addr_t
-name|_bounce_thresh
-decl_stmt|;
-comment|/* 	 * DMA mapping methods. 	 */
+begin_typedef
+typedef|typedef
 name|int
-function_decl|(
-modifier|*
-name|_dmamap_create
-function_decl|)
+name|bus_dma_filter_t
 parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_dmamap_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|_dmamap_destroy
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|_dmamap_load
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|_dmamap_load_mbuf
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|_dmamap_load_uio
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|_dmamap_load_raw
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|_dmamap_unload
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|_dmamap_sync
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
 parameter_list|,
 name|bus_addr_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
-comment|/* 	 * DMA memory utility functions. 	 */
-name|int
-function_decl|(
-modifier|*
-name|_dmamem_alloc
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|_dmamem_free
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|_dmamem_map
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|size_t
-parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|_dmamem_unmap
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-name|vm_offset_t
-function_decl|(
-modifier|*
-name|_dmamem_mmap
-function_decl|)
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|off_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
+end_typedef
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *      alignment:      alignment for segments.  *      boundary:       Boundary that segments cannot cross.  *      lowaddr:        Low restricted address that cannot appear in a mapping.  *      highaddr:       High restricted address that cannot appear in a mapping.  *      filtfunc:       An optional function to further test if an address  *                      within the range of lowaddr and highaddr cannot appear  *                      in a mapping.  *      filtfuncarg:    An argument that will be passed to filtfunc in addition  *                      to the address to test.  *      maxsize:        Maximum mapping size supported by this tag.  *      nsegments:      Number of discontinuities allowed in maps.  *      maxsegsz:       Maximum size of a segment in the map.  *      flags:          Bus DMA flags.  *      dmat:           A pointer to set to a valid dma tag should the return  *                      value of this function indicate success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|bus_dma_tag_create
+parameter_list|(
+name|bus_dma_tag_t
+name|parent
+parameter_list|,
+name|bus_size_t
+name|alignment
+parameter_list|,
+name|bus_size_t
+name|boundary
+parameter_list|,
+name|bus_addr_t
+name|lowaddr
+parameter_list|,
+name|bus_addr_t
+name|highaddr
+parameter_list|,
+name|bus_dma_filter_t
+modifier|*
+name|filtfunc
+parameter_list|,
+name|void
+modifier|*
+name|filtfuncarg
+parameter_list|,
+name|bus_size_t
+name|maxsize
+parameter_list|,
+name|int
+name|nsegments
+parameter_list|,
+name|bus_size_t
+name|maxsegsz
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|bus_dma_tag_t
+modifier|*
+name|dmat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bus_dma_tag_destroy
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Allocate a handle for mapping from kva/uva/physical  * address space into bus device space.  */
+end_comment
+
+begin_function_decl
+name|int
 name|bus_dmamap_create
 parameter_list|(
-name|t
+name|bus_dma_tag_t
+name|dmat
 parameter_list|,
-name|s
+name|int
+name|flags
 parameter_list|,
-name|n
-parameter_list|,
-name|m
-parameter_list|,
-name|b
-parameter_list|,
-name|f
-parameter_list|,
-name|p
+name|bus_dmamap_t
+modifier|*
+name|mapp
 parameter_list|)
-define|\
-value|(*(t)->_dmamap_create)((t), (s), (n), (m), (b), (f), (p))
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*  * Destroy  a handle for mapping from kva/uva/physical  * address space into bus device space.  */
+end_comment
+
+begin_function_decl
+name|int
 name|bus_dmamap_destroy
 parameter_list|(
-name|t
+name|bus_dma_tag_t
+name|dmat
 parameter_list|,
-name|p
+name|bus_dmamap_t
+name|map
 parameter_list|)
-define|\
-value|(*(t)->_dmamap_destroy)((t), (p))
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
-name|bus_dmamap_load
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|,
-name|b
-parameter_list|,
-name|s
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamap_load)((t), (m), (b), (s), (p), (f))
-end_define
+begin_comment
+comment|/*  * Allocate a piece of memory that can be efficiently mapped into  * bus device space based on the constraints lited in the dma tag.  * A dmamap to for use with dmamap_load is also allocated.  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|bus_dmamap_load_mbuf
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|,
-name|b
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamap_load_mbuf)((t), (m), (b), (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamap_load_uio
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|,
-name|u
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamap_load_uio)((t), (m), (u), (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamap_load_raw
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|,
-name|sg
-parameter_list|,
-name|n
-parameter_list|,
-name|s
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamap_load_raw)((t), (m), (sg), (n), (s), (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamap_unload
-parameter_list|(
-name|t
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|(*(t)->_dmamap_unload)((t), (p))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamap_sync
-parameter_list|(
-name|t
-parameter_list|,
-name|p
-parameter_list|,
-name|o
-parameter_list|,
-name|l
-parameter_list|,
-name|ops
-parameter_list|)
-define|\
-value|(void)((t)->_dmamap_sync ?				\ 	    (*(t)->_dmamap_sync)((t), (p), (o), (l), (ops)) : (void)0)
-end_define
-
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|int
 name|bus_dmamem_alloc
 parameter_list|(
-name|t
+name|bus_dma_tag_t
+name|dmat
 parameter_list|,
-name|s
+name|void
+modifier|*
+modifier|*
+name|vaddr
 parameter_list|,
-name|a
+name|int
+name|flags
 parameter_list|,
-name|b
-parameter_list|,
-name|sg
-parameter_list|,
-name|n
-parameter_list|,
-name|r
-parameter_list|,
-name|f
+name|bus_dmamap_t
+modifier|*
+name|mapp
 parameter_list|)
-define|\
-value|(*(t)->_dmamem_alloc)((t), (s), (a), (b), (sg), (n), (r), (f))
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+end_comment
+
+begin_function_decl
+name|void
 name|bus_dmamem_free
 parameter_list|(
-name|t
+name|bus_dma_tag_t
+name|dmat
 parameter_list|,
-name|sg
+name|void
+modifier|*
+name|vaddr
 parameter_list|,
-name|n
+name|bus_dmamap_t
+name|map
 parameter_list|)
-define|\
-value|(*(t)->_dmamem_free)((t), (sg), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamem_map
-parameter_list|(
-name|t
-parameter_list|,
-name|sg
-parameter_list|,
-name|n
-parameter_list|,
-name|s
-parameter_list|,
-name|k
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamem_map)((t), (sg), (n), (s), (k), (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamem_unmap
-parameter_list|(
-name|t
-parameter_list|,
-name|k
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|(*(t)->_dmamem_unmap)((t), (k), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_dmamem_mmap
-parameter_list|(
-name|t
-parameter_list|,
-name|sg
-parameter_list|,
-name|n
-parameter_list|,
-name|o
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->_dmamem_mmap)((t), (sg), (n), (o), (p), (f))
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  *	bus_dmamap_t  *  *	Describes a DMA mapping.  */
+comment|/*  * A function that processes a successfully loaded dma map or an error  * from a delayed load map.  */
 end_comment
 
-begin_struct
-struct|struct
-name|macppc_bus_dmamap
-block|{
-comment|/* 	 * PRIVATE MEMBERS: not for use my machine-independent code. 	 */
-name|bus_size_t
-name|_dm_size
-decl_stmt|;
-comment|/* largest DMA transfer mappable */
-name|int
-name|_dm_segcnt
-decl_stmt|;
-comment|/* number of segs this map can map */
-name|bus_size_t
-name|_dm_maxsegsz
-decl_stmt|;
-comment|/* largest possible segment */
-name|bus_size_t
-name|_dm_boundary
-decl_stmt|;
-comment|/* don't cross this */
-name|bus_addr_t
-name|_dm_bounce_thresh
-decl_stmt|;
-comment|/* bounce threshold; see tag */
-name|int
-name|_dm_flags
-decl_stmt|;
-comment|/* misc. flags */
+begin_typedef
+typedef|typedef
+name|void
+name|bus_dmamap_callback_t
+parameter_list|(
 name|void
 modifier|*
-name|_dm_cookie
-decl_stmt|;
-comment|/* cookie for bus-specific functions */
-comment|/* 	 * PUBLIC MEMBERS: these are used by machine-independent code. 	 */
-name|bus_size_t
-name|dm_mapsize
-decl_stmt|;
-comment|/* size of the mapping */
-name|int
-name|dm_nsegs
-decl_stmt|;
-comment|/* # valid segments in mapping */
-name|bus_dma_segment_t
-name|dm_segs
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* segments; variable length */
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MACPPC_BUS_DMA_PRIVATE
-end_ifdef
-
-begin_function_decl
-name|int
-name|_bus_dmamap_create
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_dmamap_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_bus_dmamap_destroy
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamap_load
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamap_load_mbuf
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamap_load_uio
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamap_load_raw
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|bus_size_t
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_bus_dmamap_unload
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_bus_dmamap_sync
-parameter_list|(
-name|bus_dma_tag_t
-parameter_list|,
-name|bus_dmamap_t
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamem_alloc
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_size_t
-name|size
-parameter_list|,
-name|bus_size_t
-name|alignment
-parameter_list|,
-name|bus_size_t
-name|boundary
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|int
-name|nsegs
-parameter_list|,
-name|int
-modifier|*
-name|rsegs
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_bus_dmamem_free
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|int
-name|nsegs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamem_map
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|int
-name|nsegs
-parameter_list|,
-name|size_t
-name|size
-parameter_list|,
-name|caddr_t
-modifier|*
-name|kvap
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_bus_dmamem_unmap
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|caddr_t
-name|kva
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_offset_t
-name|_bus_dmamem_mmap
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|int
-name|nsegs
-parameter_list|,
-name|off_t
-name|off
-parameter_list|,
-name|int
-name|prot
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_bus_dmamem_alloc_range
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_size_t
-name|size
-parameter_list|,
-name|bus_size_t
-name|alignment
-parameter_list|,
-name|bus_size_t
-name|boundary
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|int
-name|nsegs
-parameter_list|,
-name|int
-modifier|*
-name|rsegs
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|vm_offset_t
-name|low
-parameter_list|,
-name|vm_offset_t
-name|high
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_typedef
 
 begin_comment
-comment|/* _MACPPC_BUS_DMA_PRIVATE */
+comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
 end_comment
+
+begin_function_decl
+name|int
+name|bus_dmamap_load
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|bus_size_t
+name|buflen
+parameter_list|,
+name|bus_dmamap_callback_t
+modifier|*
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|callback_arg
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Perform a syncronization operation on the given map.  */
+end_comment
+
+begin_function_decl
+name|void
+name|bus_dmamap_sync
+parameter_list|(
+name|bus_dma_tag_t
+parameter_list|,
+name|bus_dmamap_t
+parameter_list|,
+name|bus_dmasync_op_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Release the mapping held by map.  */
+end_comment
+
+begin_function_decl
+name|void
+name|bus_dmamap_unload
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
