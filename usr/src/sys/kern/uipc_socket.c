@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -803,13 +803,6 @@ operator|=
 name|sodisconnect
 argument_list|(
 name|so
-argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1343,8 +1336,6 @@ begin_expr_stmt
 name|sodisconnect
 argument_list|(
 name|so
-argument_list|,
-name|nam
 argument_list|)
 specifier|register
 expr|struct
@@ -1353,14 +1344,6 @@ operator|*
 name|so
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|nam
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1433,7 +1416,12 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|nam
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|(
 expr|struct
