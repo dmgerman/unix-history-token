@@ -15,6 +15,12 @@ directive|define
 name|__crypto_headers_h__
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPENSSL_DES_LIBDES_COMPATIBILITY
+end_define
+
 begin_include
 include|#
 directive|include
