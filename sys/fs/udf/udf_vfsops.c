@@ -2561,12 +2561,6 @@ name|v_vflag
 operator||=
 name|VV_ROOT
 expr_stmt|;
-name|udfmp
-operator|->
-name|root_vp
-operator|=
-name|vp
-expr_stmt|;
 return|return
 operator|(
 literal|0
