@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psl.h	3.1	%H%	*/
+comment|/*	psl.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -49,6 +49,17 @@ end_define
 
 begin_comment
 comment|/* negative bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_ALLCC
+value|0xf
+end_define
+
+begin_comment
+comment|/* all cc bits - unlikely */
 end_comment
 
 begin_define
@@ -114,7 +125,7 @@ value|0xc00000
 end_define
 
 begin_comment
-comment|/* previous mode */
+comment|/* previous mode (all on is user) */
 end_comment
 
 begin_define
@@ -125,7 +136,7 @@ value|0x3000000
 end_define
 
 begin_comment
-comment|/* current mode */
+comment|/* current mode (all on is user) */
 end_comment
 
 begin_define
@@ -170,6 +181,17 @@ end_define
 
 begin_comment
 comment|/* compatibility mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_USERCLR
+value|0x3c20ff00
+end_define
+
+begin_comment
+comment|/* bits must be clear in user mode */
 end_comment
 
 end_unit
