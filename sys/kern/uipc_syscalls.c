@@ -464,9 +464,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* An extra reference on `fp' has been held for us by falloc(). */
 name|mtx_lock
 argument_list|(
@@ -618,8 +620,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|done2
-label|:
 return|return
 operator|(
 name|error
