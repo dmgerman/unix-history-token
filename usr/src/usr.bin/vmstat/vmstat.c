@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.18 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,24 +80,6 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
 end_include
 
 begin_include
@@ -3796,10 +3778,12 @@ comment|/* 24 M_VNODE */
 literal|"namecache"
 block|,
 comment|/* 25 M_CACHE */
-literal|0
+literal|"UFS quota"
 block|,
-literal|0
+comment|/* 26 M_DQUOT */
+literal|"UFS mount"
 block|,
+comment|/* 27 M_UFSMNT */
 literal|0
 block|,
 literal|0
