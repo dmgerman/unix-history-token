@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.32 (Berkeley) %G%"
+literal|"@(#)util.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4956,9 +4956,24 @@ expr_stmt|;
 goto|goto
 name|defprint
 goto|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|S_IFIFO
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|S_IFSOCK
+argument_list|)
+operator|||
+name|S_IFIFO
+operator|!=
+name|S_IFSOCK
+operator|)
 case|case
 name|S_IFIFO
 case|:
