@@ -492,11 +492,13 @@ name|air_vinfo_rsp
 modifier|*
 name|avr
 decl_stmt|;
-name|int
-name|count
-decl_stmt|,
+name|size_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|size_t
+name|count
+decl_stmt|;
+name|size_t
 name|buf_len
 init|=
 name|aip
@@ -714,7 +716,7 @@ name|avsp_len
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|count
 argument_list|)
 argument_list|)
 operator|)
