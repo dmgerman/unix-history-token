@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: util.c,v 1.115 2004/04/10 12:21:39 lukem Exp $	*/
+comment|/*	$NetBSD: util.c,v 1.117 2005/01/03 09:50:09 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2003 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason R. Thorpe of the Numerical Aerospace Simulation Facility,  * NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997-2005 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason R. Thorpe of the Numerical Aerospace Simulation Facility,  * NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: util.c,v 1.115 2004/04/10 12:21:39 lukem Exp $"
+literal|"$NetBSD: util.c,v 1.117 2005/01/03 09:50:09 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -47,7 +47,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1107,9 +1107,13 @@ name|void
 name|intr
 parameter_list|(
 name|int
-name|dummy
+name|signo
 parameter_list|)
 block|{
+name|sigint_raised
+operator|=
+literal|1
+expr_stmt|;
 name|alarmtimer
 argument_list|(
 literal|0
@@ -1887,7 +1891,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|updateremotepwd
+name|updatelocalcwd
+argument_list|()
+expr_stmt|;
+name|updateremotecwd
 argument_list|()
 expr_stmt|;
 name|cleanup_ftp_login
@@ -3403,12 +3410,60 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * update global `remotepwd', which contains the state of the remote cwd  */
+comment|/*  * Update global `localcwd', which contains the state of the local cwd  */
 end_comment
 
 begin_function
 name|void
-name|updateremotepwd
+name|updatelocalcwd
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|getcwd
+argument_list|(
+name|localcwd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|localcwd
+argument_list|)
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|localcwd
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|ttyout
+argument_list|,
+literal|"got localcwd as `%s'\n"
+argument_list|,
+name|localcwd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Update global `remotecwd', which contains the state of the remote cwd  */
+end_comment
+
+begin_function
+name|void
+name|updateremotecwd
 parameter_list|(
 name|void
 parameter_list|)
@@ -3453,7 +3508,7 @@ operator|!=
 name|COMPLETE
 condition|)
 goto|goto
-name|badremotepwd
+name|badremotecwd
 goto|;
 name|cp
 operator|=
@@ -3485,7 +3540,7 @@ operator|!=
 literal|'"'
 condition|)
 goto|goto
-name|badremotepwd
+name|badremotecwd
 goto|;
 name|cp
 operator|+=
@@ -3504,7 +3559,7 @@ name|i
 operator|<
 sizeof|sizeof
 argument_list|(
-name|remotepwd
+name|remotecwd
 argument_list|)
 operator|-
 literal|1
@@ -3541,7 +3596,7 @@ expr_stmt|;
 else|else
 break|break;
 block|}
-name|remotepwd
+name|remotecwd
 index|[
 name|i
 index|]
@@ -3550,7 +3605,7 @@ operator|*
 name|cp
 expr_stmt|;
 block|}
-name|remotepwd
+name|remotecwd
 index|[
 name|i
 index|]
@@ -3565,24 +3620,24 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
-literal|"got remotepwd as `%s'\n"
+literal|"got remotecwd as `%s'\n"
 argument_list|,
-name|remotepwd
+name|remotecwd
 argument_list|)
 expr_stmt|;
 goto|goto
-name|cleanupremotepwd
+name|cleanupremotecwd
 goto|;
-name|badremotepwd
+name|badremotecwd
 label|:
-name|remotepwd
+name|remotecwd
 index|[
 literal|0
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|cleanupremotepwd
+name|cleanupremotecwd
 label|:
 name|verbose
 operator|=
@@ -3592,6 +3647,114 @@ name|code
 operator|=
 name|ocode
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Ensure file is in or under dir.  * Returns 1 if so, 0 if not (or an error occurred).  */
+end_comment
+
+begin_function
+name|int
+name|fileindir
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dir
+parameter_list|)
+block|{
+name|char
+name|realfile
+index|[
+name|PATH_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|size_t
+name|dirlen
+decl_stmt|;
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|file
+argument_list|,
+name|realfile
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Unable to determine real path of `%s'"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|realfile
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+comment|/* relative result */
+return|return
+literal|1
+return|;
+name|dirlen
+operator|=
+name|strlen
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("file %s realfile %s dir %s [%d]\n", file, realfile, dir, dirlen);
+endif|#
+directive|endif
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|realfile
+argument_list|,
+name|dir
+argument_list|,
+name|dirlen
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|realfile
+index|[
+name|dirlen
+index|]
+operator|==
+literal|'/'
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -4672,7 +4835,7 @@ name|p2
 operator|=
 name|connected
 condition|?
-name|remotepwd
+name|remotecwd
 else|:
 literal|""
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.c,v 1.5 2004/03/09 17:04:24 hubertf Exp $	*/
+comment|/*	$NetBSD: progressbar.c,v 1.6 2005/02/10 16:00:28 jmc Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: progressbar.c,v 1.5 2004/03/09 17:04:24 hubertf Exp $"
+literal|"$NetBSD: progressbar.c,v 1.6 2005/02/10 16:00:28 jmc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -191,12 +191,6 @@ begin_comment
 comment|/* !defined(NO_PROGRESS) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PROGRESS
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|void
@@ -236,15 +230,6 @@ name|oerrno
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_PROGRESS */
-end_comment
 
 begin_comment
 comment|/*  * List of order of magnitude prefixes.  * The last is `P', as 2^64 = 16384 Petabytes  */
@@ -331,11 +316,14 @@ name|barlength
 decl_stmt|,
 name|i
 decl_stmt|,
-name|len
-decl_stmt|,
 name|remaining
 decl_stmt|;
 comment|/* 			 * Work variables for progress bar. 			 * 			 * XXX:	if the format of the progress bar changes 			 *	(especially the number of characters in the 			 *	`static' portion of it), be sure to update 			 *	these appropriately. 			 */
+endif|#
+directive|endif
+name|int
+name|len
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -343,6 +331,9 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* workspace for progress bar */
+ifndef|#
+directive|ifndef
+name|NO_PROGRESS
 define|#
 directive|define
 name|BAROVERHEAD

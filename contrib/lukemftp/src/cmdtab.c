@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmdtab.c,v 1.41 2003/08/07 11:13:53 agc Exp $	*/
+comment|/*	$NetBSD: cmdtab.c,v 1.43 2004/07/15 08:50:10 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cmdtab.c,v 1.41 2003/08/07 11:13:53 agc Exp $"
+literal|"$NetBSD: cmdtab.c,v 1.43 2004/07/15 08:50:10 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -73,8 +73,21 @@ begin_comment
 comment|/*  * User FTP -- Command Tables.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HSTR
+value|static const char
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_HELP
+end_ifndef
+
 begin_decl_stmt
-name|char
+name|HSTR
 name|accounthelp
 index|[]
 init|=
@@ -83,7 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|appendhelp
 index|[]
 init|=
@@ -92,7 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|asciihelp
 index|[]
 init|=
@@ -101,7 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|beephelp
 index|[]
 init|=
@@ -110,7 +123,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|binaryhelp
 index|[]
 init|=
@@ -119,7 +132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|casehelp
 index|[]
 init|=
@@ -128,7 +141,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|cdhelp
 index|[]
 init|=
@@ -137,7 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|cduphelp
 index|[]
 init|=
@@ -146,7 +159,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|chmodhelp
 index|[]
 init|=
@@ -155,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|connecthelp
 index|[]
 init|=
@@ -164,7 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|crhelp
 index|[]
 init|=
@@ -173,7 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|debughelp
 index|[]
 init|=
@@ -182,7 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|deletehelp
 index|[]
 init|=
@@ -191,7 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|disconhelp
 index|[]
 init|=
@@ -200,7 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|domachelp
 index|[]
 init|=
@@ -209,7 +222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|edithelp
 index|[]
 init|=
@@ -218,7 +231,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|epsv4help
 index|[]
 init|=
@@ -227,7 +240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|feathelp
 index|[]
 init|=
@@ -236,7 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|formhelp
 index|[]
 init|=
@@ -245,7 +258,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|gatehelp
 index|[]
 init|=
@@ -254,7 +267,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|globhelp
 index|[]
 init|=
@@ -263,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|hashhelp
 index|[]
 init|=
@@ -272,7 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|helphelp
 index|[]
 init|=
@@ -281,7 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|idlehelp
 index|[]
 init|=
@@ -290,7 +303,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|lcdhelp
 index|[]
 init|=
@@ -299,7 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|lpagehelp
 index|[]
 init|=
@@ -308,7 +321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|lpwdhelp
 index|[]
 init|=
@@ -317,7 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|lshelp
 index|[]
 init|=
@@ -326,7 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|macdefhelp
 index|[]
 init|=
@@ -335,7 +348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mdeletehelp
 index|[]
 init|=
@@ -344,7 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mgethelp
 index|[]
 init|=
@@ -353,7 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mregethelp
 index|[]
 init|=
@@ -362,7 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|fgethelp
 index|[]
 init|=
@@ -371,7 +384,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mkdirhelp
 index|[]
 init|=
@@ -380,7 +393,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mlshelp
 index|[]
 init|=
@@ -389,7 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mlsdhelp
 index|[]
 init|=
@@ -399,7 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mlsthelp
 index|[]
 init|=
@@ -408,7 +421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|modehelp
 index|[]
 init|=
@@ -417,7 +430,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|modtimehelp
 index|[]
 init|=
@@ -426,7 +439,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|mputhelp
 index|[]
 init|=
@@ -435,7 +448,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|newerhelp
 index|[]
 init|=
@@ -444,7 +457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|nmaphelp
 index|[]
 init|=
@@ -453,7 +466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|ntranshelp
 index|[]
 init|=
@@ -462,7 +475,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|optshelp
 index|[]
 init|=
@@ -471,7 +484,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|pagehelp
 index|[]
 init|=
@@ -480,7 +493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|passivehelp
 index|[]
 init|=
@@ -489,7 +502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|plshelp
 index|[]
 init|=
@@ -498,7 +511,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|pmlsdhelp
 index|[]
 init|=
@@ -508,7 +521,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|porthelp
 index|[]
 init|=
@@ -517,7 +530,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|preservehelp
 index|[]
 init|=
@@ -527,7 +540,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|progresshelp
 index|[]
 init|=
@@ -536,7 +549,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|prompthelp
 index|[]
 init|=
@@ -545,7 +558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|proxyhelp
 index|[]
 init|=
@@ -554,7 +567,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|pwdhelp
 index|[]
 init|=
@@ -563,7 +576,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|quithelp
 index|[]
 init|=
@@ -572,7 +585,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|quotehelp
 index|[]
 init|=
@@ -581,7 +594,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|ratehelp
 index|[]
 init|=
@@ -590,7 +603,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|receivehelp
 index|[]
 init|=
@@ -599,7 +612,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|regethelp
 index|[]
 init|=
@@ -608,7 +621,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|remotehelp
 index|[]
 init|=
@@ -617,7 +630,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|renamehelp
 index|[]
 init|=
@@ -626,7 +639,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|resethelp
 index|[]
 init|=
@@ -635,7 +648,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|restarthelp
 index|[]
 init|=
@@ -644,7 +657,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|rmdirhelp
 index|[]
 init|=
@@ -653,7 +666,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|rmtstatushelp
 index|[]
 init|=
@@ -662,7 +675,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|runiquehelp
 index|[]
 init|=
@@ -671,7 +684,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|sendhelp
 index|[]
 init|=
@@ -680,7 +693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|sethelp
 index|[]
 init|=
@@ -689,7 +702,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|shellhelp
 index|[]
 init|=
@@ -698,7 +711,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|sitehelp
 index|[]
 init|=
@@ -709,7 +722,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|sizecmdhelp
 index|[]
 init|=
@@ -718,7 +731,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|statushelp
 index|[]
 init|=
@@ -727,7 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|structhelp
 index|[]
 init|=
@@ -736,7 +749,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|suniquehelp
 index|[]
 init|=
@@ -745,7 +758,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|systemhelp
 index|[]
 init|=
@@ -754,7 +767,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|tenexhelp
 index|[]
 init|=
@@ -763,7 +776,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|tracehelp
 index|[]
 init|=
@@ -772,7 +785,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|typehelp
 index|[]
 init|=
@@ -781,7 +794,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|umaskhelp
 index|[]
 init|=
@@ -790,7 +803,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|unsethelp
 index|[]
 init|=
@@ -799,7 +812,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|usagehelp
 index|[]
 init|=
@@ -808,7 +821,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|userhelp
 index|[]
 init|=
@@ -817,7 +830,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|verbosehelp
 index|[]
 init|=
@@ -826,13 +839,63 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|HSTR
 name|xferbufhelp
 index|[]
 init|=
 literal|"set socket send/receive buffer size"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|HSTR
+name|empty
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_HELP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|H
+parameter_list|(
+name|x
+parameter_list|)
+value|empty
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|H
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -878,7 +941,7 @@ begin_define
 define|#
 directive|define
 name|CMPL0
-value|"",
+value|empty,
 end_define
 
 begin_endif
@@ -900,7 +963,10 @@ block|{
 block|{
 literal|"!"
 block|,
+name|H
+argument_list|(
 name|shellhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -915,7 +981,10 @@ block|,
 block|{
 literal|"$"
 block|,
+name|H
+argument_list|(
 name|domachelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -930,7 +999,10 @@ block|,
 block|{
 literal|"account"
 block|,
+name|H
+argument_list|(
 name|accounthelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -945,7 +1017,10 @@ block|,
 block|{
 literal|"append"
 block|,
+name|H
+argument_list|(
 name|appendhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -963,7 +1038,10 @@ block|,
 block|{
 literal|"ascii"
 block|,
+name|H
+argument_list|(
 name|asciihelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -978,7 +1056,10 @@ block|,
 block|{
 literal|"bell"
 block|,
+name|H
+argument_list|(
 name|beephelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -993,7 +1074,10 @@ block|,
 block|{
 literal|"binary"
 block|,
+name|H
+argument_list|(
 name|binaryhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1008,7 +1092,10 @@ block|,
 block|{
 literal|"bye"
 block|,
+name|H
+argument_list|(
 name|quithelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1023,7 +1110,10 @@ block|,
 block|{
 literal|"case"
 block|,
+name|H
+argument_list|(
 name|casehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1038,7 +1128,10 @@ block|,
 block|{
 literal|"cd"
 block|,
+name|H
+argument_list|(
 name|cdhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1056,7 +1149,10 @@ block|,
 block|{
 literal|"cdup"
 block|,
+name|H
+argument_list|(
 name|cduphelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1071,7 +1167,10 @@ block|,
 block|{
 literal|"chmod"
 block|,
+name|H
+argument_list|(
 name|chmodhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1089,7 +1188,10 @@ block|,
 block|{
 literal|"close"
 block|,
+name|H
+argument_list|(
 name|disconhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1104,7 +1206,10 @@ block|,
 block|{
 literal|"cr"
 block|,
+name|H
+argument_list|(
 name|crhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1119,7 +1224,10 @@ block|,
 block|{
 literal|"debug"
 block|,
+name|H
+argument_list|(
 name|debughelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1134,7 +1242,10 @@ block|,
 block|{
 literal|"delete"
 block|,
+name|H
+argument_list|(
 name|deletehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1152,7 +1263,10 @@ block|,
 block|{
 literal|"dir"
 block|,
+name|H
+argument_list|(
 name|lshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1170,7 +1284,10 @@ block|,
 block|{
 literal|"disconnect"
 block|,
+name|H
+argument_list|(
 name|disconhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1185,7 +1302,10 @@ block|,
 block|{
 literal|"edit"
 block|,
+name|H
+argument_list|(
 name|edithelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1200,7 +1320,10 @@ block|,
 block|{
 literal|"epsv4"
 block|,
+name|H
+argument_list|(
 name|epsv4help
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1215,7 +1338,10 @@ block|,
 block|{
 literal|"exit"
 block|,
+name|H
+argument_list|(
 name|quithelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1230,7 +1356,10 @@ block|,
 block|{
 literal|"features"
 block|,
+name|H
+argument_list|(
 name|feathelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1245,7 +1374,10 @@ block|,
 block|{
 literal|"fget"
 block|,
+name|H
+argument_list|(
 name|fgethelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1263,7 +1395,10 @@ block|,
 block|{
 literal|"form"
 block|,
+name|H
+argument_list|(
 name|formhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1278,7 +1413,10 @@ block|,
 block|{
 literal|"ftp"
 block|,
+name|H
+argument_list|(
 name|connecthelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1293,7 +1431,10 @@ block|,
 block|{
 literal|"gate"
 block|,
+name|H
+argument_list|(
 name|gatehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1308,7 +1449,10 @@ block|,
 block|{
 literal|"get"
 block|,
+name|H
+argument_list|(
 name|receivehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1326,7 +1470,10 @@ block|,
 block|{
 literal|"glob"
 block|,
+name|H
+argument_list|(
 name|globhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1341,7 +1488,10 @@ block|,
 block|{
 literal|"hash"
 block|,
+name|H
+argument_list|(
 name|hashhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1356,7 +1506,10 @@ block|,
 block|{
 literal|"help"
 block|,
+name|H
+argument_list|(
 name|helphelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1374,7 +1527,10 @@ block|,
 block|{
 literal|"idle"
 block|,
+name|H
+argument_list|(
 name|idlehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1389,7 +1545,10 @@ block|,
 block|{
 literal|"image"
 block|,
+name|H
+argument_list|(
 name|binaryhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1404,7 +1563,10 @@ block|,
 block|{
 literal|"lcd"
 block|,
+name|H
+argument_list|(
 name|lcdhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1422,7 +1584,10 @@ block|,
 block|{
 literal|"less"
 block|,
+name|H
+argument_list|(
 name|pagehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1440,7 +1605,10 @@ block|,
 block|{
 literal|"lpage"
 block|,
+name|H
+argument_list|(
 name|lpagehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1458,7 +1626,10 @@ block|,
 block|{
 literal|"lpwd"
 block|,
+name|H
+argument_list|(
 name|lpwdhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1473,7 +1644,10 @@ block|,
 block|{
 literal|"ls"
 block|,
+name|H
+argument_list|(
 name|lshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1491,7 +1665,10 @@ block|,
 block|{
 literal|"macdef"
 block|,
+name|H
+argument_list|(
 name|macdefhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1506,7 +1683,10 @@ block|,
 block|{
 literal|"mdelete"
 block|,
+name|H
+argument_list|(
 name|mdeletehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1524,7 +1704,10 @@ block|,
 block|{
 literal|"mdir"
 block|,
+name|H
+argument_list|(
 name|mlshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1542,7 +1725,10 @@ block|,
 block|{
 literal|"mget"
 block|,
+name|H
+argument_list|(
 name|mgethelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1560,7 +1746,10 @@ block|,
 block|{
 literal|"mkdir"
 block|,
+name|H
+argument_list|(
 name|mkdirhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1578,7 +1767,10 @@ block|,
 block|{
 literal|"mls"
 block|,
+name|H
+argument_list|(
 name|mlshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1596,7 +1788,10 @@ block|,
 block|{
 literal|"mlsd"
 block|,
+name|H
+argument_list|(
 name|mlsdhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1614,7 +1809,10 @@ block|,
 block|{
 literal|"mlst"
 block|,
+name|H
+argument_list|(
 name|mlsthelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1632,7 +1830,10 @@ block|,
 block|{
 literal|"mode"
 block|,
+name|H
+argument_list|(
 name|modehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1647,7 +1848,10 @@ block|,
 block|{
 literal|"modtime"
 block|,
+name|H
+argument_list|(
 name|modtimehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1665,7 +1869,10 @@ block|,
 block|{
 literal|"more"
 block|,
+name|H
+argument_list|(
 name|pagehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1683,7 +1890,10 @@ block|,
 block|{
 literal|"mput"
 block|,
+name|H
+argument_list|(
 name|mputhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1701,7 +1911,10 @@ block|,
 block|{
 literal|"mreget"
 block|,
+name|H
+argument_list|(
 name|mregethelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1719,7 +1932,10 @@ block|,
 block|{
 literal|"msend"
 block|,
+name|H
+argument_list|(
 name|mputhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1737,7 +1953,10 @@ block|,
 block|{
 literal|"newer"
 block|,
+name|H
+argument_list|(
 name|newerhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1755,7 +1974,10 @@ block|,
 block|{
 literal|"nlist"
 block|,
+name|H
+argument_list|(
 name|lshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1773,7 +1995,10 @@ block|,
 block|{
 literal|"nmap"
 block|,
+name|H
+argument_list|(
 name|nmaphelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1788,7 +2013,10 @@ block|,
 block|{
 literal|"ntrans"
 block|,
+name|H
+argument_list|(
 name|ntranshelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1803,7 +2031,10 @@ block|,
 block|{
 literal|"open"
 block|,
+name|H
+argument_list|(
 name|connecthelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1818,7 +2049,10 @@ block|,
 block|{
 literal|"page"
 block|,
+name|H
+argument_list|(
 name|pagehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1836,7 +2070,10 @@ block|,
 block|{
 literal|"passive"
 block|,
+name|H
+argument_list|(
 name|passivehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1851,7 +2088,10 @@ block|,
 block|{
 literal|"pdir"
 block|,
+name|H
+argument_list|(
 name|plshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1869,7 +2109,10 @@ block|,
 block|{
 literal|"pls"
 block|,
+name|H
+argument_list|(
 name|plshelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1887,7 +2130,10 @@ block|,
 block|{
 literal|"pmlsd"
 block|,
+name|H
+argument_list|(
 name|pmlsdhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1905,7 +2151,10 @@ block|,
 block|{
 literal|"preserve"
 block|,
+name|H
+argument_list|(
 name|preservehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1920,7 +2169,10 @@ block|,
 block|{
 literal|"progress"
 block|,
+name|H
+argument_list|(
 name|progresshelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1935,7 +2187,10 @@ block|,
 block|{
 literal|"prompt"
 block|,
+name|H
+argument_list|(
 name|prompthelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1950,7 +2205,10 @@ block|,
 block|{
 literal|"proxy"
 block|,
+name|H
+argument_list|(
 name|proxyhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1968,7 +2226,10 @@ block|,
 block|{
 literal|"put"
 block|,
+name|H
+argument_list|(
 name|sendhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -1986,7 +2247,10 @@ block|,
 block|{
 literal|"pwd"
 block|,
+name|H
+argument_list|(
 name|pwdhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2001,7 +2265,10 @@ block|,
 block|{
 literal|"quit"
 block|,
+name|H
+argument_list|(
 name|quithelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2016,7 +2283,10 @@ block|,
 block|{
 literal|"quote"
 block|,
+name|H
+argument_list|(
 name|quotehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2031,7 +2301,10 @@ block|,
 block|{
 literal|"rate"
 block|,
+name|H
+argument_list|(
 name|ratehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2046,7 +2319,10 @@ block|,
 block|{
 literal|"rcvbuf"
 block|,
+name|H
+argument_list|(
 name|xferbufhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2061,7 +2337,10 @@ block|,
 block|{
 literal|"recv"
 block|,
+name|H
+argument_list|(
 name|receivehelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2079,7 +2358,10 @@ block|,
 block|{
 literal|"reget"
 block|,
+name|H
+argument_list|(
 name|regethelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2097,7 +2379,10 @@ block|,
 block|{
 literal|"remopts"
 block|,
+name|H
+argument_list|(
 name|optshelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2112,7 +2397,10 @@ block|,
 block|{
 literal|"rename"
 block|,
+name|H
+argument_list|(
 name|renamehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2130,7 +2418,10 @@ block|,
 block|{
 literal|"reset"
 block|,
+name|H
+argument_list|(
 name|resethelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2145,7 +2436,10 @@ block|,
 block|{
 literal|"restart"
 block|,
+name|H
+argument_list|(
 name|restarthelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2160,7 +2454,10 @@ block|,
 block|{
 literal|"rhelp"
 block|,
+name|H
+argument_list|(
 name|remotehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2175,7 +2472,10 @@ block|,
 block|{
 literal|"rmdir"
 block|,
+name|H
+argument_list|(
 name|rmdirhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2193,7 +2493,10 @@ block|,
 block|{
 literal|"rstatus"
 block|,
+name|H
+argument_list|(
 name|rmtstatushelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2211,7 +2514,10 @@ block|,
 block|{
 literal|"runique"
 block|,
+name|H
+argument_list|(
 name|runiquehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2226,7 +2532,10 @@ block|,
 block|{
 literal|"send"
 block|,
+name|H
+argument_list|(
 name|sendhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2244,7 +2553,10 @@ block|,
 block|{
 literal|"sendport"
 block|,
+name|H
+argument_list|(
 name|porthelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2259,7 +2571,10 @@ block|,
 block|{
 literal|"set"
 block|,
+name|H
+argument_list|(
 name|sethelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2277,7 +2592,10 @@ block|,
 block|{
 literal|"site"
 block|,
+name|H
+argument_list|(
 name|sitehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2292,7 +2610,10 @@ block|,
 block|{
 literal|"size"
 block|,
+name|H
+argument_list|(
 name|sizecmdhelp
+argument_list|)
 block|,
 literal|1
 block|,
@@ -2310,7 +2631,10 @@ block|,
 block|{
 literal|"sndbuf"
 block|,
+name|H
+argument_list|(
 name|xferbufhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2325,7 +2649,10 @@ block|,
 block|{
 literal|"status"
 block|,
+name|H
+argument_list|(
 name|statushelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2340,7 +2667,10 @@ block|,
 block|{
 literal|"struct"
 block|,
+name|H
+argument_list|(
 name|structhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2355,7 +2685,10 @@ block|,
 block|{
 literal|"sunique"
 block|,
+name|H
+argument_list|(
 name|suniquehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2370,7 +2703,10 @@ block|,
 block|{
 literal|"system"
 block|,
+name|H
+argument_list|(
 name|systemhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2385,7 +2721,10 @@ block|,
 block|{
 literal|"tenex"
 block|,
+name|H
+argument_list|(
 name|tenexhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2400,7 +2739,10 @@ block|,
 block|{
 literal|"throttle"
 block|,
+name|H
+argument_list|(
 name|ratehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2415,7 +2757,10 @@ block|,
 block|{
 literal|"trace"
 block|,
+name|H
+argument_list|(
 name|tracehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2430,7 +2775,10 @@ block|,
 block|{
 literal|"type"
 block|,
+name|H
+argument_list|(
 name|typehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2445,7 +2793,10 @@ block|,
 block|{
 literal|"umask"
 block|,
+name|H
+argument_list|(
 name|umaskhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2460,7 +2811,10 @@ block|,
 block|{
 literal|"unset"
 block|,
+name|H
+argument_list|(
 name|unsethelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2478,7 +2832,10 @@ block|,
 block|{
 literal|"usage"
 block|,
+name|H
+argument_list|(
 name|usagehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2496,7 +2853,10 @@ block|,
 block|{
 literal|"user"
 block|,
+name|H
+argument_list|(
 name|userhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2511,7 +2871,10 @@ block|,
 block|{
 literal|"verbose"
 block|,
+name|H
+argument_list|(
 name|verbosehelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2526,7 +2889,10 @@ block|,
 block|{
 literal|"xferbuf"
 block|,
+name|H
+argument_list|(
 name|xferbufhelp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -2541,7 +2907,10 @@ block|,
 block|{
 literal|"?"
 block|,
+name|H
+argument_list|(
 name|helphelp
+argument_list|)
 block|,
 literal|0
 block|,

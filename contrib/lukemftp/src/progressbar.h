@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.h,v 1.4 2004/03/09 17:04:24 hubertf Exp $	*/
+comment|/*	$NetBSD: progressbar.h,v 1.5 2005/02/10 16:00:38 jmc Exp $	*/
 end_comment
 
 begin_comment
