@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
 end_include
 
@@ -1059,6 +1053,8 @@ begin_macro
 name|sbselqueue
 argument_list|(
 argument|sb
+argument_list|,
+argument|cp
 argument_list|)
 end_macro
 
@@ -1067,6 +1063,14 @@ name|struct
 name|sockbuf
 modifier|*
 name|sb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|cp
 decl_stmt|;
 end_decl_stmt
 
@@ -1109,9 +1113,7 @@ name|sb
 operator|->
 name|sb_sel
 operator|=
-name|u
-operator|.
-name|u_procp
+name|cp
 expr_stmt|;
 name|sb
 operator|->
