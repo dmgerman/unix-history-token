@@ -2005,7 +2005,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* do thhis here because pp_down calls i4bisppp_tlf */
+comment|/* do this here because pp_down calls i4bisppp_tlf */
 name|sc
 operator|->
 name|sc_state
@@ -2151,14 +2151,14 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* do thhis here because pp_down calls i4bisppp_tlf */
+comment|/* do this here because pp_down calls i4bisppp_tlf */
 name|sc
 operator|->
 name|sc_state
 operator|=
 name|ST_IDLE
 expr_stmt|;
-comment|/* Ahh. ppp does't like to get a down event when 		 * dialing fails. So first tell that we are up 		 * (doesn't hurt us since sc_state != ST_CONNECTED) 		 * and then go down. 		 */
+comment|/* 		 * Ahh, sppp does't like to get a down event when 		 * dialing fails. So first tell it that we are up 		 * (doesn't hurt us since sc_state != ST_CONNECTED) 		 * and then go down. 		 */
 name|sp
 operator|->
 name|pp_up
