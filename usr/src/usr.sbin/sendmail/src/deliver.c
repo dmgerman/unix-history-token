@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.152
+literal|3.153
 operator|%
 name|G
 operator|%
@@ -3506,9 +3506,9 @@ name|xbuf
 argument_list|,
 literal|"From %s  $d remote from %s\n"
 argument_list|,
-name|buf
-argument_list|,
 name|bang
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|template
