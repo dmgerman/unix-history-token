@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.4";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.5";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -64,6 +64,16 @@ end_define
 
 begin_comment
 comment|/* for use in f_clos() */
+end_comment
+
+begin_decl_stmt
+name|short
+name|opnbof_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* open at beginning of file */
 end_comment
 
 begin_decl_stmt
@@ -447,6 +457,9 @@ else|else
 block|{
 if|if
 condition|(
+operator|!
+name|opnbof_
+operator|&&
 operator|(
 name|b
 operator|->
@@ -487,6 +500,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|opnbof_
+condition|)
 name|fseek
 argument_list|(
 name|b
