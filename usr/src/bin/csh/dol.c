@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.7 (Berkeley) %G%"
+literal|"@(#)dol.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
