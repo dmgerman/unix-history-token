@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.1 82/04/02"
+literal|"@(#)rwhod.c	4.2 82/04/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|struct
 name|utmp
 name|utmp
 index|[
-literal|100
+literal|500
 index|]
 decl_stmt|;
 end_decl_stmt
