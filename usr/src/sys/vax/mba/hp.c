@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.48	82/05/24	*/
+comment|/*	hp.c	4.49	82/06/05	*/
 end_comment
 
 begin_ifdef
@@ -1313,6 +1313,7 @@ break|break;
 ifdef|#
 directive|ifdef
 name|CAD
+comment|/* 		 * AMPEX 9300, SI Combination needs a have the drive cleared 		 * before we start.  We do not know why, but tests show 		 * that the recalibrate fixes the problem. 		 */
 case|case
 name|SI9766
 case|:
@@ -1330,6 +1331,19 @@ operator|->
 name|mi_type
 operator|=
 name|HPDT_RM05
+expr_stmt|;
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_RECAL
+operator||
+name|HP_GO
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
