@@ -1048,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PCI attach: scan OpenFirmware child nodes, and attach these as children  * of the macio bus  */
+comment|/*  * PCI attach: scan Open Firmware child nodes, and attach these as children  * of the macio bus  */
 end_comment
 
 begin_function

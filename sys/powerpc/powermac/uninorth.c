@@ -1089,7 +1089,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Enable the GMAC ethernet cell if OpenFirmware says it is 	 * used 	 */
+comment|/* 	 * Enable the GMAC Ethernet cell if Open Firmware says it is 	 * used. 	 */
 for|for
 control|(
 name|child

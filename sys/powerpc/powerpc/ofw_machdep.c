@@ -706,7 +706,7 @@ condition|(
 name|pmap_bootstrapped
 condition|)
 block|{
-comment|/* 		 * Swap the kernel's address space with OpenFirmware's 		 */
+comment|/* 		 * Swap the kernel's address space with Open Firmware's 		 */
 for|for
 control|(
 name|i

@@ -1780,7 +1780,7 @@ decl_stmt|;
 name|phandle_t
 name|chosenh
 decl_stmt|;
-comment|/* 	 * Tell the OpenFirmware functions where they find the ofw gate. 	 */
+comment|/* 	 * Tell the Open Firmware functions where they find the ofw gate. 	 */
 name|OF_init
 argument_list|(
 name|openfirm

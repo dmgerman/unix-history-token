@@ -1160,7 +1160,7 @@ name|ver
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize openfirmware (needed for console). 	 */
+comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
 name|OF_init
 argument_list|(
 name|vec

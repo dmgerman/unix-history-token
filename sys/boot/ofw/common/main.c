@@ -403,7 +403,7 @@ modifier|*
 modifier|*
 name|bargv
 decl_stmt|;
-comment|/* 	 * Initalise the OpenFirmware routines by giving them the entry point. 	 */
+comment|/* 	 * Initalise the Open Firmware routines by giving them the entry point. 	 */
 name|OF_init
 argument_list|(
 name|openfirm

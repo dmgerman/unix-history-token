@@ -515,7 +515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach the OpenFirmware disk to nexus if present  */
+comment|/*  * Attach the Open Firmware disk to nexus if present.  */
 end_comment
 
 begin_function
@@ -612,7 +612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe for an OpenFirmware disk.  */
+comment|/*  * Probe for an Open Firmware disk.  */
 end_comment
 
 begin_function
@@ -710,7 +710,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"OpenFirmware disk"
+literal|"Open Firmware disk"
 argument_list|)
 expr_stmt|;
 return|return

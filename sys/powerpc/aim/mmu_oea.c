@@ -3070,7 +3070,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Set up the OpenFirmware pmap and add it's mappings. 	 */
+comment|/* 	 * Set up the Open Firmware pmap and add it's mappings. 	 */
 end_comment
 
 begin_expr_stmt

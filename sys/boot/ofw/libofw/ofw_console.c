@@ -117,7 +117,7 @@ init|=
 block|{
 literal|"ofw"
 block|,
-literal|"OpenFirmware console"
+literal|"Open Firmware console"
 block|,
 literal|0
 block|,

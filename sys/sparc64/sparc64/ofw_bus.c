@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 - 2003 by Thomas Moestl<tmm@FreeBSD.org>.  * A
 end_comment
 
 begin_comment
-comment|/*  * OpenFirmware bus support code that is (hopefully) independent from the used  * hardware.  * Maybe this should go into dev/ofw/; there may however be sparc specific  * bits left.  */
+comment|/*  * Open Firmware bus support code that is (hopefully) independent from the  * used hardware.  * Maybe this should go into dev/ofw/; there may however be sparc specific  * bits left.  */
 end_comment
 
 begin_include

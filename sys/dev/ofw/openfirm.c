@@ -68,7 +68,7 @@ name|M_OFWPROP
 argument_list|,
 literal|"openfirm"
 argument_list|,
-literal|"OpenFirmware properties"
+literal|"Open Firmware properties"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2814,7 +2814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Suspend and drop back to the OpenFirmware interface. */
+comment|/* Suspend and drop back to the Open Firmware interface. */
 end_comment
 
 begin_function
@@ -2860,7 +2860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Shut down and drop back to the OpenFirmware interface. */
+comment|/* Shut down and drop back to the Open Firmware interface. */
 end_comment
 
 begin_function

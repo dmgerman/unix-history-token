@@ -3084,7 +3084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Suspend and drop back to the OpenFirmware interface. */
+comment|/* Suspend and drop back to the Open Firmware interface. */
 end_comment
 
 begin_function
@@ -3128,7 +3128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Shut down and drop back to the OpenFirmware interface. */
+comment|/* Shut down and drop back to the Open Firmware interface. */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2001 by Thomas Moestl<tmm@FreeBSD.org>.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Some OpenFirmware helper functions that are likely machine dependent.  */
+comment|/*  * Some Open Firmware helper functions that are likely machine dependent.  */
 end_comment
 
 begin_include

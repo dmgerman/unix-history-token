@@ -100,7 +100,7 @@ file|<sys/rman.h>
 end_include
 
 begin_comment
-comment|/*  * The nexus (which is a pseudo-bus actually) iterates over the nodes that  * hang from the OpenFirmware root node and adds them as devices to this bus  * (except some special nodes which are excluded) so that drivers can be  * attached to them.  *  * Additionally, interrupt setup/teardown and some resource management are  * done at this level.  *  * Maybe this code should get into dev/ofw to some extent, as some of it should  * work for all OpenFirmware based machines...  */
+comment|/*  * The nexus (which is a pseudo-bus actually) iterates over the nodes that  * hang from the Open Firmware root node and adds them as devices to this bus  * (except some special nodes which are excluded) so that drivers can be  * attached to them.  *  * Additionally, interrupt setup/teardown and some resource management are  * done at this level.  *  * Maybe this code should get into dev/ofw to some extent, as some of it should  * work for all Open Firmware based machines...  */
 end_comment
 
 begin_expr_stmt
@@ -557,7 +557,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"OpenFirmware Nexus device"
+literal|"Open Firmware Nexus device"
 argument_list|)
 expr_stmt|;
 return|return

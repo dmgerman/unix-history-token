@@ -104,7 +104,7 @@ file|"pic_if.h"
 end_include
 
 begin_comment
-comment|/*  * The nexus (which is a pseudo-bus actually) iterates over the nodes that  * exist in OpenFirmware and adds them as devices to this bus so that drivers  * can be attached to them.  *  * Maybe this code should get into dev/ofw to some extent, as some of it should  * work for all OpenFirmware based machines...  */
+comment|/*  * The nexus (which is a pseudo-bus actually) iterates over the nodes that  * exist in Open Firmware and adds them as devices to this bus so that drivers  * can be attached to them.  *  * Maybe this code should get into dev/ofw to some extent, as some of it should  * work for all Open Firmware based machines...  */
 end_comment
 
 begin_expr_stmt
@@ -671,7 +671,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"OpenFirmware Nexus device"
+literal|"Open Firmware Nexus device"
 argument_list|)
 expr_stmt|;
 return|return

@@ -84,7 +84,7 @@ file|<dev/ofw/openpromio.h>
 end_include
 
 begin_comment
-comment|/*  * This provides a solaris compatible character device interface to  * openfirmware.  It exists entirely for compatibility with software  * like X11, and only the features that are actually needed for that  * are implemented.  The interface sucks too much to actually use,  * new code should use the /dev/openfirm device.  */
+comment|/*  * This provides a Solaris compatible character device interface to  * Open Firmware.  It exists entirely for compatibility with software  * like X11, and only the features that are actually needed for that  * are implemented.  The interface sucks too much to actually use,  * new code should use the /dev/openfirm device.  */
 end_comment
 
 begin_decl_stmt

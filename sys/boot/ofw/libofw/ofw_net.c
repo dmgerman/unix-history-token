@@ -946,7 +946,7 @@ name|NETIF_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"ofwn_init: OpenFirmware instance handle: %08x\n"
+literal|"ofwn_init: Open Firmware instance handle: %08x\n"
 argument_list|,
 name|netinstance
 argument_list|)

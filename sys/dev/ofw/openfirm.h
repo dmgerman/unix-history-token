@@ -24,7 +24,7 @@ name|_OPENFIRM_H_
 end_define
 
 begin_comment
-comment|/*  * Prototypes for Openfirmware Interface Routines  */
+comment|/*  * Prototypes for Open Firmware Interface Routines  */
 end_comment
 
 begin_typedef
@@ -84,7 +84,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Stuff that is used by the OpenFirmware code.  */
+comment|/*  * Stuff that is used by the Open Firmware code.  */
 end_comment
 
 begin_function_decl
@@ -114,7 +114,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This isn't actually an OpenFirmware function, but it seemed like the right  * place for it to go.  */
+comment|/*  * This isn't actually an Open Firmware function, but it seemed like the right  * place for it to go.  */
 end_comment
 
 begin_function_decl

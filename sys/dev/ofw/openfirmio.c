@@ -1130,7 +1130,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"openfirm:<OpenFirmware control device>\n"
+literal|"openfirm:<Open Firmware control device>\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allow only root access by default; this device may allow 		 * users to peek into firmware passwords, and likely to crash 		 * the machine on some boxen due to firmware quirks. 		 */

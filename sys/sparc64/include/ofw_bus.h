@@ -30,7 +30,7 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  * Other than in OpenFirmware calls, the size of a bus cell seems to be always  * the same.  */
+comment|/*  * Other than in Open Firmware calls, the size of a bus cell seems to be  * always the same.  */
 end_comment
 
 begin_typedef

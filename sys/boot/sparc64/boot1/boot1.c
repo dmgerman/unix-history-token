@@ -2150,7 +2150,7 @@ name|int
 name|nblk
 parameter_list|)
 block|{
-comment|/* 	 * The OpenFirmware should open the correct partition for us. 	 * That means, if we read from offset zero on an open instance handle, 	 * we should read from offset zero of that partition. 	 */
+comment|/* 	 * The Open Firmware should open the correct partition for us. 	 * That means, if we read from offset zero on an open instance handle, 	 * we should read from offset zero of that partition. 	 */
 name|ofw_seek
 argument_list|(
 name|bootdev
