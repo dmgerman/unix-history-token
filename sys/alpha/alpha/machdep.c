@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.2 1998/06/10 19:59:40 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.3 1998/06/10 20:35:10 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -243,6 +243,12 @@ begin_include
 include|#
 directive|include
 file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
 end_include
 
 begin_include
@@ -1484,7 +1490,6 @@ if|if
 condition|(
 literal|1
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -1493,9 +1498,9 @@ name|boothowto
 operator|&
 name|RB_CONFIG
 condition|)
-block|{
 endif|#
 directive|endif
+block|{
 name|userconfig
 argument_list|()
 expr_stmt|;
@@ -1535,6 +1540,9 @@ name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|int
 name|register_netisr
 parameter_list|(
@@ -1598,6 +1606,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|setup_netisrs
@@ -1664,7 +1675,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Retrieve the platform name from the DSR.  */
+end_comment
+
+begin_function
 specifier|const
 name|char
 modifier|*
@@ -1746,7 +1763,13 @@ name|sysname
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Lookup the system specified system variation in the provided table,  * returning the model string on match.  */
+end_comment
+
+begin_function
 specifier|const
 name|char
 modifier|*
@@ -1810,7 +1833,13 @@ name|NULL
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Generate a default platform name based for unknown system variations.  */
+end_comment
+
+begin_function
 specifier|const
 name|char
 modifier|*
@@ -1853,6 +1882,9 @@ name|s
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|identifycpu
@@ -1910,6 +1942,9 @@ block|printf("variation: 0x%lx, revision 0x%lx\n", 	    hwrpb->rpb_variation, *(
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_decl_stmt
 specifier|extern
 name|char
 name|kernel_text
@@ -1918,6 +1953,9 @@ decl_stmt|,
 name|_end
 index|[]
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|void
 name|alpha_init
 parameter_list|(
@@ -2039,6 +2077,7 @@ operator|=
 operator|(
 name|u_long
 operator|)
+operator|&
 name|_end
 expr_stmt|;
 name|bootinfo
@@ -2048,8 +2087,91 @@ operator|=
 operator|(
 name|u_long
 operator|)
+operator|&
 name|_end
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIMOS
+block|{
+name|char
+modifier|*
+name|p
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|bootinfo
+operator|.
+name|ssym
+operator|+
+literal|8
+decl_stmt|;
+if|if
+condition|(
+name|p
+index|[
+name|EI_MAG0
+index|]
+operator|==
+name|ELFMAG0
+operator|&&
+name|p
+index|[
+name|EI_MAG1
+index|]
+operator|==
+name|ELFMAG1
+operator|&&
+name|p
+index|[
+name|EI_MAG2
+index|]
+operator|==
+name|ELFMAG2
+operator|&&
+name|p
+index|[
+name|EI_MAG3
+index|]
+operator|==
+name|ELFMAG3
+condition|)
+block|{
+name|bootinfo
+operator|.
+name|ssym
+operator|=
+operator|(
+name|u_long
+operator|)
+name|p
+expr_stmt|;
+name|bootinfo
+operator|.
+name|esym
+operator|=
+operator|(
+name|u_long
+operator|)
+name|p
+operator|+
+operator|*
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|(
+name|p
+operator|-
+literal|8
+operator|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 name|bootinfo
 operator|.
 name|hwrpb_phys
@@ -3527,6 +3649,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|bzero
 parameter_list|(
@@ -3624,7 +3749,13 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Wait "n" microseconds.  */
+end_comment
+
+begin_function
 name|void
 name|DELAY
 parameter_list|(
@@ -3659,7 +3790,13 @@ comment|/* XXX */
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_comment
 comment|/*  * The following primitives manipulate the run queues.  _whichqs tells which  * of the 32 queues _qs have processes in them.  Setrunqueue puts processes  * into queues, Remrunqueue removes them from queues.  The running process is  * on no queue, other processes are on a queue related to p->p_priority,  * divided by 4 actually to shrink the 0-127 range of priorities into the 32  * available queues.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|P_FORW
@@ -3667,6 +3804,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct proc*) (p)->p_procq.tqe_next)
+end_define
+
+begin_define
 define|#
 directive|define
 name|P_BACK
@@ -3674,6 +3814,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct proc*) (p)->p_procq.tqe_prev)
+end_define
+
+begin_define
 define|#
 directive|define
 name|INSRQ
@@ -3688,6 +3831,9 @@ name|p
 parameter_list|)
 define|\
 value|do {						\ 	whichqs |= (1<< pri);			\ 	P_FORW(p) = (struct proc *)&qs[pri];	\ 	P_BACK(p) = qs[pri].ph_rlink;		\ 	P_FORW(P_BACK(p)) = p;			\ 	qs[pri].ph_rlink = p;			\ } while(0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|REMRQ
@@ -3702,7 +3848,13 @@ name|p
 parameter_list|)
 define|\
 value|do {							\ 	if (!(whichqs& (1<< pri)))			\ 		panic(#whichqs);			\ 	P_FORW(P_BACK(p)) = P_FORW(p);			\ 	P_BACK(P_FORW(p)) = P_BACK(p);			\ 	P_BACK(p) = NULL;				\ 	if ((struct proc *)&qs[pri] == qs[pri].ph_link)	\ 		whichqs&= ~(1<< pri);			\ } while(0)
+end_define
+
+begin_comment
 comment|/*  * setrunqueue(p)  *	proc *p;  *  * Call should be made at splclock(), and p->p_stat should be SRUN.  */
+end_comment
+
+begin_function
 name|void
 name|setrunqueue
 parameter_list|(
@@ -3821,7 +3973,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * remrq(p)  *  * Call should be made at splclock().  */
+end_comment
+
+begin_function
 name|void
 name|remrq
 parameter_list|(
@@ -3933,7 +4091,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * at top to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
+end_comment
+
+begin_function
 name|void
 name|sendsig
 parameter_list|(
@@ -3950,7 +4114,13 @@ name|u_long
 name|code
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
+end_comment
+
+begin_function
 name|int
 name|sigreturn
 parameter_list|(
@@ -3971,7 +4141,13 @@ operator|-
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Machine dependent boot() routine  *  * I haven't seen anything to put here yet  * Possibly some stuff might be grafted back here from boot()  */
+end_comment
+
+begin_function
 name|void
 name|cpu_boot
 parameter_list|(
@@ -3979,7 +4155,13 @@ name|int
 name|howto
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*  * Shutdown the CPU as much as possible  */
+end_comment
+
+begin_function
 name|void
 name|cpu_halt
 parameter_list|(
@@ -3990,7 +4172,13 @@ name|alpha_pal_halt
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Turn the power off.  */
+end_comment
+
+begin_function
 name|void
 name|cpu_power_down
 parameter_list|(
@@ -4002,7 +4190,13 @@ argument_list|()
 expr_stmt|;
 comment|/* XXX */
 block|}
+end_function
+
+begin_comment
 comment|/*  * Clear registers on exec  */
+end_comment
+
+begin_function
 name|void
 name|setregs
 parameter_list|(
@@ -4193,6 +4387,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|int
 name|ptrace_set_pc
 parameter_list|(
@@ -4230,6 +4427,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|ptrace_single_step
 parameter_list|(
@@ -4243,6 +4443,9 @@ return|return
 name|EINVAL
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|ptrace_read_u_check
 parameter_list|(
@@ -4274,6 +4477,9 @@ return|return
 name|EPERM
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|ptrace_write_u
 parameter_list|(
@@ -4303,6 +4509,9 @@ name|EFAULT
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|alpha_pa_access
 parameter_list|(
@@ -4324,6 +4533,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|fill_regs
 parameter_list|(
@@ -4566,6 +4778,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|set_regs
 parameter_list|(
@@ -4808,9 +5023,15 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|DDB
+end_ifndef
+
+begin_function
 name|void
 name|Debugger
 parameter_list|(
@@ -4828,13 +5049,28 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* no DDB */
+end_comment
+
+begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_comment
 comment|/*  * Determine the size of the transfer, and make sure it is  * within the boundaries of the partition. Adjust transfer  * if needed, and signal errors or early completion.  */
+end_comment
+
+begin_function
 name|int
 name|bounds_check_with_label
 parameter_list|(
@@ -4898,9 +5134,15 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
+end_include
+
+begin_function
 name|struct
 name|intrec
 modifier|*
@@ -4932,6 +5174,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|intr_connect
 parameter_list|(
