@@ -210,14 +210,6 @@ comment|/* 				 * Another error has occurred, so exit the 				 * loop here:  			
 break|break;
 block|}
 block|}
-comment|/* Unlock the file descriptor: */
-name|_thread_fd_unlock
-argument_list|(
-name|fd
-argument_list|,
-name|FD_RDWR
-argument_list|)
-expr_stmt|;
 comment|/* Check for errors: */
 if|if
 condition|(
@@ -251,6 +243,40 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+comment|/*                   * If the parent socket was blocking, make sure that                  * the new socket is also set blocking here (as the 		 * call to _thread_fd_table_init() above will always  		 * set the new socket flags to non-blocking, as that  		 * will be the inherited state of the new socket. 		 */
+if|if
+condition|(
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|&
+name|O_NONBLOCK
+operator|)
+operator|==
+literal|0
+condition|)
+name|_thread_fd_table
+index|[
+name|ret
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|O_NONBLOCK
+expr_stmt|;
+comment|/* Unlock the file descriptor: */
+name|_thread_fd_unlock
+argument_list|(
+name|fd
+argument_list|,
+name|FD_RDWR
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Return the socket file descriptor or -1 on error: */
 return|return
