@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pp.c	5.2 (Berkeley) %G%"
+literal|"@(#)pp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,8 +787,7 @@ literal|'\t'
 argument_list|)
 expr_stmt|;
 name|i
-operator|=
-operator|-
+operator|-=
 literal|8
 expr_stmt|;
 block|}
@@ -971,8 +970,7 @@ name|pplev
 index|[
 name|lv
 index|]
-operator|=
-operator|-
+operator|-=
 name|unit
 expr_stmt|;
 if|if
@@ -1265,7 +1263,7 @@ name|unit
 else|:
 literal|28
 expr_stmt|;
-comment|/* 	if (outcol> i + 8) { 		ppnl(); 		i =+ 8; 	} */
+comment|/* 	if (outcol> i + 8) { 		ppnl(); 		i += 8; 	} */
 do|do
 name|putchar
 argument_list|(
