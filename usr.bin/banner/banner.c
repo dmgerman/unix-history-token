@@ -19967,6 +19967,19 @@ begin_comment
 comment|/* -w option: scrunch letters to 80 columns */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -20054,20 +20067,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: banner [-w width]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -20466,7 +20467,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"The character '%c' is not in my character set"
+literal|"the character '%c' is not in my character set"
 argument_list|,
 name|message
 index|[
@@ -20827,6 +20828,27 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: banner [-d] [-t] [-w width] message ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
