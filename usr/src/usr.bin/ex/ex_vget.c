@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.10 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2579,8 +2579,6 @@ argument_list|(
 name|trace
 argument_list|,
 literal|"\nfastpeekkey: "
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2594,6 +2592,7 @@ argument_list|,
 name|trapalarm
 argument_list|)
 expr_stmt|;
+name|CATCH
 if|if
 condition|(
 name|value
@@ -2642,12 +2641,16 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|CATCH
 name|c
-init|=
+operator|=
 name|peekkey
 argument_list|()
-decl_stmt|;
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MDEBUG
@@ -2666,11 +2669,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|ONERR
 name|c
 init|=
