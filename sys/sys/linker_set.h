@@ -120,7 +120,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".stabs \"_" #set "\", " #type ", 0, 0, _" #sym)
+value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".stabs \"" #set "\", " #type ", 0, 0, " #sym)
 end_define
 
 begin_define
