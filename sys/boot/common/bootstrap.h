@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.12 1998/10/09 07:09:22 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.13 1998/10/09 23:11:05 peter Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_comment
@@ -380,6 +386,29 @@ end_comment
 
 begin_struct
 struct|struct
+name|pnphandler
+block|{
+name|char
+modifier|*
+name|pp_name
+decl_stmt|;
+comment|/* handler/bus name */
+name|void
+function_decl|(
+modifier|*
+name|pp_enumerate
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* enumerate PnP devices, add to chain */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pnpident
 block|{
 name|char
@@ -387,32 +416,25 @@ modifier|*
 name|id_ident
 decl_stmt|;
 comment|/* ASCII identifier, actual format varies with bus/handler */
-name|struct
-name|pnpident
-modifier|*
-name|id_next
-decl_stmt|;
-comment|/* the next identifier */
+name|STAILQ_ENTRY
+argument_list|(
+argument|pnpident
+argument_list|)
+name|id_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_struct_decl
-struct_decl|struct
-name|pnphandler
-struct_decl|;
-end_struct_decl
 
 begin_struct
 struct|struct
 name|pnpinfo
 block|{
-name|struct
-name|pnpident
+name|char
 modifier|*
-name|pi_ident
+name|pi_desc
 decl_stmt|;
-comment|/* list of identifiers */
+comment|/* ASCII description, optional */
 name|int
 name|pi_revision
 decl_stmt|;
@@ -437,37 +459,20 @@ modifier|*
 name|pi_handler
 decl_stmt|;
 comment|/* handler which detected this device */
-name|struct
-name|pnpinfo
-modifier|*
-name|pi_next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|pnphandler
-block|{
-name|char
-modifier|*
-name|pp_name
-decl_stmt|;
-comment|/* handler/bus name */
-name|void
-function_decl|(
-modifier|*
-name|pp_enumerate
-function_decl|)
-parameter_list|(
-name|struct
-name|pnpinfo
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* add detected devices to chain */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pnpident
+argument_list|)
+name|pi_ident
+expr_stmt|;
+comment|/* list of identifiers */
+name|STAILQ_ENTRY
+argument_list|(
+argument|pnpinfo
+argument_list|)
+name|pi_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -499,6 +504,44 @@ parameter_list|,
 name|char
 modifier|*
 name|ident
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|pnpinfo
+modifier|*
+name|pnp_allocinfo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|pnp_freeinfo
+parameter_list|(
+name|struct
+name|pnpinfo
+modifier|*
+name|pi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|pnp_addinfo
+parameter_list|(
+name|struct
+name|pnpinfo
+modifier|*
+name|pi
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -832,6 +875,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_LINKER_SET
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -1031,6 +1080,149 @@ comment|/* really ls_length of them, trailing NULL */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* XXX just for conversion's sake, until we move to the new linker set code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_FOREACH
+parameter_list|(
+name|pvar
+parameter_list|,
+name|set
+parameter_list|)
+define|\
+value|for (pvar = set.ls_items;			\ 		 pvar< set.ls_items + set.ls_length;	\ 		 pvar++)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NEW_LINKER_SET */
+end_comment
+
+begin_comment
+comment|/*  * Private macros, not to be used outside this header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|static void *__CONCAT(__setentry,__LINE__)			\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
+end_define
+
+begin_define
+define|#
+directive|define
+name|__SET_BEGIN
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|({ extern void *__CONCAT(__start_set_,set);			\&__CONCAT(__start_set_,set); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|__SET_END
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|({ extern void *__CONCAT(__stop_set_,set);			\&__CONCAT(__stop_set_,set); })
+end_define
+
+begin_comment
+comment|/*  * Public macros.  */
+end_comment
+
+begin_comment
+comment|/* Add an entry to a set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEXT_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|__MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|__MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|__MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|__MAKE_SET(set, sym)
+end_define
+
+begin_comment
+comment|/*  * Iterate over all the elements of a set.  *  * Sets always contain addresses of things, and "pvar" points to words  * containing those addresses.  Thus is must be declared as "type **pvar",  * and the address of each set item is obtained inside the loop by "*pvar".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_FOREACH
+parameter_list|(
+name|pvar
+parameter_list|,
+name|set
+parameter_list|)
+define|\
+value|for (pvar = (__typeof__(pvar))__SET_BEGIN(set);			\ 	    pvar< (__typeof__(pvar))__SET_END(set); pvar++)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Support for commands   */
