@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -125,7 +131,7 @@ name|ISSTR
 parameter_list|(
 name|ch
 parameter_list|)
-value|(isascii(ch)&& (isprint(ch) || ch == '\t'))
+value|(isalnum(ch) || ispunct(ch) || isascii(ch)&& isprint(ch) || ch == '\t')
 end_define
 
 begin_typedef
@@ -256,6 +262,16 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* 	 * for backward compatibility, allow '-' to specify 'a' flag; no 	 * longer documented in the man page or usage string. 	 */
 name|asdata
 operator|=
