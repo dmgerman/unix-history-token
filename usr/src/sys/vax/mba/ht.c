@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.13	81/03/10	*/
+comment|/*	ht.c	4.14	81/03/11	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	test error handling  *	test tape with disk on same mba  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	test writing on write prot tape and error thereby  *	check rle error on block tape code  */
+comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	test error handling  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	check rle error on block tape code  */
 end_comment
 
 begin_include
@@ -496,6 +496,8 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
+name|olddens
+decl_stmt|,
 name|dens
 decl_stmt|;
 name|tuunit
@@ -552,14 +554,11 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
-name|htcommand
-argument_list|(
-name|dev
-argument_list|,
-name|HT_SENSE
-argument_list|,
-literal|1
-argument_list|)
+name|olddens
+operator|=
+name|sc
+operator|->
+name|sc_dens
 expr_stmt|;
 name|dens
 operator|=
@@ -583,6 +582,21 @@ operator||
 name|sc
 operator|->
 name|sc_slave
+expr_stmt|;
+name|htcommand
+argument_list|(
+name|dev
+argument_list|,
+name|HT_SENSE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dens
+operator|=
+name|olddens
 expr_stmt|;
 if|if
 condition|(
