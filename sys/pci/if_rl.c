@@ -5166,6 +5166,29 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 		 * If there was a transmit underrun, bump the TX threshold. 		 * Make sure not to overflow the 63 * 32byte we can address 		 * with the 6 available bit. 		 */
+if|if
+condition|(
+operator|(
+name|txstat
+operator|&
+name|RL_TXSTAT_TX_UNDERRUN
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|rl_txthresh
+operator|<
+literal|2016
+operator|)
+condition|)
+name|sc
+operator|->
+name|rl_txthresh
+operator|+=
+literal|32
+expr_stmt|;
 if|if
 condition|(
 name|txstat
@@ -5227,20 +5250,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If there was a transmit underrun, 			 * bump the TX threshold. 			 */
-if|if
-condition|(
-name|txstat
-operator|&
-name|RL_TXSTAT_TX_UNDERRUN
-condition|)
+comment|/* restore original threshold */
 name|sc
 operator|->
 name|rl_txthresh
 operator|=
 name|oldthresh
-operator|+
-literal|32
 expr_stmt|;
 return|return;
 block|}
