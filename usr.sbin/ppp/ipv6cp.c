@@ -1029,7 +1029,7 @@ operator|&
 name|hisaddr
 argument_list|)
 expr_stmt|;
-name|ncprange_sethost
+name|ncprange_set
 argument_list|(
 operator|&
 name|myrange
@@ -1038,6 +1038,8 @@ operator|&
 name|ipv6cp
 operator|->
 name|myaddr
+argument_list|,
+literal|64
 argument_list|)
 expr_stmt|;
 if|if
