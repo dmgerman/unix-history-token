@@ -596,6 +596,20 @@ operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* ra: assembly magic */
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 		 * We start off at a nesting level of 1 within the kernel. 		 */
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_kernnest
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block
