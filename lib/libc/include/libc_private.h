@@ -15,12 +15,6 @@ directive|define
 name|_LIBC_PRIVATE_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<spinlock.h>
-end_include
-
 begin_comment
 comment|/*  * This global flag is non-zero when a process has created one  * or more threads. It is used to avoid calling locking functions  * when they are not required.  */
 end_comment
@@ -242,7 +236,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|spinlock_t
+name|struct
+name|_spinlock
 modifier|*
 name|__malloc_lock
 decl_stmt|;

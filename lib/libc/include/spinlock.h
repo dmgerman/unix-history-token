@@ -31,9 +31,9 @@ begin_comment
 comment|/*  * Lock structure with room for debugging information.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|_spinlock
 block|{
 specifier|volatile
 name|long
@@ -53,6 +53,13 @@ name|int
 name|lineno
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_spinlock
 name|spinlock_t
 typedef|;
 end_typedef
