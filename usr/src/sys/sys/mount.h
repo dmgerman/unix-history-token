@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -433,100 +433,235 @@ begin_comment
 comment|/*  * Operations supported on mounted file system.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|nameidata
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|vfsops
 block|{
 name|int
-function_decl|(
-modifier|*
-name|vfs_mount
-function_decl|)
-parameter_list|(
-comment|/* mp, path, data, ndp */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_mount
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+name|char
+operator|*
+name|path
+operator|,
+name|caddr_t
+name|data
+operator|,
+expr|struct
+name|nameidata
+operator|*
+name|ndp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|vfs_start
-function_decl|)
-parameter_list|(
-comment|/* mp, flags */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_start
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|vfs_unmount
-function_decl|)
-parameter_list|(
-comment|/* mp, forcibly */
-parameter_list|)
-function_decl|;
+name|flags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|vfs_root
-function_decl|)
-parameter_list|(
-comment|/* mp, vpp */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_unmount
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|vfs_quotactl
-function_decl|)
-parameter_list|(
-comment|/* mp, cmd, uid, arg */
-parameter_list|)
-function_decl|;
+name|mntflags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|vfs_statfs
-function_decl|)
-parameter_list|(
-comment|/* mp, sbp */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_root
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+name|vpp
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|vfs_sync
-function_decl|)
-parameter_list|(
-comment|/* mp, waitfor */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_quotactl
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|vfs_fhtovp
-function_decl|)
-parameter_list|(
-comment|/* mp, fidp, vpp */
-parameter_list|)
-function_decl|;
+name|cmds
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|vfs_vptofh
-function_decl|)
-parameter_list|(
-comment|/* vp, fidp */
-parameter_list|)
-function_decl|;
+name|uid
+operator|,
+comment|/* should be uid_t */
+name|caddr_t
+name|arg
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|vfs_init
-function_decl|)
-parameter_list|(
-comment|/* */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*vfs_statfs
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+expr|struct
+name|statfs
+operator|*
+name|sbp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*vfs_sync
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+name|int
+name|waitfor
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*vfs_fhtovp
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+expr|struct
+name|fid
+operator|*
+name|fhp
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+name|vpp
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*vfs_vptofh
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+expr|struct
+name|fid
+operator|*
+name|fhp
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*vfs_init
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -543,9 +678,11 @@ parameter_list|,
 name|DATA
 parameter_list|,
 name|NDP
+parameter_list|,
+name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_mount)(MP, PATH, DATA, NDP)
+value|(*(MP)->mnt_op->vfs_mount)(MP, PATH, DATA, NDP, P)
 end_define
 
 begin_define
@@ -556,8 +693,10 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|FLAGS
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_start)(MP, FLAGS)
+value|(*(MP)->mnt_op->vfs_start)(MP, FLAGS, P)
 end_define
 
 begin_define
@@ -567,9 +706,11 @@ name|VFS_UNMOUNT
 parameter_list|(
 name|MP
 parameter_list|,
-name|FORCIBLY
+name|FORCE
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCIBLY)
+value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE, P)
 end_define
 
 begin_define
@@ -596,8 +737,10 @@ parameter_list|,
 name|U
 parameter_list|,
 name|A
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A)
+value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A, P)
 end_define
 
 begin_define
@@ -608,8 +751,10 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|SBP
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_statfs)(MP, SBP)
+value|(*(MP)->mnt_op->vfs_statfs)(MP, SBP, P)
 end_define
 
 begin_define
@@ -1023,58 +1168,84 @@ begin_comment
 comment|/*  * exported vnode operations  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|vfs_remove
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* remove a vfs from mounted vfs list */
+comment|/* remove a vfs from mount list */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|int
 name|vfs_lock
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* lock a vfs */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|vfs_unlock
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* unlock a vfs */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|struct
 name|mount
 modifier|*
 name|getvfs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|fsid_t
+operator|*
+name|fsid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* return vfs given fsid */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|mount
 modifier|*
@@ -1087,7 +1258,6 @@ comment|/* ptr to root mount structure */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|vfsops
 modifier|*
@@ -1097,7 +1267,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mount filesystem type switch table */
+comment|/* mount filesystem type table */
 end_comment
 
 begin_else
