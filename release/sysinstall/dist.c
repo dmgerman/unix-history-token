@@ -1152,6 +1152,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Servers/X8514"
 block|,
@@ -1178,6 +1181,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Servers/XI128"
 block|,
@@ -1191,6 +1196,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Servers/XMa8"
 block|,
@@ -1217,6 +1225,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Servers/XMa64"
 block|,
@@ -1295,6 +1305,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Servers/XVG16"
 block|,
@@ -1321,6 +1334,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__alpha__
