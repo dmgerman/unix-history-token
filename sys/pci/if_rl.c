@@ -306,6 +306,14 @@ literal|"Corega FEtherII CB-TXD"
 block|}
 block|,
 block|{
+name|PEPPERCON_VENDORID
+block|,
+name|PEPPERCON_DEVICEID_ROLF
+block|,
+literal|"Peppercon AG ROL-F"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

@@ -2273,6 +2273,28 @@ value|0xa11e
 end_define
 
 begin_comment
+comment|/*  * Peppercon vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PEPPERCON_VENDORID
+value|0x1743
+end_define
+
+begin_comment
+comment|/*  * Peppercon ROL-F device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PEPPERCON_DEVICEID_ROLF
+value|0x8139
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 
