@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ktrace.c,v 1.6.2.2 1997/07/18 06:37:20 charnier Exp $"
+literal|"$Id: ktrace.c,v 1.6.2.3 1997/08/29 05:29:25 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

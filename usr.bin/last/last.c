@@ -1027,7 +1027,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s \n"
+literal|"%-*.*s %-*.*s %-*.*s %10.10s %5.5s \n"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -1144,7 +1144,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s \n"
+literal|"%-*.*s %-*.*s %-*.*s %10.10s %5.5s \n"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -1403,7 +1403,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s "
+literal|"%-*.*s %-*.*s %-*.*s %10.10s %5.5s "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,

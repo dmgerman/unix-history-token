@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)look.c	8.1 (Berkeley) 6/14/93";
+unit|static char sccsid[] = "@(#)look.c	8.2 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: look.c,v 1.3.2.1 1997/07/24 06:50:33 charnier Exp $"
+literal|"$Id: look.c,v 1.3.2.2 1997/08/29 05:29:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,13 +379,13 @@ modifier|*
 name|file
 decl_stmt|,
 modifier|*
-name|front
-decl_stmt|,
-modifier|*
 name|string
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|caddr_t
+name|front
 decl_stmt|;
 operator|(
 name|void
@@ -610,7 +610,7 @@ name|st_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fd
 argument_list|,
@@ -621,7 +621,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(

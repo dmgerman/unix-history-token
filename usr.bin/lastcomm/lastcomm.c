@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lastcomm.c,v 1.4.2.1 1997/07/22 07:16:41 charnier Exp $"
+literal|"$Id: lastcomm.c,v 1.4.2.2 1997/08/29 05:29:27 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,7 +754,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %-7s %-*s %-*s "
+literal|"%-*.*s %-7s %-*s %-*s "
+argument_list|,
+name|fldsiz
+argument_list|(
+name|acct
+argument_list|,
+name|ac_comm
+argument_list|)
 argument_list|,
 name|fldsiz
 argument_list|(

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kzip.c,v 1.5.2.1 1997/07/21 11:56:35 charnier Exp $"
+literal|"$Id: kzip.c,v 1.5.2.2 1997/08/29 05:29:26 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,10 +418,9 @@ operator|=
 name|hdr
 operator|.
 name|a_entry
-operator|-
-literal|0xf0000000
+operator|&
+literal|0x00FFFFFF
 expr_stmt|;
-comment|/* replace KZBASE */
 name|lseek
 argument_list|(
 name|fdi

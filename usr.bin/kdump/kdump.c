@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdump.c,v 1.7.2.3 1997/07/17 06:37:36 charnier Exp $"
+literal|"$Id: kdump.c,v 1.7.2.4 1997/08/29 05:29:24 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
