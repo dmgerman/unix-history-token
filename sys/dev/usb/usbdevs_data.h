@@ -5720,6 +5720,18 @@ literal|"DigiFilm-Combo Reader"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_SIIG
+block|,
+name|USB_PRODUCT_SIIG_WINTERREADER
+block|,
+literal|0
+block|,
+literal|"SIIG"
+block|,
+literal|"Sitecom Cardreader CN-311"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SILICONPORTALS
 block|,
 name|USB_PRODUCT_SILICONPORTALS_YAPPH_NF

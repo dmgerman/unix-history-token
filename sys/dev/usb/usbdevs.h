@@ -9201,6 +9201,17 @@ begin_comment
 comment|/* DigiFilm-Combo Reader */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_SIIG_WINTERREADER
+value|0x0330
+end_define
+
+begin_comment
+comment|/* Sitecom Cardreader CN-311 */
+end_comment
+
 begin_comment
 comment|/* Silicon Portals Inc. */
 end_comment
