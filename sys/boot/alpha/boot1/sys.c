@@ -45,6 +45,12 @@ directive|include
 file|<sys/dirent.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
+
 begin_define
 define|#
 directive|define
