@@ -230,6 +230,14 @@ modifier|*
 name|gsp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|gsp
+operator|==
+name|NULL
+condition|)
+comment|/* XXX: phk thinks about this */
+return|return;
 name|g_free
 argument_list|(
 name|gsp
