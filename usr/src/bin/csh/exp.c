@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exp.c	4.2 (Berkeley) %G%"
+literal|"@(#)exp.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1816,6 +1816,19 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|vp
+operator|==
+literal|0
+condition|)
+name|bferr
+argument_list|(
+literal|"Expression syntax"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|eq
