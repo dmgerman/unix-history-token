@@ -3857,7 +3857,14 @@ name|if_flags
 operator|&
 name|IFF_RUNNING
 condition|)
+block|{
+name|KUE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Set MAC address */
 name|kue_ctl
 argument_list|(
