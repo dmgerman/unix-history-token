@@ -1202,7 +1202,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"uudecode %s failed"
+literal|"key_read: uudecode %s failed"
 argument_list|,
 name|cp
 argument_list|)
@@ -1226,9 +1226,18 @@ name|k
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"key_read: dsa_key_from_blob %s failed"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|xfree
 argument_list|(
 name|blob
@@ -1279,30 +1288,46 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-name|strchr
-argument_list|(
-name|cp
-argument_list|,
-literal|'='
-argument_list|)
-expr_stmt|;
-if|if
+comment|/* advance cp: skip whitespace and data */
+while|while
 condition|(
+operator|*
 name|cp
 operator|==
-name|NULL
+literal|' '
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\t'
 condition|)
-return|return
-literal|0
-return|;
+name|cp
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|'\t'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
 operator|*
 name|cpp
 operator|=
 name|cp
-operator|+
-literal|1
 expr_stmt|;
 break|break;
 default|default:
