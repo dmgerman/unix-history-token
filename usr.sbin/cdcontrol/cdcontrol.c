@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_CD_DRIVE
-value|"/dev/cd0c"
+value|"/dev/cd0"
 end_define
 
 begin_endif
