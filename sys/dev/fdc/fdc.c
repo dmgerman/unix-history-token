@@ -1095,10 +1095,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The open function is named fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
