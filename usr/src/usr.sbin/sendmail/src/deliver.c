@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.25 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2231,16 +2231,6 @@ comment|/* 	**  If this mailer is expensive, and if we don't want to make 	**  c
 if|if
 condition|(
 name|NoConnect
-operator|&&
-operator|!
-name|bitset
-argument_list|(
-name|EF_QUEUERUN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
 operator|&&
 name|bitnset
 argument_list|(

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.18 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.19 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.18 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.19 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2122,6 +2122,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DAEMON */
+comment|/* force it to run expensive jobs */
+name|NoConnect
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	**  Create ourselves an envelope 	*/
 name|CurEnv
 operator|=
