@@ -2465,7 +2465,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"use \"disklabel -r\" to install initial label\n"
+literal|"add \"-r\" to install initial label\n"
 argument_list|)
 expr_stmt|;
 break|break;
