@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.34 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -411,6 +411,21 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_function_decl
+specifier|volatile
+name|void
+name|boot
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* boot() does not return */
+end_comment
+
 begin_function
 specifier|volatile
 comment|/* panic() does not return */
@@ -545,6 +560,7 @@ name|tablefull
 parameter_list|(
 name|tab
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|tab
