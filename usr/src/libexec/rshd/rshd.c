@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.22 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,43 +1052,14 @@ block|}
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KERBEROS
 if|if
 condition|(
-name|fromp
-operator|->
-name|sin_port
-operator|>=
-name|IPPORT_RESERVED
-operator|||
-name|fromp
-operator|->
-name|sin_port
-operator|<
-name|IPPORT_RESERVED
-operator|/
-literal|2
+operator|!
+name|use_kerberos
 condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"Connection from %s on illegal port"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|fromp
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1218,26 +1189,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KERBEROS
 if|if
 condition|(
-name|port
-operator|>=
-name|IPPORT_RESERVED
+operator|!
+name|use_kerberos
 condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"2nd port not reserved\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fromp
 operator|->
 name|sin_port
@@ -1575,9 +1534,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|endpwent
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -2239,6 +2195,29 @@ name|pwd
 operator|->
 name|pw_shell
 expr_stmt|;
+name|endpwent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pwd
+operator|->
+name|pw_uid
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"ROOT shell from %s@%s, comm: %s\n"
+argument_list|,
+name|remuser
+argument_list|,
+name|hostname
+argument_list|,
+name|cmdbuf
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|pwd
@@ -2556,7 +2535,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rshd [-l] [-n]"
+literal|"usage: rshd [-ln]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -2565,7 +2544,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rshd [-l] [-n] [-k] [-v] [-e]"
+literal|"usage: rshd [-lknvx]"
 argument_list|)
 expr_stmt|;
 endif|#
