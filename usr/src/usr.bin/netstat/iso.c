@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.13 (Berkeley) %G%"
+literal|"@(#)iso.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,12 +182,6 @@ begin_include
 include|#
 directive|include
 file|<netiso/tp_states.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netiso/tp_astring.c>
 end_include
 
 begin_include
@@ -1396,6 +1390,12 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|tp_sstring
+index|[]
+decl_stmt|;
 name|struct
 name|tp_ref
 modifier|*
