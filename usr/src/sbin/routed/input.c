@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.5 (Berkeley) %G%"
+literal|"@(#)input.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,6 +916,24 @@ condition|(
 name|rt
 operator|==
 literal|0
+operator|||
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+operator|(
+name|RTS_INTERNAL
+operator||
+name|RTS_INTERFACE
+operator|)
+operator|)
+operator|==
+operator|(
+name|RTS_INTERNAL
+operator||
+name|RTS_INTERFACE
+operator|)
 condition|)
 block|{
 name|rt

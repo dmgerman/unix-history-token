@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.3 (Berkeley) %G%"
+literal|"@(#)inet.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,18 +547,6 @@ operator|&
 name|IN_CLASSC_HOST
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|host
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* network */
 comment|/* 	 * Check whether this network is subnetted; 	 * if so, check whether this is a subnet or a host. 	 */
 for|for
 control|(
@@ -585,16 +573,28 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|host
 operator|&
 operator|~
 name|ifp
 operator|->
 name|int_subnetmask
+condition|)
+return|return
+operator|(
+name|RTF_HOST
 operator|)
-operator|==
-literal|0
+return|;
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_subnetmask
+operator|!=
+name|ifp
+operator|->
+name|int_netmask
 condition|)
 return|return
 operator|(
@@ -604,10 +604,24 @@ return|;
 else|else
 return|return
 operator|(
-name|RTF_HOST
+literal|0
 operator|)
 return|;
+comment|/* network */
 block|}
+if|if
+condition|(
+name|host
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* network */
+else|else
 return|return
 operator|(
 name|RTF_HOST
@@ -617,7 +631,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return true if a route to subnet rtsin should be sent to dst.  * Send it only if dst is on the same logical network,  * or the route turns out to be for the net (aka subnet 0).  */
+comment|/*  * Return true if a route to subnet of route rt should be sent to dst.  * Send it only if dst is on the same logical network,  * or the route is the "internal" route for the net.  */
 end_comment
 
 begin_macro
@@ -735,14 +749,27 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|r
 operator|&
 name|IN_CLASSA_HOST
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
-operator|==
+return|;
+return|return
+operator|(
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERNAL
+operator|)
+operator|!=
 literal|0
 operator|)
 return|;
@@ -800,14 +827,27 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|r
 operator|&
 name|IN_CLASSB_HOST
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
-operator|==
+return|;
+return|return
+operator|(
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERNAL
+operator|)
+operator|!=
 literal|0
 operator|)
 return|;
@@ -858,14 +898,27 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|r
 operator|&
 name|IN_CLASSC_HOST
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
-operator|==
+return|;
+return|return
+operator|(
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERNAL
+operator|)
+operator|!=
 literal|0
 operator|)
 return|;

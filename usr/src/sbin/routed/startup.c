@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.5 (Berkeley) %G%"
+literal|"@(#)startup.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,6 +1073,16 @@ name|rt
 operator|->
 name|rt_state
 operator|&
+operator|(
+name|RTS_INTERNAL
+operator||
+name|RTS_INTERFACE
+operator|)
+operator|)
+operator|==
+operator|(
+name|RTS_INTERNAL
+operator||
 name|RTS_INTERFACE
 operator|)
 condition|)
@@ -1091,6 +1101,7 @@ operator|->
 name|int_metric
 argument_list|,
 operator|(
+operator|(
 name|ifp
 operator|->
 name|int_flags
@@ -1098,10 +1109,11 @@ operator|&
 operator|(
 name|IFF_INTERFACE
 operator||
-name|IFF_PASSIVE
-operator||
 name|IFF_REMOTE
 operator|)
+operator|)
+operator||
+name|RTS_PASSIVE
 operator||
 name|RTS_INTERNAL
 operator||
