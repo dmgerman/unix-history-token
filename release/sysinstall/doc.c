@@ -193,7 +193,6 @@ name|self
 parameter_list|)
 block|{
 name|char
-modifier|*
 name|tmp
 index|[
 literal|512
