@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.18	85/02/20	*/
+comment|/*	vfs_lookup.c	6.19	85/02/20	*/
 end_comment
 
 begin_include
@@ -4465,6 +4465,19 @@ operator|->
 name|d_reclen
 control|)
 block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_reclen
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|error
 operator|=
 name|rdwri
