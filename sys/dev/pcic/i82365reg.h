@@ -1764,5 +1764,16 @@ begin_comment
 comment|/* PNP0E03 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_ACTIONTEC
+value|0x1802A904
+end_define
+
+begin_comment
+comment|/* AEI0218 */
+end_comment
+
 end_unit
 

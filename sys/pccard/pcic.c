@@ -361,11 +361,12 @@ block|}
 block|,
 comment|/* PNP0E03 */
 block|{
-literal|0x1802a904
+name|PCIC_PNP_ACTIONTEC
 block|,
 name|NULL
 block|}
 block|,
+comment|/* AEI0218 */
 block|{
 literal|0
 block|}
