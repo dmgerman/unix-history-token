@@ -229,6 +229,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|trimdomain
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|protopr
 name|__P
 argument_list|(
@@ -332,14 +345,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|mbpr
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
