@@ -2966,6 +2966,13 @@ name|numrows
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|s_num
+operator|>
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|row
@@ -3075,6 +3082,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
