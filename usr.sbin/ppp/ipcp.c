@@ -2109,7 +2109,6 @@ name|ns
 operator|.
 name|resolv_nons
 condition|)
-empty_stmt|;
 name|fputs
 argument_list|(
 name|ipcp
