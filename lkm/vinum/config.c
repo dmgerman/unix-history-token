@@ -4,7 +4,7 @@ comment|/* To do:   * Don't store drive configuration on the config DB: read eac
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: config.c,v 1.19 1998/10/05 02:48:15 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: config.c,v 1.20 1998/10/26 02:05:34 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -1180,6 +1180,31 @@ literal|0
 expr_stmt|;
 comment|/* start at the beginning */
 block|}
+if|if
+condition|(
+name|plex
+operator|->
+name|subdisks
+operator|==
+name|MAXSD
+condition|)
+comment|/* we already have our maximum */
+name|throw_rude_remark
+argument_list|(
+name|ENOSPC
+argument_list|,
+comment|/* crap out */
+literal|"Can't add %s to %s: plex full\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|plex
 operator|->
 name|subdisks
@@ -2740,6 +2765,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* this also sets drive_unallocated */
+name|vinum_conf
+operator|.
+name|drives_used
+operator|--
+expr_stmt|;
+comment|/* one less drive */
 block|}
 end_function
 
@@ -3362,6 +3393,12 @@ name|state
 operator|=
 name|sd_unallocated
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|--
+expr_stmt|;
+comment|/* one less sd */
 block|}
 end_function
 
@@ -3783,6 +3820,12 @@ name|state
 operator|=
 name|plex_unallocated
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|plexes_used
+operator|--
+expr_stmt|;
+comment|/* one less plex */
 block|}
 end_function
 
@@ -4095,6 +4138,12 @@ name|state
 operator|=
 name|volume_unallocated
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|volumes_used
+operator|--
+expr_stmt|;
+comment|/* one less volume */
 block|}
 end_function
 
