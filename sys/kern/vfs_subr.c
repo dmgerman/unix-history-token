@@ -3587,6 +3587,16 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|v_bsize
+operator|=
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+expr_stmt|;
 return|return
 operator|(
 literal|0

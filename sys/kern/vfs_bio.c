@@ -9467,6 +9467,34 @@ name|bsize
 operator|=
 name|size
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_bsize
+operator|!=
+name|bsize
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Wrong block size on vnode: %d should be %d\n"
+argument_list|,
+name|vp
+operator|->
+name|v_bsize
+argument_list|,
+name|bsize
+argument_list|)
+expr_stmt|;
+name|vprint
+argument_list|(
+literal|"Please email phk@FreeBSD.org this info\n"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 name|offset
 operator|=
 name|blkno

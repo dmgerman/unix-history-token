@@ -430,6 +430,10 @@ name|ino_t
 name|v_cachedid
 decl_stmt|;
 comment|/* cached file id */
+name|int
+name|v_bsize
+decl_stmt|;
+comment|/* block size for I/O */
 block|}
 struct|;
 end_struct
