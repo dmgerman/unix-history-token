@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	4.5 (Berkeley) %G%"
+literal|"@(#)cmp.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_define
@@ -142,15 +148,20 @@ specifier|static
 name|int
 name|fd1
 decl_stmt|,
-comment|/* descriptor, file 1 */
 name|fd2
-decl_stmt|,
-comment|/* descriptor, file 2 */
-name|silent
-init|=
-name|NO
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* file descriptors */
+end_comment
+
+begin_expr_stmt
+name|silent
+operator|=
+name|NO
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* if silent run */
@@ -191,14 +202,13 @@ name|char
 modifier|*
 name|file1
 decl_stmt|,
-comment|/* name, file 1 */
 modifier|*
 name|file2
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* name, file 2 */
+comment|/* file names */
 end_comment
 
 begin_function
@@ -222,7 +232,6 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-comment|/* getopt externals */
 specifier|extern
 name|int
 name|optind
@@ -230,7 +239,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-comment|/* arguments */
 name|u_long
 name|otoi
 parameter_list|()
@@ -329,28 +337,18 @@ argument_list|(
 name|file1
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|perror
+name|error
 argument_list|(
 name|file1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
-block|}
 name|file2
 operator|=
 name|argv
@@ -368,28 +366,18 @@ argument_list|(
 name|file2
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|perror
+name|error
 argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* handle skip arguments */
 if|if
 condition|(
@@ -438,6 +426,7 @@ block|}
 name|cmp
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
@@ -494,6 +483,10 @@ name|int
 name|rlen
 decl_stmt|;
 comment|/* read length */
+specifier|register
+name|int
+name|nread
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -518,6 +511,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|nread
+operator|=
 name|read
 argument_list|(
 name|fd
@@ -526,25 +522,26 @@ name|buf1
 argument_list|,
 name|rlen
 argument_list|)
+operator|)
 operator|!=
 name|rlen
 condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|silent
+name|nread
+operator|<
+literal|0
 condition|)
-name|printf
+name|error
 argument_list|(
-literal|"cmp: EOF on %s\n"
-argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
+else|else
+name|endoffile
 argument_list|(
-name|DIFF
+name|fname
 argument_list|)
 expr_stmt|;
 block|}
@@ -562,10 +559,10 @@ name|u_char
 operator|*
 name|C1
 block|,
-comment|/* traveling pointers */
 operator|*
 name|C2
 block|;
+comment|/* traveling pointers */
 specifier|register
 name|int
 name|cnt
@@ -573,10 +570,9 @@ block|,
 comment|/* counter */
 name|len1
 block|,
-comment|/* read length 1 */
 name|len2
 block|;
-comment|/* read length 2 */
+comment|/* read lengths */
 specifier|register
 name|long
 name|byte
@@ -622,25 +618,15 @@ case|case
 operator|-
 literal|1
 case|:
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|perror
+name|error
 argument_list|(
 name|file1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ERR
 argument_list|)
 expr_stmt|;
 case|case
 literal|0
 case|:
-comment|/* 				 * read of file 1 just failed, find out 				 * if there's anything left in file 2 				 */
+comment|/* 			 * read of file 1 just failed, find out 			 * if there's anything left in file 2 			 */
 switch|switch
 condition|(
 name|read
@@ -657,19 +643,9 @@ case|case
 operator|-
 literal|1
 case|:
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|perror
+name|error
 argument_list|(
 name|file2
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ERR
 argument_list|)
 expr_stmt|;
 case|case
@@ -685,21 +661,9 @@ name|OK
 argument_list|)
 expr_stmt|;
 default|default:
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|printf
+name|endoffile
 argument_list|(
-literal|"cmp: EOF on %s\n"
-argument_list|,
 name|file1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|DIFF
 argument_list|)
 expr_stmt|;
 block|}
@@ -729,27 +693,16 @@ operator|==
 operator|-
 literal|1
 operator|)
-block|{
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|perror
+name|error
 argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-unit|} 		if
-operator|(
+begin_if
+if|if
+condition|(
 name|bcmp
 argument_list|(
 name|buf1
@@ -758,7 +711,7 @@ name|buf2
 argument_list|,
 name|len2
 argument_list|)
-operator|)
+condition|)
 block|{
 if|if
 condition|(
@@ -769,9 +722,6 @@ argument_list|(
 name|DIFF
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|all
@@ -892,10 +842,8 @@ operator|++
 name|line
 expr_stmt|;
 block|}
-end_if
-
-begin_block
-unit|} 		else
+block|}
+else|else
 block|{
 name|byte
 operator|+=
@@ -936,7 +884,7 @@ operator|++
 name|line
 expr_stmt|;
 block|}
-end_block
+end_if
 
 begin_comment
 comment|/* 		 * couldn't read as much from file2 as from file1; checked 		 * here because there might be a difference before we got 		 * to this point, which would have precedence. 		 */
@@ -949,25 +897,11 @@ name|len2
 operator|<
 name|len1
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
-name|printf
+name|endoffile
 argument_list|(
-literal|"cmp: EOF on %s\n"
-argument_list|,
 name|file2
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|DIFF
-argument_list|)
-expr_stmt|;
-block|}
 end_if
 
 begin_comment
@@ -1045,6 +979,119 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * error --  *	print I/O error message and die  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|error
+argument_list|(
+argument|filename
+argument_list|)
+name|char
+operator|*
+name|filename
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|int
+name|sverrno
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
+block|{
+name|sverrno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cmp: %s: "
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|sverrno
+expr_stmt|;
+name|perror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|ERR
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * endoffile --  *	print end-of-file message and exit indicating the files were different  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|endoffile
+argument_list|(
+argument|filename
+argument_list|)
+name|char
+operator|*
+name|filename
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+comment|/* 32V put this message on stdout, S5 does it on stderr. */
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cmp: EOF on %s\n"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|DIFF
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * usage --  *	print usage and die  */
