@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	3.1	%H%	*/
+comment|/*	vm_meter.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -299,10 +299,12 @@ decl_stmt|;
 comment|/* 	 * Check if paging rate is too high, or average of 	 * free list very low and if so, adjust multiprogramming 	 * load by swapping someone out. 	 * 	 * Avoid glitches: don't hard swap the only process, 	 * and don't swap based on paging rate if there is a reasonable 	 * amount of free memory. 	 */
 name|loop
 label|:
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl6
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|deservin
 operator|=
 literal|0
@@ -553,20 +555,22 @@ argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|swapout
-parameter_list|(
+argument_list|(
 name|rp
-parameter_list|,
+argument_list|,
 name|rp
 operator|->
 name|p_dsize
-parameter_list|,
+argument_list|,
 name|rp
 operator|->
 name|p_ssize
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
@@ -600,10 +604,12 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Decide how deserving this guy is.  If he is deserving 	 * we will be willing to work harder to bring him in. 	 * Needs is an estimate of how much core he will need. 	 * If he has been out for a while, then we will 	 * bring him in with 1/2 the core he will need, otherwise 	 * we are conservative. 	 */
 name|deservin
 operator|=
@@ -697,10 +703,12 @@ block|}
 name|hardswap
 label|:
 comment|/* 	 * Need resources (kernel map or memory), swap someone out. 	 * Select the nbig largest jobs, then the oldest of these 	 * is ``most likely to get booted.'' 	 */
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl6
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|inp
 operator|=
 name|p
@@ -1173,10 +1181,12 @@ name|loop
 goto|;
 block|}
 comment|/* 	 * Want to swap someone in, but can't 	 * so wait on runin. 	 */
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl6
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|runin
 operator|++
 expr_stmt|;
