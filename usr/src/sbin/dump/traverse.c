@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.8 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,7 +1370,7 @@ name|spcl
 operator|.
 name|c_magic
 operator|=
-name|MAGIC
+name|NFS_MAGIC
 expr_stmt|;
 name|spcl
 operator|.
