@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
 end_include
 
 begin_include
@@ -318,11 +324,6 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-decl_stmt|;
-specifier|extern
-name|struct
-name|timeval
-name|time
 decl_stmt|;
 define|#
 directive|define
