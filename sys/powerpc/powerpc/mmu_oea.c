@@ -491,16 +491,6 @@ name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Physical address of the last available physical page.  */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|pmap_pagedaemon_waken
@@ -3692,23 +3682,16 @@ empty_stmt|;
 end_for
 
 begin_expr_stmt
-name|avail_end
+name|Maxmem
 operator|=
+name|powerpc_btop
+argument_list|(
 name|phys_avail
 index|[
 name|i
 operator|+
 literal|1
 index|]
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Maxmem
-operator|=
-name|powerpc_btop
-argument_list|(
-name|avail_end
 argument_list|)
 expr_stmt|;
 end_expr_stmt

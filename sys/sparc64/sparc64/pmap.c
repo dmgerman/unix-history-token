@@ -253,16 +253,6 @@ name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Physical address of the last available physical page.  */
-end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|pmap_pagedaemon_waken
@@ -1881,20 +1871,16 @@ operator|+=
 literal|2
 control|)
 empty_stmt|;
-name|avail_end
+name|Maxmem
 operator|=
+name|sparc64_btop
+argument_list|(
 name|phys_avail
 index|[
 name|i
 operator|+
 literal|1
 index|]
-expr_stmt|;
-name|Maxmem
-operator|=
-name|sparc64_btop
-argument_list|(
-name|avail_end
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add the prom mappings to the kernel tsb. 	 */
