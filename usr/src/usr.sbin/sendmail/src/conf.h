@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.42 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1272,6 +1272,88 @@ end_define
 
 begin_comment
 comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  386BSD / FreeBSD 1.0E (works) / NetBSD (not tested) ** **  4.3BSD clone, closer to 4.4BSD */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__386BSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has the setsid(2) POSIX syscall */
 end_comment
 
 begin_define
