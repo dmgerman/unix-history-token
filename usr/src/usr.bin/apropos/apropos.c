@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	5.2 (Berkeley) %G%"
+literal|"@(#)apropos.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,8 @@ begin_define
 define|#
 directive|define
 name|DEF_PATH
-value|"/usr/man"
+value|"/usr/man:/usr/new/man:/usr/local/man"
 end_define
-
-begin_comment
-comment|/* default man path */
-end_comment
 
 begin_define
 define|#
