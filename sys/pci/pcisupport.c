@@ -8564,6 +8564,30 @@ operator|=
 literal|"Riva Integrated TNT2"
 expr_stmt|;
 break|break;
+case|case
+literal|0x0100
+case|:
+name|chip
+operator|=
+literal|"GeForce 256"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0101
+case|:
+name|chip
+operator|=
+literal|"GeForce DDR"
+expr_stmt|;
+break|break;
+case|case
+literal|0x0103
+case|:
+name|chip
+operator|=
+literal|"Quadro"
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
