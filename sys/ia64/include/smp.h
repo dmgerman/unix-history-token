@@ -70,8 +70,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_COUNT
+name|IPI_TEST
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_COUNT
+value|7
 end_define
 
 begin_ifndef
