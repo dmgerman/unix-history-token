@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.6	%G%"
+literal|"@(#)parseaddr.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1515,7 +1515,7 @@ operator|*
 name|rp
 operator|!=
 literal|'\0'
-operator|&&
+operator|||
 operator|*
 name|ap
 operator|!=
@@ -2266,13 +2266,11 @@ name|m
 operator|=
 operator|*
 name|mp
+operator|++
 operator|)
 operator|!=
 name|NULL
 condition|;
-name|m
-operator|++
-operator|,
 name|i
 operator|++
 control|)
