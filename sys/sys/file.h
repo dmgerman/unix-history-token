@@ -686,7 +686,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|nfiles
+name|openfiles
 decl_stmt|;
 end_decl_stmt
 
@@ -703,7 +703,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sx to protect filelist and nfiles */
+comment|/* sx to protect filelist and openfiles */
 end_comment
 
 begin_function_decl
@@ -772,23 +772,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|fdrop
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fdrop_locked
 parameter_list|(
 name|struct
 name|file
@@ -1014,7 +997,7 @@ parameter_list|(
 name|fp
 parameter_list|)
 define|\
-value|do {								\ 		FILE_LOCK(fp);						\ 		fhold_locked(fp);					\ 		FILE_UNLOCK(fp);					\ 	} while (0)
+value|do {								\ 		FILE_LOCK(fp);						\ 		(fp)->f_count++;					\ 		FILE_UNLOCK(fp);					\ 	} while (0)
 end_define
 
 begin_decl_stmt
