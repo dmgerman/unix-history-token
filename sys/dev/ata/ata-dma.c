@@ -3932,6 +3932,7 @@ argument_list|,
 operator|(
 name|uval
 operator|&
+operator|~
 literal|0x3f
 operator|)
 operator||
@@ -4007,6 +4008,7 @@ argument_list|,
 operator|(
 name|uval
 operator|&
+operator|~
 literal|0x3f
 operator|)
 operator||
@@ -4082,6 +4084,7 @@ argument_list|,
 operator|(
 name|uval
 operator|&
+operator|~
 literal|0x3f
 operator|)
 operator||
@@ -4157,6 +4160,7 @@ argument_list|,
 operator|(
 name|uval
 operator|&
+operator|~
 literal|0x3f
 operator|)
 operator||
