@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ie.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"le.h"
 end_include
 
@@ -318,19 +312,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tina.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ppc.h"
 end_include
 
 begin_include
@@ -449,14 +431,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|fedriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|iedriver
 decl_stmt|;
 end_decl_stmt
 
@@ -792,23 +766,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|isa_driver
-name|pcfdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
 name|tinadriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|ppcdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1110,20 +1068,6 @@ block|}
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|NPPC
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_TTY
-block|,
-operator|&
-name|ppcdriver
-block|}
-block|,
-endif|#
-directive|endif
 comment|/* BIO */
 if|#
 directive|if
@@ -1196,20 +1140,6 @@ block|,
 endif|#
 directive|endif
 comment|/* NET */
-if|#
-directive|if
-name|NIE
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|iedriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NED
@@ -1332,20 +1262,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|wldriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NPCF
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|pcfdriver
 block|}
 block|,
 endif|#
