@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.6 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5634,9 +5634,24 @@ name|columns
 operator|=
 name|tgetnum
 argument_list|(
+literal|"ws"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|columns
+operator|<
+literal|0
+condition|)
+name|columns
+operator|=
+name|tgetnum
+argument_list|(
 literal|"co"
 argument_list|)
-operator|-
+expr_stmt|;
+name|columns
+operator|-=
 literal|1
 expr_stmt|;
 if|if
@@ -6063,7 +6078,10 @@ name|rh_file
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buffer
@@ -6074,7 +6092,13 @@ name|hp
 operator|->
 name|rh_host
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buffer
+operator|)
 return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -6112,7 +6136,10 @@ argument_list|)
 operator|!=
 name|WHOD_HDR_SIZE
 condition|)
-return|return
+block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buffer
@@ -6123,7 +6150,13 @@ name|hp
 operator|->
 name|rh_host
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buffer
+operator|)
 return|;
+block|}
 operator|(
 name|void
 operator|)
