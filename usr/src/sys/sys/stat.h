@@ -1,11 +1,124 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.13 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_macro
+unit|struct
+name|ostat
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_struct
 struct|struct
 name|stat
+endif|#
+directive|endif
+block|{
+name|u_short
+name|st_dev
+decl_stmt|;
+comment|/* inode's device */
+name|ino_t
+name|st_ino
+decl_stmt|;
+comment|/* inode's number */
+name|mode_t
+name|st_mode
+decl_stmt|;
+comment|/* inode protection mode */
+name|nlink_t
+name|st_nlink
+decl_stmt|;
+comment|/* number of hard links */
+name|u_short
+name|st_uid
+decl_stmt|;
+comment|/* user ID of the file's owner */
+name|u_short
+name|st_gid
+decl_stmt|;
+comment|/* group ID of the file's group */
+name|u_short
+name|st_rdev
+decl_stmt|;
+comment|/* device type */
+name|long
+name|st_size
+decl_stmt|;
+comment|/* file size, in bytes */
+name|struct
+name|timeval
+name|st_atimeval
+decl_stmt|;
+comment|/* time of last access */
+name|struct
+name|timeval
+name|st_mtimeval
+decl_stmt|;
+comment|/* time of last data modification */
+name|struct
+name|timeval
+name|st_ctimeval
+decl_stmt|;
+comment|/* time of last file status change */
+name|long
+name|st_blksize
+decl_stmt|;
+comment|/* optimal blocksize for I/O */
+name|long
+name|st_blocks
+decl_stmt|;
+comment|/* blocks allocated for file */
+name|u_long
+name|st_flags
+decl_stmt|;
+comment|/* user defined flags for file */
+name|u_long
+name|st_gen
+decl_stmt|;
+comment|/* file generation number */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_macro
+unit|struct
+name|stat
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|qstat
+endif|#
+directive|endif
 block|{
 name|dev_t
 name|st_dev
@@ -35,39 +148,33 @@ name|dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
+name|struct
+name|timeval
+name|st_atimeval
+decl_stmt|;
+comment|/* time of last access */
+name|struct
+name|timeval
+name|st_mtimeval
+decl_stmt|;
+comment|/* time of last data modification */
+name|struct
+name|timeval
+name|st_ctimeval
+decl_stmt|;
+comment|/* time of last file status change */
 name|off_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
-name|time_t
-name|st_atime
-decl_stmt|;
-comment|/* time of last access */
-name|long
-name|st_spare1
-decl_stmt|;
-name|time_t
-name|st_mtime
-decl_stmt|;
-comment|/* time of last data modification */
-name|long
-name|st_spare2
-decl_stmt|;
-name|time_t
-name|st_ctime
-decl_stmt|;
-comment|/* time of last file status change */
-name|long
-name|st_spare3
-decl_stmt|;
-name|long
-name|st_blksize
-decl_stmt|;
-comment|/* optimal blocksize for I/O */
-name|long
+name|quad_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
+name|u_long
+name|st_blksize
+decl_stmt|;
+comment|/* optimal blocksize for I/O */
 name|u_long
 name|st_flags
 decl_stmt|;
@@ -76,9 +183,36 @@ name|u_long
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
+name|long
+name|st_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|st_atime
+value|st_atimeval.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_mtime
+value|st_mtimeval.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_ctime
+value|st_ctimeval.tv_sec
+end_define
 
 begin_define
 define|#
@@ -709,6 +843,62 @@ operator|*
 operator|,
 expr|struct
 name|stat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* temporarily */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lqstat
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|qstat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fqstat
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|qstat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|qstat
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|qstat
 operator|*
 operator|)
 argument_list|)
