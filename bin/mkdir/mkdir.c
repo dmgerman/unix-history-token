@@ -230,6 +230,14 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'m'
+case|:
+name|mode
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|pflag
@@ -243,14 +251,6 @@ case|:
 name|vflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'m'
-case|:
-name|mode
-operator|=
-name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -791,7 +791,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkdir [-p] [-m mode] [-v] directory ...\n"
+literal|"usage: mkdir [-pv] [-m mode] directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
