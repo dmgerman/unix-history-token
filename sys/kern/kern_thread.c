@@ -2505,11 +2505,15 @@ literal|"userret: upcall thread %p (pid %d, %s)"
 argument_list|,
 name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|)
