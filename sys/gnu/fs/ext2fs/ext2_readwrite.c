@@ -503,7 +503,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
+block|}
 name|vp
 operator|->
 name|v_lastr
@@ -627,7 +638,7 @@ name|B_AGE
 expr_stmt|;
 endif|#
 directive|endif
-name|brelse
+name|bqrelse
 argument_list|(
 name|bp
 argument_list|)
@@ -639,7 +650,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|brelse
+name|bqrelse
 argument_list|(
 name|bp
 argument_list|)

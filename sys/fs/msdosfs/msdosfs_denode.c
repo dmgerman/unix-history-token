@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.14 1995/12/03 16:41:53 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.15 1995/12/07 12:47:19 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -1469,6 +1469,15 @@ return|return
 name|EINVAL
 return|;
 block|}
+if|if
+condition|(
+name|dep
+operator|->
+name|de_FileSize
+operator|<
+name|length
+condition|)
+block|{
 name|vnode_pager_setsize
 argument_list|(
 name|DETOV
@@ -1479,14 +1488,6 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dep
-operator|->
-name|de_FileSize
-operator|<
-name|length
-condition|)
 return|return
 name|deextend
 argument_list|(
@@ -1497,6 +1498,7 @@ argument_list|,
 name|cred
 argument_list|)
 return|;
+block|}
 comment|/* 	 * If the desired length is 0 then remember the starting cluster of 	 * the file and set the StartCluster field in the directory entry 	 * to 0.  If the desired length is not zero, then get the number of 	 * the last cluster in the shortened file.  Then get the number of 	 * the first cluster in the part of the file that is to be freed. 	 * Then set the next cluster pointer in the last cluster of the 	 * file to CLUST_EOFE. 	 */
 if|if
 condition|(
@@ -1768,6 +1770,16 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|DETOV
+argument_list|(
+name|dep
+argument_list|)
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|TIMEVAL_TO_TIMESPEC

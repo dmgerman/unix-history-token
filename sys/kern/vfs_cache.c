@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $Id: vfs_cache.c,v 1.18 1995/12/14 09:52:47 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $Id: vfs_cache.c,v 1.19 1995/12/22 15:56:35 phk Exp $  */
 end_comment
 
 begin_include
@@ -62,6 +62,13 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MAXVNODEUSE
+value|32
+end_define
 
 begin_comment
 comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (vp, name) where vp refers to the directory  * containing name.  *  * If it is a "negative" entry, (that we know a name to>not< exist)  * we point out entry at our own "nchENOENT", to avoid too much special  * casing in the inner loops of lookup.  *  * For simplicity (and economy of storage), names longer than  * a maximum length of NCHNAMLEN are not cached; they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
@@ -555,6 +562,25 @@ name|ncp
 operator|->
 name|nc_vp
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_usage
+operator|<
+name|MAXVNODEUSE
+condition|)
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_usage
+operator|++
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -788,6 +814,19 @@ operator|->
 name|nc_vp
 operator|=
 name|vp
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usage
+operator|<
+name|MAXVNODEUSE
+condition|)
+operator|++
+name|vp
+operator|->
+name|v_usage
 expr_stmt|;
 name|ncp
 operator|->

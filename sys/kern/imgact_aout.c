@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_aout.c,v 1.20 1995/12/11 04:56:00 dyson Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_aout.c,v 1.21 1995/12/15 02:57:40 peter Exp $  */
 end_comment
 
 begin_include
@@ -454,7 +454,7 @@ argument_list|(
 name|imgp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map text read/execute 	 */
+comment|/* 	 * Map text/data read/execute 	 */
 name|vmaddr
 operator|=
 name|virtual_offset
@@ -476,6 +476,10 @@ comment|/* address */
 name|a_out
 operator|->
 name|a_text
+operator|+
+name|a_out
+operator|->
+name|a_data
 argument_list|,
 comment|/* size */
 name|VM_PROT_READ
@@ -483,11 +487,7 @@ operator||
 name|VM_PROT_EXECUTE
 argument_list|,
 comment|/* protection */
-name|VM_PROT_READ
-operator||
-name|VM_PROT_EXECUTE
-operator||
-name|VM_PROT_WRITE
+name|VM_PROT_ALL
 argument_list|,
 comment|/* max protection */
 name|MAP_PRIVATE
@@ -516,74 +516,35 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Map data read/write (if text is 0, assume text is in data area 	 *	[Bill's screwball mode]) 	 */
-name|vmaddr
-operator|=
-name|virtual_offset
-operator|+
-name|a_out
-operator|->
-name|a_text
-expr_stmt|;
-name|error
-operator|=
-name|vm_mmap
+comment|/* 	 * allow writing of data 	 */
+name|vm_map_protect
 argument_list|(
 operator|&
 name|vmspace
 operator|->
 name|vm_map
 argument_list|,
-operator|&
 name|vmaddr
-argument_list|,
-name|a_out
-operator|->
-name|a_data
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-operator||
-operator|(
-name|a_out
-operator|->
-name|a_text
-condition|?
-literal|0
-else|:
-name|VM_PROT_EXECUTE
-operator|)
-argument_list|,
-name|VM_PROT_ALL
-argument_list|,
-name|MAP_PRIVATE
-operator||
-name|MAP_FIXED
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|imgp
-operator|->
-name|vp
-argument_list|,
-name|file_offset
 operator|+
 name|a_out
 operator|->
 name|a_text
+argument_list|,
+name|vmaddr
+operator|+
+name|a_out
+operator|->
+name|a_text
+operator|+
+name|a_out
+operator|->
+name|a_data
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|bss_size
@@ -623,6 +584,12 @@ argument_list|,
 name|bss_size
 argument_list|,
 name|FALSE
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
