@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.5	83/10/18	*/
+comment|/* main.c	(Berkeley)	1.6	83/12/19	*/
 end_comment
 
 begin_include
@@ -27,6 +27,10 @@ directive|include
 file|"dev.h"
 end_include
 
+begin_empty
+empty|#idndef DEVDIR
+end_empty
+
 begin_define
 define|#
 directive|define
@@ -37,6 +41,11 @@ end_define
 begin_comment
 comment|/* place to look up device files */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
