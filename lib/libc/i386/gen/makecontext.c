@@ -264,7 +264,7 @@ name|mcontext_t
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Arrange the stack as follows: 		 * 		 *	_ctx_start()	- context start wrapper 		 *	start()		- user start routine 		 * 	arg1 		 *	... 		 *	argn 		 *	ucp		- this context, %ebp points here 		 * 		 * When the context is started, control will return to 		 * the context start wrapper which will pop the user 		 * start routine from the top of the stack.  After that, 		 * the top of the stack will be setup with all arguments 		 * necessary for calling the start routine.  When the 		 * start routine returns, the context wrapper then sets 		 * the stack pointer to %ebp which was setup to point to 		 * the base of the stack (and where ucp is stored).  It 		 * will then call _ctx_done() to swap in the next context 		 * (uc_link != 0) or exit the program (uc_link == 0). 		 */
+comment|/* 		 * Arrange the stack as follows: 		 * 		 *	_ctx_start()	- context start wrapper 		 *	start()		- user start routine 		 * 	arg1            - first argument, aligned(16) 		 *	... 		 *	argn 		 *	ucp		- this context, %ebp points here 		 * 		 * When the context is started, control will return to 		 * the context start wrapper which will pop the user 		 * start routine from the top of the stack.  After that, 		 * the top of the stack will be setup with all arguments 		 * necessary for calling the start routine.  When the 		 * start routine returns, the context wrapper then sets 		 * the stack pointer to %ebp which was setup to point to 		 * the base of the stack (and where ucp is stored).  It 		 * will then call _ctx_done() to swap in the next context 		 * (uc_link != 0) or exit the program (uc_link == 0). 		 */
 name|stack_top
 operator|=
 operator|(
@@ -286,22 +286,11 @@ name|ss_size
 operator|-
 sizeof|sizeof
 argument_list|(
-name|double
+name|intptr_t
 argument_list|)
 operator|)
 expr_stmt|;
-name|stack_top
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ALIGN
-argument_list|(
-name|stack_top
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Adjust top of stack to allow for 3 pointers (return 		 * address, _ctx_start, and ucp) and argc arguments. 		 * We allow the arguments to be pointers also. 		 */
+comment|/* 		 * Adjust top of stack to allow for 3 pointers (return 		 * address, _ctx_start, and ucp) and argc arguments. 		 * We allow the arguments to be pointers also.  The first 		 * argument to the user function must be properly aligned. 		 */
 name|stack_top
 operator|=
 name|stack_top
@@ -313,10 +302,39 @@ name|intptr_t
 argument_list|)
 operator|*
 operator|(
-literal|3
+literal|1
 operator|+
 name|argc
 operator|)
+operator|)
+expr_stmt|;
+name|stack_top
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|stack_top
+operator|&
+operator|~
+literal|15
+operator|)
+expr_stmt|;
+name|stack_top
+operator|=
+name|stack_top
+operator|-
+operator|(
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|intptr_t
+argument_list|)
 operator|)
 expr_stmt|;
 name|argp
