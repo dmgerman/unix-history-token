@@ -4354,12 +4354,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
+name|FXP_LOCK_ASSERT
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
 name|MA_NOTOWNED
 argument_list|)
@@ -6356,12 +6353,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_assert
+name|FXP_LOCK_ASSERT
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -7517,12 +7511,9 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
-name|mtx_assert
+name|FXP_LOCK_ASSERT
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -8706,12 +8697,9 @@ name|prm
 decl_stmt|,
 name|s
 decl_stmt|;
-name|mtx_assert
+name|FXP_LOCK_ASSERT
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -10954,12 +10942,9 @@ decl_stmt|;
 comment|/* 	 * Detaching causes us to call ioctl with the mutex owned.  Preclude 	 * that by saying we're busy if the lock is already held. 	 */
 if|if
 condition|(
-name|mtx_owned
+name|FXP_LOCKED
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 condition|)
 return|return
@@ -11264,12 +11249,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mtx_owned
+name|FXP_LOCKED
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 condition|)
 name|FXP_UNLOCK
@@ -11496,6 +11478,13 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|FXP_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If there are queued commands, we must wait until they are all 	 * completed. If we are already waiting, then add a NOP command 	 * with interrupt option so that we're notified when all commands 	 * have been completed - fxp_start() ensures that no additional 	 * TX commands will be added when need_mcsetup is true. 	 */
 if|if
 condition|(
