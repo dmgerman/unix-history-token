@@ -66,6 +66,7 @@ name|dlopen
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -85,6 +86,7 @@ operator|(
 name|void
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -93,6 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dlerror
