@@ -56,16 +56,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-specifier|const
-name|sccsid
-index|[]
-init|=
-literal|"@(#)printf.c	8.1 (Berkeley) 7/20/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char const sccsid[] = "@(#)printf.c	8.1 (Berkeley) 7/20/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
