@@ -1371,7 +1371,7 @@ end_macro
 begin_block
 block|{
 name|int
-name|c
+name|lines
 decl_stmt|,
 name|quit
 decl_stmt|;
