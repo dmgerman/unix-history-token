@@ -438,9 +438,9 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|eventhandler_tag
 name|clonetag
 decl_stmt|;
@@ -1559,11 +1559,11 @@ name|changerq
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
+end_ifdef
 
 begin_function
 specifier|static
@@ -2277,9 +2277,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -3309,9 +3309,9 @@ name|si_drv1
 operator|=
 name|periph
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|softc
 operator|->
 name|clonetag

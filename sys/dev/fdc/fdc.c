@@ -1205,9 +1205,9 @@ decl_stmt|;
 name|dev_t
 name|masterdev
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|eventhandler_tag
 name|clonetag
 decl_stmt|;
@@ -1602,11 +1602,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -5065,11 +5065,11 @@ begin_comment
 comment|/* NCARD> 0 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
+end_ifdef
 
 begin_comment
 comment|/*  * Create a clone device upon request by devfs.  */
@@ -6018,9 +6018,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|fd
 operator|->
 name|clonetag
@@ -6066,9 +6066,9 @@ operator|->
 name|fdu
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 block|{
 name|int
 name|i
@@ -6181,9 +6181,9 @@ operator|->
 name|masterdev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 block|{
 name|int
 name|i

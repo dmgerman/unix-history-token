@@ -1097,9 +1097,9 @@ name|dev_t
 name|dev
 decl_stmt|;
 comment|/* device place holders */
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|eventhandler_tag
 name|clone_evh
 decl_stmt|;

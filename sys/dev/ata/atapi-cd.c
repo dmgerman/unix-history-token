@@ -1664,9 +1664,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -1861,11 +1861,11 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
+end_ifdef
 
 begin_function
 specifier|static
@@ -2041,9 +2041,9 @@ name|flags
 operator||=
 name|ATA_D_MEDIA_CHANGED
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
 name|cdp
 operator|->
 name|clone_evh
