@@ -551,7 +551,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *   * For WF2Q+ support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *   */
+comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *  * For WF2Q+ support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *  */
 end_comment
 
 begin_struct

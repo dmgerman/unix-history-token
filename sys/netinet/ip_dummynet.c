@@ -4238,7 +4238,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-comment|/*      * RED algorithm      *       * RED calculates the average queue size (avg) using a low-pass filter      * with an exponential weighted (w_q) moving average:      * 	avg<-  (1-w_q) * avg + w_q * q_size      * where q_size is the queue length (measured in bytes or * packets).      *       * If q_size == 0, we compute the idle time for the link, and set      *	avg = (1 - w_q)^(idle/s)      * where s is the time needed for transmitting a medium-sized packet.      *       * Now, if avg< min_th the packet is enqueued.      * If avg> max_th the packet is dropped. Otherwise, the packet is      * dropped with probability P function of avg.      *       */
+comment|/*      * RED algorithm      *      * RED calculates the average queue size (avg) using a low-pass filter      * with an exponential weighted (w_q) moving average:      * 	avg<-  (1-w_q) * avg + w_q * q_size      * where q_size is the queue length (measured in bytes or * packets).      *      * If q_size == 0, we compute the idle time for the link, and set      *	avg = (1 - w_q)^(idle/s)      * where s is the time needed for transmitting a medium-sized packet.      *      * Now, if avg< min_th the packet is enqueued.      * If avg> max_th the packet is dropped. Otherwise, the packet is      * dropped with probability P function of avg.      *      */
 name|int64_t
 name|p_b
 init|=
@@ -4841,7 +4841,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * ro		route parameter (only used in ip_output, NULL otherwise)  * dst		destination address, only used by ip_output  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *   */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * ro		route parameter (only used in ip_output, NULL otherwise)  * dst		destination address, only used by ip_output  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *  */
 end_comment
 
 begin_function
