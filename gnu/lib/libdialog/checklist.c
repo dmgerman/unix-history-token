@@ -46,6 +46,15 @@ parameter_list|,
 name|dialogMenuItem
 modifier|*
 name|me
+parameter_list|,
+name|int
+name|list_width
+parameter_list|,
+name|int
+name|item_x
+parameter_list|,
+name|int
+name|check_x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -61,17 +70,6 @@ name|item
 parameter_list|)
 value|((di) ?&((di)[(item)]) : NULL)
 end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|list_width
-decl_stmt|,
-name|check_x
-decl_stmt|,
-name|item_x
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Display a dialog box with a list of options that can be turned on or off  */
@@ -186,6 +184,13 @@ decl_stmt|;
 name|dialogMenuItem
 modifier|*
 name|ditems
+decl_stmt|;
+name|int
+name|list_width
+decl_stmt|,
+name|check_x
+decl_stmt|,
+name|item_x
 decl_stmt|;
 comment|/* Allocate space for storing item on/off status */
 if|if
@@ -1125,6 +1130,12 @@ name|ditems
 argument_list|,
 name|i
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|wnoutrefresh
@@ -1793,6 +1804,12 @@ name|ditems
 argument_list|,
 name|scroll
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|scrollok
@@ -1856,6 +1873,12 @@ name|ditems
 argument_list|,
 name|scroll
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|wnoutrefresh
@@ -2008,6 +2031,12 @@ name|max_choice
 operator|-
 literal|1
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|scrollok
@@ -2090,6 +2119,12 @@ name|max_choice
 operator|-
 literal|1
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|wnoutrefresh
@@ -2350,6 +2385,12 @@ name|scroll
 operator|+
 name|i
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 block|}
@@ -2680,6 +2721,12 @@ name|scroll
 operator|+
 name|choice
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 comment|/* Highlight new item */
@@ -2734,6 +2781,12 @@ name|scroll
 operator|+
 name|choice
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|wnoutrefresh
@@ -3300,6 +3353,12 @@ name|scroll
 operator|+
 name|i
 argument_list|)
+argument_list|,
+name|list_width
+argument_list|,
+name|item_x
+argument_list|,
+name|check_x
 argument_list|)
 expr_stmt|;
 name|wnoutrefresh
@@ -3392,6 +3451,15 @@ parameter_list|,
 name|dialogMenuItem
 modifier|*
 name|me
+parameter_list|,
+name|int
+name|list_width
+parameter_list|,
+name|int
+name|item_x
+parameter_list|,
+name|int
+name|check_x
 parameter_list|)
 block|{
 name|int
