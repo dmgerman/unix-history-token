@@ -7304,6 +7304,10 @@ break|break;
 case|case
 name|O_LOG
 case|:
+if|if
+condition|(
+name|fw_verbose
+condition|)
 name|ipfw_log
 argument_list|(
 name|f
