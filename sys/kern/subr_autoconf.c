@@ -123,19 +123,6 @@ argument_list|,
 name|ich_links
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"IDCH: %p(%p)\n"
-argument_list|,
-name|hook_entry
-operator|->
-name|ich_func
-argument_list|,
-name|hook_entry
-operator|->
-name|ich_arg
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|hook_entry

@@ -904,8 +904,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|BUF_STRATEGY
+name|VOP_STRATEGY
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -1174,8 +1176,13 @@ argument_list|(
 name|rbp
 argument_list|)
 expr_stmt|;
-name|BUF_STRATEGY
+operator|(
+name|void
+operator|)
+name|VOP_STRATEGY
 argument_list|(
+name|vp
+argument_list|,
 name|rbp
 argument_list|)
 expr_stmt|;
