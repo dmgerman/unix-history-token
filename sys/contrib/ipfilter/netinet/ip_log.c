@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.2 1998/03/21 11:34:14 peter Exp $  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.3 1998/03/21 14:42:45 peter Exp $  */
 end_comment
 
 begin_include
@@ -441,6 +441,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/random.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -843,6 +849,27 @@ expr_stmt|;
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|300000
+name|read_random
+argument_list|(
+operator|&
+name|iplcrcinit
+argument_list|,
+sizeof|sizeof
+name|iplcrcinit
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
 name|BSD
 operator|>=
 literal|199306
@@ -890,6 +917,8 @@ name|tv
 operator|.
 name|tv_usec
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
