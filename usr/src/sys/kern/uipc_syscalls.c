@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	6.1	83/07/29	*/
+comment|/*	uipc_syscalls.c	6.2	83/09/25	*/
 end_comment
 
 begin_include
@@ -2161,6 +2161,15 @@ return|return;
 block|}
 if|if
 condition|(
+name|iov
+operator|->
+name|iov_len
+operator|==
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
 name|useracc
 argument_list|(
 name|iov
@@ -3036,6 +3045,15 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|iov
+operator|->
+name|iov_len
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|useracc
