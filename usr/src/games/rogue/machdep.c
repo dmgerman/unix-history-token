@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.3 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,12 @@ begin_include
 include|#
 directive|include
 file|"rogue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -1080,7 +1086,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* md_lock():  *  * This function is intended to give the user exclusive access to the  * score file.  It does so by "creat"ing a lock file, which can only  * be created if it does not already exist.  The file is deleted when  * score file processing is finished.  The lock file should be located  * in the same directory as the score file.  These full path names should  * be defined for any particular site in rogue.h.  The constants SCORE_FILE  * and LOCK_FILE define these file names.  *  * When the parameter 'l' is non-zero (true), a lock is requested.  Otherwise  * the lock is released by removing the lock file.  */
+comment|/* md_lock():  *  * This function is intended to give the user exclusive access to the score  * file.  It does so by "creat"ing a lock file, which can only be created  * if it does not already exist.  The file is deleted when score file  * processing is finished.  The lock file should be located in the same  * directory as the score file.  These full path names should be defined for  * any particular site in rogue.h.  The constants _PATH_SCOREFILE and  * _PATH_LOCKFILE define these file names.  *  * When the parameter 'l' is non-zero (true), a lock is requested.  Otherwise  * the lock is released by removing the lock file.  */
 end_comment
 
 begin_macro
@@ -1105,7 +1111,7 @@ name|char
 modifier|*
 name|lock_file
 init|=
-name|LOCK_FILE
+name|_PATH_LOCKFILE
 decl_stmt|;
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)score.c	5.3 (Berkeley) %G%"
+literal|"@(#)score.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"rogue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -950,7 +956,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|SCORE_FILE
+name|_PATH_SCOREFILE
 argument_list|,
 literal|"a+"
 argument_list|)
