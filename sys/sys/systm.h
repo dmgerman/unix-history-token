@@ -224,19 +224,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|swapdev_vp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode for swap device */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|boothowto
 decl_stmt|;
