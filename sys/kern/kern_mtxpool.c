@@ -110,11 +110,14 @@ argument_list|(
 argument|void *ptr
 argument_list|)
 block|{
-name|uintptr_t
+name|int
 name|p
 block|;
 name|p
 operator|=
+operator|(
+name|int
+operator|)
 operator|(
 name|uintptr_t
 operator|)
@@ -180,6 +183,10 @@ argument_list|,
 literal|"pool mutex"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_NOWITNESS
+operator||
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 name|mtx_pool_valid
