@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.49 2003/04/26 22:13:51 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.50 2003/04/27 03:31:47 imp Exp   */
 end_comment
 
 begin_comment
@@ -659,6 +659,17 @@ end_define
 
 begin_comment
 comment|/* Lexar Media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_OEM1
+value|0x50c2
+end_define
+
+begin_comment
+comment|/* Mystery OEM #1 */
 end_comment
 
 begin_define
@@ -3296,6 +3307,31 @@ define|#
 directive|define
 name|PCMCIA_STR_NWN_WLAN_1148
 value|"NWN 1148 WLAN"
+end_define
+
+begin_comment
+comment|/* Mystery OEM #1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_OEM1_PRISM3
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_OEM1_PRISM3
+value|0x7300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_OEM1_PRISM3
+value|"Prism 3 37300P"
 end_define
 
 begin_comment
