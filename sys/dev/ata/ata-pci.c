@@ -2323,13 +2323,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_detach
-argument_list|,
-name|ata_pci_attach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|device_shutdown
 argument_list|,
 name|bus_generic_shutdown
