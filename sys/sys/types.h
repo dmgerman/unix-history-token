@@ -37,11 +37,11 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef
@@ -331,16 +331,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Deprecated BSD unsigned integrals.  */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|__uint8_t
 name|u_int8_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* unsigned integrals (deprecated) */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -363,24 +363,20 @@ name|u_int64_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * Deprecated BSD 64-bit integrals.  */
-end_comment
-
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|__uint64_t
 name|u_quad_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* quads */
+comment|/* quads (deprecated) */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|__int64_t
 name|quad_t
 typedef|;
 end_typedef
@@ -444,7 +440,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|__int64_t
 name|daddr_t
 typedef|;
 end_typedef
@@ -455,7 +451,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|fixpt_t
 typedef|;
 end_typedef
@@ -494,7 +490,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|ino_t
 typedef|;
 end_typedef
@@ -544,7 +540,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|__uint16_t
 name|nlink_t
 typedef|;
 end_typedef
@@ -618,13 +614,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|quad_t
+name|__int64_t
 name|rlim_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* resource limit */
+comment|/* resource limit (XXX not unsigned) */
 end_comment
 
 begin_typedef
@@ -640,7 +636,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|__int32_t
 name|swblk_t
 typedef|;
 end_typedef
@@ -756,7 +752,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|__uint64_t
 name|uoff_t
 typedef|;
 end_typedef
@@ -778,7 +774,7 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|udev_t
 typedef|;
 end_typedef
@@ -819,7 +815,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|dev_t
 typedef|;
 end_typedef
@@ -834,69 +830,6 @@ directive|define
 name|udev_t
 value|dev_t
 end_define
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_comment
-comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|major
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
-end_define
-
-begin_comment
-comment|/* major number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|minor
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)((x)&0xffff00ff))
-end_define
-
-begin_comment
-comment|/* minor number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|makedev
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((dev_t)(((x)<< 8) | (y)))
-end_define
-
-begin_comment
-comment|/* create dev_t */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __BSD_VISIBLE */
-end_comment
 
 begin_endif
 endif|#
@@ -1129,6 +1062,69 @@ include|#
 directive|include
 file|<sys/select.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|major
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)(((u_int)(x)>> 8)&0xff))
+end_define
+
+begin_comment
+comment|/* major number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|minor
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)((x)&0xffff00ff))
+end_define
+
+begin_comment
+comment|/* minor number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|makedev
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((dev_t)(((x)<< 8) | (y)))
+end_define
+
+begin_comment
+comment|/* create dev_t */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * These declarations belong elsewhere, but are repeated here and in  *<stdio.h> to give broken programs a better chance of working with  * 64-bit off_t's.  */
