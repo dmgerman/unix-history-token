@@ -81,7 +81,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fnmatch.h"
+file|<fnmatch.h>
 end_include
 
 begin_comment
