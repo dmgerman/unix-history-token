@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.5 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1128,7 +1128,7 @@ decl_stmt|;
 name|char
 name|versbuf
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 name|long
@@ -1238,7 +1238,7 @@ name|fgets
 argument_list|(
 name|versbuf
 argument_list|,
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 argument_list|,
 name|fstr
 argument_list|)
