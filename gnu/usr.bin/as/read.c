@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: read.c,v 1.10 1997/03/29 02:16:44 jdp Exp $"
+literal|"$Id: read.c,v 1.11 1997/04/29 02:11:48 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6688,6 +6688,16 @@ operator|.
 name|X_add_symbol
 operator|->
 name|sy_frag
+expr_stmt|;
+name|symbolP
+operator|->
+name|sy_aux
+operator|=
+name|exp
+operator|.
+name|X_add_symbol
+operator|->
+name|sy_aux
 expr_stmt|;
 break|break;
 case|case
