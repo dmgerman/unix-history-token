@@ -171,12 +171,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/svr4/svr4_socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<compat/svr4/svr4_errno.h>
 end_include
 

@@ -115,63 +115,6 @@ directive|include
 file|<compat/svr4/svr4_proto.h>
 end_include
 
-begin_struct
-struct|struct
-name|svr4_sockcache_entry
-block|{
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Process for the socket		*/
-name|void
-modifier|*
-name|cookie
-decl_stmt|;
-comment|/* Internal cookie used for matching	*/
-name|struct
-name|sockaddr_un
-name|sock
-decl_stmt|;
-comment|/* Pathname for the socket		*/
-name|udev_t
-name|dev
-decl_stmt|;
-comment|/* Device where the socket lives on	*/
-name|ino_t
-name|ino
-decl_stmt|;
-comment|/* Inode where the socket lives on	*/
-name|TAILQ_ENTRY
-argument_list|(
-argument|svr4_sockcache_entry
-argument_list|)
-name|entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_extern
-extern|extern TAILQ_HEAD(svr4_sockcache_head
-operator|,
-extern|svr4_sockcache_entry
-end_extern
-
-begin_expr_stmt
-unit|)
-name|svr4_head
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|svr4_str_initialized
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|struct
 name|sockaddr_un

@@ -200,57 +200,12 @@ name|streamsopen
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|svr4_sockcache_entry
-block|{
+begin_decl_stmt
 name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Process for the socket		*/
-name|void
-modifier|*
-name|cookie
-decl_stmt|;
-comment|/* Internal cookie used for matching	*/
-name|struct
-name|sockaddr_un
-name|sock
-decl_stmt|;
-comment|/* Pathname for the socket		*/
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* Device where the socket lives on	*/
-name|ino_t
-name|ino
-decl_stmt|;
-comment|/* Inode where the socket lives on	*/
-name|TAILQ_ENTRY
-argument_list|(
-argument|svr4_sockcache_entry
-argument_list|)
-name|entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument|svr4_sockcache_head
-argument_list|,
-argument|svr4_sockcache_entry
-argument_list|)
-end_macro
-
-begin_expr_stmt
+name|svr4_sockcache_head
 name|svr4_head
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Initialization flag (set/queried by svr4_mod LKM) */
