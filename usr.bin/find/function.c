@@ -3462,11 +3462,6 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|group_from_gid
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|group_from_gid
@@ -3533,11 +3528,6 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|user_from_uid
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|user_from_uid
