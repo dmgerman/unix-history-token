@@ -2933,7 +2933,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"bad ivar read request (%d)\n"
+literal|"bad ivar read request (%d)"
 argument_list|,
 name|index
 argument_list|)
@@ -3049,7 +3049,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"bad ivar write request (%d)\n"
+literal|"bad ivar write request (%d)"
 argument_list|,
 name|index
 argument_list|)
