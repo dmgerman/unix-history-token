@@ -69,7 +69,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general.h"
+file|"../general/general.h"
 end_include
 
 begin_include
@@ -123,13 +123,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../keyboard/map3270.ext"
+file|"../ascii/map3270.ext"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../system/globals.h"
+file|"../general/globals.h"
 end_include
 
 begin_function_decl
@@ -2684,11 +2684,17 @@ name|SLOWSCREEN
 argument_list|)
 name|memset
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|Terminal
 operator|+
 name|LINES
 operator|/
 literal|2
+operator|)
 argument_list|,
 literal|0
 argument_list|,
