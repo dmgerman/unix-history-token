@@ -6153,15 +6153,12 @@ expr_stmt|;
 comment|/* Return true for 'present' and 'functioning' */
 if|if
 condition|(
-operator|(
+name|ACPI_DEVICE_PRESENT
+argument_list|(
 name|devinfo
 operator|->
 name|CurrentStatus
-operator|&
-literal|0x9
-operator|)
-operator|==
-literal|0x9
+argument_list|)
 condition|)
 name|ret
 operator|=
@@ -6293,18 +6290,15 @@ name|ret
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Return true for 'present' and 'functioning' */
+comment|/* Return true for 'present', 'battery present', and 'functioning' */
 if|if
 condition|(
-operator|(
+name|ACPI_BATTERY_PRESENT
+argument_list|(
 name|devinfo
 operator|->
 name|CurrentStatus
-operator|&
-literal|0x19
-operator|)
-operator|==
-literal|0x19
+argument_list|)
 condition|)
 name|ret
 operator|=

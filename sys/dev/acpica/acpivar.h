@@ -802,14 +802,78 @@ parameter_list|)
 value|do {			\     if (acpi_get_verbose(acpi_sc))				\ 	device_printf(dev, x);					\ } while (0)
 end_define
 
+begin_comment
+comment|/* Values for the device _STA (status) method. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_PRESENT
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_ENABLED
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_SHOW_IN_UI
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_FUNCTIONAL
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_BATT_PRESENT
+value|(1<< 4)
+end_define
+
 begin_define
 define|#
 directive|define
 name|ACPI_DEVINFO_PRESENT
 parameter_list|(
 name|x
+parameter_list|,
+name|flags
 parameter_list|)
-value|(((x)& 0x9) == 9)
+define|\
+value|(((x)& (flags)) == (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_PRESENT
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|ACPI_DEVINFO_PRESENT(x, ACPI_STA_PRESENT | ACPI_STA_FUNCTIONAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATTERY_PRESENT
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|ACPI_DEVINFO_PRESENT(x, ACPI_STA_PRESENT | ACPI_STA_FUNCTIONAL | \ 	    ACPI_STA_BATT_PRESENT)
 end_define
 
 begin_function_decl
