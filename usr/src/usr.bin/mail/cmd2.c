@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.4 %G%"
+literal|"@(#)cmd2.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1786,6 +1786,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;

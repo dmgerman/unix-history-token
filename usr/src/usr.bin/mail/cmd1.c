@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.6 %G%"
+literal|"@(#)cmd1.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,6 +1912,9 @@ block|{
 case|case
 literal|0
 case|:
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|execlp
 argument_list|(
 literal|"ls"
