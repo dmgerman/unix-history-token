@@ -2487,6 +2487,14 @@ argument_list|(
 literal|"pcic: failed to allocate IRQ\n"
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"pcic: controller irq %d\n"
+argument_list|,
+name|pcic_irq
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		 *	Check for a card in this slot. 		 */
 name|setb
@@ -3276,7 +3284,7 @@ name|sp
 argument_list|,
 name|PCIC_TIME_CMD1
 argument_list|,
-literal|0x5F
+literal|0xf
 argument_list|)
 expr_stmt|;
 name|putb

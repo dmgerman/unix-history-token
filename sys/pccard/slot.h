@@ -392,6 +392,14 @@ modifier|*
 name|cdata
 decl_stmt|;
 comment|/* Controller specific data */
+name|int
+name|suspend_power
+decl_stmt|;
+comment|/* Leave powered on during suspend */
+name|int
+name|pwr_off_pending
+decl_stmt|;
+comment|/* Power status of slot */
 ifdef|#
 directive|ifdef
 name|DEVFS
