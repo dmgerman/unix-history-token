@@ -143,14 +143,22 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %s differ: char %qd, line %qd\n"
+literal|"%s %s differ: char %lld, line %lld\n"
 argument_list|,
 name|file1
 argument_list|,
 name|file2
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|byte
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|line
 argument_list|)
 expr_stmt|;

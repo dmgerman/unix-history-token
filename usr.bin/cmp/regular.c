@@ -460,8 +460,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%08qx %02x %02x\n"
+literal|"%08llx %02x %02x\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|byte
 operator|-
 literal|1
@@ -488,8 +492,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6qd %3o %3o\n"
+literal|"%6lld %3o %3o\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|byte
 argument_list|,
 name|ch

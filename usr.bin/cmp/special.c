@@ -281,8 +281,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6qd %3o %3o\n"
+literal|"%6lld %3o %3o\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|byte
 argument_list|,
 name|ch1
