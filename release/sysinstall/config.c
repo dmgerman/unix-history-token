@@ -2825,7 +2825,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"sawfish"
+literal|"sawfish-gnome"
 argument_list|)
 expr_stmt|;
 if|if
