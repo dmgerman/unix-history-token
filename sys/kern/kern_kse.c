@@ -1885,7 +1885,7 @@ name|td2
 argument_list|,
 name|sig
 argument_list|,
-name|SIGTARGET_P
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 block|}
