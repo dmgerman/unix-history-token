@@ -1830,6 +1830,9 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pn
 operator|->
 name|name
@@ -1840,7 +1843,20 @@ name|pw
 operator|->
 name|pw_name
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pn
 operator|->
 name|dir
@@ -1851,7 +1867,20 @@ name|pw
 operator|->
 name|pw_dir
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pn
 operator|->
 name|shell
@@ -1861,6 +1890,16 @@ argument_list|(
 name|pw
 operator|->
 name|pw_shell
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
 argument_list|)
 expr_stmt|;
 comment|/* why do we skip asterisks!?!? */
@@ -2048,6 +2087,9 @@ name|t
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pn
 operator|->
 name|realname
@@ -2055,6 +2097,16 @@ operator|=
 name|strdup
 argument_list|(
 name|name
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
 argument_list|)
 expr_stmt|;
 name|pn
