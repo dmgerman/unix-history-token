@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_kbd.c, 3.20, Last Edit-Date: [Thu Jan 26 14:12:21 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_kbd.c, 3.20, Last Edit-Date: [Sun Feb 26 13:28:00 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	patch from joerg for timeout in kbd_emulate_pc()  *	-hm	starting to implement alt-shift/ctrl key mappings  *	-hm	Gateway 2000 Keyboard fix from Brian Moore  *	-hm	some #if adjusting for NetBSD 0.9  *	-hm	split off pcvt_kbd.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Martin, PCVT_NO_LED_UPDATE  *	-hm	PCVT_VT220KEYB patches from Lon Willet  *	-hm	PR #399, patch from Bill Sommerfeld: Return with PCVT_META_ESC  *	-hm	allow keyboard-less kernel boot for serial consoles and such ..  *	-hm	patch from Lon Willett for led-update and showkey()  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	patch from joerg for timeout in kbd_emulate_pc()  *	-hm	starting to implement alt-shift/ctrl key mappings  *	-hm	Gateway 2000 Keyboard fix from Brian Moore  *	-hm	some #if adjusting for NetBSD 0.9  *	-hm	split off pcvt_kbd.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Martin, PCVT_NO_LED_UPDATE  *	-hm	PCVT_VT220KEYB patches from Lon Willet  *	-hm	PR #399, patch from Bill Sommerfeld: Return with PCVT_META_ESC  *	-hm	allow keyboard-less kernel boot for serial consoles and such ..  *	-hm	patch from Lon Willett for led-update and showkey()  *	-hm	patch from Lon Willett to fix mapping of Control-R scancode  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -457,7 +457,7 @@ name|PCVT_SHOWKEYS
 end_if
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	keyboard debugging: put kbd communication into a display buffer  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	keyboard debugging: put kbd communication char into some buffer  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -596,7 +596,7 @@ comment|/* PCVT_SHOWKEYS */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 12  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	function to switch to another virtual screen  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -612,16 +612,19 @@ if|if
 condition|(
 name|critical_scroll
 condition|)
+comment|/* executing critical region ? */
 name|switch_page
 operator|=
 name|page
 expr_stmt|;
+comment|/* yes, auto switch later */
 else|else
 name|vgapage
 argument_list|(
 name|page
 argument_list|)
 expr_stmt|;
+comment|/* no, switch now */
 block|}
 end_function
 
@@ -851,7 +854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	set typamatic rate  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	set typematic rate  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1649,7 +1652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	init keyboard code, this initializes the keyboard subsystem  *	just "a bit" so the very very first ddb session is able to  *	get proper keystrokes, in other words, it's a hack ....  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	init keyboard code, this initializes the keyboard subsystem  *	just "a bit" so the very very first ddb session is able to  *	get proper keystrokes - in other words, it's a hack ....  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4748,7 +4751,7 @@ name|ext1
 operator|&&
 name|key
 operator|==
-literal|58
+literal|64
 condition|)
 comment|/* virtual control key */
 name|key

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_sup.c, 3.20, Last Edit-Date: [Thu Jan  5 16:49:50 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_sup.c, 3.20, Last Edit-Date: [Sun Feb 19 19:59:38 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	removed paranoid delay()/DELAY() from vga_test()  *	-hm	removing vgapage() protection if PCVT_KBD_FIFO  *	-hm	some new CONF_ - values  *	-hm	Joerg's patches for FreeBSD ttymalloc  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	applying Lon Willet's patches for NetBSD  *	-hm	NetBSD PR #400: patch to short-circuit TIOCSWINSZ  *	-hm	getting PCVT_BURST reported correctly for FreeBSD 2.0  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	removed paranoid delay()/DELAY() from vga_test()  *	-hm	removing vgapage() protection if PCVT_KBD_FIFO  *	-hm	some new CONF_ - values  *	-hm	Joerg's patches for FreeBSD ttymalloc  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	applying Lon Willet's patches for NetBSD  *	-hm	NetBSD PR #400: patch to short-circuit TIOCSWINSZ  *	-hm	getting PCVT_BURST reported correctly for FreeBSD 2.0  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	moving ega/vga coldinit support code to mda2egaorvga()  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -1058,12 +1058,25 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|PCVT_KBD_FIFO
 name|data
 operator|->
 name|kbd_fifo_sz
 operator|=
 name|PCVT_KBD_FIFO_SZ
 expr_stmt|;
+else|#
+directive|else
+name|data
+operator|->
+name|kbd_fifo_sz
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|data
 operator|->
 name|compile_opts
@@ -1209,13 +1222,6 @@ directive|if
 name|PCVT_USL_VT_COMPAT
 operator||
 name|CONF_USL_VT_COMPAT
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_FAKE_SYSCONS10
-operator||
-name|CONF_FAKE_SYSCONS10
 endif|#
 directive|endif
 if|#
@@ -1988,6 +1994,8 @@ directive|else
 name|switch_screen
 argument_list|(
 name|current_video_screen
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -6684,10 +6692,6 @@ begin_comment
 comment|/* PCVT_BACKUP_FONTS */
 end_comment
 
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	switch to virtual screen n (0 ... PCVT_NSCREENS-1)  *---------------------------------------------------------------------------*/
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -6695,27 +6699,17 @@ operator|!
 name|PCVT_USL_VT_COMPAT
 end_if
 
-begin_decl_stmt
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	switch to virtual screen n (0 ... PCVT_NSCREENS-1)  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 name|void
 name|vgapage
-argument_list|(
+parameter_list|(
 name|int
 name|n
-argument_list|)
-else|#
-directive|else
-name|void
-name|switch_screen
-argument_list|(
-name|int
-name|n
-argument_list|,
-name|int
-name|dontsave
-argument_list|)
-endif|#
-directive|endif
-comment|/* !PCVT_USL_VT_COMPAT */
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -6759,18 +6753,6 @@ comment|/* protect us */
 endif|#
 directive|endif
 comment|/* !PCVT_KBD_FIFO */
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
-if|if
-condition|(
-operator|!
-name|dontsave
-condition|)
-block|{
-endif|#
-directive|endif
-comment|/* PCVT_USL_VT_COMPAT*/
 comment|/* video board memory -> kernel memory */
 name|bcopy
 argument_list|(
@@ -6802,13 +6784,6 @@ operator|->
 name|Memory
 expr_stmt|;
 comment|/* operate in memory now */
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
-block|}
-endif|#
-directive|endif
-comment|/*  PCVT_USL_VT_COMPAT */
 comment|/* update global screen pointers/variables */
 name|current_video_screen
 operator|=
@@ -6868,7 +6843,6 @@ expr_stmt|;
 comment|/* current tty */
 endif|#
 directive|endif
-comment|/* !PCVT_NETBSD */
 name|vsp
 operator|=
 operator|&
@@ -7119,7 +7093,16 @@ argument_list|)
 expr_stmt|;
 comment|/* update fkey labels, if present */
 block|}
-end_decl_stmt
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !PCVT_USL_VT_COMPAT */
+end_comment
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	test if it is a vga  *---------------------------------------------------------------------------*/
@@ -9015,6 +8998,127 @@ name|CURSOR_ON_BIT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	cold init support, if a mono monitor is attached to a  *	vga or ega, it comes up with a mda emulation. switch  *	board to generic ega/vga mode in this case.  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|mda2egaorvga
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * program sequencer to access 	 * video ram 	 */
+comment|/* synchronous reset */
+name|outb
+argument_list|(
+name|TS_INDEX
+argument_list|,
+name|TS_SYNCRESET
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|TS_DATA
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+comment|/* write to map 0& 1 */
+name|outb
+argument_list|(
+name|TS_INDEX
+argument_list|,
+name|TS_WRPLMASK
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|TS_DATA
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* odd-even addressing */
+name|outb
+argument_list|(
+name|TS_INDEX
+argument_list|,
+name|TS_MEMMODE
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|TS_DATA
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* clear synchronous reset */
+name|outb
+argument_list|(
+name|TS_INDEX
+argument_list|,
+name|TS_SYNCRESET
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|TS_DATA
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* 	 * program graphics controller 	 * to access character 	 * generator 	 */
+comment|/* select map 0 for cpu reads */
+name|outb
+argument_list|(
+name|GDC_INDEX
+argument_list|,
+name|GDC_RDPLANESEL
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|GDC_DATA
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* enable odd-even addressing */
+name|outb
+argument_list|(
+name|GDC_INDEX
+argument_list|,
+name|GDC_MODE
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|GDC_DATA
+argument_list|,
+literal|0x10
+argument_list|)
+expr_stmt|;
+comment|/* map starts at 0xb000 */
+name|outb
+argument_list|(
+name|GDC_INDEX
+argument_list|,
+name|GDC_MISC
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|GDC_DATA
+argument_list|,
+literal|0x0a
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

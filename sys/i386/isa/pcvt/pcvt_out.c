@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_out.c, 3.20, Last Edit-Date: [Wed Jan 25 16:38:07 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_out.c, 3.20, Last Edit-Date: [Sun Feb 26 13:39:16 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_out.c	VT220 Terminal Emulator  *	---------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patch from Thomas Gellekum  *	-hm	bugfix: clear last line when hpmode 28lines and force 24  *	-hm	right fkey labels after soft/hard reset  *	-hm	patch from Joerg for comconsole operation  *	-hm	patch from Lon Willet to preserve the initial cursor shape  *	-hm	if FAT_CURSOR is defined, you get the old cursor type back ..  *	-hm	patch from Lon Willett regarding winsize settings  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_out.c	VT220 Terminal Emulator  *	---------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patch from Thomas Gellekum  *	-hm	bugfix: clear last line when hpmode 28lines and force 24  *	-hm	right fkey labels after soft/hard reset  *	-hm	patch from Joerg for comconsole operation  *	-hm	patch from Lon Willet to preserve the initial cursor shape  *	-hm	if FAT_CURSOR is defined, you get the old cursor type back ..  *	-hm	patch from Lon Willett regarding winsize settings  *	-hm	applying patch from Joerg fixing Crtat bug, non VGA startup bug  *	-hm	setting variable color for CGA and MDA/HGC in coldinit  *	-hm	fixing bug initializing cursor position on startup  *	-hm	fixing support for EGA boards in vt_coldinit()  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -405,7 +405,7 @@ comment|/* first time called ? */
 name|vt_coldinit
 argument_list|()
 expr_stmt|;
-comment|/*   yes, we have ti init ourselves */
+comment|/*   yes, we have to init ourselves */
 if|if
 condition|(
 name|svsp
@@ -2951,7 +2951,6 @@ operator|)
 operator|/
 name|CHR
 decl_stmt|;
-comment|/* gcc 2.4.5 */
 name|u_short
 name|was
 decl_stmt|;
@@ -2978,6 +2977,8 @@ name|do_initialization
 operator|=
 literal|0
 expr_stmt|;
+comment|/* reset init necessary flag */
+comment|/* get the equipment byte from the RTC chip */
 name|equipment
 operator|=
 operator|(
@@ -2998,7 +2999,6 @@ condition|(
 name|equipment
 condition|)
 block|{
-default|default:
 case|case
 name|EQ_EGAVGA
 case|:
@@ -3067,6 +3067,7 @@ condition|(
 name|vga_test
 argument_list|()
 condition|)
+comment|/* EGA or VGA ? */
 block|{
 name|adaptor_type
 operator|=
@@ -3083,113 +3084,8 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * if a mono monitor is 					 * attached to a vga, it comes 					 * up with a mda emulation. 					 */
-comment|/* 					 * program sequencer to access 					 * video ram 					 */
-comment|/* synchronous reset */
-name|outb
-argument_list|(
-name|TS_INDEX
-argument_list|,
-name|TS_SYNCRESET
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TS_DATA
-argument_list|,
-literal|0x01
-argument_list|)
-expr_stmt|;
-comment|/* write to map 0& 1 */
-name|outb
-argument_list|(
-name|TS_INDEX
-argument_list|,
-name|TS_WRPLMASK
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TS_DATA
-argument_list|,
-literal|0x03
-argument_list|)
-expr_stmt|;
-comment|/* odd-even addressing */
-name|outb
-argument_list|(
-name|TS_INDEX
-argument_list|,
-name|TS_MEMMODE
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TS_DATA
-argument_list|,
-literal|0x03
-argument_list|)
-expr_stmt|;
-comment|/* clear synchronous reset */
-name|outb
-argument_list|(
-name|TS_INDEX
-argument_list|,
-name|TS_SYNCRESET
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|TS_DATA
-argument_list|,
-literal|0x03
-argument_list|)
-expr_stmt|;
-comment|/* 					 * program graphics controller 					 * to access character 					 * generator 					 */
-comment|/* select map 0 for cpu reads */
-name|outb
-argument_list|(
-name|GDC_INDEX
-argument_list|,
-name|GDC_RDPLANESEL
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|GDC_DATA
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/* enable odd-even addressing */
-name|outb
-argument_list|(
-name|GDC_INDEX
-argument_list|,
-name|GDC_MODE
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|GDC_DATA
-argument_list|,
-literal|0x10
-argument_list|)
-expr_stmt|;
-comment|/* map starts at 0xb000 */
-name|outb
-argument_list|(
-name|GDC_INDEX
-argument_list|,
-name|GDC_MISC
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|GDC_DATA
-argument_list|,
-literal|0x0a
-argument_list|)
+name|mda2egaorvga
+argument_list|()
 expr_stmt|;
 name|Crtat
 operator|=
@@ -3206,11 +3102,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|color
-condition|)
-block|{
 name|adaptor_type
 operator|=
 name|EGA_ADAPTOR
@@ -3219,30 +3110,24 @@ name|totalfonts
 operator|=
 literal|4
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* mono ega -> MDA .... */
-name|addr_6845
-operator|=
-name|MONO_BASE
-expr_stmt|;
-name|adaptor_type
-operator|=
-name|MDA_ADAPTOR
-expr_stmt|;
-name|totalfonts
-operator|=
+if|if
+condition|(
+name|color
+operator|==
 literal|0
+condition|)
+block|{
+name|mda2egaorvga
+argument_list|()
 expr_stmt|;
 name|Crtat
 operator|=
 name|SaveCrtat
 expr_stmt|;
-break|break;
+comment|/* mono start */
 block|}
 block|}
-comment|/* decouple vga charsets and intensity */
+comment|/* decouple ega/vga charsets and intensity */
 name|set_2ndcharset
 argument_list|()
 expr_stmt|;
@@ -3250,6 +3135,7 @@ break|break;
 case|case
 name|EQ_40COLOR
 case|:
+comment|/* XXX should panic in 40 col mode ! */
 case|case
 name|EQ_80COLOR
 case|:
@@ -3273,6 +3159,10 @@ name|adaptor_type
 operator|=
 name|CGA_ADAPTOR
 expr_stmt|;
+name|color
+operator|=
+literal|1
+expr_stmt|;
 name|totalfonts
 operator|=
 literal|0
@@ -3288,6 +3178,10 @@ expr_stmt|;
 name|adaptor_type
 operator|=
 name|MDA_ADAPTOR
+expr_stmt|;
+name|color
+operator|=
+literal|0
 expr_stmt|;
 name|totalfonts
 operator|=
@@ -3447,7 +3341,8 @@ name|lastchar
 operator|=
 literal|0
 expr_stmt|;
-comment|/* VTxxx behaviour of last 						 * char on line */
+comment|/* VTxxx behaviour of last */
+comment|/*            char on line */
 name|svsp
 operator|->
 name|report_chars
@@ -3503,7 +3398,8 @@ name|labels_on
 operator|=
 literal|1
 expr_stmt|;
-comment|/* if in HP-mode, display 						 * fkey-labels */
+comment|/* if in HP-mode, display */
+comment|/*            fkey-labels */
 name|svsp
 operator|->
 name|attribute
@@ -3606,7 +3502,7 @@ name|svsp
 operator|->
 name|screen_rows
 expr_stmt|;
-comment|/* scrolling region 						     * end */
+comment|/* scrolling region length*/
 name|svsp
 operator|->
 name|scrr_end
@@ -3617,7 +3513,7 @@ name|scrr_len
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Preserve initial cursor shape */
+comment|/* scrolling region end */
 if|if
 condition|(
 name|nscr
@@ -3625,6 +3521,15 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|adaptor_type
+operator|==
+name|VGA_ADAPTOR
+condition|)
+block|{
+comment|/* only VGA can read cursor shape registers ! */
+comment|/* Preserve initial cursor shape */
 name|outb
 argument_list|(
 name|addr_6845
@@ -3661,6 +3566,23 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* MDA,HGC,CGA,EGA registers are write-only */
+name|svsp
+operator|->
+name|cursor_start
+operator|=
+literal|0
+expr_stmt|;
+name|svsp
+operator|->
+name|cursor_end
+operator|=
+literal|15
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3858,7 +3780,7 @@ name|maxcol
 operator|=
 name|SCR_COL80
 expr_stmt|;
-comment|/* 80 columns now (you MUST!!! 						 * start with 80!) 						 * see et4000_col() for 						 * reason ... */
+comment|/* 80 columns now (MUST!!!) */
 name|svsp
 operator|->
 name|wd132col
@@ -3951,15 +3873,14 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Preserve data on the startup screen that	*/
-comment|/* precedes the cursor position.		*/
-comment|/* Leave the cursor where it was found.		*/
+comment|/* 			 * Preserve data on the startup screen that 			 * precedes the cursor position.  Leave the 			 * cursor where it was found. 			 */
 name|unsigned
 name|cursorat
 decl_stmt|;
 name|int
 name|filllen
 decl_stmt|;
+comment|/* CRTC regs 0x0e and 0x0f are r/w everywhere */
 name|outb
 argument_list|(
 name|addr_6845
@@ -4031,7 +3952,7 @@ operator|->
 name|screen_rows
 condition|)
 block|{
-comment|/* Scroll up; this should only happen when 				   PCVT_24LINESDEF is set */
+comment|/* 			 * Scroll up; this should only happen when 			 * PCVT_24LINESDEF is set 			 */
 name|int
 name|nscroll
 init|=

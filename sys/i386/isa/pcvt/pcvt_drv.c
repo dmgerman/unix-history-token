@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_drv.c, 3.20, Last Edit-Date: [Thu Jan  5 15:54:02 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_drv.c, 3.20, Last Edit-Date: [Sun Feb 26 12:58:03 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	adding ttrstrt() proto for NetBSD 0.9  *	-hm	kernel/console output cursor positioning fixed  *	-hm	kernel/console output switches optional to screen 0  *	-hm	FreeBSD 1.1 porting  *	-hm	the NetBSD 0.9 compiler detected a nondeclared var which was  *		 NOT detected by neither the NetBSD-current nor FreeBSD 1.x!  *	-hm	including Michael's keyboard fifo code  *	-hm	Joergs patch for FreeBSD tty-malloc code  *	-hm	adjustments for NetBSD-current  *	-hm	FreeBSD bugfix from Joerg re timeout/untimeout casts  *	-jw	including Thomas Gellekum's FreeBSD 1.1.5 patch  *	-hm	adjusting #if's for NetBSD-current  *	-hm	applying Joerg's patch for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	NetBSD PR #400: screen size report for new session  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	adding ttrstrt() proto for NetBSD 0.9  *	-hm	kernel/console output cursor positioning fixed  *	-hm	kernel/console output switches optional to screen 0  *	-hm	FreeBSD 1.1 porting  *	-hm	the NetBSD 0.9 compiler detected a nondeclared var which was  *		 NOT detected by neither the NetBSD-current nor FreeBSD 1.x!  *	-hm	including Michael's keyboard fifo code  *	-hm	Joergs patch for FreeBSD tty-malloc code  *	-hm	adjustments for NetBSD-current  *	-hm	FreeBSD bugfix from Joerg re timeout/untimeout casts  *	-jw	including Thomas Gellekum's FreeBSD 1.1.5 patch  *	-hm	adjusting #if's for NetBSD-current  *	-hm	applying Joerg's patch for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	NetBSD PR #400: screen size report for new session  *	-hm	patch from Rafael Boni/Lon Willett for NetBSD-current  *	-hm	bell patch from Thomas Eberhardt for NetBSD  *	-hm	multiple X server bugfixes from Lon Willett  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -151,8 +151,31 @@ if|#
 directive|if
 name|PCVT_NETBSD
 operator|>
-literal|9
+literal|100
+comment|/* NetBSD-current Feb 20 1995 */
 name|pcprobe
+parameter_list|(
+name|struct
+name|device
+modifier|*
+name|parent
+parameter_list|,
+name|void
+modifier|*
+name|match
+parameter_list|,
+name|void
+modifier|*
+name|aux
+parameter_list|)
+else|#
+directive|else
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+function|pcprobe
 parameter_list|(
 name|struct
 name|device
@@ -180,6 +203,9 @@ parameter_list|)
 endif|#
 directive|endif
 comment|/* PCVT_NETBSD> 9 */
+endif|#
+directive|endif
+comment|/* PCVT_NETBSD> 100 */
 block|{
 name|kbd_code_init
 argument_list|()
@@ -821,6 +847,26 @@ name|ih_level
 operator|=
 name|IPL_TTY
 expr_stmt|;
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|100
+name|intr_establish
+argument_list|(
+name|ia
+operator|->
+name|ia_irq
+argument_list|,
+name|IST_EDGE
+argument_list|,
+operator|&
+name|vthand
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* PCVT_NETBSD> 100 */
 name|intr_establish
 argument_list|(
 name|ia
@@ -831,8 +877,12 @@ operator|&
 name|vthand
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_NETBSD> 100 */
 else|#
 directive|else
+comment|/* PCVT_NETBSD> 9 */
 return|return
 literal|1
 return|;
@@ -1597,48 +1647,10 @@ return|;
 endif|#
 directive|endif
 comment|/* PCVT_EMU_MOUSE */
-if|if
-condition|(
-name|vsx
-operator|->
-name|vt_status
-operator|&
-name|VT_WAIT_ACT
-condition|)
-name|wakeup
+name|reset_usl_modes
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|vsx
-operator|->
-name|smode
 argument_list|)
-expr_stmt|;
-name|vsx
-operator|->
-name|proc
-operator|=
-literal|0
-expr_stmt|;
-name|vsx
-operator|->
-name|vt_status
-operator|=
-name|vsx
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
-name|vsx
-operator|->
-name|smode
-operator|.
-name|mode
-operator|=
-name|VT_AUTO
 expr_stmt|;
 endif|#
 directive|endif
@@ -2062,11 +2074,47 @@ block|}
 case|case
 name|CONSOLE_X_BELL
 case|:
-comment|/* 		 * If `data' is non-null, it points to int[2], the first 		 * value denotes the pitch in Hz, the second a duration 		 * in ms (??? jw - 333 us). Otherwise, behaves like BEL. 		 */
+comment|/* 		 * If `data' is non-null, the first int value denotes 		 * the pitch, the second a duration. Otherwise, behaves 		 * like BEL. 		 */
 if|if
 condition|(
 name|data
 condition|)
+block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+name|sysbeep
+argument_list|(
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|)
+index|[
+literal|0
+index|]
+argument_list|,
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|)
+index|[
+literal|1
+index|]
+operator|*
+name|hz
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* PCVT_NETBSD */
 name|sysbeep
 argument_list|(
 name|PCVT_SYSBEEPF
@@ -2098,7 +2146,12 @@ operator|/
 literal|3000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_NETBSD */
+block|}
 else|else
+block|{
 name|sysbeep
 argument_list|(
 name|PCVT_SYSBEEPF
@@ -2110,6 +2163,7 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2152,11 +2206,47 @@ return|;
 case|case
 name|CONSOLE_X_BELL
 case|:
-comment|/* 		 * If `data' is non-null, it points to int[2], the first 		 * value denotes the pitch in Hz, the second a duration 		 * in ms (??? jw - 333 us). Otherwise, behaves like BEL. 		 */
+comment|/* 		 * If `data' is non-null, the first int value denotes 		 * the pitch, the second a duration. Otherwise, behaves 		 * like BEL. 		 */
 if|if
 condition|(
 name|data
 condition|)
+block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+name|sysbeep
+argument_list|(
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|)
+index|[
+literal|0
+index|]
+argument_list|,
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|)
+index|[
+literal|1
+index|]
+operator|*
+name|hz
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* PCVT_NETBSD */
 name|sysbeep
 argument_list|(
 name|PCVT_SYSBEEPF
@@ -2188,7 +2278,12 @@ operator|/
 literal|3000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_NETBSD */
+block|}
 else|else
+block|{
 name|sysbeep
 argument_list|(
 name|PCVT_SYSBEEPF
@@ -2200,6 +2295,7 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2445,6 +2541,30 @@ operator|)
 argument_list|)
 return|;
 block|}
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|205
+name|struct
+name|tty
+modifier|*
+name|pcdevtotty
+parameter_list|(
+name|Dev_t
+name|dev
+parameter_list|)
+block|{
+return|return
+name|get_pccons
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* PCVT_FREEBSD> 205 */
 comment|/*---------------------------------------------------------------------------*  *  *	handle a keyboard receive interrupt  *  *	NOTE: the keyboard is multiplexed by means of "pcconsp"  *	between virtual screens. pcconsp - switching is done in  *	the vgapage() routine  *  *---------------------------------------------------------------------------*/
 if|#
 directive|if
@@ -3145,6 +3265,18 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|pcstop
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{ }
 else|#
 directive|else
 comment|/* PCVT_NETBSD || PCVT_FREEBSD>= 200 */

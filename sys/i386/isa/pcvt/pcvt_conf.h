@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1994 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_conf.h, 3.20, Last Edit-Date: [Wed Jan 11 09:20:27 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1994 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_conf.h, 3.20, Last Edit-Date: [Sun Feb 26 12:48:45 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_conf.h	VT220 driver global configuration file  *	------------------------------------------------------  *	-hm	introduced pcvt_conf.h  *	-hm	re-integrated selfconfiguration for NetBSD from Onno  *	-hm	patch from Onno for NetBSD-current  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_conf.h	VT220 driver global configuration file  *	------------------------------------------------------  *	-hm	introduced pcvt_conf.h  *	-hm	re-integrated selfconfiguration for NetBSD from Onno  *	-hm	patch from Onno for NetBSD-current  *	-hm	removed PCVT_FAKE_SYSCONS10  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  * from: Onno van der Linden    c/o   vdlinden@fwi.uva.nl  *  * Here's an idea how to automatically detect the version of NetBSD pcvt is  * being compiled on:  *   * NetBSD 0.8 : NetBSD0_8 defined in<sys/param.h>  * NetBSD 0.9 : NetBSD0_9 defined in<sys/param.h>  * NetBSD 1.0 : NetBSD1_0 defined as 1 in<sys/param.h>  * NetBSD 1.0A: NetBSD1_0 defined as 2 in<sys/param.h>  *  * The NetBSDx_y defines are mutual exclusive.  *  * This leads to something like this in pcvt_hdr.h (#elif is possible too):  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  * from: Onno van der Linden    c/o   frank@fwi.uva.nl  *  * Here's an idea how to automatically detect the version of NetBSD pcvt is  * being compiled on:  *   * NetBSD 0.8 : NetBSD0_8 defined in<sys/param.h>  * NetBSD 0.9 : NetBSD0_9 defined in<sys/param.h>  * NetBSD 1.0 : NetBSD1_0 defined as 1 in<sys/param.h>  * NetBSD 1.0A: NetBSD1_0 defined as 2 in<sys/param.h>  *  * The NetBSDx_y defines are mutual exclusive.  *  * This leads to something like this in pcvt_hdr.h (#elif is possible too):  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -107,7 +107,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/*  *  one of the following options must be set in the kernel config file:  *  *======================================================================*  *			N e t B S D					*  *======================================================================*  *  *	options "PCVT_NETBSD=xxx" enables support for NetBSD  *  *	select:  *		PCVT_NETBSD =   9	for NetBSD 0.9  *		PCVT_NETBSD =  99	for PRE-1.0 NetBSD-current  *		PCVT_NETBSD = 100	for NetBSD 1.0  *		PCVT_NETBSD = 199	for PRE-2.0 NetBSD-current  *  *  *======================================================================*  *			F r e e B S D					*  *======================================================================*  *		  *	options "PCVT_FREEBSD=xxx" enables support for FreeBSD  *  *	select:  *		PCVT_FREEBSD = 102	for 1.0 release (actually 1.0.2)  *		PCVT_FREEBSD = 110	for FreeBSD 1.1-Release  *		PCVT_FREEBSD = 115	for FreeBSD 1.1.5.1-Release  *		PCVT_FREEBSD = 200	for FreeBSD 2.0-Release  *		PCVT_FREEBSD = 299	for PRE-3.0 FreeBSD-current  *  *======================================================================*  *			3 8 6 B S D					*  *======================================================================*  *		  *	options "PCVT_386BSD" enables support for 386BSD + pk 0.2.4  *  */
+comment|/*  *  one of the following options must be set in the kernel config file:  *  *======================================================================*  *			N e t B S D					*  *======================================================================*  *  *	options "PCVT_NETBSD=xxx" enables support for NetBSD  *  *	select:  *		PCVT_NETBSD =   9	for NetBSD 0.9  *		PCVT_NETBSD =  99	for PRE-1.0 NetBSD-current  *		PCVT_NETBSD = 100	for NetBSD 1.0  *		PCVT_NETBSD = 199	for PRE-2.0 NetBSD-current  *  *  *======================================================================*  *			F r e e B S D					*  *======================================================================*  *		  *	options "PCVT_FREEBSD=xxx" enables support for FreeBSD  *  *	select:  *		PCVT_FREEBSD = 102	for 1.0 release (actually 1.0.2)  *		PCVT_FREEBSD = 110	for FreeBSD 1.1-Release  *		PCVT_FREEBSD = 115	for FreeBSD 1.1.5.1-Release  *		PCVT_FREEBSD = 200	for FreeBSD 2.0-Release  *		PCVT_FREEBSD = 210	for FreeBSD 2.1-Release  *  *======================================================================*  *			3 8 6 B S D					*  *======================================================================*  *		  *	options "PCVT_386BSD" enables support for 386BSD + pk 0.2.4  *                            NOTE: the 386BSD pcvt is unsupported and  *                            will be removed in a future release  *  */
 end_comment
 
 begin_comment
@@ -1138,7 +1138,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* NETBSD only: this is the number of	*/
+comment|/* NETBSD and FreeBSD>= 2.0 only: this */
 end_comment
 
 begin_endif
@@ -1147,7 +1147,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* characters handled as a burst in	*/
+comment|/* is the number of output characters	*/
+end_comment
+
+begin_comment
+comment|/* handled together as a burst in 	*/
 end_comment
 
 begin_comment
@@ -1356,7 +1360,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* allow the keyboard to send null 	*/
+comment|/* allow the keyboard to send null	*/
 end_comment
 
 begin_elif
@@ -1368,7 +1372,7 @@ literal|0
 end_elif
 
 begin_comment
-comment|/* program. this has the side effect,	*/
+comment|/* (0x00) characters to the calling	*/
 end_comment
 
 begin_undef
@@ -1378,7 +1382,7 @@ name|PCVT_NULLCHARS
 end_undef
 
 begin_comment
-comment|/* (0x00) characters to the calling	*/
+comment|/* program. this has the side effect	*/
 end_comment
 
 begin_define
@@ -1636,6 +1640,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* will be removed in a future release  */
+end_comment
 
 begin_if
 if|#
@@ -2164,7 +2172,47 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* buffer.				*/
+comment|/* buffer. The fastscroll code works	*/
+end_comment
+
+begin_comment
+comment|/* ONLY for VGA/EGA/CGA because it uses */
+end_comment
+
+begin_comment
+comment|/* the crtc for hardware scrolling and	*/
+end_comment
+
+begin_comment
+comment|/* therefore needs more than the one	*/
+end_comment
+
+begin_comment
+comment|/* page video memory MDA and most 	*/
+end_comment
+
+begin_comment
+comment|/* Hercules boards support.		*/
+end_comment
+
+begin_comment
+comment|/* If you run pcvt ONLY on MDA/Hercules */
+end_comment
+
+begin_comment
+comment|/* you should disable fastscroll to save*/
+end_comment
+
+begin_comment
+comment|/* the time to decide which board you	*/
+end_comment
+
+begin_comment
+comment|/* are running pcvt on at runtime.	*/
+end_comment
+
+begin_comment
+comment|/*     [see roll_up() and roll_down().]	*/
 end_comment
 
 begin_if
@@ -2254,7 +2302,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* emulate some compatibility ioctls	*/
+comment|/* this option enables multiple virtual */
 end_comment
 
 begin_elif
@@ -2266,7 +2314,7 @@ literal|0
 end_elif
 
 begin_comment
-comment|/* this is not a full USL VT compatibi-	*/
+comment|/* screen support for XFree86. If set	*/
 end_comment
 
 begin_undef
@@ -2276,7 +2324,7 @@ name|PCVT_USL_VT_COMPAT
 end_undef
 
 begin_comment
-comment|/* lity, but just enough to fool XFree86*/
+comment|/* to off, support for a "classic"	*/
 end_comment
 
 begin_define
@@ -2287,7 +2335,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* release 2 (or higher) in believing	*/
+comment|/* single screen only X server is	*/
 end_comment
 
 begin_endif
@@ -2296,92 +2344,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* it runs on syscons and thus enabling	*/
+comment|/* compiled in. If enabled, most of the	*/
 end_comment
 
 begin_comment
-comment|/* the stuff to switch VTs within an X	*/
+comment|/* ioctl's from SYSV/USL are supported	*/
 end_comment
 
 begin_comment
-comment|/* session				*/
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|PCVT_FAKE_SYSCONS10
-end_if
-
-begin_comment
-comment|/* ---------- DEFAULT: OFF ------------ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCVT_FAKE_SYSCONS10
-value|0
-end_define
-
-begin_comment
-comment|/* fake syscons 1.0; this causes XFree86*/
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|PCVT_FAKE_SYSCONS10
-operator|!=
-literal|0
-end_elif
-
-begin_comment
-comment|/* 2.0 to use the VT_OPENQRY ioctl in	*/
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_FAKE_SYSCONS10
-end_undef
-
-begin_comment
-comment|/* order to test for a free vt to use	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCVT_FAKE_SYSCONS10
-value|1
-end_define
-
-begin_comment
-comment|/* This is NOT REQUIRED, and not enabled*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* by default due to the possible	*/
+comment|/* to run multiple X servers and/or 	*/
 end_comment
 
 begin_comment
-comment|/* confusion for other utilities.	*/
-end_comment
-
-begin_comment
-comment|/* NB: XFree86 (tm) version 2.1 will be	*/
-end_comment
-
-begin_comment
-comment|/* fixed w.r.t. VT_OPENQRY		*/
+comment|/* character terminal sessions.		*/
 end_comment
 
 begin_endif

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_vtf.c, 3.20, Last Edit-Date: [Thu Jan  5 15:56:25 1995]  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_vtf.c, 3.20, Last Edit-Date: [Wed Feb 22 14:16:13 1995]  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_vtf.c	VT220 Terminal Emulator Functions  *	-------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patch from Thomas Gellekum  *	-hm	fixed bug fkey labels not properly (re)set after ris  *	-hm	Michael Havemester fixed NOFASTSCROLL define bug  *	-hm	set caps/scroll/num_lock in vt_str() and made led_update()  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_vtf.c	VT220 Terminal Emulator Functions  *	-------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patch from Thomas Gellekum  *	-hm	fixed bug fkey labels not properly (re)set after ris  *	-hm	Michael Havemester fixed NOFASTSCROLL define bug  *	-hm	set caps/scroll/num_lock in vt_str() and made led_update()  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	fixing NOFASTSCROLL operation for MDA/Hercules  *	-jw/hm	fixing bug in roll_up() and roll_down()  *	-hm	fastscroll/Crtat bugfix from Lon Willett  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -7790,7 +7790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	scroll screen one line up  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	scroll screen n lines up  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7813,15 +7813,13 @@ operator|==
 literal|0
 if|if
 condition|(
-operator|(
 name|svsp
 operator|->
 name|scrr_beg
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
+comment|/* if scroll region is whole screen */
 name|svsp
 operator|->
 name|scrr_len
@@ -7829,9 +7827,13 @@ operator|==
 name|svsp
 operator|->
 name|screen_rows
-operator|)
 operator|&&
 operator|(
+name|svsp
+operator|!=
+name|vsp
+operator|||
+comment|/* and either running in memory */
 operator|(
 name|svsp
 operator|->
@@ -7840,31 +7842,39 @@ operator|==
 name|svsp
 operator|->
 name|screen_rowsize
-operator|)
-operator|||
-operator|(
-name|svsp
+operator|&&
+comment|/* or no fkeys */
+name|adaptor_type
 operator|!=
-name|vsp
+name|MDA_ADAPTOR
 operator|)
 operator|)
 condition|)
+comment|/* and not on MDA/Hercules */
 block|{
 name|u_short
 modifier|*
 name|Memory
 init|=
 operator|(
-name|svsp
-operator|==
 name|vsp
+operator|!=
+name|svsp
+operator|||
+operator|(
+name|vsp
+operator|->
+name|vt_status
+operator|&
+name|VT_GRAFX
+operator|)
 operator|)
 condition|?
-name|Crtat
-else|:
 name|svsp
 operator|->
 name|Memory
+else|:
+name|Crtat
 decl_stmt|;
 if|if
 condition|(
@@ -7926,6 +7936,7 @@ name|Memory
 expr_stmt|;
 block|}
 else|else
+block|{
 name|svsp
 operator|->
 name|Crtat
@@ -7936,11 +7947,21 @@ name|svsp
 operator|->
 name|maxcol
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|svsp
-operator|==
 name|vsp
+operator|==
+name|svsp
+operator|&&
+operator|!
+operator|(
+name|vsp
+operator|->
+name|vt_status
+operator|&
+name|VT_GRAFX
+operator|)
 condition|)
 block|{
 name|outb
@@ -8114,7 +8135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	scroll screen one line down  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	scroll screen n lines down  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8138,15 +8159,13 @@ operator|==
 literal|0
 if|if
 condition|(
-operator|(
 name|svsp
 operator|->
 name|scrr_beg
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
+comment|/* if scroll region is whole screen */
 name|svsp
 operator|->
 name|scrr_len
@@ -8154,9 +8173,13 @@ operator|==
 name|svsp
 operator|->
 name|screen_rows
-operator|)
 operator|&&
 operator|(
+name|svsp
+operator|!=
+name|vsp
+operator|||
+comment|/* and either running in memory */
 operator|(
 name|svsp
 operator|->
@@ -8165,31 +8188,39 @@ operator|==
 name|svsp
 operator|->
 name|screen_rowsize
-operator|)
-operator|||
-operator|(
-name|svsp
+operator|&&
+comment|/* or no fkeys */
+name|adaptor_type
 operator|!=
-name|vsp
+name|MDA_ADAPTOR
 operator|)
 operator|)
 condition|)
+comment|/* and not on MDA/Hercules */
 block|{
 name|u_short
 modifier|*
 name|Memory
 init|=
 operator|(
-name|svsp
-operator|==
 name|vsp
+operator|!=
+name|svsp
+operator|||
+operator|(
+name|vsp
+operator|->
+name|vt_status
+operator|&
+name|VT_GRAFX
+operator|)
 operator|)
 condition|?
-name|Crtat
-else|:
 name|svsp
 operator|->
 name|Memory
+else|:
+name|Crtat
 decl_stmt|;
 if|if
 condition|(
@@ -8259,6 +8290,7 @@ name|screen_rows
 expr_stmt|;
 block|}
 else|else
+block|{
 name|svsp
 operator|->
 name|Crtat
@@ -8269,11 +8301,21 @@ name|svsp
 operator|->
 name|maxcol
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|svsp
-operator|==
 name|vsp
+operator|==
+name|svsp
+operator|&&
+operator|!
+operator|(
+name|vsp
+operator|->
+name|vt_status
+operator|&
+name|VT_GRAFX
+operator|)
 condition|)
 block|{
 name|outb

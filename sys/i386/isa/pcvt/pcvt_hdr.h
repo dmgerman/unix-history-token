@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_hdr.h, 3.20, Last Edit-Date: [Thu Jan 26 09:54:00 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_hdr.h, 3.20, Last Edit-Date: [Sun Feb 26 13:12:33 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patches from Thomas Gellekum  *	-hm	moving vt_selattr() inline into this file  *	-hm	Michael's keyboard fifo diffs  *	-hm	documenting some #ifdef's ...  *	-hm	Joerg's patches for FreeBSD's ttymalloc  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	moved user configurable items to pcvt_conf.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	patch from Joerg fixing FreeBSD 2.0 support  *	-hm	patch from Onno/John for NetBSD-current  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patches from Thomas Gellekum  *	-hm	moving vt_selattr() inline into this file  *	-hm	Michael's keyboard fifo diffs  *	-hm	documenting some #ifdef's ...  *	-hm	Joerg's patches for FreeBSD's ttymalloc  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	moved user configurable items to pcvt_conf.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	patch from Joerg fixing FreeBSD 2.0 support  *	-hm	patch from Onno/John for NetBSD-current  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	added pcstop (patch from Onno)  *	-hm	multiple X server bugfixes from Lon Willett  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCVT_REL
-value|"3.20-b19"
+value|"3.20-b22"
 end_define
 
 begin_comment
@@ -717,54 +717,6 @@ directive|define
 name|PCVT_SCREENSAVER
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCVT_FAKE_SYSCONS10 meaningless without PCVT_USL_VT_COMPAT */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|PCVT_FAKE_SYSCONS10
-operator|&&
-operator|!
-name|PCVT_USL_VT_COMPAT
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_FAKE_SYSCONS10
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCVT_FAKE_SYSCONS10
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|PCVT_FAKE_SYSCONS10
-end_if
-
-begin_warning
-warning|#
-directive|warning
-literal|"options PCVT_FAKE_SYSCONS10 will be removed in the next release"
-end_warning
 
 begin_endif
 endif|#
@@ -4593,7 +4545,7 @@ comment|/* flag, display functions enable */
 name|u_char
 name|transparent
 decl_stmt|;
-comment|/* flag, make path temp transparent 					 * for ctrls */
+comment|/* flag, mk path tmp trnsprnt for ctls*/
 name|u_char
 name|scrr_beg
 decl_stmt|;
@@ -4609,7 +4561,7 @@ comment|/* scrolling region, end */
 name|u_char
 name|screen_rows
 decl_stmt|;
-comment|/* screen size, length (minus status 					 * lines) */
+comment|/* screen size, length - status lines */
 name|u_char
 name|screen_rowsize
 decl_stmt|;
@@ -4621,11 +4573,11 @@ comment|/* VGA character set value */
 name|u_char
 name|lastchar
 decl_stmt|;
-comment|/* flag, vt100 behaviour of last char 					 * on line */
+comment|/* flag, vt100 behaviour of last char */
 name|u_char
 name|lastrow
 decl_stmt|;
-comment|/* save row, vt100 behaviour of last 					 * char on line */
+comment|/* save row, --------- " -----------  */
 name|u_char
 modifier|*
 name|report_chars
@@ -4634,7 +4586,7 @@ comment|/* ptr, status reports from terminal */
 name|u_char
 name|report_count
 decl_stmt|;
-comment|/* count, -"- */
+comment|/* count, ----------- " ------------ */
 name|u_char
 name|state
 decl_stmt|;
@@ -4650,7 +4602,7 @@ comment|/* flag, vt100 mode, origin mode */
 name|u_char
 name|sc_flag
 decl_stmt|;
-comment|/* flag, vt100 mode, saved parms 					 * valid */
+comment|/* flag, vt100 mode,saved parms valid */
 name|u_char
 name|sc_row
 decl_stmt|;
@@ -4736,7 +4688,7 @@ comment|/* system fkey-labels */
 name|u_char
 name|labels_on
 decl_stmt|;
-comment|/* display fkey labels and status 					 * line on/off */
+comment|/* display fkey labels etc. on/off */
 name|u_char
 name|which_fkl
 decl_stmt|;
@@ -4927,7 +4879,7 @@ comment|/* ptr to current G1 conversion table*/
 name|u_char
 name|force24
 decl_stmt|;
-comment|/* force 24 lines in DEC 25 and HP 28 					 * lines */
+comment|/* force 24 lines in DEC 25 and HP 28*/
 name|u_short
 modifier|*
 name|G2
@@ -7107,6 +7059,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|205
+end_if
+
+begin_function_decl
+name|struct
+name|tty
+modifier|*
+name|pcdevtotty
+parameter_list|(
+name|Dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_FREEBSD> 205 */
+end_comment
+
 begin_function_decl
 name|int
 name|pcrint
@@ -7180,12 +7161,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|PCVT_NETBSD
-end_if
-
 begin_function_decl
 name|void
 name|pcstart
@@ -7198,19 +7173,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
-name|pcstart
+name|pcstop
 parameter_list|(
 name|struct
 name|tty
 modifier|*
 name|tp
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7237,15 +7210,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  PCVT_NETBSD */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -7260,7 +7224,10 @@ name|int
 name|n
 parameter_list|,
 name|int
-name|dontsave
+name|oldgrafx
+parameter_list|,
+name|int
+name|newgrafx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7315,6 +7282,18 @@ parameter_list|(
 name|keymap_t
 modifier|*
 name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|reset_usl_modes
+parameter_list|(
+name|struct
+name|video_state
+modifier|*
+name|vsx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7672,6 +7651,15 @@ parameter_list|,
 name|u_char
 modifier|*
 name|char_table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mda2egaorvga
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
