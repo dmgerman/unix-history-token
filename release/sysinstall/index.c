@@ -2051,7 +2051,7 @@ name|nitems
 argument_list|,
 literal|".."
 argument_list|,
-literal|"Return to previous menu."
+literal|"RETURN TO PREVIOUS MENU."
 argument_list|,
 operator|&
 name|curr
