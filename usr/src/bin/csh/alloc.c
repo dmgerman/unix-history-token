@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.10 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -827,16 +827,6 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* how many blocks to get */
-if|if
-condition|(
-name|rnu
-operator|<
-name|bucket
-condition|)
-name|rnu
-operator|=
-name|bucket
-expr_stmt|;
 name|memtop
 operator|=
 operator|(
@@ -985,6 +975,12 @@ name|siz
 operator|)
 expr_stmt|;
 block|}
+name|op
+operator|->
+name|ov_next
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
