@@ -1393,7 +1393,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"chown: %s"
+literal|"chmod: %s"
 argument_list|,
 name|to
 operator|.
