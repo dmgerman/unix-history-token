@@ -178,21 +178,21 @@ begin_define
 define|#
 directive|define
 name|LAPIC_TIMER_HZ_DIVIDER
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|LAPIC_TIMER_STATHZ_DIVIDER
-value|23
+value|15
 end_define
 
 begin_define
 define|#
 directive|define
 name|LAPIC_TIMER_PROFHZ_DIVIDER
-value|2
+value|3
 end_define
 
 begin_comment
@@ -505,20 +505,6 @@ decl_stmt|,
 name|lapic_timer_period
 decl_stmt|,
 name|lapic_timer_hz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_long
-modifier|*
-name|lapic_virtual_hardclock
-decl_stmt|,
-modifier|*
-name|lapic_virtual_statclock
-decl_stmt|,
-modifier|*
-name|lapic_virtual_profclock
 decl_stmt|;
 end_decl_stmt
 
@@ -1586,30 +1572,6 @@ operator|=
 name|value
 operator|/
 name|lapic_timer_hz
-expr_stmt|;
-name|intrcnt_add
-argument_list|(
-literal|"lapic: hardclock"
-argument_list|,
-operator|&
-name|lapic_virtual_hardclock
-argument_list|)
-expr_stmt|;
-name|intrcnt_add
-argument_list|(
-literal|"lapic: statclock"
-argument_list|,
-operator|&
-name|lapic_virtual_statclock
-argument_list|)
-expr_stmt|;
-name|intrcnt_add
-argument_list|(
-literal|"lapic: profclock"
-argument_list|,
-operator|&
-name|lapic_virtual_profclock
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Start up the timer on the BSP.  The APs will kick off their 	 * timer during lapic_setup(). 	 */
 name|lapic_timer_periodic
@@ -2731,20 +2693,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-operator|*
-name|lapic_virtual_hardclock
-operator|)
-operator|++
-expr_stmt|;
 name|hardclock
 argument_list|(
 operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|hardclock_process
 argument_list|(
@@ -2775,21 +2729,6 @@ name|la_stat_ticks
 operator|-=
 name|lapic_timer_hz
 expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|==
-literal|0
-condition|)
-operator|(
-operator|*
-name|lapic_virtual_statclock
-operator|)
-operator|++
-expr_stmt|;
 name|statclock
 argument_list|(
 operator|&
@@ -2818,21 +2757,6 @@ operator|->
 name|la_prof_ticks
 operator|-=
 name|lapic_timer_hz
-expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|==
-literal|0
-condition|)
-operator|(
-operator|*
-name|lapic_virtual_profclock
-operator|)
-operator|++
 expr_stmt|;
 if|if
 condition|(
