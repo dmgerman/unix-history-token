@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.9 (Berkeley) %G%"
+literal|"@(#)tape.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1720,6 +1720,14 @@ operator|.
 name|c_type
 operator|==
 name|TS_TAPE
+operator|&&
+operator|(
+name|tmpbuf
+operator|.
+name|c_flags
+operator|&
+name|DR_NEWHEADER
+operator|)
 condition|)
 for|for
 control|(
@@ -4720,9 +4728,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|TS_OTAPE
-case|:
-case|case
 name|TS_TAPE
 case|:
 case|case
@@ -4818,12 +4823,6 @@ operator|->
 name|c_type
 operator|==
 name|TS_TAPE
-operator|||
-name|header
-operator|->
-name|c_type
-operator|==
-name|TS_OTAPE
 condition|)
 block|{
 name|fprintf
