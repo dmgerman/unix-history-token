@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -107,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.04"
+value|"1.05"
 end_define
 
 begin_comment
@@ -145,6 +149,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ISGRAPH
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setvbuf function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETVBUF
 value|1
 end_define
 
