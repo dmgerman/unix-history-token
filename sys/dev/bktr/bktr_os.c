@@ -1498,7 +1498,7 @@ name|bktr
 operator|->
 name|res_irq
 argument_list|,
-name|INTR_TYPE_NET
+name|INTR_TYPE_TTY
 argument_list|,
 name|bktr_intr
 argument_list|,
@@ -3006,7 +3006,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|i386_btop
+name|atop
 argument_list|(
 name|vtophys
 argument_list|(
@@ -3040,6 +3040,9 @@ parameter_list|)
 block|{
 name|int
 name|unit
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|bktr_ptr_t
 name|bktr
@@ -3088,8 +3091,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|disable_intr
-argument_list|()
+name|s
+operator|=
+name|DISABLE_INTR
 expr_stmt|;
 if|if
 condition|(
@@ -3148,8 +3152,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|enable_intr
-argument_list|()
+name|ENABLE_INTR
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3805,7 +3811,7 @@ operator|)
 name|bktr
 argument_list|,
 operator|&
-name|net_imask
+name|tty_imask
 argument_list|)
 expr_stmt|;
 comment|/* Update the Device Control Register */

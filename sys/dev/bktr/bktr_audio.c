@@ -1486,11 +1486,6 @@ decl_stmt|;
 name|int
 name|stereo
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"MSP autodetect\n"
-argument_list|)
-expr_stmt|;
 comment|/* MSP3430G - countries with mono and DBX stereo */
 if|if
 condition|(

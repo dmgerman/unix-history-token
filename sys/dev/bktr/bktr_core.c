@@ -10938,8 +10938,13 @@ case|case
 name|BT848_GSTATUS
 case|:
 comment|/* reap status */
-name|disable_intr
-argument_list|()
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|DISABLE_INTR
 expr_stmt|;
 name|temp
 operator|=
@@ -10949,8 +10954,10 @@ name|status_sum
 operator|=
 literal|0
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|ENABLE_INTR
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(
@@ -10962,6 +10969,7 @@ operator|=
 name|temp
 expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 comment|/* STATUS_SUM */
