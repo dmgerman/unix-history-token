@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.13 1995/11/04 17:07:47 bde Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.14 1995/11/09 21:53:45 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -177,7 +177,7 @@ file|"si.h"
 end_include
 
 begin_comment
-comment|/*  * This device driver is designed to interface the Specialix International  * range of serial multiplexor cards (SLXOS) to BSDI/386 on an ISA bus machine.  *  * The controller is interfaced to the host via dual port ram  * and a (programmable - SIHOST2) interrupt at IRQ 11,12 or 15.  */
+comment|/*  * This device driver is designed to interface the Specialix International  * range of serial multiplexor cards (SI/XIO) to BSDI/386 on an ISA bus machine.  *  * The controller is interfaced to the host via dual port ram  * and a (programmable - SIHOST2) interrupt at IRQ 11,12 or 15.  */
 end_comment
 
 begin_define
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|SI_I_HIGH_WATER
-value|(TTYHOG - 2 * SLXOS_BUFFERSIZE)
+value|(TTYHOG - 2 * SI_BUFFERSIZE)
 end_define
 
 begin_enum
@@ -1262,7 +1262,11 @@ literal|0
 operator|,
 name|DBG_AUTOBOOT
 operator|,
-literal|"SLXOS probe at virtual=0x%x physical=0x%x\n"
+literal|"si%d: probe at virtual=0x%x physical=0x%x\n"
+operator|,
+name|id
+operator|->
+name|id_unit
 operator|,
 name|id
 operator|->
@@ -1568,7 +1572,7 @@ literal|0
 operator|,
 name|DBG_AUTOBOOT
 operator|,
-literal|"SLXOS: si%d: EISA base %x, irq %x, id_irq %x, port %x\n"
+literal|"si%d: EISA base %x, irq %x, id_irq %x, port %x\n"
 operator|,
 name|id
 operator|->
@@ -1908,7 +1912,11 @@ literal|0
 operator|,
 name|DBG_AUTOBOOT
 operator|,
-literal|"SLXOS: found type %d card, try memory test\n"
+literal|"si%d: found type %d card, try memory test\n"
+operator|,
+name|id
+operator|->
+name|id_unit
 operator|,
 name|type
 operator|)
@@ -2390,7 +2398,11 @@ literal|0
 operator|,
 name|DBG_AUTOBOOT
 operator|,
-literal|"SLXOS siattach\n"
+literal|"si%d: siattach\n"
+operator|,
+name|id
+operator|->
+name|id_unit
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2445,7 +2457,11 @@ literal|0
 operator|,
 name|DBG_DOWNLOAD
 operator|,
-literal|"SLXOS si_download: nbytes %d\n"
+literal|"si%d: si_download: nbytes %d\n"
+operator|,
+name|id
+operator|->
+name|id_unit
 operator|,
 name|si_dsize
 operator|)
@@ -7890,7 +7906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Poller to catch missed interrupts.  *  * Note that the SYSV SLXOS drivers poll at 100 times per second to get better  * response.  We could really use a "periodic" version timeout(). :-)  */
+comment|/*  * Poller to catch missed interrupts.  *  * Note that the SYSV Specialix drivers poll at 100 times per second to get  * better response.  We could really use a "periodic" version timeout(). :-)  */
 end_comment
 
 begin_ifdef
@@ -8159,7 +8175,7 @@ specifier|static
 name|BYTE
 name|si_rxbuf
 index|[
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -8770,7 +8786,7 @@ if|if
 condition|(
 name|n
 operator|<=
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|op
 condition|)
@@ -8815,7 +8831,7 @@ else|else
 block|{
 name|x
 operator|=
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|op
 expr_stmt|;
@@ -9459,7 +9475,7 @@ comment|/* will it fit in one lump? */
 if|if
 condition|(
 operator|(
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|ipos
 operator|)
@@ -9515,7 +9531,7 @@ index|[
 name|ipos
 index|]
 argument_list|,
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|ipos
 argument_list|)
@@ -9524,7 +9540,7 @@ if|if
 condition|(
 name|n
 operator|==
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|ipos
 condition|)
@@ -9553,7 +9569,7 @@ argument_list|,
 name|amount
 operator|-
 operator|(
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 operator|-
 name|ipos
 operator|)
@@ -10698,7 +10714,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"SLXOS %ci%d(%d): "
+literal|"%ci%d(%d): "
 argument_list|,
 literal|'s'
 argument_list|,
