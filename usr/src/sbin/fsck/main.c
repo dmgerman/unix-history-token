@@ -1,11 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
-specifier|static
 name|char
-name|sccsid
+name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.11.1.2	(Berkeley)	%G%"
+literal|"@(#)main.c	2.17	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
