@@ -3944,7 +3944,7 @@ argument_list|(
 operator|&
 name|crypto_cdevsw
 argument_list|,
-name|CRYPTO_MAJOR
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
