@@ -284,13 +284,13 @@ name|read32k
 range|:
 literal|1
 decl_stmt|;
-comment|/* 32k block size (data only) */
+comment|/* 32k blk size (data only) */
 name|u_int8_t
 name|read32k5
 range|:
 literal|1
 decl_stmt|;
-comment|/* 32.5k block size (data& AUX) */
+comment|/* 32.5k blk size (data&AUX) */
 name|u_int8_t
 name|reserved3_23
 range|:
@@ -301,13 +301,13 @@ name|write32k
 range|:
 literal|1
 decl_stmt|;
-comment|/* 32k block size (data only) */
+comment|/* 32k blk size (data only) */
 name|u_int8_t
 name|write32k5
 range|:
 literal|1
 decl_stmt|;
-comment|/* 32.5k block size (data& AUX) */
+comment|/* 32.5k blk size (data&AUX) */
 name|u_int8_t
 name|reserved3_6
 range|:

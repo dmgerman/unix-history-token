@@ -265,7 +265,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int32_t
 name|afd_partial_done
 parameter_list|(
 name|struct
@@ -277,7 +277,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int32_t
 name|afd_done
 parameter_list|(
 name|struct
@@ -333,18 +333,17 @@ begin_comment
 comment|/* internal vars */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int32_t
-name|afdnlun
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of config'd drives */
-end_comment
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AFD
+argument_list|,
+literal|"AFD driver"
+argument_list|,
+literal|"ATAPI floppy driver buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int32_t
@@ -364,6 +363,12 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+specifier|static
+name|int32_t
+name|afdnlun
+init|=
+literal|0
+decl_stmt|;
 name|fdp
 operator|=
 name|malloc
@@ -374,7 +379,7 @@ expr|struct
 name|afd_softc
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_AFD
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -447,7 +452,7 @@ name|free
 argument_list|(
 name|fdp
 argument_list|,
-name|M_TEMP
+name|M_AFD
 argument_list|)
 expr_stmt|;
 return|return
@@ -533,6 +538,14 @@ operator|->
 name|si_drv1
 operator|=
 name|fdp
+expr_stmt|;
+name|dev
+operator|->
+name|si_iosize_max
+operator|=
+literal|252
+operator|*
+name|DEV_BSIZE
 expr_stmt|;
 return|return
 literal|0
@@ -643,7 +656,7 @@ operator|!
 operator|(
 name|error
 operator|=
-name|atapi_immed_cmd
+name|atapi_queue_cmd
 argument_list|(
 name|fdp
 operator|->
@@ -661,23 +674,16 @@ argument_list|,
 name|A_READ
 argument_list|,
 literal|30
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)
-block|{
-name|error
-operator|=
-name|atapi_error
-argument_list|(
-name|fdp
-operator|->
-name|atp
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -1173,14 +1179,6 @@ name|disklabel
 modifier|*
 name|label
 decl_stmt|;
-name|dev
-operator|->
-name|si_iosize_max
-operator|=
-literal|254
-operator|*
-name|DEV_BSIZE
-expr_stmt|;
 name|fdp
 operator|->
 name|atp
@@ -1912,7 +1910,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int32_t
 name|afd_partial_done
 parameter_list|(
 name|struct
@@ -1941,16 +1939,9 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|atapi_error
-argument_list|(
-name|request
-operator|->
-name|device
-argument_list|,
 name|request
 operator|->
 name|result
-argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -1967,12 +1958,15 @@ name|request
 operator|->
 name|bytecount
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int32_t
 name|afd_done
 parameter_list|(
 name|struct
@@ -2018,16 +2012,9 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|atapi_error
-argument_list|(
-name|request
-operator|->
-name|device
-argument_list|,
 name|request
 operator|->
 name|result
-argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -2065,6 +2052,9 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2242,7 +2232,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|atapi_immed_cmd
+name|atapi_queue_cmd
 argument_list|(
 name|fdp
 operator|->
@@ -2257,6 +2247,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2264,22 +2260,9 @@ condition|(
 name|error
 condition|)
 return|return
-name|atapi_error
-argument_list|(
-name|fdp
-operator|->
-name|atp
-argument_list|,
 name|error
-argument_list|)
 return|;
 return|return
-name|atapi_error
-argument_list|(
-name|fdp
-operator|->
-name|atp
-argument_list|,
 name|atapi_wait_ready
 argument_list|(
 name|fdp
@@ -2287,7 +2270,6 @@ operator|->
 name|atp
 argument_list|,
 literal|30
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -2348,13 +2330,7 @@ literal|0
 block|}
 decl_stmt|;
 return|return
-name|atapi_error
-argument_list|(
-name|fdp
-operator|->
-name|atp
-argument_list|,
-name|atapi_immed_cmd
+name|atapi_queue_cmd
 argument_list|(
 name|fdp
 operator|->
@@ -2369,7 +2345,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|30
-argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 return|;
 block|}

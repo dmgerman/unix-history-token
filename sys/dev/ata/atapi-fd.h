@@ -125,7 +125,7 @@ comment|/* number of heads */
 name|u_int8_t
 name|sectors
 decl_stmt|;
-comment|/* number of sectors per track */
+comment|/* number of sectors pr track */
 name|u_int16_t
 name|sector_size
 decl_stmt|;

@@ -1161,8 +1161,8 @@ decl_stmt|;
 name|u_int8_t
 name|sense_length
 decl_stmt|;
-comment|/* additional sense length (n-7) */
-comment|/* additional cmd specific info */
+comment|/* additional sense len (n-7) */
+comment|/* additional cmd spec info */
 name|u_int32_t
 name|cmd_specific_info
 name|__attribute__
@@ -1179,11 +1179,11 @@ comment|/* additional sense code */
 name|u_int8_t
 name|ascq
 decl_stmt|;
-comment|/* additional sense code qualifier */
+comment|/* additional sense code qual */
 name|u_int8_t
 name|replaceable_unit_code
 decl_stmt|;
-comment|/* field replaceable unit code */
+comment|/* replaceable unit code */
 name|u_int8_t
 name|sk_specific1
 range|:
@@ -1195,7 +1195,7 @@ name|sksv
 range|:
 literal|1
 decl_stmt|;
-comment|/* sense key specific info valid */
+comment|/* sense key specific info OK */
 name|u_int8_t
 name|sk_specific2
 decl_stmt|;
@@ -1238,19 +1238,19 @@ decl_stmt|;
 comment|/* drive flags */
 define|#
 directive|define
-name|ATAPI_F_MEDIA_CHANGED
+name|ATAPI_F_DMA_ENABLED
 value|0x0001
 define|#
 directive|define
-name|ATAPI_F_DMA_ENABLED
+name|ATAPI_F_DMA_USED
 value|0x0002
 define|#
 directive|define
-name|ATAPI_F_DMA_USED
+name|ATAPI_F_DSC_USED
 value|0x0004
 define|#
 directive|define
-name|ATAPI_F_DRQT_CMD
+name|ATAPI_F_MEDIA_CHANGED
 value|0x0008
 block|}
 struct|;
@@ -1258,7 +1258,7 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|void
+name|int32_t
 name|atapi_callback_t
 parameter_list|(
 name|struct
@@ -1298,10 +1298,6 @@ name|u_int32_t
 name|bytecount
 decl_stmt|;
 comment|/* bytes to transfer */
-name|u_int32_t
-name|donecount
-decl_stmt|;
-comment|/* bytes transferred */
 name|int32_t
 name|timeout
 decl_stmt|;
@@ -1319,6 +1315,11 @@ name|int32_t
 name|result
 decl_stmt|;
 comment|/* result of this cmd */
+name|struct
+name|atapi_reqsense
+name|sense
+decl_stmt|;
+comment|/* sense data if error */
 name|int32_t
 name|flags
 decl_stmt|;
@@ -1377,29 +1378,6 @@ end_function_decl
 
 begin_function_decl
 name|int32_t
-name|atapi_immed_cmd
-parameter_list|(
-name|struct
-name|atapi_softc
-modifier|*
-parameter_list|,
-name|int8_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int32_t
-parameter_list|,
-name|int32_t
-parameter_list|,
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
 name|atapi_queue_cmd
 parameter_list|(
 name|struct
@@ -1437,19 +1415,6 @@ parameter_list|(
 name|struct
 name|atapi_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|atapi_error
-parameter_list|(
-name|struct
-name|atapi_softc
-modifier|*
-parameter_list|,
-name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -32,6 +32,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_E_ABORT
+value|0x04
+end_define
+
+begin_comment
+comment|/* command aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_FEATURE
 value|0x01
 end_define
@@ -417,7 +428,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_S_SERV
+name|ATA_S_SERVICE
 value|0x10
 end_define
 
@@ -439,7 +450,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_S_DMRD
+name|ATA_S_DMA
 value|0x20
 end_define
 
@@ -450,7 +461,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_S_DRDY
+name|ATA_S_READY
 value|0x40
 end_define
 
@@ -461,7 +472,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_S_BSY
+name|ATA_S_BUSY
 value|0x80
 end_define
 
@@ -650,6 +661,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_BMSTAT_DMA_SIMPLEX
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_BMDTP_PORT
 value|0x04
 end_define
@@ -688,6 +706,13 @@ define|#
 directive|define
 name|ATA_UDMA2
 value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_UDMA3
+value|0x43
 end_define
 
 begin_define
@@ -761,24 +786,32 @@ name|ATA_MODE_PIO
 value|0x00
 define|#
 directive|define
-name|ATA_MODE_DMA
+name|ATA_MODE_WDMA2
 value|0x01
 define|#
 directive|define
-name|ATA_MODE_UDMA33
+name|ATA_MODE_UDMA2
 value|0x02
 define|#
 directive|define
-name|ATA_MODE_UDMA66
+name|ATA_MODE_UDMA3
 value|0x04
+define|#
+directive|define
+name|ATA_MODE_UDMA4
+value|0x08
 name|int32_t
 name|flags
 decl_stmt|;
 comment|/* controller flags */
 define|#
 directive|define
-name|ATA_ATAPI_DMA_RO
+name|ATA_DMA_ACTIVE
 value|0x01
+define|#
+directive|define
+name|ATA_ATAPI_DMA_RO
+value|0x02
 name|int32_t
 name|devices
 decl_stmt|;
@@ -835,6 +868,10 @@ define|#
 directive|define
 name|ATA_ACTIVE_ATAPI
 value|0x4
+define|#
+directive|define
+name|ATA_REINITING
+value|0x5
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -872,12 +909,9 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|MAXATA
-value|8
-end_define
+begin_comment
+comment|/* array to hold all ata softc's */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -888,6 +922,13 @@ name|atadevices
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAXATA
+value|16
+end_define
 
 begin_comment
 comment|/* public prototypes */
@@ -1017,8 +1058,6 @@ parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
-parameter_list|,
-name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1030,8 +1069,6 @@ parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
-parameter_list|,
-name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1043,8 +1080,6 @@ parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
-parameter_list|,
-name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
