@@ -2282,6 +2282,11 @@ argument_list|(
 literal|"NDIS driver corrupted reserved packet fields"
 argument_list|)
 expr_stmt|;
+name|NDIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 operator|(
@@ -2369,6 +2374,11 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_OACTIVE
+expr_stmt|;
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2742,6 +2752,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|NDIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|p0
 operator|=
 operator|&
@@ -2778,11 +2793,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|NDIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ndis_txarray
@@ -2965,11 +2975,6 @@ operator|->
 name|ndis_txpending
 operator|--
 expr_stmt|;
-name|NDIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|pcnt
 operator|++
 expr_stmt|;
@@ -3006,6 +3011,18 @@ name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
+comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|5
+expr_stmt|;
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ndis_send_packets
 argument_list|(
 name|sc
@@ -3014,13 +3031,6 @@ name|p0
 argument_list|,
 name|pcnt
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|5
 expr_stmt|;
 return|return;
 block|}
