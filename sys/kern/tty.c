@@ -12028,13 +12028,6 @@ expr|*
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_timeout
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|ttyregister
 argument_list|(
 name|tp
@@ -12084,6 +12077,13 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
+name|tp
+operator|->
+name|t_timeout
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
