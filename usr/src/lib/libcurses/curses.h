@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)curses.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)curses.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -595,11 +595,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|addbytes
+parameter_list|(
+name|da
+parameter_list|,
+name|co
+parameter_list|)
+value|VOID(waddbytes(stdscr, da,co))
+end_define
+
+begin_define
+define|#
+directive|define
 name|addstr
 parameter_list|(
 name|str
 parameter_list|)
-value|VOID(waddstr(stdscr, str))
+value|VOID(waddbytes(stdscr, str, strlen(str)))
 end_define
 
 begin_define
@@ -759,6 +771,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|mvwaddbytes
+parameter_list|(
+name|win
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|da
+parameter_list|,
+name|co
+parameter_list|)
+define|\
+value|VOID(wmove(win,y,x)==ERR?ERR:waddbytes(win,da,co))
+end_define
+
+begin_define
+define|#
+directive|define
 name|mvwaddstr
 parameter_list|(
 name|win
@@ -769,7 +800,8 @@ name|x
 parameter_list|,
 name|str
 parameter_list|)
-value|VOID(wmove(win,y,x)==ERR?ERR:waddstr(win,str))
+define|\
+value|VOID(wmove(win,y,x)==ERR?ERR:waddbytes(win,str,strlen(str)))
 end_define
 
 begin_define
@@ -856,6 +888,22 @@ parameter_list|,
 name|x
 parameter_list|)
 value|mvwgetch(stdscr,y,x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mvaddbytes
+parameter_list|(
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|da
+parameter_list|,
+name|co
+parameter_list|)
+value|mvwaddbytes(stdscr,y,x,da,co)
 end_define
 
 begin_define
