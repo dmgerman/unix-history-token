@@ -975,6 +975,7 @@ name|transp
 parameter_list|,
 name|rpcvers_t
 name|rpcbversnum
+name|__unused
 parameter_list|)
 block|{
 name|RPCB
@@ -1101,6 +1102,7 @@ name|transp
 parameter_list|,
 name|rpcvers_t
 name|versnum
+name|__unused
 parameter_list|)
 block|{
 name|RPCB
@@ -1221,6 +1223,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1228,6 +1231,7 @@ name|transp
 parameter_list|,
 name|rpcvers_t
 name|versnum
+name|__unused
 parameter_list|)
 block|{
 name|RPCB
@@ -1862,18 +1866,22 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
 name|xprt
+name|__unused
 parameter_list|,
 name|rpcvers_t
 name|versnum
+name|__unused
 parameter_list|)
 block|{
 return|return

@@ -542,6 +542,7 @@ name|delete_prog
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -739,6 +740,7 @@ operator|,
 name|void
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|)
 argument_list|)

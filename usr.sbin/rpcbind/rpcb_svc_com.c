@@ -668,6 +668,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1127,6 +1128,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1488,6 +1490,7 @@ begin_function
 name|void
 name|delete_prog
 parameter_list|(
+name|unsigned
 name|int
 name|prog
 parameter_list|)
@@ -1615,6 +1618,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1858,18 +1862,22 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
 name|transp
+name|__unused
 parameter_list|,
 name|rpcvers_t
 name|rpcbversnum
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -1917,6 +1925,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1924,6 +1933,7 @@ name|transp
 parameter_list|,
 name|rpcvers_t
 name|rpcbversnum
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -2071,6 +2081,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -2078,6 +2089,7 @@ name|transp
 parameter_list|,
 name|rpcvers_t
 name|rpcbversnum
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -6480,11 +6492,13 @@ specifier|register
 name|rpcblist_ptr
 name|rbl
 decl_stmt|;
+name|unsigned
 name|int
 name|lowv
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
 name|int
 name|highv
 init|=
@@ -7108,6 +7122,7 @@ decl_stmt|,
 modifier|*
 name|fnd
 decl_stmt|;
+name|unsigned
 name|long
 name|prot
 decl_stmt|;

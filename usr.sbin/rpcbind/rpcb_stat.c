@@ -802,10 +802,6 @@ return|return;
 block|}
 end_function
 
-begin_comment
-comment|/*  */
-end_comment
-
 begin_function
 name|void
 modifier|*
@@ -814,18 +810,22 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|struct
 name|svc_req
 modifier|*
 name|req
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
 name|xprt
+name|__unused
 parameter_list|,
 name|rpcvers_t
 name|versnum
+name|__unused
 parameter_list|)
 block|{
 return|return

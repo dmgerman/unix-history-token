@@ -344,6 +344,7 @@ name|struct
 name|netbuf
 modifier|*
 name|baddr
+name|__unused
 parameter_list|)
 block|{
 name|struct

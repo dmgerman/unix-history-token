@@ -126,6 +126,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -3149,6 +3155,7 @@ name|terminate
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -3414,6 +3421,7 @@ name|reap
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -3448,6 +3456,7 @@ name|toggle_verboselog
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|verboselog

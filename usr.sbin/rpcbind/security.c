@@ -326,6 +326,7 @@ name|void
 modifier|*
 name|args
 parameter_list|,
+name|unsigned
 name|int
 name|rpcbvers
 parameter_list|)
@@ -1047,6 +1048,7 @@ name|args
 parameter_list|,
 name|int
 name|versnum
+name|__unused
 parameter_list|)
 block|{
 name|struct

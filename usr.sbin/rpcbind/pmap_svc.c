@@ -491,6 +491,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -980,6 +981,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*
@@ -1446,6 +1448,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 parameter_list|,
 name|SVCXPRT
 modifier|*

@@ -1251,9 +1251,11 @@ name|struct
 name|ipv6_mreq
 name|mreq6
 decl_stmt|;
+name|unsigned
 name|int
 name|ifindex
-decl_stmt|,
+decl_stmt|;
+name|int
 name|s
 decl_stmt|;
 endif|#
