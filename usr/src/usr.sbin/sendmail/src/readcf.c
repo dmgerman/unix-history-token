@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -1468,6 +1468,10 @@ block|,
 literal|'A'
 block|,
 name|M_ARPAFMT
+block|,
+literal|'U'
+block|,
+name|M_UGLYUUCP
 block|,
 literal|'\0'
 block|,

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.56		%G%"
+literal|"@(#)sendmail.h	3.57		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,11 +403,15 @@ name|MAILER
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* bits for m_flags */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|M_FOPT
-value|000001
+value|000000001
 end_define
 
 begin_comment
@@ -418,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|M_ROPT
-value|000002
+value|000000002
 end_define
 
 begin_comment
@@ -429,7 +433,7 @@ begin_define
 define|#
 directive|define
 name|M_QUIET
-value|000004
+value|000000004
 end_define
 
 begin_comment
@@ -440,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|M_RESTR
-value|000010
+value|000000010
 end_define
 
 begin_comment
@@ -451,7 +455,7 @@ begin_define
 define|#
 directive|define
 name|M_NHDR
-value|000020
+value|000000020
 end_define
 
 begin_comment
@@ -462,7 +466,7 @@ begin_define
 define|#
 directive|define
 name|M_LOCAL
-value|000040
+value|000000040
 end_define
 
 begin_comment
@@ -473,29 +477,29 @@ begin_define
 define|#
 directive|define
 name|M_STRIPQ
-value|000100
+value|000000100
 end_define
 
 begin_comment
-comment|/* strip quote characters from user/host */
+comment|/* strip quote chars from user/host */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_MUSER
-value|000200
+value|000000200
 end_define
 
 begin_comment
-comment|/* mailer can handle multiple users at once */
+comment|/* can handle multiple users at once */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_NEEDFROM
-value|000400
+value|000000400
 end_define
 
 begin_comment
@@ -506,7 +510,7 @@ begin_define
 define|#
 directive|define
 name|M_NEEDDATE
-value|001000
+value|000001000
 end_define
 
 begin_comment
@@ -517,7 +521,7 @@ begin_define
 define|#
 directive|define
 name|M_MSGID
-value|002000
+value|000002000
 end_define
 
 begin_comment
@@ -528,7 +532,7 @@ begin_define
 define|#
 directive|define
 name|M_USR_UPPER
-value|010000
+value|000010000
 end_define
 
 begin_comment
@@ -539,7 +543,7 @@ begin_define
 define|#
 directive|define
 name|M_HST_UPPER
-value|020000
+value|000020000
 end_define
 
 begin_comment
@@ -550,11 +554,22 @@ begin_define
 define|#
 directive|define
 name|M_FULLNAME
-value|040000
+value|000040000
 end_define
 
 begin_comment
 comment|/* want Full-Name field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_UGLYUUCP
+value|000100000
+end_define
+
+begin_comment
+comment|/* this wants an ugly UUCP from line */
 end_comment
 
 begin_define
