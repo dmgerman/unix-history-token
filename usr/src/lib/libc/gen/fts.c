@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.41 (Berkeley) %G%"
+literal|"@(#)fts.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,7 +2320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the tricky part -- do not casually change *anything* in here.  The  * idea is to build the linked list of entries that are used by fts_children  * and fts_read.  There are lots of special cases.  *  * The real slowdown in walking the tree is the stat calls.  If FTS_NOSTAT is  * set and it's a physical walk (so that symbolic links can't be directories),  * we assume that the number of subdirectories in a node is equal to the number  * of links to the parent.  This allows stat calls to be skipped in any leaf  * directories and for any nodes after the directories in the parent node have  * been found.  This empirically cuts the stat calls by about 2/3.  */
+comment|/*  * This is the tricky part -- do not casually change *anything* in here.  The  * idea is to build the linked list of entries that are used by fts_children  * and fts_read.  There are lots of special cases.  *  * The real slowdown in walking the tree is the stat calls.  If FTS_NOSTAT is  * set and it's a physical walk (so that symbolic links can't be directories),  * we can do things quickly.  First, if it's a 4.4BSD file system, the type  * of the file is in the directory entry.  Otherwise, we assume that the number  * of subdirectories in a node is equal to the number of links to the parent.  * The former skips all stat calls.  The latter skips stat calls in any leaf  * directories and for any files after the subdirectories in the directory have  * been found, cutting the stat calls by about 2/3.  */
 end_comment
 
 begin_function
@@ -2882,7 +2882,56 @@ elseif|else
 if|if
 condition|(
 name|nlinks
+operator|==
+literal|0
+ifdef|#
+directive|ifdef
+name|DT_DIR
+operator|||
+name|nlinks
+operator|>
+literal|0
+operator|&&
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DT_DIR
+operator|&&
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DT_UNKNOWN
+endif|#
+directive|endif
 condition|)
+block|{
+name|p
+operator|->
+name|fts_accpath
+operator|=
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+condition|?
+name|p
+operator|->
+name|fts_path
+else|:
+name|p
+operator|->
+name|fts_name
+expr_stmt|;
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_NSOK
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* Build a file name for fts_stat to stat. */
 if|if
@@ -2926,6 +2975,7 @@ name|p
 operator|->
 name|fts_name
 expr_stmt|;
+comment|/* Stat it. */
 name|p
 operator|->
 name|fts_info
@@ -2939,6 +2989,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Decrement link count if applicable. */
 if|if
 condition|(
 name|nlinks
@@ -2967,32 +3018,6 @@ operator|)
 condition|)
 operator|--
 name|nlinks
-expr_stmt|;
-block|}
-else|else
-block|{
-name|p
-operator|->
-name|fts_accpath
-operator|=
-name|ISSET
-argument_list|(
-name|FTS_NOCHDIR
-argument_list|)
-condition|?
-name|p
-operator|->
-name|fts_path
-else|:
-name|p
-operator|->
-name|fts_name
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_NSOK
 expr_stmt|;
 block|}
 comment|/* We walk in directory order so "ls -f" doesn't get upset. */
