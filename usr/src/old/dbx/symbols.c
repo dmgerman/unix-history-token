@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.11 %G%"
+literal|"@(#)symbols.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5255,6 +5255,12 @@ operator|->
 name|class
 operator|!=
 name|TAG
+name|and
+name|s
+operator|->
+name|class
+operator|!=
+name|MODULE
 name|endfind
 argument_list|(
 name|s
@@ -5313,7 +5319,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*      * Old way      * 	if (not isactive(program)) { 	    f = program; 	} else { 	    f = whatblock(pc); 	    if (f == nil) { 		panic("no block for addr 0x%x", pc); 	    } 	}      *      * Now start with curfunc.      */
+comment|/* start with current function */
 name|p
 operator|=
 name|curfunc
@@ -5344,6 +5350,12 @@ operator|->
 name|class
 operator|!=
 name|TAG
+name|and
+name|t
+operator|->
+name|class
+operator|!=
+name|MODULE
 name|endfind
 argument_list|(
 name|t
