@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/ncvs/src/usr.bin/ee/ee.c,v 1.3 1995/08/30 17:42:28 ache Exp $  |  */
+comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/ncvs/src/usr.bin/ee/ee.c,v 1.4 1995/10/22 14:10:08 jkh Exp $  |  */
 end_comment
 
 begin_decl_stmt
@@ -33,7 +33,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.2.4  $Revision: 1.3 $"
+literal|"@(#) ee, version 1.2.4  $Revision: 1.4 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5666,9 +5666,11 @@ name|waddch
 argument_list|(
 name|window
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|character
-operator|&
-literal|0xFF
 argument_list|)
 expr_stmt|;
 return|return
@@ -5684,6 +5686,10 @@ name|waddch
 argument_list|(
 name|window
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|character
 argument_list|)
 expr_stmt|;
@@ -9944,13 +9950,6 @@ name|g_pos
 operator|=
 literal|0
 expr_stmt|;
-name|keypad
-argument_list|(
-name|com_win
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|esc_flag
@@ -9989,6 +9988,12 @@ operator|(
 name|in
 operator|==
 literal|127
+operator|)
+operator|||
+operator|(
+name|in
+operator|==
+name|KEY_BACKSPACE
 operator|)
 operator|)
 operator|&&
@@ -10101,6 +10106,12 @@ operator|(
 name|in
 operator|!=
 literal|'\r'
+operator|)
+operator|&&
+operator|(
+name|in
+operator|<
+literal|256
 operator|)
 condition|)
 block|{
@@ -10241,13 +10252,6 @@ literal|'\r'
 operator|)
 condition|)
 do|;
-name|keypad
-argument_list|(
-name|com_win
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
 operator|*
 name|nam_str
 operator|=
