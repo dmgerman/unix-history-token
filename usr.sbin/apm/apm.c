@@ -1422,6 +1422,14 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|tm
 operator|=
 operator|*
@@ -1451,6 +1459,13 @@ argument_list|(
 literal|"Resume timer: %s\n"
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"Resume timer: unknown\n"
 argument_list|)
 expr_stmt|;
 block|}
