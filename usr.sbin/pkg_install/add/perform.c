@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.4 1993/09/18 03:38:48 jkh Exp $"
+literal|"$Id: perform.c,v 1.5 1993/10/08 01:19:28 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,7 +473,9 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
 name|PkgName
@@ -533,9 +535,9 @@ argument_list|,
 name|pkg_fullname
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+return|return
+literal|1
+return|;
 block|}
 block|}
 if|if
