@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)route.h	7.4 (Berkeley) 6/27/88  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)route.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -94,6 +94,16 @@ modifier|*
 name|rt_ifa
 decl_stmt|;
 comment|/* the answer: interface to use */
+name|struct
+name|sockaddr
+modifier|*
+name|rt_genmask
+decl_stmt|;
+comment|/* for generation of cloned routes */
+name|caddr_t
+name|rt_llinfo
+decl_stmt|;
+comment|/* pointer to link level info cache */
 block|}
 struct|;
 end_struct
@@ -217,6 +227,28 @@ end_define
 
 begin_comment
 comment|/* subnet mask present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_CLONING
+value|0x100
+end_define
+
+begin_comment
+comment|/* generate new routes on use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_XRESOLVE
+value|0x200
+end_define
+
+begin_comment
+comment|/* external daemon resolves name */
 end_comment
 
 begin_comment
@@ -493,6 +525,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTM_RESOLVE
+value|0xb
+end_define
+
+begin_comment
+comment|/* req to resolve dst to LL addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTV_MTU
 value|0x1
 end_define
@@ -610,7 +653,7 @@ parameter_list|(
 name|rt
 parameter_list|)
 define|\
-value|if ((rt)->rt_refcnt == 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
+value|if ((rt)->rt_refcnt<= 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
 end_define
 
 begin_ifdef
