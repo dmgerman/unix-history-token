@@ -1279,11 +1279,11 @@ name|bus_space_barrier
 argument_list|(
 name|sc
 operator|->
-name|sh
+name|st
 argument_list|,
 name|sc
 operator|->
-name|st
+name|sh
 argument_list|,
 literal|0
 argument_list|,
