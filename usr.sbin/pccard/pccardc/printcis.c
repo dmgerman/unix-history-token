@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: printcis.c,v 1.8 1997/10/06 11:35:55 charnier Exp $"
+literal|"$Id: printcis.c,v 1.9 1997/11/18 21:08:07 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3199,6 +3199,14 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0xff
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"\tAddit. info = [%s]"
@@ -3213,11 +3221,32 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|0xff
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|",[%s]\n"
+literal|",[%s]"
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|++
+condition|)
+empty_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
