@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.5 (Berkeley) 82/05/04"
+literal|"@(#)input.c	1.6 (Berkeley) 82/05/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,26 +241,6 @@ expr_stmt|;
 if|if
 condition|(
 literal|0
-ifndef|#
-directive|ifndef
-name|ERNIE
-operator|||
-operator|(
-name|piflag
-operator|&&
-operator|(
-operator|(
-name|errorclass
-operator|=
-name|pi
-argument_list|()
-operator|)
-operator|!=
-name|C_UNKNOWN
-operator|)
-operator|)
-endif|#
-directive|endif
 operator|||
 operator|(
 operator|(
@@ -371,9 +351,6 @@ operator|)
 operator|!=
 name|C_UNKNOWN
 operator|)
-ifdef|#
-directive|ifdef
-name|ERNIE
 operator|||
 operator|(
 operator|(
@@ -396,8 +373,6 @@ operator|)
 operator|!=
 name|C_UNKNOWN
 operator|)
-endif|#
-directive|endif
 condition|)
 empty_stmt|;
 else|else

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.3 (Berkeley) %G%"
+literal|"@(#)main.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,46 +373,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|ERNIE
-case|case
-literal|'p'
-case|:
-operator|*
-name|cp
-operator|--
-operator|=
-literal|0
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|1
-condition|)
-block|{
-name|currentfilename
-operator|=
-name|argv
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|piflag
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-break|break;
-endif|#
-directive|endif
 case|case
 literal|'t'
 case|:
