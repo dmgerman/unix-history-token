@@ -291,12 +291,28 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Invalid character, so fail */
+if|if
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|c
+argument_list|)
+condition|)
+block|{
+name|gotend
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+else|else
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* Invalid character, so fail */
 block|}
 block|}
 comment|/* 	 * Concoct the address according to 	 * the number of parts specified. 	 */
