@@ -1015,7 +1015,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|de
@@ -1107,7 +1107,7 @@ name|dd
 operator|->
 name|de_mode
 operator|=
-literal|0755
+literal|0555
 expr_stmt|;
 name|dd
 operator|->
@@ -1782,7 +1782,7 @@ name|de
 operator|->
 name|de_mode
 operator|=
-literal|0666
+literal|0755
 expr_stmt|;
 name|de
 operator|->
