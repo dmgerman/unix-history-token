@@ -647,6 +647,12 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|sc
+operator|->
+name|an_dev
+operator|=
+name|dev
+expr_stmt|;
 name|error
 operator|=
 name|an_attach

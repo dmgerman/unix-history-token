@@ -1156,12 +1156,21 @@ name|an_rss_thresh
 decl_stmt|;
 comment|/* 0x76 */
 name|u_int16_t
-name|an_rsvd6
-index|[
-literal|4
-index|]
+name|an_modulation_type
 decl_stmt|;
 comment|/* 0x78 */
+name|u_int16_t
+name|an_short_preamble
+decl_stmt|;
+comment|/* 0x7A */
+name|u_int16_t
+name|an_home_product
+decl_stmt|;
+comment|/* 0x7C */
+name|u_int16_t
+name|an_rsvd6
+decl_stmt|;
+comment|/* 0x7E */
 comment|/* Aironet extensions. */
 name|u_int8_t
 name|an_nodename
@@ -1390,8 +1399,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AN_AUTHTYPE_EXCLUDE_UNENCRYPTED
-value|0x0004
+name|AN_AUTHTYPE_PRIVACY_IN_USE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_AUTHTYPE_ALLOW_UNENCRYPTED
+value|0x0200
 end_define
 
 begin_define
@@ -1760,6 +1776,20 @@ name|AN_TXENCAP_80211
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|AN_RID_WEP_TEMP
+value|0xFF15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RID_WEP_PERM
+value|0xFF16
+end_define
+
 begin_comment
 comment|/*  * Actual config, same structure as general config (read only).  */
 end_comment
@@ -1913,6 +1943,10 @@ name|u_int16_t
 name|an_bootblockrev
 decl_stmt|;
 comment|/* 0x7E */
+name|u_int16_t
+name|an_req_hw_support
+decl_stmt|;
+comment|/* 0x80 */
 block|}
 struct|;
 end_struct
@@ -2013,7 +2047,7 @@ name|an_errcode
 decl_stmt|;
 comment|/* 0x0A */
 name|u_int16_t
-name|an_cur_signal_quality
+name|an_cur_signal_strength
 decl_stmt|;
 comment|/* 0x0C */
 name|u_int16_t
@@ -2103,12 +2137,50 @@ name|an_accumulated_arl
 decl_stmt|;
 comment|/* 0x6A */
 name|u_int16_t
-name|an_rsvd0
-index|[
-literal|10
-index|]
+name|an_cur_signal_quality
 decl_stmt|;
 comment|/* 0x6C */
+name|u_int16_t
+name|an_current_tx_rate
+decl_stmt|;
+comment|/* 0x6E */
+name|u_int16_t
+name|an_ap_device
+decl_stmt|;
+comment|/* 0x70 */
+name|u_int16_t
+name|an_normalized_rssi
+decl_stmt|;
+comment|/* 0x72 */
+name|u_int16_t
+name|an_short_pre_in_use
+decl_stmt|;
+comment|/* 0x74 */
+name|u_int8_t
+name|an_ap_ip_addr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 0x76 */
+name|u_int16_t
+name|an_max_noise_prev_sec
+decl_stmt|;
+comment|/* 0x7A */
+name|u_int16_t
+name|an_avg_noise_prev_min
+decl_stmt|;
+comment|/* 0x7C */
+name|u_int16_t
+name|an_max_noise_prev_min
+decl_stmt|;
+comment|/* 0x7E */
+name|u_int16_t
+name|an_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2641,6 +2713,74 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Volatile WEP Key  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_WEP_VOLATILE
+value|0xFF15
+end_define
+
+begin_comment
+comment|/* Volatile WEP Key */
+end_comment
+
+begin_struct
+struct|struct
+name|an_ltv_wepkey
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+comment|/* 0x00 */
+name|u_int16_t
+name|an_type
+decl_stmt|;
+comment|/* 0xXX */
+name|u_int16_t
+name|an_key_index
+decl_stmt|;
+comment|/* 0x02 */
+name|u_int8_t
+name|an_mac_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 0x04 */
+name|u_int16_t
+name|an_key_len
+decl_stmt|;
+comment|/* 0x0A */
+name|u_int8_t
+name|an_key
+index|[
+literal|13
+index|]
+decl_stmt|;
+comment|/* 0x0C */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Persistent WEP Key  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_WEP_PERSISTENT
+value|0xFF16
+end_define
+
+begin_comment
+comment|/* Persistent WEP Key */
+end_comment
 
 begin_comment
 comment|/*  * Receive frame structure.  */
@@ -3245,6 +3385,14 @@ name|struct
 name|an_ltv_aplist
 name|an_aplist
 decl_stmt|;
+name|struct
+name|an_ltv_key
+name|an_temp_keys
+decl_stmt|;
+name|struct
+name|an_ltv_key
+name|an_perm_keys
+decl_stmt|;
 name|int
 name|an_tx_rate
 decl_stmt|;
@@ -3299,6 +3447,9 @@ directive|endif
 name|struct
 name|callout_handle
 name|an_stat_ch
+decl_stmt|;
+name|device_t
+name|an_dev
 decl_stmt|;
 block|}
 struct|;
