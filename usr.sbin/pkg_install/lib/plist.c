@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.17.2.2 1997/06/30 03:15:22 jkh Exp $"
+literal|"$Id: plist.c,v 1.17.2.3 1997/07/01 06:14:15 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1841,19 +1841,10 @@ argument_list|,
 name|nukedirs
 argument_list|)
 condition|)
-block|{
-name|whinge
-argument_list|(
-literal|"Unable to completely remove file '%s'"
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
 name|fail
 operator|=
 name|FAIL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|preserve
