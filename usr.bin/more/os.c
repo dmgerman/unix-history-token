@@ -87,6 +87,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|volatile
 name|int
 name|reading
 decl_stmt|;
@@ -476,6 +477,10 @@ end_macro
 
 begin_block
 block|{
+name|reading
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)

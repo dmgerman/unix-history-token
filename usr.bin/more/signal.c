@@ -137,6 +137,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|reading
 decl_stmt|;
