@@ -2549,10 +2549,6 @@ begin_comment
 comment|/*  * Invalidate all entries to a particular vnode.  *  * Remove all entries in the namecache relating to this vnode and  * change the v_id.  We take the v_id from a global counter, since  * it becomes a handy sequence number in crash-dumps that way.  * No valid vnode will ever have (v_id == 0).  *  * XXX: Only time and the size of v_id prevents this from failing:  * XXX: In theory we should hunt down all (struct vnode*, v_id)  * XXX: soft references and nuke them, at least on the global  * XXX: v_id wraparound.  The period of resistance can be extended  * XXX: by incrementing each vnodes v_id individually instead of  * XXX: using the global v_id.  */
 end_comment
 
-begin_comment
-comment|/*  * XXX This is sometimes called when a vnode may still be re-used, in which  * case v_dd may be invalid.  Need to look this up.  */
-end_comment
-
 begin_function
 name|void
 name|cache_purge
@@ -2565,6 +2561,11 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|struct
+name|namecache
+modifier|*
+name|ncp
+decl_stmt|;
 specifier|static
 name|u_long
 name|nextid
@@ -2583,8 +2584,14 @@ operator|->
 name|v_cache_src
 argument_list|)
 condition|)
-name|cache_zap
-argument_list|(
+block|{
+name|struct
+name|vnode
+modifier|*
+name|cvp
+decl_stmt|;
+name|ncp
+operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -2592,8 +2599,44 @@ name|vp
 operator|->
 name|v_cache_src
 argument_list|)
+expr_stmt|;
+comment|/* 		 * We must reset v_dd of any children so they don't 		 * continue to point to us. 		 */
+if|if
+condition|(
+operator|(
+name|cvp
+operator|=
+name|ncp
+operator|->
+name|nc_vp
+operator|)
+operator|&&
+name|cvp
+operator|->
+name|v_dd
+operator|==
+name|vp
+condition|)
+block|{
+name|cvp
+operator|->
+name|v_dd
+operator|=
+name|cvp
+expr_stmt|;
+name|cvp
+operator|->
+name|v_ddid
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|cache_zap
+argument_list|(
+name|ncp
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 operator|!
