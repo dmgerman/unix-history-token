@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.39 2000/06/01 14:29:00 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.40 2000/10/10 12:37:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -971,7 +971,7 @@ name|bEndpointAddress
 expr_stmt|;
 name|desc
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|err
 operator|=
@@ -1459,6 +1459,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_repdesc
+condition|)
 name|free
 argument_list|(
 name|sc
