@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.12	82/03/31	*/
+comment|/*	trap.c	4.13	82/07/12	*/
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ directive|include
 file|"../h/mtpr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/acct.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -101,6 +107,49 @@ literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|trap_type
+index|[]
+init|=
+block|{
+literal|"Reserved addressing mode"
+block|,
+literal|"Privileged instruction"
+block|,
+literal|"Reserved operand"
+block|,
+literal|"Breakpoint"
+block|,
+literal|"Xfc trap"
+block|,
+literal|"Syscall trap"
+block|,
+literal|"Arithmetic fault"
+block|,
+literal|"Ast trap"
+block|,
+literal|"Segmentation fault"
+block|,
+literal|"Protection fault"
+block|,
+literal|"Trace trap"
+block|,
+literal|"Compatibility mode trap"
+block|,
+comment|/**					these never get to "default" case 	"Page fault", 	"Page table fault", **/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TRAP_TYPES
+value|(sizeof trap_type / sizeof trap_type[0])
+end_define
 
 begin_comment
 comment|/*  * Called from the trap handler when a processor trap occurs.  */
@@ -207,6 +256,28 @@ argument_list|,
 name|code
 argument_list|,
 name|pc
+argument_list|)
+expr_stmt|;
+name|type
+operator|&=
+operator|~
+name|USER
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|type
+operator|<
+name|TRAP_TYPES
+condition|)
+name|panic
+argument_list|(
+name|trap_type
+index|[
+name|type
+index|]
 argument_list|)
 expr_stmt|;
 name|panic
@@ -452,6 +523,12 @@ operator|+
 name|USER
 case|:
 comment|/* compatibility mode fault */
+name|u
+operator|.
+name|u_acflag
+operator||=
+name|ACOMPAT
+expr_stmt|;
 name|u
 operator|.
 name|u_code
@@ -1055,7 +1132,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nonexistent system call-- set fatal error code.  */
+comment|/*  * nonexistent system call-- signal process (may want to handle it)  * flag error if process won't see signal immediately  * Q: should we do that all the time ??  */
 end_comment
 
 begin_macro
@@ -1065,11 +1142,40 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_signal
+index|[
+name|SIGSYS
+index|]
+operator|==
+name|SIG_IGN
+operator|||
+name|u
+operator|.
+name|u_signal
+index|[
+name|SIGSYS
+index|]
+operator|==
+name|SIG_HOLD
+condition|)
 name|u
 operator|.
 name|u_error
 operator|=
-literal|100
+name|EINVAL
+expr_stmt|;
+name|psignal
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|SIGSYS
+argument_list|)
 expr_stmt|;
 block|}
 end_block
