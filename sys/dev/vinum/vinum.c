@@ -711,11 +711,26 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|drives_used
+init|=
+name|vinum_conf
+operator|.
+name|drives_used
+decl_stmt|;
+if|if
+condition|(
+name|DRIVE
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|cleardrive
 condition|)
 block|{
+comment|/* remove the vinum config */
 for|for
 control|(
 name|i
@@ -724,8 +739,6 @@ literal|0
 init|;
 name|i
 operator|<
-name|vinum_conf
-operator|.
 name|drives_used
 condition|;
 name|i
@@ -741,13 +754,6 @@ block|}
 else|else
 block|{
 comment|/* keep the config */
-if|if
-condition|(
-name|DRIVE
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -756,8 +762,6 @@ literal|0
 init|;
 name|i
 operator|<
-name|vinum_conf
-operator|.
 name|drives_used
 condition|;
 name|i
@@ -773,12 +777,12 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* close files and things */
+block|}
 name|Free
 argument_list|(
 name|DRIVE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 while|while
 condition|(
@@ -1412,12 +1416,9 @@ block|{
 comment|/* yes, can do */
 if|if
 condition|(
-name|Volno
-argument_list|(
 name|dev
-argument_list|)
 operator|==
-literal|1
+name|VINUM_DAEMON_DEV
 condition|)
 comment|/* daemon device */
 name|vinum_conf
@@ -1427,7 +1428,13 @@ operator||=
 name|VF_DAEMONOPEN
 expr_stmt|;
 comment|/* we're open */
-else|else
+elseif|else
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_SUPERDEV
+condition|)
 name|vinum_conf
 operator|.
 name|flags
@@ -1435,6 +1442,12 @@ operator||=
 name|VF_OPEN
 expr_stmt|;
 comment|/* we're open */
+else|else
+name|error
+operator|=
+name|ENODEV
+expr_stmt|;
+comment|/* nothing, maybe a debug mismatch */
 block|}
 return|return
 name|error
@@ -1691,12 +1704,9 @@ case|:
 comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
 if|if
 condition|(
-name|Volno
-argument_list|(
 name|dev
-argument_list|)
 operator|==
-literal|0
+name|VINUM_SUPERDEV
 condition|)
 comment|/* normal superdev */
 name|vinum_conf
@@ -1707,8 +1717,15 @@ operator|~
 name|VF_OPEN
 expr_stmt|;
 comment|/* no longer open */
-else|else
+elseif|else
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_DAEMON_DEV
+condition|)
 block|{
+comment|/* the daemon device */
 name|vinum_conf
 operator|.
 name|flags
