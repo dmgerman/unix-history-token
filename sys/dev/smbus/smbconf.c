@@ -385,6 +385,8 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* first, ask the underlying layers if the request is ok */
+do|do
+block|{
 name|error
 operator|=
 name|SMBUS_CALLBACK
@@ -403,6 +405,27 @@ operator|&
 name|how
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|error
+operator|=
+name|smbus_poll
+argument_list|(
+name|sc
+argument_list|,
+name|how
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|error
+operator|==
+name|EWOULDBLOCK
+condition|)
+do|;
 while|while
 condition|(
 operator|!

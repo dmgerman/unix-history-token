@@ -559,7 +559,7 @@ block|{
 comment|/* not supported */
 return|return
 operator|(
-name|ENODEV
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -585,7 +585,7 @@ block|{
 comment|/* not supported */
 return|return
 operator|(
-name|ENODEV
+name|EINVAL
 operator|)
 return|;
 block|}

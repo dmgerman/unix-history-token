@@ -745,7 +745,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: unknown class!\n"
+literal|"%s: unknown class!"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
