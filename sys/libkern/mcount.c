@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mcount.c,v 1.6 1995/12/30 07:24:13 bde Exp $"
+literal|"$Id: mcount.c,v 1.7 1996/05/02 14:20:33 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,15 +208,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KERNEL
-specifier|register
-name|int
-name|s
-decl_stmt|;
-comment|/* XXX */
-name|u_long
-name|save_eflags
-decl_stmt|;
-comment|/* XXX */
+name|MCOUNT_DECL
+argument_list|(
+argument|s
+argument_list|)
 endif|#
 directive|endif
 name|p
@@ -244,6 +239,9 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 name|MCOUNT_ENTER
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -840,6 +838,9 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 name|MCOUNT_EXIT
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -864,6 +865,9 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 name|MCOUNT_EXIT
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
