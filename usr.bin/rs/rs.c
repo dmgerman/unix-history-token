@@ -1276,6 +1276,7 @@ name|ocols
 operator|==
 literal|0
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"display width %d is less than column width %d"
@@ -1285,6 +1286,11 @@ argument_list|,
 name|colw
 argument_list|)
 expr_stmt|;
+name|ocols
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ocols
