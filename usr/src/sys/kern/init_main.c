@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.33	82/07/22	*/
+comment|/*	init_main.c	4.34	82/08/22	*/
 end_comment
 
 begin_include
@@ -436,6 +436,11 @@ name|rootdev
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
