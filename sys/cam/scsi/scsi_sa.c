@@ -307,22 +307,10 @@ name|sa_state
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|SA_CCB_BUFFER_IO
-block|,
-name|SA_CCB_WAITING
-block|}
-name|sa_ccb_types
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
-name|ccb_type
+name|ccb_pflags
 value|ppriv_field0
 end_define
 
@@ -331,6 +319,57 @@ define|#
 directive|define
 name|ccb_bp
 value|ppriv_ptr1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_CCB_BUFFER_IO
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_CCB_WAITING
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_CCB_TYPEMASK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_POSITION_UPDATED
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|Set_CCB_Type
+parameter_list|(
+name|x
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|x->ccb_h.ccb_pflags&= ~SA_CCB_TYPEMASK;	\ 	x->ccb_h.ccb_pflags |= type
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCB_Type
+parameter_list|(
+name|x
+parameter_list|)
+value|(x->ccb_h.ccb_pflags& SA_CCB_TYPEMASK)
 end_define
 
 begin_typedef
@@ -512,7 +551,12 @@ comment|/* Don't try and dummy read density */
 name|SA_QUIRK_NO_MODESEL
 init|=
 literal|0x40
+block|,
 comment|/* Don't do mode select at all */
+name|SA_QUIRK_NO_CPAGE
+init|=
+literal|0x80
+comment|/* Don't use DEVICE COMPRESSION page */
 block|}
 name|sa_quirks
 typedef|;
@@ -962,6 +1006,12 @@ block|,
 literal|1024
 block|}
 block|,
+if|#
+directive|if
+literal|0
+block|{ 		{ T_SEQUENTIAL, SIP_MEDIA_REMOVABLE, "HP", 		  "C15*", "*"}, SA_QUIRK_VARIABLE|SA_QUIRK_NO_CPAGE, 0, 	},
+endif|#
+directive|endif
 block|{
 block|{
 name|T_SEQUENTIAL
@@ -6266,13 +6316,12 @@ literal|"queuing for immediate ccb\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|Set_CCB_Type
+argument_list|(
 name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|ccb_type
-operator|=
+argument_list|,
 name|SA_CCB_WAITING
+argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -6763,9 +6812,17 @@ name|start_ccb
 operator|->
 name|ccb_h
 operator|.
-name|ccb_type
-operator|=
+name|ccb_pflags
+operator|&=
+operator|~
+name|SA_POSITION_UPDATED
+expr_stmt|;
+name|Set_CCB_Type
+argument_list|(
+name|start_ccb
+argument_list|,
 name|SA_CCB_BUFFER_IO
+argument_list|)
 expr_stmt|;
 name|start_ccb
 operator|->
@@ -6878,11 +6935,10 @@ name|csio
 expr_stmt|;
 switch|switch
 condition|(
+name|CCB_Type
+argument_list|(
 name|csio
-operator|->
-name|ccb_h
-operator|.
-name|ccb_type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -7128,6 +7184,18 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|ccb_pflags
+operator|&
+name|SA_POSITION_UPDATED
+operator|)
+operator|&&
+operator|(
 name|softc
 operator|->
 name|blkno
@@ -7137,6 +7205,7 @@ name|daddr_t
 operator|)
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 if|if
@@ -9552,11 +9621,10 @@ block|}
 block|}
 if|if
 condition|(
+name|CCB_Type
+argument_list|(
 name|csio
-operator|->
-name|ccb_h
-operator|.
-name|ccb_type
+argument_list|)
 operator|==
 name|SA_CCB_BUFFER_IO
 condition|)
@@ -9670,7 +9738,8 @@ argument_list|,
 name|CAM_DEBUG_INFO
 argument_list|,
 operator|(
-literal|"Key 0x%x ASC/ASCQ 		    0x%x 0x%x flags 0x%x resid %d dxfer_len %d\n"
+literal|"Key 0x%x ASC/ASCQ "
+literal|"0x%x 0x%x flags 0x%x resid %d dxfer_len %d\n"
 operator|,
 name|sense_key
 operator|,
@@ -9734,11 +9803,10 @@ operator|!=
 name|CAM_SCSI_STATUS_ERROR
 operator|||
 operator|(
+name|CCB_Type
+argument_list|(
 name|csio
-operator|->
-name|ccb_h
-operator|.
-name|ccb_type
+argument_list|)
 operator|==
 name|SA_CCB_WAITING
 operator|)
@@ -9859,6 +9927,14 @@ operator|->
 name|blkno
 operator|=
 literal|0
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|ccb_pflags
+operator||=
+name|SA_POSITION_UPDATED
 expr_stmt|;
 block|}
 block|}
@@ -10000,6 +10076,14 @@ name|blkno
 operator|=
 literal|0
 expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|ccb_pflags
+operator||=
+name|SA_POSITION_UPDATED
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -10127,6 +10211,14 @@ name|softc
 operator|->
 name|blkno
 operator|++
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|ccb_pflags
+operator||=
+name|SA_POSITION_UPDATED
 expr_stmt|;
 block|}
 block|}
@@ -10286,6 +10378,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|SA_QUIRK_NO_CPAGE
+condition|)
+name|cpage
+operator|=
+name|SA_DEVICE_CONFIGURATION_PAGE
+expr_stmt|;
+else|else
 name|cpage
 operator|=
 name|SA_DATA_COMPRESSION_PAGE
@@ -12955,14 +13060,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * We have to try and flush any buffered writes here if we were writing. 	 * 	 * The SCSI specification is vague enough about situations like 	 * different sized blocks in a tape drive buffer as to make one 	 * wary about trying to figure out the actual block location value 	 * if data is in the tape drive buffer. 	 */
+comment|/* 	 * We try and flush any buffered writes here if we were writing 	 * and we're trying to get hardware block position. It eats 	 * up performance substantially, but I'm wary of drive firmware. 	 * 	 * I think that *logical* block position is probably okay- 	 * but hardware block position might have to wait for data 	 * to hit media to be valid. Caveat Emptor. 	 */
 if|if
 condition|(
+name|hard
+operator|&&
+operator|(
 name|softc
 operator|->
 name|flags
 operator|&
 name|SA_FLAG_TAPE_WRITTEN
+operator|)
 condition|)
 block|{
 name|error
@@ -13107,12 +13216,6 @@ comment|/* nothing is certain */
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-block|u_int32_t firstblk, lastblk, nbufblk, nbufbyte;  			firstblk = scsi_4btoul(loc.firstblk); 			lastblk = scsi_4btoul(loc.lastblk); 			nbufblk = scsi_4btoul(loc.nbufblk); 			nbufbyte = scsi_4btoul(loc.nbufbyte); 			if (lastblk || nbufblk || nbufbyte) { 				xpt_print_path(periph->path); 				printf("rdpos firstblk 0x%x lastblk 0x%x bufblk" 				    " 0x%x bufbyte 0x%x\n", firstblk, lastblk, 				    nbufblk, nbufbyte); 			} 			*blkptr = firstblk;
-else|#
-directive|else
 operator|*
 name|blkptr
 operator|=
@@ -13123,8 +13226,6 @@ operator|.
 name|firstblk
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 name|xpt_release_ccb
