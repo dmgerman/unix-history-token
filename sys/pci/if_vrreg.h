@@ -2306,6 +2306,13 @@ name|VIA_DEVICEID_RHINE_II
 value|0x6100
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIA_DEVICEID_RHINE_II_2
+value|0x3065
+end_define
+
 begin_comment
 comment|/*  * Delta Electronics device ID.  */
 end_comment

@@ -252,6 +252,14 @@ literal|"VIA VT86C100A Rhine II 10/100BaseTX"
 block|}
 block|,
 block|{
+name|VIA_VENDORID
+block|,
+name|VIA_DEVICEID_RHINE_II_2
+block|,
+literal|"VIA VT6102 Rhine II 10/100BaseTX"
+block|}
+block|,
+block|{
 name|DELTA_VENDORID
 block|,
 name|DELTA_DEVICEID_RHINE_II
