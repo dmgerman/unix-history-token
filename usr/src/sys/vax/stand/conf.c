@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.1	%G%	*/
+comment|/*	conf.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -235,6 +235,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|tmstragety
+argument_list|()
+decl_stmt|,
+name|tmopen
+argument_list|()
+decl_stmt|,
+name|tmclose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|devsw
 name|devsw
@@ -264,6 +277,14 @@ block|,
 name|upopen
 block|,
 name|nullsys
+block|,
+literal|"tm"
+block|,
+name|tmstragety
+block|,
+name|tmopen
+block|,
+name|tmclose
 block|,
 literal|0
 block|,
