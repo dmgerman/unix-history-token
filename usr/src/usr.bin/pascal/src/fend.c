@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.18 %G%"
+literal|"@(#)fend.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2788,9 +2788,9 @@ name|eecookiep
 operator|->
 name|nlp
 operator|->
-name|nl_value
+name|value
 index|[
-name|ENTLOC
+name|NL_ENTLOC
 index|]
 decl_stmt|;
 name|int
