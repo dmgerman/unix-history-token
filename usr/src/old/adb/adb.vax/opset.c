@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c 4.3 %G%"
+literal|"@(#)opset.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* two level index by opcode into insttab */
+comment|/* two level 1-based index by opcode into insttab */
 end_comment
 
 begin_function
@@ -535,9 +535,13 @@ operator|->
 name|popcode
 index|]
 operator|=
+operator|(
 name|p
 operator|-
 name|insttab
+operator|)
+operator|+
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -894,6 +898,8 @@ index|]
 index|[
 name|ins
 index|]
+operator|-
+literal|1
 index|]
 expr_stmt|;
 name|printf
