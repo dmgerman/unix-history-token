@@ -444,12 +444,12 @@ begin_struct
 struct|struct
 name|kse
 block|{
-name|struct
-name|kse_mailbox
-name|k_mbx
-decl_stmt|;
-comment|/* kernel kse mailbox */
 comment|/* -- location and order specific items for gdb -- */
+name|struct
+name|kcb
+modifier|*
+name|k_kcb
+decl_stmt|;
 name|struct
 name|pthread
 modifier|*
@@ -483,11 +483,6 @@ argument_list|)
 name|k_kgqe
 expr_stmt|;
 comment|/* KSEG's KSE list entry */
-name|struct
-name|ksd
-name|k_ksd
-decl_stmt|;
-comment|/* KSE specific data */
 comment|/* 	 * Items that are only modified by the kse, or that otherwise 	 * don't need to be locked when accessed 	 */
 name|struct
 name|lock
@@ -823,7 +818,7 @@ name|KSE_WAKEUP
 parameter_list|(
 name|kse
 parameter_list|)
-value|kse_wakeup(&(kse)->k_mbx)
+value|kse_wakeup(&(kse)->k_kcb->kcb_kmbx)
 end_define
 
 begin_define
@@ -1366,7 +1361,7 @@ parameter_list|,
 name|tsp
 parameter_list|)
 define|\
-value|do {							\ 	*tsp = (curkse)->k_mbx.km_timeofday;		\ 	if ((tsp)->tv_sec == 0)				\ 		clock_gettime(CLOCK_REALTIME, tsp);	\ } while (0)
+value|do {							\ 	*tsp = (curkse)->k_kcb->kcb_kmbx.km_timeofday;	\ 	if ((tsp)->tv_sec == 0)				\ 		clock_gettime(CLOCK_REALTIME, tsp);	\ } while (0)
 end_define
 
 begin_struct
@@ -1597,14 +1592,10 @@ name|pthread
 block|{
 comment|/* 	 * Thread mailbox is first so it cal be aligned properly. 	 */
 name|struct
-name|kse_thr_mailbox
-name|tmbx
-decl_stmt|;
-name|void
+name|tcb
 modifier|*
-name|alloc_addr
+name|tcb
 decl_stmt|;
-comment|/* real address (unaligned) */
 comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
 define|#
 directive|define
@@ -2669,39 +2660,6 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|pthread
-modifier|*
-name|_get_curthread
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|kse
-modifier|*
-name|_get_curkse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_set_curkse
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
 name|kse
 modifier|*
 name|_kse_alloc
@@ -3250,37 +3208,6 @@ name|_thr_alloc
 parameter_list|(
 name|struct
 name|pthread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_thread_enter_uts
-parameter_list|(
-name|struct
-name|kse_thr_mailbox
-modifier|*
-parameter_list|,
-name|struct
-name|kse_mailbox
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_thread_switch
-parameter_list|(
-name|struct
-name|kse_thr_mailbox
-modifier|*
-parameter_list|,
-name|struct
-name|kse_thr_mailbox
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

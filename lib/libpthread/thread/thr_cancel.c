@@ -447,7 +447,9 @@ argument_list|(
 operator|&
 name|pthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|,
 name|KSE_INTR_INTERRUPT
 argument_list|,

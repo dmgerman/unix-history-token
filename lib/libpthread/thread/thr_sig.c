@@ -63,12 +63,6 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pthread_md.h"
-end_include
-
 begin_comment
 comment|/* Prototypes: */
 end_comment
@@ -531,7 +525,9 @@ literal|0
 expr_stmt|;
 name|curkse
 operator|->
-name|k_mbx
+name|k_kcb
+operator|->
+name|kcb_kmbx
 operator|.
 name|km_flags
 operator|=
@@ -549,7 +545,9 @@ argument_list|)
 expr_stmt|;
 name|curkse
 operator|->
-name|k_mbx
+name|k_kcb
+operator|->
+name|kcb_kmbx
 operator|.
 name|km_flags
 operator|=
@@ -559,7 +557,9 @@ name|set
 operator|=
 name|curkse
 operator|->
-name|k_mbx
+name|k_kcb
+operator|->
+name|kcb_kmbx
 operator|.
 name|km_sigscaught
 expr_stmt|;
@@ -1250,7 +1250,9 @@ argument_list|(
 operator|&
 name|curkse
 operator|->
-name|k_mbx
+name|k_kcb
+operator|->
+name|kcb_kmbx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1387,7 +1389,9 @@ argument_list|(
 operator|&
 name|curthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|)
 expr_stmt|;
 comment|/* Now invoke real handler */
@@ -1568,7 +1572,9 @@ argument_list|(
 operator|&
 name|curthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|)
 expr_stmt|;
 name|DBG_MSG
@@ -1814,7 +1820,9 @@ argument_list|(
 operator|&
 name|curthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We are processing buffered signals, synchronize working 	 * signal mask into kernel. 	 */
@@ -3073,7 +3081,9 @@ argument_list|(
 operator|&
 name|curthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -3627,7 +3637,9 @@ argument_list|(
 operator|&
 name|pthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|,
 name|restart
 condition|?
@@ -4121,7 +4133,9 @@ argument_list|(
 operator|&
 name|pthread
 operator|->
-name|tmbx
+name|tcb
+operator|->
+name|tcb_tmbx
 argument_list|,
 name|KSE_INTR_SENDSIG
 argument_list|,

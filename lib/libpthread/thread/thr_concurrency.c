@@ -393,7 +393,9 @@ argument_list|(
 operator|&
 name|newkse
 operator|->
-name|k_mbx
+name|k_kcb
+operator|->
+name|kcb_kmbx
 argument_list|,
 literal|0
 argument_list|)
