@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_bigkey.c	5.5 (Berkeley) %G%"
+literal|"@(#)hash_bigkey.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,23 +38,13 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  PACKAGE: hash  DESCRIPTION:  	Big key/data handling for the hashing package.  ROUTINES:      External 	__big_keydata 	__big_split 	__big_insert 	__big_return 	__big_delete 	__find_last_page     Internal 	collect_key 	collect_data ******************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Includes */
+comment|/*  * PACKAGE: hash  * DESCRIPTION:  *	Big key/data handling for the hashing package.  *  * ROUTINES:  * External  *	__big_keydata  *	__big_split  *	__big_insert  *	__big_return  *	__big_delete  *	__find_last_page  * Internal  *	collect_key  *	collect_data  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_include
@@ -87,6 +77,23 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -99,154 +106,53 @@ directive|include
 file|"page.h"
 end_include
 
-begin_comment
-comment|/* Externals */
-end_comment
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_comment
-comment|/* buf.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|BUFHEAD
-modifier|*
-name|__get_buf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* dynahash.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|call_hash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* page.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|BUFHEAD
-modifier|*
-name|__add_ovflpage
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* My externals */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_keydata
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_split
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_insert
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_return
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_delete
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_short
-name|__find_last_page
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__find_bigpair
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* My internals */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|collect_key
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
+name|__P
+argument_list|(
+operator|(
+name|BUFHEAD
+operator|*
+operator|,
 name|int
-name|collect_data
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HASH_STATISTICS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|hash_accesses
-decl_stmt|,
-name|hash_collisions
-decl_stmt|,
-name|hash_expansions
-decl_stmt|,
-name|hash_overflows
+operator|,
+name|DBT
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|int
+name|collect_data
+name|__P
+argument_list|(
+operator|(
+name|BUFHEAD
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* Big_insert  You need to do an insert and the key/data pair is too big 0 ==> OK -1 ==> ERROR */
+comment|/*  * Big_insert  *  * You need to do an insert and the key/data pair is too big  *  * Returns:  * 0 ==> OK  *-1 ==> ERROR  */
 end_comment
 
 begin_function
@@ -264,6 +170,7 @@ name|BUFHEAD
 modifier|*
 name|bufp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
@@ -275,40 +182,17 @@ end_function
 
 begin_block
 block|{
-name|char
-modifier|*
-name|cp
-init|=
-name|bufp
-operator|->
-name|page
-decl_stmt|;
-comment|/* Character pointer of p */
 specifier|register
 name|u_short
 modifier|*
 name|p
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|cp
-decl_stmt|;
-name|char
-modifier|*
-name|key_data
-decl_stmt|,
-modifier|*
-name|val_data
 decl_stmt|;
 name|int
 name|key_size
 decl_stmt|,
-name|val_size
-decl_stmt|;
-name|int
 name|n
+decl_stmt|,
+name|val_size
 decl_stmt|;
 name|u_short
 name|space
@@ -317,6 +201,31 @@ name|move_bytes
 decl_stmt|,
 name|off
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|key_data
+decl_stmt|,
+modifier|*
+name|val_data
+decl_stmt|;
+name|cp
+operator|=
+name|bufp
+operator|->
+name|page
+expr_stmt|;
+comment|/* Character pointer of p. */
+name|p
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|cp
+expr_stmt|;
 name|key_data
 operator|=
 operator|(
@@ -471,14 +380,12 @@ condition|(
 operator|!
 name|bufp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|n
 operator|=
 name|p
@@ -491,7 +398,6 @@ condition|(
 operator|!
 name|key_size
 condition|)
-block|{
 if|if
 condition|(
 name|FREESPACE
@@ -586,7 +492,6 @@ index|]
 operator|=
 name|FULL_KEY
 expr_stmt|;
-block|}
 name|p
 operator|=
 operator|(
@@ -643,7 +548,7 @@ argument_list|,
 name|val_size
 argument_list|)
 expr_stmt|;
-comment|/* 	    Here's the hack to make sure that if the data ends 	    on the same page as the key ends, FREESPACE is 	    at least one 	*/
+comment|/* 		 * Here's the hack to make sure that if the data ends on the 		 * same page as the key ends, FREESPACE is at least one. 		 */
 if|if
 condition|(
 name|space
@@ -656,11 +561,9 @@ name|val
 operator|->
 name|size
 condition|)
-block|{
 name|move_bytes
 operator|--
 expr_stmt|;
-block|}
 name|off
 operator|=
 name|OFFSET
@@ -755,14 +658,12 @@ condition|(
 operator|!
 name|bufp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|cp
 operator|=
 name|bufp
@@ -779,7 +680,6 @@ name|cp
 expr_stmt|;
 block|}
 else|else
-block|{
 name|p
 index|[
 name|n
@@ -787,7 +687,6 @@ index|]
 operator|=
 name|FULL_KEY_DATA
 expr_stmt|;
-block|}
 name|bufp
 operator|->
 name|flags
@@ -804,7 +703,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*     Called when bufp's page  contains a partial key (index should be 1)      All pages in the big key/data pair except bufp are freed.  We cannot     free bufp because the page pointing to it is lost and we can't     get rid of its pointer.      Returns 0 => OK 	    -1 => ERROR */
+comment|/*  * Called when bufp's page  contains a partial key (index should be 1)  *  * All pages in the big key/data pair except bufp are freed.  We cannot  * free bufp because the page pointing to it is lost and we can't get rid  * of its pointer.  *  * Returns:  * 0 => OK  *-1 => ERROR  */
 end_comment
 
 begin_function
@@ -827,25 +726,32 @@ block|{
 specifier|register
 name|BUFHEAD
 modifier|*
-name|rbufp
-init|=
-name|bufp
-decl_stmt|;
-specifier|register
-name|BUFHEAD
-modifier|*
 name|last_bfp
-init|=
-name|NULL
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
-name|cp
+name|rbufp
 decl_stmt|;
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+name|pageno
+decl_stmt|;
+name|int
+name|key_done
+decl_stmt|,
+name|n
+decl_stmt|;
+name|rbufp
+operator|=
+name|bufp
+expr_stmt|;
+name|last_bfp
+operator|=
+name|NULL
+expr_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -853,29 +759,15 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-name|u_short
-modifier|*
-name|xbp
-decl_stmt|;
-name|u_short
+expr_stmt|;
 name|pageno
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|u_short
-name|off
-decl_stmt|,
-name|free_sp
-decl_stmt|;
-name|int
+expr_stmt|;
 name|key_done
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|int
-name|n
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -911,7 +803,7 @@ name|key_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		If there is freespace left on a FULL_KEY_DATA page, 		then the data is short and fits entirely on this 		page, and this is the last page. 	    */
+comment|/* 		 * If there is freespace left on a FULL_KEY_DATA page, then 		 * the data is short and fits entirely on this page, and this 		 * is the last page. 		 */
 if|if
 condition|(
 name|bp
@@ -980,7 +872,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Error */
+comment|/* Error. */
 name|bp
 operator|=
 operator|(
@@ -992,8 +884,8 @@ operator|->
 name|page
 expr_stmt|;
 block|}
-comment|/*  	    If we get here then rbufp points to the last page of 	    the big key/data pair.  Bufp points to the first 	    one -- it should now be empty pointing to the next 	    page after this pair.  Can't free it because we don't 	    have the page pointing to it. 	*/
-comment|/* This is information from the last page of the pair */
+comment|/* 	 * If we get here then rbufp points to the last page of the big 	 * key/data pair.  Bufp points to the first one -- it should now be 	 * empty pointing to the next page after this pair.  Can't free it 	 * because we don't have the page pointing to it. 	 */
+comment|/* This is information from the last page of the pair. */
 name|n
 operator|=
 name|bp
@@ -1010,7 +902,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* Now, bp is the first page of the pair */
+comment|/* Now, bp is the first page of the pair. */
 name|bp
 operator|=
 operator|(
@@ -1028,7 +920,7 @@ operator|>
 literal|2
 condition|)
 block|{
-comment|/* There is an overflow page */
+comment|/* There is an overflow page. */
 name|bp
 index|[
 literal|1
@@ -1053,15 +945,13 @@ name|ovfl
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* This is the last page */
+comment|/* This is the last page. */
 name|bufp
 operator|->
 name|ovfl
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|n
 operator|-=
 literal|2
@@ -1138,7 +1028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 = key not found     -1 = get next overflow page     -2 means key not found and this is big key/data     -3 error */
+comment|/*  * Returns:  *  0 = key not found  * -1 = get next overflow page  * -2 means key not found and this is big key/data  * -3 error  */
 end_comment
 
 begin_function
@@ -1173,7 +1063,24 @@ specifier|register
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|ksize
+decl_stmt|;
+name|u_short
+name|bytes
+decl_stmt|;
+name|char
+modifier|*
+name|kkey
+decl_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -1181,30 +1088,21 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
+expr_stmt|;
 name|p
-init|=
+operator|=
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-name|int
+expr_stmt|;
 name|ksize
-init|=
+operator|=
 name|size
-decl_stmt|;
-name|char
-modifier|*
+expr_stmt|;
 name|kkey
-init|=
+operator|=
 name|key
-decl_stmt|;
-name|u_short
-name|bytes
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|bytes
@@ -1294,14 +1192,12 @@ condition|(
 operator|!
 name|bufp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|3
 operator|)
 return|;
-block|}
 name|p
 operator|=
 name|bufp
@@ -1323,11 +1219,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|bytes
 operator|!=
 name|ksize
-operator|)
 operator|||
 name|bcmp
 argument_list|(
@@ -1347,8 +1241,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|HASH_STATISTICS
-name|hash_collisions
 operator|++
+name|hash_collisions
 expr_stmt|;
 endif|#
 directive|endif
@@ -1369,7 +1263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Given the buffer pointer of the first overflow page of a big pair,      find the end of the big pair      This will set bpp to the buffer header of the last page of the big pair.       It will return the pageno of the overflow page following the last page of      the pair; 0 if there isn't any (i.e. big pair is the last key in the      bucket) */
+comment|/*  * Given the buffer pointer of the first overflow page of a big pair,  * find the end of the big pair  *  * This will set bpp to the buffer header of the last page of the big pair.  * It will return the pageno of the overflow page following the last page  * of the pair; 0 if there isn't any (i.e. big pair is the last key in the  * bucket)  */
 end_comment
 
 begin_function
@@ -1385,23 +1279,26 @@ modifier|*
 name|bpp
 decl_stmt|;
 block|{
-name|int
-name|n
-decl_stmt|;
-name|u_short
-name|pageno
-decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
-init|=
-operator|*
-name|bpp
 decl_stmt|;
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+name|pageno
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|bufp
+operator|=
+operator|*
+name|bpp
+expr_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -1409,11 +1306,12 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|n
 operator|=
@@ -1422,7 +1320,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 		This is the last page if: 			the tag is FULL_KEY_DATA and either 				only 2 entries 				OVFLPAGE marker is explicit 				there is freespace on the page 	    */
+comment|/* 		 * This is the last page if: the tag is FULL_KEY_DATA and 		 * either only 2 entries OVFLPAGE marker is explicit there 		 * is freespace on the page. 		 */
 if|if
 condition|(
 name|bp
@@ -1531,7 +1429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Return the data for the key/data pair     that begins on this page at this index     (index should always be 1) */
+comment|/*  * Return the data for the key/data pair that begins on this page at this  * index (index should always be 1).  */
 end_comment
 
 begin_function
@@ -1567,12 +1465,21 @@ modifier|*
 name|save_p
 decl_stmt|;
 name|u_short
-name|save_addr
-decl_stmt|;
-name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+name|len
+decl_stmt|,
+name|off
+decl_stmt|,
+name|save_addr
+decl_stmt|;
+name|char
+modifier|*
+name|tp
+decl_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -1580,19 +1487,7 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-name|u_short
-name|off
-decl_stmt|,
-name|len
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|tp
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 name|bp
@@ -1734,7 +1629,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-comment|/* 	    This is a hack.  We can't distinguish between 	    FULL_KEY_DATA that contains complete data or 	    incomplete data, so we require that if the 	    data  is complete, there is at least 1 byte 	    of free space left. 	*/
+comment|/* 			 * This is a hack.  We can't distinguish between 			 * FULL_KEY_DATA that contains complete data or 			 * incomplete data, so we require that if the data 			 * is complete, there is at least 1 byte of free 			 * space left. 			 */
 name|off
 operator|=
 name|bp
@@ -1807,7 +1702,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The data is all on one page */
+comment|/* The data is all on one page. */
 name|tp
 operator|=
 operator|(
@@ -1864,7 +1759,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* No more buckets in chain */
+comment|/* No more buckets in 							 * chain */
 name|hashp
 operator|->
 name|cpage
@@ -1986,14 +1881,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|save_p
@@ -2003,7 +1896,7 @@ operator|!=
 name|save_addr
 condition|)
 block|{
-comment|/* We are pretty short on buffers */
+comment|/* We are pretty short on buffers. */
 name|errno
 operator|=
 name|EINVAL
@@ -2054,7 +1947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Count how big the total datasize is by     recursing through the pages.  Then allocate     a buffer and copy the data as you recurse up. */
+comment|/*  * Count how big the total datasize is by recursing through the pages.  Then  * allocate a buffer and copy the data as you recurse up.  */
 end_comment
 
 begin_function
@@ -2074,30 +1967,23 @@ name|bufp
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|int
+decl_stmt|,
 name|set
 decl_stmt|;
 block|{
 specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|bufp
-operator|->
-name|page
-decl_stmt|;
-specifier|register
 name|u_short
 modifier|*
 name|bp
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
 name|p
+decl_stmt|;
+name|BUFHEAD
+modifier|*
+name|xbp
 decl_stmt|;
 name|u_short
 name|save_addr
@@ -2107,10 +1993,20 @@ name|mylen
 decl_stmt|,
 name|totlen
 decl_stmt|;
-name|BUFHEAD
-modifier|*
-name|xbp
-decl_stmt|;
+name|p
+operator|=
+name|bufp
+operator|->
+name|page
+expr_stmt|;
+name|bp
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|p
+expr_stmt|;
 name|mylen
 operator|=
 name|hashp
@@ -2162,10 +2058,6 @@ name|hashp
 operator|->
 name|tmp_buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|totlen
@@ -2178,14 +2070,12 @@ name|hashp
 operator|->
 name|tmp_buf
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|set
@@ -2250,14 +2140,12 @@ name|hashp
 operator|->
 name|cpage
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2338,14 +2226,12 @@ operator|<
 literal|1
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -2360,7 +2246,7 @@ name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* Out of buffers */
+comment|/* Out of buffers. */
 return|return
 operator|(
 operator|-
@@ -2401,7 +2287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* 	Fill in the key and data 	for this big pair  */
+comment|/*  * Fill in the key and data for this big pair.  */
 end_comment
 
 begin_function
@@ -2467,14 +2353,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|key
 operator|->
 name|data
@@ -2496,7 +2380,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*     Count how big the total key size is by     recursing through the pages.  Then collect     the data, allocate a buffer and copy the key as     you recurse up. */
+comment|/*  * Count how big the total key size is by recursing through the pages.  Then  * collect the data, allocate a buffer and copy the key as you recurse up.  */
 end_comment
 
 begin_function
@@ -2527,36 +2411,39 @@ name|int
 name|set
 decl_stmt|;
 block|{
+name|BUFHEAD
+modifier|*
+name|xbp
+decl_stmt|;
 name|char
 modifier|*
 name|p
-init|=
-name|bufp
-operator|->
-name|page
-decl_stmt|;
-name|u_short
-modifier|*
-name|bp
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|p
-decl_stmt|;
-name|u_short
-name|save_addr
 decl_stmt|;
 name|int
 name|mylen
 decl_stmt|,
 name|totlen
 decl_stmt|;
-name|BUFHEAD
+name|u_short
 modifier|*
-name|xbp
+name|bp
+decl_stmt|,
+name|save_addr
 decl_stmt|;
+name|p
+operator|=
+name|bufp
+operator|->
+name|page
+expr_stmt|;
+name|bp
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|p
+expr_stmt|;
 name|mylen
 operator|=
 name|hashp
@@ -2597,7 +2484,7 @@ operator|==
 name|FULL_KEY_DATA
 condition|)
 block|{
-comment|/* End of Key */
+comment|/* End of Key. */
 if|if
 condition|(
 name|hashp
@@ -2615,10 +2502,6 @@ name|hashp
 operator|->
 name|tmp_key
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|totlen
@@ -2631,14 +2514,12 @@ name|hashp
 operator|->
 name|tmp_key
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|__big_return
 argument_list|(
 name|bufp
@@ -2696,14 +2577,12 @@ operator|<
 literal|1
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -2759,7 +2638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     return 0 => OK 	   -1 => error */
+comment|/*  * Returns:  *  0 => OK  * -1 => error  */
 end_comment
 
 begin_function
@@ -2789,12 +2668,12 @@ modifier|*
 name|np
 decl_stmt|;
 comment|/* Pointer to new bucket page */
+comment|/* Pointer to first page containing the big key/data */
 name|BUFHEAD
 modifier|*
 name|big_keyp
 decl_stmt|;
-comment|/* Pointer to first page containing the big key/data */
-name|u_short
+name|int
 name|addr
 decl_stmt|;
 comment|/* Address of big_keyp */
@@ -2808,11 +2687,6 @@ name|ret
 decl_stmt|;
 block|{
 specifier|register
-name|u_short
-modifier|*
-name|prev_pagep
-decl_stmt|;
-specifier|register
 name|BUFHEAD
 modifier|*
 name|tmpp
@@ -2825,16 +2699,6 @@ decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bp
-init|=
-name|big_keyp
-decl_stmt|;
-name|u_short
-name|off
-decl_stmt|,
-name|free_space
-decl_stmt|;
-name|u_short
-name|n
 decl_stmt|;
 name|DBT
 name|key
@@ -2844,6 +2708,17 @@ decl_stmt|;
 name|u_int
 name|change
 decl_stmt|;
+name|u_short
+name|free_space
+decl_stmt|,
+name|n
+decl_stmt|,
+name|off
+decl_stmt|;
+name|bp
+operator|=
+name|big_keyp
+expr_stmt|;
 comment|/* Now figure out where the big key/data goes */
 if|if
 condition|(
@@ -2862,14 +2737,12 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|change
 operator|=
 operator|(
@@ -2920,7 +2793,6 @@ literal|0
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
@@ -2929,17 +2801,17 @@ operator|)
 return|;
 empty_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|ret
 operator|->
 name|nextp
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 comment|/* Now make one of np/op point to the big key/data pair */
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|assert
 argument_list|(
 name|np
@@ -2949,6 +2821,8 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|change
@@ -2971,6 +2845,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG1
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3025,6 +2902,9 @@ name|tmpp
 operator|->
 name|page
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|assert
 argument_list|(
 name|FREESPACE
@@ -3035,6 +2915,8 @@ operator|>=
 name|OVFLSIZE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|=
 name|tp
@@ -3062,6 +2944,9 @@ operator|++
 name|n
 index|]
 operator|=
+operator|(
+name|u_short
+operator|)
 name|addr
 expr_stmt|;
 name|tp
@@ -3095,7 +2980,7 @@ name|free_space
 operator|-
 name|OVFLSIZE
 expr_stmt|;
-comment|/*  	Finally, set the new and old return values. 	BIG_KEYP contains a pointer to the last page of the big key_data pair. 	Make sure that big_keyp has no following page (2 elements) or create 	an empty following page.     */
+comment|/* 	 * Finally, set the new and old return values. BIG_KEYP contains a 	 * pointer to the last page of the big key_data pair. Make sure that 	 * big_keyp has no following page (2 elements) or create an empty 	 * following page. 	 */
 name|ret
 operator|->
 name|newp
@@ -3134,7 +3019,7 @@ operator|>
 literal|2
 condition|)
 block|{
-comment|/*  	    There may be either one or two offsets on this page  	    If there is one, then the overflow page is linked on 	    normally and tp[4] is OVFLPAGE.  If there are two, tp[4] 	    contains the second offset and needs to get stuffed in 	    after the next overflow page is added 	*/
+comment|/* 		 * There may be either one or two offsets on this page.  If 		 * there is one, then the overflow page is linked on normally 		 * and tp[4] is OVFLPAGE.  If there are two, tp[4] contains 		 * the second offset and needs to get stuffed in after the 		 * next overflow page is added. 		 */
 name|n
 operator|=
 name|tp
@@ -3191,14 +3076,12 @@ condition|(
 operator|!
 name|tmpp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|tp
 index|[
 literal|4
@@ -3208,12 +3091,10 @@ name|n
 expr_stmt|;
 block|}
 else|else
-block|{
 name|tmpp
 operator|=
 name|big_keyp
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|change

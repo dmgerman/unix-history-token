@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.7 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  PACKAGE: hash  DESCRIPTION:  	Contains buffer management  ROUTINES:      External 	__buf_init 	__get_buf 	__buf_free 	__reclaim_buf     Internal 	newbuf  ******************************************************************************/
+comment|/*  * PACKAGE: hash  *  * DESCRIPTION:  *	Contains buffer management  *  * ROUTINES:  * External  *	__buf_init  *	__get_buf  *	__buf_free  *	__reclaim_buf  * Internal  *	newbuf  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<db.h>
 end_include
 
 begin_include
@@ -71,36 +71,57 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"hash.h"
 end_include
 
-begin_comment
-comment|/* Externals */
-end_comment
+begin_include
+include|#
+directive|include
+file|"page.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 begin_decl_stmt
-specifier|extern
-name|HTAB
-modifier|*
-name|hashp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* My internals */
-end_comment
-
-begin_function_decl
 specifier|static
 name|BUFHEAD
 modifier|*
 name|newbuf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+name|BUFHEAD
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Unlink B from its place in the lru */
@@ -113,8 +134,7 @@ name|BUF_REMOVE
 parameter_list|(
 name|B
 parameter_list|)
-define|\
-value|{					\     B->prev->next = B->next;		\     B->next->prev = B->prev;		\ }
+value|{ \ 	(B)->prev->next = (B)->next; \ 	(B)->next->prev = (B)->prev; \ }
 end_define
 
 begin_comment
@@ -130,8 +150,7 @@ name|B
 parameter_list|,
 name|P
 parameter_list|)
-define|\
-value|{					\     B->next = P->next;			\     B->prev = P;			\     P->next = B;			\     B->next->prev = B;			\ }
+value|{ \ 	(B)->next = (P)->next; \ 	(B)->prev = (P); \ 	(P)->next = (B); \ 	(B)->next->prev = (B); \ }
 end_define
 
 begin_define
@@ -155,7 +174,7 @@ name|MRU_INSERT
 parameter_list|(
 name|B
 parameter_list|)
-value|BUF_INSERT(B,(&hashp->bufhead))
+value|BUF_INSERT((B),&hashp->bufhead)
 end_define
 
 begin_define
@@ -165,11 +184,11 @@ name|LRU_INSERT
 parameter_list|(
 name|B
 parameter_list|)
-value|BUF_INSERT(B,LRU)
+value|BUF_INSERT((B), LRU)
 end_define
 
 begin_comment
-comment|/*     We are looking for a buffer with address "addr".     If prev_bp is NULL, then address is a bucket index.     If prev_bp is not NULL, then it points to the page previous 	to an overflow page that we are trying to find.      CAVEAT:  The buffer header accessed via prev_bp's ovfl field     may no longer be valid.  Therefore, you must always verify that     its address matches the address you are seeking. */
+comment|/*  * We are looking for a buffer with address "addr".  If prev_bp is NULL, then  * address is a bucket index.  If prev_bp is not NULL, then it points to the  * page previous to an overflow page that we are trying to find.  *  * CAVEAT:  The buffer header accessed via prev_bp's ovfl field may no longer  * be valid.  Therefore, you must always verify that its address matches the  * address you are seeking.  */
 end_comment
 
 begin_function
@@ -194,32 +213,34 @@ decl_stmt|;
 name|int
 name|newpage
 decl_stmt|;
-comment|/* If prev_bp is set, indicates that this is 					a new overflow page */
+comment|/* If prev_bp set, indicates a new overflow page. */
 block|{
-specifier|register
-name|int
-name|segment_ndx
-decl_stmt|;
 specifier|register
 name|BUFHEAD
 modifier|*
 name|bp
 decl_stmt|;
 specifier|register
-name|unsigned
+name|u_int
 name|is_disk
-init|=
-literal|0
+decl_stmt|,
+name|is_disk_mask
 decl_stmt|;
 specifier|register
-name|unsigned
-name|is_disk_mask
-init|=
-literal|0
+name|int
+name|segment_ndx
 decl_stmt|;
 name|SEGMENT
 name|segp
 decl_stmt|;
+name|is_disk
+operator|=
+literal|0
+expr_stmt|;
+name|is_disk_mask
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|prev_bp
@@ -273,7 +294,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * valid segment ensured by __call_hash() 	 */
+comment|/* valid segment ensured by __call_hash() */
 name|segp
 operator|=
 name|hashp
@@ -365,19 +386,16 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|!
 name|prev_bp
 condition|)
-block|{
 name|segp
 index|[
 name|segment_ndx
@@ -389,14 +407,13 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|bp
 operator||
 name|is_disk_mask
 operator|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -420,7 +437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     We need a buffer for this page. Either allocate one, or     evict a resident one (if we have as many buffers as we're     allowed) and put this one in.      If newbuf finds an error (returning NULL), it also sets errno */
+comment|/*  * We need a buffer for this page. Either allocate one, or evict a resident  * one (if we have as many buffers as we're allowed) and put this one in.  *  * If newbuf finds an error (returning NULL), it also sets errno.  */
 end_comment
 
 begin_function
@@ -458,18 +475,17 @@ name|BUFHEAD
 modifier|*
 name|next_xbp
 decl_stmt|;
+name|SEGMENT
+name|segp
+decl_stmt|;
 name|int
 name|segment_ndx
 decl_stmt|;
 name|u_short
+name|oaddr
+decl_stmt|,
 modifier|*
 name|shortp
-decl_stmt|;
-name|u_short
-name|oaddr
-decl_stmt|;
-name|SEGMENT
-name|segp
 decl_stmt|;
 name|oaddr
 operator|=
@@ -479,7 +495,7 @@ name|bp
 operator|=
 name|LRU
 expr_stmt|;
-comment|/*  	If LRU buffer is pinned, the buffer pool is too small. 	We need to allocate more buffers     */
+comment|/* 	 * If LRU buffer is pinned, the buffer pool is too small. We need to 	 * allocate more buffers. 	 */
 if|if
 condition|(
 name|hashp
@@ -498,10 +514,6 @@ block|{
 comment|/* Allocate a new one */
 name|bp
 operator|=
-operator|(
-name|BUFHEAD
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -522,10 +534,6 @@ name|bp
 operator|->
 name|page
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|hashp
@@ -534,13 +542,11 @@ name|BSIZE
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|hashp
 operator|->
 name|nbufs
@@ -555,7 +561,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/*  	    If this is an overflow page with addr 0, it's already 	    been flushed back in an overflow chain and initialized 	*/
+comment|/* 		 * If this is an overflow page with addr 0, it's already been 		 * flushed back in an overflow chain and initialized. 		 */
 if|if
 condition|(
 operator|(
@@ -575,7 +581,7 @@ name|BUF_BUCKET
 operator|)
 condition|)
 block|{
-comment|/*  		Set oaddr before __put_page so that you get it  		before bytes are swapped 	    */
+comment|/* 			 * Set oaddr before __put_page so that you get it 			 * before bytes are swapped. 			 */
 name|shortp
 operator|=
 operator|(
@@ -593,7 +599,6 @@ index|[
 literal|0
 index|]
 condition|)
-block|{
 name|oaddr
 operator|=
 name|shortp
@@ -606,7 +611,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -640,14 +644,12 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
-comment|/*  		Update the pointer to this page (i.e. invalidate it).  		If this is a new file (i.e. we created it at open time),  		make sure that we mark pages which have been written to  		disk so we retrieve them from disk later, rather than 		allocating new pages. 	    */
+comment|/* 			 * Update the pointer to this page (i.e. invalidate it). 			 * 			 * If this is a new file (i.e. we created it at open 			 * time), make sure that we mark pages which have been 			 * written to disk so we retrieve them from disk later, 			 * rather than allocating new pages. 			 */
 if|if
 condition|(
 name|IS_BUCKET
@@ -687,6 +689,9 @@ operator|->
 name|SSHIFT
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|assert
 argument_list|(
 name|segp
@@ -694,6 +699,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|hashp
@@ -718,7 +725,6 @@ index|]
 argument_list|)
 operator|)
 condition|)
-block|{
 name|segp
 index|[
 name|segment_ndx
@@ -730,7 +736,6 @@ operator|*
 operator|)
 name|BUF_DISK
 expr_stmt|;
-block|}
 else|else
 name|segp
 index|[
@@ -740,7 +745,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		Since overflow pages can only be access by means of 		their bucket, free overflow pages associated with this 		bucket. 	    */
+comment|/* 			 * Since overflow pages can only be access by means of 			 * their bucket, free overflow pages associated with 			 * this bucket. 			 */
 for|for
 control|(
 name|xbp
@@ -769,7 +774,7 @@ name|xbp
 operator|=
 name|next_xbp
 expr_stmt|;
-comment|/* Check that ovfl pointer is up date */
+comment|/* Check that ovfl pointer is up date. */
 if|if
 condition|(
 name|IS_BUCKET
@@ -805,7 +810,7 @@ index|[
 literal|0
 index|]
 condition|)
-block|{
+comment|/* set before __put_page */
 name|oaddr
 operator|=
 name|shortp
@@ -818,8 +823,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* set before __put_page */
-block|}
 if|if
 condition|(
 operator|(
@@ -845,13 +848,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|xbp
 operator|->
 name|addr
@@ -887,6 +888,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG1
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -927,10 +931,13 @@ condition|(
 name|prev_bp
 condition|)
 block|{
-comment|/*  	    If prev_bp is set, this is an overflow page, hook it in to the 	    buffer overflow links 	*/
+comment|/* 		 * If prev_bp is set, this is an overflow page, hook it in to 		 * the buffer overflow links. 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG1
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1012,20 +1019,22 @@ name|int
 name|nbytes
 decl_stmt|;
 block|{
-name|int
-name|npages
-decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bfp
-init|=
+decl_stmt|;
+name|int
+name|npages
+decl_stmt|;
+name|bfp
+operator|=
 operator|&
 operator|(
 name|hashp
 operator|->
 name|bufhead
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|npages
 operator|=
 operator|(
@@ -1069,7 +1078,7 @@ name|prev
 operator|=
 name|bfp
 expr_stmt|;
-comment|/* 	This space is calloc'd so these are already null  	bfp->ovfl = NULL; 	bfp->flags = 0; 	bfp->page = NULL; 	bfp->addr = 0;     */
+comment|/* 	 * This space is calloc'd so these are already null. 	 * 	 * bfp->ovfl = NULL; 	 * bfp->flags = 0; 	 * bfp->page = NULL; 	 * bfp->addr = 0; 	 */
 block|}
 end_function
 
@@ -1084,8 +1093,7 @@ name|to_disk
 parameter_list|)
 name|int
 name|do_free
-decl_stmt|;
-name|int
+decl_stmt|,
 name|to_disk
 decl_stmt|;
 block|{
@@ -1099,13 +1107,11 @@ condition|(
 operator|!
 name|LRU
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 for|for
 control|(
 name|bp
@@ -1168,14 +1174,12 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 block|}
 comment|/* Check if we are freeing stuff */
 if|if
@@ -1201,9 +1205,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|bp

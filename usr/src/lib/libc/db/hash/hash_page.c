@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.13 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/****************************************************************************** PACKAGE:  hashing  DESCRIPTION:  	Page manipulation for hashing package.  ROUTINES:      External 	__get_page 	__add_ovflpage     Internal 	overflow_page 	open_temp ******************************************************************************/
+comment|/*  * PACKAGE:  hashing  *  * DESCRIPTION:  *	Page manipulation for hashing package.  *  * ROUTINES:  *  * External  *	__get_page  *	__add_ovflpage  * Internal  *	overflow_page  *	open_temp  */
 end_comment
 
 begin_include
@@ -57,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_include
@@ -101,6 +95,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -113,200 +124,131 @@ directive|include
 file|"page.h"
 end_include
 
-begin_comment
-comment|/* Externals */
-end_comment
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_comment
-comment|/* buf.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|BUFHEAD
-modifier|*
-name|__get_buf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|__reclaim_buf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* big.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_split
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_insert
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__big_delete
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__find_bigpair
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* dynahash.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|__call_hash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__expand_table
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* my externals */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|__get_page
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|BUFHEAD
-modifier|*
-name|__add_ovflpage
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__split_page
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__addel
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* my internals */
-end_comment
-
-begin_function_decl
-specifier|static
-name|u_short
-name|overflow_page
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|open_temp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ugly_split
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|squeeze_key
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|putpair
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|int
+name|ugly_split
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+name|BUFHEAD
+operator|*
+operator|,
+name|BUFHEAD
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|first_free
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_short
+name|overflow_page
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|open_temp
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|squeeze_key
+name|__P
+argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_long
 modifier|*
 name|fetch_bitmap
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HASH_STATISTICS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|hash_accesses
-decl_stmt|,
-name|hash_collisions
-decl_stmt|,
-name|hash_expansions
-decl_stmt|,
-name|hash_overflows
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -315,12 +257,11 @@ name|PAGE_INIT
 parameter_list|(
 name|P
 parameter_list|)
-define|\
-value|{							\     ((u_short *)P)[0] = 0;				\     ((u_short *)P)[1] = hashp->BSIZE - 3 * sizeof(u_short);	\     ((u_short *)P)[2] = hashp->BSIZE;			\ }
+value|{ \ 	((u_short *)(P))[0] = 0; \ 	((u_short *)(P))[1] = hashp->BSIZE - 3 * sizeof(u_short); \ 	((u_short *)(P))[2] = hashp->BSIZE; \ }
 end_define
 
 begin_comment
-comment|/* 	This is called AFTER we have verified that there is room on the 	page for the pair (PAIRFITS has returned true) so we go right 	ahead and start moving stuff on. */
+comment|/*  * This is called AFTER we have verified that there is room on the page for  * the pair (PAIRFITS has returned true) so we go right ahead and start moving  * stuff on.  */
 end_comment
 
 begin_function
@@ -338,35 +279,36 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
-name|DBT
-modifier|*
+decl_stmt|,
+decl|*
 name|val
 decl_stmt|;
+end_function
+
+begin_block
 block|{
-specifier|register
-name|u_short
-name|n
-decl_stmt|;
-specifier|register
-name|u_short
-name|off
-decl_stmt|;
 specifier|register
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+name|n
+decl_stmt|,
+name|off
+decl_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
 operator|)
 name|p
-decl_stmt|;
-comment|/* enter the key first */
+expr_stmt|;
+comment|/* Enter the key first. */
 name|n
 operator|=
 name|bp
@@ -408,7 +350,7 @@ index|]
 operator|=
 name|off
 expr_stmt|;
-comment|/* now the data */
+comment|/* Now the data. */
 name|off
 operator|-=
 name|val
@@ -438,7 +380,7 @@ index|]
 operator|=
 name|off
 expr_stmt|;
-comment|/* adjust page info */
+comment|/* Adjust page info. */
 name|bp
 index|[
 literal|0
@@ -477,12 +419,11 @@ index|]
 operator|=
 name|off
 expr_stmt|;
-return|return;
 block|}
-end_function
+end_block
 
 begin_comment
-comment|/*     0 OK     -1 error */
+comment|/*  * Returns:  *	 0 OK  *	-1 error  */
 end_comment
 
 begin_function
@@ -507,7 +448,18 @@ specifier|register
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+name|newoff
+decl_stmt|;
+specifier|register
+name|int
+name|n
+decl_stmt|;
+name|u_short
+name|pairlen
+decl_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -515,23 +467,14 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-specifier|register
-name|int
+expr_stmt|;
 name|n
-init|=
+operator|=
 name|bp
 index|[
 literal|0
 index|]
-decl_stmt|;
-specifier|register
-name|u_short
-name|newoff
-decl_stmt|;
-name|u_short
-name|pairlen
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -807,7 +750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     -1 ==> Error     0 ==> OK */
+comment|/*  * Returns:  *	 0 ==> OK  *	-1 ==> Error  */
 end_comment
 
 begin_function
@@ -821,24 +764,15 @@ name|nbucket
 parameter_list|)
 name|u_int
 name|obucket
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|nbucket
 decl_stmt|;
 block|{
-name|DBT
-name|key
-decl_stmt|;
-name|DBT
-name|val
-decl_stmt|;
 specifier|register
 name|BUFHEAD
 modifier|*
 name|new_bufp
-decl_stmt|;
-specifier|register
-name|BUFHEAD
+decl_stmt|,
 modifier|*
 name|old_bufp
 decl_stmt|;
@@ -852,45 +786,49 @@ name|char
 modifier|*
 name|np
 decl_stmt|;
+name|DBT
+name|key
+decl_stmt|,
+name|val
+decl_stmt|;
 name|int
 name|n
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ndx
-decl_stmt|;
-name|int
+decl_stmt|,
 name|retval
+decl_stmt|;
+name|u_short
+name|copyto
+decl_stmt|,
+name|diff
+decl_stmt|,
+name|off
+decl_stmt|,
+name|moved
 decl_stmt|;
 name|char
 modifier|*
 name|op
 decl_stmt|;
-name|u_short
 name|copyto
-init|=
+operator|=
 operator|(
 name|u_short
 operator|)
 name|hashp
 operator|->
 name|BSIZE
-decl_stmt|;
-name|u_short
-name|diff
-decl_stmt|;
-name|u_short
+expr_stmt|;
 name|off
-init|=
+operator|=
 operator|(
 name|u_short
 operator|)
 name|hashp
 operator|->
 name|BSIZE
-decl_stmt|;
-name|u_short
-name|moved
-decl_stmt|;
+expr_stmt|;
 name|old_bufp
 operator|=
 name|__get_buf
@@ -1261,6 +1199,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG3
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1320,7 +1261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 ==> success     -1 ==> failure      Called when we encounter an overflow or big key/data page during      split handling.     This is special cased since we have to begin checking whether     the key/data pairs fit on their respective pages and because     we may need overflow pages for both the old and new pages      The first page might be a page with regular key/data pairs     in which case we have a regular overflow condition and just     need to go on to the next page or it might be a big key/data      pair in which case we need to fix the big key/data pair. */
+comment|/*  * Called when we encounter an overflow or big key/data page during split  * handling.  This is special cased since we have to begin checking whether  * the key/data pairs fit on their respective pages and because we may need  * overflow pages for both the old and new pages.  *  * The first page might be a page with regular key/data pairs in which case  * we have a regular overflow condition and just need to go on to the next  * page or it might be a big key/data pair in which case we need to fix the  * big key/data pair.  *  * Returns:  *	 0 ==> success  *	-1 ==> failure  */
 end_comment
 
 begin_function
@@ -1341,99 +1282,67 @@ parameter_list|)
 name|u_int
 name|obucket
 decl_stmt|;
-comment|/* Same as __split_page */
+comment|/* Same as __split_page. */
 name|BUFHEAD
 modifier|*
 name|old_bufp
-decl_stmt|;
-name|BUFHEAD
-modifier|*
+decl_stmt|,
+decl|*
 name|new_bufp
 decl_stmt|;
-name|u_short
+end_function
+
+begin_decl_stmt
+name|int
 name|copyto
 decl_stmt|;
-comment|/* First byte on page which contains key/data values */
+end_decl_stmt
+
+begin_comment
+comment|/* First byte on page which contains key/data values. */
+end_comment
+
+begin_decl_stmt
 name|int
 name|moved
 decl_stmt|;
-comment|/* number of pairs moved to new page */
+end_decl_stmt
+
+begin_comment
+comment|/* Number of pairs moved to new page. */
+end_comment
+
+begin_block
 block|{
 specifier|register
 name|BUFHEAD
 modifier|*
 name|bufp
-init|=
-name|old_bufp
 decl_stmt|;
 comment|/* Buffer header for ino */
 specifier|register
 name|u_short
 modifier|*
 name|ino
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|old_bufp
-operator|->
-name|page
 decl_stmt|;
 comment|/* Page keys come off of */
 specifier|register
 name|u_short
 modifier|*
 name|np
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|new_bufp
-operator|->
-name|page
 decl_stmt|;
 comment|/* New page */
 specifier|register
 name|u_short
 modifier|*
 name|op
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|old_bufp
-operator|->
-name|page
 decl_stmt|;
-comment|/* Page keys go on to if they 						   aren't moving */
-name|char
-modifier|*
-name|cino
-decl_stmt|;
-comment|/* Character value of ino */
+comment|/* Page keys go on to if they aren't moving */
 name|BUFHEAD
 modifier|*
 name|last_bfp
-init|=
-name|NULL
 decl_stmt|;
-comment|/* Last buffer header OVFL which 						   needs to be freed */
-name|u_short
-name|ov_addr
-decl_stmt|,
-name|last_addr
-init|=
-literal|0
-decl_stmt|;
-name|u_short
-name|n
-decl_stmt|;
-name|u_short
-name|off
-decl_stmt|;
+comment|/* Last buf header OVFL needing to be freed */
 name|DBT
 name|key
 decl_stmt|,
@@ -1442,6 +1351,72 @@ decl_stmt|;
 name|SPLIT_RETURN
 name|ret
 decl_stmt|;
+name|u_short
+name|last_addr
+decl_stmt|,
+name|n
+decl_stmt|,
+name|off
+decl_stmt|,
+name|ov_addr
+decl_stmt|,
+name|scopyto
+decl_stmt|;
+name|char
+modifier|*
+name|cino
+decl_stmt|;
+comment|/* Character value of ino */
+name|bufp
+operator|=
+name|old_bufp
+expr_stmt|;
+name|ino
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|old_bufp
+operator|->
+name|page
+expr_stmt|;
+name|np
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|new_bufp
+operator|->
+name|page
+expr_stmt|;
+name|op
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|old_bufp
+operator|->
+name|page
+expr_stmt|;
+name|last_bfp
+operator|=
+name|NULL
+expr_stmt|;
+name|last_addr
+operator|=
+literal|0
+expr_stmt|;
+name|scopyto
+operator|=
+operator|(
+name|u_short
+operator|)
+name|copyto
+expr_stmt|;
+comment|/* ANSI */
 name|n
 operator|=
 name|ino
@@ -1496,14 +1471,12 @@ operator|&
 name|ret
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|old_bufp
 operator|=
 name|ret
@@ -1619,7 +1592,7 @@ index|[
 name|n
 index|]
 expr_stmt|;
-comment|/*  		Fix up the old page -- the extra 2 are the fields which 		contained the overflow information  	    */
+comment|/* 			 * Fix up the old page -- the extra 2 are the fields 			 * which contained the overflow information. 			 */
 name|ino
 index|[
 literal|0
@@ -1636,7 +1609,7 @@ argument_list|(
 name|ino
 argument_list|)
 operator|=
-name|copyto
+name|scopyto
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1657,7 +1630,7 @@ argument_list|(
 name|ino
 argument_list|)
 operator|=
-name|copyto
+name|scopyto
 expr_stmt|;
 name|bufp
 operator|=
@@ -1695,7 +1668,7 @@ name|n
 operator|=
 literal|1
 expr_stmt|;
-name|copyto
+name|scopyto
 operator|=
 name|hashp
 operator|->
@@ -1709,13 +1682,11 @@ if|if
 condition|(
 name|last_bfp
 condition|)
-block|{
 name|__free_ovflpage
 argument_list|(
 name|last_bfp
 argument_list|)
 expr_stmt|;
-block|}
 name|last_bfp
 operator|=
 name|bufp
@@ -2031,23 +2002,21 @@ if|if
 condition|(
 name|last_bfp
 condition|)
-block|{
 name|__free_ovflpage
 argument_list|(
 name|last_bfp
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
-comment|/*     Add the given pair to the page     1 ==> failure     0 ==> OK */
+comment|/*  * Add the given pair to the page  *  * Returns:  *	0 ==> OK  *	1 ==> failure  */
 end_comment
 
 begin_function
@@ -2065,20 +2034,31 @@ name|BUFHEAD
 modifier|*
 name|bufp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
-name|DBT
-modifier|*
+decl_stmt|,
+decl|*
 name|val
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 specifier|register
 name|u_short
 modifier|*
 name|bp
-init|=
+decl_stmt|,
+modifier|*
+name|sop
+decl_stmt|;
+name|int
+name|do_expand
+decl_stmt|;
+name|bp
+operator|=
 operator|(
 name|u_short
 operator|*
@@ -2086,15 +2066,7 @@ operator|)
 name|bufp
 operator|->
 name|page
-decl_stmt|;
-specifier|register
-name|u_short
-modifier|*
-name|sop
-decl_stmt|;
-name|int
-name|do_expand
-decl_stmt|;
+expr_stmt|;
 name|do_expand
 operator|=
 literal|0
@@ -2118,7 +2090,6 @@ operator|<
 name|REAL_KEY
 operator|)
 condition|)
-block|{
 comment|/* Exception case */
 if|if
 condition|(
@@ -2143,14 +2114,12 @@ condition|(
 operator|!
 name|bufp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|bp
 operator|=
 operator|(
@@ -2162,8 +2131,7 @@ operator|->
 name|page
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 comment|/* Try to squeeze key on this page */
 if|if
 condition|(
@@ -2221,14 +2189,12 @@ condition|(
 operator|!
 name|bufp
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|bp
 operator|=
 operator|(
@@ -2239,8 +2205,6 @@ name|bufp
 operator|->
 name|page
 expr_stmt|;
-block|}
-block|}
 block|}
 if|if
 condition|(
@@ -2334,7 +2298,6 @@ argument_list|,
 name|val
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
@@ -2342,14 +2305,13 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
 name|bufp
 operator|->
 name|flags
 operator||=
 name|BUF_MOD
 expr_stmt|;
-comment|/*  	If the average number of keys per bucket exceeds the fill factor, 	expand the table     */
+comment|/* 	 * If the average number of keys per bucket exceeds the fill factor, 	 * expand the table. 	 */
 name|hashp
 operator|->
 name|NKEYS
@@ -2377,24 +2339,22 @@ operator|->
 name|FFACTOR
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|__expand_table
 argument_list|()
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
-comment|/*     returns a pointer, NULL on error */
+comment|/*  *  * Returns:  *	pointer on success  *	NULL on error  */
 end_comment
 
 begin_function
@@ -2414,31 +2374,11 @@ specifier|register
 name|u_short
 modifier|*
 name|sp
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|bufp
-operator|->
-name|page
-decl_stmt|;
-name|u_short
-name|ovfl_num
 decl_stmt|;
 name|u_short
 name|ndx
 decl_stmt|,
-name|newoff
-decl_stmt|;
-name|char
-modifier|*
-name|op
-decl_stmt|;
-name|DBT
-name|okey
-decl_stmt|,
-name|oval
+name|ovfl_num
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2450,6 +2390,16 @@ name|tmp2
 decl_stmt|;
 endif|#
 directive|endif
+name|sp
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|bufp
+operator|->
+name|page
+expr_stmt|;
 name|bufp
 operator|->
 name|flags
@@ -2507,13 +2457,11 @@ literal|1
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|bufp
 operator|->
 name|ovfl
@@ -2525,6 +2473,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG1
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2551,7 +2502,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*  	Since a pair is allocated on a page only if there's room 	to add an overflow page, we know that the OVFL information 	will fit on the page     */
+comment|/* 	 * Since a pair is allocated on a page only if there's room to add 	 * an overflow page, we know that the OVFL information will fit on 	 * the page. 	 */
 name|sp
 index|[
 name|ndx
@@ -2624,7 +2575,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 indicates SUCCESS     -1 indicates FAILURE */
+comment|/*  * Returns:  *	 0 indicates SUCCESS  *	-1 indicates FAILURE  */
 end_comment
 
 begin_function
@@ -2651,32 +2602,26 @@ name|bucket
 decl_stmt|;
 name|int
 name|is_bucket
-decl_stmt|;
-name|int
+decl_stmt|,
 name|is_disk
-decl_stmt|;
-name|int
+decl_stmt|,
 name|is_bitmap
 decl_stmt|;
 block|{
 specifier|register
 name|int
+name|fd
+decl_stmt|,
+name|page
+decl_stmt|,
 name|size
 decl_stmt|;
-specifier|register
 name|int
-name|fd
-decl_stmt|;
-specifier|register
-name|int
-name|page
+name|rsize
 decl_stmt|;
 name|u_short
 modifier|*
 name|bp
-decl_stmt|;
-name|int
-name|rsize
 decl_stmt|;
 name|fd
 operator|=
@@ -2771,14 +2716,12 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|bp
 operator|=
 operator|(
@@ -2792,7 +2735,6 @@ condition|(
 operator|!
 name|rsize
 condition|)
-block|{
 name|bp
 index|[
 literal|0
@@ -2801,7 +2743,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* We hit the EOF, so initialize a new page */
-block|}
 elseif|else
 if|if
 condition|(
@@ -2849,9 +2790,7 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|max
 decl_stmt|;
 if|if
@@ -2881,7 +2820,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|BLSWAP
 argument_list|(
 operator|(
@@ -2896,7 +2834,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2930,7 +2867,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|BSSWAP
 argument_list|(
 name|bp
@@ -2939,7 +2875,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -2951,7 +2886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*      Write page p to disk     -1==>failure     0==> OK */
+comment|/*  * Write page p to disk  *  * Returns:  *	 0 ==> OK  *	-1 ==>failure  */
 end_comment
 
 begin_function
@@ -2976,22 +2911,17 @@ name|bucket
 decl_stmt|;
 name|int
 name|is_bucket
-decl_stmt|;
-name|int
+decl_stmt|,
 name|is_bitmap
 decl_stmt|;
 block|{
 specifier|register
 name|int
-name|size
-decl_stmt|;
-specifier|register
-name|int
 name|fd
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|page
+decl_stmt|,
+name|size
 decl_stmt|;
 name|int
 name|wsize
@@ -3071,7 +3001,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|BLSWAP
 argument_list|(
 operator|(
@@ -3086,7 +3015,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3118,7 +3046,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|BSSWAP
 argument_list|(
 operator|(
@@ -3133,7 +3060,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -3193,7 +3119,6 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
 comment|/* Errno is set */
 return|return
 operator|(
@@ -3201,7 +3126,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|wsize
@@ -3236,7 +3160,7 @@ value|((1<< INT_BYTE_SHIFT) -1)
 end_define
 
 begin_comment
-comment|/*     Initialize a new bitmap page.  Bitmap pages are left in memory     once they are read in. */
+comment|/*  * Initialize a new bitmap page.  Bitmap pages are left in memory  * once they are read in.  */
 end_comment
 
 begin_function
@@ -3251,13 +3175,11 @@ name|nbits
 parameter_list|,
 name|ndx
 parameter_list|)
-name|u_short
+name|int
 name|pnum
-decl_stmt|;
-name|int
+decl_stmt|,
 name|nbits
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ndx
 decl_stmt|;
 block|{
@@ -3266,10 +3188,9 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
-name|clearints
-decl_stmt|;
-name|int
 name|clearbytes
+decl_stmt|,
+name|clearints
 decl_stmt|;
 if|if
 condition|(
@@ -3277,10 +3198,6 @@ operator|!
 operator|(
 name|ip
 operator|=
-operator|(
-name|u_long
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|hashp
@@ -3382,6 +3299,9 @@ index|[
 name|ndx
 index|]
 operator|=
+operator|(
+name|u_short
+operator|)
 name|pnum
 expr_stmt|;
 name|hashp
@@ -3414,11 +3334,9 @@ decl_stmt|;
 block|{
 specifier|register
 name|u_long
-name|mask
-decl_stmt|;
-specifier|register
-name|u_long
 name|i
+decl_stmt|,
+name|mask
 decl_stmt|;
 name|mask
 operator|=
@@ -3471,16 +3389,8 @@ begin_function
 specifier|static
 name|u_short
 name|overflow_page
-parameter_list|( )
+parameter_list|()
 block|{
-specifier|register
-name|int
-name|max_free
-decl_stmt|;
-specifier|register
-name|int
-name|splitnum
-decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
@@ -3488,25 +3398,27 @@ name|freep
 decl_stmt|;
 specifier|register
 name|int
+name|max_free
+decl_stmt|,
 name|offset
+decl_stmt|,
+name|splitnum
 decl_stmt|;
 name|u_short
 name|addr
 decl_stmt|;
 name|int
-name|in_use_bits
-decl_stmt|;
-name|int
-name|free_page
+name|bit
 decl_stmt|,
 name|free_bit
-decl_stmt|;
-name|int
+decl_stmt|,
+name|free_page
+decl_stmt|,
 name|i
 decl_stmt|,
-name|j
+name|in_use_bits
 decl_stmt|,
-name|bit
+name|j
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3615,13 +3527,11 @@ name|i
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|i
@@ -3666,7 +3576,6 @@ name|bit
 operator|+=
 name|BITS_PER_MAP
 control|)
-block|{
 if|if
 condition|(
 name|freep
@@ -3679,7 +3588,6 @@ condition|)
 goto|goto
 name|found
 goto|;
-block|}
 block|}
 comment|/* No Free Page Found */
 name|hashp
@@ -3767,7 +3675,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*  	    This is tricky.  The 1 indicates that you want the 	    new page allocated with 1 clear bit.  Actually, you 	    are going to allocate 2 pages from this map.  The first 	    is going to be the map page, the second is the overflow 	    page we were looking for.  The init_bitmap routine 	    automatically, sets the first bit of itself to indicate 	    that the bitmap itself is in use.  We would explicitly 	    set the second bit, but don't have to if we tell init_bitmap 	    not to leave it clear in the first place. 	*/
+comment|/* 		 * This is tricky.  The 1 indicates that you want the new page 		 * allocated with 1 clear bit.  Actually, you are going to 		 * allocate 2 pages from this map.  The first is going to be 		 * the map page, the second is the overflow page we were 		 * looking for.  The init_bitmap routine automatically, sets 		 * the first bit of itself to indicate that the bitmap itself 		 * is in use.  We would explicitly set the second bit, but 		 * don't have to if we tell init_bitmap not to leave it clear 		 * in the first place. 		 */
 name|__init_bitmap
 argument_list|(
 name|OADDR_OF
@@ -3805,7 +3713,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		Free_bit addresses the last used bit.  Bump it to 		address the first available bit. 	*/
+comment|/* 		 * Free_bit addresses the last used bit.  Bump it to address 		 * the first available bit. 		 */
 name|free_bit
 operator|++
 expr_stmt|;
@@ -3860,6 +3768,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG2
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3914,7 +3825,7 @@ name|i
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	Bits are addressed starting with 0, but overflow pages are 	addressed beginning at 1. Bit is a bit addressnumber, so we  	need to increment it to convert it to a page number.     */
+comment|/* 	 * Bits are addressed starting with 0, but overflow pages are addressed 	 * beginning at 1. Bit is a bit addressnumber, so we need to increment 	 * it to convert it to a page number. 	 */
 name|bit
 operator|=
 literal|1
@@ -4004,6 +3915,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG2
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4029,54 +3943,51 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Mark this overflow page as free. */
+comment|/*  * Mark this overflow page as free.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|extern
+name|void
 name|__free_ovflpage
-argument_list|(
-argument|obufp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|obufp
+parameter_list|)
 name|BUFHEAD
 modifier|*
 name|obufp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_short
 name|addr
-init|=
-name|obufp
-operator|->
-name|addr
-decl_stmt|;
-name|int
-name|free_page
-decl_stmt|,
-name|free_bit
-decl_stmt|;
-name|int
-name|bit_address
-decl_stmt|;
-name|u_short
-name|ndx
 decl_stmt|;
 name|u_long
 modifier|*
 name|freep
 decl_stmt|;
 name|int
-name|j
+name|bit_address
+decl_stmt|,
+name|free_page
+decl_stmt|,
+name|free_bit
 decl_stmt|;
+name|u_short
+name|ndx
+decl_stmt|;
+name|addr
+operator|=
+name|obufp
+operator|->
+name|addr
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG1
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4169,25 +4080,30 @@ index|[
 name|free_page
 index|]
 operator|)
-operator|&&
-operator|!
-operator|(
+condition|)
 name|freep
 operator|=
 name|fetch_bitmap
 argument_list|(
 name|free_page
 argument_list|)
-operator|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* 	 * This had better never happen.  It means we tried to read a bitmap 	 * that has already had overflow pages allocated off it, and we 	 * failed to read it from the file. 	 */
+if|if
+condition|(
+operator|!
+name|freep
 condition|)
-block|{
-comment|/*  	    This had better never happen.  It means we tried to 	    read a bitmap that has already had overflow pages allocated 	    off it, and we failed to read it from the file 	*/
 name|assert
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 name|CLRBIT
 argument_list|(
 name|freep
@@ -4198,6 +4114,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG2
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4220,12 +4139,11 @@ argument_list|(
 name|obufp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* 0 success -1 failure */
+comment|/*  * Returns:  *	 0 success  *	-1 failure  */
 end_comment
 
 begin_function
@@ -4247,42 +4165,10 @@ init|=
 literal|"_hashXXXXXX"
 decl_stmt|;
 comment|/* Block signals; make sure file goes away at process exit. */
-name|sigemptyset
+name|sigfillset
 argument_list|(
 operator|&
 name|set
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGHUP
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGINT
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGQUIT
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGTERM
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4375,7 +4261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*      We have to know that the key will fit, but the     last entry on the page is an overflow pair, so we     need to shift things. */
+comment|/*  * We have to know that the key will fit, but the last entry on the page is  * an overflow pair, so we need to shift things.  */
 end_comment
 
 begin_function
@@ -4393,36 +4279,40 @@ name|u_short
 modifier|*
 name|sp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
-name|DBT
-modifier|*
+decl_stmt|,
+decl|*
 name|val
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 specifier|register
 name|char
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|u_short
+name|free_space
+decl_stmt|,
+name|n
+decl_stmt|,
+name|off
+decl_stmt|,
+name|pageno
+decl_stmt|;
+name|p
+operator|=
 operator|(
 name|char
 operator|*
 operator|)
 name|sp
-decl_stmt|;
-name|u_short
-name|free_space
-decl_stmt|,
-name|off
-decl_stmt|;
-name|u_short
-name|pageno
-decl_stmt|,
-name|n
-decl_stmt|;
+expr_stmt|;
 name|n
 operator|=
 name|sp
@@ -4560,7 +4450,7 @@ operator|=
 name|off
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -4591,10 +4481,6 @@ index|[
 name|ndx
 index|]
 operator|=
-operator|(
-name|u_long
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|hashp
@@ -4630,13 +4516,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|hashp
@@ -4656,20 +4540,15 @@ directive|ifdef
 name|DEBUG4
 end_ifdef
 
-begin_macro
+begin_function
+name|int
 name|print_chain
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|short
+parameter_list|(
+name|addr
+parameter_list|)
+name|int
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|BUFHEAD
 modifier|*
@@ -4678,10 +4557,12 @@ decl_stmt|;
 name|short
 modifier|*
 name|bp
-decl_stmt|;
-name|short
+decl_stmt|,
 name|oaddr
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4695,9 +4576,6 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
-operator|(
-name|int
-operator|)
 name|addr
 argument_list|,
 name|NULL
@@ -4767,6 +4645,9 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4804,6 +4685,9 @@ operator|->
 name|page
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -4812,7 +4696,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

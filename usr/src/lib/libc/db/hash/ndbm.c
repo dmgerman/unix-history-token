@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.7 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*     This package provides a dbm compatible interface to the new hashing     package described in db(3) */
+comment|/*  * This package provides a dbm compatible interface to the new hashing  * package described in db(3).  */
 end_comment
 
 begin_include
@@ -68,11 +68,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hash.h"
 end_include
 
 begin_comment
-comment|/*     return 	*DBM on success 		NULL on failure */
+comment|/*  * Returns:  * 	*DBM on success  *	 NULL on failure  */
 end_comment
 
 begin_function
@@ -94,8 +100,7 @@ name|file
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
 name|mode
 decl_stmt|;
 block|{
@@ -166,7 +171,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|hash_open
+operator|(
+name|DBM
+operator|*
+operator|)
+name|__hash_open
 argument_list|(
 name|path
 argument_list|,
@@ -210,7 +219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -230,11 +239,11 @@ name|datum
 name|key
 decl_stmt|;
 block|{
-name|int
-name|status
-decl_stmt|;
 name|datum
 name|retval
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|status
 operator|=
@@ -290,7 +299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -309,10 +318,9 @@ name|int
 name|status
 decl_stmt|;
 name|datum
-name|retkey
-decl_stmt|;
-name|datum
 name|retdata
+decl_stmt|,
+name|retkey
 decl_stmt|;
 name|status
 operator|=
@@ -345,14 +353,12 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 name|retkey
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|retkey
@@ -362,7 +368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -381,10 +387,9 @@ name|int
 name|status
 decl_stmt|;
 name|datum
-name|retkey
-decl_stmt|;
-name|datum
 name|retdata
+decl_stmt|,
+name|retkey
 decl_stmt|;
 name|status
 operator|=
@@ -417,14 +422,12 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 name|retkey
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|retkey
@@ -434,7 +437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 on success<0 failure */
+comment|/*  * Returns:  *	 0 on success  *<0 failure  */
 end_comment
 
 begin_function
@@ -481,27 +484,23 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*     0 on success<0 failure     1 if DBM_INSERT and entry exists */
+comment|/*  * Returns:  *	 0 on success  *<0 failure  *	 1 if DBM_INSERT and entry exists  */
 end_comment
 
 begin_function
@@ -523,8 +522,7 @@ name|db
 decl_stmt|;
 name|datum
 name|key
-decl_stmt|;
-name|datum
+decl_stmt|,
 name|content
 decl_stmt|;
 name|int

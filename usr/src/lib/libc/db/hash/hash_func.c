@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_func.c	5.1 (Berkeley) %G%"
+literal|"@(#)hash_func.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,60 +37,132 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"page.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hash1
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hash2
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hash3
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hash4
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Global default hash function */
 end_comment
 
-begin_function_decl
-specifier|static
+begin_macro
 name|int
-name|hash1
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*default_hash
+argument_list|)
+end_macro
 
-begin_function_decl
-specifier|static
+begin_expr_stmt
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
 name|int
-name|hash2
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|hash3
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
+operator|)
+argument_list|)
+operator|=
 name|hash4
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|default_hash
-function_decl|)
-parameter_list|()
-init|=
-name|hash4
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/******************************* HASH FUNCTIONS **************************/
 end_comment
 
 begin_comment
-comment|/* 	Assume that we've already split the bucket to which this 	key hashes, calculate that bucket, and check that in fact 	we did already split it.  	This came from ejb's hsearch. */
+comment|/*  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * This came from ejb's hsearch.  */
 end_comment
 
 begin_define
@@ -116,10 +188,12 @@ name|key
 parameter_list|,
 name|len
 parameter_list|)
-name|char
+specifier|register
+name|u_char
 modifier|*
 name|key
 decl_stmt|;
+specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -128,33 +202,14 @@ specifier|register
 name|int
 name|h
 decl_stmt|;
-specifier|register
-name|int
-name|l
-init|=
-name|len
-decl_stmt|;
-specifier|register
-name|unsigned
-name|char
-modifier|*
-name|k
-init|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|key
-decl_stmt|;
 name|h
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Convert string to integer 	 */
+comment|/* Convert string to integer */
 while|while
 condition|(
-name|l
+name|len
 operator|--
 condition|)
 name|h
@@ -165,7 +220,7 @@ name|PRIME1
 operator|^
 operator|(
 operator|*
-name|k
+name|key
 operator|++
 operator|-
 literal|' '
@@ -184,7 +239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Phong's linear congruential hash */
+comment|/*  * Phong's linear congruential hash  */
 end_comment
 
 begin_define
@@ -204,23 +259,21 @@ specifier|static
 name|int
 name|hash2
 parameter_list|(
-name|str
+name|key
 parameter_list|,
-name|n
+name|len
 parameter_list|)
 specifier|register
-name|unsigned
-name|char
+name|u_char
 modifier|*
-name|str
+name|key
 decl_stmt|;
 name|int
-name|n
+name|len
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|e
 decl_stmt|,
@@ -232,9 +285,9 @@ name|h
 decl_stmt|;
 name|e
 operator|=
-name|str
+name|key
 operator|+
-name|n
+name|len
 expr_stmt|;
 for|for
 control|(
@@ -242,7 +295,7 @@ name|h
 operator|=
 literal|0
 init|;
-name|str
+name|key
 operator|!=
 name|e
 condition|;
@@ -251,7 +304,7 @@ block|{
 name|c
 operator|=
 operator|*
-name|str
+name|key
 operator|++
 expr_stmt|;
 if|if
@@ -259,7 +312,7 @@ condition|(
 operator|!
 name|c
 operator|&&
-name|str
+name|key
 operator|>
 name|e
 condition|)
@@ -281,7 +334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is INCREDIBLY ugly, but fast.  * We break the string up into 8 byte units.  On the first time  * through the loop we get the "leftover bytes" (strlen % 8).  * On every other iteration, we perform 8 HASHC's so we handle  * all 8 bytes.  Essentially, this saves us 7 cmp& branch  * instructions.  If this routine is heavily used enough, it's  * worth the ugly coding  *   * OZ's original sdbm hash  */
+comment|/*  * This is INCREDIBLY ugly, but fast.  We break the string up into 8 byte  * units.  On the first time through the loop we get the "leftover bytes"  * (strlen % 8).  On every other iteration, we perform 8 HASHC's so we handle  * all 8 bytes.  Essentially, this saves us 7 cmp& branch instructions.  If  * this routine is heavily used enough, it's worth the ugly coding.  *  * OZ's original sdbm hash  */
 end_comment
 
 begin_function
@@ -291,43 +344,32 @@ name|hash3
 parameter_list|(
 name|key
 parameter_list|,
-name|nbytes
+name|len
 parameter_list|)
-name|char
+specifier|register
+name|u_char
 modifier|*
 name|key
 decl_stmt|;
+specifier|register
 name|int
-name|nbytes
+name|len
 decl_stmt|;
 block|{
 specifier|register
 name|int
 name|n
-init|=
-literal|0
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|str
-init|=
-name|key
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|loop
-decl_stmt|;
-specifier|register
-name|int
-name|len
-init|=
-name|nbytes
 decl_stmt|;
 define|#
 directive|define
 name|HASHC
-value|n = *str++ + 65599 * n
+value|n = *key++ + 65599 * n
+name|n
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -419,7 +461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Hash function from Chris Torek */
+comment|/* Hash function from Chris Torek. */
 end_comment
 
 begin_function
@@ -429,51 +471,40 @@ name|hash4
 parameter_list|(
 name|key
 parameter_list|,
-name|nbytes
+name|len
 parameter_list|)
-name|char
+specifier|register
+name|u_char
 modifier|*
 name|key
 decl_stmt|;
+specifier|register
 name|int
-name|nbytes
+name|len
 decl_stmt|;
 block|{
 specifier|register
 name|int
 name|h
-init|=
-literal|0
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|key
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|loop
-decl_stmt|;
-specifier|register
-name|int
-name|len
-init|=
-name|nbytes
 decl_stmt|;
 define|#
 directive|define
 name|HASH4a
-value|h = (h<< 5) - h + *p++;
+value|h = (h<< 5) - h + *key++;
 define|#
 directive|define
 name|HASH4b
-value|h = (h<< 5) + h + *p++;
+value|h = (h<< 5) + h + *key++;
 define|#
 directive|define
 name|HASH4
 value|HASH4b
+name|h
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|len

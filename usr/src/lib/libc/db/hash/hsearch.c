@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	5.5 (Berkeley) %G%"
+literal|"@(#)hsearch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,13 +91,10 @@ name|hcreate
 parameter_list|(
 name|nel
 parameter_list|)
-name|unsigned
+name|u_int
 name|nel
 decl_stmt|;
 block|{
-name|int
-name|status
-decl_stmt|;
 name|HASHINFO
 name|info
 decl_stmt|;
@@ -139,7 +136,11 @@ literal|0
 expr_stmt|;
 name|dbp
 operator|=
-name|hash_open
+operator|(
+name|DB
+operator|*
+operator|)
+name|__hash_open
 argument_list|(
 name|NULL
 argument_list|,
@@ -181,26 +182,24 @@ name|ACTION
 name|action
 decl_stmt|;
 block|{
-name|int
-name|status
-decl_stmt|;
 name|DBT
 name|key
 decl_stmt|,
 name|val
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|dbp
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|key
 operator|.
 name|data
@@ -281,13 +280,11 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -315,15 +312,12 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 else|else
-block|{
 name|item
 operator|.
 name|data
@@ -336,7 +330,6 @@ name|val
 operator|.
 name|data
 expr_stmt|;
-block|}
 block|}
 name|retval
 operator|.
@@ -391,7 +384,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

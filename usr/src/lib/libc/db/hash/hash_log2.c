@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_log2.c	5.1 (Berkeley) %G%"
+literal|"@(#)hash_log2.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,31 +37,56 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_macro
-name|__log2
-argument_list|(
-argument|num
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"page.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_function
+name|int
+name|__log2
+parameter_list|(
+name|num
+parameter_list|)
 name|int
 name|num
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|limit
-init|=
-literal|1
 decl_stmt|;
+name|limit
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -88,7 +113,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
