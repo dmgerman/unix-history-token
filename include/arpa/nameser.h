@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  *  *      @(#)nameser.h	8.2 (Berkeley) 2/16/94  *	From Id: nameser.h,v 4.9.1.15 1994/07/19 22:51:24 vixie Exp  *	$Id: nameser.h,v 1.7 1996/01/30 23:31:16 mpp Exp $  */
+comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * Portions Copyright (c) 1995 by International Business Machines, Inc.  *  * International Business Machines, Inc. (hereinafter called IBM) grants  * permission under its copyrights to use, copy, modify, and distribute this  * Software with or without fee, provided that the above copyright notice and  * all paragraphs of this notice appear in all copies, and that the name of IBM  * not be used in connection with the marketing of any product incorporating  * the Software or modifications thereof, without specific, written prior  * permission.  *  * To the extent it has a right to do so, IBM grants an immunity from suit  * under its patents, if any, for the use, sale or manufacture of products to  * the extent that such products are used for performing Domain Name System  * dynamic updates in TCP/IP networks by means of the Software.  No immunity is  * granted for any product per se or for any other function of any product.  * THE SOFTWARE IS PROVIDED "AS IS", AND IBM DISCLAIMS ALL WARRANTIES,  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE.  IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL,  * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER ARISING  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE, EVEN  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.  *  *      @(#)nameser.h	8.2 (Berkeley) 2/16/94  *	From Id: nameser.h,v 8.11 1996/10/08 04:51:02 vixie Exp  *	$Id: nameser.h,v 1.11 1997/02/23 09:17:20 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -33,12 +33,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
 begin_comment
 comment|/*  * revision information.  this is the release date in YYYYMMDD format.  * it can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__BIND> 19931104)".  do not  * compare for equality; rather, use it to determine whether your resolver  * is new enough to contain a certain feature.  */
 end_comment
@@ -47,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|__BIND
-value|19950621
+value|19960801
 end_define
 
 begin_comment
@@ -73,11 +67,11 @@ begin_define
 define|#
 directive|define
 name|MAXDNAME
-value|256
+value|1025
 end_define
 
 begin_comment
-comment|/* maximum domain name */
+comment|/* maximum presentation domain name */
 end_comment
 
 begin_define
@@ -246,98 +240,6 @@ begin_comment
 comment|/* notify secondary of SOA change */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALLOW_UPDATES
-end_ifdef
-
-begin_comment
-comment|/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATEA
-value|0x9
-end_define
-
-begin_comment
-comment|/* add resource record */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATED
-value|0xa
-end_define
-
-begin_comment
-comment|/* delete a specific resource record */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATEDA
-value|0xb
-end_define
-
-begin_comment
-comment|/* delete all named resource record */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATEM
-value|0xc
-end_define
-
-begin_comment
-comment|/* modify a specific resource record */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATEMA
-value|0xd
-end_define
-
-begin_comment
-comment|/* modify all named resource record */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZONEINIT
-value|0xe
-end_define
-
-begin_comment
-comment|/* initial zone transfer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZONEREF
-value|0xf
-end_define
-
-begin_comment
-comment|/* incremental zone referesh */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Currently defined response codes  */
 end_comment
@@ -407,32 +309,6 @@ end_define
 begin_comment
 comment|/* query refused */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALLOW_UPDATES
-end_ifdef
-
-begin_comment
-comment|/* non standard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOCHANGE
-value|0xf
-end_define
-
-begin_comment
-comment|/* update failed to change db */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Type values for resources and queries  */
@@ -757,6 +633,72 @@ begin_comment
 comment|/* Location Information */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_NXT
+value|30
+end_define
+
+begin_comment
+comment|/* Next Valid Name in Zone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_EID
+value|31
+end_define
+
+begin_comment
+comment|/* Endpoint identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NIMLOC
+value|32
+end_define
+
+begin_comment
+comment|/* Nimrod locator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SRV
+value|33
+end_define
+
+begin_comment
+comment|/* Server selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ATMA
+value|34
+end_define
+
+begin_comment
+comment|/* ATM Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NAPTR
+value|35
+end_define
+
+begin_comment
+comment|/* Naming Authority PoinTeR */
+end_comment
+
 begin_comment
 comment|/* non standard */
 end_comment
@@ -807,6 +749,17 @@ end_comment
 
 begin_comment
 comment|/* Query type values which do not appear in resource records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_IXFR
+value|251
+end_define
+
+begin_comment
+comment|/* incremental zone transfer */
 end_comment
 
 begin_define
@@ -906,6 +859,300 @@ comment|/* wildcard match */
 end_comment
 
 begin_comment
+comment|/*  * Flags field of the KEY RR rdata  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_TYPEMASK
+value|0xC000
+end_define
+
+begin_comment
+comment|/* Mask for "type" bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_TYPE_AUTH_CONF
+value|0x0000
+end_define
+
+begin_comment
+comment|/* Key usable for both */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_TYPE_CONF_ONLY
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Key usable for confidentiality */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_TYPE_AUTH_ONLY
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Key usable for authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_TYPE_NO_KEY
+value|0xC000
+end_define
+
+begin_comment
+comment|/* No key usable for either; no key */
+end_comment
+
+begin_comment
+comment|/* The type bits can also be interpreted independently, as single bits: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_NO_AUTH
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Key not usable for authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_NO_CONF
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Key not usable for confidentiality */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_EXPERIMENTAL
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Security is *mandatory* if bit=0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_RESERVED3
+value|0x1000
+end_define
+
+begin_comment
+comment|/* reserved - must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_RESERVED4
+value|0x0800
+end_define
+
+begin_comment
+comment|/* reserved - must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_USERACCOUNT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* key is assoc. with a user acct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_ENTITY
+value|0x0200
+end_define
+
+begin_comment
+comment|/* key is assoc. with entity eg host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_ZONEKEY
+value|0x0100
+end_define
+
+begin_comment
+comment|/* key is zone key for the zone named */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_IPSEC
+value|0x0080
+end_define
+
+begin_comment
+comment|/* key is for IPSEC use (host or user)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_EMAIL
+value|0x0040
+end_define
+
+begin_comment
+comment|/* key is for email (MIME security) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_RESERVED10
+value|0x0020
+end_define
+
+begin_comment
+comment|/* reserved - must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_RESERVED11
+value|0x0010
+end_define
+
+begin_comment
+comment|/* reserved - must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_SIGNATORYMASK
+value|0x000F
+end_define
+
+begin_comment
+comment|/* key can sign DNS RR's of same name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYFLAG_RESERVED_BITMASK
+value|( KEYFLAG_RESERVED3 | \ 				    KEYFLAG_RESERVED4 | \ 				    KEYFLAG_RESERVED10| KEYFLAG_RESERVED11)
+end_define
+
+begin_comment
+comment|/* The Algorithm field of the KEY and SIG RR's is an integer, {1..254} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALGORITHM_MD5RSA
+value|1
+end_define
+
+begin_comment
+comment|/* MD5 with RSA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALGORITHM_EXPIRE_ONLY
+value|253
+end_define
+
+begin_comment
+comment|/* No alg, no security */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALGORITHM_PRIVATE_OID
+value|254
+end_define
+
+begin_comment
+comment|/* Key begins with OID indicating alg */
+end_comment
+
+begin_comment
+comment|/* Signatures */
+end_comment
+
+begin_comment
+comment|/* Size of a mod or exp in bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_MD5RSA_KEY_PART_BITS
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_MD5RSA_KEY_PART_BITS
+value|2552
+end_define
+
+begin_comment
+comment|/* Total of binary mod and exp, bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MD5RSA_KEY_BYTES
+value|((MAX_MD5RSA_KEY_PART_BITS+7/8)*2+3)
+end_define
+
+begin_comment
+comment|/* Max length of text sig block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_KEY_BASE64
+value|(((MAX_MD5RSA_KEY_BYTES+2)/3)*4)
+end_define
+
+begin_comment
 comment|/*  * Status return codes for T_UNSPEC conversion routines  */
 end_comment
 
@@ -943,6 +1190,12 @@ directive|define
 name|CONV_BADBUFLEN
 value|(-4)
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
 
 begin_comment
 comment|/*  * Structure for query header.  The order of the fields is machine- and  * compiler-dependent, depending on the byte/bit order and the layout  * of bit fields.  We use bit fields only in int variables, as this  * is all ANSI requires.  This requires a somewhat confusing rearrangement.  */
@@ -1004,9 +1257,21 @@ comment|/* recursion available */
 name|unsigned
 name|unused
 range|:
-literal|3
+literal|1
 decl_stmt|;
 comment|/* unused bits (MBZ as of 4.9.3a3) */
+name|unsigned
+name|ad
+range|:
+literal|1
+decl_stmt|;
+comment|/* authentic data from named */
+name|unsigned
+name|cd
+range|:
+literal|1
+decl_stmt|;
+comment|/* checking disabled by resolver */
 name|unsigned
 name|rcode
 range|:
@@ -1063,9 +1328,21 @@ literal|4
 decl_stmt|;
 comment|/* response code */
 name|unsigned
+name|cd
+range|:
+literal|1
+decl_stmt|;
+comment|/* checking disabled by resolver */
+name|unsigned
+name|ad
+range|:
+literal|1
+decl_stmt|;
+comment|/* authentic data from named */
+name|unsigned
 name|unused
 range|:
-literal|3
+literal|1
 decl_stmt|;
 comment|/* unused bits (MBZ as of 4.9.3a3) */
 name|unsigned
@@ -1116,43 +1393,6 @@ directive|define
 name|INDIR_MASK
 value|0xc0
 end_define
-
-begin_comment
-comment|/*  * Structure for passing resource records around.  */
-end_comment
-
-begin_struct
-struct|struct
-name|rrec
-block|{
-name|int16_t
-name|r_zone
-decl_stmt|;
-comment|/* zone number */
-name|int16_t
-name|r_class
-decl_stmt|;
-comment|/* class number */
-name|int16_t
-name|r_type
-decl_stmt|;
-comment|/* type number */
-name|u_int32_t
-name|r_ttl
-decl_stmt|;
-comment|/* time to live */
-name|int
-name|r_size
-decl_stmt|;
-comment|/* size of data area */
-name|char
-modifier|*
-name|r_data
-decl_stmt|;
-comment|/* pointer to data */
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|extern
