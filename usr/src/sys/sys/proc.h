@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -213,11 +213,14 @@ name|int
 name|p_thread
 decl_stmt|;
 comment|/* id for this "thread" (Mach glue) XXX */
+name|struct
+name|filedesc
+modifier|*
+name|p_fd
+decl_stmt|;
+comment|/* ptr to open files structure */
 name|int
 name|p_pad1
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|segsz_t
 name|p_rssize
