@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -277,6 +277,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|FILE
 name|__sF
@@ -284,377 +285,177 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
+begin_decl_stmt
+name|__END_DECLS
 define|#
 directive|define
 name|__SLBF
 value|0x0001
-end_define
-
-begin_comment
 comment|/* line buffered */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SNBF
 value|0x0002
-end_define
-
-begin_comment
 comment|/* unbuffered */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SRD
 value|0x0004
-end_define
-
-begin_comment
 comment|/* OK to read */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SWR
 value|0x0008
-end_define
-
-begin_comment
 comment|/* OK to write */
-end_comment
-
-begin_comment
 comment|/* RD and WR are never simultaneously asserted */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SRW
 value|0x0010
-end_define
-
-begin_comment
 comment|/* open for reading& writing */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SEOF
 value|0x0020
-end_define
-
-begin_comment
 comment|/* found EOF */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SERR
 value|0x0040
-end_define
-
-begin_comment
 comment|/* found error */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SMBF
 value|0x0080
-end_define
-
-begin_comment
 comment|/* _buf is from malloc */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SAPP
 value|0x0100
-end_define
-
-begin_comment
 comment|/* fdopen()ed in append mode */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SSTR
 value|0x0200
-end_define
-
-begin_comment
 comment|/* this is an sprintf/snprintf string */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SOPT
 value|0x0400
-end_define
-
-begin_comment
 comment|/* do fseek() optimisation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SNPT
 value|0x0800
-end_define
-
-begin_comment
 comment|/* do not do fseek() optimisation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SOFF
 value|0x1000
-end_define
-
-begin_comment
 comment|/* set iff _offset is in fact correct */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__SMOD
 value|0x2000
-end_define
-
-begin_comment
 comment|/* true => fgetline modified _p text */
-end_comment
-
-begin_comment
 comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  *  * Although numbered as their counterparts above, the implementation  * does not rely on this.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_IOFBF
 value|0
-end_define
-
-begin_comment
 comment|/* setvbuf should set fully buffered */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_IOLBF
 value|1
-end_define
-
-begin_comment
 comment|/* setvbuf should set line buffered */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_IONBF
 value|2
-end_define
-
-begin_comment
 comment|/* setvbuf should set unbuffered */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|BUFSIZ
 value|1024
-end_define
-
-begin_comment
 comment|/* size of buffer used by setbuf */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EOF
 value|(-1)
-end_define
-
-begin_comment
 comment|/*  * FOPEN_MAX is a minimum maximum, and should be the number of descriptors  * that the kernel can provide without allocation of a resource that can  * fail without the process sleeping.  Do not use this for anything.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FOPEN_MAX
 value|20
-end_define
-
-begin_comment
 comment|/* must be<= OPEN_MAX<sys/syslimits.h> */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FILENAME_MAX
 value|1024
-end_define
-
-begin_comment
 comment|/* must be<= PATH_MAX<sys/syslimits.h> */
-end_comment
-
-begin_comment
 comment|/* System V/ANSI C; this is the wrong way to do this, do *not* use these. */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|P_tmpdir
 value|"/var/tmp/"
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|L_tmpnam
 value|1024
-end_define
-
-begin_comment
 comment|/* XXX must be == PATH_MAX */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TMP_MAX
 value|308915776
-end_define
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SEEK_SET
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|SEEK_SET
 value|0
-end_define
-
-begin_comment
 comment|/* set file offset to offset */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SEEK_CUR
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|SEEK_CUR
 value|1
-end_define
-
-begin_comment
 comment|/* set file offset to current plus offset */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SEEK_END
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|SEEK_END
 value|2
-end_define
-
-begin_comment
 comment|/* set file offset to EOF plus offset */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|stdin
 value|(&__sF[0])
-end_define
-
-begin_define
 define|#
 directive|define
 name|stdout
 value|(&__sF[1])
-end_define
-
-begin_define
 define|#
 directive|define
 name|stderr
 value|(&__sF[2])
-end_define
-
-begin_comment
 comment|/*  * Functions defined in ANSI C standard.  */
-end_comment
-
-begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
 name|clearerr
@@ -1661,8 +1462,9 @@ parameter_list|)
 value|funopen(cookie, 0, fn, 0, 0)
 endif|#
 directive|endif
-comment|/* neither ANSI nor POSIX */
+comment|/* !_ANSI_SOURCE&& !_POSIX_SOURCE */
 comment|/*  * Functions internal to the implementation.  */
+name|__BEGIN_DECLS
 name|int
 name|__srget
 name|__P
@@ -1690,11 +1492,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
+begin_function
+name|__END_DECLS
 comment|/*  * The __sfoo macros are here so that we can   * define function versions in the C library.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__sgetc
@@ -1702,15 +1502,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(--(p)->_r< 0 ? __srget(p) : (int)(*(p)->_p++))
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__GNUC__
-end_ifdef
-
-begin_function
 specifier|static
 name|__inline
 name|int
