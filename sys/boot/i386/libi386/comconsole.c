@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Michael Smith (msmith@freebsd.org)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 	From Id: probe_keyboard.c,v 1.13 1997/06/09 05:10:55 bde Exp  *  *	$Id: comconsole.c,v 1.2 1998/09/17 23:52:09 msmith Exp $  */
+comment|/*  * Copyright (c) 1998 Michael Smith (msmith@freebsd.org)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 	From Id: probe_keyboard.c,v 1.13 1997/06/09 05:10:55 bde Exp  *  *	$Id: comconsole.c,v 1.3 1998/10/02 16:32:45 msmith Exp $  */
 end_comment
 
 begin_include
@@ -83,6 +83,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|int
+name|comc_started
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|console
 name|comconsole
@@ -148,11 +155,29 @@ name|int
 name|arg
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|comc_started
+operator|&&
+name|arg
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|comc_started
+operator|=
+literal|1
+expr_stmt|;
 name|v86
 operator|.
 name|ctl
 operator|=
-name|V86_FLAGS
+literal|0
 expr_stmt|;
 name|v86
 operator|.
@@ -177,13 +202,31 @@ comment|/* XXX take as arg, or use env var? */
 name|v86int
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|10
+operator|&&
+name|comc_ischar
+argument_list|()
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|comc_getchar
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-name|v86
-operator|.
-name|efl
-operator|&
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -218,6 +261,14 @@ literal|0x100
 operator||
 name|c
 expr_stmt|;
+comment|/* Function 1 = write */
+name|v86
+operator|.
+name|edx
+operator|=
+name|BIOS_COMPORT
+expr_stmt|;
+comment|/* XXX take as arg, or use env var? */
 name|v86int
 argument_list|()
 expr_stmt|;
@@ -254,8 +305,16 @@ name|v86
 operator|.
 name|eax
 operator|=
-literal|0x300
+literal|0x200
 expr_stmt|;
+comment|/* Function 2 = read */
+name|v86
+operator|.
+name|edx
+operator|=
+name|BIOS_COMPORT
+expr_stmt|;
+comment|/* XXX take as arg, or use env var? */
 name|v86int
 argument_list|()
 expr_stmt|;
@@ -305,8 +364,16 @@ name|v86
 operator|.
 name|eax
 operator|=
-literal|0x200
+literal|0x300
 expr_stmt|;
+comment|/* Function 3 = status */
+name|v86
+operator|.
+name|edx
+operator|=
+name|BIOS_COMPORT
+expr_stmt|;
+comment|/* XXX take as arg, or use env var? */
 name|v86int
 argument_list|()
 expr_stmt|;
@@ -316,9 +383,10 @@ name|v86
 operator|.
 name|eax
 operator|&
-literal|0x1
+literal|0x100
 operator|)
 return|;
+comment|/* AH bit 1 is "receive data ready" */
 block|}
 end_function
 
