@@ -1713,6 +1713,12 @@ operator|->
 name|vm_pmap
 operator|.
 name|pm_context
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
 argument_list|,
 name|va
 argument_list|,

@@ -141,6 +141,9 @@ name|pm_active
 decl_stmt|;
 name|u_int
 name|pm_context
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 name|u_int
 name|pm_count
