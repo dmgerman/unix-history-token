@@ -851,13 +851,6 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
-name|LIST_ENTRY
-argument_list|(
-argument|pmap
-argument_list|)
-name|pm_list
-expr_stmt|;
-comment|/* List of all pmaps */
 block|}
 struct|;
 end_struct
