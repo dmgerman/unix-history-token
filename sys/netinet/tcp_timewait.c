@@ -6315,9 +6315,8 @@ name|sa_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ro
-operator|->
-name|ro_dst
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6458,9 +6457,8 @@ name|sin6_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ro6
-operator|->
-name|ro_dst
+operator|*
+name|dst6
 argument_list|)
 expr_stmt|;
 name|dst6
