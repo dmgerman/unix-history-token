@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/05/26	4.3	*/
+comment|/*	routed.h	82/06/05	4.4	*/
 end_comment
 
 begin_comment
@@ -39,14 +39,34 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* pad to 32-bit boundary */
+union|union
+block|{
 name|struct
 name|netinfo
-name|rip_nets
+name|ru_nets
 index|[
 literal|1
 index|]
 decl_stmt|;
 comment|/* variable length... */
+name|char
+name|ru_tracefile
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* ditto ... */
+block|}
+name|ripun
+union|;
+define|#
+directive|define
+name|rip_nets
+value|ripun.ru_nets
+define|#
+directive|define
+name|rip_tracefile
+value|ripun.ru_tracefile
 block|}
 struct|;
 end_struct
@@ -71,6 +91,28 @@ end_define
 
 begin_comment
 comment|/* responding to request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_TRACEON
+value|0x3
+end_define
+
+begin_comment
+comment|/* turn tracing on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_TRACEOFF
+value|0x4
+end_define
+
+begin_comment
+comment|/* turn it off */
 end_comment
 
 begin_define
