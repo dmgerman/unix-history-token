@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.13 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -819,7 +819,11 @@ name|pk
 operator|->
 name|p_state
 operator|&
+operator|(
 name|LIVE
+operator||
+name|WAITO
+operator|)
 operator|)
 operator|==
 name|LIVE
