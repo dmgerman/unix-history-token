@@ -808,17 +808,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UPCALLING
-value|0x000100
-end_define
-
-begin_comment
-comment|/* This thread is doing an upcall. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_ONSLEEPQ
 value|0x000200
 end_define
@@ -907,6 +896,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_SA
+value|0x040000
+end_define
+
+begin_comment
+comment|/* A scheduler activation based thread */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_DEADLKTREAT
 value|0x800000
 end_define
@@ -950,6 +950,17 @@ end_define
 
 begin_comment
 comment|/* Thread is currently in KTRACE code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_UPCALLING
+value|0x0008
+end_define
+
+begin_comment
+comment|/* This thread is doing an upcall. */
 end_comment
 
 begin_define
