@@ -130,7 +130,7 @@ comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
 begin_comment
-unit|rv = vm_map_find(kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference(object);  		rv = vm_map_pageable(kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy((caddr_t)kva + page_offset, 			       retval, sizeof *retval); 		} 		vm_map_remove(kernel_map, kva, kva + PAGE_SIZE); 	}  	return (rv); }  static int pwrite(struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
+unit|rv = vm_map_find(kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference(object);  		rv = vm_map_pageable(kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy((caddr_t)kva + page_offset, 			    retval, sizeof *retval); 		} 		vm_map_remove(kernel_map, kva, kva + PAGE_SIZE); 	}  	return (rv); }  static int pwrite(struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
 comment|/* offset into page */
 end_comment
 
