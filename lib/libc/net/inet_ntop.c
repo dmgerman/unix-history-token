@@ -270,7 +270,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|socklen_t
+name|size_t
 operator|)
 name|snprintf
 argument_list|(
