@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.9 83/02/09"
+literal|"@(#)rlogin.c	4.10 83/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -1589,7 +1589,14 @@ expr_stmt|;
 if|if
 condition|(
 name|cnt
-operator|<=
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|cnt
+operator|<
 literal|0
 condition|)
 block|{
