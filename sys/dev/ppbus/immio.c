@@ -52,21 +52,6 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -152,6 +137,40 @@ end_define
 begin_comment
 comment|/*  * Microcode to execute very fast I/O sequences at the lowest bus level.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_RET
+value|MS_PARAM(7, 2, MS_TYP_PTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WAIT_TMO
+value|MS_PARAM(1, 0, MS_TYP_INT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_WAIT_MICROSEQUENCE
+define|\
+value|struct ppb_microseq wait_microseq[] = {					\ 	MS_CASS(0x0c),							\ 	MS_SET(MS_UNKNOWN),						\
+comment|/* loop */
+value|\ 	MS_BRSET(nBUSY, 4
+comment|/* ready */
+value|),					\ 	MS_DBRA(-2
+comment|/* loop */
+value|),						\ 	MS_CASS(0x04),							\ 	MS_RET(1),
+comment|/* timed out */
+value|\
+comment|/* ready */
+value|\ 	MS_CASS(0x04),							\ 	MS_RFETCH(MS_REG_STR, 0xb8, MS_UNKNOWN ),			\ 	MS_RET(0)
+comment|/* no error */
+value|\ }
+end_define
 
 begin_define
 define|#
@@ -286,13 +305,67 @@ define|#
 directive|define
 name|DECLARE_NEGOCIATE_MICROSEQ
 define|\
-value|static struct ppb_microseq negociate_microseq[] = { 			\ 	MS_CASS(0x4),							\ 	MS_DELAY(5),							\ 	MS_DASS(MS_UNKNOWN
+value|struct ppb_microseq negociate_microseq[] = {				\ 	MS_CASS(0x4),							\ 	MS_DELAY(5),							\ 	MS_DASS(MS_UNKNOWN
 comment|/* mode */
 value|),					\ 	MS_DELAY(100),							\ 	MS_CASS(0x6),							\ 	MS_DELAY(5),							\ 	MS_BRSET(0x20, 5
 comment|/* continue */
 value|),				\ 	MS_DELAY(5),							\ 	MS_CASS(0x7),							\ 	MS_DELAY(5),							\ 	MS_CASS(0x6),							\ 	MS_RET(VP0_ENEGOCIATE),						\
 comment|/* continue: */
 value|\ 	MS_DELAY(5),							\ 	MS_CASS(0x7),							\ 	MS_DELAY(5),							\ 	MS_CASS(0x6),							\ 	MS_RET(0)							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|INB_NIBBLE_L
+value|MS_PARAM(3, 2, MS_TYP_PTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INB_NIBBLE_H
+value|MS_PARAM(6, 2, MS_TYP_PTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INB_NIBBLE_F
+value|MS_PARAM(9, 0, MS_TYP_FUN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INB_NIBBLE_P
+value|MS_PARAM(9, 1, MS_TYP_PTR)
+end_define
+
+begin_comment
+comment|/*  * This is the sub-microseqence for MS_GET in NIBBLE mode  * Retrieve the two nibbles and call the C function to generate the character  * and store it in the buffer (see nibble_inbyte_hook())  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECLARE_NIBBLE_INBYTE_SUBMICROSEQ
+define|\
+value|struct ppb_microseq nibble_inbyte_submicroseq[] = {			\ 	MS_CASS(0x4),							\
+comment|/* loop: */
+value|\ 	MS_CASS(0x6),							\ 	MS_DELAY(1),							\ 	MS_RFETCH(MS_REG_STR, MS_FETCH_ALL, MS_UNKNOWN
+comment|/* low nibble */
+value|),\ 	MS_CASS(0x5),							\ 	MS_DELAY(1),							\ 	MS_RFETCH(MS_REG_STR, MS_FETCH_ALL, MS_UNKNOWN
+comment|/* high nibble */
+value|),\ 	MS_CASS(0x4),							\ 	MS_DELAY(1),							\
+comment|/* do a C call to format the received nibbles */
+value|\ 	MS_C_CALL(MS_UNKNOWN
+comment|/* C hook */
+value|, MS_UNKNOWN
+comment|/* param */
+value|),	\ 	MS_DBRA(-7
+comment|/* loop */
+value|),						\ 	MS_RET(0)							\ }
 end_define
 
 begin_decl_stmt
@@ -412,113 +485,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Macro used to initialize each vpoio_data structure during  * low level attachment  *  * XXX should be converted to ppb_MS_init_msq()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INIT_NIBBLE_INBYTE_SUBMICROSEQ
-parameter_list|(
-name|vpo
-parameter_list|)
-value|{		    	\ 	(vpo)->vpo_nibble_inbyte_msq[6].arg[2].p =		\ 			(void *)&(vpo)->vpo_nibble.h;		\ 	(vpo)->vpo_nibble_inbyte_msq[3].arg[2].p =		\ 			(void *)&(vpo)->vpo_nibble.l;		\ 	(vpo)->vpo_nibble_inbyte_msq[9].arg[0].f =		\ 			nibble_inbyte_hook;			\ 	(vpo)->vpo_nibble_inbyte_msq[9].arg[1].p =		\ 			(void *)&(vpo)->vpo_nibble;		\ }
-end_define
-
-begin_comment
-comment|/*  * This is the sub-microseqence for MS_GET in NIBBLE mode  * Retrieve the two nibbles and call the C function to generate the character  * and store it in the buffer (see nibble_inbyte_hook())  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|ppb_microseq
-name|nibble_inbyte_submicroseq
-index|[]
-init|=
-block|{
-name|MS_CASS
-argument_list|(
-literal|0x4
-argument_list|)
-block|,
-comment|/* loop: */
-name|MS_CASS
-argument_list|(
-literal|0x6
-argument_list|)
-block|,
-name|MS_DELAY
-argument_list|(
-literal|1
-argument_list|)
-block|,
-name|MS_RFETCH
-argument_list|(
-name|MS_REG_STR
-argument_list|,
-name|MS_FETCH_ALL
-argument_list|,
-name|MS_UNKNOWN
-comment|/* low nibble */
-argument_list|)
-block|,
-name|MS_CASS
-argument_list|(
-literal|0x5
-argument_list|)
-block|,
-name|MS_DELAY
-argument_list|(
-literal|1
-argument_list|)
-block|,
-name|MS_RFETCH
-argument_list|(
-name|MS_REG_STR
-argument_list|,
-name|MS_FETCH_ALL
-argument_list|,
-name|MS_UNKNOWN
-comment|/* high nibble */
-argument_list|)
-block|,
-name|MS_CASS
-argument_list|(
-literal|0x4
-argument_list|)
-block|,
-name|MS_DELAY
-argument_list|(
-literal|1
-argument_list|)
-block|,
-comment|/* do a C call to format the received nibbles */
-name|MS_C_CALL
-argument_list|(
-name|MS_UNKNOWN
-comment|/* C hook */
-argument_list|,
-name|MS_UNKNOWN
-comment|/* param */
-argument_list|)
-block|,
-name|MS_DBRA
-argument_list|(
-operator|-
-literal|7
-comment|/* loop */
-argument_list|)
-block|,
-name|MS_RET
-argument_list|(
-literal|0
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * This is the sub-microseqence for MS_GET in PS2 mode  */
@@ -1725,7 +1691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * imm_wait()  *  * H_SELIN must be low.  *  * XXX should be ported to microseq  */
+comment|/*  * imm_wait()  *  * H_SELIN must be low.  *  */
 end_comment
 
 begin_function
@@ -1742,6 +1708,8 @@ name|int
 name|tmo
 parameter_list|)
 block|{
+name|DECLARE_WAIT_MICROSEQUENCE
+expr_stmt|;
 name|device_t
 name|ppbus
 init|=
@@ -1752,81 +1720,61 @@ operator|->
 name|vpo_dev
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
-name|k
+name|ret
+decl_stmt|,
+name|err
 decl_stmt|;
-specifier|register
-name|char
-name|r
-decl_stmt|;
-name|ppb_wctr
+comment|/* 	 * Return some status information. 	 * Semantics :	0x88 = ZIP+ wants more data 	 *		0x98 = ZIP+ wants to send more data 	 *		0xa8 = ZIP+ wants command 	 *		0xb8 = end of transfer, ZIP+ is sending status 	 */
+name|ppb_MS_init_msq
 argument_list|(
-name|ppbus
+name|wait_microseq
 argument_list|,
-literal|0xc
-argument_list|)
-expr_stmt|;
-comment|/* XXX should be ported to microseq */
-name|k
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|!
+literal|2
+argument_list|,
+name|WAIT_RET
+argument_list|,
 operator|(
-operator|(
-name|r
-operator|=
-name|ppb_rstr
-argument_list|(
-name|ppbus
-argument_list|)
+name|void
+operator|*
 operator|)
 operator|&
-literal|0x80
-operator|)
-operator|&&
-operator|(
-name|k
-operator|++
-operator|<
+name|ret
+argument_list|,
+name|WAIT_TMO
+argument_list|,
 name|tmo
-operator|)
-condition|)
-name|DELAY
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return some status information. 	 * Semantics :	0x88 = ZIP+ wants more data 	 *		0x98 = ZIP+ wants to send more data 	 *		0xa8 = ZIP+ wants command 	 *		0xb8 = end of transfer, ZIP+ is sending status 	 */
-name|ppb_wctr
+name|ppb_MS_microseq
 argument_list|(
 name|ppbus
 argument_list|,
-literal|0x4
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|,
+name|wait_microseq
+argument_list|,
+operator|&
+name|err
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|k
-operator|<
-name|tmo
+name|err
 condition|)
-return|return
-operator|(
-name|r
-operator|&
-literal|0xb8
-operator|)
-return|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 comment|/* command timed out */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -1996,6 +1944,8 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|DECLARE_NIBBLE_INBYTE_SUBMICROSEQ
+expr_stmt|;
 name|device_t
 name|ppbus
 init|=
@@ -2005,6 +1955,11 @@ name|vpo
 operator|->
 name|vpo_dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Initialize microsequence code 	 */
 name|vpo
@@ -2062,12 +2017,68 @@ name|nibble_inbyte_submicroseq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|INIT_NIBBLE_INBYTE_SUBMICROSEQ
+name|ppb_MS_init_msq
 argument_list|(
 name|vpo
+operator|->
+name|vpo_nibble_inbyte_msq
+argument_list|,
+literal|4
+argument_list|,
+name|INB_NIBBLE_H
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|vpo
+operator|)
+operator|->
+name|vpo_nibble
+operator|.
+name|h
+argument_list|,
+name|INB_NIBBLE_L
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|vpo
+operator|)
+operator|->
+name|vpo_nibble
+operator|.
+name|l
+argument_list|,
+name|INB_NIBBLE_F
+argument_list|,
+name|nibble_inbyte_hook
+argument_list|,
+name|INB_NIBBLE_P
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|vpo
+operator|)
+operator|->
+name|vpo_nibble
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize mode dependent in/out microsequences 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|ppb_request_bus
 argument_list|(
 name|ppbus
@@ -2078,7 +2089,11 @@ name|vpo_dev
 argument_list|,
 name|PPB_WAIT
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|error
+goto|;
 comment|/* ppbus automatically restore the last mode entered during detection */
 switch|switch
 condition|(
@@ -2214,9 +2229,11 @@ operator|->
 name|vpo_dev
 argument_list|)
 expr_stmt|;
+name|error
+label|:
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2390,7 +2407,7 @@ name|negociated
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * enter disk state, allocate the ppbus 	 * 	 * XXX 	 * Should we allow this call to be interruptible? 	 * The only way to report the interruption is to return 	 * EIO do upper SCSI code :^( 	 */
+comment|/* 	 * enter disk state, allocate the ppbus 	 * 	 * XXX 	 * Should we allow this call to be interruptible? 	 * The only way to report the interruption is to return 	 * EIO to upper SCSI code :^( 	 */
 if|if
 condition|(
 operator|(
