@@ -301,6 +301,13 @@ name|AL
 value|gettystrs[29].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|DF
+value|gettystrs[30].value
+end_define
+
 begin_comment
 comment|/*  * Numeric definitions.  */
 end_comment

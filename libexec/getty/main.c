@@ -3958,7 +3958,7 @@ argument_list|(
 name|db
 argument_list|)
 argument_list|,
-literal|"%+"
+name|DF
 argument_list|,
 name|localtime
 argument_list|(
