@@ -46,7 +46,7 @@ name|v86
 operator|.
 name|addr
 operator|=
-literal|0x1a
+literal|0x12
 expr_stmt|;
 comment|/* int 0x12 */
 name|v86int
@@ -90,7 +90,7 @@ name|addr
 operator|=
 literal|0x15
 expr_stmt|;
-comment|/* int 0x12 function 0x88*/
+comment|/* int 0x15 function 0x88*/
 name|v86
 operator|.
 name|eax
