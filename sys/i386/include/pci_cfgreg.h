@@ -169,5 +169,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|pci_cfgintr
+parameter_list|(
+name|int
+name|bus
+parameter_list|,
+name|int
+name|device
+parameter_list|,
+name|int
+name|pin
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
