@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|new_curse_name
 init|=
-literal|"@(#) new_curse.c $Revision: 1.2 $"
+literal|"@(#) new_curse.c $FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

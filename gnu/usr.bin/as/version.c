@@ -41,7 +41,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.6 $\n"
+literal|"GNU assembler version 1.92.3,\n$FreeBSD$\n"
 decl_stmt|;
 end_decl_stmt
 
