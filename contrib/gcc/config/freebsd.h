@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.12 1999/04/30 19:12:51 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.13 1999/06/28 09:05:56 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* Common FreeBSD configuration.     All FreeBSD architectures should in
 end_comment
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_undef
@@ -28,7 +28,7 @@ name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
-comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
+comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc.  */
 end_comment
 
 begin_define
@@ -67,7 +67,7 @@ value|" -Dunix -D__FreeBSD__=4 -D__FreeBSD_cc_version=400002 -Asystem(unix) -Asy
 end_define
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.     (like the default, except no -lg, and no -p.  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.     (like the default, except no -lg, and no -p).  */
 end_comment
 
 begin_undef
@@ -84,7 +84,7 @@ value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthr
 end_define
 
 begin_comment
-comment|/* Let gcc locate this for us according to the -m rules */
+comment|/* Let gcc locate this for us according to the -m rules.  */
 end_comment
 
 begin_undef
@@ -106,7 +106,7 @@ comment|/* Code generation parameters.  */
 end_comment
 
 begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions.      (even though the svr4 ABI for the i386 says that records and unions are    returned in memory)  */
+comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions      (even though the svr4 ABI for the i386 says that records and unions are    returned in memory).  */
 end_comment
 
 begin_undef
@@ -123,7 +123,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc. */
+comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc.  */
 end_comment
 
 begin_undef
@@ -133,7 +133,7 @@ name|NO_DOLLAR_IN_LABEL
 end_undef
 
 begin_comment
-comment|/* Use more efficient ``thunks'' to implement C++ vtables.  XXX note that     this setting is claimed to have a few bugs by the EGCS maintainers.  They    believe the bugs will be worked out in EGCS 1.2. */
+comment|/* Use more efficient ``thunks'' to implement C++ vtables.  XXX note that     this setting is claimed to have a few bugs by the EGCS maintainers.  They    believe the bugs will be worked out in EGCS 1.2.  */
 end_comment
 
 begin_undef
@@ -150,7 +150,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha. */
+comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha.  */
 end_comment
 
 begin_define
