@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)buf.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)buf.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -163,6 +163,32 @@ name|int
 name|b_pfcent
 decl_stmt|;
 comment|/* center page when swapping cluster */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+define|#
+directive|define
+name|MAXBPTE
+value|32
+comment|/* must be>=KLMAX */
+name|long
+name|b_upte
+index|[
+name|MAXBPTE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* user pte's for swap/raw I/O */
+name|int
+name|b_ptecnt
+decl_stmt|;
+comment|/* number of user pte's in b_upte */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -733,6 +759,31 @@ end_define
 begin_comment
 comment|/* call b_iodone from iodone */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|B_NOT1K
+value|0x400000
+end_define
+
+begin_comment
+comment|/* I/O is through intermediate buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Insq/Remq for the buffer hash lists.  */
