@@ -2774,6 +2774,13 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_wakeup
+argument_list|(
+name|fs
+operator|.
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -2835,13 +2842,6 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Unlock everything, and return 	 */
-name|vm_page_wakeup
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
 name|fs
