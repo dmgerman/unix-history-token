@@ -13,12 +13,6 @@ directive|include
 file|<stand.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -41,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<sys/linker.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
 end_include
 
 begin_include
