@@ -23957,13 +23957,6 @@ name|newacq
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|secpolicyindex
-modifier|*
-name|spidx
-init|=
-name|NULL
-decl_stmt|;
 name|u_int8_t
 name|satype
 decl_stmt|;
@@ -23980,10 +23973,6 @@ comment|/* sanity check */
 if|if
 condition|(
 name|saidx
-operator|==
-name|NULL
-operator|||
-name|sp
 operator|==
 name|NULL
 condition|)
@@ -24011,13 +24000,6 @@ name|panic
 argument_list|(
 literal|"key_acquire: invalid proto is passed.\n"
 argument_list|)
-expr_stmt|;
-name|spidx
-operator|=
-operator|&
-name|sp
-operator|->
-name|spidx
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -24266,6 +24248,11 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX proxy address (optional) */
 comment|/* set sadb_x_policy */
+if|if
+condition|(
+name|sp
+condition|)
+block|{
 name|m
 operator|=
 name|key_setsadbxpolicy
@@ -24306,6 +24293,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX identity (optional) */
 if|#
 directive|if
