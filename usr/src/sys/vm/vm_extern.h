@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -86,7 +86,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|getpagesize
+name|compat_43_getpagesize
 name|__P
 argument_list|(
 operator|(
