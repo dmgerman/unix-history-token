@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.15 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3228,6 +3228,9 @@ name|f_fname
 argument_list|)
 expr_stmt|;
 block|}
+name|untty
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3667,6 +3670,31 @@ name|ttyf
 operator|>=
 literal|0
 condition|)
+block|{
+name|struct
+name|stat
+name|statb
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|ttyf
+argument_list|,
+operator|&
+name|statb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|statb
+operator|.
+name|st_mode
+operator|&
+name|S_IWRITE
+operator|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -3679,6 +3707,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
