@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_include
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.24 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.25 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.24 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.25 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1433,11 +1433,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. ** **	Returns: **		none. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
+comment|/*  *  MAPHOSTNAME -- turn a hostname into canonical form  *  *	Parameters:  *		hbuf -- a buffer containing a hostname.  *		hbsize -- the size of hbuf.  *  *	Returns:  *		none.  *  *	Side Effects:  *		Looks up the host specified in hbuf.  If it is not  *		the canonical name for that host, replace it with  *		the canonical name.  If the name is unknown, or it  *		is already the canonical name, leave it unchanged.  */
 end_comment
 
 begin_macro
@@ -1470,29 +1467,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|extern
-name|struct
-name|hostent
-modifier|*
-name|gethostbyname
-parameter_list|()
-function_decl|;
-comment|/* 	**  If first character is a bracket, then it is an address 	**  lookup.  Address is copied into a temporary buffer to 	**  strip the brackets and to preserve hbuf if address is 	**  unknown. 	*/
-if|if
-condition|(
-operator|*
-name|hbuf
-operator|==
-literal|'['
-condition|)
-block|{
-specifier|extern
-name|struct
-name|hostent
-modifier|*
-name|gethostbyaddr
-parameter_list|()
-function_decl|;
 name|u_long
 name|in_addr
 decl_stmt|;
@@ -1502,31 +1476,42 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|char
+name|struct
+name|hostent
 modifier|*
-name|bptr
-decl_stmt|;
-operator|(
-name|void
-operator|)
+name|gethostbyaddr
+parameter_list|()
+function_decl|;
+comment|/* 	 * If first character is a bracket, then it is an address 	 * lookup.  Address is copied into a temporary buffer to 	 * strip the brackets and to preserve hbuf if address is 	 * unknown. 	 */
+if|if
+condition|(
+operator|*
+name|hbuf
+operator|!=
+literal|'['
+condition|)
+block|{
+name|getcanonname
+argument_list|(
+name|hbuf
+argument_list|,
+name|hbsize
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+operator|*
+name|index
+argument_list|(
 name|strcpy
 argument_list|(
 name|ptr
 argument_list|,
 name|hbuf
 argument_list|)
-expr_stmt|;
-name|bptr
-operator|=
-name|index
-argument_list|(
-name|ptr
 argument_list|,
 literal|']'
 argument_list|)
-expr_stmt|;
-operator|*
-name|bptr
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1568,58 +1553,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-block|}
-else|else
-block|{
-name|makelower
-argument_list|(
-name|hbuf
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MXDOMAIN
-name|getcanonname
-argument_list|(
-name|hbuf
-argument_list|,
-name|hbsize
-argument_list|)
-expr_stmt|;
-return|return;
-else|#
-directive|else
-else|MXDOMAIN
-name|hp
-operator|=
-name|gethostbyname
-argument_list|(
-name|hbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 if|if
 condition|(
-name|hp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|int
-name|i
-init|=
 name|strlen
 argument_list|(
 name|hp
 operator|->
 name|h_name
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|i
 operator|>=
 name|hbsize
 condition|)
@@ -1647,11 +1588,7 @@ name|h_name
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_else
 else|#
