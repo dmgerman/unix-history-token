@@ -1894,7 +1894,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory Pages:\t%ldK\n"
+literal|"Free Memory Pages:\t%lldK\n"
 argument_list|,
 operator|(
 name|long
