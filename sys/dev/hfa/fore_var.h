@@ -665,6 +665,10 @@ name|callout_handle
 name|fu_thandle
 decl_stmt|;
 comment|/* Timer handle */
+name|int
+name|fu_ft4
+decl_stmt|;
+comment|/* Running ForeThought 4 firmware */
 block|}
 struct|;
 end_struct

@@ -598,7 +598,7 @@ name|Fore_vcc
 modifier|*
 name|fvp
 decl_stmt|;
-comment|/* 	 * Process each completed entry 	 */
+comment|/* 	 * Process each completed entry 	 * ForeThought 4 may set QSTAT_ERROR without QSTAT_COMPLETED. 	 */
 while|while
 condition|(
 operator|*
@@ -608,7 +608,11 @@ name|fu_cmd_head
 operator|->
 name|hcq_status
 operator|&
+operator|(
 name|QSTAT_COMPLETED
+operator||
+name|QSTAT_ERROR
+operator|)
 condition|)
 block|{
 name|hcp
@@ -890,6 +894,33 @@ name|CMD_GET_PROM
 case|:
 if|if
 condition|(
+name|fup
+operator|->
+name|fu_ft4
+condition|)
+goto|goto
+name|unknown
+goto|;
+goto|goto
+name|prom
+goto|;
+case|case
+name|CMD_GET_PROM4
+case|:
+if|if
+condition|(
+operator|!
+name|fup
+operator|->
+name|fu_ft4
+condition|)
+goto|goto
+name|unknown
+goto|;
+name|prom
+label|:
+if|if
+condition|(
 operator|*
 name|hcp
 operator|->
@@ -1050,6 +1081,8 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|unknown
+label|:
 name|log
 argument_list|(
 name|LOG_ERR

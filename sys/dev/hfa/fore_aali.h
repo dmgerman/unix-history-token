@@ -1065,6 +1065,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CMD_ZERO_STATS4
+value|0x09
+end_define
+
+begin_comment
+comment|/* FT 4 Zero stats (unimpl) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_GET_PROM4
+value|0x0a
+end_define
+
+begin_comment
+comment|/* FT 4 Get PROM data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CMD_INTR_REQ
 value|0x80
 end_define
