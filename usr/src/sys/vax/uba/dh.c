@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.1	%H%	*/
+comment|/*	dh.c	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -242,6 +242,20 @@ define|#
 directive|define
 name|IENAB
 value|030100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NXM
+value|02000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRNXM
+value|0400
 end_define
 
 begin_define
@@ -1647,6 +1661,31 @@ operator|)
 operator|~
 name|XINT
 expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|&
+name|NXM
+condition|)
+block|{
+name|addr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator||=
+name|CLRNXM
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dh clr NXM\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|sbar
 operator|=
 operator|&
@@ -2270,6 +2309,12 @@ expr_stmt|;
 name|addr
 operator|++
 expr_stmt|;
+name|dhxint
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+comment|/* in case lost interrupt */
 name|dhrint
 argument_list|(
 name|d
