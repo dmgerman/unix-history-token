@@ -262,6 +262,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|emitline
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|eval
 name|__P
 argument_list|(
@@ -525,6 +537,31 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|inname
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* names of these input files  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inlineno
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current number in each input*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|outfile
@@ -760,6 +797,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* start character for comment */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|synccpp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Line synchronisation for C preprocessor */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|chscratch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Scratch space for gpbc() macro */
 end_comment
 
 end_unit

@@ -905,7 +905,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: m4 [-Dname[=val]] [-Uname]\n"
+literal|"usage: m4 [-s] [-D name[=val]]... [-U name]... file...\n"
 argument_list|)
 expr_stmt|;
 name|exit
