@@ -744,6 +744,12 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+name|e
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
 block|}
 return|return
 name|e
