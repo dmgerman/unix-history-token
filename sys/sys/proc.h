@@ -123,6 +123,12 @@ begin_comment
 comment|/* Machine-dependent proc substruct. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (e)		locked by proctree_lock sx  * (c)		const until freeing  */
 end_comment
@@ -544,7 +550,7 @@ name|void
 modifier|*
 name|td_mailbox
 decl_stmt|;
-comment|/* the userland mailbox address */
+comment|/* The userland mailbox address. */
 name|struct
 name|ucred
 modifier|*
@@ -560,7 +566,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* (k) switchin special func */
+comment|/* (k) Switchin special func. */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -659,7 +665,7 @@ value|0x000001
 end_define
 
 begin_comment
-comment|/* may give away the kse, uses the kg runq */
+comment|/* May give away the kse, uses the kg runq. */
 end_comment
 
 begin_define
@@ -670,7 +676,7 @@ value|0x000002
 end_define
 
 begin_comment
-comment|/* Caused a panic, let it drive crashdump */
+comment|/* Caused a panic, let it drive crashdump. */
 end_comment
 
 begin_define
@@ -736,7 +742,7 @@ value|0x000200
 end_define
 
 begin_comment
-comment|/* On the sleep queue */
+comment|/* On the sleep queue. */
 end_comment
 
 begin_define
@@ -747,7 +753,7 @@ value|0x000400
 end_define
 
 begin_comment
-comment|/* Don't recurse in msleep() */
+comment|/* Don't recurse in msleep(). */
 end_comment
 
 begin_define
@@ -780,7 +786,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* on suspension queue */
+comment|/* On suspension queue. */
 end_comment
 
 begin_define
@@ -791,11 +797,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Actually asleep! */
-end_comment
-
-begin_comment
-comment|/* actually tricky */
+comment|/* Actually asleep! (tricky). */
 end_comment
 
 begin_define
@@ -806,7 +808,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* stack not in mem.. bad juju if run */
+comment|/* Stack not in mem.. bad juju if run. */
 end_comment
 
 begin_define
@@ -817,7 +819,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Stopped on a mutex */
+comment|/* Stopped on a mutex. */
 end_comment
 
 begin_define
@@ -828,7 +830,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Awaiting interrupt */
+comment|/* Awaiting interrupt. */
 end_comment
 
 begin_define
@@ -3306,9 +3308,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|uma_zone
-modifier|*
+name|uma_zone_t
 name|proc_zone
 decl_stmt|;
 end_decl_stmt
