@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.51 1997/10/26 20:55:28 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.52 1997/10/27 13:33:43 bde Exp $ */
 end_comment
 
 begin_comment
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_include
