@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.5 %G%"
+literal|"@(#)source.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,10 +870,18 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|curline
+operator|!=
+literal|0
+condition|)
+block|{
 name|cursrcline
 operator|=
 name|curline
 expr_stmt|;
+block|}
 block|}
 end_function
 
