@@ -9674,6 +9674,17 @@ name|aps_ready
 condition|)
 comment|/* spin */
 empty_stmt|;
+comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * something unique to lock with. 	 */
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|idleproc
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* lock against other AP's that are waking up */
 name|mtx_enter
 argument_list|(
@@ -9862,17 +9873,6 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
-comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * something unique to lock with. 	 */
-name|PCPU_SET
-argument_list|(
-name|curproc
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|idleproc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|microuptime
 argument_list|(
 name|PCPU_PTR
