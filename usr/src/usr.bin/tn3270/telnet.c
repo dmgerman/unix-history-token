@@ -2737,6 +2737,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<process.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -3331,11 +3337,16 @@ return|return
 literal|1
 return|;
 block|}
+if|#
+directive|if
+literal|1
+comment|/* For BIOS variety of calls */
 if|if
 condition|(
-operator|!
 name|kbhit
 argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
 return|return
@@ -3348,16 +3359,6 @@ name|getch
 argument_list|()
 expr_stmt|;
 comment|/* MSC - get console character */
-if|#
-directive|if
-literal|0
-comment|/* For BIOS variety of calls */
-block|if ((input&0xff) == 0) { 	if ((input&0xff00) == 0x0300) {
-comment|/* Null */
-block|DoNextChar(0); 	} else { 	    DoNextChar(0x01); 	    if (input&0x8000) { 		DoNextChar(0x01); 		DoNextChar((input>>8)&0x7f); 	    } else { 		DoNextChar((input>>8)&0xff); 	    } 	}     } else { 	DoNextChar(input&0xff);     }
-endif|#
-directive|endif
-comment|/* 0 */
 if|if
 condition|(
 operator|(
@@ -3386,6 +3387,115 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* 0 */
+if|if
+condition|(
+operator|(
+name|input
+operator|=
+name|dirconio
+argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+name|lineend
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|input
+operator|&
+literal|0xff
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|input
+operator|&
+literal|0xff00
+operator|)
+operator|==
+literal|0x0300
+condition|)
+block|{
+comment|/* Null */
+name|DoNextChar
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DoNextChar
+argument_list|(
+literal|0x01
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|input
+operator|&
+literal|0x8000
+condition|)
+block|{
+name|DoNextChar
+argument_list|(
+literal|0x01
+argument_list|)
+expr_stmt|;
+name|DoNextChar
+argument_list|(
+operator|(
+name|input
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x7f
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DoNextChar
+argument_list|(
+operator|(
+name|input
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|DoNextChar
+argument_list|(
+name|input
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* 0 */
 return|return
 name|lineend
 return|;
@@ -3424,7 +3534,9 @@ name|closeallsockets
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -14694,11 +14806,6 @@ index|[]
 init|=
 literal|"exit telnet"
 decl_stmt|,
-name|zhelp
-index|[]
-init|=
-literal|"suspend telnet"
-decl_stmt|,
 name|statushelp
 index|[]
 init|=
@@ -14748,6 +14855,34 @@ decl_stmt|,
 endif|#
 directive|endif
 comment|/* defined(TN3270)&& defined(unix) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+name|zhelp
+index|[]
+init|=
+literal|"suspend telnet"
+decl_stmt|,
+endif|#
+directive|endif
+comment|/* defined(unix */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+name|shellhelp
+index|[]
+init|=
+literal|"invoke a subshell"
+decl_stmt|,
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
 name|modehelp
 index|[]
 init|=
@@ -14755,13 +14890,16 @@ literal|"try to enter line-by-line or character-at-a-time mode"
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|help
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|shell
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -14905,6 +15043,12 @@ block|,
 endif|#
 directive|endif
 comment|/* defined(TN3270)&& defined(unix) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
 block|{
 literal|"z"
 block|,
@@ -14917,6 +15061,30 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* defined(unix) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+block|{
+literal|"!"
+block|,
+name|shellhelp
+block|,
+name|shell
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
 block|{
 literal|"?"
 block|,
