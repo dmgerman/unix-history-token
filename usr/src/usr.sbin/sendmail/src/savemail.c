@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.14	%G%"
+literal|"@(#)savemail.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,10 +112,6 @@ if|if
 condition|(
 name|exclusive
 operator|++
-operator|||
-name|TempFile
-operator|==
-name|NULL
 condition|)
 return|return;
 end_if
@@ -598,6 +594,10 @@ condition|(
 name|p
 operator|!=
 name|NULL
+operator|&&
+name|TempFile
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* we have a home directory; open dead.letter */
@@ -787,6 +787,13 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TempFile
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -810,6 +817,15 @@ name|Mailer
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n  ----- No message was collected -----\n\n"
 argument_list|)
 expr_stmt|;
 operator|(
