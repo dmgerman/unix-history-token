@@ -41,11 +41,19 @@ begin_comment
 comment|/* New version (support 32-bit UIDs, bigger 				   message sizes, etc. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
@@ -425,7 +433,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__ || __amd64__ */
 end_comment
 
 begin_endif

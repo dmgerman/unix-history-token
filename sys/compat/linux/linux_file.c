@@ -152,6 +152,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|COMPAT_LINUX32
+end_if
+
+begin_include
+include|#
+directive|include
 file|<machine/../linux/linux.h>
 end_include
 
@@ -160,6 +173,28 @@ include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux32_proto.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3999,6 +4034,14 @@ name|l_pid_t
 name|l_pid
 decl_stmt|;
 block|}
+if|#
+directive|if
+name|__amd64__
+operator|&&
+name|COMPAT_LINUX32
+name|__packed
+endif|#
+directive|endif
 struct|;
 end_struct
 
@@ -4214,6 +4257,15 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|COMPAT_LINUX32
+operator|)
 end_if
 
 begin_struct
@@ -4236,6 +4288,14 @@ name|l_pid_t
 name|l_pid
 decl_stmt|;
 block|}
+if|#
+directive|if
+name|__amd64__
+operator|&&
+name|COMPAT_LINUX32
+name|__packed
+endif|#
+directive|endif
 struct|;
 end_struct
 
@@ -4450,7 +4510,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
 end_comment
 
 begin_if
@@ -5217,6 +5277,15 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|COMPAT_LINUX32
+operator|)
 end_if
 
 begin_function
@@ -5527,7 +5596,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
 end_comment
 
 begin_function
