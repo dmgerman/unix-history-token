@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec.c 1.1 %G%"
+literal|"@(#)rec.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,12 +758,9 @@ index|[
 name|NL_OFFS
 index|]
 operator|+
-name|even
-argument_list|(
 name|width
 argument_list|(
 name|t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
