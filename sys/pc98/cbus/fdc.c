@@ -5869,7 +5869,7 @@ name|i
 decl_stmt|,
 name|j
 init|=
-literal|1000000
+literal|100000
 decl_stmt|;
 while|while
 condition|(
@@ -6008,7 +6008,7 @@ name|i
 decl_stmt|,
 name|j
 init|=
-literal|1000000
+literal|100000
 decl_stmt|;
 while|while
 condition|(
@@ -6040,12 +6040,6 @@ operator|--
 operator|>
 literal|0
 condition|)
-block|{
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -6060,7 +6054,6 @@ argument_list|,
 literal|"ready for output in input\n"
 argument_list|)
 return|;
-block|}
 if|if
 condition|(
 name|j
@@ -6165,7 +6158,7 @@ decl_stmt|;
 comment|/* Check that the direction bit is set */
 name|i
 operator|=
-literal|1000000
+literal|100000
 expr_stmt|;
 while|while
 condition|(
@@ -6185,11 +6178,7 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|i
@@ -6207,7 +6196,7 @@ return|;
 comment|/* Check that the floppy controller is ready for a command */
 name|i
 operator|=
-literal|1000000
+literal|100000
 expr_stmt|;
 while|while
 condition|(
@@ -6229,11 +6218,7 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|i
@@ -6260,11 +6245,6 @@ operator|+
 name|FDDATA
 argument_list|,
 name|x
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10
 argument_list|)
 expr_stmt|;
 name|TRACE1
