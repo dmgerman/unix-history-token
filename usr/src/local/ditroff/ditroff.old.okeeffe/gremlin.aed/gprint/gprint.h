@@ -1,21 +1,128 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gprint.h	1.3	83/03/30  *  * This file contains standard definitions used by the gprint program.  */
+comment|/* gprint.h	1.4	83/05/13  *  * This file contains standard definitions used by the gprint program.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|Xmax
+name|Vxlen
+value|2048
+end_define
+
+begin_comment
+comment|/* varian dimensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Vylen
+value|1536
+end_define
+
+begin_define
+define|#
+directive|define
+name|Vbytperlin
+value|264
+end_define
+
+begin_define
+define|#
+directive|define
+name|Wxlen
+value|2048
+end_define
+
+begin_comment
+comment|/* versatec dimensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Wylen
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|Wbytperlin
+value|880
+end_define
+
+begin_define
+define|#
+directive|define
+name|MenuSize
+value|116
+end_define
+
+begin_comment
+comment|/* screen dimensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HXmin
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HXmax
 value|511
 end_define
 
 begin_define
 define|#
 directive|define
-name|Ymax
-value|483
+name|HYmin
+value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|HYmax
+value|(511 - MenuSize)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VXmin
+value|MenuSize
+end_define
+
+begin_define
+define|#
+directive|define
+name|VXmax
+value|511
+end_define
+
+begin_define
+define|#
+directive|define
+name|VYmin
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VYmax
+value|511
+end_define
+
+begin_comment
+comment|/* translation stuff */
+end_comment
 
 begin_define
 define|#
@@ -26,7 +133,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|Orientation ? (y) : (x)
+value|Orientation ? ((y) - VYmin) : ((x) - HXmin)
 end_define
 
 begin_define
@@ -38,7 +145,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|Orientation ? (x) : (y)
+value|Orientation ? ((x) - VXmin) : (HYmax - (y))
 end_define
 
 begin_define

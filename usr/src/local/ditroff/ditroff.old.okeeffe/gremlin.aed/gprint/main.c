@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.4	83/03/30  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
+comment|/* main.c	1.5	83/05/13  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
 end_comment
 
 begin_include
@@ -193,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* output buffer DevRange x DevRange/8 */
+comment|/* output buffer NumOfLin x DevRange/8 */
 end_comment
 
 begin_decl_stmt
@@ -236,7 +236,7 @@ begin_decl_stmt
 name|double
 name|scale
 init|=
-literal|3.0
+literal|4.0
 decl_stmt|;
 end_decl_stmt
 
@@ -302,7 +302,7 @@ begin_decl_stmt
 name|int
 name|DevRange
 init|=
-literal|1536
+name|Vxlen
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +314,7 @@ begin_decl_stmt
 name|int
 name|DevRange8
 init|=
-literal|1536
+name|Vxlen
 operator|/
 literal|8
 decl_stmt|;
@@ -322,15 +322,23 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|BytesPerLine
+name|BytPrLin
 init|=
-literal|264
+name|Vbytperlin
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Bytes per raster line (different from range 				   due to non-square paper). */
+comment|/* Bytes per raster line. (not DevRange8) */
 end_comment
+
+begin_decl_stmt
+name|int
+name|NumOfLin
+init|=
+name|Vylen
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -368,15 +376,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* variables used to print from font file */
-end_comment
-
 begin_decl_stmt
 name|int
 name|Orientation
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* variables used to print from font file */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -604,23 +612,27 @@ case|case
 literal|'W'
 case|:
 comment|/* Print to wide (versatec) device */
-name|scale
+name|BytPrLin
 operator|=
-literal|4.0
+name|Wbytperlin
 expr_stmt|;
 name|DevRange
 operator|=
-literal|2048
+name|Wxlen
 expr_stmt|;
 name|DevRange8
 operator|=
-literal|2048
+name|Wxlen
 operator|/
 literal|8
 expr_stmt|;
-name|BytesPerLine
+name|BytPrLin
 operator|=
-literal|880
+name|Wbytperlin
+expr_stmt|;
+name|NumOfLin
+operator|=
+name|Wylen
 expr_stmt|;
 name|lpargs
 index|[
@@ -634,23 +646,27 @@ case|case
 literal|'V'
 case|:
 comment|/* Print to narrow (varian) device */
-name|scale
+name|BytPrLin
 operator|=
-literal|3.0
+name|Vbytperlin
 expr_stmt|;
 name|DevRange
 operator|=
-literal|1536
+name|Vxlen
 expr_stmt|;
 name|DevRange8
 operator|=
-literal|1536
+name|Vxlen
 operator|/
 literal|8
 expr_stmt|;
-name|BytesPerLine
+name|BytPrLin
 operator|=
-literal|264
+name|Vbytperlin
+expr_stmt|;
+name|NumOfLin
+operator|=
+name|Vylen
 expr_stmt|;
 name|lpargs
 index|[
@@ -1458,7 +1474,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"unknown switch: %c"
+literal|"unknown switch: %c\n"
 argument_list|,
 operator|*
 name|arg
@@ -1505,7 +1521,7 @@ name|malloc
 argument_list|(
 name|bufsize
 operator|=
-name|DevRange
+name|NumOfLin
 operator|*
 name|DevRange8
 argument_list|)
@@ -1593,7 +1609,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gprint: can't open %s"
+literal|"gprint: can't open %s\n"
 argument_list|,
 name|file
 index|[
@@ -1875,7 +1891,7 @@ for|for
 control|(
 name|i
 operator|=
-name|BytesPerLine
+name|BytPrLin
 operator|-
 name|DevRange8
 init|;
@@ -1902,7 +1918,39 @@ name|pfp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	if (!WriteRaster) { 		lpargs[lparg] = 0; 		execv(LPR, lpargs); 		fprintf(stderr, "gprint: can't exec %s\n", LPR); 		cleanup(); 	} */
+if|if
+condition|(
+operator|!
+name|WriteRaster
+condition|)
+block|{
+name|lpargs
+index|[
+name|lparg
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|execv
+argument_list|(
+name|LPR
+argument_list|,
+name|lpargs
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gprint: can't exec %s\n"
+argument_list|,
+name|LPR
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1944,7 +1992,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Points should be in the range 0<= x< DevRange, 0<= y< DevRange.  * The origin is the top left-hand corner with increasing x towards the  * right and increasing y going down.  * The output array is DevRange x DevRange/8 pixels.  */
+comment|/*  * Points should be in the range 0<= x< DevRange, 0<= y< NumOfLin.  * The origin is the top left-hand corner with increasing x towards the  * right and increasing y going down.  * The output array is NumOfLin x DevRange/8 pixels.  */
 end_comment
 
 begin_expr_stmt
@@ -1982,7 +2030,7 @@ name|unsigned
 operator|)
 name|y
 operator|<
-name|DevRange
+name|NumOfLin
 condition|)
 block|{
 name|byte
@@ -2015,16 +2063,6 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"(%d, %d) out of range\n"
-argument_list|,
-name|x
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
