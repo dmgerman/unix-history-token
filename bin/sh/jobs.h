@@ -131,6 +131,12 @@ name|char
 name|jobctl
 decl_stmt|;
 comment|/* job running under job control */
+name|struct
+name|job
+modifier|*
+name|next
+decl_stmt|;
+comment|/* job used after this one */
 endif|#
 directive|endif
 block|}
