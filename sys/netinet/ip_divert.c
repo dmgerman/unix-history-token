@@ -655,13 +655,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX sbappendaddr must be protected by Giant until 	 * we have locking at the socket layer.  When entered 	 * from below we come in w/o Giant and must take it 	 * here.  Unfortunately we cannot tell whether we're 	 * entering from above (already holding Giant), 	 * below (potentially without Giant), or otherwise 	 * (e.g. from tcp_syncache through a timeout) so we 	 * have to grab it regardless.  This causes a LOR with 	 * the tcp lock, at least, and possibly others.  For 	 * the moment we're ignoring this. Once sockets are 	 * locked this cruft can be removed. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* Put packet on socket queue, if any */
 name|sa
 operator|=
@@ -773,12 +766,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|divcbinfo
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
