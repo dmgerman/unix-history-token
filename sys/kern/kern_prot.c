@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 2000-2001 Robert N. M. Watson.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  *  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_prot.c	8.6 (Berkeley) 1/21/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  * Copyright (c) 2000-2001 Robert N. M. Watson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_prot.c	8.6 (Berkeley) 1/21/94  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_expr_stmt
@@ -173,10 +173,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * getpid  */
-end_comment
 
 begin_comment
 comment|/*  * MPSAFE  */
@@ -284,10 +280,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * getppid  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -393,7 +385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get process group ID; note that POSIX getpgrp takes no parameter   *  * MP SAFE  */
+comment|/*   * Get process group ID; note that POSIX getpgrp takes no parameter.  */
 end_comment
 
 begin_ifndef
@@ -548,10 +540,7 @@ name|pt
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|s
 decl_stmt|;
 name|s
@@ -560,6 +549,10 @@ name|mtx_lock_giant
 argument_list|(
 name|kern_giant_proc
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -716,14 +709,16 @@ name|pt
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -815,10 +810,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * getuid() - MP SAFE  */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -937,10 +928,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * geteuid() - MP SAFE  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -962,6 +949,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1020,10 +1011,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * getgid() - MP SAFE  */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -1312,14 +1299,16 @@ name|ngrp
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|cred
 operator|=
@@ -1350,10 +1339,6 @@ operator|=
 name|cred
 operator|->
 name|cr_ngroups
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 goto|goto
 name|done2
@@ -1412,11 +1397,9 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|td
 operator|->
 name|td_retval
@@ -1527,12 +1510,10 @@ operator|->
 name|p_pid
 argument_list|)
 condition|)
-block|{
 name|error
 operator|=
 name|EPERM
 expr_stmt|;
-block|}
 else|else
 block|{
 operator|(
@@ -1863,7 +1844,6 @@ name|pgid
 operator|==
 literal|0
 condition|)
-block|{
 name|uap
 operator|->
 name|pgid
@@ -1872,7 +1852,6 @@ name|targp
 operator|->
 name|p_pid
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2045,20 +2024,18 @@ name|uid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-name|uid
-operator|=
-name|uap
-operator|->
-name|uid
-expr_stmt|;
 name|oldcred
 operator|=
 name|p
 operator|->
 name|p_ucred
+expr_stmt|;
+name|uid
+operator|=
+name|uap
+operator|->
+name|uid
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -2066,7 +2043,11 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of  	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uid's are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of 	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uids are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
 if|if
 condition|(
 name|uid
@@ -2113,6 +2094,8 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|done2
@@ -2325,8 +2308,6 @@ name|euid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|euid
 operator|=
@@ -2339,6 +2320,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2374,12 +2359,12 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
 name|newcred
 operator|=
@@ -2508,8 +2493,6 @@ name|gid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|gid
 operator|=
@@ -2522,6 +2505,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2579,12 +2566,12 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -2799,8 +2786,6 @@ name|egid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|egid
 operator|=
@@ -2813,6 +2798,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2848,12 +2837,12 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -3021,6 +3010,8 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|done2
@@ -3215,32 +3206,34 @@ modifier|*
 name|oldcred
 decl_stmt|;
 name|uid_t
-name|ruid
-decl_stmt|,
 name|euid
+decl_stmt|,
+name|ruid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-name|ruid
+name|euid
 operator|=
 name|uap
 operator|->
-name|ruid
+name|euid
 expr_stmt|;
-name|euid
+name|ruid
 operator|=
 name|uap
 operator|->
-name|euid
+name|ruid
 expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|oldcred
 operator|=
@@ -3317,11 +3310,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -3531,32 +3522,34 @@ modifier|*
 name|oldcred
 decl_stmt|;
 name|gid_t
-name|rgid
-decl_stmt|,
 name|egid
+decl_stmt|,
+name|rgid
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-name|rgid
+name|egid
 operator|=
 name|uap
 operator|->
-name|rgid
+name|egid
 expr_stmt|;
-name|egid
+name|rgid
 operator|=
 name|uap
 operator|->
-name|egid
+name|rgid
 expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|oldcred
 operator|=
@@ -3636,11 +3629,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -3869,26 +3860,26 @@ modifier|*
 name|oldcred
 decl_stmt|;
 name|uid_t
-name|ruid
-decl_stmt|,
 name|euid
+decl_stmt|,
+name|ruid
 decl_stmt|,
 name|suid
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ruid
+name|euid
 operator|=
 name|uap
 operator|->
-name|ruid
+name|euid
 expr_stmt|;
-name|euid
+name|ruid
 operator|=
 name|uap
 operator|->
-name|euid
+name|ruid
 expr_stmt|;
 name|suid
 operator|=
@@ -4011,11 +4002,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -4222,26 +4211,26 @@ modifier|*
 name|oldcred
 decl_stmt|;
 name|gid_t
-name|rgid
-decl_stmt|,
 name|egid
+decl_stmt|,
+name|rgid
 decl_stmt|,
 name|sgid
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|rgid
+name|egid
 operator|=
 name|uap
 operator|->
-name|rgid
+name|egid
 expr_stmt|;
-name|egid
+name|rgid
 operator|=
 name|uap
 operator|->
-name|egid
+name|rgid
 expr_stmt|;
 name|sgid
 operator|=
@@ -4713,11 +4702,11 @@ name|Giant
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error1
 condition|?
 name|error1
 else|:
-operator|(
 name|error2
 condition|?
 name|error2
@@ -4938,11 +4927,11 @@ name|Giant
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error1
 condition|?
 name|error1
 else|:
-operator|(
 name|error2
 condition|?
 name|error2
@@ -4974,6 +4963,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * NOT MPSAFE?  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5064,14 +5057,16 @@ directive|ifdef
 name|REGRESSION
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -5133,7 +5128,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !REGRESSION */
+comment|/* REGRESSION */
 block|}
 end_function
 
@@ -5266,6 +5261,7 @@ name|p
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|suser_xxx
 argument_list|(
 literal|0
@@ -5274,6 +5270,7 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5410,8 +5407,9 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 name|cred
+operator|==
+name|NULL
 condition|)
 name|cred
 operator|=
@@ -5460,7 +5458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test (local, globale) securelevel values against passed required  * securelevel.  _gt implements (level> securelevel), and _ge implements  * (level>= securelevel).  Returns 0 oer EPERM.  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel  * message is displayed.  */
+comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel message  * is displayed.  */
 end_comment
 
 begin_function
@@ -5476,13 +5474,19 @@ name|int
 name|level
 parameter_list|)
 block|{
+name|int
+name|active_securelevel
+decl_stmt|;
+name|active_securelevel
+operator|=
+name|securelevel
+expr_stmt|;
 if|if
 condition|(
 name|cr
 operator|==
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"securelevel_gt: cr is NULL\n"
@@ -5490,56 +5494,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|level
-operator|>
-name|securelevel
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
 name|cr
 operator|->
 name|cr_prison
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|level
-operator|>
-name|securelevel
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|level
-operator|>
+name|active_securelevel
+operator|=
 name|imax
 argument_list|(
 name|cr
@@ -5548,21 +5510,20 @@ name|cr_prison
 operator|->
 name|pr_securelevel
 argument_list|,
-name|securelevel
+name|active_securelevel
 argument_list|)
-condition|)
+expr_stmt|;
 return|return
 operator|(
+name|active_securelevel
+operator|>
+name|level
+condition|?
+name|EPERM
+else|:
 literal|0
 operator|)
 return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -5579,69 +5540,34 @@ name|int
 name|level
 parameter_list|)
 block|{
+name|int
+name|active_securelevel
+decl_stmt|;
+name|active_securelevel
+operator|=
+name|securelevel
+expr_stmt|;
 if|if
 condition|(
 name|cr
 operator|==
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"securelevel_ge: cr is NULL\n"
+literal|"securelevel_gt: cr is NULL\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|level
-operator|>=
-name|securelevel
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|cr
 operator|->
 name|cr_prison
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|level
-operator|>=
-name|securelevel
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|level
-operator|>=
+name|active_securelevel
+operator|=
 name|imax
 argument_list|(
 name|cr
@@ -5650,26 +5576,25 @@ name|cr_prison
 operator|->
 name|pr_securelevel
 argument_list|,
-name|securelevel
+name|active_securelevel
 argument_list|)
-condition|)
+expr_stmt|;
 return|return
 operator|(
+name|active_securelevel
+operator|>=
+name|level
+condition|?
+name|EPERM
+else|:
 literal|0
 operator|)
 return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * 'see_other_uids' determines whether or not visibility of processes  * and sockets with credentials holding different real uid's is possible  * using a variety of system MIBs.  */
+comment|/*  * 'see_other_uids' determines whether or not visibility of processes  * and sockets with credentials holding different real uids is possible  * using a variety of system MIBs.  * XXX: data declarations should be together near the beginning of the file.  */
 end_comment
 
 begin_decl_stmt
@@ -5703,7 +5628,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Determine if u1 "can see" the subject specified by u2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: none  * References: u1 and u2 must be immutable credentials  *             u1 and u2 must be valid for the lifetime of the call  *             u1 may equal u2, in which case only one reference is required  */
+comment|/*-  * Determine if u1 "can see" the subject specified by u2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: none  * References: *u1 and *u2 must not change during the call  *             u1 may equal u2, in which case only one reference is required  */
 end_comment
 
 begin_function
@@ -6056,7 +5981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether p1 may reschedule p2  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+comment|/*-  * Determine whether p1 may reschedule p2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6199,7 +6124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The 'unprivileged_procdebug_permitted' flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  */
+comment|/*  * The 'unprivileged_procdebug_permitted' flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  * XXX: data declarations should be together near the beginning of the file.  */
 end_comment
 
 begin_decl_stmt
@@ -6252,15 +6177,15 @@ name|p2
 parameter_list|)
 block|{
 name|int
-name|error
+name|credentialchanged
 decl_stmt|,
-name|i
+name|error
 decl_stmt|,
 name|grpsubset
 decl_stmt|,
-name|uidsubset
+name|i
 decl_stmt|,
-name|credentialchanged
+name|uidsubset
 decl_stmt|;
 if|if
 condition|(
@@ -6487,14 +6412,12 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* can't trace init when securelevel> 0 */
+comment|/* Can't trace init when securelevel> 0. */
 if|if
 condition|(
 name|p2
-operator|->
-name|p_pid
 operator|==
-literal|1
+name|initproc
 condition|)
 block|{
 name|error
@@ -6772,7 +6695,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -6781,7 +6703,6 @@ operator|->
 name|cr_mtx
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -7206,6 +7127,8 @@ argument_list|,
 name|PRISON_ROOT
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|done2
@@ -7244,19 +7167,16 @@ name|error
 operator|==
 name|ENAMETOOLONG
 condition|)
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
 operator|!
 name|error
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -7278,7 +7198,6 @@ name|logintmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|done2
 label|:
 name|mtx_unlock
