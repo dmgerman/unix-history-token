@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kbio.h>
 end_include
 
@@ -84,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -97,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -1459,7 +1465,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|error
@@ -1790,7 +1796,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|error
