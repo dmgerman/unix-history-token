@@ -555,6 +555,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|db_cmdfcn_t
+name|db_deletehwatch_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|db_cmdfcn_t
 name|db_deletewatch_cmd
 decl_stmt|;
 end_decl_stmt
@@ -562,6 +568,12 @@ end_decl_stmt
 begin_decl_stmt
 name|db_cmdfcn_t
 name|db_examine_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|db_cmdfcn_t
+name|db_hwatchpoint_cmd
 decl_stmt|;
 end_decl_stmt
 
