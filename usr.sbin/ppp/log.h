@@ -283,18 +283,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|log_Id
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|log_Keep
 parameter_list|(
