@@ -129,7 +129,7 @@ name|char
 name|tbl_end
 index|[]
 init|=
-literal|"\n};\n"
+literal|"};\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ name|char
 name|null_entry
 index|[]
 init|=
-literal|"\n\t{\n\  \tNULL,\n\  \t(xdrproc_t) xdr_void,\t\t\t0,\n\  \t(xdrproc_t) xdr_void,\t\t\t0,\n\  \t}"
+literal|"\n\t(char *(*)())0,\n\  \t(xdrproc_t) xdr_void,\t\t\t0,\n\  \t(xdrproc_t) xdr_void,\t\t\t0,\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,7 +451,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|",\n\n\t{\n\tRPCGEN_ACTION("
+literal|"\n\t(char *(*)())RPCGEN_ACTION("
 argument_list|)
 expr_stmt|;
 comment|/* routine to invoke */
@@ -567,13 +567,6 @@ operator|->
 name|res_type
 argument_list|)
 expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t}"
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* print the table trailer */
 name|f_print
@@ -630,7 +623,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t(xdrproc_t) xdr_%s,"
+literal|"\txdr_%s,"
 argument_list|,
 name|stringfix
 argument_list|(
@@ -699,7 +692,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|" sizeof ( "
+literal|"sizeof ( "
 argument_list|)
 expr_stmt|;
 comment|/* XXX: should "follow" be 1 ??? */
