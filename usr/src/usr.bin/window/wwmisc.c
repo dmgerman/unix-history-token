@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwmisc.c	3.3 83/09/15"
+literal|"@(#)wwmisc.c	3.4 83/11/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,17 +178,19 @@ return|;
 block|}
 end_block
 
-begin_function
+begin_decl_stmt
 name|char
 modifier|*
 name|unctrl
-parameter_list|(
+argument_list|(
 name|c
-parameter_list|)
-specifier|register
-name|char
+argument_list|)
+decl|register
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|static
 name|char
@@ -204,6 +206,17 @@ name|p
 init|=
 name|buf
 decl_stmt|;
+name|c
+operator|=
+operator|(
+name|unsigned
+operator|)
+operator|(
+name|unsigned
+name|char
+operator|)
+name|c
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -318,7 +331,7 @@ return|return
 name|buf
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
