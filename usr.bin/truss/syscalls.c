@@ -1606,6 +1606,17 @@ name|sc
 init|=
 name|syscalls
 decl_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 while|while
 condition|(
 name|sc
