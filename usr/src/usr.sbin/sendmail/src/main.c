@@ -5230,7 +5230,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d e_flags %o, e_id=%s\n"
+literal|"\n====finis: stat %d e_flags %x, e_id=%s\n"
 argument_list|,
 name|ExitStat
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.34 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,7 +851,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"allocaddr(flags=%o, paddr=%s)\n"
+literal|"allocaddr(flags=%x, paddr=%s)\n"
 argument_list|,
 name|flags
 argument_list|,
@@ -5899,7 +5899,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"buildaddr, flags=%o, tv="
+literal|"buildaddr, flags=%x, tv="
 argument_list|,
 name|flags
 argument_list|)

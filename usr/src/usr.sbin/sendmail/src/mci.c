@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.14 (Berkeley) %G%"
+literal|"@(#)mci.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,7 +1143,7 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"flags=%o, errno=%d, herrno=%d, exitstat=%d, state=%d, pid=%d,%s"
+literal|"flags=%x, errno=%d, herrno=%d, exitstat=%d, state=%d, pid=%d,%s"
 argument_list|,
 name|mci
 operator|->
