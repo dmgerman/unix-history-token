@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.1 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,14 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -958,6 +966,12 @@ init|;
 name|i
 operator|<
 literal|10
+operator|&&
+name|i
+operator|<
+name|dp
+operator|->
+name|d_nsectors
 condition|;
 name|i
 operator|+=
@@ -1126,6 +1140,12 @@ init|;
 name|i
 operator|<
 literal|10
+operator|&&
+name|i
+operator|<
+name|dp
+operator|->
+name|d_nsectors
 condition|;
 name|i
 operator|+=
@@ -1628,6 +1648,13 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *  Copy disk sector s1 to s2.  */
 end_comment
@@ -1653,12 +1680,51 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
+if|if
+condition|(
 name|buf
-index|[
-literal|512
-index|]
-decl_stmt|;
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|dp
+operator|->
+name|d_secsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Out of memory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|lseek
@@ -1800,10 +1866,8 @@ end_block
 
 begin_decl_stmt
 name|char
+modifier|*
 name|zbuf
-index|[
-literal|512
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,6 +1888,51 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|zbuf
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|zbuf
+operator|=
+name|malloc
+argument_list|(
+name|dp
+operator|->
+name|d_secsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zbuf
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Out of memory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|lseek
@@ -1948,11 +2057,11 @@ operator|)
 return|;
 return|return
 operator|(
-name|b2
+name|b1
 operator|->
 name|bt_trksec
 operator|-
-name|b1
+name|b2
 operator|->
 name|bt_trksec
 operator|)
@@ -2242,10 +2351,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|buf
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -2343,7 +2448,9 @@ name|long
 operator|)
 name|blk
 operator|*
-literal|512
+name|dp
+operator|->
+name|d_secsize
 argument_list|,
 name|L_SET
 argument_list|)
@@ -2457,7 +2564,9 @@ name|long
 operator|)
 name|blk
 operator|*
-literal|512
+name|dp
+operator|->
+name|d_secsize
 argument_list|,
 name|L_SET
 argument_list|)
