@@ -117,7 +117,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|BF_cbc_encrypt
+name|BF_ecb_encrypt
 parameter_list|(
 specifier|const
 name|unsigned
@@ -128,14 +128,7 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|long
-parameter_list|,
-specifier|const
 name|BF_KEY
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
 modifier|*
 parameter_list|,
 name|int
