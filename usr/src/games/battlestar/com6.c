@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com6.c	5.3 (Berkeley) %G%"
+literal|"@(#)com6.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,11 +298,27 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * sigh -- this program thinks "time" is an int.  It's easier to not load  *<time.h> than try and fix it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
 
 begin_macro
 name|post
@@ -330,6 +346,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|date
+decl_stmt|,
+modifier|*
+name|ctime
+argument_list|()
 decl_stmt|;
 name|int
 name|s
