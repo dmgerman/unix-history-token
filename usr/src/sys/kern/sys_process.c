@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm/vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
+file|"vm/vm_prot.h"
 end_include
 
 begin_comment
@@ -217,11 +217,9 @@ name|SSTOP
 operator|||
 name|p
 operator|->
-name|p_ppid
+name|p_pptr
 operator|!=
 name|curp
-operator|->
-name|p_pid
 operator|||
 operator|!
 operator|(
@@ -751,9 +749,12 @@ name|rv
 operator|=
 name|vm_map_protect
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|sa
 argument_list|,
@@ -792,9 +793,12 @@ name|void
 operator|)
 name|vm_map_protect
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|sa
 argument_list|,
@@ -930,9 +934,9 @@ condition|(
 name|poff
 operator|==
 operator|&
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 index|[
 name|ipcreg
 index|[
@@ -948,9 +952,9 @@ condition|(
 name|poff
 operator|==
 operator|&
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 index|[
 name|PS
 index|]
@@ -1072,9 +1076,9 @@ name|ip_addr
 operator|!=
 literal|1
 condition|)
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 index|[
 name|PC
 index|]
@@ -1115,9 +1119,9 @@ name|i
 operator|==
 name|PT_STEP
 condition|)
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 index|[
 name|PS
 index|]

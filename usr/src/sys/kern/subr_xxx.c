@@ -1,7 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_xxx.c	7.9 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Miscellaneous trivial functions, including many  * that are often inline-expanded or done in assembler.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/cpu.h"
+end_include
 
 begin_include
 include|#
@@ -10,11 +26,11 @@ file|"errno.h"
 end_include
 
 begin_comment
-comment|/*  * Routine placed in illegal entries in the bdevsw and cdevsw tables.  */
+comment|/*  * Unsupported device function (e.g. writing to read-only device).  */
 end_comment
 
 begin_macro
-name|nodev
+name|enodev
 argument_list|()
 end_macro
 
@@ -29,11 +45,49 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Null routine; placed in insignificant entries  * in the bdevsw and cdevsw tables.  */
+comment|/*  * Unconfigured device function; driver not configured.  */
 end_comment
 
 begin_macro
-name|nulldev
+name|enxio
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Return error for unsupported operation.  */
+end_comment
+
+begin_macro
+name|eopnotsupp
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Generic null operation, always returns success.  */
+end_comment
+
+begin_macro
+name|nullop
 argument_list|()
 end_macro
 
@@ -76,6 +130,14 @@ argument|b
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 return|return
@@ -101,6 +163,14 @@ argument|b
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 return|return
@@ -119,6 +189,7 @@ end_block
 
 begin_function
 name|unsigned
+name|int
 name|min
 parameter_list|(
 name|a
@@ -126,6 +197,7 @@ parameter_list|,
 name|b
 parameter_list|)
 name|unsigned
+name|int
 name|a
 decl_stmt|,
 name|b
@@ -147,6 +219,7 @@ end_function
 
 begin_function
 name|unsigned
+name|int
 name|max
 parameter_list|(
 name|a
@@ -154,6 +227,123 @@ parameter_list|,
 name|b
 parameter_list|)
 name|unsigned
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|a
+operator|>
+name|b
+condition|?
+name|a
+else|:
+name|b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+name|lmin
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|long
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|a
+operator|<
+name|b
+condition|?
+name|a
+else|:
+name|b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+name|lmax
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|long
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|a
+operator|>
+name|b
+condition|?
+name|a
+else|:
+name|b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|ulmin
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|unsigned
+name|long
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|a
+operator|<
+name|b
+condition|?
+name|a
+else|:
+name|b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|ulmax
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|unsigned
+name|long
 name|a
 decl_stmt|,
 name|b
@@ -278,24 +468,26 @@ name|hp300
 argument_list|)
 end_if
 
-begin_expr_stmt
+begin_macro
 name|bcmp
 argument_list|(
-name|s1
+argument|v1
 argument_list|,
-name|s2
+argument|v2
 argument_list|,
-name|len
+argument|len
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|s1
-operator|,
-operator|*
-name|s2
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|void
+modifier|*
+name|v1
+decl_stmt|,
+modifier|*
+name|v2
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -306,6 +498,18 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|u_char
+modifier|*
+name|s1
+init|=
+name|v1
+decl_stmt|,
+modifier|*
+name|s2
+init|=
+name|v2
+decl_stmt|;
 while|while
 condition|(
 name|len
@@ -367,7 +571,6 @@ condition|;
 name|len
 operator|++
 control|)
-comment|/* void */
 empty_stmt|;
 return|return
 operator|(
