@@ -496,7 +496,31 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+comment|/* Check if the thread is waiting on a child process: */
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGCHLD
+operator|&&
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_WAIT_WAIT
+condition|)
+block|{
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
 comment|/* Check if system calls are not restarted: */
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
