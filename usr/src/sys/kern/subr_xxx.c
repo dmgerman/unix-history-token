@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.6	81/03/11	*/
+comment|/*	subr_xxx.c	4.7	81/03/11	*/
 end_comment
 
 begin_include
@@ -733,7 +733,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|"ct."
+file|"ct.h"
 end_include
 
 begin_if
