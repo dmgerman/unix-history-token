@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)raw_cb.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)raw_cb.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -348,6 +348,22 @@ expr_stmt|;
 name|remque
 argument_list|(
 name|rp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rp
+operator|->
+name|rcb_options
+condition|)
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|rp
+operator|->
+name|rcb_options
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m_freem
