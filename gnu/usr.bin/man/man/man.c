@@ -5171,7 +5171,7 @@ argument_list|)
 expr_stmt|;
 name|glob
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|found
 operator|+=
