@@ -1996,7 +1996,7 @@ name|sprintf
 argument_list|(
 name|tmpstr
 argument_list|,
-literal|"ftfilt vol%s%02d %010d %s"
+literal|"ftfilt vol%s%02d %010ld %s"
 argument_list|,
 operator|(
 name|tvlast
