@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c	5.4 (Berkeley) %G%"
+literal|"@(#)dol.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2280,6 +2280,15 @@ expr_stmt|;
 name|dolp
 operator|=
 literal|""
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|error
+argument_list|(
+name|err
+argument_list|)
 expr_stmt|;
 block|}
 end_block

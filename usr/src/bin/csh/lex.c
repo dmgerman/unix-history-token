@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.4 (Berkeley) %G%"
+literal|"@(#)lex.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,19 +1860,21 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|lap
-operator|!=
-literal|0
-operator|&&
 name|strlen
 argument_list|(
 name|cp
 argument_list|)
 operator|+
+operator|(
+name|lap
+condition|?
 name|strlen
 argument_list|(
 name|lap
 argument_list|)
+else|:
+literal|0
+operator|)
 operator|>=
 sizeof|sizeof
 argument_list|(
@@ -1884,7 +1886,7 @@ condition|)
 block|{
 name|seterr
 argument_list|(
-literal|"Expansion buf ovflo"
+literal|"Expansion buffer overflow"
 argument_list|)
 expr_stmt|;
 return|return;
