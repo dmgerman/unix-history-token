@@ -7198,11 +7198,13 @@ index|]
 operator|=
 name|count
 expr_stmt|;
-name|devstat_start_transaction
+name|devstat_start_transaction_bio
 argument_list|(
 name|cdp
 operator|->
 name|stats
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|bp
