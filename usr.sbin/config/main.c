@@ -708,6 +708,11 @@ argument_list|(
 literal|"Don't forget to do a ``make depend''\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"You may need to use the make -DNO_WERROR flag if you hit unfixed warnings.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
