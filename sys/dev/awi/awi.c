@@ -83,17 +83,11 @@ operator|>=
 literal|4
 end_if
 
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
 begin_define
 define|#
 directive|define
 name|NBPFILTER
-value|NBPF
+value|1
 end_define
 
 begin_else
