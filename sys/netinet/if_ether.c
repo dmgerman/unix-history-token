@@ -2036,7 +2036,6 @@ modifier|*
 name|rt0
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|llinfo_arp
 modifier|*
@@ -2268,6 +2267,22 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* 	 * If ARP is disabled on this interface, stop. 	 * XXX 	 * Probably should not allocate empty llinfo struct if we are 	 * not going to be sending out an arp request. 	 */
+if|if
+condition|(
+name|ac
+operator|->
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_NOARP
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * There is an arptab entry, but no ethernet address 	 * response yet.  Replace the held mbuf with this 	 * latest one. 	 */
 if|if
 condition|(

@@ -2730,6 +2730,23 @@ break|break;
 case|case
 name|ETHERTYPE_ARP
 case|:
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+condition|)
+block|{
+comment|/* Discard packet if ARP is disabled on interface */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|schednetisr
 argument_list|(
 name|NETISR_ARP
