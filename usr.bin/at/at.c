@@ -254,7 +254,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.2 1994/06/08 18:19:43 kernel Exp $"
+literal|"$Id: at.c,v 1.2 1995/04/12 02:42:28 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -974,13 +974,6 @@ literal|"Cannot give away file"
 argument_list|)
 expr_stmt|;
 name|PRIV_END
-comment|/* We no longer need suid root; now we just need to be able to write      * to the directory, if necessary.      */
-name|REDUCE_PRIV
-argument_list|(
-name|DAEMON_UID
-argument_list|,
-name|DAEMON_GID
-argument_list|)
 comment|/* We've successfully created the file; let's set the flag so it       * gets removed in case of an interrupt or error.      */
 name|fcreated
 init|=
@@ -1934,6 +1927,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|perr
 argument_list|(
 name|argv
@@ -1942,6 +1936,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -1972,11 +1968,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(

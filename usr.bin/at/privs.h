@@ -90,6 +90,35 @@ parameter_list|)
 value|setegid(e)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_REAL_PRIV
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{\ 				setgid(b); \ 				setuid(a); \ 			    }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SET_REAL_PRIV
+parameter_list|(
+name|a
+operator|.
+name|b
+parameter_list|)
+value|{\ 				setregid((b), real_gid); \ 				setreuid((a), real_uid); \ 			    }
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -176,7 +205,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{\ 			setreuid(real_uid, effective_uid); \ 			setregid(real_gid, effective_gid); \ 			effective_uid = (a); \ 			effective_gid = (b); \ 			setregid(effective_gid, real_gid); \ 			setreuid(effective_uid, real_uid); \ 		    }
+value|{\ 			setreuid(real_uid, effective_uid); \ 			setregid(real_gid, effective_gid); \ 			effective_uid = (a); \ 			effective_gid = (b); \ 			SET_REAL_PRIV(a, b); \ 		    }
 end_define
 
 begin_endif
