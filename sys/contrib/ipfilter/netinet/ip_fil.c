@@ -502,7 +502,7 @@ expr|\
 operator|(
 name|__FreeBSD_version
 operator|<
-literal|503001
+literal|503000
 operator|)
 operator|&&
 operator|!
