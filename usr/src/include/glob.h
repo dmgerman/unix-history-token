@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -148,12 +148,60 @@ begin_comment
 comment|/* unignored error */
 end_comment
 
-begin_function_decl
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|int
+name|glob
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|)
+operator|,
+name|glob_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|globfree
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|glob_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 end_unit
 

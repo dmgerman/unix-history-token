@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vis.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vis.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -233,6 +233,43 @@ name|char
 operator|*
 operator|,
 name|size_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|strunvis
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|unvis
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|u_char
+operator|,
+name|int
+operator|*
 operator|,
 name|int
 operator|)
