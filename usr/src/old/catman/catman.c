@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)catman.c	5.2 (Berkeley) %G%"
+literal|"@(#)catman.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,7 +420,7 @@ index|]
 expr_stmt|;
 name|umask
 argument_list|(
-literal|022
+literal|02
 argument_list|)
 expr_stmt|;
 for|for
@@ -582,7 +582,7 @@ name|mkdir
 argument_list|(
 name|buf
 argument_list|,
-literal|0777
+literal|0775
 argument_list|)
 operator|<
 literal|0
@@ -623,13 +623,13 @@ operator|&
 literal|0777
 operator|)
 operator|!=
-literal|0777
+literal|0775
 condition|)
 name|chmod
 argument_list|(
 name|cat
 argument_list|,
-literal|0777
+literal|0775
 argument_list|)
 expr_stmt|;
 while|while
