@@ -559,14 +559,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
-name|msgbufmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|msgbuf
 modifier|*
@@ -579,14 +571,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * Crashdump maps.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
-name|pt_crashdumpmap
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1925,6 +1909,9 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
+decl_stmt|,
+modifier|*
+name|unused
 decl_stmt|;
 name|avail_start
 operator|=
@@ -2096,21 +2083,20 @@ argument_list|)
 comment|/* 	 * Crashdump maps. 	 */
 name|SYSMAP
 argument_list|(
-name|caddr_t
+argument|caddr_t
 argument_list|,
-name|pt_crashdumpmap
+argument|unused
 argument_list|,
-name|crashdumpmap
+argument|crashdumpmap
 argument_list|,
-name|MAXDUMPPGS
+argument|MAXDUMPPGS
 argument_list|)
-expr_stmt|;
-comment|/* 	 * msgbufp is used to map the system message buffer. 	 * XXX msgbufmap is not used. 	 */
+comment|/* 	 * msgbufp is used to map the system message buffer. 	 */
 name|SYSMAP
 argument_list|(
 argument|struct msgbuf *
 argument_list|,
-argument|msgbufmap
+argument|unused
 argument_list|,
 argument|msgbufp
 argument_list|,

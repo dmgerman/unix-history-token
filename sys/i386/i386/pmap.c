@@ -691,9 +691,6 @@ name|CMAP2
 decl_stmt|,
 modifier|*
 name|CMAP3
-decl_stmt|,
-modifier|*
-name|ptmmap
 decl_stmt|;
 end_decl_stmt
 
@@ -727,14 +724,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
-name|msgbufmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|msgbuf
 modifier|*
@@ -747,14 +736,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * Crashdump maps.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
-name|pt_crashdumpmap
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1221,6 +1202,9 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
+decl_stmt|,
+modifier|*
+name|unused
 decl_stmt|;
 name|int
 name|i
@@ -1445,32 +1429,31 @@ expr_stmt|;
 comment|/* 	 * Crashdump maps. 	 */
 name|SYSMAP
 argument_list|(
-name|caddr_t
+argument|caddr_t
 argument_list|,
-name|pt_crashdumpmap
+argument|unused
 argument_list|,
-name|crashdumpmap
+argument|crashdumpmap
 argument_list|,
-name|MAXDUMPPGS
+argument|MAXDUMPPGS
 argument_list|)
-expr_stmt|;
-comment|/* 	 * ptvmmap is used for reading arbitrary physical pages via /dev/mem. 	 * XXX ptmmap is not used. 	 */
+comment|/* 	 * ptvmmap is used for reading arbitrary physical pages via /dev/mem. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
 argument_list|,
-argument|ptmmap
+argument|unused
 argument_list|,
 argument|ptvmmap
 argument_list|,
 literal|1
 argument_list|)
-comment|/* 	 * msgbufp is used to map the system message buffer. 	 * XXX msgbufmap is not used. 	 */
+comment|/* 	 * msgbufp is used to map the system message buffer. 	 */
 name|SYSMAP
 argument_list|(
 argument|struct msgbuf *
 argument_list|,
-argument|msgbufmap
+argument|unused
 argument_list|,
 argument|msgbufp
 argument_list|,
