@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -358,6 +358,14 @@ name|retry
 goto|;
 name|gotit
 label|:
+name|cp
+operator|=
+operator|&
+name|name
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -605,8 +613,12 @@ name|cnputc
 argument_list|(
 name|c
 operator|=
+operator|(
 name|cngetc
 argument_list|()
+operator|&
+literal|0177
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
