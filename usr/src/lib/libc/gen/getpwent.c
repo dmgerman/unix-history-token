@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.10 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,9 +94,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|_pw_rewind
-init|=
-literal|1
+name|_pw_getfirstkey
 decl_stmt|,
 name|_pw_stayopen
 decl_stmt|;
@@ -497,7 +495,7 @@ condition|(
 name|_pw_db
 condition|)
 block|{
-name|_pw_rewind
+name|_pw_getfirstkey
 operator|=
 literal|1
 expr_stmt|;
@@ -542,11 +540,17 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+block|{
+name|_pw_getfirstkey
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 end_if
 
 begin_comment
@@ -1120,10 +1124,10 @@ name|dptr
 condition|)
 if|if
 condition|(
-name|_pw_rewind
+name|_pw_getfirstkey
 condition|)
 block|{
-name|_pw_rewind
+name|_pw_getfirstkey
 operator|=
 literal|0
 expr_stmt|;
