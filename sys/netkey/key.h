@@ -498,7 +498,7 @@ comment|/* type of security association */
 name|u_int8_t
 name|vers
 decl_stmt|;
-comment|/* version of security association (AH/ESP) */
+comment|/* version of sassoc (AH/ESP) */
 name|u_int8_t
 name|state
 decl_stmt|;
@@ -775,7 +775,7 @@ comment|/* number of acquire messages sent */
 name|u_long
 name|expiretime
 decl_stmt|;
-comment|/* expiration time for acquire 					 * message */
+comment|/* expiration time for acquire message */
 name|struct
 name|key_acquirelist
 modifier|*

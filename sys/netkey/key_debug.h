@@ -108,7 +108,8 @@ name|lev
 parameter_list|,
 name|arg
 parameter_list|)
-value|if ((lev)< in6_debug_level) { \ 						      printf arg; \ 						      } \                          else in6_debug_level = in6_debug_level
+define|\
+value|if ((lev)< in6_debug_level) { \ 		printf arg; \ 	} else \ 		in6_debug_level = in6_debug_level
 end_define
 
 begin_comment
@@ -124,7 +125,8 @@ name|lev
 parameter_list|,
 name|stmt
 parameter_list|)
-value|if ((lev)< in6_debug_level) { stmt ; } \                        else in6_debug_level = in6_debug_level
+define|\
+value|if ((lev)< in6_debug_level) { \ 		stmt ; \ 	} else \ 		in6_debug_level = in6_debug_level
 end_define
 
 begin_comment
