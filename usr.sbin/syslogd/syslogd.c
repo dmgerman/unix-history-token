@@ -3125,7 +3125,7 @@ argument_list|(
 name|line
 argument_list|)
 operator|-
-literal|3
+literal|4
 index|]
 condition|)
 block|{
@@ -8341,10 +8341,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 name|logerror
 argument_list|(
 name|hstrerror
