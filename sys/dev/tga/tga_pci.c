@@ -387,12 +387,6 @@ operator|.
 name|d_name
 operator|=
 literal|"tga"
-block|,
-operator|.
-name|d_maj
-operator|=
-operator|-
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -474,7 +468,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 break|break;
 block|}
