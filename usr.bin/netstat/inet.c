@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet.c,v 1.29 1998/06/09 04:13:01 imp Exp $"
+literal|"$Id: inet.c,v 1.30 1998/07/06 21:01:23 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +722,24 @@ if|if
 condition|(
 name|Aflag
 condition|)
+block|{
+if|if
+condition|(
+name|istcp
+condition|)
+name|printf
+argument_list|(
+literal|"%8lx "
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|inp
+operator|->
+name|inp_ppcb
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%8lx "
@@ -734,6 +752,7 @@ operator|->
 name|so_pcb
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%-5.5s %6ld %6ld "
