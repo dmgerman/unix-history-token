@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -922,7 +928,7 @@ comment|/* Try to map procedure number to name. */
 if|if
 condition|(
 name|procnum
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 name|procmap
