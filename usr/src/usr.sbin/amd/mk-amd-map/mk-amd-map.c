@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mk-amd-map.c,v 5.2 90/06/23 22:20:10 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: mk-amd-map.c,v 5.2 90/06/23 22:20:10 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mk-amd-map.c	5.1 (Berkeley) %G%"
+literal|"@(#)mk-amd-map.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,7 +795,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|remove
+name|xremove
 parameter_list|(
 name|f
 parameter_list|)
@@ -860,9 +860,10 @@ name|DBM
 modifier|*
 name|mapd
 decl_stmt|;
+specifier|static
 name|char
-modifier|*
 name|maptmp
+index|[]
 init|=
 literal|"dbmXXXXXX"
 decl_stmt|;
@@ -1053,14 +1054,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|remove
+name|xremove
 argument_list|(
 name|maptpag
 argument_list|)
 operator|<
 literal|0
 operator|||
-name|remove
+name|xremove
 argument_list|(
 name|maptdir
 argument_list|)
