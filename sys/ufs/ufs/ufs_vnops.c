@@ -11395,19 +11395,11 @@ name|v_pollinfo
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* XXX: call v_addpollinfo(vp) ? */
-name|printf
+name|v_addpollinfo
 argument_list|(
-literal|"ufs_kqfilter: vnode with no v_pollinfo\n"
+name|vp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&

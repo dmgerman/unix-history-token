@@ -1130,8 +1130,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|v_addpollinfo
 parameter_list|(
@@ -1141,15 +1139,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|vp
-operator|->
-name|v_pollinfo
-operator|!=
-name|NULL
-condition|)
-return|return;
 name|vp
 operator|->
 name|v_pollinfo
@@ -11450,6 +11439,14 @@ name|short
 name|events
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_pollinfo
+operator|==
+name|NULL
+condition|)
 name|v_addpollinfo
 argument_list|(
 name|vp
@@ -11565,6 +11562,14 @@ name|short
 name|events
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_pollinfo
+operator|==
+name|NULL
+condition|)
 name|v_addpollinfo
 argument_list|(
 name|vp
