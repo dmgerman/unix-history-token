@@ -539,7 +539,7 @@ end_enum
 
 begin_decl_stmt
 name|int
-name|reboot
+name|Reboot
 init|=
 name|FALSE
 decl_stmt|;
@@ -2279,7 +2279,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|reboot
+name|Reboot
 condition|)
 block|{
 comment|/* Instead of going single user, let's halt the machine */
@@ -4832,7 +4832,7 @@ break|break;
 case|case
 name|SIGINT
 case|:
-name|reboot
+name|Reboot
 operator|=
 name|TRUE
 expr_stmt|;
