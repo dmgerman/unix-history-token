@@ -43,6 +43,9 @@ decl_stmt|,
 name|disengaged
 decl_stmt|;
 name|int
+name|suspending
+decl_stmt|;
+name|int
 name|standby_countdown
 decl_stmt|,
 name|suspend_countdown

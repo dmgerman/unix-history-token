@@ -725,6 +725,16 @@ name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|init_i8259
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1063,6 +1073,53 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *  ICU reinitialize when ICU configuration has lost.  */
+end_comment
+
+begin_function
+name|void
+name|icu_reinit
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+name|init_i8259
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ICU_LEN
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|intr_handler
+index|[
+name|i
+index|]
+operator|!=
+name|isa_strayintr
+condition|)
+name|INTREN
+argument_list|(
+literal|1
+operator|<<
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Fill in default interrupt table (in case of spuruious interrupt  * during configuration of kernel, setup interrupt control unit  */
 end_comment
 
@@ -1099,6 +1156,20 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+name|init_i8259
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|init_i8259
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 comment|/* initialize 8259's */
 if|#
 directive|if

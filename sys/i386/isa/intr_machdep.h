@@ -768,6 +768,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|icu_reinit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|update_intr_masks
 name|__P
