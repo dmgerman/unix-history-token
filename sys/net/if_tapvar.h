@@ -19,6 +19,10 @@ directive|define
 name|_NET_IF_TAPVAR_H_
 end_define
 
+begin_comment
+comment|/*  * tap_mtx locks tap_flags, tap_pid.  tap_next locked with global tapmtx.  * Other fields locked by owning subsystems.  */
+end_comment
+
 begin_struct
 struct|struct
 name|tap_softc
@@ -92,6 +96,11 @@ comment|/* next device in chain      */
 name|dev_t
 name|tap_dev
 decl_stmt|;
+name|struct
+name|mtx
+name|tap_mtx
+decl_stmt|;
+comment|/* per-softc mutex */
 block|}
 struct|;
 end_struct
