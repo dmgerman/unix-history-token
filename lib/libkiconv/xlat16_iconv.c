@@ -723,14 +723,14 @@ index|[
 literal|2
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|dst
 index|[
 literal|3
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|ret
 operator|=
