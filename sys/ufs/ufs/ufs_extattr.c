@@ -1342,7 +1342,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX: Note, should VOP_CLOSE() if vfs_object_create() fails, but due 	 * to a similar piece of code in vn_open(), we don't. 	 */
+comment|/* 	 * XXX: Note, should VOP_CLOSE() if VOP_CREATEVOBJECT() fails, but due 	 * to a similar piece of code in vn_open(), we don't. 	 */
 if|if
 condition|(
 name|vn_canvmio
@@ -1357,15 +1357,15 @@ condition|(
 operator|(
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
 name|td
-argument_list|,
-name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=

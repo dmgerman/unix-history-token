@@ -2858,19 +2858,17 @@ argument_list|)
 operator|==
 name|TRUE
 condition|)
-block|{
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|tvp
 argument_list|,
-name|td
-argument_list|,
 name|cred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Release any locks held. 	 */
 if|if
 condition|(

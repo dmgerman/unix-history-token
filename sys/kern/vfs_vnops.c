@@ -1113,13 +1113,13 @@ condition|(
 operator|(
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
-name|td
-argument_list|,
 name|cred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=

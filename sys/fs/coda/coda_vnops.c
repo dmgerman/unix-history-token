@@ -1053,13 +1053,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
-name|td
-argument_list|,
 name|cred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1071,7 +1071,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_open: vfs_object_create() returns %d\n"
+literal|"coda_open: VOP_CREATEVOBJECT() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1767,13 +1767,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
-name|td
-argument_list|,
 name|cred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1785,7 +1785,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_rdwr: vfs_object_create() returns %d\n"
+literal|"coda_rdwr: VOP_CREATEVOBJECT() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -6796,13 +6796,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
-name|td
-argument_list|,
 name|cred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6814,7 +6814,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_readdir: vfs_object_create() returns %d\n"
+literal|"coda_readdir: VOP_CREATEVOBJECT() returns %d\n"
 argument_list|,
 name|error
 argument_list|)

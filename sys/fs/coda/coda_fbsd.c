@@ -534,13 +534,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|vfs_object_create
+name|VOP_CREATEVOBJECT
 argument_list|(
 name|vp
 argument_list|,
-name|p
-argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -552,7 +552,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_getpage: vfs_object_create() returns %d\n"
+literal|"coda_getpage: VOP_CREATEVOBJECT() returns %d\n"
 argument_list|,
 name|error
 argument_list|)

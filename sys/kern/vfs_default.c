@@ -1304,7 +1304,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vfs_object_create: NULL object"
+literal|"vop_stdcreatevobject: NULL object"
 operator|)
 argument_list|)
 expr_stmt|;
