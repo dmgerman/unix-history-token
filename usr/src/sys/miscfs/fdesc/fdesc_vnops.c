@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.3 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.4 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dirent.h>
 end_include
 
 begin_include
@@ -1246,11 +1252,11 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|readdir
+name|dirent
 name|d
 decl_stmt|;
 name|struct
-name|readdir
+name|dirent
 modifier|*
 name|dp
 init|=
@@ -1308,7 +1314,13 @@ name|UIO_MX
 expr_stmt|;
 name|dp
 operator|->
-name|d_ino
+name|d_type
+operator|=
+name|DT_UNKNOWN
+expr_stmt|;
+name|dp
+operator|->
+name|d_fileno
 operator|=
 name|i
 operator|+
