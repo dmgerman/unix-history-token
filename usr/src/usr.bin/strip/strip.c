@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.12 (Berkeley) %G%"
+literal|"@(#)strip.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,13 +473,6 @@ modifier|*
 name|ep
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|pagesize
-init|=
-operator|-
-literal|1
-decl_stmt|;
 specifier|register
 name|off_t
 name|fsize
@@ -503,44 +496,14 @@ operator|->
 name|a_drsize
 condition|)
 return|return;
-comment|/* 	 * New file size is the header plus text and data segments; OMAGIC 	 * and NMAGIC formats have the text/data immediately following the 	 * header.  ZMAGIC format wastes the rest of of header page. 	 */
-if|if
-condition|(
-name|ep
-operator|->
-name|a_magic
-operator|==
-name|ZMAGIC
-condition|)
+comment|/* 	 * New file size is the header plus text and data segments. 	 */
 name|fsize
 operator|=
-name|pagesize
-operator|==
-operator|-
-literal|1
-condition|?
-operator|(
-name|pagesize
-operator|=
-name|getpagesize
-argument_list|()
-operator|)
-else|:
-name|pagesize
-expr_stmt|;
-else|else
-name|fsize
-operator|=
-sizeof|sizeof
+name|N_DATOFF
 argument_list|(
-name|EXEC
-argument_list|)
-expr_stmt|;
-name|fsize
-operator|+=
+operator|*
 name|ep
-operator|->
-name|a_text
+argument_list|)
 operator|+
 name|ep
 operator|->
