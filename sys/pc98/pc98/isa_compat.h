@@ -297,6 +297,12 @@ directive|include
 file|"bs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"olpt.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -700,6 +706,14 @@ name|bsdriver
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_driver
+name|olptdriver
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -928,6 +942,20 @@ name|INTR_TYPE_FAST
 block|,
 operator|&
 name|lorandriver
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|NOLPT
+operator|>
+literal|0
+block|{
+name|INTR_TYPE_TTY
+block|,
+operator|&
+name|olptdriver
 block|}
 block|,
 endif|#
