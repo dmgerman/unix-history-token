@@ -53,15 +53,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|cmd
-name|ctbl_t
-index|[]
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|cmd
@@ -78,6 +69,15 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cmd
+name|ctbl_t
+index|[]
+typedef|;
+end_typedef
 
 begin_decl_stmt
 name|command_t
