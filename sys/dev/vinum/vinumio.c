@@ -902,14 +902,14 @@ name|state
 operator|>
 name|drive_down
 condition|)
-comment|/* if it's up, */
+comment|/* if it's up */
 name|drive
 operator|->
 name|state
 operator|=
 name|drive_down
 expr_stmt|;
-comment|/* go down directly, do not pass daemon */
+comment|/* make sure it's down */
 name|unlockdrive
 argument_list|(
 name|drive
@@ -1140,7 +1140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read data from a drive  *  * Return error number  */
+comment|/*  * Read data from a drive.  * Return error number.  */
 end_comment
 
 begin_function
@@ -2380,16 +2380,16 @@ name|lasterror
 operator|=
 name|ENODEV
 expr_stmt|;
-name|set_drive_state
+name|close_drive
 argument_list|(
 name|drive
-operator|->
-name|driveno
-argument_list|,
-name|drive_down
-argument_list|,
-name|setstate_force
 argument_list|)
+expr_stmt|;
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_down
 expr_stmt|;
 block|}
 return|return
@@ -4921,6 +4921,14 @@ operator|->
 name|devicename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|==
+name|drive_up
+condition|)
 comment|/* Read in both copies of the configuration information */
 name|error
 operator|=
@@ -4937,6 +4945,29 @@ argument_list|,
 name|VINUM_CONFIG_OFFSET
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"vinum_scandisk: %s is %s\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|,
+name|drive_state
+argument_list|(
+name|drive
+operator|->
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
