@@ -177,6 +177,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|g_do_wither
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* geom_subr.c */
 end_comment
@@ -205,6 +214,15 @@ modifier|*
 name|g_wait_down
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|g_wither_washer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* geom_io.c */
