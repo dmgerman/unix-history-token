@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.3 (Berkeley) %G%"
+literal|"@(#)su.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -254,6 +262,11 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|openlog
 argument_list|(
@@ -524,6 +537,11 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+define|#
+directive|define
+name|Getlogin
+parameter_list|()
+value|(((p = getlogin())&& *p) ? p : buf)
 if|if
 condition|(
 name|pwd
@@ -593,7 +611,7 @@ name|LOG_CRIT
 argument_list|,
 literal|"BAD SU %s on %s"
 argument_list|,
-name|getlogin
+name|Getlogin
 argument_list|()
 argument_list|,
 name|ttyname
@@ -629,7 +647,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s on %s"
 argument_list|,
-name|getlogin
+name|Getlogin
 argument_list|()
 argument_list|,
 name|ttyname
