@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,6 +158,13 @@ name|TRUE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
 begin_comment
 comment|/*  * External data, mostly RPC constants in XDR form  */
 end_comment
@@ -189,6 +196,10 @@ decl_stmt|,
 name|nfs_vers
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Maybe these should be bits in a u_long ?? */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -509,7 +520,10 @@ name|so_error
 operator|==
 literal|0
 condition|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -519,9 +533,11 @@ name|so
 operator|->
 name|so_timeo
 argument_list|,
-name|PZERO
-operator|-
-literal|2
+name|PSOCK
+argument_list|,
+literal|"nfscon"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -564,6 +580,8 @@ name|nm_flag
 operator|&
 operator|(
 name|NFSMNT_SOFT
+operator||
+name|NFSMNT_SPONGY
 operator||
 name|NFSMNT_INT
 operator|)
@@ -627,15 +645,11 @@ name|nm_wsize
 operator|+
 name|NFS_MAXPKTHDR
 argument_list|,
-operator|(
 name|nmp
 operator|->
 name|nm_rsize
 operator|+
 name|NFS_MAXPKTHDR
-operator|)
-operator|*
-literal|4
 argument_list|)
 condition|)
 goto|goto
@@ -650,7 +664,13 @@ name|nmp
 operator|->
 name|nm_flag
 operator|&
+operator|(
+name|NFSMNT_SOFT
+operator||
+name|NFSMNT_SPONGY
+operator||
 name|NFSMNT_INT
+operator|)
 condition|)
 block|{
 name|so
@@ -821,7 +841,6 @@ name|soreserve
 argument_list|(
 name|so
 argument_list|,
-operator|(
 name|nmp
 operator|->
 name|nm_wsize
@@ -832,9 +851,6 @@ sizeof|sizeof
 argument_list|(
 name|u_long
 argument_list|)
-operator|)
-operator|*
-literal|2
 argument_list|,
 name|nmp
 operator|->
@@ -1053,6 +1069,9 @@ operator|(
 name|EINTR
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|tsleep
 argument_list|(
 operator|(
@@ -2684,8 +2703,6 @@ operator|&
 name|nmp
 operator|->
 name|nm_flag
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Already received, bye bye */
@@ -3152,6 +3169,8 @@ argument|procnum
 argument_list|,
 argument|procp
 argument_list|,
+argument|tryhard
+argument_list|,
 argument|mp
 argument_list|,
 argument|mrp
@@ -3195,6 +3214,12 @@ name|struct
 name|proc
 modifier|*
 name|procp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tryhard
 decl_stmt|;
 end_decl_stmt
 
@@ -3346,11 +3371,26 @@ name|procp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nmp
 operator|->
 name|nm_flag
 operator|&
 name|NFSMNT_SOFT
+operator|)
+operator|||
+operator|(
+operator|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_SPONGY
+operator|)
+operator|&&
+operator|!
+name|tryhard
+operator|)
 condition|)
 name|rep
 operator|->
@@ -3380,7 +3420,7 @@ name|r_rexmit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Three cases: 	 * - non-idempotent requests on SOCK_DGRAM use NFS_MINIDEMTIMEO 	 * - idempotent requests on SOCK_DGRAM use 0 	 * - Reliable transports, NFS_RELIABLETIMEO 	 *   Timeouts are still done on reliable transports to ensure detection 	 *   of connection loss. 	 */
+comment|/* 	 * Three cases: 	 * - non-idempotent requests on SOCK_DGRAM use NFS_MINIDEMTIMEO 	 * - idempotent requests on SOCK_DGRAM use 0 	 * - Reliable transports, NFS_RELIABLETIMEO 	 *   Timeouts are still done on reliable transports to ensure detection 	 *   of excessive connection delay. 	 */
 if|if
 condition|(
 name|nmp
@@ -3667,8 +3707,6 @@ operator|&
 name|nmp
 operator|->
 name|nm_flag
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|error
@@ -4094,8 +4132,6 @@ argument|procnum
 argument_list|,
 argument|cr
 argument_list|,
-argument|lockp
-argument_list|,
 argument|msk
 argument_list|,
 argument|mtch
@@ -4186,13 +4222,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-modifier|*
-name|lockp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
@@ -4250,13 +4279,6 @@ operator|&
 name|PR_CONNREQUIRED
 condition|)
 block|{
-name|nfs_solock
-argument_list|(
-name|lockp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|nfs_receive
@@ -4274,11 +4296,6 @@ name|nfsreq
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-name|nfs_sounlock
-argument_list|(
-name|lockp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5317,15 +5334,6 @@ operator|->
 name|nm_rtt
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_sotype
-operator|!=
-name|SOCK_DGRAM
-condition|)
-continue|continue;
 comment|/* If not timed out */
 if|if
 condition|(
@@ -5339,36 +5347,6 @@ operator|->
 name|nm_rto
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_sotype
-operator|!=
-name|SOCK_DGRAM
-condition|)
-block|{
-name|rep
-operator|->
-name|r_flags
-operator||=
-name|R_MUSTRESEND
-expr_stmt|;
-name|rep
-operator|->
-name|r_timer
-operator|=
-name|rep
-operator|->
-name|r_timerinit
-expr_stmt|;
-continue|continue;
-block|}
-endif|#
-directive|endif
 comment|/* Do backoff and save new timeout in mount */
 if|if
 condition|(
@@ -5454,7 +5432,7 @@ name|rep
 operator|->
 name|r_rexmit
 operator|>
-literal|8
+name|NFS_FISHY
 condition|)
 block|{
 if|if
@@ -5516,7 +5494,7 @@ condition|(
 name|rep
 operator|->
 name|r_rexmit
-operator|>
+operator|>=
 name|rep
 operator|->
 name|r_retry
@@ -5536,6 +5514,15 @@ name|R_SOFTTERM
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|nmp
+operator|->
+name|nm_sotype
+operator|!=
+name|SOCK_DGRAM
+condition|)
+continue|continue;
 comment|/* 		 * If there is enough space and the window allows.. 		 *	Resend it 		 */
 if|if
 condition|(
@@ -6295,27 +6282,17 @@ begin_comment
 comment|/*  * Lock a socket against others.  * Necessary for STREAM sockets to ensure you get an entire rpc request/reply  * and also to avoid race conditions between the processes with nfs requests  * in progress when a reconnect is necessary.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|nfs_solock
 argument_list|(
-argument|flagp
-argument_list|,
-argument|cant_intr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-modifier|*
 name|flagp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|)
+specifier|register
 name|int
-name|cant_intr
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|flagp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -6332,26 +6309,6 @@ name|flagp
 operator||=
 name|NFSMNT_WANTSCK
 expr_stmt|;
-if|if
-condition|(
-name|cant_intr
-condition|)
-operator|(
-name|void
-operator|)
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|flagp
-argument_list|,
-name|PZERO
-operator|-
-literal|7
-argument_list|)
-expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)
@@ -6363,10 +6320,10 @@ operator|)
 name|flagp
 argument_list|,
 name|PZERO
-operator|+
+operator|-
 literal|1
 argument_list|,
-literal|"nfssolck"
+literal|"nfsolck"
 argument_list|,
 literal|0
 argument_list|)
@@ -6384,19 +6341,17 @@ begin_comment
 comment|/*  * Unlock the stream socket for others.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|nfs_sounlock
 argument_list|(
-argument|flagp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-modifier|*
 name|flagp
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+name|int
+operator|*
+name|flagp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

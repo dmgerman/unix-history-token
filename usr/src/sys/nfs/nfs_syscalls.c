@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -223,30 +223,37 @@ begin_comment
 comment|/*  * NFS server system calls  * getfh() lives here too, but maybe should move to kern/vfs_syscalls.c  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|value
-parameter_list|)
-value|{ u.u_error = (value); return; }
-end_define
-
 begin_comment
 comment|/*  * Get file handle system call  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|getfh
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
 
-begin_block
-block|{
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
 specifier|register
 struct|struct
-name|a
+name|args
 block|{
 name|char
 modifier|*
@@ -259,16 +266,18 @@ decl_stmt|;
 block|}
 modifier|*
 name|uap
-init|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
 struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|nameidata
@@ -299,9 +308,9 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|ndp
+operator|->
+name|ni_cred
 argument_list|,
 operator|&
 name|u
@@ -445,16 +454,33 @@ begin_comment
 comment|/*  * Nfs server psuedo system call for the nfsd's  * Never returns unless it fails or gets killed  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|nfssvc
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
 
-begin_block
-block|{
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
 specifier|register
 struct|struct
-name|a
+name|args
 block|{
 name|int
 name|s
@@ -474,16 +500,18 @@ decl_stmt|;
 block|}
 modifier|*
 name|uap
-init|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
 struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|mbuf
@@ -541,10 +569,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|cacherep
-decl_stmt|,
-name|solock
-init|=
-literal|0
 decl_stmt|;
 name|u_long
 name|retxid
@@ -628,8 +652,6 @@ argument_list|,
 name|siz
 argument_list|,
 name|siz
-operator|*
-literal|4
 argument_list|)
 condition|)
 goto|goto
@@ -956,9 +978,6 @@ argument_list|,
 name|cr
 argument_list|,
 operator|&
-name|solock
-argument_list|,
-operator|&
 name|msk
 argument_list|,
 operator|&
@@ -989,9 +1008,15 @@ name|error
 operator|==
 name|ERESTART
 condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|so
 operator|->
 name|so_error
@@ -1245,24 +1270,6 @@ name|siz
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_flags
-operator|&
-name|PR_CONNREQUIRED
-condition|)
-name|nfs_solock
-argument_list|(
-operator|&
-name|solock
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|nfs_send
@@ -1279,22 +1286,6 @@ name|nfsreq
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_flags
-operator|&
-name|PR_CONNREQUIRED
-condition|)
-name|nfs_sounlock
-argument_list|(
-operator|&
-name|solock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1376,10 +1367,43 @@ begin_comment
 comment|/*  * Nfs pseudo system call for asynchronous i/o daemons.  * These babies just pretend to be disk interrupt service routines  * for client nfs. They are mainly here for read ahead/write behind.  * Never returns unless it fails or gets killed  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|async_daemon
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1463,9 +1487,7 @@ index|[
 name|myiod
 index|]
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_bio.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_bio.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -111,6 +111,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|uio
 modifier|*
@@ -144,6 +145,10 @@ name|VTONFS
 argument_list|(
 name|vp
 argument_list|)
+decl_stmt|;
+specifier|register
+name|int
+name|biosize
 decl_stmt|;
 name|struct
 name|buf
@@ -228,7 +233,18 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * If the file's modify time on the server has changed since the 	 * last read rpc or you have written to the file, 	 * you may have lost data cache consistency with the 	 * server, so flush all of the file's data out of the cache. 	 * Then force a getattr rpc to ensure that you have up to date 	 * attributes. 	 * NB: This implies that cache data can be read when up to 	 * NFS_ATTRTIMEO seconds out of date. If you find that you need current 	 * attributes this could be forced by setting n_attrstamp to 0 before 	 * the nfs_getattr() call. 	 */
+name|biosize
+operator|=
+name|VFSTONFS
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+operator|->
+name|nm_rsize
+expr_stmt|;
+comment|/* 	 * If the file's modify time on the server has changed since the 	 * last read rpc or you have written to the file, 	 * you may have lost data cache consistency with the 	 * server, so flush all of the file's data out of the cache. 	 * Then force a getattr rpc to ensure that you have up to date 	 * attributes. 	 * NB: This implies that cache data can be read when up to 	 * NFS_ATTRTIMEO seconds out of date. If you find that you need current 	 * attributes this could be forced by setting n_attrstamp to 0 before 	 * the nfs_dogetattr() call. 	 */
 if|if
 condition|(
 name|vp
@@ -277,7 +293,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vp
 argument_list|,
@@ -285,6 +301,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -309,7 +327,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vp
 argument_list|,
@@ -317,6 +335,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -385,8 +405,8 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|>>
-name|NFS_BIOSHIFT
+operator|/
+name|biosize
 expr_stmt|;
 name|on
 operator|=
@@ -395,7 +415,7 @@ operator|->
 name|uio_offset
 operator|&
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 literal|1
 operator|)
@@ -408,7 +428,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 name|on
 argument_list|)
@@ -454,7 +474,7 @@ operator|=
 name|lbn
 operator|*
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|/
 name|DEV_BSIZE
 operator|)
@@ -468,7 +488,7 @@ literal|1
 operator|)
 operator|*
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|/
 name|DEV_BSIZE
 operator|)
@@ -501,11 +521,11 @@ name|vp
 argument_list|,
 name|bn
 argument_list|,
-name|NFS_BIOSIZE
+name|biosize
 argument_list|,
 name|rablock
 argument_list|,
-name|NFS_BIOSIZE
+name|biosize
 argument_list|,
 name|cred
 argument_list|,
@@ -522,7 +542,7 @@ name|vp
 argument_list|,
 name|bn
 argument_list|,
-name|NFS_BIOSIZE
+name|biosize
 argument_list|,
 name|cred
 argument_list|,
@@ -549,7 +569,7 @@ operator|(
 name|on
 operator|>=
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 name|bp
 operator|->
@@ -560,7 +580,7 @@ condition|?
 literal|0
 else|:
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 name|bp
 operator|->
@@ -733,7 +753,7 @@ name|n
 operator|+
 name|on
 operator|==
-name|NFS_BIOSIZE
+name|biosize
 operator|||
 name|uio
 operator|->
@@ -851,6 +871,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|biosize
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -915,7 +939,11 @@ if|if
 condition|(
 name|ioflag
 operator|&
+operator|(
 name|IO_APPEND
+operator||
+name|IO_SYNC
+operator|)
 condition|)
 block|{
 if|if
@@ -942,6 +970,13 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_APPEND
+condition|)
+block|{
 name|np
 operator|->
 name|n_attrstamp
@@ -952,7 +987,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vp
 argument_list|,
@@ -960,6 +995,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -975,6 +1012,7 @@ name|np
 operator|->
 name|n_size
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|nfs_writerpc
@@ -1071,6 +1109,18 @@ name|EFBIG
 operator|)
 return|;
 block|}
+comment|/* 	 * I use nm_rsize, not nm_wsize so that all buffer cache blocks 	 * will be the same size within a filesystem. nfs_writerpc will 	 * still use nm_wsize when sizing the rpc's. 	 */
+name|biosize
+operator|=
+name|VFSTONFS
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+operator|->
+name|nm_rsize
+expr_stmt|;
 name|np
 operator|->
 name|n_flag
@@ -1089,8 +1139,8 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|>>
-name|NFS_BIOSHIFT
+operator|/
+name|biosize
 expr_stmt|;
 name|on
 operator|=
@@ -1099,7 +1149,7 @@ operator|->
 name|uio_offset
 operator|&
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 literal|1
 operator|)
@@ -1112,7 +1162,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|NFS_BIOSIZE
+name|biosize
 operator|-
 name|on
 argument_list|)
@@ -1149,7 +1199,7 @@ operator|=
 name|lbn
 operator|*
 operator|(
-name|NFS_BIOSIZE
+name|biosize
 operator|/
 name|DEV_BSIZE
 operator|)
@@ -1164,7 +1214,7 @@ name|vp
 argument_list|,
 name|bn
 argument_list|,
-name|NFS_BIOSIZE
+name|biosize
 argument_list|)
 expr_stmt|;
 if|if
@@ -1333,7 +1383,7 @@ operator|+
 name|on
 operator|)
 operator|==
-name|NFS_BIOSIZE
+name|biosize
 condition|)
 block|{
 name|bp
