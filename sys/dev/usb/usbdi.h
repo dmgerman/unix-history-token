@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.40 2000/02/02 07:34:00 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.44 2000/09/23 21:02:04 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -694,6 +694,34 @@ name|flags
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usbd_status
+name|usbd_do_request_flags_pipe
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|usbd_pipe_handle
+name|pipe
+parameter_list|,
+name|usb_device_request_t
+modifier|*
+name|req
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|u_int16_t
+name|flags
+parameter_list|,
+name|int
+modifier|*
+name|actlen
 parameter_list|)
 function_decl|;
 end_function_decl
