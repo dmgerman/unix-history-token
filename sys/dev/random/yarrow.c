@@ -1282,10 +1282,6 @@ name|count
 parameter_list|)
 block|{
 specifier|static
-name|u_int64_t
-name|genval
-decl_stmt|;
-specifier|static
 name|int
 name|cur
 init|=
@@ -1296,6 +1292,13 @@ name|int
 name|gate
 init|=
 literal|1
+decl_stmt|;
+specifier|static
+name|u_char
+name|genval
+index|[
+name|KEYSIZE
+index|]
 decl_stmt|;
 name|u_int
 name|i
@@ -1384,7 +1387,6 @@ name|random_state
 operator|.
 name|counter
 argument_list|,
-operator|&
 name|genval
 argument_list|)
 expr_stmt|;
@@ -1398,7 +1400,6 @@ name|buf
 operator|+
 name|i
 argument_list|,
-operator|&
 name|genval
 argument_list|,
 sizeof|sizeof
@@ -1469,7 +1470,6 @@ name|random_state
 operator|.
 name|counter
 argument_list|,
-operator|&
 name|genval
 argument_list|)
 expr_stmt|;
@@ -1477,7 +1477,6 @@ name|memcpy
 argument_list|(
 name|buf
 argument_list|,
-operator|&
 name|genval
 argument_list|,
 name|count
@@ -1537,14 +1536,9 @@ name|memcpy
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|genval
-operator|+
-operator|(
+index|[
 sizeof|sizeof
 argument_list|(
 name|random_state
@@ -1553,7 +1547,7 @@ name|counter
 argument_list|)
 operator|-
 name|cur
-operator|)
+index|]
 argument_list|,
 name|retval
 argument_list|)
