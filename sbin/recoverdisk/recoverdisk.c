@@ -664,12 +664,15 @@ name|i
 condition|)
 name|printf
 argument_list|(
-literal|"\nWrite error at %jd/%d\n"
+literal|"\nWrite error at %jd/%jd\n"
 argument_list|,
 name|lp
 operator|->
 name|start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -689,12 +692,15 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"\n%jd %d failed %d\n"
+literal|"\n%jd %jd failed %d\n"
 argument_list|,
 name|lp
 operator|->
 name|start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|i
 argument_list|,
 name|errno
