@@ -25,6 +25,16 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*   * We need to include<sys/types.h> for the u_quad_t definition  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
 comment|/*  * Kludge for handling systems that can't cope with multiple  * external definitions of a variable.  In ONE routine (tar.c),  * we #define TAR_EXTERN to null; here, we set it to "extern" if  * it is not already set.  */
 end_comment
 
@@ -748,7 +758,7 @@ end_comment
 
 begin_decl_stmt
 name|TAR_EXTERN
-name|int
+name|u_quad_t
 name|tot_written
 decl_stmt|;
 end_decl_stmt
