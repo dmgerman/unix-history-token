@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.45 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1122,7 @@ name|gethostbyname
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1131,6 +1132,7 @@ name|querybuf
 name|buf
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -1220,6 +1222,10 @@ name|host
 operator|.
 name|h_name
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 expr_stmt|;
 name|host
