@@ -168,7 +168,7 @@ name|__ldfpsr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm __volatile("mov ar.fpsr=%0" : : "r" (__r))
+value|__asm __volatile("mov ar.fpsr=%0;;" : : "r" (__r))
 end_define
 
 begin_function
