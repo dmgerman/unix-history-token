@@ -1498,7 +1498,7 @@ name|NULL
 argument_list|,
 literal|"%s -a %s%s -u %s%d"
 argument_list|,
-name|PATH_MDCONFIG
+name|_PATH_MDCONFIG
 argument_list|,
 name|ta
 argument_list|,
@@ -1620,7 +1620,7 @@ name|fd
 argument_list|,
 literal|"%s -a %s%s"
 argument_list|,
-name|PATH_MDCONFIG
+name|_PATH_MDCONFIG
 argument_list|,
 name|ta
 argument_list|,
@@ -1826,7 +1826,7 @@ name|NULL
 argument_list|,
 literal|"%s -d -u %s%d"
 argument_list|,
-name|PATH_MDCONFIG
+name|_PATH_MDCONFIG
 argument_list|,
 name|mdname
 argument_list|,
@@ -1881,7 +1881,7 @@ name|NULL
 argument_list|,
 literal|"%s%s /dev/%s%d %s"
 argument_list|,
-name|PATH_MOUNT
+name|_PATH_MOUNT
 argument_list|,
 name|args
 argument_list|,
@@ -2113,7 +2113,7 @@ name|NULL
 argument_list|,
 literal|"%s%s /dev/%s%d"
 argument_list|,
-name|PATH_NEWFS
+name|_PATH_NEWFS
 argument_list|,
 name|args
 argument_list|,
