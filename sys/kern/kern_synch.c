@@ -780,7 +780,7 @@ operator|->
 name|ke_state
 operator|==
 name|KES_ONRUNQ
-operator|&&
+operator|||
 name|ke
 operator|->
 name|ke_state
