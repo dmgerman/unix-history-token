@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.45 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3249,12 +3249,12 @@ expr_stmt|;
 if|if
 condition|(
 name|MaxMciCache
-operator|<=
+operator|<
 literal|0
 condition|)
 name|MaxMciCache
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case

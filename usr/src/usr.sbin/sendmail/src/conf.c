@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.41 (Berkeley) %G%"
+literal|"@(#)conf.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +153,10 @@ operator||
 name|H_ACHECK
 operator||
 name|H_RESENT
+block|,
+literal|"apparently-to"
+block|,
+name|H_RCPT
 block|,
 comment|/* message identification and control */
 literal|"message-id"
@@ -2390,6 +2394,35 @@ end_endif
 begin_comment
 comment|/* UNSETENV */
 end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  GETDTABLESIZE -- return number of file descriptors ** **	Only on non-BSD systems ** **	Parameters: **		none ** **	Returns: **		size of file descriptor table ** **	Side Effects: **		none */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSTEM5
+end_ifdef
+
+begin_function
+name|int
+name|getdtablesize
+parameter_list|()
+block|{
+return|return
+name|NOFILE
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	5.4 (Berkeley) %G%"
+literal|"@(#)mci.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,21 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
+name|MaxMciCache
+operator|*
+sizeof|sizeof
+expr|*
+name|MciCache
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|MciCache
+argument_list|,
 name|MaxMciCache
 operator|*
 sizeof|sizeof

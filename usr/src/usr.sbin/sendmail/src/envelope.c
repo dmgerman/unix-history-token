@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.30 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ condition|(
 name|e
 operator|==
 name|CurEnv
+operator|&&
+name|e
+operator|->
+name|e_parent
+operator|!=
+name|NULL
 condition|)
 name|parent
 operator|=
@@ -212,7 +218,13 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|parent
+operator|!=
+name|NULL
+condition|)
 name|e
 operator|->
 name|e_msgpriority
@@ -221,7 +233,7 @@ name|parent
 operator|->
 name|e_msgsize
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_expr_stmt
 name|e
