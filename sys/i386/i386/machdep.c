@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.23 1993/12/22 13:12:04 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.24 1994/01/03 07:55:21 davidg Exp $  */
 end_comment
 
 begin_include
@@ -174,24 +174,6 @@ directive|include
 file|"sys/vnode.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINE_NONCONTIG
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
@@ -200,39 +182,6 @@ decl_stmt|,
 name|avail_end
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|hole_start
-decl_stmt|,
-name|hole_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|avail_next
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|avail_remaining
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MACHINE_NONCONTIG */
-end_comment
 
 begin_include
 include|#
@@ -498,6 +447,15 @@ name|biosmem
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_offset_t
+name|phys_avail
+index|[
+literal|6
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_extern
 extern|extern cyloffset;
 end_extern
@@ -594,9 +552,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifndef|#
-directive|ifndef
-name|MACHINE_NONCONTIG
 name|pmap_enter
 argument_list|(
 name|pmap_kernel
@@ -618,35 +573,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|pmap_enter
-argument_list|(
-name|pmap_kernel
-argument_list|()
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|msgbufp
-operator|+
-name|i
-operator|*
-name|NBPG
-argument_list|,
-name|avail_end
-operator|+
-name|i
-operator|*
-name|NBPG
-argument_list|,
-name|VM_PROT_ALL
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|msgbufmapped
 operator|=
 literal|1
@@ -1034,7 +960,7 @@ name|mb_map
 operator|=
 name|kmem_suballoc
 argument_list|(
-name|kernel_map
+name|kmem_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -5185,23 +5111,40 @@ literal|0x100000
 operator|/
 name|NBPG
 expr_stmt|;
-if|if
-condition|(
-name|first
-operator|<
-literal|0x100000
-condition|)
-name|first
-operator|=
-literal|0x100000
-expr_stmt|;
-comment|/* skip hole */
 block|}
 end_if
 
 begin_comment
 comment|/* This used to explode, since Maxmem used to be 0 for bas CMOS*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAXMEM
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|MAXMEM
+operator|/
+literal|4
+operator|<
+name|Maxmem
+condition|)
+name|Maxmem
+operator|=
+name|MAXMEM
+operator|/
+literal|4
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|maxmem
@@ -5241,33 +5184,18 @@ operator|/
 literal|4
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
-literal|"Too little RAM memory. Warning, running in degraded mode.\n"
+literal|"Too little RAM memory.\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INFORM_WAIT
-comment|/* 		 * People with less than 2 Meg have to hit return; this way 		 * we see the messages and can tell them why they blow up later. 		 * If they get working well enough to recompile, they can unset 		 * the flag; otherwise, it's a toy and they have to lump it. 		 */
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !INFORM_WAIT*/
+comment|/* NOT REACHED */
 block|}
 end_if
 
 begin_comment
 comment|/* call pmap initialization to make new kernel address space */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINCE_NONCONTIG
-end_ifndef
 
 begin_expr_stmt
 name|pmap_bootstrap
@@ -5279,32 +5207,85 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* 	 * Initialize pointers to the two chunks of memory; for use 	 *	later in vm_page_startup. 	 */
+end_comment
+
+begin_comment
+comment|/* avail_start and avail_end are initialized in pmap_bootstrap */
+end_comment
 
 begin_expr_stmt
-name|pmap_bootstrap
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|atdevbase
-operator|+
-name|IOM_SIZE
-argument_list|)
+name|phys_avail
+index|[
+literal|0
+index|]
+operator|=
+literal|0x1000
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* memory up to the ISA hole */
+end_comment
+
+begin_expr_stmt
+name|phys_avail
+index|[
+literal|1
+index|]
+operator|=
+literal|0xa0000
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|phys_avail
+index|[
+literal|2
+index|]
+operator|=
+name|avail_start
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* MACHINE_NONCONTIG */
+comment|/* memory up to the end */
 end_comment
+
+begin_expr_stmt
+name|phys_avail
+index|[
+literal|3
+index|]
+operator|=
+name|avail_end
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|phys_avail
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* no more chunks */
+end_comment
+
+begin_expr_stmt
+name|phys_avail
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* now running on new page tables, configured,and u/iom is accessible */
@@ -5473,10 +5454,6 @@ operator|=
 literal|1
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Leaves room for eflags like a trap */
-end_comment
 
 begin_expr_stmt
 name|gdp
@@ -5666,9 +5643,6 @@ argument_list|,
 name|NBPG
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACHINE_NONCONTIG
 operator|*
 operator|(
 name|int
@@ -5678,9 +5652,6 @@ name|CADDR2
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACHINE_NONCONTIG */
 block|}
 end_function
 
