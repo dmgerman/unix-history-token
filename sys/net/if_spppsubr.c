@@ -273,12 +273,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -297,6 +291,12 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -308,6 +308,11 @@ include|#
 directive|include
 file|<netinet/tcp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -339,11 +344,6 @@ include|#
 directive|include
 file|<net/ethertypes.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1625,6 +1625,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set yet.  We want to put "interactive" traffic on a high  * priority queue.  To decide if traffic is interactive, we check that  * a) it is TCP and b) one of its ports is telnet, rlogin or ftp control.  *  * XXX is this really still necessary?  - joerg -  */
 end_comment
@@ -1666,6 +1672,11 @@ name|p
 parameter_list|)
 value|(interactive_ports[(p)& 7] == (p))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* almost every function needs these */
