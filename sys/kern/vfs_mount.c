@@ -106,6 +106,29 @@ name|rootvnode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*   * The root specifiers we will try if RB_CDROM is specified.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|cdrom_rootdevnames
+index|[]
+init|=
+block|{
+literal|"cd9660:cd0a"
+block|,
+literal|"cd9660:acd0a"
+block|,
+literal|"cd9660:wcd0a"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -214,6 +237,9 @@ modifier|*
 name|junk
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 comment|/*  	 * The root filesystem information is compiled in, and we are 	 * booted with instructions to use it. 	 */
 ifdef|#
 directive|ifdef
@@ -254,6 +280,45 @@ name|vfs_mountroot_ask
 argument_list|()
 condition|)
 return|return;
+block|}
+comment|/* 	 * We've been given the generic "use CDROM as root" flag.  This is 	 * necessary because one media may be used in many different 	 * devices, so we need to search for them. 	 */
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_CDROM
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|cdrom_rootdevnames
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|vfs_mountroot_try
+argument_list|(
+name|cdrom_rootdevnames
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+return|return;
+block|}
 block|}
 comment|/* 	 * Try to use the value read by the loader from /etc/fstab, or 	 * supplied via some other means.  This is the preferred  	 * mechanism. 	 */
 if|if
