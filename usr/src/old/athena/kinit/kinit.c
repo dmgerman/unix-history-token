@@ -539,7 +539,7 @@ argument_list|(
 literal|"Kerberos realm: "
 argument_list|)
 expr_stmt|;
-name|fgets
+name|getstr
 argument_list|(
 name|realm
 argument_list|,
