@@ -293,6 +293,23 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|FUJITSU
+argument_list|,
+name|NE200
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|}
+block|,
+comment|/* Sold by Eagle */
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|RATOC
 argument_list|,
 name|REX_R280
