@@ -444,7 +444,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468EKLNS:X:acde:fFk:l:n:rs:t:uxy"
+literal|"468EKLNS:X:acde:fFk:l:n:rs:uxy"
 name|IPSECOPT
 argument_list|)
 operator|)
