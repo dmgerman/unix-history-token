@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	6.2	84/05/30	*/
+comment|/*	route.h	6.3	84/08/29	*/
 end_comment
 
 begin_comment
@@ -163,12 +163,35 @@ define|\
 value|if ((rt)->rt_refcnt == 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATEWAY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RTHASHSIZ
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|RTHASHSIZ
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
