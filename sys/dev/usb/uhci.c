@@ -669,18 +669,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|Static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 					 uhci_intr_info_t *); Static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|Static
 name|void
@@ -7703,22 +7691,6 @@ name|sqh
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*   * Enter a list of transfers onto a control queue.  * Called at splusb()   */
-end_comment
-
-begin_endif
-unit|void uhci_enter_ctl_q(uhci_softc_t *sc, uhci_soft_qh_t *sqh, uhci_intr_info_t *ii) { 	DPRINTFN(5, ("uhci_enter_ctl_q: sqh=%p\n", sqh));  }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
