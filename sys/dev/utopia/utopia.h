@@ -394,6 +394,65 @@ name|UTP_TYPE_IDT77155
 value|5
 end_define
 
+begin_comment
+comment|/*  * Statistics. These structures are versioned.  */
+end_comment
+
+begin_struct
+struct|struct
+name|utopia_stats1
+block|{
+name|uint32_t
+name|version
+decl_stmt|;
+comment|/* version of this statistics struct */
+name|uint32_t
+name|fill
+decl_stmt|;
+name|uint64_t
+name|rx_sbip
+decl_stmt|;
+comment|/* rx section BIP errors */
+name|uint64_t
+name|rx_lbip
+decl_stmt|;
+comment|/* rx line BIP errors */
+name|uint64_t
+name|rx_lfebe
+decl_stmt|;
+comment|/* rx line far end block errors */
+name|uint64_t
+name|rx_pbip
+decl_stmt|;
+comment|/* rx path BIP errors */
+name|uint64_t
+name|rx_pfebe
+decl_stmt|;
+comment|/* rx path far end block errors */
+name|uint64_t
+name|rx_cells
+decl_stmt|;
+comment|/* received cells */
+name|uint64_t
+name|rx_corr
+decl_stmt|;
+comment|/* correctable cell errors */
+name|uint64_t
+name|rx_uncorr
+decl_stmt|;
+comment|/* uncorrectable cell errors */
+name|uint64_t
+name|rx_symerr
+decl_stmt|;
+comment|/* symbol errors */
+name|uint64_t
+name|tx_cells
+decl_stmt|;
+comment|/* transmitted cells */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -524,6 +583,11 @@ modifier|*
 name|chip
 decl_stmt|;
 comment|/* chip operations */
+name|struct
+name|utopia_stats1
+name|stats
+decl_stmt|;
+comment|/* statistics */
 block|}
 struct|;
 end_struct
@@ -635,6 +699,18 @@ name|void
 function_decl|(
 modifier|*
 name|intr
+function_decl|)
+parameter_list|(
+name|struct
+name|utopia
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* update statistics */
+name|void
+function_decl|(
+modifier|*
+name|update_stats
 function_decl|)
 parameter_list|(
 name|struct
@@ -795,6 +871,16 @@ parameter_list|(
 name|S
 parameter_list|)
 value|((S)->chip->update_carrier((S)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|utopia_update_stats
+parameter_list|(
+name|S
+parameter_list|)
+value|((S)->chip->update_stats((S)))
 end_define
 
 begin_define
