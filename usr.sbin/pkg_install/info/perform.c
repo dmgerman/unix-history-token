@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.6 1993/09/08 01:46:57 jkh Exp $"
+literal|"$Id: perform.c,v 1.7 1994/10/04 16:07:46 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,8 +264,10 @@ name|FILENAME_MAX
 index|]
 decl_stmt|;
 name|char
-modifier|*
 name|home
+index|[
+name|FILENAME_MAX
+index|]
 decl_stmt|;
 name|Package
 name|plist
@@ -294,6 +296,21 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|getcwd
+argument_list|(
+name|home
+argument_list|,
+name|FILENAME_MAX
+argument_list|)
+condition|)
+name|upchuck
+argument_list|(
+literal|"getcwd"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|pkg
 index|[
 literal|0
@@ -320,7 +337,7 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 65%. 	 */
+comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 75%, but we're only unpacking the + files so 	 * be very optimistic. 	 */
 if|if
 condition|(
 name|stat
@@ -345,12 +362,6 @@ return|return
 literal|1
 return|;
 block|}
-name|sb
-operator|.
-name|st_size
-operator|*=
-literal|1.65
-expr_stmt|;
 name|home
 operator|=
 name|make_playpen
@@ -360,6 +371,8 @@ argument_list|,
 name|sb
 operator|.
 name|st_size
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
