@@ -341,7 +341,9 @@ end_comment
 begin_function
 name|void
 name|init_des_cipher
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -407,12 +409,10 @@ begin_function
 name|int
 name|get_des_char
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -476,17 +476,13 @@ begin_function
 name|int
 name|put_des_char
 parameter_list|(
-name|c
-parameter_list|,
-name|fp
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -559,12 +555,10 @@ begin_function
 name|int
 name|flush_des_file
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -643,7 +637,9 @@ end_comment
 begin_function
 name|int
 name|get_keyword
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -717,14 +713,11 @@ begin_function
 name|void
 name|des_error
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
-comment|/* the message */
+parameter_list|)
 block|{
 name|errmsg
 operator|=
@@ -748,18 +741,12 @@ begin_function
 name|int
 name|hex_to_binary
 parameter_list|(
+name|int
 name|c
 parameter_list|,
+name|int
 name|radix
 parameter_list|)
-name|int
-name|c
-decl_stmt|;
-comment|/* char to be converted */
-name|int
-name|radix
-decl_stmt|;
-comment|/* base (2 to 16) */
 block|{
 switch|switch
 condition|(
@@ -1022,27 +1009,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * convert the key to a bit pattern  */
+comment|/*  * convert the key to a bit pattern  *	obuf		bit pattern  *	kbuf		the key itself  */
 end_comment
 
 begin_function
 name|void
 name|expand_des_key
 parameter_list|(
+name|char
+modifier|*
 name|obuf
 parameter_list|,
+name|char
+modifier|*
 name|kbuf
 parameter_list|)
-name|char
-modifier|*
-name|obuf
-decl_stmt|;
-comment|/* bit pattern */
-name|char
-modifier|*
-name|kbuf
-decl_stmt|;
-comment|/* the key itself */
 block|{
 name|int
 name|i
@@ -1390,11 +1371,9 @@ begin_function
 name|void
 name|set_des_key
 parameter_list|(
-name|buf
-parameter_list|)
 name|Desbuf
 name|buf
-decl_stmt|;
+parameter_list|)
 comment|/* key block */
 block|{
 name|int
@@ -1534,23 +1513,17 @@ begin_function
 name|int
 name|cbc_encode
 parameter_list|(
-name|msgbuf
-parameter_list|,
-name|n
-parameter_list|,
-name|fp
-parameter_list|)
 name|char
 modifier|*
 name|msgbuf
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|inverse
@@ -1716,27 +1689,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This decrypts using the Cipher Block Chaining mode of DES  */
+comment|/*  * This decrypts using the Cipher Block Chaining mode of DES  *	msgbuf	I/O buffer  *	fp	input file descriptor  */
 end_comment
 
 begin_function
 name|int
 name|cbc_decode
 parameter_list|(
-name|msgbuf
-parameter_list|,
-name|fp
-parameter_list|)
 name|char
 modifier|*
 name|msgbuf
-decl_stmt|;
-comment|/* I/O buffer */
+parameter_list|,
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
-comment|/* input file descriptor */
+parameter_list|)
 block|{
 name|Desbuf
 name|tbuf

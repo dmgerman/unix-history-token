@@ -64,7 +64,9 @@ begin_function
 name|pattern_t
 modifier|*
 name|get_compiled_pattern
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|pattern_t
@@ -276,11 +278,9 @@ name|char
 modifier|*
 name|extract_pattern
 parameter_list|(
-name|delimiter
-parameter_list|)
 name|int
 name|delimiter
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -445,12 +445,10 @@ name|char
 modifier|*
 name|parse_char_class
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
