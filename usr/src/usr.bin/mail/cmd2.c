@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.8 %G%"
+literal|"@(#)cmd2.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,7 +2232,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|alloca
+name|salloc
 argument_list|(
 operator|(
 name|count
