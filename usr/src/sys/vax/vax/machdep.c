@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.40	81/10/17	*/
+comment|/*	machdep.c	4.41	81/10/29	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../bbnnet/net.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../bbnnet/host.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.5	81/05/15	*/
+comment|/*	param.c	4.6	81/10/29	*/
 end_comment
 
 begin_include
@@ -242,14 +242,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nwork
-init|=
-name|NWORK
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|nnetcon
 init|=
 name|NCON
@@ -394,25 +386,6 @@ ifdef|#
 directive|ifdef
 name|BBNNET
 end_ifdef
-
-begin_decl_stmt
-name|struct
-name|pfree
-modifier|*
-name|freetab
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|work
-modifier|*
-name|workfree
-decl_stmt|,
-modifier|*
-name|workNWORK
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
