@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.7 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1700,7 +1700,7 @@ decl_stmt|;
 name|int
 name|x
 decl_stmt|,
-name|sizerr
+name|readerr
 decl_stmt|,
 name|f
 decl_stmt|,
@@ -2006,7 +2006,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|sizerr
+name|readerr
 operator|=
 literal|0
 expr_stmt|;
@@ -2055,7 +2055,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|sizerr
+name|readerr
 operator|==
 literal|0
 operator|&&
@@ -2072,9 +2072,9 @@ argument_list|)
 operator|!=
 name|amt
 condition|)
-name|sizerr
+name|readerr
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 operator|(
 name|void
@@ -2101,7 +2101,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sizerr
+name|readerr
 operator|==
 literal|0
 condition|)
@@ -2111,9 +2111,14 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"rcp: %s: file changed size\n"
+literal|"rcp: %s: %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|sys_errlist
+index|[
+name|readerr
+index|]
 argument_list|)
 expr_stmt|;
 operator|(
