@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	4.1 (Berkeley, from Melbourne) %G%"
+literal|"@(#)quota.c	4.2 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +54,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|QUOTA
-end_define
-
 begin_include
 include|#
 directive|include
@@ -99,6 +93,15 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|morethanone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfname
+init|=
+literal|"quotas"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,7 +506,7 @@ name|dqblk
 name|dqblk
 decl_stmt|;
 name|char
-name|qfname
+name|qfilename
 index|[
 name|MAXPATHLEN
 operator|+
@@ -546,7 +549,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|qfname
+name|qfilename
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -554,16 +557,14 @@ name|fs
 operator|->
 name|fs_file
 argument_list|,
-name|fs
-operator|->
-name|fs_quotafile
+name|qfname
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|stat
 argument_list|(
-name|qfname
+name|qfilename
 argument_list|,
 operator|&
 name|statb
@@ -600,7 +601,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|qfname
+name|qfilename
 argument_list|,
 name|FRDONLY
 argument_list|)
