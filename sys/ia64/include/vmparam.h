@@ -306,6 +306,53 @@ value|((x) | IA64_RR_BASE(7))
 end_define
 
 begin_comment
+comment|/*  * Page size of the identity mappings in region 7.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG2_ID_PAGE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOG2_ID_PAGE_SIZE
+value|28
+end_define
+
+begin_comment
+comment|/* 256M */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IA64_ID_PAGE_SHIFT
+value|(LOG2_ID_PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_ID_PAGE_SIZE
+value|(1<<(LOG2_ID_PAGE_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_ID_PAGE_MASK
+value|(IA64_ID_PAGE_SIZE-1)
+end_define
+
+begin_comment
 comment|/*  * Mach derived constants  */
 end_comment
 

@@ -1571,7 +1571,7 @@ operator|)
 operator|,
 literal|"r"
 operator|(
-literal|28
+name|IA64_ID_PAGE_SHIFT
 operator|<<
 literal|2
 operator|)
@@ -1611,7 +1611,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_asm
-asm|__asm __volatile("mov	cr.itir=%0" :: "r"(28<< 2));
+asm|__asm __volatile("mov	cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
 end_asm
 
 begin_asm
@@ -2483,15 +2483,7 @@ block|{
 name|ia64_pal_base
 operator|&=
 operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|28
-operator|)
-operator|-
-literal|1
-operator|)
+name|IA64_ID_PAGE_MASK
 expr_stmt|;
 comment|/* 		 * We use a TR to map the first 256M of memory - this might 		 * cover the palcode too. 		 */
 if|if

@@ -256,6 +256,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|IA64_ID_PAGE_SHIFT
+argument_list|,
+name|IA64_ID_PAGE_SHIFT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|KSTACK_PAGES
 argument_list|,
 name|KSTACK_PAGES

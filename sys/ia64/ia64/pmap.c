@@ -1964,7 +1964,7 @@ literal|8
 operator|)
 operator||
 operator|(
-literal|28
+name|IA64_ID_PAGE_SHIFT
 operator|<<
 literal|2
 operator|)
@@ -1987,7 +1987,7 @@ literal|8
 operator|)
 operator||
 operator|(
-literal|28
+name|IA64_ID_PAGE_SHIFT
 operator|<<
 literal|2
 operator|)
