@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)graph.c	4.3 (Berkeley) %G%"
+literal|"@(#)graph.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,13 +69,6 @@ include|#
 directive|include
 file|<math.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|INF
-value|HUGE
-end_define
 
 begin_define
 define|#
@@ -598,7 +591,7 @@ name|yd
 operator|.
 name|xlb
 operator|=
-name|INF
+literal|0
 expr_stmt|;
 name|xd
 operator|.
@@ -608,8 +601,7 @@ name|yd
 operator|.
 name|xub
 operator|=
-operator|-
-name|INF
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1776,6 +1768,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Compute upper and lower bounds for the given descriptor.  * We may already have one or both.  We assume that if n==0,  * v[0].xv is a valid limit value.  */
+end_comment
+
 begin_expr_stmt
 name|getlim
 argument_list|(
@@ -1804,19 +1800,41 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
 if|if
 condition|(
 operator|!
 name|p
 operator|->
 name|xlbf
-operator|&&
+condition|)
+block|{
+comment|/* need lower bound */
+name|p
+operator|->
+name|xlb
+operator|=
+name|v
+index|[
+literal|0
+index|]
+operator|.
+name|xv
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
 name|p
 operator|->
 name|xlb
@@ -1839,13 +1857,42 @@ index|]
 operator|.
 name|xv
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|p
 operator|->
 name|xubf
-operator|&&
+condition|)
+block|{
+comment|/* need upper bound */
+name|p
+operator|->
+name|xub
+operator|=
+name|v
+index|[
+literal|0
+index|]
+operator|.
+name|xv
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
 name|p
 operator|->
 name|xub
@@ -1868,17 +1915,7 @@ index|]
 operator|.
 name|xv
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
 block|}
-do|while
-condition|(
-name|i
-operator|<
-name|n
-condition|)
-do|;
 block|}
 end_block
 
