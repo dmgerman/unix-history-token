@@ -147,7 +147,7 @@ condition|)
 return|return
 name|ENOENT
 return|;
-comment|/* 	 * Fine the root directory. 	 */
+comment|/* 	 * Find the root directory. 	 */
 name|status
 operator|=
 name|sfs
