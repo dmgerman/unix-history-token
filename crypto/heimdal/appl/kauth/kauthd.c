@@ -622,6 +622,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -685,6 +687,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
@@ -761,6 +765,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
@@ -1041,6 +1047,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
