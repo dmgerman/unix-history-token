@@ -4149,6 +4149,16 @@ operator|>=
 name|hlen
 condition|)
 block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"ah4_calccksum: "
+literal|"invalid IP option\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -4186,6 +4196,23 @@ condition|)
 empty_stmt|;
 else|else
 block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"ah4_calccksum: invalid IP option "
+literal|"(type=%02x)\n"
+operator|,
+name|p
+index|[
+name|i
+operator|+
+name|IPOPT_OPTVAL
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -4252,6 +4279,15 @@ operator|+
 name|IPOPT_OLEN
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|2
+condition|)
+goto|goto
+name|invalopt
+goto|;
 name|skip
 operator|=
 literal|0
@@ -4267,6 +4303,15 @@ operator|+
 name|IPOPT_OLEN
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|2
+condition|)
+goto|goto
+name|invalopt
+goto|;
 name|skip
 operator|=
 literal|1
@@ -4276,8 +4321,8 @@ block|}
 if|if
 condition|(
 name|l
-operator|<=
-literal|0
+operator|<
+literal|1
 operator|||
 name|hlen
 operator|-
@@ -4286,6 +4331,8 @@ operator|<
 name|l
 condition|)
 block|{
+name|invalopt
+label|:
 name|ipseclog
 argument_list|(
 operator|(

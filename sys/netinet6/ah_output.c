@@ -2427,8 +2427,14 @@ name|i
 operator|+
 name|IPOPT_OLEN
 index|]
-operator|<=
-literal|0
+operator|<
+literal|2
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 operator|||
 name|optlen
 operator|-
@@ -2506,8 +2512,8 @@ name|i
 operator|+
 name|IPOPT_OLEN
 index|]
-operator|<=
-literal|0
+operator|<
+literal|2
 operator|||
 name|optlen
 operator|-
