@@ -3441,6 +3441,13 @@ block|}
 block|,
 comment|/* RSS0262 - 5614Jx3[G] V90+K56Flex Modem */
 block|{
+literal|0x1010104d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SHP1010 - Rockwell 33600bps Modem */
+block|{
 literal|0xc100ad4d
 block|,
 name|NULL
