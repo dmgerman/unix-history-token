@@ -125,14 +125,6 @@ directive|include
 file|"pcib_if.h"
 end_include
 
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* sysctl vars */
 end_comment
