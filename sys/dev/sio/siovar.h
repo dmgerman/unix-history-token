@@ -232,6 +232,9 @@ name|dev
 operator|,
 name|int
 name|xrid
+operator|,
+name|u_long
+name|rclk
 operator|)
 argument_list|)
 decl_stmt|;
@@ -261,6 +264,9 @@ name|dev
 operator|,
 name|int
 name|xrid
+operator|,
+name|u_long
+name|rclk
 operator|,
 name|int
 name|noprobe

@@ -348,6 +348,8 @@ argument_list|,
 name|id
 operator|->
 name|rid
+argument_list|,
+literal|0UL
 argument_list|)
 operator|)
 return|;
@@ -553,6 +555,8 @@ argument_list|,
 name|id
 operator|->
 name|rid
+argument_list|,
+literal|0UL
 argument_list|,
 literal|0
 argument_list|)
