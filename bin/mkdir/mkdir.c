@@ -398,6 +398,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pflag
+condition|)
+block|{
 name|warn
 argument_list|(
 literal|"%s"
@@ -410,6 +416,7 @@ name|exitval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 name|exit
