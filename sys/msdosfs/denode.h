@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.8 1995/11/09 08:17:21 bde Exp $ */
+comment|/*	$Id: denode.h,v 1.9 1996/07/28 07:58:55 ache Exp $ */
 end_comment
 
 begin_comment
@@ -247,6 +247,10 @@ name|u_quad_t
 name|de_modrev
 decl_stmt|;
 comment|/* Revision level for lease. */
+name|int
+name|de_lockcount
+decl_stmt|;
+comment|/* Process lock count (recursion) */
 block|}
 struct|;
 end_struct
@@ -297,6 +301,17 @@ end_define
 
 begin_comment
 comment|/* denode has been modified, but DE_UPDATE 				 * isn't set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE_RECURSE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Recursion expected */
 end_comment
 
 begin_comment
