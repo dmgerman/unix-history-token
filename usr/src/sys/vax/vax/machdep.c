@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.35	81/05/05	*/
+comment|/*	machdep.c	4.36	81/05/09	*/
 end_comment
 
 begin_include
@@ -1450,13 +1450,57 @@ return|return;
 asm|asm("bad:");
 name|bad
 label|:
+comment|/* 	 * Process has trashed its stack; give it an illegal 	 * instruction to halt it in its tracks. 	 */
+name|u
+operator|.
+name|u_signal
+index|[
+name|SIGILL
+index|]
+operator|=
+name|SIG_DFL
+expr_stmt|;
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_siga0
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+operator|(
+name|SIGILL
+operator|-
+literal|1
+operator|)
+operator|)
+expr_stmt|;
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_siga1
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+operator|(
+name|SIGILL
+operator|-
+literal|1
+operator|)
+operator|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|u
 operator|.
 name|u_procp
 argument_list|,
-name|SIGKILL
+name|SIGILL
 argument_list|)
 expr_stmt|;
 block|}
