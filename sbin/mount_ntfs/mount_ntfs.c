@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ntfs/ntfsmount.h>
 end_include
 
