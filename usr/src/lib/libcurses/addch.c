@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addch.c	5.9 (Berkeley) %G%"
+literal|"@(#)addch.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,8 @@ name|attr
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
 name|__waddch
 argument_list|(
 name|win
@@ -77,7 +79,8 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
