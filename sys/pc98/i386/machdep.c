@@ -6523,7 +6523,7 @@ argument_list|)
 decl_stmt|,
 name|IDTVEC
 argument_list|(
-name|syscall
+name|lcall_syscall
 argument_list|)
 decl_stmt|,
 name|IDTVEC
@@ -10389,7 +10389,7 @@ operator|)
 operator|&
 name|IDTVEC
 argument_list|(
-name|syscall
+name|lcall_syscall
 argument_list|)
 expr_stmt|;
 name|gdp
@@ -10397,7 +10397,6 @@ operator|->
 name|gd_looffset
 operator|=
 name|x
-operator|++
 expr_stmt|;
 name|gdp
 operator|->
@@ -10438,16 +10437,7 @@ name|gdp
 operator|->
 name|gd_hioffset
 operator|=
-operator|(
-operator|(
-name|int
-operator|)
-operator|&
-name|IDTVEC
-argument_list|(
-name|syscall
-argument_list|)
-operator|)
+name|x
 operator|>>
 literal|16
 expr_stmt|;
