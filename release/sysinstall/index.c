@@ -180,6 +180,10 @@ literal|"All"
 block|,
 literal|"All available packages in all categories."
 block|,
+literal|"accessibility"
+block|,
+literal|"Ports to help disabled users."
+block|,
 literal|"afterstep"
 block|,
 literal|"Ports to support the AfterStep window manager."
@@ -252,6 +256,10 @@ literal|"emulators"
 block|,
 literal|"Utilities for emulating other OS types."
 block|,
+literal|"finance"
+block|,
+literal|"Monetary, financial and related applications."
+block|,
 literal|"french"
 block|,
 literal|"Ported software for French countries."
@@ -276,13 +284,21 @@ literal|"graphics"
 block|,
 literal|"Graphics libraries and utilities."
 block|,
-literal|"ipv6"
+literal|"haskell"
 block|,
-literal|"IPv6 related software."
+literal|"Software related to the Haskell language."
 block|,
 literal|"hebrew"
 block|,
 literal|"Ported software for Hebrew language."
+block|,
+literal|"hungarian"
+block|,
+literal|"Ported software for the Hungarian market."
+block|,
+literal|"ipv6"
+block|,
+literal|"IPv6 related software."
 block|,
 literal|"irc"
 block|,
@@ -336,6 +352,10 @@ literal|"misc"
 block|,
 literal|"Miscellaneous utilities."
 block|,
+literal|"multimedia"
+block|,
+literal|"Multimedia software."
+block|,
 literal|"net"
 block|,
 literal|"Networking utilities."
@@ -358,7 +378,11 @@ literal|"Packages without a home elsewhere."
 block|,
 literal|"palm"
 block|,
-literal|"Software support for the 3Com Palm Pilot(tm) series."
+literal|"Software support for the Palm(tm) series."
+block|,
+literal|"parallel"
+block|,
+literal|"Applications dealing with parallelism in computing."
 block|,
 literal|"perl5"
 block|,
@@ -375,6 +399,10 @@ block|,
 literal|"plan9"
 block|,
 literal|"Software from the Plan9 operating system."
+block|,
+literal|"portuguese"
+block|,
+literal|"Ported software for the Portuguese market."
 block|,
 literal|"print"
 block|,
