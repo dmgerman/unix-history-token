@@ -1790,7 +1790,7 @@ block|,
 name|setgroups
 block|,
 comment|/* 80 = setgroups */
-literal|1
+literal|0
 block|,
 name|getpgrp
 block|,
