@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.99 1999/05/04 20:29:58 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.101 1999/05/05 16:54:54 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.99 1999/05/04 20:29:58 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.101 1999/05/05 16:54:54 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9135,6 +9135,40 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|txstat
+operator|&
+name|XL_TXSTATUS_UNDERRUN
+operator|&&
+name|sc
+operator|->
+name|xl_tx_thresh
+operator|<
+name|XL_PACKET_SIZE
+condition|)
+block|{
+name|sc
+operator|->
+name|xl_tx_thresh
+operator|+=
+name|XL_MIN_FRAMELEN
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xl%d: tx underrun, increasing tx start"
+literal|" threshold to %d bytes\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
+argument_list|,
+name|sc
+operator|->
+name|xl_tx_thresh
+argument_list|)
+expr_stmt|;
+block|}
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -9143,7 +9177,9 @@ name|XL_COMMAND
 argument_list|,
 name|XL_CMD_TX_SET_START
 operator||
-name|XL_MIN_FRAMELEN
+name|sc
+operator|->
+name|xl_tx_thresh
 argument_list|)
 expr_stmt|;
 if|if
@@ -10601,6 +10637,12 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Set the TX start threshold for best performance. */
+name|sc
+operator|->
+name|xl_tx_thresh
+operator|=
+name|XL_MIN_FRAMELEN
+expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -10609,7 +10651,9 @@ name|XL_COMMAND
 argument_list|,
 name|XL_CMD_TX_SET_START
 operator||
-name|XL_MIN_FRAMELEN
+name|sc
+operator|->
+name|xl_tx_thresh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is a 3c905B, also set the tx reclaim threshold. 	 * This helps cut down on the number of tx reclaim errors 	 * that could happen on a busy network. The chip multiplies 	 * the register value by 16 to obtain the actual threshold 	 * in bytes, so we divide by 16 when setting the value here. 	 * The existing threshold value can be examined by reading 	 * the register at offset 9 in window 5. 	 */
