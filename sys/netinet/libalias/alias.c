@@ -593,6 +593,9 @@ parameter_list|,
 name|struct
 name|ip
 modifier|*
+parameter_list|,
+name|int
+name|create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1576,6 +1579,9 @@ name|struct
 name|ip
 modifier|*
 name|pip
+parameter_list|,
+name|int
+name|create
 parameter_list|)
 block|{
 comment|/*     Alias outgoing echo and timestamp requests.     De-alias outgoing echo and timestamp replies. */
@@ -1620,7 +1626,7 @@ name|ic
 operator|->
 name|icmp_id
 argument_list|,
-literal|1
+name|create
 argument_list|)
 expr_stmt|;
 if|if
@@ -2320,6 +2326,8 @@ argument_list|(
 name|la
 argument_list|,
 name|pip
+argument_list|,
+name|create
 argument_list|)
 expr_stmt|;
 block|}
@@ -2359,6 +2367,8 @@ argument_list|(
 name|la
 argument_list|,
 name|pip
+argument_list|,
+name|create
 argument_list|)
 expr_stmt|;
 block|}
