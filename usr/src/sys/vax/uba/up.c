@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.76	83/07/09	*/
+comment|/*	up.c	4.77	83/07/20	*/
 end_comment
 
 begin_include
@@ -381,6 +381,52 @@ literal|98
 block|,
 comment|/* H=cyl 98 thru 667 */
 block|}
+struct|,
+name|up980_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 99 */
+literal|33440
+block|,
+literal|100
+block|,
+comment|/* B=cyl 100 thru 308 */
+literal|131680
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 822 */
+literal|15884
+block|,
+literal|309
+block|,
+comment|/* D=cyl 309 thru 408 */
+literal|55936
+block|,
+literal|409
+block|,
+comment|/* E=cyl 409 thru 758 */
+literal|10080
+block|,
+literal|759
+block|,
+comment|/* F=cyl 759 thru 822 */
+literal|82080
+block|,
+literal|309
+block|,
+comment|/* G=cyl 309 thru 822 */
+literal|0
+block|,
+literal|0
+block|, }
 struct|;
 end_struct
 
@@ -641,6 +687,25 @@ literal|8
 block|}
 block|,
 comment|/* Capricorn */
+block|{
+literal|32
+block|,
+literal|5
+block|,
+literal|32
+operator|*
+literal|5
+block|,
+literal|823
+block|,
+name|up980_sizes
+block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
+comment|/* DM980 */
 block|{
 literal|0
 block|,
