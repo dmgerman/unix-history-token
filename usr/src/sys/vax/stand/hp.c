@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	6.4	84/02/06	*/
+comment|/*	hp.c	6.5	84/04/02	*/
 end_comment
 
 begin_comment
@@ -478,7 +478,10 @@ name|hpaddr
 argument_list|,
 name|i
 argument_list|,
+name|UNITTODRIVE
+argument_list|(
 name|unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Read in the bad sector table. 		 */
