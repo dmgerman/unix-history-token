@@ -11,17 +11,25 @@ begin_comment
 comment|/*  * The boot program passes a pointer (in the boot environment virtual  * address address space; "BEVA") to a bootinfo to the kernel using  * the following convention:  *  *	a0 contains first free page frame number  *	a1 contains page number of current level 1 page table  *	if a2 contains BOOTINFO_MAGIC and a4 is nonzero:  *		a3 contains pointer (BEVA) to bootinfo  *		a4 contains bootinfo version number  *	if a2 contains BOOTINFO_MAGIC and a4 contains 0 (backward compat):  *		a3 contains pointer (BEVA) to bootinfo version  *		    (u_long), then the bootinfo  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BOOTINFO_MAGIC
+value|0xdeadbeeffeedface
+end_define
+
 begin_struct
 struct|struct
 name|bootinfo
 block|{
-name|char
-name|bi_flags
-index|[
-literal|64
-index|]
+name|u_int64_t
+name|bi_magic
 decl_stmt|;
-comment|/* boot flags */
+comment|/* BOOTINFO_MAGIC */
+name|u_int64_t
+name|bi_version
+decl_stmt|;
+comment|/* version 1 */
 name|char
 name|bi_kernel
 index|[
@@ -29,6 +37,10 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* name of booted kernel */
+name|u_int64_t
+name|bi_boothowto
+decl_stmt|;
+comment|/* value for boothowto */
 name|u_int64_t
 name|bi_systab
 decl_stmt|;
