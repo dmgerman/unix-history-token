@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.1 (Berkeley) %G%"
+literal|"@(#)const.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,19 +119,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|const
-operator|(
-name|cline
-operator|,
-name|cid
-operator|,
-name|cdecl
-operator|)
+begin_macro
+name|constant
+argument_list|(
+argument|cline
+argument_list|,
+argument|cid
+argument_list|,
+argument|cdecl
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|cline
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
