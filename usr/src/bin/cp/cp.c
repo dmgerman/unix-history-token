@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.7 (Berkeley) %G%"
+literal|"@(#)cp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,8 +155,6 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|exit_val
-decl_stmt|,
-name|symfollow
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +167,20 @@ decl_stmt|,
 name|recursive_flag
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|statfcn
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* stat function to use */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -262,6 +274,14 @@ name|r
 decl_stmt|;
 name|int
 name|force_flag
+decl_stmt|,
+name|symfollow
+decl_stmt|,
+name|lstat
+argument_list|()
+decl_stmt|,
+name|stat
+argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -272,6 +292,8 @@ name|malloc
 argument_list|()
 decl_stmt|;
 name|force_flag
+operator|=
+name|symfollow
 operator|=
 literal|0
 expr_stmt|;
@@ -446,6 +468,17 @@ name|exit
 argument_list|(
 name|exit_val
 argument_list|)
+expr_stmt|;
+name|statfcn
+operator|=
+name|symfollow
+operator|||
+operator|!
+name|recursive_flag
+condition|?
+name|stat
+else|:
+name|lstat
 expr_stmt|;
 comment|/* 	 * Cp has two distinct cases: 	 * 	 * Case (1)	  $ cp [-rip] source target 	 * 	 * Case (2)	  $ cp [-rip] source1 ... directory 	 * 	 * In both cases, source can be either a file or a directory. 	 * 	 * In (1), the target becomes a copy of the source. That is, if the 	 * source is a file, the target will be a file, and likewise for 	 * directories. 	 * 	 * In (2), the real target is not directory, but "directory/source". 	 */
 name|r
@@ -637,22 +670,7 @@ name|statval
 decl_stmt|;
 name|statval
 operator|=
-name|symfollow
-operator|||
-operator|!
-name|recursive_flag
-condition|?
-name|stat
-argument_list|(
-name|from
-operator|.
-name|p_path
-argument_list|,
-operator|&
-name|from_stat
-argument_list|)
-else|:
-name|lstat
+name|statfcn
 argument_list|(
 name|from
 operator|.
@@ -1395,7 +1413,7 @@ name|done
 goto|;
 if|if
 condition|(
-name|stat
+name|statfcn
 argument_list|(
 name|from
 operator|.
