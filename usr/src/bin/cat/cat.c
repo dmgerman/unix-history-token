@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	5.6 (Berkeley) %G%"
+literal|"@(#)cat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,13 +508,24 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|gobble
+operator|&&
+name|putc
+argument_list|(
+name|ch
+argument_list|,
+name|stdout
+argument_list|)
+operator|==
+name|EOF
 condition|)
-continue|continue;
+break|break;
 name|gobble
 operator|=
 literal|1
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -576,6 +587,10 @@ condition|)
 break|break;
 block|}
 block|}
+name|gobble
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ch
