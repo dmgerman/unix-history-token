@@ -4614,6 +4614,7 @@ name|rxcycles
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* DEVICE_POLLING */
 block|}
 struct|;
 end_struct
