@@ -8311,7 +8311,6 @@ name|DDB
 ifdef|#
 directive|ifdef
 name|ALT_BREAK_TO_DEBUGGER
-comment|/* 			 * Solaris implements a new BREAK which is initiated 			 * by a character sequence CR ~ ^b which is similar 			 * to a familiar pattern used on Sun servers by the 			 * Remote Console. 			 */
 if|if
 condition|(
 name|com
