@@ -106,8 +106,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_security
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
-argument_list|(,
+argument_list|(
+name|_kern_security
+argument_list|,
 name|OID_AUTO
 argument_list|,
 name|jail
@@ -139,7 +149,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_jail
+name|_kern_security_jail
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -168,7 +178,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_jail
+name|_kern_security_jail
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -197,7 +207,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_jail
+name|_kern_security_jail
 argument_list|,
 name|OID_AUTO
 argument_list|,
