@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getgrent.c,v 1.19 1999/10/13 16:39:30 vixie Exp $"
+literal|"$Id: getgrent.c,v 1.20 2001/05/29 05:48:41 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -289,7 +301,9 @@ end_ifdef
 begin_function
 name|void
 name|setgrent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|net_data
@@ -299,14 +313,11 @@ init|=
 name|init
 argument_list|()
 decl_stmt|;
-return|return
-operator|(
 name|setgrent_p
 argument_list|(
 name|net_data
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -318,7 +329,9 @@ end_else
 begin_function
 name|int
 name|setgrent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|net_data
@@ -373,21 +386,7 @@ begin_function
 name|int
 name|getgrouplist
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|gid_t
-name|basegid
-parameter_list|,
-name|gid_t
-modifier|*
-name|groups
-parameter_list|,
-name|int
-modifier|*
-name|ngroups
+name|GETGROUPLIST_ARGS
 parameter_list|)
 block|{
 name|struct
@@ -636,6 +635,9 @@ name|net_data
 operator|->
 name|gr_last
 operator|&&
+operator|(
+name|gid_t
+operator|)
 name|net_data
 operator|->
 name|gr_last

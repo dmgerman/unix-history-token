@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_pw.c,v 8.1 1999/01/18 07:46:54 vixie Exp $"
+literal|"$Id: irp_pw.c,v 8.2 2001/11/01 07:29:26 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,6 +1385,9 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PW_CLASS
 if|if
 condition|(
 name|pw
@@ -1400,6 +1403,8 @@ operator|->
 name|pw_class
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pw

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.43.2.2 2001/08/09 14:04:45 marka Exp $"
+literal|"$Id: host.c,v 8.49 2001/12/17 04:24:37 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,10 @@ directive|define
 name|NS_HEADERDATA_SIZE
 value|10
 end_define
+
+begin_comment
+comment|/* type + class + ttl + rdlen */
+end_comment
 
 begin_define
 define|#
@@ -1594,6 +1598,9 @@ else|:
 name|chase_domain
 argument_list|,
 name|chase_lastgoodkey
+index|[
+literal|0
+index|]
 condition|?
 name|chase_lastgoodkey
 else|:
@@ -2897,6 +2904,22 @@ condition|(
 name|domain
 operator|==
 name|NULL
+operator|||
+operator|(
+name|domain
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|domain
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|)
 condition|)
 name|sprintf
 argument_list|(
@@ -3130,6 +3153,7 @@ comment|/* 	 * Find first satisfactory answer. 	 */
 name|hp
 operator|=
 operator|(
+specifier|const
 name|HEADER
 operator|*
 operator|)
@@ -3531,10 +3555,6 @@ name|eom
 condition|)
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_rr
 argument_list|(
 name|cp
@@ -3574,10 +3594,6 @@ name|eom
 condition|)
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_rr
 argument_list|(
 name|cp
@@ -3606,6 +3622,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_hex_field
 parameter_list|(
@@ -3619,6 +3636,7 @@ parameter_list|,
 name|int
 name|width
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pref
@@ -3764,6 +3782,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|memswap
 parameter_list|(
@@ -3839,88 +3858,6 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|print_hex
-parameter_list|(
-name|u_int8_t
-name|field
-index|[]
-parameter_list|,
-name|int
-name|length
-parameter_list|)
-block|{
-comment|/* Prints the hex values of a field...not as pretty as the print_hex_field. 	*/
-name|int
-name|i
-decl_stmt|,
-name|start
-decl_stmt|,
-name|stop
-decl_stmt|;
-name|start
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
-name|stop
-operator|=
-name|length
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|start
-init|;
-name|i
-operator|<
-name|stop
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%02x "
-argument_list|,
-operator|(
-name|u_char
-operator|)
-name|field
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|start
-operator|=
-name|stop
-expr_stmt|;
-if|if
-condition|(
-name|start
-operator|<
-name|length
-condition|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|start
-operator|<
-name|length
-condition|)
-do|;
 block|}
 end_function
 
@@ -4037,15 +3974,8 @@ name|canonrr_len
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -4059,7 +3989,10 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
 operator|==
 name|NULL
 condition|)
@@ -4385,10 +4318,6 @@ index|]
 decl_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -4634,10 +4563,6 @@ index|]
 decl_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -4743,10 +4668,6 @@ name|cp
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -5052,10 +4973,6 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -5280,10 +5197,6 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -5495,10 +5408,6 @@ expr_stmt|;
 comment|/* replacement  */
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -5535,10 +5444,6 @@ name|ns_t_rp
 case|:
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -5602,10 +5507,6 @@ expr_stmt|;
 block|}
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -6001,10 +5902,6 @@ name|bitmaplen
 decl_stmt|;
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -6346,10 +6243,6 @@ expr_stmt|;
 comment|/* signer's name */
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pr_cdname
 argument_list|(
 name|cp
@@ -6546,7 +6439,7 @@ name|n
 argument_list|)
 expr_stmt|;
 name|chase_sigrdata_len
-operator|+=
+operator|=
 name|SIG_RDATA_BY_NAME
 operator|+
 name|n
@@ -6918,7 +6811,7 @@ name|i
 operator|+
 literal|1
 init|;
-name|i
+name|j
 operator|<
 name|NUMRR
 operator|&&
@@ -6952,7 +6845,7 @@ name|data
 argument_list|,
 name|MY_PACKETSZ
 argument_list|)
-operator|>
+operator|<
 literal|0
 condition|)
 name|memswap
@@ -7034,6 +6927,13 @@ condition|(
 name|verbose
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|print_hex_field
 argument_list|(
 name|chase_sigrdata

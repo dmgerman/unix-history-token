@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.41 2001/02/08 02:05:50 marka Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.46 2001/11/17 15:16:46 marka Exp $  */
 end_comment
 
 begin_comment
@@ -134,10 +134,37 @@ begin_comment
 comment|/*  * XXX  * For IPv6 transport support we need a seperate reference counted  * database of source addresses and d_addr should become a union with  * a pointer into that database.  A bit can be robbed from d_rode to  * indicate what the union is being used for.  This should require less  * memory than making d_addr a union of struct in6_addr and struct in_addr.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CHECK_MAGIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DATABUF_MAGIC
+value|(('D'<<24)|('A'<<16)|('T'<<8)|'A')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|databuf
 block|{
+ifdef|#
+directive|ifdef
+name|CHECK_MAGIC
+name|u_int32_t
+name|d_magic
+decl_stmt|;
+comment|/* magic number */
+endif|#
+directive|endif
 name|struct
 name|databuf
 modifier|*
@@ -201,6 +228,12 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* place to mark data */
+name|unsigned
+name|d_noedns
+range|:
+literal|1
+decl_stmt|;
+comment|/* this server does not support edns */
 name|int16_t
 name|d_type
 decl_stmt|;
@@ -485,6 +518,8 @@ modifier|*
 name|n_hash
 decl_stmt|;
 comment|/* hash table for children */
+union|union
+block|{
 name|char
 name|_n_name
 index|[
@@ -495,6 +530,20 @@ operator|*
 argument_list|)
 index|]
 decl_stmt|;
+name|unsigned
+name|char
+name|_n_len
+index|[
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+name|_n
+union|;
 comment|/* Counted str (dynamic). */
 block|}
 struct|;
@@ -517,7 +566,7 @@ name|NAMELEN
 parameter_list|(
 name|nb
 parameter_list|)
-value|(((u_char *)((nb)._n_name))[0])
+value|((((nb)._n._n_len))[0])
 end_define
 
 begin_define
@@ -527,7 +576,7 @@ name|NAME
 parameter_list|(
 name|nb
 parameter_list|)
-value|((nb)._n_name + 1)
+value|((nb)._n._n_name + 1)
 end_define
 
 begin_struct
@@ -644,6 +693,9 @@ decl_stmt|;
 name|int
 name|siglen
 decl_stmt|;
+name|int
+name|tsig_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -702,6 +754,7 @@ decl_stmt|;
 name|int
 name|line
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1008,6 +1061,13 @@ end_define
 begin_comment
 comment|/* db_set_update */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NONGLUE
+value|(-14)
+end_define
 
 begin_comment
 comment|/*  * getnum() options  */

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/cylink_link.c,v 1.8 2001/04/05 22:00:00 bwelling Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/cylink_link.c,v 1.9 2001/05/29 05:48:05 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,10 +679,6 @@ name|SHAUpdate
 argument_list|(
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|data
 argument_list|,
 name|len
@@ -1083,10 +1079,6 @@ name|SHAUpdate
 argument_list|(
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|data
 argument_list|,
 name|len
@@ -3051,6 +3043,11 @@ index|[
 name|SHA_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|nothing
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|key

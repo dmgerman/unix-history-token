@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 8.11 2001/03/26 07:04:30 marka Exp $"
+literal|"$Id: nsap_addr.c,v 8.12 2001/05/28 07:37:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,6 +192,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|ascii
+operator|+=
+literal|2
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -405,11 +409,13 @@ expr_stmt|;
 block|}
 operator|*
 name|ascii
+operator|++
 operator|=
 literal|'0'
 expr_stmt|;
 operator|*
 name|ascii
+operator|++
 operator|=
 literal|'x'
 expr_stmt|;

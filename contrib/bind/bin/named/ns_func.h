@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.105 2001/02/16 04:46:12 marka Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.115 2002/01/29 03:59:38 marka Exp $  */
 end_comment
 
 begin_comment
@@ -75,8 +75,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -90,8 +99,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -105,8 +123,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -120,8 +147,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -135,8 +171,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -150,8 +195,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -167,13 +221,23 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
 name|ns_assertion_failed
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -184,6 +248,7 @@ parameter_list|,
 name|assertion_type
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cond
@@ -252,6 +317,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
 name|__freestr
 parameter_list|(
 name|char
@@ -287,6 +353,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|checked_ctime
@@ -300,6 +367,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ctimel
@@ -311,11 +379,13 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
 name|__freestr_record
 parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -333,6 +403,7 @@ name|size_t
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -352,6 +423,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -406,8 +478,17 @@ name|format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_ifdef
 ifdef|#
@@ -455,6 +536,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
 name|debug_freestr
 parameter_list|(
 name|char
@@ -746,9 +828,17 @@ name|struct
 name|in_addr
 modifier|*
 parameter_list|,
+name|struct
+name|dst_key
+modifier|*
+modifier|*
+name|keys
+parameter_list|,
 name|int
 parameter_list|,
 name|u_int16_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -897,6 +987,83 @@ end_comment
 begin_comment
 comment|/* ++from ns_req.c++ */
 end_comment
+
+begin_function_decl
+name|int
+name|ns_get_opt
+parameter_list|(
+name|u_char
+modifier|*
+name|msg
+parameter_list|,
+name|u_char
+modifier|*
+name|eom
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|versionp
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|rcodep
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|flagp
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|bufsizep
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|optionsp
+parameter_list|,
+name|size_t
+modifier|*
+name|optsizep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ns_add_opt
+parameter_list|(
+name|u_char
+modifier|*
+name|msg
+parameter_list|,
+name|u_char
+modifier|*
+name|cp
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|,
+name|u_int8_t
+name|version
+parameter_list|,
+name|u_int16_t
+name|rcode
+parameter_list|,
+name|u_int16_t
+name|size
+parameter_list|,
+name|u_int16_t
+name|flags
+parameter_list|,
+name|u_char
+modifier|*
+name|options
+parameter_list|,
+name|size_t
+name|optlen
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1049,6 +1216,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|int
+name|drop_port
+parameter_list|(
+name|u_int16_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* --from ns_req.c-- */
@@ -1221,13 +1397,14 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|NO_SOCKADDR_UN
 end_ifndef
 
 begin_function_decl
 name|control
 name|ns_ctl_new_unix
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1482,6 +1659,8 @@ parameter_list|(
 name|struct
 name|qinfo
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1512,9 +1691,6 @@ name|ns_freeqns
 parameter_list|(
 name|struct
 name|qinfo
-modifier|*
-parameter_list|,
-name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1660,7 +1836,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|dq_remove_all
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2807,14 +2985,6 @@ modifier|*
 name|msg
 parameter_list|,
 name|struct
-name|qstream
-modifier|*
-name|qsp
-parameter_list|,
-name|int
-name|dfd
-parameter_list|,
-name|struct
 name|sockaddr_in
 name|from
 parameter_list|,
@@ -3171,6 +3341,10 @@ name|zone_config
 parameter_list|,
 name|struct
 name|in_addr
+parameter_list|,
+name|struct
+name|dst_key
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3494,9 +3668,11 @@ name|ip_match_list
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3965,6 +4141,7 @@ begin_function_decl
 name|ip_match_list
 name|lookup_acl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3975,6 +4152,7 @@ begin_function_decl
 name|void
 name|define_acl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -3999,6 +4177,7 @@ begin_function_decl
 name|void
 name|define_key
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ixfr.c,v 8.26.2.2 2001/08/10 03:00:08 marka Exp $"
+literal|"$Id: ns_ixfr.c,v 8.31 2002/01/02 05:15:20 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1403,18 +1403,13 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
-expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
 expr_stmt|;
 name|foundsoa
 operator|=
@@ -1620,18 +1615,13 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
-expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 name|rp
@@ -1783,18 +1773,13 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
-expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
 expr_stmt|;
 name|foundsoa
 operator|=
@@ -2035,18 +2020,13 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
-expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 name|rp
@@ -2112,21 +2092,14 @@ name|r_dp
 operator|!=
 name|NULL
 condition|)
-block|{
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
 expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|res_freeupdrec
 argument_list|(
 name|rp
@@ -2359,18 +2332,13 @@ name|r_dp
 operator|!=
 name|NULL
 condition|)
-name|db_freedata
+name|db_detach
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|r_dp
 argument_list|)
-expr_stmt|;
-name|rp
-operator|->
-name|r_dp
-operator|=
-name|NULL
 expr_stmt|;
 name|res_freeupdrec
 argument_list|(
@@ -2640,16 +2608,15 @@ name|ns_log_default
 argument_list|,
 literal|3
 argument_list|,
-literal|"%s, size %d blk %d"
+literal|"%s, size %ld"
 argument_list|,
 name|zp
 operator|->
 name|z_source
 argument_list|,
-name|db_sb
-operator|.
-name|st_size
-argument_list|,
+operator|(
+name|long
+operator|)
 name|db_sb
 operator|.
 name|st_size
@@ -2750,16 +2717,22 @@ name|ns_log_default
 argument_list|,
 literal|3
 argument_list|,
-literal|"%s, size %d max %d\n"
+literal|"%s, size %ld max %ld\n"
 argument_list|,
 name|zp
 operator|->
 name|z_ixfr_base
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
+operator|(
+name|long
+operator|)
 name|zp
 operator|->
 name|z_max_log_size_ixfr
@@ -2872,8 +2845,11 @@ name|ns_log_default
 argument_list|,
 literal|3
 argument_list|,
-literal|"seek: %d"
+literal|"seek: %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|seek
 argument_list|)
 expr_stmt|;
@@ -3609,29 +3585,35 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* signal to read for lowest serial number */
 name|zp
 operator|->
 name|z_serial_ixfr_start
 operator|=
 literal|0
 expr_stmt|;
-comment|/* signal to read for lowest serial number */
 name|ns_debug
 argument_list|(
 name|ns_log_default
 argument_list|,
 literal|3
 argument_list|,
-literal|"%s, size %d max %d\n"
+literal|"%s, size %ld max %ld\n"
 argument_list|,
 name|zp
 operator|->
 name|z_ixfr_base
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
+operator|(
+name|long
+operator|)
 name|zp
 operator|->
 name|z_max_log_size_ixfr

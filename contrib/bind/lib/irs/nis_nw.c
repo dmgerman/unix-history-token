@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_nw.c,v 1.15 1999/01/18 07:46:58 vixie Exp $"
+literal|"$Id: nis_nw.c,v 1.16 2001/05/29 05:49:15 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1063,6 +1063,10 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 if|if
 condition|(
 name|init
@@ -1111,6 +1115,13 @@ argument_list|,
 name|do_val
 argument_list|)
 expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|name
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|yp_match
@@ -1121,15 +1132,11 @@ name|nis_domain
 argument_list|,
 name|networks_byname
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|name
+name|tmp
 argument_list|,
 name|strlen
 argument_list|(
-name|name
+name|tmp
 argument_list|)
 argument_list|,
 operator|&

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns.c,v 1.15 2000/02/28 07:52:16 vixie Exp $"
+literal|"$Id: dns.c,v 1.16 2001/05/29 05:48:26 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,11 @@ name|dns_p
 modifier|*
 name|dns
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

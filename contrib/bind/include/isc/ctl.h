@@ -16,7 +16,7 @@ comment|/*  * Copyright (c) 1998,1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: ctl.h,v 8.9 1999/08/08 20:16:45 vixie Exp $  */
+comment|/*  * $Id: ctl.h,v 8.11 2001/08/10 02:40:49 marka Exp $  */
 end_comment
 
 begin_include
@@ -165,6 +165,7 @@ parameter_list|,
 name|u_int
 name|respflags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|respctx
@@ -254,6 +255,46 @@ name|ctl_logger
 value|__ctl_logger
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_function_decl
+name|void
+name|ctl_logger
+parameter_list|(
+name|enum
+name|ctl_severity
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 name|void
 name|ctl_logger
@@ -269,6 +310,11 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Client symbols. */
@@ -473,6 +519,7 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,

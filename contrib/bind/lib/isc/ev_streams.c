@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_streams.c,v 8.21 1999/10/07 20:44:04 vixie Exp $"
+literal|"$Id: ev_streams.c,v 8.22 2001/05/29 05:49:29 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -665,6 +665,11 @@ name|id
 operator|.
 name|opaque
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|opaqueCtx
+argument_list|)
+expr_stmt|;
 name|str
 operator|->
 name|timer
@@ -705,6 +710,11 @@ name|id
 operator|.
 name|opaque
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|opaqueCtx
+argument_list|)
+expr_stmt|;
 name|str
 operator|->
 name|flags
@@ -1113,6 +1123,9 @@ if|if
 condition|(
 name|bytes
 operator|<
+operator|(
+name|size_t
+operator|)
 name|str
 operator|->
 name|iovCur
@@ -1330,6 +1343,11 @@ decl_stmt|;
 name|int
 name|bytes
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|evmask
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 name|writev
@@ -1468,6 +1486,11 @@ decl_stmt|;
 name|int
 name|bytes
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|evmask
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 name|readv

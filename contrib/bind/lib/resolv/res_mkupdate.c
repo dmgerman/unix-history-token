@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkupdate.c,v 1.25 2000/11/22 01:20:46 marka Exp $"
+literal|"$Id: res_mkupdate.c,v 1.26 2001/05/29 05:49:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1719,6 +1719,7 @@ operator|/
 literal|8
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|maxbm
 init|=
@@ -4835,6 +4836,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|res_buildservicelist
 parameter_list|()
@@ -5091,7 +5093,9 @@ end_function
 begin_function
 name|void
 name|res_buildprotolist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|protoent
@@ -5226,7 +5230,9 @@ end_function
 begin_function
 name|void
 name|res_destroyprotolist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|valuelist

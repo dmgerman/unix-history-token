@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9,6 +13,12 @@ begin_define
 define|#
 directive|define
 name|WANT_IRS_PW
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PW_CLASS
 end_define
 
 begin_define
@@ -150,15 +160,12 @@ name|GROUP_R_ARGS
 value|char *buf, int buflen
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|GROUP_R_ENT_ARGS
-end_undef
-
-begin_comment
-comment|/*empty*/
-end_comment
+value|void
+end_define
 
 begin_define
 define|#
@@ -172,6 +179,13 @@ define|#
 directive|define
 name|GROUP_R_BAD
 value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETGROUPLIST_ARGS
+value|const char *name, int basegid, int *groups, \ 			  int *ngroups
 end_define
 
 begin_define
@@ -390,15 +404,15 @@ name|NGR_R_END_RETURN
 value|void
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NGR_R_END_RESULT
-end_undef
-
-begin_comment
-comment|/*empty*/
-end_comment
+parameter_list|(
+name|x
+parameter_list|)
+value|return
+end_define
 
 begin_define
 define|#
@@ -717,6 +731,53 @@ define|#
 directive|define
 name|IRS_LCL_SV_DB
 end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKLEN_T
+value|int
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISC_FORMAT_PRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+parameter_list|)
+define|\
+value|__attribute__((__format__(__printf__, fmt, args)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISC_FORMAT_PRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

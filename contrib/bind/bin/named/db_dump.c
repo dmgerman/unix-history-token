@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.49 2001/02/06 06:42:19 marka Exp $"
+literal|"$Id: db_dump.c,v 8.51 2001/06/18 14:42:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,12 @@ begin_include
 include|#
 directive|include
 file|<isc/logging.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/misc.h>
 end_include
 
 begin_include
@@ -466,10 +472,12 @@ name|zp
 operator|++
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pre
-decl_stmt|,
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|64
@@ -818,6 +826,7 @@ parameter_list|,
 name|int
 name|zone
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|origin
@@ -2984,19 +2993,56 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s?d_type=%d?"
-argument_list|,
-name|sep
+literal|"\\# %u"
 argument_list|,
 name|dp
 operator|->
-name|d_type
+name|d_size
 argument_list|)
 expr_stmt|;
-name|sep
-operator|=
-literal|" "
+if|if
+condition|(
+name|dp
+operator|->
+name|d_size
+operator|!=
+literal|0
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|" ( "
+argument_list|,
+name|fp
+argument_list|)
 expr_stmt|;
+name|isc_puthexstring
+argument_list|(
+name|fp
+argument_list|,
+name|dp
+operator|->
+name|d_data
+argument_list|,
+name|dp
+operator|->
+name|d_size
+argument_list|,
+literal|40
+argument_list|,
+literal|48
+argument_list|,
+literal|"\n\t\t\t\t"
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|" ) "
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

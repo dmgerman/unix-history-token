@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/prandom.c,v 1.10 2001/02/12 23:13:46 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/prandom.c,v 1.12 2001/07/26 01:20:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,6 +401,7 @@ name|prand_hash
 modifier|*
 name|hash
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -420,6 +421,7 @@ name|dst_work
 modifier|*
 name|tmp
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -1007,6 +1009,9 @@ name|buf
 operator|.
 name|st_atime
 operator|<
+operator|(
+name|time_t
+operator|)
 name|d_round
 condition|)
 return|return
@@ -1017,7 +1022,7 @@ return|;
 name|EREPORT
 argument_list|(
 operator|(
-literal|"do_ls i %d filled %4d in_temp %4d\n"
+literal|"do_ls i %d filled %4d\n"
 operator|,
 name|i
 operator|-
@@ -1026,10 +1031,6 @@ operator|,
 name|work
 operator|->
 name|filled
-operator|,
-name|work
-operator|->
-name|in_temp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1343,17 +1344,13 @@ expr_stmt|;
 name|EREPORT
 argument_list|(
 operator|(
-literal|"unix_cmd() i %d filled %4d in_temp %4d\n"
+literal|"unix_cmd() i %d filled %4d\n"
 operator|,
 name|cmd_index
 operator|,
 name|work
 operator|->
 name|filled
-operator|,
-name|work
-operator|->
-name|in_temp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1448,6 +1445,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|NULL
 expr_stmt|;
 comment|/* drain the pipe */
@@ -1725,6 +1725,9 @@ name|st
 operator|.
 name|st_mtime
 operator|<
+operator|(
+name|time_t
+operator|)
 name|f_round
 condition|)
 return|return
@@ -1923,6 +1926,7 @@ argument_list|(
 name|work
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2080,6 +2084,7 @@ name|prand_hash
 modifier|*
 name|hash
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -2088,11 +2093,18 @@ name|int
 name|size
 parameter_list|)
 block|{
+specifier|const
 name|u_char
 modifier|*
 name|tmp
 init|=
 name|input
+decl_stmt|;
+name|u_char
+modifier|*
+name|save
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|tp
@@ -2151,9 +2163,11 @@ name|step
 operator|+
 literal|2
 expr_stmt|;
+name|tmp
+operator|=
 name|tp
 operator|=
-name|tmp
+name|save
 operator|=
 name|malloc
 argument_list|(
@@ -2326,13 +2340,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|tmp
-operator|!=
-name|input
+name|tmp_size
+operator|>
+literal|0
 condition|)
 name|SAFE_FREE2
 argument_list|(
-name|tmp
+name|save
 argument_list|,
 name|tmp_size
 argument_list|)
@@ -2352,7 +2366,7 @@ literal|0
 condition|)
 name|SAFE_FREE2
 argument_list|(
-name|tmp
+name|save
 argument_list|,
 name|tmp_size
 argument_list|)
@@ -2378,6 +2392,7 @@ name|dst_work
 modifier|*
 name|work
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -3024,15 +3039,11 @@ block|{
 name|EREPORT
 argument_list|(
 operator|(
-literal|"own_random r %08x b %6d t %6d f %6d\n"
+literal|"own_random r %08x b %6d f %6d\n"
 operator|,
 name|ran_val
 operator|,
 name|bytes
-operator|,
-name|work
-operator|->
-name|in_temp
 operator|,
 name|work
 operator|->
@@ -4133,6 +4144,9 @@ name|semi_old
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REPORT_ERRORS
 if|if
 condition|(
 name|i
@@ -4148,6 +4162,8 @@ name|i
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cnt
 operator|++
 expr_stmt|;

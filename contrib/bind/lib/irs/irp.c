@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 8.6 2000/02/04 08:28:33 vixie Exp $"
+literal|"$Id: irp.c,v 8.8 2001/09/25 04:50:29 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,6 +260,11 @@ name|irp_p
 modifier|*
 name|irp
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1497,6 +1502,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1508,6 +1517,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1519,6 +1532,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2017,14 +2034,24 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|todo
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|buffer
+argument_list|)
 operator|-
-literal|2
+literal|3
 condition|)
 block|{
 name|syslog
@@ -2116,11 +2143,6 @@ operator|-=
 name|i
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

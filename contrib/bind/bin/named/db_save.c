@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_save.c,v 8.28 2000/11/29 06:55:48 marka Exp $"
+literal|"$Id: db_save.c,v 8.29 2001/04/25 13:53:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -472,6 +472,23 @@ name|d_nstime
 operator|=
 literal|0
 expr_stmt|;
+name|dp
+operator|->
+name|d_rcnt
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CHECK_MAGIC
+name|dp
+operator|->
+name|d_magic
+operator|=
+name|DATABUF_MAGIC
+expr_stmt|;
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|dp
