@@ -4972,6 +4972,17 @@ name|EXT_NDIS
 value|0x999
 end_define
 
+begin_comment
+comment|/* mtx type for NDIS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_NDIS_LOCK
+value|"NDIS lock"
+end_define
+
 begin_struct
 struct|struct
 name|ndis_filterdbs
@@ -6552,6 +6563,32 @@ name|void
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ndis_thsuspend
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ndis_thresume
+parameter_list|(
+name|struct
+name|proc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

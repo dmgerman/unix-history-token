@@ -389,6 +389,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICE_LEVEL
+value|(DISPATCH_LEVEL + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROFILE_LEVEL
 value|27
 end_define
@@ -440,6 +447,50 @@ define|#
 directive|define
 name|SYNC_LEVEL_MP
 value|(IPI_LEVEL - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_PASSIVE_LEVEL
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_proc->p_flag& P_KTHREAD == FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_DISPATCH_LEVEL
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_priority == PI_SOFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_DIRQL_LEVEL
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_priority< PRI_MIN_KERN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_HIGH_LEVEL
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_critnest != 0)
 end_define
 
 begin_struct
@@ -1451,15 +1502,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-modifier|*
-name|ntoskrnl_dispatchlock
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
@@ -1617,6 +1659,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|uint32_t
 name|ntoskrnl_waitforobj
 parameter_list|(
@@ -1637,6 +1680,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|void
 name|ntoskrnl_init_event
 parameter_list|(
@@ -1652,6 +1696,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|void
 name|ntoskrnl_clear_event
 parameter_list|(
@@ -1663,6 +1708,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|uint32_t
 name|ntoskrnl_read_event
 parameter_list|(
@@ -1674,6 +1720,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|uint32_t
 name|ntoskrnl_set_event
 parameter_list|(
@@ -1689,6 +1736,7 @@ end_function_decl
 
 begin_function_decl
 name|__stdcall
+specifier|extern
 name|uint32_t
 name|ntoskrnl_reset_event
 parameter_list|(
@@ -1697,6 +1745,75 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|void
+name|ntoskrnl_lock_dpc
+parameter_list|(
+comment|/*kspin_lock * */
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|void
+name|ntoskrnl_unlock_dpc
+parameter_list|(
+comment|/*kspin_lock * */
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * On the Windows x86 arch, KeAcquireSpinLock() and KeReleaseSpinLock()  * routines live in the HAL. We try to imitate this behavior.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ntoskrnl_acquire_spinlock
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|*(b) = FASTCALL(hal_lock, a, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ntoskrnl_release_spinlock
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|FASTCALL(hal_unlock, a, b)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
 
 begin_macro
 name|__END_DECLS
