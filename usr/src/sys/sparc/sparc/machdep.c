@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.32 92/07/13 01:41:14 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.33 92/08/05 04:20:03 torek Exp $  */
 end_comment
 
 begin_include
@@ -1316,6 +1316,10 @@ name|int
 name|addr
 decl_stmt|,
 name|oonstack
+decl_stmt|,
+name|oldsp
+decl_stmt|,
+name|newsp
 decl_stmt|;
 name|struct
 name|sigframe
@@ -1340,6 +1344,15 @@ operator|->
 name|p_md
 operator|.
 name|md_tf
+expr_stmt|;
+name|oldsp
+operator|=
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|6
+index|]
 expr_stmt|;
 name|oonstack
 operator|=
@@ -1415,12 +1428,7 @@ expr|struct
 name|sigframe
 operator|*
 operator|)
-name|tf
-operator|->
-name|tf_out
-index|[
-literal|6
-index|]
+name|oldsp
 expr_stmt|;
 name|fp
 operator|=
@@ -1541,12 +1549,7 @@ name|sf_sc
 operator|.
 name|sc_sp
 operator|=
-name|tf
-operator|->
-name|tf_out
-index|[
-literal|6
-index|]
+name|oldsp
 expr_stmt|;
 name|sf
 operator|.
@@ -1604,7 +1607,20 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 	 * Put the stack in a consistent state before we whack away 	 * at it.  Note that write_user_windows may just dump the 	 * registers into the pcb; we need them in the process's memory. 	 */
+comment|/* 	 * Put the stack in a consistent state before we whack away 	 * at it.  Note that write_user_windows may just dump the 	 * registers into the pcb; we need them in the process's memory. 	 * We also need to make sure that when we start the signal handler, 	 * its %i6 (%fp), which is loaded from the newly allocated stack area, 	 * joins seamlessly with the frame it was in when the signal occurred, 	 * so that the debugger and _longjmp code can back up through it. 	 */
+name|newsp
+operator|=
+operator|(
+name|int
+operator|)
+name|fp
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rwindow
+argument_list|)
+expr_stmt|;
 name|write_user_windows
 argument_list|()
 expr_stmt|;
@@ -1630,6 +1646,26 @@ name|fp
 argument_list|,
 sizeof|sizeof
 name|sf
+argument_list|)
+operator|||
+name|suword
+argument_list|(
+operator|&
+operator|(
+operator|(
+expr|struct
+name|rwindow
+operator|*
+operator|)
+name|newsp
+operator|)
+operator|->
+name|rw_in
+index|[
+literal|6
+index|]
+argument_list|,
+name|oldsp
 argument_list|)
 condition|)
 block|{
@@ -1773,16 +1809,7 @@ index|[
 literal|6
 index|]
 operator|=
-operator|(
-name|int
-operator|)
-name|fp
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rwindow
-argument_list|)
+name|newsp
 expr_stmt|;
 ifdef|#
 directive|ifdef
