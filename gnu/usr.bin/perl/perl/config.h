@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|BIN
-value|"/usr/local/bin"
+value|"/usr/bin"
 end_define
 
 begin_comment
@@ -1381,7 +1381,7 @@ begin_define
 define|#
 directive|define
 name|SCRIPTDIR
-value|"/usr/local/bin"
+value|"/usr/bin"
 end_define
 
 begin_comment
@@ -1552,7 +1552,7 @@ begin_define
 define|#
 directive|define
 name|PRIVLIB
-value|"/usr/local/lib/perl"
+value|"/usr/share/perl"
 end_define
 
 begin_comment
