@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.3	82/06/13	*/
+comment|/*	if_vv.c	4.4	82/06/15	*/
 end_comment
 
 begin_comment
@@ -885,6 +885,15 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 return|return;
 block|}
 name|addr
@@ -1260,6 +1269,15 @@ argument_list|,
 name|VV_IBITS
 argument_list|)
 expr_stmt|;
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1599,6 +1617,14 @@ operator|->
 name|vs_oactive
 operator|=
 literal|1
+expr_stmt|;
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|if_flags
+operator||=
+name|IFF_UP
 expr_stmt|;
 name|vvxint
 argument_list|(
