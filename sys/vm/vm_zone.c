@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.21 1998/04/25 04:50:01 dyson Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.22 1998/10/09 00:24:49 jdp Exp $  */
 end_comment
 
 begin_include
@@ -1855,7 +1855,7 @@ name|zone_kmem_pages
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of interrupt safe pages allocated by zone"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1876,7 +1876,7 @@ name|zone_kmem_kvaspace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"KVA space allocated by zone"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1897,7 +1897,7 @@ name|zone_kern_pages
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of non-interrupt safe pages allocated by zone"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
