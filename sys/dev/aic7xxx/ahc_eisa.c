@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/aic7xxx/aic7xxx_freebsd.h>
+file|<dev/aic7xxx/aic7xxx_osm.h>
 end_include
 
 begin_include
@@ -529,6 +529,9 @@ argument_list|(
 name|ahc
 argument_list|,
 name|entry
+argument_list|,
+comment|/*unused ioport arg*/
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -570,6 +573,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|u_int
+name|unused_ioport_arg
 parameter_list|)
 block|{
 name|struct
@@ -749,7 +755,10 @@ name|SYS_RES_IRQ
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ahc_map_int
+argument_list|(
+name|ahc
+argument_list|)
 operator|)
 return|;
 block|}
@@ -758,7 +767,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|ahc_eisa_methods
+name|ahc_eisa_device_methods
 index|[]
 init|=
 block|{
@@ -801,7 +810,7 @@ init|=
 block|{
 literal|"ahc"
 block|,
-name|ahc_eisa_methods
+name|ahc_eisa_device_methods
 block|,
 expr|sizeof
 operator|(

@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -653,10 +659,6 @@ begin_comment
 comment|/********************************* Byte Order *********************************/
 end_comment
 
-begin_comment
-comment|/*  * XXX Waiting for FreeBSD byte swapping functions.  * For now assume host is Little Endian.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -664,7 +666,7 @@ name|ahc_htobe16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe16(x)
 end_define
 
 begin_define
@@ -674,7 +676,7 @@ name|ahc_htobe32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe32(x)
 end_define
 
 begin_define
@@ -684,7 +686,7 @@ name|ahc_htobe64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe64(x)
 end_define
 
 begin_define
@@ -694,7 +696,7 @@ name|ahc_htole16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole16(x)
 end_define
 
 begin_define
@@ -704,7 +706,7 @@ name|ahc_htole32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole32(x)
 end_define
 
 begin_define
@@ -714,7 +716,7 @@ name|ahc_htole64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole64(x)
 end_define
 
 begin_define
@@ -724,7 +726,7 @@ name|ahc_be16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be16toh(x)
 end_define
 
 begin_define
@@ -734,7 +736,7 @@ name|ahc_be32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be32toh(x)
 end_define
 
 begin_define
@@ -744,7 +746,7 @@ name|ahc_be64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be64toh(x)
 end_define
 
 begin_define
@@ -754,7 +756,7 @@ name|ahc_le16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le16toh(x)
 end_define
 
 begin_define
@@ -764,7 +766,7 @@ name|ahc_le32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le32toh(x)
 end_define
 
 begin_define
@@ -774,7 +776,7 @@ name|ahc_le64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le64toh(x)
 end_define
 
 begin_comment
@@ -2251,6 +2253,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|u_int
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2412,6 +2417,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ahc_platform_free
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_map_int
 parameter_list|(
 name|struct
 name|ahc_softc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#29 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#40 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -38,6 +38,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|scb_platform_data
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|seeprom_descriptor
 struct_decl|;
 end_struct_decl
 
@@ -402,6 +408,17 @@ define|#
 directive|define
 name|AHC_MAX_QUEUE
 value|253
+end_define
+
+begin_comment
+comment|/*  * The maximum amount of SCB storage we allocate in host memory.  This  * number should reflect the 1 additional SCB we require to handle our  * qinfifo mechanism.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_SCB_MAX_ALLOC
+value|(AHC_MAX_QUEUE+1)
 end_define
 
 begin_comment
@@ -941,6 +958,18 @@ begin_struct
 struct|struct
 name|target_data
 block|{
+name|uint32_t
+name|residual_datacnt
+decl_stmt|;
+comment|/* Residual in the current S/G seg */
+name|uint32_t
+name|residual_sg_ptr
+decl_stmt|;
+comment|/* The next S/G for this transfer */
+name|uint8_t
+name|scsi_status
+decl_stmt|;
+comment|/* SCSI status to give to initiator */
 name|uint8_t
 name|target_phases
 decl_stmt|;
@@ -949,10 +978,6 @@ name|uint8_t
 name|data_phase
 decl_stmt|;
 comment|/* Data-In or Data-Out */
-name|uint8_t
-name|scsi_status
-decl_stmt|;
-comment|/* SCSI status to give to initiator */
 name|uint8_t
 name|initiator_tag
 decl_stmt|;
@@ -1277,12 +1302,10 @@ name|scb
 modifier|*
 name|scbindex
 index|[
-name|AHC_SCB_MAX
-operator|+
-literal|1
+literal|256
 index|]
 decl_stmt|;
-comment|/* Mapping from tag to SCB */
+comment|/* 					 * Mapping from tag to SCB. 					 * As tag identifiers are an 					 * 8bit value, we provide space 					 * for all possible tag values. 					 * Any lookups to entries at or 					 * above AHC_SCB_MAX_ALLOC will 					 * always fail. 					 */
 name|struct
 name|hardware_scb
 modifier|*
@@ -2763,6 +2786,9 @@ parameter_list|,
 name|struct
 name|aic7770_identity
 modifier|*
+parameter_list|,
+name|u_int
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2978,6 +3004,20 @@ parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc_find_softc
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3296,6 +3336,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ahc_abort_scbs
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|int
+name|target
+parameter_list|,
+name|char
+name|channel
+parameter_list|,
+name|int
+name|lun
+parameter_list|,
+name|u_int
+name|tag
+parameter_list|,
+name|role_t
+name|role
+parameter_list|,
+name|uint32_t
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ahc_restart
 parameter_list|(
@@ -3311,6 +3381,11 @@ begin_function_decl
 name|void
 name|ahc_calc_residual
 parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
 name|struct
 name|scb
 modifier|*
@@ -3699,6 +3774,38 @@ begin_comment
 comment|/******************************* Debug ***************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ahc_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWMISC
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWSENSE
+value|0x2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|ahc_print_scb
@@ -3719,6 +3826,39 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/******************************* SEEPROM *************************************/
+end_comment
+
+begin_function_decl
+name|int
+name|ahc_acquire_seeprom
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|struct
+name|seeprom_descriptor
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_release_seeprom
+parameter_list|(
+name|struct
+name|seeprom_descriptor
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/aic7xxx/aic7xxx_freebsd.h>
+file|<dev/aic7xxx/aic7xxx_osm.h>
 end_include
 
 begin_define
@@ -56,7 +56,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|ahc_pci_methods
+name|ahc_pci_device_methods
 index|[]
 init|=
 block|{
@@ -99,7 +99,7 @@ init|=
 block|{
 literal|"ahc"
 block|,
-name|ahc_pci_methods
+name|ahc_pci_device_methods
 block|,
 expr|sizeof
 operator|(
@@ -912,7 +912,10 @@ name|SYS_RES_IRQ
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ahc_map_int
+argument_list|(
+name|ahc
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1016,7 +1019,7 @@ operator|+
 literal|4
 argument_list|,
 comment|/*bytes*/
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 name|pm_control
