@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.59 1995/12/19 14:30:48 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.61 1996/01/19 23:38:06 phk Exp $  */
 end_comment
 
 begin_comment
@@ -19,20 +19,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_comment
-comment|/* isn't it a joy */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_comment
-comment|/* to have three of these */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -42,31 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
 end_include
 
 begin_include
@@ -79,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rlist.h>
 end_include
 
 begin_include
@@ -109,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/spl.h>
 end_include
 
 begin_include
@@ -145,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/ic/i8237.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/ic/i8042.h>
 end_include
 
 begin_include
@@ -266,28 +210,6 @@ end_define
 begin_comment
 comment|/* clear first/last FF */
 end_comment
-
-begin_comment
-comment|/*  * XXX these defines should be in a central place.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|read_eflags
-parameter_list|()
-value|({u_long ef; \ 				  __asm("pushfl; popl %0" : "=a" (ef)); \ 				  ef; })
-end_define
-
-begin_define
-define|#
-directive|define
-name|write_eflags
-parameter_list|(
-name|ef
-parameter_list|)
-value|__asm("pushl %0; popfl" : : "a" ((u_long)(ef)))
-end_define
 
 begin_decl_stmt
 name|u_long
@@ -713,6 +635,26 @@ name|tmpdvp
 operator|,
 name|u_int
 name|checkbits
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|isa_dmarangecheck
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+name|va
+operator|,
+name|unsigned
+name|length
+operator|,
+name|unsigned
+name|chan
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1607,16 +1549,11 @@ comment|/*  * XXX we should really add the tty device to net_imask when the line
 include|#
 directive|include
 file|"sl.h"
-include|#
-directive|include
-file|"ppp.h"
 if|#
 directive|if
-operator|(
 name|NSL
 operator|>
 literal|0
-operator|)
 name|net_imask
 operator||=
 name|tty_imask
@@ -1837,22 +1774,6 @@ name|isdp
 operator|->
 name|id_driver
 decl_stmt|;
-name|checkbits
-operator|=
-literal|0
-expr_stmt|;
-name|checkbits
-operator||=
-name|CC_DRQ
-expr_stmt|;
-name|checkbits
-operator||=
-name|CC_IOADDR
-expr_stmt|;
-name|checkbits
-operator||=
-name|CC_MEMADDR
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1876,6 +1797,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|checkbits
+operator|=
+name|CC_DRQ
+operator||
+name|CC_IOADDR
+operator||
+name|CC_MEMADDR
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2002,7 +1931,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|isdp
 operator|->
 name|id_iobase
@@ -2010,7 +1938,6 @@ operator|+
 name|id_alive
 operator|-
 literal|1
-operator|)
 operator|!=
 name|isdp
 operator|->
@@ -2184,7 +2111,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check for conflicts again.  The driver may have 			 * changed *dvp.  We should weaken the early check 			 * since the driver may have been able to change 			 * *dvp to avoid conflicts if given a chance.  We 			 * already skip the early check for IRQs and force 			 * a check for IRQs in the next group of checks. 		 	 */
+comment|/* 			 * Check for conflicts again.  The driver may have 			 * changed *dvp.  We should weaken the early check 			 * since the driver may have been able to change 			 * *dvp to avoid conflicts if given a chance.  We 			 * already skip the early check for IRQs and force 			 * a check for IRQs in the next group of checks. 			 */
 name|checkbits
 operator||=
 name|CC_IRQ
@@ -2893,23 +2820,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|int
-name|isa_dmarangecheck
-parameter_list|(
-name|caddr_t
-name|va
-parameter_list|,
-name|unsigned
-name|length
-parameter_list|,
-name|unsigned
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * isa_dmastart(): program 8237 DMA controller channel, avoid page alignment  * problems by using a bounce buffer.  */
