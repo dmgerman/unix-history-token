@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.12 1998/02/02 22:04:26 danny Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.13 1998/02/13 01:58:10 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -353,6 +359,21 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|show_usage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1003,7 +1024,7 @@ break|break;
 default|default:
 name|errx
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"impossible"
 argument_list|)
@@ -2236,6 +2257,14 @@ name|l
 decl_stmt|,
 name|i
 decl_stmt|;
+name|unsigned
+name|long
+name|rulenum
+decl_stmt|;
+name|int
+name|bytes
+decl_stmt|;
+comment|/* extract rules from kernel */
 name|memset
 argument_list|(
 name|rules
@@ -2246,7 +2275,7 @@ sizeof|sizeof
 name|rules
 argument_list|)
 expr_stmt|;
-name|l
+name|bytes
 operator|=
 sizeof|sizeof
 name|rules
@@ -2264,7 +2293,7 @@ argument_list|,
 name|rules
 argument_list|,
 operator|&
-name|l
+name|bytes
 argument_list|)
 expr_stmt|;
 if|if
@@ -2280,11 +2309,22 @@ argument_list|,
 literal|"getsockopt(IP_FW_GET)"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ac
+condition|)
+block|{
+comment|/* display all rules */
 for|for
 control|(
 name|r
 operator|=
 name|rules
+operator|,
+name|l
+operator|=
+name|bytes
 init|;
 name|l
 operator|>=
@@ -2310,6 +2350,160 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* display specific rules requested on command line */
+name|int
+name|exitval
+init|=
+name|EX_OK
+decl_stmt|;
+while|while
+condition|(
+name|ac
+operator|--
+condition|)
+block|{
+name|char
+modifier|*
+name|endptr
+decl_stmt|;
+name|int
+name|seen
+decl_stmt|;
+comment|/* convert command line rule # */
+name|rulenum
+operator|=
+name|strtoul
+argument_list|(
+operator|*
+name|av
+operator|++
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|endptr
+condition|)
+block|{
+name|exitval
+operator|=
+name|EX_USAGE
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"invalid rule number: %s"
+argument_list|,
+name|av
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|seen
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|r
+operator|=
+name|rules
+operator|,
+name|l
+operator|=
+name|bytes
+init|;
+name|l
+operator|>=
+sizeof|sizeof
+name|rules
+index|[
+literal|0
+index|]
+operator|&&
+name|r
+operator|->
+name|fw_number
+operator|<=
+name|rulenum
+condition|;
+name|r
+operator|++
+operator|,
+name|l
+operator|-=
+sizeof|sizeof
+name|rules
+index|[
+literal|0
+index|]
+control|)
+if|if
+condition|(
+name|rulenum
+operator|==
+name|r
+operator|->
+name|fw_number
+condition|)
+block|{
+name|show_ipfw
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+name|seen
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|seen
+condition|)
+block|{
+comment|/* give precedence to other error(s) */
+if|if
+condition|(
+name|exitval
+operator|==
+name|EX_OK
+condition|)
+name|exitval
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"rule %lu does not exist"
+argument_list|,
+name|rulenum
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|exitval
+operator|!=
+name|EX_OK
+condition|)
+name|exit
+argument_list|(
+name|exitval
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2382,8 +2576,8 @@ literal|"usage: ipfw [options]\n"
 literal|"    flush\n"
 literal|"    add [number] rule\n"
 literal|"    delete number ...\n"
-literal|"    list\n"
-literal|"    show\n"
+literal|"    list [number ...]\n"
+literal|"    show [number ...]\n"
 literal|"    zero [number ...]\n"
 literal|"  rule:  action proto src dst extras...\n"
 literal|"    action:\n"
@@ -2405,7 +2599,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2914,7 +3108,7 @@ name|IP_FW_MAX_PORTS
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"too many ports (max is %d)"
 argument_list|,
@@ -3068,7 +3262,7 @@ condition|)
 block|{
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"unknown port ``%s''"
 argument_list|,
@@ -3104,7 +3298,7 @@ condition|)
 block|{
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"port ``%s'' out of range"
 argument_list|,
@@ -3205,7 +3399,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"port range must be first in list"
 argument_list|)
@@ -3912,9 +4106,9 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|failed
+name|exitval
 init|=
-literal|0
+name|EX_OK
 decl_stmt|;
 name|memset
 argument_list|(
@@ -3984,9 +4178,9 @@ condition|(
 name|i
 condition|)
 block|{
-name|failed
+name|exitval
 operator|=
-literal|1
+name|EX_UNAVAILABLE
 expr_stmt|;
 name|warn
 argument_list|(
@@ -4003,11 +4197,13 @@ block|}
 block|}
 if|if
 condition|(
-name|failed
+name|exitval
+operator|!=
+name|EX_OK
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|exitval
 argument_list|)
 expr_stmt|;
 block|}
@@ -6365,7 +6561,7 @@ name|i
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -6425,7 +6621,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -6452,7 +6648,7 @@ decl_stmt|;
 name|int
 name|failed
 init|=
-literal|0
+name|EX_OK
 decl_stmt|;
 name|memset
 argument_list|(
@@ -6528,7 +6724,7 @@ argument_list|)
 expr_stmt|;
 name|failed
 operator|=
-literal|1
+name|EX_UNAVAILABLE
 expr_stmt|;
 block|}
 else|else
@@ -6555,10 +6751,12 @@ block|}
 if|if
 condition|(
 name|failed
+operator|!=
+name|EX_OK
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|failed
 argument_list|)
 expr_stmt|;
 block|}
@@ -6895,7 +7093,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -7118,7 +7316,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
 literal|"socket"
 argument_list|)
@@ -7173,7 +7371,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
 literal|"fopen: %s"
 argument_list|,
@@ -7277,7 +7475,7 @@ name|MAX_ARGS
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"%s: too many arguments"
 argument_list|,
@@ -7314,7 +7512,7 @@ name|av
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|EX_OK
 return|;
 block|}
 end_function
