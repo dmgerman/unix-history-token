@@ -329,9 +329,9 @@ name|c_lock
 argument_list|,
 name|LCK_ADAPTIVE
 argument_list|,
-name|_kse_lock_wait
+name|_thr_lock_wait
 argument_list|,
-name|_kse_lock_wakeup
+name|_thr_lock_wakeup
 argument_list|)
 operator|!=
 literal|0

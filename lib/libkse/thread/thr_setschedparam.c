@@ -215,7 +215,7 @@ name|in_syncq
 operator|=
 name|pthread
 operator|->
-name|flags
+name|sflags
 operator|&
 name|THR_FLAGS_IN_SYNCQ
 expr_stmt|;

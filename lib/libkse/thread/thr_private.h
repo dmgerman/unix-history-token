@@ -516,13 +516,12 @@ index|[
 name|NSIG
 index|]
 decl_stmt|;
+name|stack_t
+name|k_stack
+decl_stmt|;
 name|int
 name|k_check_sigq
 decl_stmt|;
-name|long
-name|k_resched
-decl_stmt|;
-comment|/* scheduling signal arrived */
 name|int
 name|k_flags
 decl_stmt|;
@@ -536,6 +535,9 @@ directive|define
 name|KF_INITIALIZED
 value|0x0002
 comment|/* initialized on 1st upcall */
+name|int
+name|k_waiting
+decl_stmt|;
 name|int
 name|k_cpu
 decl_stmt|;
@@ -774,8 +776,7 @@ name|KSE_SET_WAIT
 parameter_list|(
 name|kse
 parameter_list|)
-define|\
-value|atomic_store_rel_int(&(kse)->k_mbx.km_flags, 1)
+value|atomic_store_rel_int(&(kse)->k_waiting, 1)
 end_define
 
 begin_define
@@ -785,8 +786,7 @@ name|KSE_CLEAR_WAIT
 parameter_list|(
 name|kse
 parameter_list|)
-define|\
-value|atomic_set_acq_int(&(kse)->k_mbx.km_flags, 0)
+value|atomic_set_acq_int(&(kse)->k_waiting, 0)
 end_define
 
 begin_define
@@ -796,7 +796,7 @@ name|KSE_WAITING
 parameter_list|(
 name|kse
 parameter_list|)
-value|(kse)->k_mbx.km_flags != 0
+value|(kse)->k_waiting != 0
 end_define
 
 begin_define
@@ -2707,7 +2707,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|_kse_setthreaded
 parameter_list|(
 name|int

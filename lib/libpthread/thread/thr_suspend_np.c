@@ -302,7 +302,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|THR_RUNQ_REMOVE
 argument_list|(
 name|thread
@@ -315,7 +314,26 @@ argument_list|,
 name|PS_SUSPENDED
 argument_list|)
 expr_stmt|;
-block|}
+ifdef|#
+directive|ifdef
+name|NOT_YET
+if|if
+condition|(
+operator|(
+name|thread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* ??? */
+endif|#
+directive|endif
 block|}
 block|}
 end_function

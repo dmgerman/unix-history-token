@@ -302,23 +302,32 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|crit
-operator|=
-name|_kse_critical_enter
+comment|/* 	 * Turn on threaded mode, if failed, it is unnecessary to 	 * do further work. 	 */
+if|if
+condition|(
+name|_kse_isthreaded
 argument_list|()
-expr_stmt|;
+operator|==
+literal|0
+operator|&&
+name|_kse_setthreaded
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
+block|}
 name|curthread
 operator|=
 name|_get_curthread
 argument_list|()
 expr_stmt|;
-name|curkse
-operator|=
-name|curthread
-operator|->
-name|kse
-expr_stmt|;
-comment|/* Allocate memory for the thread structure: */
+comment|/* 	 * Allocate memory for the thread structure. 	 * Some functions use malloc, so don't put it 	 * in a critical region. 	 */
 if|if
 condition|(
 operator|(
@@ -490,6 +499,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+name|curkse
+operator|=
+name|_get_curkse
+argument_list|()
+expr_stmt|;
 name|KSE_LOCK_ACQUIRE
 argument_list|(
 name|curkse
@@ -498,6 +517,7 @@ operator|&
 name|_thread_list_lock
 argument_list|)
 expr_stmt|;
+comment|/* Stack routines don't use malloc/free. */
 name|_thr_stack_free
 argument_list|(
 operator|&
@@ -512,6 +532,11 @@ name|curkse
 argument_list|,
 operator|&
 name|_thread_list_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 block|}
@@ -618,7 +643,12 @@ name|curframe
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Initialize the machine context: */
+comment|/* 			 * Initialize the machine context. 			 * Enter a critical region to get consistent context. 			 */
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
 name|THR_GETCONTEXT
 argument_list|(
 operator|&
@@ -627,6 +657,11 @@ operator|->
 name|tmbx
 operator|.
 name|tm_context
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 name|new_thread
@@ -726,7 +761,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Copy the scheduling attributes: */
+comment|/* 				 * Copy the scheduling attributes. 				 * Lock the scheduling lock to get consistent 				 * scheduling parameters. 				 */
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 name|new_thread
 operator|->
 name|base_priority
@@ -762,6 +804,13 @@ operator|->
 name|attr
 operator|.
 name|sched_policy
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -801,7 +850,7 @@ operator|->
 name|mutexq
 argument_list|)
 expr_stmt|;
-comment|/* Initialize thread locking. */
+comment|/* 			 * Initialize thread locking. 			 * Lock initializing needs malloc, so don't 			 * enter critical region before doing this! 			 */
 if|if
 condition|(
 name|_lock_init
@@ -961,6 +1010,9 @@ name|k_curthread
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_YET
 name|kse
 operator|->
 name|k_kseg
@@ -969,6 +1021,8 @@ name|kg_flags
 operator||=
 name|KGF_SINGLE_THREAD
 expr_stmt|;
+endif|#
+directive|endif
 name|new_thread
 operator|->
 name|kse
@@ -1000,6 +1054,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
 name|KSE_LOCK_ACQUIRE
 argument_list|(
 name|curthread
@@ -1042,6 +1101,11 @@ argument_list|,
 name|new_thread
 argument_list|)
 expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
+argument_list|)
+expr_stmt|;
 comment|/* Return a pointer to the thread structure: */
 operator|(
 operator|*
@@ -1052,31 +1116,6 @@ name|new_thread
 expr_stmt|;
 block|}
 block|}
-name|_kse_critical_leave
-argument_list|(
-name|crit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ret
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|_kse_isthreaded
-argument_list|()
-operator|==
-literal|0
-operator|)
-condition|)
-name|_kse_setthreaded
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Return the status: */
 return|return
 operator|(
