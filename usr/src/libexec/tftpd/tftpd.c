@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.9	83/06/12	*/
+comment|/*	tftpd.c	4.10	83/06/12	*/
 end_comment
 
 begin_comment
@@ -84,13 +84,6 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
 
 begin_define
 define|#
