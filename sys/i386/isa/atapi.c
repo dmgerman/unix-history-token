@@ -426,7 +426,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|wdstart
 parameter_list|(
 name|int
