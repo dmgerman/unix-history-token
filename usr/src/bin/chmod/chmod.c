@@ -5,12 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chmod.c	4.4 %G%"
+literal|"@(#)chmod.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * chmod options mode files  * where  *	mode	is [ugoa][+-=][rwxstugo] or a octal number  *	options are -R  */
+comment|/*  * chmod options mode files  * where  *	mode	is [ugoa][+-=][rwxXstugo] or a octal number  *	options are -R  */
 end_comment
 
 begin_include
@@ -163,8 +163,6 @@ name|int
 name|rflag
 decl_stmt|,
 name|debug
-decl_stmt|,
-name|Xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +194,8 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|usage
+label|:
 if|if
 condition|(
 name|argc
@@ -207,7 +207,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: chmod [-RX] [ugoa][+-=][rwxstugo] file ...\n"
+literal|"Usage: chmod [-R] [ugoa][+-=][rwxXstugo] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -266,13 +266,14 @@ name|rflag
 operator|++
 expr_stmt|;
 break|break;
-case|case
-literal|'X'
-case|:
-name|Xflag
-operator|++
+default|default:
+name|argc
+operator|=
+literal|0
 expr_stmt|;
-break|break;
+goto|goto
+name|usage
+goto|;
 block|}
 name|argv
 operator|++
@@ -436,16 +437,6 @@ end_decl_stmt
 
 begin_block
 block|{
-define|#
-directive|define
-name|CHECK
-parameter_list|(
-name|name
-parameter_list|,
-name|sbuf
-parameter_list|)
-define|\
-value|if (stat(name, sbuf)< 0) {\ 		fprintf(stderr, "chmod: can't access %s\n", dp->d_name);\ 		return(1);\ 	}
 specifier|register
 name|DIR
 modifier|*
@@ -570,7 +561,9 @@ name|dirp
 argument_list|)
 control|)
 block|{
-name|CHECK
+if|if
+condition|(
+name|stat
 argument_list|(
 name|dp
 operator|->
@@ -579,7 +572,27 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chmod: can't access %s\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|chmod
 argument_list|(
 name|dp
@@ -674,15 +687,11 @@ operator|!
 operator|*
 name|ms
 condition|)
-block|{
-name|nm
-operator|=
+return|return
+operator|(
 name|m
-expr_stmt|;
-goto|goto
-name|ret
-goto|;
-block|}
+operator|)
+return|;
 do|do
 block|{
 name|m
@@ -780,40 +789,6 @@ literal|255
 argument_list|)
 expr_stmt|;
 block|}
-name|ret
-label|:
-if|if
-condition|(
-name|Xflag
-operator|&&
-operator|(
-operator|(
-name|savem
-operator|&
-name|S_IFDIR
-operator|)
-operator|||
-operator|(
-name|savem
-operator|&
-name|S_IEXEC
-operator|)
-operator|)
-condition|)
-name|nm
-operator|=
-name|nm
-operator||
-operator|(
-operator|(
-name|nm
-operator|&
-literal|0444
-operator|)
-operator|>>
-literal|2
-operator|)
-expr_stmt|;
 return|return
 operator|(
 name|nm
@@ -1137,8 +1112,23 @@ continue|continue;
 case|case
 literal|'X'
 case|:
-name|Xflag
-operator|++
+if|if
+condition|(
+operator|(
+name|om
+operator|&
+name|S_IFDIR
+operator|)
+operator|||
+operator|(
+name|om
+operator|&
+name|EXEC
+operator|)
+condition|)
+name|m
+operator||=
+name|EXEC
 expr_stmt|;
 continue|continue;
 case|case
