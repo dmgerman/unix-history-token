@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.51	82/05/19	*/
+comment|/*	up.c	4.52	82/05/19	*/
 end_comment
 
 begin_include
@@ -4413,12 +4413,12 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-name|UPDS_RDY
+name|UP_RDY
 operator|)
 operator|==
 literal|0
 condition|)
-block|{
+do|;
 if|if
 condition|(
 operator|(
@@ -4739,10 +4739,7 @@ name|printf
 argument_list|(
 literal|"up%d: not ready"
 argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
