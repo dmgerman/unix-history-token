@@ -1985,6 +1985,22 @@ condition|)
 empty_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\n'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'#'
+condition|)
+block|{
+comment|/* comment... */
+continue|continue;
+block|}
 while|while
 condition|(
 operator|*
