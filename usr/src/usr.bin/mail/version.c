@@ -8,7 +8,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"Version 2.1 %G%"
+literal|"2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
