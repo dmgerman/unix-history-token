@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	2.1 (Berkeley) %G%"
+literal|"@(#)readmsg.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,14 @@ begin_decl_stmt
 name|struct
 name|sockaddr_in
 name|from
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|netinfo
+modifier|*
+name|fromnet
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +285,11 @@ operator|&
 name|ptr
 operator|->
 name|info
+argument_list|,
+operator|&
+name|ptr
+operator|->
+name|addr
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -725,6 +738,9 @@ name|print
 argument_list|(
 operator|&
 name|msgin
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -936,8 +952,58 @@ expr_stmt|;
 name|print
 argument_list|(
 name|ret
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
+block|}
+name|fromnet
+operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+name|ntp
+operator|=
+name|nettab
+init|;
+name|ntp
+operator|!=
+name|NULL
+condition|;
+name|ntp
+operator|=
+name|ntp
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|ntp
+operator|->
+name|mask
+operator|&
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|)
+operator|==
+name|ntp
+operator|->
+name|net
+condition|)
+block|{
+name|fromnet
+operator|=
+name|ntp
+expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 return|return
@@ -1046,6 +1112,9 @@ name|print
 argument_list|(
 operator|&
 name|resp
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -1204,6 +1273,9 @@ name|print
 argument_list|(
 operator|&
 name|resp
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -1285,6 +1357,9 @@ name|print
 argument_list|(
 operator|&
 name|resp
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -1363,6 +1438,9 @@ name|print
 argument_list|(
 operator|&
 name|resp
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -1424,6 +1502,8 @@ begin_macro
 name|print
 argument_list|(
 argument|msg
+argument_list|,
+argument|addr
 argument_list|)
 end_macro
 
@@ -1435,13 +1515,21 @@ name|msg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+modifier|*
+name|addr
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %d %d (%d, %d) %s\n"
+literal|"%s %d %d (%d, %d) %s %s\n"
 argument_list|,
 name|tsptype
 index|[
@@ -1473,6 +1561,13 @@ argument_list|,
 name|msg
 operator|->
 name|tsp_name
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|addr
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acksend.c	2.2 (Berkeley) %G%"
+literal|"@(#)acksend.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,8 @@ expr_stmt|;
 name|print
 argument_list|(
 name|message
+argument_list|,
+name|addr
 argument_list|)
 expr_stmt|;
 block|}

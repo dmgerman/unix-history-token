@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	2.1 (Berkeley) %G%"
+literal|"@(#)candidate.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,6 +443,9 @@ expr_stmt|;
 name|print
 argument_list|(
 name|resp
+argument_list|,
+operator|&
+name|from
 argument_list|)
 expr_stmt|;
 block|}

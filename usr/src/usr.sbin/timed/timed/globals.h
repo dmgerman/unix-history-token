@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)globals.h	2.1	(Berkeley)	%G%	*/
+comment|/*	@(#)globals.h	2.2	(Berkeley)	%G%	*/
 end_comment
 
 begin_include
@@ -305,6 +305,18 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|netinfo
+modifier|*
+name|fromnet
+decl_stmt|,
+modifier|*
+name|slavenet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|fd
@@ -358,6 +370,50 @@ name|int
 name|slvcount
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nslavenets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of nets were I could be a slave */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nmasternets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of nets were I could be a master */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nignorednets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of ignored nets */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nnets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of nets I am connected to */
+end_comment
 
 begin_decl_stmt
 name|char
