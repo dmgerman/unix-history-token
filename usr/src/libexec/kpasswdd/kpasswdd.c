@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kpasswdd.c	1.3 (Berkeley) %G%"
+literal|"@(#)kpasswdd.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberosIV/des.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<krb_db.h>
+file|<kerberosIV/krb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kerberosIV/krb_db.h>
 end_include
 
 begin_include
@@ -121,7 +127,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|mkeyversion
 decl_stmt|;
 end_decl_stmt
@@ -325,7 +331,7 @@ name|krb_recvauth
 argument_list|(
 literal|0L
 argument_list|,
-comment|/* !MUTUAL */
+comment|/* options--!MUTUAL */
 literal|0
 argument_list|,
 comment|/* file desc */
@@ -350,18 +356,21 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+comment|/* local addr */
 operator|&
 name|kdata
 argument_list|,
+comment|/* returned krb data */
 literal|""
 argument_list|,
+comment|/* service keys file */
 operator|(
 name|bit_64
 operator|*
 operator|)
 name|NULL
 argument_list|,
-comment|/* key schedule */
+comment|/* returned key schedule */
 name|version
 argument_list|)
 expr_stmt|;
@@ -382,6 +391,55 @@ name|krb_err_txt
 index|[
 name|rval
 index|]
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|version
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* indicates error on client's side (no tickets, etc.) */
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|version
+argument_list|,
+literal|"KPWDV0.1"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"kpasswdd version conflict (recv'd %s)"
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -428,11 +486,11 @@ name|mkeyversion
 operator|=
 name|kdb_get_master_key
 argument_list|(
+name|NULL
+argument_list|,
 name|master_key
 argument_list|,
 name|master_key_schedule
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -483,6 +541,37 @@ expr_stmt|;
 if|if
 condition|(
 name|rval
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"error retrieving principal record for %s.%s"
+argument_list|,
+name|kdata
+operator|.
+name|pname
+argument_list|,
+name|kdata
+operator|.
+name|pinst
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rval
 operator|!=
 literal|1
 operator|||
@@ -497,7 +586,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"more than 1 entry for %s.%s"
+literal|"more than 1 dbase entry for %s.%s"
 argument_list|,
 name|kdata
 operator|.
@@ -718,6 +807,8 @@ name|secure_msg
 argument_list|,
 name|SECURE_STRING
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|syslog
