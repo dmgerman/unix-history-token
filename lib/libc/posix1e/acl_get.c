@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999, 2000, 2001 Robert N. M. Watson  * All rights 
 end_comment
 
 begin_comment
-comment|/*  * acl_get_file - syscall wrapper for retrieving ACL by filename  * acl_get_fd - syscall wrapper for retrieving access ACL by fd  * acl_get_fd_np - syscall wrapper for retrieving ACL by fd (non-POSIX)  * acl_get_permset() returns the permission set in the ACL entry  * acl_get_qualifier() retrieves the qualifier of the tag from the ACL entry  * acl_get_tag_type() returns the tag type for the ACL entry entry_d  */
+comment|/*  * acl_get_file - syscall wrapper for retrieving ACL by filename  * acl_get_fd - syscall wrapper for retrieving access ACL by fd  * acl_get_fd_np - syscall wrapper for retrieving ACL by fd (non-POSIX)  * acl_get_perm_np() checks if a permission is in the specified  *                   permset (non-POSIX)  * acl_get_permset() returns the permission set in the ACL entry  * acl_get_qualifier() retrieves the qualifier of the tag from the ACL entry  * acl_get_tag_type() returns the tag type for the ACL entry entry_d  */
 end_comment
 
 begin_include
@@ -263,6 +263,58 @@ return|return
 operator|(
 name|aclp
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|acl_get_perm_np
+parameter_list|(
+name|acl_permset_t
+name|permset_d
+parameter_list|,
+name|acl_perm_t
+name|perm
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|perm
+condition|)
+block|{
+case|case
+name|ACL_READ
+case|:
+case|case
+name|ACL_WRITE
+case|:
+case|case
+name|ACL_EXECUTE
+case|:
+if|if
+condition|(
+operator|*
+name|permset_d
+operator|&
+name|perm
+condition|)
+return|return
+literal|1
+return|;
+break|break;
+default|default:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_function

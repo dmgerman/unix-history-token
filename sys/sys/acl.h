@@ -854,6 +854,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|acl_get_perm_np
+parameter_list|(
+name|acl_permset_t
+name|_permset_d
+parameter_list|,
+name|acl_perm_t
+name|_perm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|acl_get_permset
 parameter_list|(
 name|acl_entry_t
