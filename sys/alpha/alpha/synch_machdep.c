@@ -2051,7 +2051,7 @@ operator|==
 name|m
 condition|)
 block|{
-comment|/* 			 * Not good. This mutex already exits 			 */
+comment|/* 			 * Not good. This mutex already exists. 			 */
 name|retval
 operator|=
 literal|1
