@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.6 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.7 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
 end_comment
 
 begin_ifndef
@@ -32,12 +32,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"argoxtwentyfive.h"
-end_include
 
 begin_include
 include|#
@@ -821,13 +815,11 @@ directive|endif
 endif|ISO
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NARGOXTWENTYFIVE
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TPCONS
+end_ifdef
 
 begin_function_decl
 name|int
@@ -887,7 +879,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|iso_pcbconnect
+name|tpcons_pcbconnect
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -920,13 +912,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|tpcons_output_dg
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|isopcb
@@ -937,7 +922,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|NARGOXTWENTYFIVE
+endif|TPCONS
 end_endif
 
 begin_decl_stmt
@@ -1062,11 +1047,10 @@ argument_list|(
 name|ISO
 argument_list|)
 operator|&&
-operator|(
-name|NARGOXTWENTYFIVE
-operator|>
-literal|0
-operator|)
+name|defined
+argument_list|(
+name|TPCONS
+argument_list|)
 block|{
 name|AF_ISO
 block|,
@@ -1086,7 +1070,7 @@ name|tpcons_mtu
 block|,
 name|iso_pcbbind
 block|,
-name|iso_pcbconnect
+name|tpcons_pcbconnect
 block|,
 name|iso_pcbdisconnect
 block|,
@@ -1096,7 +1080,7 @@ name|iso_pcballoc
 block|,
 name|tpcons_output
 block|,
-name|tpcons_output_dg
+name|tpcons_output
 block|,
 name|iso_nlctloutput
 block|,

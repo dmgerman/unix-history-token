@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.14 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.15 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -32,12 +32,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"argoxtwentyfive.h"
-end_include
 
 begin_include
 include|#
@@ -108,7 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"iso.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"iso_errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iso_pcb.h"
 end_include
 
 begin_include
@@ -156,13 +162,48 @@ end_include
 begin_include
 include|#
 directive|include
-file|"iso.h"
+file|"../net/if.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRUE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|FALSE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TRUE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"../netccitt/x25.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cons.h"
+file|"../netccitt/pk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netccitt/pk_var.h"
 end_include
 
 begin_decl_stmt
@@ -685,6 +726,7 @@ name|so
 argument_list|)
 decl_stmt|;
 comment|/* old tpcb, needed below */
+specifier|register
 name|struct
 name|tp_pcb
 modifier|*
@@ -1157,7 +1199,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CONS
+name|TPCONS
 end_ifndef
 
 begin_macro
@@ -3417,16 +3459,17 @@ else|else
 block|{
 comment|/* tpdu type is CC, XPD, XAK, GR, AK, DR, DC, or DT */
 comment|/* In the next 4 checks, 		 * _tpduf is the fixed part; add 2 to get the dref bits of  		 * the fixed part (can't take the address of a bit field)  		 */
+ifdef|#
+directive|ifdef
+name|old_history
 if|if
 condition|(
 name|cons_channel
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NARGOXTWENTYFIVE
-operator|>
-literal|0
 specifier|extern
 name|struct
 name|tp_pcb
@@ -3470,9 +3513,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|NARGOXTWENTYFIVE> 0
 block|}
 else|else
+comment|/* we've now made the error reporting thing check for 			multiple channels and not close out if more than 			one in use */
+endif|#
+directive|endif
+endif|old_history
 block|{
 name|CHECK
 argument_list|(
@@ -4398,6 +4444,60 @@ name|hdr
 operator|)
 comment|/* ^ more or less the location of class */
 argument_list|)
+ifdef|#
+directive|ifdef
+name|TPCONS
+decl|if
+argument_list|(
+name|tpcb
+operator|->
+name|tp_netservice
+operator|==
+name|ISO_CONS
+operator|&&
+name|class_to_use
+operator|==
+name|TP_CLASS_0
+argument_list|)
+block|{
+name|struct
+name|isopcb
+modifier|*
+name|isop
+init|=
+operator|(
+expr|struct
+name|isopcb
+operator|*
+operator|)
+name|tpcb
+operator|->
+name|tp_npcb
+decl_stmt|;
+name|struct
+name|pklcd
+modifier|*
+name|lcp
+init|=
+operator|(
+expr|struct
+name|pklcd
+operator|*
+operator|)
+name|isop
+operator|->
+name|isop_chan
+decl_stmt|;
+name|lcp
+operator|->
+name|lcd_flags
+operator|&=
+operator|~
+name|X25_DG_CIRCUIT
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4492,40 +4592,6 @@ name|tp_tpdusize
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONS
-comment|/* Could be that this CC came in on a NEW vc, in which case 			 * we have to confirm it. 			 */
-if|if
-condition|(
-name|cons_channel
-condition|)
-name|cons_netcmd
-argument_list|(
-name|CONN_CONFIRM
-argument_list|,
-name|tpcb
-operator|->
-name|tp_npcb
-argument_list|,
-name|cons_channel
-argument_list|,
-name|tpcb
-operator|->
-name|tp_class
-operator|==
-name|TP_CLASS_4
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|CONS
-name|tpcb
-operator|->
-name|tp_peer_acktime
-operator|=
-name|acktime
 expr_stmt|;
 comment|/* if called or calling suffices appeared on the CC,  			 * they'd better jive with what's in the pcb 			 */
 if|if
