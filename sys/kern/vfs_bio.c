@@ -1270,6 +1270,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * XXX race against wakeup interrupt, currently 	 * protected by Giant.  FIXME! 	 */
 while|while
 condition|(
 name|runningbufspace
