@@ -1687,7 +1687,7 @@ name|int
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|sa
@@ -1774,7 +1774,7 @@ name|int
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|sigdelset
 argument_list|(
