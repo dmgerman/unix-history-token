@@ -1016,7 +1016,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ENOENT
 operator|)
 return|;
 if|if

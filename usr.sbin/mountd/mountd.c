@@ -5302,12 +5302,16 @@ name|targs
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't delete exports for %s"
+literal|"can't delete exports for %s: %m"
 argument_list|,
 name|fsp
 operator|->
