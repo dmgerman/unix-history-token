@@ -1319,6 +1319,14 @@ operator|<
 name|n
 condition|)
 do|;
+name|n
+operator|=
+name|x
+index|[
+name|g
+index|]
+expr_stmt|;
+comment|/* set n to length of v */
 comment|/* Generate the Huffman codes and for each, make the table entries */
 name|x
 index|[
@@ -1476,6 +1484,12 @@ name|c
 operator|+
 name|k
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|<
+name|z
+condition|)
 while|while
 condition|(
 operator|++
