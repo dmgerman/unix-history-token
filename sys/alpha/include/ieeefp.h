@@ -131,7 +131,7 @@ init|=
 literal|3
 comment|/* round toward positive infinity */
 block|}
-name|fp_rnd
+name|fp_rnd_t
 typedef|;
 end_typedef
 
