@@ -1,27 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)parseaddr.c	4.16 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"sendmail.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|parseaddr
-operator|.
-name|c
-literal|4.15
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
@@ -2497,9 +2505,6 @@ decl_stmt|;
 name|int
 name|trsize
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|olddelimchar
@@ -2664,11 +2669,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
 comment|/* append it to the token list */
 for|for
@@ -3775,7 +3776,7 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
-argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	register char *p; 	extern char *macvalue(); 	char *oldg = macvalue(
+argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
 literal|'g'
 argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	char pvpbuf[PSBUFSIZE]; 	extern char **prescan(); 	extern char *crackaddr();
 ifdef|#
