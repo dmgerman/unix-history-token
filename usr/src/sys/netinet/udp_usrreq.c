@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.45	83/02/16	*/
+comment|/*	udp_usrreq.c	4.46	83/05/03	*/
 end_comment
 
 begin_include
@@ -424,15 +424,6 @@ name|udpstat
 operator|.
 name|udps_badsum
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"udp cksum %x\n"
-argument_list|,
-name|ui
-operator|->
-name|ui_sum
-argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -1444,14 +1435,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PRU_CONTROL
-case|:
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-break|break;
-case|case
 name|PRU_SOCKADDR
 case|:
 name|in_setsockaddr
@@ -1463,11 +1446,50 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|printf
+argument_list|(
+literal|"request %d\n"
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"udp_usrreq"
 argument_list|)
 expr_stmt|;
+case|case
+name|PRU_RCVD
+case|:
+case|case
+name|PRU_CONTROL
+case|:
+case|case
+name|PRU_SENSE
+case|:
+case|case
+name|PRU_RCVOOB
+case|:
+case|case
+name|PRU_SENDOOB
+case|:
+case|case
+name|PRU_FASTTIMO
+case|:
+case|case
+name|PRU_SLOWTIMO
+case|:
+case|case
+name|PRU_PROTORCV
+case|:
+case|case
+name|PRU_PROTOSEND
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
 block|}
 name|release
 label|:
