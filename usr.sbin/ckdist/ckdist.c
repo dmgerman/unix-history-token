@@ -709,6 +709,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|opt_dir
 argument_list|)
 expr_stmt|;
@@ -1189,6 +1191,8 @@ argument_list|)
 condition|)
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
@@ -1206,6 +1210,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|path
 argument_list|)
@@ -1444,6 +1450,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|dname
 argument_list|)
@@ -1878,6 +1886,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|dname
 argument_list|)
