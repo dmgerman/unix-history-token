@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getlogin.c	5.7 (Berkeley) %G%"
+literal|"@(#)getlogin.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -81,7 +81,7 @@ specifier|static
 name|char
 name|logname
 index|[
-name|UT_NAMESIZE
+name|MAXLOGNAME
 operator|+
 literal|1
 index|]
