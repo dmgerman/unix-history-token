@@ -289,11 +289,14 @@ condition|(
 operator|!
 name|tmp
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"clist_init: could not allocate cblock"
+literal|"cblock_alloc_cblocks: could not malloc cblock"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|bzero
 argument_list|(
 operator|(
