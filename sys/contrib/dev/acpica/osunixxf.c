@@ -967,8 +967,9 @@ name|UINT32
 name|milliseconds
 parameter_list|)
 block|{
-name|sleep
+name|usleep
 argument_list|(
+operator|(
 operator|(
 name|seconds
 operator|*
@@ -976,6 +977,9 @@ literal|1000
 operator|)
 operator|+
 name|milliseconds
+operator|)
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 return|return;
