@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.12 1998/08/24 10:20:36 cracauer Exp $"
+literal|"$Id: trap.c,v 1.13 1998/08/25 08:49:47 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,13 +227,11 @@ end_comment
 begin_decl_stmt
 name|int
 name|in_dotrap
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Do we execute in a trap handler? */
+comment|/* do we execute in a trap handler? */
 end_comment
 
 begin_decl_stmt

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: jobs.c,v 1.20 1998/05/18 06:43:47 charnier Exp $"
+literal|"$Id: jobs.c,v 1.21 1998/08/24 10:20:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are we in waitcmd? */
+comment|/* are we in waitcmd()? */
 end_comment
 
 begin_decl_stmt
@@ -340,7 +340,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Should wait be terminated? */
+comment|/* should wait be terminated? */
 end_comment
 
 begin_if
@@ -425,7 +425,6 @@ end_if
 
 begin_decl_stmt
 name|STATIC
-specifier|volatile
 name|int
 name|onsigchild
 name|__P
@@ -1680,12 +1679,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 	 * Loop until a process is terminated or stopped, or a SIGINT is 	 * received. 	 */
 name|in_waitcmd
 operator|++
 expr_stmt|;
 do|do
 block|{
-comment|/* loop until process terminated or stopped or SIGINT is 		 * received  		 */
 if|if
 condition|(
 name|job
@@ -1771,6 +1770,9 @@ argument_list|(
 name|job
 argument_list|)
 expr_stmt|;
+name|in_waitcmd
+operator|--
+expr_stmt|;
 return|return
 name|retval
 return|;
@@ -1799,6 +1801,9 @@ name|njobs
 condition|)
 block|{
 comment|/* no running procs */
+name|in_waitcmd
+operator|--
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1840,7 +1845,6 @@ do|;
 name|in_waitcmd
 operator|--
 expr_stmt|;
-comment|/* Not reachable */
 return|return
 literal|0
 return|;

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: error.c,v 1.11 1998/08/24 10:20:36 cracauer Exp $"
+literal|"$Id: error.c,v 1.12 1998/08/24 19:15:48 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from trap.c when a SIGINT is received.  (If the user specifies  * that SIGINT is to be trapped or ignored using the trap builtin, then  * this routine is not called.)  Supressint is nonzero when interrupts  * are held using the INTOFF macro.  If SIGINTs are not suppressed and  * the shell is not a root shell, then we want to be terminated if we  * get here, as if we were terminated directly by a SIGINT.  Arrange for  * this here.  */
+comment|/*  * Called from trap.c when a SIGINT is received.  (If the user specifies  * that SIGINT is to be trapped or ignored using the trap builtin, then  * this routine is not called.)  Suppressint is nonzero when interrupts  * are held using the INTOFF macro.  If SIGINTs are not suppressed and  * the shell is not a root shell, then we want to be terminated if we  * get here, as if we were terminated directly by a SIGINT.  Arrange for  * this here.  */
 end_comment
 
 begin_function
@@ -214,7 +214,7 @@ block|{
 name|sigset_t
 name|sigset
 decl_stmt|;
-comment|/* The !in_dotrap is save. The only way we can arrive here with 	 * in_dotrap set is that a trap handler set SIGINT to default 	 * and killed itself. 	 */
+comment|/* 	 * The !in_dotrap here is safe.  The only way we can arrive here 	 * with in_dotrap set is that a trap handler set SIGINT to SIG_DFL 	 * and killed itself. 	 */
 if|if
 condition|(
 name|suppressint
@@ -248,7 +248,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* This doesn't seem to be needed. Note that main emit a newline 	 * as well.          */
+comment|/* 	 * This doesn't seem to be needed, since main() emits a newline. 	 */
 if|#
 directive|if
 literal|0
