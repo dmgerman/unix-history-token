@@ -1909,9 +1909,11 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
+specifier|register
 name|int
 name|l
 decl_stmt|;
+specifier|register
 name|int
 name|cnum
 decl_stmt|,
@@ -1919,6 +1921,7 @@ name|pnum
 decl_stmt|,
 name|sum
 decl_stmt|;
+specifier|register
 name|BOOLEAN
 name|myturn
 decl_stmt|,
@@ -2004,11 +2007,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* enable last flag */
-name|prtable
-argument_list|(
-name|sum
-argument_list|)
-expr_stmt|;
 name|prhand
 argument_list|(
 name|ph
@@ -2016,6 +2014,11 @@ argument_list|,
 name|pnum
 argument_list|,
 name|Playwin
+argument_list|)
+expr_stmt|;
+name|prtable
+argument_list|(
+name|sum
 argument_list|)
 expr_stmt|;
 if|if
@@ -2586,6 +2589,20 @@ condition|)
 break|break;
 comment|/* both done */
 block|}
+name|prhand
+argument_list|(
+name|ph
+argument_list|,
+name|pnum
+argument_list|,
+name|Playwin
+argument_list|)
+expr_stmt|;
+name|prtable
+argument_list|(
+name|sum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|last
