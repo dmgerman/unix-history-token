@@ -66,6 +66,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|botmqhelp
+index|[]
+init|=
+literal|"move job(s) to the bottom of printer queue"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|cleanhelp
 index|[]
 init|=
@@ -178,7 +187,7 @@ name|char
 name|topqhelp
 index|[]
 init|=
-literal|"put job at top of printer queue"
+literal|"move job(s) to the top of printer queue"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +235,18 @@ block|,
 literal|0
 block|,
 name|abort_q
+block|}
+block|,
+block|{
+literal|"bottomq"
+block|,
+name|botmqhelp
+block|,
+name|PR
+block|,
+name|bottomq_cmd
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -395,7 +416,7 @@ name|topqhelp
 block|,
 name|PR
 block|,
-name|topq
+name|topq_cmd
 block|,
 literal|0
 block|}
@@ -420,6 +441,18 @@ block|,
 literal|0
 block|,
 name|help
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"xtopq"
+block|,
+name|topqhelp
+block|,
+name|PR
+block|,
+name|topq
 block|,
 literal|0
 block|}
