@@ -4533,7 +4533,6 @@ name|v
 operator|>
 literal|0xffffffff
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -4542,9 +4541,9 @@ name|v
 operator|==
 literal|0
 condition|)
-block|{
 endif|#
 directive|endif
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -5201,6 +5200,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|NXTNUM
@@ -5208,7 +5210,13 @@ parameter_list|(
 name|n
 parameter_list|)
 value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 		cp = tp, tp = word(cp); \ 		(n) = strtoul(cp, NULL, 10); \ 	} \ } while (0)
+end_define
+
+begin_comment
 comment|/* retain 1 character following number */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NXTWORD
@@ -5217,8 +5225,14 @@ name|w
 parameter_list|,
 name|n
 parameter_list|)
-value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 	        char *tmp; \ 		cp = tp, tp = word(cp); \ 	        (n) = strtoul(cp,&tmp, 10); \ 		if (tmp) (w) = *tmp; \ 	} \ } while (0)
+value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 		char *tmp; \ 		cp = tp, tp = word(cp); \ 		(n) = strtoul(cp,&tmp, 10); \ 		if (tmp) (w) = *tmp; \ 	} \ } while (0)
+end_define
+
+begin_comment
 comment|/*  * Read a partition line into partition `part' in the specified disklabel.  * Return 0 on success, 1 on failure.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|getasciipartspec
@@ -5596,7 +5610,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Check disklabel for errors and fill in  * derived fields according to supplied values.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|checklabel
@@ -6528,7 +6548,7 @@ operator|&&
 name|seen_default_offset
 condition|)
 block|{
-comment|/*  					 * this may give unneeded warnings if  					 * partitions are out-of-order 					 */
+comment|/* 					 * this may give unneeded warnings if 					 * partitions are out-of-order 					 */
 name|warnx
 argument_list|(
 literal|"Offset %ld for partition %c doesn't match expected value %ld"
@@ -6993,7 +7013,13 @@ name|errors
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * When operating on a "virgin" disk, try getting an initial label  * from the associated device driver.  This might work for all device  * drivers that are able to fetch some initial device parameters  * without even having access to a (BSD) disklabel, like SCSI disks,  * most IDE drives, or vn devices.  *  * The device name must be given in its "canonical" form.  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|disklabel
@@ -7336,6 +7362,9 @@ name|loclab
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|usage
