@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1466,6 +1466,15 @@ end_expr_stmt
 begin_expr_stmt
 name|ump
 operator|->
+name|um_relvp
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
 name|um_mountp
 operator|=
 name|mp
@@ -2081,11 +2090,11 @@ operator|->
 name|lfs_bfree
 argument_list|)
 expr_stmt|;
+comment|/* 	 * To compute the available space.  Subtract the minimum free 	 * from the total number of blocks in the file system.  Set avail 	 * to the smaller of this number and fs->lfs_bfree. 	 */
 name|sbp
 operator|->
 name|f_bavail
 operator|=
-operator|(
 name|fs
 operator|->
 name|lfs_dsize
@@ -2099,17 +2108,26 @@ name|lfs_minfree
 operator|)
 operator|/
 literal|100
-operator|)
-operator|-
-operator|(
-name|fs
+expr_stmt|;
+name|sbp
 operator|->
-name|lfs_dsize
-operator|-
+name|f_bavail
+operator|=
+name|sbp
+operator|->
+name|f_bavail
+operator|>
 name|fs
 operator|->
 name|lfs_bfree
-operator|)
+condition|?
+name|fs
+operator|->
+name|lfs_bfree
+else|:
+name|sbp
+operator|->
+name|f_bavail
 expr_stmt|;
 name|sbp
 operator|->

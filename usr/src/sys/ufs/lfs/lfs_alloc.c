@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -253,6 +253,8 @@ expr_stmt|;
 name|lfs_balloc
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|,
 name|fs
 operator|->
@@ -706,28 +708,6 @@ operator|.
 name|di_inumber
 operator|=
 name|ino
-expr_stmt|;
-name|ip
-operator|->
-name|i_din
-operator|.
-name|di_spare
-index|[
-literal|0
-index|]
-operator|=
-literal|0xdeadbeef
-expr_stmt|;
-name|ip
-operator|->
-name|i_din
-operator|.
-name|di_spare
-index|[
-literal|1
-index|]
-operator|=
-literal|0xdeadbeef
 expr_stmt|;
 name|ip
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -146,6 +146,30 @@ operator|,
 name|caddr_t
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|debug_cleaner
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|clean_vnlocked
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|clean_inlocked
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -679,6 +703,11 @@ operator|->
 name|bi_inode
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"lfs_markv VFS_VGET FAILED"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|lastino
@@ -824,7 +853,9 @@ name|bp
 operator|->
 name|b_data
 argument_list|,
-name|bsize
+name|blkp
+operator|->
+name|bi_size
 argument_list|)
 operator|)
 condition|)
@@ -1087,6 +1118,11 @@ modifier|*
 name|mntp
 decl_stmt|;
 name|struct
+name|ufsmount
+modifier|*
+name|ump
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -1252,7 +1288,58 @@ operator|==
 name|LFS_UNUSED_LBN
 condition|)
 continue|continue;
-comment|/* Could be a deadlock ? */
+comment|/* 		 * A regular call to VFS_VGET could deadlock 		 * here.  Instead, we try an unlocked access. 		 */
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mntp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vp
+operator|=
+name|ufs_ihashlookup
+argument_list|(
+name|ump
+operator|->
+name|um_dev
+argument_list|,
+name|blkp
+operator|->
+name|bi_inode
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|VOP_BMAP
+argument_list|(
+name|vp
+argument_list|,
+name|blkp
+operator|->
+name|bi_lbn
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|daddr
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|daddr
+operator|=
+name|LFS_UNUSED_DADDR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|VFS_VGET
@@ -2101,10 +2188,8 @@ name|v_flag
 operator|&
 name|VXLOCK
 condition|)
-name|printf
-argument_list|(
-literal|"Cleaned vnode VXLOCKED\n"
-argument_list|)
+name|clean_vnlocked
+operator|++
 expr_stmt|;
 name|ip
 operator|=
@@ -2122,10 +2207,8 @@ name|i_flag
 operator|&
 name|IN_LOCKED
 condition|)
-name|printf
-argument_list|(
-literal|"cleaned vnode locked\n"
-argument_list|)
+name|clean_inlocked
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2138,7 +2221,6 @@ operator|&
 name|IN_MODIFIED
 operator|)
 condition|)
-block|{
 operator|++
 name|ump
 operator|->
@@ -2146,13 +2228,6 @@ name|um_lfs
 operator|->
 name|lfs_uinodes
 expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_MODIFIED
-expr_stmt|;
-block|}
 name|ip
 operator|->
 name|i_flag

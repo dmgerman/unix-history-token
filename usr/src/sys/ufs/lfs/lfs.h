@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -139,6 +139,10 @@ name|u_int32_t
 name|fi_ino
 decl_stmt|;
 comment|/* inode number */
+name|u_int32_t
+name|fi_lastlength
+decl_stmt|;
+comment|/* length of last block in array */
 name|ufs_daddr_t
 name|fi_blocks
 index|[
@@ -305,7 +309,7 @@ name|u_int32_t
 name|lfs_segshift
 decl_stmt|;
 comment|/* fast mult/div for segments */
-name|u_int32_t
+name|u_int64_t
 name|lfs_bmask
 decl_stmt|;
 comment|/* calc block offset from file offset */
@@ -313,7 +317,7 @@ name|u_int32_t
 name|lfs_bshift
 decl_stmt|;
 comment|/* calc block number from file offset */
-name|u_int32_t
+name|u_int64_t
 name|lfs_ffmask
 decl_stmt|;
 comment|/* calc frag offset from file offset */
@@ -321,7 +325,7 @@ name|u_int32_t
 name|lfs_ffshift
 decl_stmt|;
 comment|/* fast mult/div for frag from file */
-name|u_int32_t
+name|u_int64_t
 name|lfs_fbmask
 decl_stmt|;
 comment|/* calc frag offset from block offset */
@@ -642,6 +646,14 @@ name|u_int32_t
 name|ss_datasum
 decl_stmt|;
 comment|/* check sum of data */
+name|u_int32_t
+name|ss_magic
+decl_stmt|;
+comment|/* segment summary magic number */
+define|#
+directive|define
+name|SS_MAGIC
+value|0x061561
 name|ufs_daddr_t
 name|ss_next
 decl_stmt|;
@@ -715,8 +727,13 @@ directive|define
 name|blksize
 parameter_list|(
 name|fs
+parameter_list|,
+name|ip
+parameter_list|,
+name|lbn
 parameter_list|)
-value|((fs)->lfs_bsize)
+define|\
+value|(((lbn)>= NDADDR || (ip)->i_size>= ((lbn) + 1)<< (fs)->lfs_bshift) \ 	    ? (fs)->lfs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
 end_define
 
 begin_define
@@ -728,7 +745,21 @@ name|fs
 parameter_list|,
 name|loc
 parameter_list|)
-value|((loc)& (fs)->lfs_bmask)
+value|((int)((loc)& (fs)->lfs_bmask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragoff
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc % fs->lfs_fsize) */
+define|\
+value|((int)((loc)& (fs)->lfs_ffmask))
 end_define
 
 begin_define
@@ -753,6 +784,30 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((b)>> (fs)->lfs_fsbtodb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragstodb
+parameter_list|(
+name|fs
+parameter_list|,
+name|b
+parameter_list|)
+value|((b)<< (fs)->lfs_fsbtodb - (fs)->lfs_fbshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbtofrags
+parameter_list|(
+name|fs
+parameter_list|,
+name|b
+parameter_list|)
+value|((b)>> (fs)->lfs_fsbtodb - (fs)->lfs_fbshift)
 end_define
 
 begin_define
@@ -788,9 +843,108 @@ name|fs
 parameter_list|,
 name|loc
 parameter_list|)
-comment|/* calculates (loc / fs->fs_fsize) */
+comment|/* calculates (loc / fs->lfs_fsize) */
 define|\
-value|((loc)>> (fs)->lfs_bshift)
+value|((loc)>> (fs)->lfs_ffshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blkroundup
+parameter_list|(
+name|fs
+parameter_list|,
+name|size
+parameter_list|)
+comment|/* calculates roundup(size, fs->lfs_bsize) */
+define|\
+value|((int)(((size) + (fs)->lfs_bmask)& (~(fs)->lfs_bmask)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragroundup
+parameter_list|(
+name|fs
+parameter_list|,
+name|size
+parameter_list|)
+comment|/* calculates roundup(size, fs->lfs_fsize) */
+define|\
+value|((int)(((size) + (fs)->lfs_ffmask)& (~(fs)->lfs_ffmask)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragstoblks
+parameter_list|(
+name|fs
+parameter_list|,
+name|frags
+parameter_list|)
+comment|/* calculates (frags / fs->lfs_frag) */
+define|\
+value|((frags)>> (fs)->lfs_fbshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blkstofrags
+parameter_list|(
+name|fs
+parameter_list|,
+name|blks
+parameter_list|)
+comment|/* calculates (blks * fs->lfs_frag) */
+define|\
+value|((blks)<< (fs)->lfs_fbshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragnum
+parameter_list|(
+name|fs
+parameter_list|,
+name|fsb
+parameter_list|)
+comment|/* calculates (fsb % fs->lfs_frag) */
+define|\
+value|((fsb)& ((fs)->lfs_frag - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|blknum
+parameter_list|(
+name|fs
+parameter_list|,
+name|fsb
+parameter_list|)
+comment|/* calculates rounddown(fsb, fs->lfs_frag) */
+define|\
+value|((fsb)&~ ((fs)->lfs_frag - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|dblksize
+parameter_list|(
+name|fs
+parameter_list|,
+name|dip
+parameter_list|,
+name|lbn
+parameter_list|)
+define|\
+value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1)<< (fs)->lfs_bshift)\ 	    ? (fs)->lfs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
 end_define
 
 begin_define
@@ -944,6 +1098,10 @@ modifier|*
 name|bi_bp
 decl_stmt|;
 comment|/* data buffer */
+name|int
+name|bi_size
+decl_stmt|;
+comment|/* size of the block (if fragment) */
 block|}
 name|BLOCK_INFO
 typedef|;

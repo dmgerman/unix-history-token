@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -831,6 +831,23 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+comment|/* BEGIN HACK */
+define|#
+directive|define
+name|VN_OFFSET
+value|(((void *)&vp->v_mntvnodes.le_next) - (void *)vp)
+define|#
+directive|define
+name|BACK_VP
+parameter_list|(
+name|VP
+parameter_list|)
+value|((struct vnode *)(((void *)VP->v_mntvnodes.le_prev) - VN_OFFSET))
+define|#
+directive|define
+name|BEG_OF_VLIST
+value|((struct vnode *)(((void *)&mp->mnt_vnodelist.lh_first) - VN_OFFSET))
+comment|/* Find last vnode. */
 name|loop
 label|:
 for|for
@@ -844,6 +861,12 @@ operator|.
 name|lh_first
 init|;
 name|vp
+operator|&&
+name|vp
+operator|->
+name|v_mntvnodes
+operator|.
+name|le_next
 operator|!=
 name|NULL
 condition|;
@@ -855,7 +878,26 @@ name|v_mntvnodes
 operator|.
 name|le_next
 control|)
+empty_stmt|;
+for|for
+control|(
+init|;
+name|vp
+operator|&&
+name|vp
+operator|!=
+name|BEG_OF_VLIST
+condition|;
+name|vp
+operator|=
+name|BACK_VP
+argument_list|(
+name|vp
+argument_list|)
+control|)
 block|{
+comment|/* END HACK */
+comment|/* loop: 	for (vp = mp->mnt_vnodelist.lh_first; 	     vp != NULL; 	     vp = vp->v_mntvnodes.le_next) { */
 comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
 if|if
 condition|(
@@ -1090,13 +1132,7 @@ operator|<=
 literal|2
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"segs clean: %d\n"
-argument_list|,
-name|clean
-argument_list|)
-expr_stmt|;
+comment|/* printf ("segs clean: %d\n", clean); */
 name|wakeup
 argument_list|(
 operator|&
@@ -2368,9 +2404,9 @@ name|sp
 operator|->
 name|seg_bytes_left
 operator|<
-name|fs
+name|bp
 operator|->
-name|lfs_bsize
+name|b_bcount
 condition|)
 block|{
 if|if
@@ -2522,9 +2558,9 @@ name|sp
 operator|->
 name|seg_bytes_left
 operator|-=
-name|fs
+name|bp
 operator|->
-name|lfs_bsize
+name|b_bcount
 expr_stmt|;
 return|return
 operator|(
@@ -2604,6 +2640,25 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* This is a hack to see if ordering the blocks in LFS makes a difference. */
+comment|/* BEGIN HACK */
+define|#
+directive|define
+name|BUF_OFFSET
+value|(((void *)&bp->b_vnbufs.le_next) - (void *)bp)
+define|#
+directive|define
+name|BACK_BUF
+parameter_list|(
+name|BP
+parameter_list|)
+value|((struct buf *)(((void *)BP->b_vnbufs.le_prev) - BUF_OFFSET))
+define|#
+directive|define
+name|BEG_OF_LIST
+value|((struct buf *)(((void *)&vp->v_dirtyblkhd.lh_first) - BUF_OFFSET))
+comment|/*loop:	for (bp = vp->v_dirtyblkhd.lh_first; bp; bp = bp->b_vnbufs.le_next) {*/
+comment|/* Find last buffer. */
 name|loop
 label|:
 for|for
@@ -2617,6 +2672,14 @@ operator|.
 name|lh_first
 init|;
 name|bp
+operator|&&
+name|bp
+operator|->
+name|b_vnbufs
+operator|.
+name|le_next
+operator|!=
+name|NULL
 condition|;
 name|bp
 operator|=
@@ -2626,7 +2689,25 @@ name|b_vnbufs
 operator|.
 name|le_next
 control|)
+empty_stmt|;
+for|for
+control|(
+init|;
+name|bp
+operator|&&
+name|bp
+operator|!=
+name|BEG_OF_LIST
+condition|;
+name|bp
+operator|=
+name|BACK_BUF
+argument_list|(
+name|bp
+argument_list|)
+control|)
 block|{
+comment|/* END HACK */
 if|if
 condition|(
 name|bp
@@ -2782,8 +2863,6 @@ decl_stmt|,
 name|off
 decl_stmt|;
 name|int
-name|db_per_fsb
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -2817,6 +2896,17 @@ operator|-
 name|sp
 operator|->
 name|start_lbp
+expr_stmt|;
+if|if
+condition|(
+name|nblocks
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"This is a bad thing\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2854,21 +2944,30 @@ argument_list|,
 name|nblocks
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Record the length of the last block in case it's a fragment. 	 * If there are indirect blocks present, they sort last.  An 	 * indirect block will be lfs_bsize and its presence indicates 	 * that you cannot have fragments. 	 */
+name|sp
+operator|->
+name|fip
+operator|->
+name|fi_lastlength
+operator|=
+name|sp
+operator|->
+name|start_bpp
+index|[
+name|nblocks
+operator|-
+literal|1
+index|]
+operator|->
+name|b_bcount
+expr_stmt|;
 comment|/* 	 * Assign disk addresses, and update references to the logical 	 * block and the segment usage information. 	 */
 name|fs
 operator|=
 name|sp
 operator|->
 name|fs
-expr_stmt|;
-name|db_per_fsb
-operator|=
-name|fsbtodb
-argument_list|(
-name|fs
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2912,7 +3011,24 @@ name|fs
 operator|->
 name|lfs_offset
 operator|+=
-name|db_per_fsb
+name|fragstodb
+argument_list|(
+name|fs
+argument_list|,
+name|numfrags
+argument_list|(
+name|fs
+argument_list|,
+operator|(
+operator|*
+name|sp
+operator|->
+name|start_bpp
+operator|)
+operator|->
+name|b_bcount
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3045,31 +3161,28 @@ name|B_CACHE
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Updatemeta allocating indirect block: shouldn't happen\n"
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|i_blocks
 operator|+=
-name|btodb
+name|fsbtodb
 argument_list|(
 name|fs
-operator|->
-name|lfs_bsize
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|fs
 operator|->
 name|lfs_bfree
 operator|-=
-name|btodb
+name|fragstodb
 argument_list|(
 name|fs
+argument_list|,
+name|fs
 operator|->
-name|lfs_bsize
+name|lfs_frag
 argument_list|)
 expr_stmt|;
 block|}
@@ -3142,9 +3255,14 @@ name|sup
 operator|->
 name|su_nbytes
 operator|<
-name|fs
+operator|(
+operator|*
+name|sp
 operator|->
-name|lfs_bsize
+name|start_bpp
+operator|)
+operator|->
+name|b_bcount
 condition|)
 block|{
 comment|/* XXX -- Change to a panic. */
@@ -3172,9 +3290,14 @@ name|sup
 operator|->
 name|su_nbytes
 operator|-=
-name|fs
+operator|(
+operator|*
+name|sp
 operator|->
-name|lfs_bsize
+name|start_bpp
+operator|)
+operator|->
+name|b_bcount
 expr_stmt|;
 name|error
 operator|=
@@ -3496,6 +3619,12 @@ name|ss_ninos
 operator|=
 literal|0
 expr_stmt|;
+name|ssp
+operator|->
+name|ss_magic
+operator|=
+name|SS_MAGIC
+expr_stmt|;
 comment|/* Set pointer to first FINFO, initialize it. */
 name|sp
 operator|->
@@ -3541,6 +3670,14 @@ name|fi_blocks
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|sp
+operator|->
+name|fip
+operator|->
+name|fi_lastlength
+operator|=
+literal|0
 expr_stmt|;
 name|sp
 operator|->
@@ -3845,9 +3982,6 @@ decl_stmt|;
 name|dev_t
 name|i_dev
 decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
 name|u_long
 modifier|*
 name|datap
@@ -3856,15 +3990,11 @@ modifier|*
 name|dp
 decl_stmt|;
 name|int
-name|ch_per_blk
-decl_stmt|,
 name|do_again
 decl_stmt|,
 name|i
 decl_stmt|,
 name|nblocks
-decl_stmt|,
-name|num
 decl_stmt|,
 name|s
 decl_stmt|;
@@ -3892,6 +4022,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|long
+modifier|*
+name|lp
+decl_stmt|;
 comment|/* 	 * If there are no buffers other than the segment summary to write 	 * and it is not a checkpoint, don't do anything.  On a checkpoint, 	 * even if there aren't any buffers, you need to write the superblock. 	 */
 if|if
 condition|(
@@ -3914,16 +4048,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|ssp
-operator|=
-operator|(
-name|SEGSUM
-operator|*
-operator|)
-name|sp
-operator|->
-name|segsum
-expr_stmt|;
 comment|/* Update the segment usage information. */
 name|LFS_SEGENTRY
 argument_list|(
@@ -3937,6 +4061,44 @@ name|seg_number
 argument_list|,
 name|bp
 argument_list|)
+expr_stmt|;
+comment|/* Loop through all blocks, except the segment summary. */
+for|for
+control|(
+name|bpp
+operator|=
+name|sp
+operator|->
+name|bpp
+init|;
+operator|++
+name|bpp
+operator|<
+name|sp
+operator|->
+name|cbpp
+condition|;
+control|)
+name|sup
+operator|->
+name|su_nbytes
+operator|+=
+operator|(
+operator|*
+name|bpp
+operator|)
+operator|->
+name|b_bcount
+expr_stmt|;
+name|ssp
+operator|=
+operator|(
+name|SEGSUM
+operator|*
+operator|)
+name|sp
+operator|->
+name|segsum
 expr_stmt|;
 name|ninos
 operator|=
@@ -3957,20 +4119,6 @@ name|INOPB
 argument_list|(
 name|fs
 argument_list|)
-expr_stmt|;
-name|sup
-operator|->
-name|su_nbytes
-operator|+=
-name|nblocks
-operator|-
-literal|1
-operator|-
-name|ninos
-operator|<<
-name|fs
-operator|->
-name|lfs_bshift
 expr_stmt|;
 name|sup
 operator|->
@@ -4260,14 +4408,6 @@ argument_list|)
 index|]
 expr_stmt|;
 comment|/* 	 * When we simply write the blocks we lose a rotation for every block 	 * written.  To avoid this problem, we allocate memory in chunks, copy 	 * the buffers into the chunk and write the chunk.  MAXPHYS is the 	 * largest size I/O devices can handle. 	 * When the data is copied to the chunk, turn off the the B_LOCKED bit 	 * and brelse the buffer (which will move them to the LRU list).  Add 	 * the B_CALL flag to the buffer header so we can count I/O's for the 	 * checkpoints and so we can release the allocated memory. 	 * 	 * XXX 	 * This should be removed if the new virtual memory system allows us to 	 * easily make the buffers contiguous in kernel memory and if that's 	 * fast enough. 	 */
-name|ch_per_blk
-operator|=
-name|MAXPHYS
-operator|/
-name|fs
-operator|->
-name|lfs_bsize
-expr_stmt|;
 for|for
 control|(
 name|bpp
@@ -4284,32 +4424,6 @@ name|i
 condition|;
 control|)
 block|{
-name|num
-operator|=
-name|ch_per_blk
-expr_stmt|;
-if|if
-condition|(
-name|num
-operator|>
-name|i
-condition|)
-name|num
-operator|=
-name|i
-expr_stmt|;
-name|i
-operator|-=
-name|num
-expr_stmt|;
-name|size
-operator|=
-name|num
-operator|*
-name|fs
-operator|->
-name|lfs_bsize
-expr_stmt|;
 name|cbp
 operator|=
 name|lfs_newbuf
@@ -4330,7 +4444,7 @@ operator|)
 operator|->
 name|b_blkno
 argument_list|,
-name|size
+name|MAXPHYS
 argument_list|)
 expr_stmt|;
 name|cbp
@@ -4346,6 +4460,12 @@ operator||=
 name|B_ASYNC
 operator||
 name|B_BUSY
+expr_stmt|;
+name|cbp
+operator|->
+name|b_bcount
+operator|=
+literal|0
 expr_stmt|;
 name|s
 operator|=
@@ -4365,14 +4485,38 @@ name|cbp
 operator|->
 name|b_data
 init|;
-name|num
-operator|--
+name|i
+operator|&&
+name|cbp
+operator|->
+name|b_bcount
+operator|<
+name|MAXPHYS
 condition|;
+name|i
+operator|--
 control|)
 block|{
 name|bp
 operator|=
 operator|*
+name|bpp
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|>
+operator|(
+name|MAXPHYS
+operator|-
+name|cbp
+operator|->
+name|b_bcount
+operator|)
+condition|)
+break|break;
 name|bpp
 operator|++
 expr_stmt|;
@@ -4422,6 +4566,14 @@ name|b_bcount
 argument_list|)
 expr_stmt|;
 name|p
+operator|+=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+name|cbp
+operator|->
+name|b_bcount
 operator|+=
 name|bp
 operator|->
@@ -4538,20 +4690,6 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|cbp
-operator|->
-name|b_bcount
-operator|=
-name|p
-operator|-
-operator|(
-name|char
-operator|*
-operator|)
-name|cbp
-operator|->
-name|b_data
 expr_stmt|;
 comment|/* 		 * XXXX This is a gross and disgusting hack.  Since these 		 * buffers are physically addressed, they hang off the 		 * device vnode (devvp).  As a result, they have no way 		 * of getting to the LFS superblock or lfs structure to 		 * keep track of the number of I/O's pending.  So, I am 		 * going to stuff the fs into the saveaddr field of 		 * the buffer (yuk). 		 */
 name|cbp

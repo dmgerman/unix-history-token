@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -168,6 +168,8 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
+name|db
+decl_stmt|,
 name|error
 decl_stmt|,
 name|s
@@ -198,6 +200,22 @@ argument_list|)
 operator|->
 name|um_lfs
 expr_stmt|;
+name|db
+operator|=
+name|fragstodb
+argument_list|(
+name|fs
+argument_list|,
+name|numfrags
+argument_list|(
+name|fs
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -205,12 +223,7 @@ name|LFS_FITS
 argument_list|(
 name|fs
 argument_list|,
-name|fsbtodb
-argument_list|(
-name|fs
-argument_list|,
-literal|1
-argument_list|)
+name|db
 argument_list|)
 operator|&&
 operator|!
@@ -307,12 +320,7 @@ name|fs
 operator|->
 name|lfs_avail
 operator|-=
-name|fsbtodb
-argument_list|(
-name|fs
-argument_list|,
-literal|1
-argument_list|)
+name|db
 expr_stmt|;
 operator|++
 name|locked_queue_count
