@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.16 (Berkeley) %G%"
+literal|"@(#)err.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1526,7 +1526,9 @@ name|E_DNSBASE
 case|:
 return|return
 operator|(
-literal|"Name server: host not found"
+literal|"Name server: %s: host not found"
+operator|,
+name|CurHostName
 operator|)
 return|;
 case|case
@@ -1536,7 +1538,9 @@ name|E_DNSBASE
 case|:
 return|return
 operator|(
-literal|"Name server: host name lookup failure"
+literal|"Name server: %s: host name lookup failure"
+operator|,
+name|CurHostName
 operator|)
 return|;
 case|case
@@ -1546,7 +1550,9 @@ name|E_DNSBASE
 case|:
 return|return
 operator|(
-literal|"Name server: non-recoverable error"
+literal|"Name server: %s: non-recoverable error"
+operator|,
+name|CurHostName
 operator|)
 return|;
 case|case
@@ -1556,7 +1562,9 @@ name|E_DNSBASE
 case|:
 return|return
 operator|(
-literal|"Name server: no data known for name"
+literal|"Name server: %s: no data known"
+operator|,
+name|CurHostName
 operator|)
 return|;
 endif|#
