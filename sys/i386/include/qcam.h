@@ -6,15 +6,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_QUICKCAM_H
+name|_MACHINE_QUICKCAM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_QUICKCAM_H
-value|1
+name|_MACHINE_QUICKCAM_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -211,6 +233,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_MACHINE_QUICKCAM_H_ */
+end_comment
 
 end_unit
 
