@@ -3826,9 +3826,6 @@ name|pvo_flags
 operator||=
 name|PVO_WIRED
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|pmap_pvo_enter
@@ -3849,9 +3846,6 @@ name|pte_lo
 argument_list|,
 name|pvo_flags
 argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4144,9 +4138,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|pmap_pvo_enter
@@ -4166,9 +4157,6 @@ name|pte_lo
 argument_list|,
 name|PVO_WIRED
 argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
