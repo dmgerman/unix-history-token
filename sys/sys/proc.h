@@ -1214,7 +1214,7 @@ name|proc
 modifier|*
 name|p_leader
 decl_stmt|;
-comment|/* (c) */
+comment|/* (b) */
 name|void
 modifier|*
 name|p_emuldata
