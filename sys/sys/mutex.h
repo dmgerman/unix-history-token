@@ -1717,48 +1717,6 @@ directive|ifdef
 name|_KERN_MUTEX_C_
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTR_EXTEND
-end_ifdef
-
-begin_comment
-comment|/*  * KTR_EXTEND saves file name and line for all entries, so we don't need them  * here.  Theoretically we should also change the entries which refer to them  * (from CTR5 to CTR3), but since they're just passed to snprintf as the last  * parameters, it doesn't do any harm to leave them.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|STR_mtx_enter_fmt
-index|[]
-init|=
-literal|"GOT %s [%p] r=%d"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_mtx_exit_fmt
-index|[]
-init|=
-literal|"REL %s [%p] r=%d"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_mtx_try_enter_fmt
-index|[]
-init|=
-literal|"TRY_ENTER %s [%p] result=%d"
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|char
 name|STR_mtx_enter_fmt
@@ -1785,11 +1743,6 @@ init|=
 literal|"TRY_ENTER %s [%p] result=%d at %s:%d"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
