@@ -1050,17 +1050,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|extravnodes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* extra vnodes to allocate at boot */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|prtactive
 decl_stmt|;
 end_decl_stmt

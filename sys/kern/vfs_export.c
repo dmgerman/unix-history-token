@@ -462,8 +462,6 @@ operator|=
 name|maxproc
 operator|+
 name|vm_object_cache_max
-operator|+
-name|extravnodes
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(

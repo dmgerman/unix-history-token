@@ -271,36 +271,6 @@ begin_comment
 comment|/* maximum # of timer events */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXTRAVNODES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXTRAVNODES
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|extravnodes
-init|=
-name|EXTRAVNODES
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spare vnodes to allocate */
-end_comment
-
 begin_comment
 comment|/* maximum # of mbuf clusters */
 end_comment
