@@ -6305,6 +6305,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6403,6 +6406,9 @@ name|pvo_vaddr
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -6604,6 +6610,9 @@ decl_stmt|;
 name|int
 name|pteidx
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6644,6 +6653,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -2418,9 +2418,6 @@ condition|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|vm_map_pmap
@@ -2438,9 +2435,6 @@ argument_list|(
 name|map
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|vm_map_unlock

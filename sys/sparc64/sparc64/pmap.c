@@ -4985,14 +4985,6 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_PMAP
@@ -5022,6 +5014,9 @@ name|pm
 argument_list|)
 condition|)
 return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|end
@@ -5112,6 +5107,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5523,6 +5521,9 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|eva
@@ -5607,6 +5608,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

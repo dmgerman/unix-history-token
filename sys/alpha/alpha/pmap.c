@@ -5541,6 +5541,9 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -5648,6 +5651,9 @@ expr_stmt|;
 block|}
 name|out
 label|:
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -6040,6 +6046,9 @@ argument_list|(
 literal|"pmap_protect: unaligned addresses"
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -6262,6 +6271,9 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
