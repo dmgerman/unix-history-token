@@ -35186,11 +35186,6 @@ argument_list|,
 name|rcs_lockfile
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|lockfile
-argument_list|)
-expr_stmt|;
 return|return
 name|fp
 return|;
