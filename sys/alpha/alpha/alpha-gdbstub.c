@@ -65,12 +65,11 @@ directive|include
 file|"opt_ddb.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NSIO
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|"sio.h"
+end_include
 
 begin_if
 if|#
@@ -253,11 +252,18 @@ name|c
 parameter_list|)
 comment|/* write a single character      */
 block|{
+if|#
+directive|if
+name|NSIO
+operator|>
+literal|0
 name|siogdbputc
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
@@ -273,10 +279,22 @@ name|void
 parameter_list|)
 comment|/* read and return a single char */
 block|{
+if|#
+directive|if
+name|NSIO
+operator|>
+literal|0
 return|return
 name|siogdbgetc
 argument_list|()
 return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
