@@ -93,6 +93,16 @@ parameter_list|)
 value|(((off_t)(x) + EFI_PAGE_MASK)& ~EFI_PAGE_MASK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEV_ALIGN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((off_t)(x) + (DEV_BSIZE-1))& ~(DEV_BSIZE-1))
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -1022,6 +1032,9 @@ decl_stmt|;
 name|uint64_t
 name|dumpsize
 decl_stmt|;
+name|off_t
+name|hdrgap
+decl_stmt|;
 name|size_t
 name|hdrsz
 decl_stmt|;
@@ -1227,6 +1240,15 @@ name|dumpsize
 operator|+=
 name|fileofs
 expr_stmt|;
+name|hdrgap
+operator|=
+name|fileofs
+operator|-
+name|DEV_ALIGN
+argument_list|(
+name|hdrsz
+argument_list|)
+expr_stmt|;
 comment|/* Determine dump offset on device. */
 name|dumplo
 operator|=
@@ -1365,12 +1387,10 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
+comment|/* 	 * All headers are written using blocked I/O, so we know the 	 * current offset is (still) block aligned. Skip the alignement 	 * in the file to have the segment contents aligned at page 	 * boundary. We cannot use MD_ALIGN on dumplo, because we don't 	 * care and may very well be unaligned within the dump device. 	 */
 name|dumplo
 operator|+=
-name|MD_ALIGN
-argument_list|(
-name|hdrsz
-argument_list|)
+name|hdrgap
 expr_stmt|;
 comment|/* Dump region data (updates dumplo) */
 name|error
