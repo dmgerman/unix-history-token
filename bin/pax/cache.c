@@ -755,6 +755,13 @@ name|NULL
 condition|)
 name|ptr
 operator|=
+name|uidtb
+index|[
+name|uid
+operator|%
+name|UID_SZ
+index|]
+operator|=
 operator|(
 name|UIDC
 operator|*
@@ -1091,6 +1098,13 @@ operator|==
 name|NULL
 condition|)
 name|ptr
+operator|=
+name|gidtb
+index|[
+name|gid
+operator|%
+name|GID_SZ
+index|]
 operator|=
 operator|(
 name|GIDC
