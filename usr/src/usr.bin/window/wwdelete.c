@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwdelete.c	3.13 %G%"
+literal|"@(#)wwdelete.c	3.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ name|i
 index|]
 decl_stmt|;
 specifier|register
-name|struct
+name|union
 name|ww_char
 modifier|*
 name|ns

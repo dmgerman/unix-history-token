@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwunframe.c	3.14 %G%"
+literal|"@(#)wwunframe.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ name|i
 index|]
 decl_stmt|;
 specifier|register
-name|struct
+name|union
 name|ww_char
 modifier|*
 name|ns
