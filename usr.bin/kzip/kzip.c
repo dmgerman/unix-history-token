@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kzip.c,v 1.10 1997/07/18 06:40:46 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,11 +1098,11 @@ literal|"-o"
 argument_list|,
 name|out
 argument_list|,
-literal|"/usr/lib/kzhead.o"
+literal|"/usr/lib/aout/kzhead.o"
 argument_list|,
 name|obj
 argument_list|,
-literal|"/usr/lib/kztail.o"
+literal|"/usr/lib/aout/kztail.o"
 argument_list|,
 literal|0
 argument_list|)
