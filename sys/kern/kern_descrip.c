@@ -2880,19 +2880,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|new
-operator|<
-name|fdp
-operator|->
-name|fd_nfiles
-argument_list|,
-operator|(
-literal|"fdgrowtable() failed to grow table"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -6611,21 +6598,6 @@ name|fdp
 argument_list|)
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
-name|newfdp
-operator|->
-name|fd_nfiles
-operator|>
-name|fdp
-operator|->
-name|fd_lastfile
-argument_list|,
-operator|(
-literal|"fdgrowtable() failed to grow table"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* copy everything except kqueue descriptors */
 name|newfdp
 operator|->
