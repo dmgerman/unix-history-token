@@ -1340,6 +1340,23 @@ name|__BSD_VISIBLE
 end_if
 
 begin_function_decl
+name|wchar_t
+modifier|*
+name|fgetwln
+parameter_list|(
+name|struct
+name|__sFILE
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|size_t
 name|wcslcat
 parameter_list|(
