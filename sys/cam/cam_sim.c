@@ -106,6 +106,7 @@ parameter_list|,
 name|sim_poll_func
 name|sim_poll
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|sim_name

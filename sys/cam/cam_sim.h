@@ -111,6 +111,7 @@ parameter_list|,
 name|sim_poll_func
 name|sim_poll
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|sim_name
@@ -191,6 +192,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__inline
+specifier|const
 name|char
 modifier|*
 name|cam_sim_name
@@ -292,6 +294,7 @@ decl_stmt|;
 name|sim_poll_func
 name|sim_poll
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sim_name
@@ -362,6 +365,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+specifier|const
 name|char
 modifier|*
 name|cam_sim_name
