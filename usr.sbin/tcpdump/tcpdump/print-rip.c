@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-rip.c,v 1.12 91/04/19 10:46:46 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: /a/cvs/386BSD/src/contrib/tcpdump/tcpdump/print-rip.c,v 1.1.1.1 1993/06/12 14:42:07 rgrimes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,12 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<protocols/routed.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -101,6 +95,129 @@ include|#
 directive|include
 file|"addrtoname.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|RIPVERSION
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|netinfo
+block|{
+name|struct
+name|osockaddr
+name|rip_dst
+decl_stmt|;
+comment|/* destination net/host */
+name|int
+name|rip_metric
+decl_stmt|;
+comment|/* cost of route */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rip
+block|{
+name|u_char
+name|rip_cmd
+decl_stmt|;
+comment|/* request/response */
+name|u_char
+name|rip_vers
+decl_stmt|;
+comment|/* protocol version # */
+name|u_char
+name|rip_res1
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* pad to 32-bit boundary */
+union|union
+block|{
+name|struct
+name|netinfo
+name|ru_nets
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* variable length... */
+name|char
+name|ru_tracefile
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* ditto ... */
+block|}
+name|ripun
+union|;
+define|#
+directive|define
+name|rip_nets
+value|ripun.ru_nets
+define|#
+directive|define
+name|rip_tracefile
+value|ripun.ru_tracefile
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Packet types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_REQUEST
+value|1
+end_define
+
+begin_comment
+comment|/* want info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_RESPONSE
+value|2
+end_define
+
+begin_comment
+comment|/* responding to request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_TRACEON
+value|3
+end_define
+
+begin_comment
+comment|/* turn tracing on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_TRACEOFF
+value|4
+end_define
+
+begin_comment
+comment|/* turn it off */
+end_comment
 
 begin_function
 specifier|static
