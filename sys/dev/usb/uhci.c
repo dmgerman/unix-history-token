@@ -289,7 +289,7 @@ begin_decl_stmt
 name|int
 name|uhcidebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2404,17 +2404,6 @@ name|sc_suspend
 operator|=
 name|PWR_RESUME
 expr_stmt|;
-name|sc
-operator|->
-name|sc_powerhook
-operator|=
-name|powerhook_establish
-argument_list|(
-name|uhci_power
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2426,6 +2415,17 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+name|sc
+operator|->
+name|sc_powerhook
+operator|=
+name|powerhook_establish
+argument_list|(
+name|uhci_power
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_shutdownhook
@@ -2632,6 +2632,17 @@ operator|(
 name|rv
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|powerhook_disestablish
 argument_list|(
 name|sc
@@ -2646,6 +2657,8 @@ operator|->
 name|sc_shutdownhook
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Free all xfers associated with this HC. */
 for|for
 control|(
