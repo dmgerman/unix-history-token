@@ -622,13 +622,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|chosen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pmap
 name|ofw_pmap
