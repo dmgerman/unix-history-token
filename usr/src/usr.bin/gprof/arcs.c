@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.13 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2006,6 +2006,14 @@ name|parentp
 operator|->
 name|printflag
 expr_stmt|;
+comment|/* 		 *	if the child was never actually called 		 *	(e.g. this arc is static (and all others are, too)) 		 *	no time propagates along this arc. 		 */
+if|if
+condition|(
+name|childp
+operator|->
+name|ncall
+condition|)
+block|{
 name|childp
 operator|->
 name|propfraction
@@ -2034,6 +2042,7 @@ name|ncall
 operator|)
 operator|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -2112,6 +2121,14 @@ name|parentp
 operator|->
 name|printflag
 expr_stmt|;
+comment|/* 		     *	if the cycle was never actually called 		     *	(e.g. this arc is static (and all others are, too)) 		     *	no time propagates along this arc. 		     */
+if|if
+condition|(
+name|headp
+operator|->
+name|ncall
+condition|)
+block|{
 name|headp
 operator|->
 name|propfraction
@@ -2140,6 +2157,7 @@ name|ncall
 operator|)
 operator|)
 expr_stmt|;
+block|}
 block|}
 block|}
 for|for
