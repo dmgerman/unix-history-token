@@ -47,7 +47,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* do not block			*/
+comment|/* do not block */
 end_comment
 
 begin_define
@@ -58,7 +58,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* can alloc out of reserve memory  */
+comment|/* can alloc out of reserve memory */
 end_comment
 
 begin_define
@@ -69,7 +69,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* async sleep on failure	*/
+comment|/* async sleep on failure */
 end_comment
 
 begin_define
@@ -144,32 +144,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_decl_stmt
-name|void
-name|malloc_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|malloc_uninit
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -516,6 +490,29 @@ end_comment
 
 begin_decl_stmt
 name|void
+name|contigfree
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|addr
+operator|,
+name|unsigned
+name|long
+name|size
+operator|,
+expr|struct
+name|malloc_type
+operator|*
+name|type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 modifier|*
 name|contigmalloc
 name|__P
@@ -548,29 +545,6 @@ operator|,
 name|unsigned
 name|long
 name|boundary
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|contigfree
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|addr
-operator|,
-name|unsigned
-name|long
-name|size
-operator|,
-expr|struct
-name|malloc_type
-operator|*
-name|type
 operator|)
 argument_list|)
 decl_stmt|;
@@ -613,6 +587,32 @@ name|type
 operator|,
 name|int
 name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|malloc_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|malloc_uninit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
