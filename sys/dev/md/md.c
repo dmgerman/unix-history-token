@@ -3058,17 +3058,6 @@ name|max
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>
-literal|255
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 name|sc
 operator|=
 operator|(
