@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cut.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)cut.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -926,10 +932,6 @@ control|(
 name|sep
 operator|=
 name|dchar
-operator|,
-name|output
-operator|=
-literal|0
 init|;
 name|fgets
 argument_list|(
@@ -945,6 +947,10 @@ argument_list|)
 condition|;
 control|)
 block|{
+name|output
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|isdelim
