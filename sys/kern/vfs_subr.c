@@ -12579,45 +12579,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Check to see if a filesystem is mounted on a block device.  */
-end_comment
-
-begin_function
-name|int
-name|vfs_mountedon
-parameter_list|(
-name|vp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_mountpoint
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Unmount all filesystems. The list is traversed in reverse order  * of mounting to avoid dependencies.  */
 end_comment
 
