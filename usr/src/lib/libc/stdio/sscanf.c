@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sscanf.c	5.1 (Berkeley) %G%"
+literal|"@(#)sscanf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ end_if
 begin_macro
 name|sscanf
 argument_list|(
-argument|char *str
+argument|const char *str
 argument_list|,
 argument|char const *fmt
 argument_list|,
