@@ -1986,7 +1986,7 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: fdisk [-Baeitu] [-b bootcode] [-1234] [disk]\n"
+literal|"usage: fdisk [-BIaistu] [-b bootcode] [-1234] [disk]\n"
 argument_list|,
 literal|"       fdisk -f configfile [-itv] [disk]\n"
 argument_list|)
