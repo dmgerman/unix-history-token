@@ -750,6 +750,26 @@ argument|,
 literal|0x02
 argument|); 	}
 argument_list|)
+if|if
+condition|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_MAPPED
+condition|)
+name|sndbuf_acquire
+argument_list|(
+name|bs
+argument_list|,
+name|NULL
+argument_list|,
+name|sndbuf_getfree
+argument_list|(
+name|bs
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|amt
 operator|=
 name|sndbuf_getfree
