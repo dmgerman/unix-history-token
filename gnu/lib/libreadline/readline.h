@@ -1273,14 +1273,12 @@ name|savestring
 argument_list|)
 end_if
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|savestring
-parameter_list|()
-function_decl|;
-end_function_decl
+value|rl_savestring
+end_define
 
 begin_comment
 comment|/* XXX backwards compatibility */
@@ -1290,6 +1288,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|rl_savestring
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

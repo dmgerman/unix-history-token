@@ -12369,23 +12369,6 @@ name|SHELL
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|savestring
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|savestring
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Backwards compatibilty, now that savestring has been removed from    all `public' readline header files. */
 end_comment
@@ -12393,7 +12376,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|savestring
+name|rl_savestring
 parameter_list|(
 name|s
 parameter_list|)
