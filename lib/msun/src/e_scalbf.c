@@ -40,6 +40,22 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* XXX lost declaration of this and isnan() in math.h but still have funcs. */
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+name|isnanf
+function_decl|)
+parameter_list|(
+name|float
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,12 +101,16 @@ else|#
 directive|else
 if|if
 condition|(
+call|(
 name|isnanf
+call|)
 argument_list|(
 name|x
 argument_list|)
 operator|||
+call|(
 name|isnanf
+call|)
 argument_list|(
 name|fn
 argument_list|)
