@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.22 1997/08/13 06:45:11 charnier Exp $"
+literal|"$Id: vmstat.c,v 1.23 1997/09/25 01:14:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,13 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ncpu
 decl_stmt|;
 end_decl_stmt
 
@@ -2256,6 +2263,10 @@ expr_stmt|;
 name|etime
 operator|/=
 name|hertz
+expr_stmt|;
+name|etime
+operator|/=
+name|ncpu
 expr_stmt|;
 name|inttotal
 operator|=
@@ -4425,6 +4436,36 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ncpu
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"hw.ncpu"
+argument_list|,
+operator|&
+name|ncpu
+argument_list|,
+operator|&
+name|size
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|ncpu
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
