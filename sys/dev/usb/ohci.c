@@ -2377,7 +2377,7 @@ name|std
 operator|->
 name|nexttd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -12078,7 +12078,7 @@ name|sed
 operator|->
 name|ed
 operator|.
-name|ed_tailp
+name|ed_headp
 operator|&=
 name|LE
 argument_list|(
