@@ -635,6 +635,14 @@ index|]
 decl_stmt|;
 comment|/* source subaddr	*/
 name|int
+name|dst_ton
+decl_stmt|;
+comment|/* destination type of number */
+name|int
+name|src_ton
+decl_stmt|;
+comment|/* source type of number */
+name|int
 name|scr_ind
 decl_stmt|;
 comment|/* screening ind for incoming call */

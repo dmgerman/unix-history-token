@@ -126,6 +126,35 @@ define|#
 directive|define
 name|DST
 value|(aliasing == 0 ? mp->dst_telno : dst_tela)
+comment|/* Add prefixes. All preexisting alias files are useless 	   if this is on. */
+if|if
+condition|(
+name|addprefix
+condition|)
+block|{
+name|add_number_prefix
+argument_list|(
+name|mp
+operator|->
+name|src_telno
+argument_list|,
+name|mp
+operator|->
+name|src_ton
+argument_list|)
+expr_stmt|;
+name|add_number_prefix
+argument_list|(
+name|mp
+operator|->
+name|dst_telno
+argument_list|,
+name|mp
+operator|->
+name|dst_ton
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|aliasing
