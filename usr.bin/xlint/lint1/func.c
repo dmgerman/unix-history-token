@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: func.c,v 1.7 1995/10/02 17:31:40 jpo Exp $	*/
+comment|/*	$NetBSD: func.c,v 1.7 1995/10/02 17:31:40 jpo Exp $	*/
 end_comment
 
 begin_comment
