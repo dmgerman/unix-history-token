@@ -255,7 +255,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/include/if_wavelan_ieee.h>
+file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
 begin_comment
