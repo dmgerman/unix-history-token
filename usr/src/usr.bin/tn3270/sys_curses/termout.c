@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.3 (Berkeley) %G%"
+literal|"@(#)termout.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2039,6 +2039,32 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* defined(unix) */
+if|if
+condition|(
+name|initscr
+argument_list|()
+operator|==
+name|ERR
+condition|)
+block|{
+comment|/* Initialize curses to get line size */
+name|ExitString
+argument_list|(
+literal|"InitTerminal:  Error initializing curses"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+name|MaxNumberLines
+operator|=
+name|LINES
+expr_stmt|;
+name|MaxNumberColumns
+operator|=
+name|COLS
+expr_stmt|;
 name|ClearArray
 argument_list|(
 name|Terminal
