@@ -389,6 +389,26 @@ comment|/* -[46]: address family to use */
 end_comment
 
 begin_decl_stmt
+name|int
+name|sigalrm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SIGALRM received */
+end_comment
+
+begin_decl_stmt
+name|int
+name|sigint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SIGINT received */
+end_comment
+
+begin_decl_stmt
 name|u_int
 name|ftp_timeout
 decl_stmt|;
@@ -427,13 +447,28 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|errx
-argument_list|(
+switch|switch
+condition|(
+name|sig
+condition|)
+block|{
+case|case
+name|SIGALRM
+case|:
+name|sigalrm
+operator|=
 literal|1
-argument_list|,
-literal|"Transfer timed out"
-argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|SIGINT
+case|:
+name|sigint
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -1140,17 +1175,12 @@ else|:
 name|http_timeout
 expr_stmt|;
 block|}
-comment|/*      * Set the protocol timeout.      * This currently only works for FTP, so we still use      * alarm(timeout) further down.      */
+comment|/* set the protocol timeout. */
 name|fetchTimeout
 operator|=
 name|timeout
 expr_stmt|;
 comment|/* stat remote file */
-name|alarm
-argument_list|(
-name|timeout
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fetchStat
@@ -1171,11 +1201,6 @@ argument_list|(
 literal|"%s: size not known"
 argument_list|,
 name|path
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-name|timeout
 argument_list|)
 expr_stmt|;
 comment|/* just print size */
@@ -1610,6 +1635,12 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|sigint
+operator|=
+name|sigalrm
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|us
@@ -1623,7 +1654,11 @@ block|{
 comment|/*	   	 * We have no idea how much data to expect, so do it byte by          * byte. This is incredibly inefficient, but there's not much          * we can do about it... :(	  	 */
 while|while
 condition|(
-literal|1
+operator|!
+name|sigint
+operator|&&
+operator|!
+name|sigalrm
 condition|)
 block|{
 if|if
@@ -1750,6 +1785,12 @@ operator|!=
 name|us
 operator|.
 name|size
+operator|&&
+operator|!
+name|sigint
+operator|&&
+operator|!
+name|sigalrm
 condition|;
 name|n
 operator|++
@@ -2010,7 +2051,27 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* check the file size */
+comment|/* did the transfer complete normally? */
+if|if
+condition|(
+name|sigalrm
+condition|)
+name|warnx
+argument_list|(
+literal|"transfer timed out"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sigint
+condition|)
+name|warnx
+argument_list|(
+literal|"transfer interrupted"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|us
@@ -2048,7 +2109,13 @@ name|success
 label|:
 name|r
 operator|=
-literal|0
+operator|(
+operator|!
+name|sigalrm
+operator|&&
+operator|!
+name|sigint
+operator|)
 expr_stmt|;
 goto|goto
 name|done
@@ -2761,6 +2828,14 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+comment|/* interrupt handling */
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|sig_handler
+argument_list|)
+expr_stmt|;
 comment|/* output file */
 if|if
 condition|(
@@ -2989,6 +3064,15 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sigint
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|e
