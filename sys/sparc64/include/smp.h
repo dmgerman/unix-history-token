@@ -969,9 +969,9 @@ modifier|*
 name|cookie
 parameter_list|)
 block|{
+specifier|volatile
 name|u_int
 modifier|*
-specifier|volatile
 name|mask
 decl_stmt|;
 if|if
