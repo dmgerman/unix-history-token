@@ -3056,6 +3056,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|dumping
+condition|?
+name|ATA_WAIT_READY
+else|:
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)

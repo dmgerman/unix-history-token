@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rtprio.h>
 end_include
 
@@ -2288,6 +2294,9 @@ name|it
 argument_list|,
 operator|!
 name|cold
+operator|&&
+operator|!
+name|dumping
 argument_list|)
 expr_stmt|;
 name|KASSERT
