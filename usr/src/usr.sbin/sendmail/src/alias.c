@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.2	%G%"
+literal|"@(#)alias.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file ALIASFILE for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue.  Uses libdbm database if -DDBM. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. ** **	Called By: **		main ** **	Files: **		ALIASFILE -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		ALIASFILE.pag, ALIASFILE.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file ALIASFILE for a set of aliases. **	If found, it arranges to deliver to them.  Uses libdbm **	database if -DDBM. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. ** **	Files: **		ALIASFILE -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		ALIASFILE.pag, ALIASFILE.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
 end_comment
 
 begin_define
@@ -146,6 +146,9 @@ modifier|*
 name|parse
 parameter_list|()
 function_decl|;
+name|int
+name|mno
+decl_stmt|;
 if|if
 condition|(
 name|NoAlias
@@ -322,7 +325,7 @@ name|gotmatch
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 			**  Check to see if this pseudonym exists in SendQ. 			**	Turn the alias into canonical form. 			**	Then scan SendQ until you do (or do not) 			**	find that address. 			*/
+comment|/* 			**  Check to see if this pseudonym exists. 			**	Turn the alias into canonical form. 			**	Then scan the send queue until you 			**	do (or do not) find that address. 			*/
 comment|/*  Get a canonical form for the alias. */
 for|for
 control|(
@@ -405,25 +408,29 @@ goto|goto
 name|syntaxerr
 goto|;
 block|}
-comment|/* if already in AliasQ don't realias */
+comment|/* if already queued up, don't realias */
 for|for
 control|(
 name|q
 operator|=
-operator|&
-name|AliasQ
+name|Mailer
+index|[
+name|al
+operator|.
+name|q_mailer
+index|]
+operator|->
+name|m_sendq
 init|;
-operator|(
 name|q
-operator|=
-name|nxtinq
-argument_list|(
-name|q
-argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
 control|)
 block|{
 if|if
@@ -443,53 +450,20 @@ block|}
 if|if
 condition|(
 name|q
-operator|!=
+operator|==
 name|NULL
+operator|||
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 continue|continue;
-comment|/*  Scan SendQ for that canonical form. */
-for|for
-control|(
-name|q
-operator|=
-operator|&
-name|SendQ
-init|;
-operator|(
-name|q
-operator|=
-name|nxtinq
-argument_list|(
-name|q
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|sameaddr
-argument_list|(
-operator|&
-name|al
-argument_list|,
-name|q
-argument_list|,
-name|TRUE
-argument_list|)
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|q
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 				**  Match on Alias. 				**	Deliver to the target list. 				**	Remove the alias from the send queue 				**	  and put it on the Alias queue. 				*/
+comment|/* 			**  Match on Alias. 			**	Deliver to the target list. 			**	Remove the alias from the send queue 			**	  and put it on the Alias queue. 			*/
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -530,13 +504,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tkoffq
-argument_list|(
 name|q
-argument_list|,
-operator|&
-name|SendQ
-argument_list|)
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
 expr_stmt|;
 name|didalias
 operator|++
@@ -551,15 +523,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|putonq
-argument_list|(
-name|q
-argument_list|,
-operator|&
-name|AliasQ
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 do|while
@@ -575,85 +538,59 @@ expr_stmt|;
 else|#
 directive|else
 else|DBM
-comment|/* 	**  Scan SendQ 	**	We only have to do this once, since anything we alias 	**	to is being put at the end of the queue we are 	**	scanning. 	**	If the alias on SendQ is also (already) on AliasQ, we 	**	have an alias such as: 	**		eric:eric,i:eric 	**	In this case we have already done this alias once, and 	**	we don't want to do it again (for obvious reasons!). 	*/
+comment|/* 	**  Scan send queues 	**	We only have to do this once, since anything we alias 	**	to is being put at the end of the queue we are 	**	scanning. 	*/
 for|for
 control|(
-name|q2
+name|mno
 operator|=
-name|nxtinq
-argument_list|(
-operator|&
-name|SendQ
-argument_list|)
+literal|0
 init|;
-name|q2
+name|Mailer
+index|[
+name|mno
+index|]
 operator|!=
 name|NULL
 condition|;
+name|mno
+operator|++
 control|)
 block|{
-comment|/* if already in AliasQ, don't realias */
 for|for
 control|(
 name|q
 operator|=
-operator|&
-name|AliasQ
+name|Mailer
+index|[
+name|mno
+index|]
+operator|->
+name|m_sendq
 init|;
-operator|(
 name|q
-operator|=
-name|nxtinq
-argument_list|(
-name|q
-argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
 control|)
 block|{
+comment|/* don't realias already aliased names */
 if|if
 condition|(
-name|sameaddr
+name|bitset
 argument_list|(
+name|QDONTSEND
+argument_list|,
 name|q
-argument_list|,
-name|q2
-argument_list|,
-name|TRUE
+operator|->
+name|q_flags
 argument_list|)
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|q
-operator|!=
-name|NULL
-condition|)
-block|{
-name|q2
-operator|=
-name|nxtinq
-argument_list|(
-name|q2
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
-comment|/* save ptr to next address */
-name|q
-operator|=
-name|q2
-expr_stmt|;
-name|q2
-operator|=
-name|nxtinq
-argument_list|(
-name|q
-argument_list|)
-expr_stmt|;
 comment|/* only alias local users */
 if|if
 condition|(
@@ -707,7 +644,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		**  Match on Alias. 		**	Deliver to the target list. 		**	Remove the alias from the send queue 		**	  and put it on the Alias queue. 		*/
+comment|/* 			**  Match on Alias. 			**	Deliver to the target list. 			**	Remove the alias from the send queue 			**	  and put it on the Alias queue. 			*/
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -736,13 +673,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tkoffq
-argument_list|(
 name|q
-argument_list|,
-operator|&
-name|SendQ
-argument_list|)
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
 expr_stmt|;
 name|sendto
 argument_list|(
@@ -751,29 +686,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|putonq
-argument_list|(
-name|q
-argument_list|,
-operator|&
-name|AliasQ
-argument_list|)
-expr_stmt|;
-comment|/* if our last entry had an alias, process them */
-if|if
-condition|(
-name|q2
-operator|==
-name|NULL
-condition|)
-name|q2
-operator|=
-name|nxtinq
-argument_list|(
-operator|&
-name|SendQ
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -785,7 +698,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Currently it is undefined, until the protocol for userinfo **	databases is finalized. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		TRUE -- we have forwarded it somewhere. **		FALSE -- not forwarded; go ahead& deliver. ** **	Side Effects: **		New names are added to SendQ. ** **	Called By: **		recipient */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Currently it is undefined, until the protocol for userinfo **	databases is finalized. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		TRUE -- we have forwarded it somewhere. **		FALSE -- not forwarded; go ahead& deliver. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
 begin_function

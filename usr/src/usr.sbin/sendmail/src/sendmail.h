@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	@(#)sendmail.h	3.6	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	@(#)sendmail.h	3.7	%G% */
 end_comment
 
 begin_include
@@ -91,6 +91,70 @@ comment|/* location of alias file */
 end_comment
 
 begin_comment
+comment|/* **  Address structure. **	Addresses are stored internally in this structure. */
+end_comment
+
+begin_struct
+struct|struct
+name|address
+block|{
+name|char
+modifier|*
+name|q_paddr
+decl_stmt|;
+comment|/* the printname for the address */
+name|char
+modifier|*
+name|q_user
+decl_stmt|;
+comment|/* user name */
+name|char
+modifier|*
+name|q_host
+decl_stmt|;
+comment|/* host name */
+name|short
+name|q_mailer
+decl_stmt|;
+comment|/* mailer to use */
+name|short
+name|q_rmailer
+decl_stmt|;
+comment|/* real mailer (before mapping) */
+name|short
+name|q_flags
+decl_stmt|;
+comment|/* status flags, see below */
+name|struct
+name|address
+modifier|*
+name|q_next
+decl_stmt|;
+comment|/* chain */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|address
+name|ADDRESS
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|QDONTSEND
+value|000001
+end_define
+
+begin_comment
+comment|/* don't send to this address */
+end_comment
+
+begin_comment
 comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The host map is a list of lists of strings.  Within each **	list, any host is mapped to the last host in the list. **	This allows multiple names, as well as doing clever **	mail grouping in point-to-point networks.  Note: this **	is only used internally, so the apparent host is still **	kept around. ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as described in conf.c **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
 end_comment
 
@@ -100,14 +164,14 @@ name|mailer
 block|{
 name|char
 modifier|*
-name|m_mailer
-decl_stmt|;
-comment|/* pathname of the mailer to use */
-name|char
-modifier|*
 name|m_name
 decl_stmt|;
 comment|/* symbolic name of this mailer */
+name|char
+modifier|*
+name|m_mailer
+decl_stmt|;
+comment|/* pathname of the mailer to use */
 name|short
 name|m_flags
 decl_stmt|;
@@ -127,6 +191,11 @@ modifier|*
 name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
+name|ADDRESS
+modifier|*
+name|m_sendq
+decl_stmt|;
+comment|/* list of addresses to send to */
 block|}
 struct|;
 end_struct
@@ -178,12 +247,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_HDR
+name|M_NHDR
 value|000020
 end_define
 
 begin_comment
-comment|/* insert From line */
+comment|/* don't insert From line */
 end_comment
 
 begin_define
@@ -211,12 +280,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FHDR
+name|M_MUSER
 value|000200
 end_define
 
 begin_comment
-comment|/* force good From line */
+comment|/* mailer can handle multiple users at once */
 end_comment
 
 begin_define
@@ -255,17 +324,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_COMMAS
-value|004000
-end_define
-
-begin_comment
-comment|/* need comma-seperated address lists */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_USR_UPPER
 value|010000
 end_define
@@ -289,7 +347,7 @@ begin_define
 define|#
 directive|define
 name|M_ARPAFMT
-value|(M_NEEDDATE|M_NEEDFROM|M_MSGID|M_COMMAS)
+value|(M_NEEDDATE|M_NEEDFROM|M_MSGID)
 end_define
 
 begin_decl_stmt
@@ -301,107 +359,6 @@ name|Mailer
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* **  Address structure. **	Addresses are stored internally in this structure. */
-end_comment
-
-begin_struct
-struct|struct
-name|address
-block|{
-name|char
-modifier|*
-name|q_paddr
-decl_stmt|;
-comment|/* the printname for the address */
-name|char
-modifier|*
-name|q_user
-decl_stmt|;
-comment|/* user name */
-name|char
-modifier|*
-name|q_host
-decl_stmt|;
-comment|/* host name */
-name|short
-name|q_mailer
-decl_stmt|;
-comment|/* mailer to use */
-name|short
-name|q_rmailer
-decl_stmt|;
-comment|/* real mailer (before mapping) */
-name|struct
-name|address
-modifier|*
-name|q_next
-decl_stmt|;
-comment|/* chain */
-name|struct
-name|address
-modifier|*
-name|q_prev
-decl_stmt|;
-comment|/* back pointer */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|address
-name|ADDRESS
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* some other primitives */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nxtinq
-parameter_list|(
-name|q
-parameter_list|)
-value|((q)->q_next)
-end_define
-
-begin_define
-define|#
-directive|define
-name|clearq
-parameter_list|(
-name|q
-parameter_list|)
-value|(q)->q_next = (q)->q_prev = NULL
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|ADDRESS
-name|SendQ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue of people to send to */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|ADDRESS
-name|AliasQ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue of people that are aliases */
-end_comment
 
 begin_comment
 comment|/* **  Header structure. **	This structure is used internally to store header items. */
@@ -870,6 +827,29 @@ end_decl_stmt
 
 begin_comment
 comment|/* hop count */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|CurTime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time of this message */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|FromLine
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a UNIX-style From line for this message */
 end_comment
 
 begin_include

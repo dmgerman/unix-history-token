@@ -34,12 +34,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	3.2	%G%"
+literal|"@(#)arpadate.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. */
+comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. */
 end_comment
 
 begin_ifdef
