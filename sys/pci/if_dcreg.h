@@ -3541,6 +3541,13 @@ name|DC_TX_INTR_ALWAYS
 value|0x00000400
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_21143_NWAY
+value|0x00000800
+end_define
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
