@@ -4360,32 +4360,6 @@ end_decl_stmt
 begin_function_decl
 name|__stdcall
 specifier|extern
-name|uint8_t
-name|KeAcquireSpinLockRaiseToDpc
-parameter_list|(
-name|kspin_lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|extern
-name|void
-name|KeReleaseSpinLock
-parameter_list|(
-name|kspin_lock
-modifier|*
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|extern
 name|void
 name|KeInitializeSpinLock
 parameter_list|(
@@ -4709,7 +4683,19 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|*(b) = KeAcquireSpinLockRaiseToDpc(a)
+value|*(b) = KfAcquireSpinLock(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KeReleaseSpinLock
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|KfReleaseSpinLock(a, b)
 end_define
 
 begin_comment
