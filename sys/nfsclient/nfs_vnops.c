@@ -15516,13 +15516,13 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|VI_LOCK
+continue|continue;
+block|}
+name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 name|bremfree
 argument_list|(
 name|bp
