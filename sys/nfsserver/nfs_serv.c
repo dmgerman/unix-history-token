@@ -15571,11 +15571,14 @@ name|v3
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|v3
 condition|)
-block|{
 name|nfsm_srvwcc_data
 argument_list|(
 name|dirfor_ret
@@ -15589,11 +15592,6 @@ operator|&
 name|diraft
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* fall through */
 name|nfsmout
 label|:
