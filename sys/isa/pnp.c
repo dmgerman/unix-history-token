@@ -82,10 +82,10 @@ typedef|typedef
 struct|struct
 name|_pnp_id
 block|{
-name|u_int32_t
+name|uint32_t
 name|vendor_id
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|serial
 decl_stmt|;
 name|u_char
@@ -116,11 +116,11 @@ begin_struct
 struct|struct
 name|pnp_quirk
 block|{
-name|u_int32_t
+name|uint32_t
 name|vendor_id
 decl_stmt|;
 comment|/* Vendor of the card */
-name|u_int32_t
+name|uint32_t
 name|logical_id
 decl_stmt|;
 comment|/* ID of the device with quirk */
@@ -398,16 +398,16 @@ name|char
 modifier|*
 name|pnp_eisaformat
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 init|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -901,7 +901,9 @@ name|sum
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|valid
+operator|)
 return|;
 block|}
 end_function
@@ -1009,7 +1011,9 @@ literal|"PnP device failed to report resource data\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|count
+operator|)
 return|;
 block|}
 name|outb
@@ -1050,7 +1054,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|count
+operator|)
 return|;
 block|}
 end_function
@@ -1253,10 +1259,10 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|start
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size
 decl_stmt|;
 comment|/* XXX: should handle memory control register, 32 bit memory */
@@ -1484,7 +1490,7 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|start
 decl_stmt|;
 if|if
@@ -1849,10 +1855,10 @@ begin_function
 name|void
 name|pnp_check_quirks
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|vendor_id
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|logical_id
 parameter_list|,
 name|int
@@ -2142,7 +2148,7 @@ name|retval
 init|=
 name|FALSE
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|logical_id
 decl_stmt|;
 name|device_t
@@ -2629,7 +2635,9 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -2711,7 +2719,9 @@ operator|!
 name|resources
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 if|if
@@ -2763,7 +2773,9 @@ condition|)
 block|{
 comment|/* XXX: free resources */
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|bcopy
@@ -2805,7 +2817,9 @@ operator|!=
 name|amount
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|len
 operator|+=
@@ -2827,7 +2841,9 @@ operator|=
 name|len
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3063,7 +3079,9 @@ operator|=
 name|len
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3265,7 +3283,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"It seems to NEC-PnP card (%s).\n"
+literal|"An NEC-PnP card (%s).\n"
 argument_list|,
 name|pnp_eisaformat
 argument_list|(
@@ -3292,7 +3310,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"It seems to Normal-ISA-PnP card (%s).\n"
+literal|"A Normal-ISA-PnP card (%s).\n"
 argument_list|,
 name|pnp_eisaformat
 argument_list|(
@@ -3390,7 +3408,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|found
+operator|)
 return|;
 block|}
 end_function

@@ -76,7 +76,7 @@ name|char
 modifier|*
 name|pnp_eisaformat
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|)
 function_decl|;
@@ -86,7 +86,7 @@ begin_function_decl
 name|void
 name|pnp_printf
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|,
 name|char
@@ -178,10 +178,10 @@ begin_function_decl
 name|void
 name|pnp_check_quirks
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|vendor_id
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|logical_id
 parameter_list|,
 name|int
