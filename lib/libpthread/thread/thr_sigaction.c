@@ -206,15 +206,7 @@ name|NULL
 operator|&&
 name|sig
 operator|!=
-name|_SCHED_SIGNAL
-operator|&&
-name|sig
-operator|!=
 name|SIGCHLD
-operator|&&
-name|sig
-operator|!=
-name|SIGINFO
 condition|)
 block|{
 comment|/* 			 * Ensure the signal handler cannot be interrupted 			 * by other signals.  Always request the POSIX signal 			 * handler arguments. 			 */

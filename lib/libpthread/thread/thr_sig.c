@@ -1102,11 +1102,6 @@ name|suppress_handler
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|thread_is_active
-init|=
-literal|0
-decl_stmt|;
 comment|/* Make sure this signal isn't still in the pending set: */
 name|sigdelset
 argument_list|(
@@ -1163,12 +1158,6 @@ name|PTHREAD_PRIOQ_REMOVE
 argument_list|(
 name|pthread
 argument_list|)
-expr_stmt|;
-else|else
-comment|/* 			 * This thread is running; avoid placing it in 			 * the run queue: 			 */
-name|thread_is_active
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1391,11 +1380,9 @@ break|break;
 block|}
 name|DBG_MSG
 argument_list|(
-literal|">>> suppress_handler = %d, thread_is_active = %d\n"
+literal|">>> suppress_handler = %d\n"
 argument_list|,
 name|suppress_handler
-argument_list|,
-name|thread_is_active
 argument_list|)
 expr_stmt|;
 if|if
@@ -1464,13 +1451,7 @@ argument_list|,
 name|PS_SUSPENDED
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|thread_is_active
-operator|==
-literal|0
-condition|)
+else|else
 name|PTHREAD_PRIOQ_INSERT_TAIL
 argument_list|(
 name|pthread
@@ -2141,15 +2122,6 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Set up the new frame. */
-block|thread->curframe = psf; 	thread->flags&= PTHREAD_FLAGS_PRIVATE | PTHREAD_FLAGS_TRACE | 	    PTHREAD_FLAGS_IN_SYNCQ;
-comment|/* 	 * Set up the context: 	 */
-block|stackp -= sizeof(double); 	_setjmp(thread->ctx.jb); 	SET_STACK_JB(thread->ctx.jb, stackp); 	SET_RETURN_ADDR_JB(thread->ctx.jb, _thread_sig_wrapper);
-endif|#
-directive|endif
 block|}
 end_function
 
