@@ -1774,6 +1774,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|buf
 expr_stmt|;
 name|aiov
