@@ -598,13 +598,13 @@ endif|H
 end_endif
 
 begin_comment
-comment|/* CSSG - ing70 */
+comment|/* CSSG - ucberl70 */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ING70
+name|ERL70
 end_ifdef
 
 begin_define
@@ -624,7 +624,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|ING70
+endif|ERL70
 end_endif
 
 begin_comment
