@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Normal-format output routines for GNU DIFF.    Copyright (C) 1988, 1989 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Normal-format output routines for GNU DIFF.    Copyright (C) 1988, 1989, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -9,35 +9,20 @@ directive|include
 file|"diff.h"
 end_include
 
-begin_function_decl
-name|int
-name|change_letter
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|void
 name|print_normal_hunk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|print_number_range
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
 name|change
-modifier|*
-name|find_change
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Print the edit-script SCRIPT as a normal diff.    INF points to an array of descriptions of the two files.  */
@@ -72,6 +57,7 @@ comment|/* Print a hunk of a normal diff.    This is a contiguous portion of a c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_normal_hunk
 parameter_list|(
