@@ -21,22 +21,11 @@ begin_comment
 comment|/*  * Defining MALLOC_EXTRA_SANITY will enable extra checks which are related  * to internal conditions and consistency in malloc.c. This has a  * noticeable runtime performance hit, and generally will not do you  * any good unless you fiddle with the internals of malloc or want  * to catch random pointer corruption as early as possible.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MALLOC_EXTRA_SANITY
-end_ifndef
-
 begin_undef
 undef|#
 directive|undef
 name|MALLOC_EXTRA_SANITY
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * What to use for Junk.  This is the byte value we use to fill with  * when the 'J' option is enabled.  */
