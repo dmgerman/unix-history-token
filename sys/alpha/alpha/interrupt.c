@@ -1269,6 +1269,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * returns 0 if interrupt vector can be disabled,  * 1 if it cannot  */
+end_comment
+
 begin_function
 name|int
 name|alpha_teardown_intr
@@ -1287,7 +1291,18 @@ name|cookie
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|h
 decl_stmt|;
+name|h
+operator|=
+name|HASHVEC
+argument_list|(
+name|i
+operator|->
+name|vector
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splhigh
@@ -1312,8 +1327,23 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|alpha_intr_hash
+index|[
+name|h
+index|]
+argument_list|)
+condition|)
 return|return
 literal|0
+return|;
+else|else
+return|return
+literal|1
 return|;
 block|}
 end_function
