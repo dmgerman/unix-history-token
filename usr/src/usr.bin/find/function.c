@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.10 (Berkeley) %G%"
+literal|"@(#)function.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,10 +581,6 @@ modifier|*
 name|c_depth
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|depth
-decl_stmt|;
 name|PLAN
 modifier|*
 name|new
@@ -650,7 +646,7 @@ name|waitpid
 argument_list|()
 decl_stmt|;
 name|void
-name|find_subst
+name|brace_subst
 parameter_list|()
 function_decl|;
 for|for
@@ -678,7 +674,7 @@ index|[
 name|cnt
 index|]
 condition|)
-name|find_subst
+name|brace_subst
 argument_list|(
 name|plan
 operator|->
@@ -714,7 +710,7 @@ operator|->
 name|flags
 operator|&&
 operator|!
-name|find_queryuser
+name|queryuser
 argument_list|(
 name|plan
 operator|->
@@ -1880,6 +1876,9 @@ name|new
 operator|->
 name|l_data
 operator|=
+operator|(
+name|nlink_t
+operator|)
 name|find_parsenum
 argument_list|(
 name|new

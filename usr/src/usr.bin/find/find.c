@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.34 (Berkeley) %G%"
+literal|"@(#)find.c	4.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,16 +411,16 @@ name|find_create
 argument_list|()
 decl_stmt|,
 modifier|*
-name|find_squish_not
+name|not_squish
 argument_list|()
 decl_stmt|,
 modifier|*
-name|find_squish_or
+name|or_squish
 argument_list|()
 decl_stmt|;
 name|PLAN
 modifier|*
-name|find_squish_paren
+name|paren_squish
 parameter_list|()
 function_decl|;
 comment|/* 	 * for each argument in the command line, determine what kind of node 	 * it is, create the appropriate node type and add the new plan node 	 * to the end of the existing plan.  The resulting plan is a linked 	 * list of plan nodes.  For example, the string: 	 * 	 *	% find . -name foo -newer bar -print 	 * 	 * results in the plan: 	 * 	 *	[-name foo]--> [-newer bar]--> [-print] 	 * 	 * in this diagram, `[-name foo]' represents the plan node generated 	 * by c_name() with an argument of foo and `-->' represents the 	 * plan->next pointer. 	 */
@@ -516,7 +516,7 @@ block|}
 comment|/* 	 * the command line has been completely processed into a search plan 	 * except for the (, ), !, and -o operators.  Rearrange the plan so 	 * that the portions of the plan which are affected by the operators 	 * are moved into operator nodes themselves.  For example: 	 * 	 *	[!]--> [-name foo]--> [-print] 	 * 	 * becomes 	 * 	 *	[! [-name foo] ]--> [-print] 	 * 	 * and 	 * 	 *	[(]--> [-depth]--> [-name foo]--> [)]--> [-print] 	 * 	 * becomes 	 * 	 *	[expr [-depth]-->[-name foo] ]--> [-print] 	 * 	 * operators are handled in order of precedence. 	 */
 name|plan
 operator|=
-name|find_squish_paren
+name|paren_squish
 argument_list|(
 name|plan
 argument_list|)
@@ -524,7 +524,7 @@ expr_stmt|;
 comment|/* ()'s */
 name|plan
 operator|=
-name|find_squish_not
+name|not_squish
 argument_list|(
 name|plan
 argument_list|)
@@ -532,7 +532,7 @@ expr_stmt|;
 comment|/* !'s */
 name|plan
 operator|=
-name|find_squish_or
+name|or_squish
 argument_list|(
 name|plan
 argument_list|)

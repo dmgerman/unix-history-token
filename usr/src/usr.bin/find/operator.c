@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operator.c	5.1 (Berkeley) %G%"
+literal|"@(#)operator.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,14 +46,21 @@ directive|include
 file|"find.h"
 end_include
 
+begin_function_decl
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * find_yanknode --  *	destructively removes the top from the plan  */
+comment|/*  * yanknode --  *	destructively removes the top from the plan  */
 end_comment
 
 begin_function
 name|PLAN
 modifier|*
-name|find_yanknode
+name|yanknode
 parameter_list|(
 name|planp
 parameter_list|)
@@ -114,13 +121,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find_yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	find_squish_paren.  In comments below, an expression is either  *	a simple node or a T_EXPR node containing a list of simple nodes.  */
+comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a T_EXPR node containing a list of simple nodes.  */
 end_comment
 
 begin_function
 name|PLAN
 modifier|*
-name|find_yankexpr
+name|yankexpr
 parameter_list|(
 name|planp
 parameter_list|)
@@ -162,7 +169,7 @@ condition|(
 operator|(
 name|node
 operator|=
-name|find_yanknode
+name|yanknode
 argument_list|(
 name|planp
 argument_list|)
@@ -200,7 +207,7 @@ condition|(
 operator|(
 name|next
 operator|=
-name|find_yankexpr
+name|yankexpr
 argument_list|(
 name|planp
 argument_list|)
@@ -305,13 +312,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find_squish_paren --  *	replaces "parentheisized" plans in our search plan with "expr" nodes.  */
+comment|/*  * paren_squish --  *	replaces "parentheisized" plans in our search plan with "expr" nodes.  */
 end_comment
 
 begin_function
 name|PLAN
 modifier|*
-name|find_squish_paren
+name|paren_squish
 parameter_list|(
 name|plan
 parameter_list|)
@@ -344,13 +351,13 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * the basic idea is to have find_yankexpr do all our work and just 	 * collect it's results together. 	 */
+comment|/* 	 * the basic idea is to have yankexpr do all our work and just 	 * collect it's results together. 	 */
 while|while
 condition|(
 operator|(
 name|expr
 operator|=
-name|find_yankexpr
+name|yankexpr
 argument_list|(
 operator|&
 name|plan
@@ -418,13 +425,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find_squish_not --  *	compresses "!" expressions in our search plan.  */
+comment|/*  * not_squish --  *	compresses "!" expressions in our search plan.  */
 end_comment
 
 begin_function
 name|PLAN
 modifier|*
-name|find_squish_not
+name|not_squish
 parameter_list|(
 name|plan
 parameter_list|)
@@ -470,7 +477,7 @@ condition|(
 operator|(
 name|next
 operator|=
-name|find_yanknode
+name|yanknode
 argument_list|(
 operator|&
 name|plan
@@ -496,7 +503,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|find_squish_not
+name|not_squish
 argument_list|(
 name|next
 operator|->
@@ -523,7 +530,7 @@ literal|1
 decl_stmt|;
 name|node
 operator|=
-name|find_yanknode
+name|yanknode
 argument_list|(
 operator|&
 name|plan
@@ -543,7 +550,7 @@ name|notlevel
 expr_stmt|;
 name|node
 operator|=
-name|find_yanknode
+name|yanknode
 argument_list|(
 operator|&
 name|plan
@@ -643,13 +650,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find_squish_or --  *	compresses -o expressions in our search plan.  */
+comment|/*  * or_squish --  *	compresses -o expressions in our search plan.  */
 end_comment
 
 begin_function
 name|PLAN
 modifier|*
-name|find_squish_or
+name|or_squish
 parameter_list|(
 name|plan
 parameter_list|)
@@ -689,7 +696,7 @@ condition|(
 operator|(
 name|next
 operator|=
-name|find_yanknode
+name|yanknode
 argument_list|(
 operator|&
 name|plan
@@ -715,7 +722,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|find_squish_or
+name|or_squish
 argument_list|(
 name|next
 operator|->
@@ -741,7 +748,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|find_squish_or
+name|or_squish
 argument_list|(
 name|next
 operator|->
@@ -790,7 +797,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|find_squish_or
+name|or_squish
 argument_list|(
 name|plan
 argument_list|)
