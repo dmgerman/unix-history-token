@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.22 1999/05/07 10:10:07 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.23 1999/03/20 21:58:38 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -439,27 +439,14 @@ name|vol
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|devcode
-modifier|*
-name|device
-init|=
-operator|(
-expr|struct
-name|devcode
-operator|*
-operator|)
-operator|&
+switch|switch
+condition|(
+name|DEVTYPE
+argument_list|(
 name|bp
 operator|->
 name|b_dev
-decl_stmt|;
-comment|/* decode device number */
-switch|switch
-condition|(
-name|device
-operator|->
-name|type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1337,7 +1324,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"Revive conflict sd %d: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -1360,11 +1347,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->
@@ -1437,7 +1436,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Request: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"Request: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 operator|(
 name|u_int
@@ -1456,11 +1455,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->
@@ -1647,7 +1658,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev 0x%x, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
 argument_list|,
 name|rqe
 operator|->
@@ -1661,11 +1672,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rqe
 operator|->
 name|b
 operator|.
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_dev
+argument_list|)
 argument_list|,
 name|rqe
 operator|->
@@ -3284,7 +3307,9 @@ operator|->
 name|driveno
 index|]
 operator|.
-name|dev
+name|vp
+operator|->
+name|v_rdev
 expr_stmt|;
 comment|/* drive device */
 name|bp
@@ -3767,7 +3792,9 @@ operator|->
 name|driveno
 index|]
 operator|.
-name|dev
+name|vp
+operator|->
+name|v_rdev
 expr_stmt|;
 comment|/* device */
 name|sbp
@@ -3947,7 +3974,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev 0x%x, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
 argument_list|,
 name|sbp
 operator|->
@@ -3961,11 +3988,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|sbp
 operator|->
 name|b
 operator|.
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_dev
+argument_list|)
 argument_list|,
 name|sbp
 operator|->

@@ -610,7 +610,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Relaunch revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"Relaunch revive conflict sd %d: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -633,11 +633,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->

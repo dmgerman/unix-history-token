@@ -6702,20 +6702,11 @@ expr_stmt|;
 comment|/* note last referred volume */
 name|vol
 operator|->
-name|devno
-operator|=
-name|VINUMBDEV
-argument_list|(
 name|volno
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_VOLUME_TYPE
-argument_list|)
+operator|=
+name|volno
 expr_stmt|;
-comment|/* also note device number */
+comment|/* also note in volume */
 comment|/*      * Before we can actually use the volume, we need      * a volume label.  We could start to fake one here,      * but it will be a lot easier when we have some      * to copy from the drives, so defer it until we      * set up the configuration. XXX      */
 if|if
 condition|(

@@ -244,7 +244,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinumd: recovering I/O request: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"vinumd: recovering I/O request: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 operator|(
 name|u_int
@@ -263,11 +263,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->

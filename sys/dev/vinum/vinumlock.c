@@ -309,7 +309,7 @@ name|volume
 operator|+
 name|vol
 operator|->
-name|devno
+name|volno
 argument_list|,
 name|PRIBIO
 operator||
@@ -389,7 +389,7 @@ name|volume
 operator|+
 name|vol
 operator|->
-name|devno
+name|volno
 argument_list|)
 expr_stmt|;
 block|}

@@ -17,11 +17,22 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-end_ifndef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#

@@ -167,25 +167,13 @@ operator|)
 name|data
 decl_stmt|;
 comment|/* struct to return */
-name|struct
-name|devcode
-modifier|*
-name|device
-init|=
-operator|(
-expr|struct
-name|devcode
-operator|*
-operator|)
-operator|&
-name|dev
-decl_stmt|;
 comment|/* First, decide what we're looking at */
 switch|switch
 condition|(
-name|device
-operator|->
-name|type
+name|DEVTYPE
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case

@@ -166,7 +166,20 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
-comment|/* Create a block device number */
+define|#
+directive|define
+name|VINUMMINOR
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|(  (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT) 		\ 			      | (t<< VINUM_TYPE_SHIFT) )
+comment|/* Create block and character device minor numbers */
 define|#
 directive|define
 name|VINUMBDEV
@@ -179,26 +192,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|((BDEV_MAJOR<< MAJORDEV_SHIFT)	\ 			     | (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
-comment|/* Create a bit mask for x bits */
-define|#
-directive|define
-name|MASK
-parameter_list|(
-name|x
-parameter_list|)
-value|((1<< (x)) - 1)
-comment|/* Create a raw block device number */
-define|#
-directive|define
-name|VINUMRBDEV
-parameter_list|(
-name|d
-parameter_list|,
-name|t
-parameter_list|)
-value|((BDEV_MAJOR<< MAJORDEV_SHIFT)				\ 			     | ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			     | ((d& ~MASK (VINUM_VOL_WIDTH))				\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
-comment|/* And a character device number */
+value|makedev (BDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
 name|VINUMCDEV
@@ -211,7 +205,34 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|((CDEV_MAJOR<< MAJORDEV_SHIFT)	\ 			     | (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+comment|/* Create a bit mask for x bits */
+define|#
+directive|define
+name|MASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((1<< (x)) - 1)
+comment|/* Create a raw block device minor number */
+define|#
+directive|define
+name|VINUMRMINOR
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
+value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			  | (t<< VINUM_TYPE_SHIFT) )
+define|#
+directive|define
+name|VINUMRBDEV
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
+value|makedev (BDEV_MAJOR, VINUMRMINOR (d, t))
 comment|/* extract device type */
 define|#
 directive|define
@@ -219,84 +240,39 @@ name|DEVTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> VINUM_TYPE_SHIFT)& 7)
+value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
 comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
+define|#
+directive|define
 name|VINUM_SUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMBDEV (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
+define|#
+directive|define
 name|VINUM_WRONGSUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMBDEV (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* non-debug superdevice number */
 else|#
 directive|else
+define|#
+directive|define
 name|VINUM_SUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMBDEV (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
+define|#
+directive|define
 name|VINUM_WRONGSUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMBDEV (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* debug superdevice number */
 endif|#
 directive|endif
+define|#
+directive|define
 name|VINUM_DAEMON_DEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMBDEV (0, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* daemon superdevice number */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
@@ -360,6 +336,10 @@ end_comment
 
 begin_comment
 comment|/*  *  31 30   28  27                  20  19 18    16  15                 8    7                   0  * |-----------------------------------------------------------------------------------------------|  * |X |  Type  |    Subdisk number     | X| Plex   |      Major number     |  volume number        |  * |-----------------------------------------------------------------------------------------------|  *  *    0x2                 03                 1           19                      06  *  * The fields in the minor number are interpreted as follows:  *  * Volume:              Only type and volume number are relevant  * Plex in volume:      type, plex number in volume and volume number are relevant  * raw plex:            type, plex number is made of bits 27-16 and 7-0  * raw subdisk:         type, subdisk number is made of bits 27-16 and 7-0  */
+end_comment
+
+begin_comment
+comment|/* This doesn't get used.  Consider removing it. */
 end_comment
 
 begin_struct
@@ -952,10 +932,6 @@ name|u_int64_t
 name|bytes_written
 decl_stmt|;
 comment|/* number of bytes written */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* and device number */
 name|char
 name|devicename
 index|[
@@ -1279,10 +1255,10 @@ name|int
 name|last_plex_read
 decl_stmt|;
 comment|/* index of plex used for last read, 							    * for round-robin */
-name|dev_t
-name|devno
+name|int
+name|volno
 decl_stmt|;
-comment|/* device number */
+comment|/* volume number */
 name|int
 name|flags
 decl_stmt|;
