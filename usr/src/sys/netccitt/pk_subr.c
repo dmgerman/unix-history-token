@@ -1,84 +1,84 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|"x25.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk.h"
+file|"pk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk_var.h"
+file|"pk_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25err.h"
+file|"x25err.h"
 end_include
 
 begin_decl_stmt
@@ -396,6 +396,11 @@ argument_list|(
 name|lcp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+condition|)
+block|{
 name|soisdisconnecting
 argument_list|(
 name|so
@@ -409,6 +414,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+block|}
 name|pk_clear
 argument_list|(
 name|lcp
@@ -556,13 +562,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Efficiency hack: leave a four byte gap at the beginning 	 * of the packet level header with the hope that this will 	 * be enough room for the link level to insert its header. 	 */
-comment|/* XXX does the above still apply? */
 name|m
 operator|->
-name|m_off
-operator|=
-name|MMINOFF
-operator|+
+name|m_data
+operator|+=
 literal|4
 expr_stmt|;
 name|m
@@ -664,6 +667,15 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Restart all logical channels. */
+if|if
+condition|(
+name|pkp
+operator|->
+name|pk_chan
+operator|==
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -1520,6 +1532,12 @@ operator|->
 name|lcd_ceaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lcp
+operator|->
+name|so
+condition|)
 name|soisconnecting
 argument_list|(
 name|lcp
@@ -2169,6 +2187,19 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|pkp
+operator|->
+name|pk_chan
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -2500,12 +2531,15 @@ name|lcd_last_transmitted_pr
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|so
 operator|=
 name|lcp
 operator|->
 name|lcd_so
-expr_stmt|;
+condition|)
+block|{
 name|so
 operator|->
 name|so_error
@@ -2528,6 +2562,7 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+block|}
 name|xp
 operator|=
 name|lcp
@@ -2812,6 +2847,9 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
+name|so
+operator|&&
+operator|(
 operator|(
 name|so
 operator|->
@@ -2827,10 +2865,31 @@ operator|->
 name|so_snd
 operator|.
 name|sb_sel
+operator|)
 condition|)
 name|sowwakeup
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lcp
+operator|->
+name|lcd_downq
+operator|.
+name|pq_unblock
+condition|)
+call|(
+modifier|*
+name|lcp
+operator|->
+name|lcd_downq
+operator|.
+name|pq_unblock
+call|)
+argument_list|(
+name|lcp
 argument_list|)
 expr_stmt|;
 return|return

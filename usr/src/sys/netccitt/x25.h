@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -157,6 +157,102 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  *  X.25 Socket address structure.  It contains the network id, X.121  *  address, facilities information, higher level protocol value (first four  *  bytes of the User Data field), and up to 12 characters of User Data.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr_x25
+block|{
+name|u_char
+name|x25_len
+decl_stmt|;
+name|u_char
+name|x25_family
+decl_stmt|;
+comment|/* must be AF_CCITT */
+name|short
+name|x25_net
+decl_stmt|;
+comment|/* network id code (usually a dnic) */
+name|char
+name|x25_addr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* X.121 address (null terminated) */
+struct|struct
+name|x25opts
+block|{
+name|char
+name|op_flags
+decl_stmt|;
+comment|/* miscellaneous options */
+comment|/* pk_var.h defines other lcd_flags */
+define|#
+directive|define
+name|X25_REVERSE_CHARGE
+value|0x01
+comment|/* remote DTE pays for call */
+define|#
+directive|define
+name|X25_DBIT
+value|0x02
+comment|/* not yet supported */
+define|#
+directive|define
+name|X25_MQBIT
+value|0x04
+comment|/* prepend M&Q bit status byte to packet data */
+define|#
+directive|define
+name|X25_OLDSOCKADDR
+value|0x08
+comment|/* uses old sockaddr structure */
+name|char
+name|op_psize
+decl_stmt|;
+comment|/* requested packet size */
+define|#
+directive|define
+name|X25_PS128
+value|7
+define|#
+directive|define
+name|X25_PS256
+value|8
+define|#
+directive|define
+name|X25_PS512
+value|9
+name|char
+name|op_wsize
+decl_stmt|;
+comment|/* window size (1 .. 7) */
+name|char
+name|op_speed
+decl_stmt|;
+comment|/* throughput class */
+block|}
+name|x25_opts
+struct|;
+name|short
+name|x25_udlen
+decl_stmt|;
+comment|/* user data field length */
+name|char
+name|x25_udata
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* user data field */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * network configuration info  * this structure must be 16 bytes long  */
 end_comment
 
@@ -164,24 +260,10 @@ begin_struct
 struct|struct
 name|x25config
 block|{
-name|u_short
-name|xc_family
+name|struct
+name|sockaddr_x25
+name|xc_addr
 decl_stmt|;
-comment|/* always AF_CCITT */
-name|u_short
-name|xc_net
-decl_stmt|;
-comment|/* network id (usually a dnic) */
-name|char
-name|xc_ntnlen
-decl_stmt|;
-name|char
-name|xc_ntn
-index|[
-literal|5
-index|]
-decl_stmt|;
-comment|/* network specific address (in bcd) */
 comment|/* link level parameters */
 name|u_short
 name|xc_lproto
@@ -255,111 +337,48 @@ name|xc_rsvd2
 range|:
 literal|5
 decl_stmt|;
-name|u_char
+name|u_short
 name|xc_maxlcn
 decl_stmt|;
 comment|/* max logical channels */
-name|u_char
-name|xc_rsvd3
+name|u_short
+name|xc_dg_idletimo
+decl_stmt|;
+comment|/* timeout for idle datagram circuits. };  #ifdef IFNAMSIZ struct ifreq_x25 { 	char	ifr_name[IFNAMSIZ];		/* if name, e.g. "en0" */
+name|struct
+name|x25config
+name|ifr_xc
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFCONF_X25
+value|_IOW('i', 12, struct ifreq_x25)
+end_define
 
 begin_comment
-comment|/*  *  X.25 Socket address structure.  It contains the network id, X.121  *  address, facilities information, higher level protocol value (first four  *  bytes of the User Data field), and up to 12 characters of User Data.  */
+comment|/* set ifnet config */
 end_comment
 
-begin_struct
-struct|struct
-name|sockaddr_x25
-block|{
-name|u_char
-name|x25_len
-decl_stmt|;
-name|u_char
-name|x25_family
-decl_stmt|;
-comment|/* must be AF_CCITT */
-name|short
-name|x25_net
-decl_stmt|;
-comment|/* network id code (usually a dnic) */
-struct|struct
-name|x25opts
-block|{
-name|char
-name|op_flags
-decl_stmt|;
-comment|/* miscellaneous options */
+begin_define
 define|#
 directive|define
-name|X25_REVERSE_CHARGE
-value|0x01
-comment|/* remote DTE pays for call */
-define|#
-directive|define
-name|X25_DBIT
-value|0x02
-comment|/* not yet supported */
-define|#
-directive|define
-name|X25_MQBIT
-value|0x04
-comment|/* prepend M&Q bit status byte to packet data */
-define|#
-directive|define
-name|X25_OLDSOCKADDR
-value|0x08
-comment|/* uses old sockaddr structure */
-name|char
-name|op_psize
-decl_stmt|;
-comment|/* requested packet size */
-define|#
-directive|define
-name|X25_PS128
-value|7
-define|#
-directive|define
-name|X25_PS256
-value|8
-define|#
-directive|define
-name|X25_PS512
-value|9
-name|char
-name|op_wsize
-decl_stmt|;
-comment|/* window size (1 .. 7) */
-name|char
-name|op_speed
-decl_stmt|;
-comment|/* throughput class */
-block|}
-name|x25_opts
-struct|;
-name|char
-name|x25_addr
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* X.121 address (null terminated) */
-name|short
-name|x25_udlen
-decl_stmt|;
-comment|/* user data field length */
-name|char
-name|x25_udata
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* user data field */
-block|}
-struct|;
-end_struct
+name|SIOCGIFCONF_X25
+value|_IOWR('i',13, struct ifreq_x25)
+end_define
+
+begin_comment
+comment|/* get ifnet config */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

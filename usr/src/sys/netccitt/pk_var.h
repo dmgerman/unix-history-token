@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -87,6 +87,10 @@ name|short
 name|lcd_timer
 decl_stmt|;
 comment|/* Various timer values */
+name|short
+name|lcd_dg_timer
+decl_stmt|;
+comment|/* to reclaim idle datagram circuits */
 name|char
 name|lcd_retry
 decl_stmt|;
@@ -186,11 +190,91 @@ name|lcd_listen
 decl_stmt|;
 comment|/* Next lcd on listen queue */
 name|struct
-name|ifaddr
+name|pkcb
 modifier|*
-name|lcd_ifa
+name|lcd_pkp
 decl_stmt|;
 comment|/* network this lcd is attached to */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|X25_DG_CIRCUIT
+value|0x10
+end_define
+
+begin_comment
+comment|/* lcd_flag: used for datagrams */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|X25_DG_ROUTING
+value|0x20
+end_define
+
+begin_comment
+comment|/* lcd_flag: peer addr not yet known */
+end_comment
+
+begin_comment
+comment|/*  * Per network information, allocated dynamically  * when a new network is configured.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pkcb
+block|{
+name|struct
+name|pkcb
+modifier|*
+name|pk_next
+decl_stmt|;
+name|struct
+name|x25_ifaddr
+modifier|*
+name|pk_ia
+decl_stmt|;
+comment|/* backpointer to ifaddr */
+name|short
+name|pk_state
+decl_stmt|;
+comment|/* packet level status */
+name|int
+function_decl|(
+modifier|*
+name|pk_output
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* link level output procedure */
+name|struct
+name|x25config
+modifier|*
+name|pk_xcp
+decl_stmt|;
+comment|/* network specific configuration */
+name|struct
+name|x25config
+name|pk_xc
+decl_stmt|;
+comment|/* network specific configuration */
+name|struct
+name|pklcd
+modifier|*
+modifier|*
+name|pk_chan
+decl_stmt|;
+comment|/* actual size == xc_maxlcn+1 */
+define|#
+directive|define
+name|pk_maxlcn
+value|pk_xc.xc_maxlcn
+comment|/* local copy of xc_maxlcn */
 block|}
 struct|;
 end_struct
@@ -217,49 +301,27 @@ directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
 name|struct
-name|x25_ifaddr
-modifier|*
-name|ia_next
+name|pkcb
+name|ia_pkcb
 decl_stmt|;
-comment|/* next in list of x25 addresses */
-name|struct
-name|sockaddr_x25
+comment|/* per network information */
+define|#
+directive|define
+name|ia_maxlcn
+value|ia_pkcb.pk_maxlcn
+define|#
+directive|define
+name|ia_chan
+value|ia_pkcb.pk_chan
+define|#
+directive|define
 name|ia_addr
-decl_stmt|;
-comment|/* reserve space for interface name */
+value|ia_pkcb.pk_xc.xc_addr
 name|struct
 name|sockaddr_x25
 name|ia_sockmask
 decl_stmt|;
 comment|/* reserve space for netmask */
-name|struct
-name|x25config
-modifier|*
-name|ia_xcp
-decl_stmt|;
-comment|/* network specific configuration */
-name|struct
-name|x25config
-modifier|*
-name|ia_xc
-decl_stmt|;
-comment|/* network specific configuration */
-name|short
-name|ia_state
-decl_stmt|;
-comment|/* packet level status */
-define|#
-directive|define
-name|ia_maxlcn
-value|ia->ia_xc.xc_maxlcn
-comment|/* local copy of xc_maxlcn */
-name|struct
-name|pklcd
-modifier|*
-modifier|*
-name|ia_chan
-decl_stmt|;
-comment|/* dispatch vector for ciruits */
 block|}
 struct|;
 end_struct
@@ -270,24 +332,112 @@ end_comment
 
 begin_struct
 struct|struct
-name|rtext_x25
+name|rtextension_x25
 block|{
 name|struct
 name|pklcd
 modifier|*
 name|rtx_lcd
 decl_stmt|;
-name|int
-name|rtx_state
-decl_stmt|;
+comment|/* local connection block */
 name|struct
 name|rtentry
 modifier|*
 name|rtx_rt
 decl_stmt|;
+comment|/* back pointer to route */
+name|struct
+name|x25_ifaddr
+modifier|*
+name|rtx_ia
+decl_stmt|;
+comment|/* may not be same as rt_ifa */
+name|int
+name|rtx_state
+decl_stmt|;
+comment|/* can't trust lcd->lcd_state */
+name|int
+name|rtx_flags
+decl_stmt|;
+name|int
+name|rtx_timer
+decl_stmt|;
+comment|/* for idle timeout */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* States for rtx_state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRS_NEWBORN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XRS_RESOLVING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XRS_FREE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XRS_CONNECTED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XRS_CONNECTING
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XRS_DISCONNECTING
+value|5
+end_define
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRF_VALID
+value|0x1
+end_define
+
+begin_comment
+comment|/* Circuit is live, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRF_RTHELD
+value|0x2
+end_define
+
+begin_comment
+comment|/* this lcb references rtentry */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -297,9 +447,9 @@ end_ifdef
 
 begin_decl_stmt
 name|struct
-name|x25_ifaddr
+name|pkcb
 modifier|*
-name|x25_ifaddr
+name|pkcbhead
 decl_stmt|;
 end_decl_stmt
 
