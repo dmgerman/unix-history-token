@@ -1021,7 +1021,7 @@ comment|/* disk sector size in chars */
 end_comment
 
 begin_comment
-comment|/* the following defines the size of the infamous environment block.    this macro is guaranteed to blow older C preprocessors out of the    water.    Furthermore, it is wrong: the proper value is more accurately    determined by using sizeof *tchar in several places.    no harm is done as long as it's big enough. */
+comment|/* the following defines the size of the infamous environment block.    this macro is guaranteed to blow older C preprocessors out of the    water.  Any additions to ni.c between "block" and the end of the    data space affects this macro. */
 end_comment
 
 begin_define
@@ -1029,11 +1029,13 @@ define|#
 directive|define
 name|EVUSED
 define|\
-value|(59 * sizeof(int)
+value|(61 * sizeof(int)
 comment|/* integers in env block */
-value|\ 		+ 9 * sizeof(tchar)
+value|\ 		+ 4 * sizeof(tchar)
 comment|/* tchars in env block */
-value|\ 		+ NHYP * sizeof(tchar)
+value|\ 		+ 5 * sizeof(tchar *)
+comment|/* tchar pointers in env block */
+value|\ 		+ NHYP * sizeof(tchar *)
 comment|/* hytab */
 value|\ 		+ NTAB * sizeof(int)
 comment|/* tabtab */
