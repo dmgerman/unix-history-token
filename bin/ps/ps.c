@@ -1428,7 +1428,7 @@ case|:
 if|#
 directive|if
 literal|0
-comment|/* 			 * XXX - This SUSv3 behavior is still under debate 			 *	since it conflicts with the (undocumented) 			 *	`-g' option.  So we skip it for now. 			 */
+comment|/*- 			 * XXX - This SUSv3 behavior is still under debate 			 *	since it conflicts with the (undocumented) 			 *	`-g' option.  So we skip it for now. 			 */
 block|add_list(&pgrplist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
 else|#
 directive|else
@@ -1626,7 +1626,7 @@ if|#
 directive|if
 literal|0
 block|case 'R':
-comment|/* 			 * XXX - This un-standard option is still under 			 *	debate.  This is what SUSv3 defines as 			 *	the `-U' option, and while it would be 			 *	nice to have, it could cause even more 			 *	confusion to implement it as `-R'. 			 */
+comment|/*- 			 * XXX - This un-standard option is still under 			 *	debate.  This is what SUSv3 defines as 			 *	the `-U' option, and while it would be 			 *	nice to have, it could cause even more 			 *	confusion to implement it as `-R'. 			 */
 block|add_list(&ruidlist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
 endif|#
 directive|endif
@@ -1650,7 +1650,7 @@ if|#
 directive|if
 literal|0
 block|case 's':
-comment|/* 			 * XXX - This non-standard option is still under 			 *	debate.  This *is* supported on Solaris, 			 *	Linux, and IRIX, but conflicts with `-s' 			 *	on NetBSD and maybe some older BSD's. 			 */
+comment|/*- 			 * XXX - This non-standard option is still under 			 *	debate.  This *is* supported on Solaris, 			 *	Linux, and IRIX, but conflicts with `-s' 			 *	on NetBSD and maybe some older BSD's. 			 */
 block|add_list(&sesslist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
 endif|#
 directive|endif
@@ -2128,7 +2128,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* 		 * XXX - KERN_PROC_SESSION causes error in kvm_getprocs? 		 *	For now, always do sid-matching in this routine. 		 */
+comment|/*- 		 * XXX - KERN_PROC_SESSION causes error in kvm_getprocs? 		 *	For now, always do sid-matching in this routine. 		 */
 block|} else if (sesslist.count == 1) { 			what = KERN_PROC_SESSION | showthreads; 			flag = *sesslist.pids; 			nselectors = 0;
 endif|#
 directive|endif
@@ -3866,7 +3866,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 			 * This would add a simple non-standard-but-convienent 			 * feature. 			 * 			 * XXX - The first time I tried to add this check, 			 *	it increased the total size of `ps' by 3940 			 *	bytes on i386!  That's 12% of the entire 			 *	program!  The `ps.o' file grew by only about 			 *	40 bytes, but the final (stripped) executable 			 *	in /bin/ps grew by 12%.  I have not had time 			 *	to investigate, so skip the feature for now. 			 */
+comment|/*- 			 * This would add a simple non-standard-but-convienent 			 * feature. 			 * 			 * XXX - The first time I tried to add this check, 			 *	it increased the total size of `ps' by 3940 			 *	bytes on i386!  That's 12% of the entire 			 *	program!  The `ps.o' file grew by only about 			 *	40 bytes, but the final (stripped) executable 			 *	in /bin/ps grew by 12%.  I have not had time 			 *	to investigate, so skip the feature for now. 			 */
 comment|/* 			 * We now have a single element.  Add it to the 			 * list, unless the element is ":".  In that case, 			 * reset the list so previous entries are ignored. 			 */
 if|if
 condition|(
