@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bld.h -- Public #include File (module.h template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       bld.c     Modifications: */
+comment|/* bld.h -- Public #include File (module.h template V1.0)    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Owning Modules:       bld.c     Modifications: */
 end_comment
 
 begin_comment
@@ -1153,6 +1153,15 @@ decl_stmt|;
 name|ffebld
 name|right
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FFECOM_nonterHOOK
+name|ffecomNonter
+name|hook
+decl_stmt|;
+comment|/* Whatever the compiler/backend wants! */
+endif|#
+directive|endif
 block|}
 name|nonter
 struct|;
@@ -1164,6 +1173,15 @@ decl_stmt|;
 name|ffebld
 name|trail
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FFECOM_itemHOOK
+name|ffecomItem
+name|hook
+decl_stmt|;
+comment|/* Whatever the compiler/backend wants! */
+endif|#
+directive|endif
 block|}
 name|item
 struct|;
@@ -3339,6 +3357,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ffebld_op_string
@@ -3530,6 +3549,16 @@ parameter_list|(
 name|b
 parameter_list|)
 value|((b)->u.arrter.size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_basictype
+parameter_list|(
+name|b
+parameter_list|)
+value|(ffeinfo_basictype (ffebld_info ((b))))
 end_define
 
 begin_if
@@ -5350,6 +5379,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|ffebld_item_hook
+parameter_list|(
+name|b
+parameter_list|)
+value|((b)->u.item.hook)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_item_set_hook
+parameter_list|(
+name|b
+parameter_list|,
+name|h
+parameter_list|)
+value|((b)->u.item.hook = (h))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_kind
+parameter_list|(
+name|b
+parameter_list|)
+value|(ffeinfo_kind (ffebld_info ((b))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_kindtype
+parameter_list|(
+name|b
+parameter_list|)
+value|(ffeinfo_kindtype (ffebld_info ((b))))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ffebld_labter
 parameter_list|(
 name|b
@@ -5815,6 +5886,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|ffebld_nonter_hook
+parameter_list|(
+name|b
+parameter_list|)
+value|((b)->u.nonter.hook)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_nonter_set_hook
+parameter_list|(
+name|b
+parameter_list|,
+name|h
+parameter_list|)
+value|((b)->u.nonter.hook = (h))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ffebld_op
 parameter_list|(
 name|b
@@ -5828,6 +5921,16 @@ directive|define
 name|ffebld_pool
 parameter_list|()
 value|(ffebld_pool_stack_.pool)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_rank
+parameter_list|(
+name|b
+parameter_list|)
+value|(ffeinfo_rank (ffebld_info ((b))))
 end_define
 
 begin_define
@@ -5967,7 +6070,7 @@ name|ffebld_size
 parameter_list|(
 name|b
 parameter_list|)
-value|(ffeinfo_size((b)->info))
+value|(ffeinfo_size (ffebld_info ((b))))
 end_define
 
 begin_define
@@ -5977,7 +6080,7 @@ name|ffebld_size_known
 parameter_list|(
 name|b
 parameter_list|)
-value|ffebld_size(b)
+value|ffebld_size((b))
 end_define
 
 begin_define
@@ -6122,6 +6225,16 @@ parameter_list|(
 name|b
 parameter_list|)
 value|((b)->u.item.trail)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffebld_where
+parameter_list|(
+name|b
+parameter_list|)
+value|(ffeinfo_where (ffebld_info ((b))))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for switches for C++.    Copyright (C) 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for switches for C++.    Copyright (C) 1995, 96-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_macro
@@ -13,46 +13,6 @@ end_macro
 begin_comment
 comment|/* This is the contribution to the `lang_options' array in gcc.c for    g++.  */
 end_comment
-
-begin_block
-block|{
-literal|"-+e0"
-operator|,
-literal|""
-block|}
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_comment
-comment|/* gcc.c tacks the `-' on the front.  */
-end_comment
-
-begin_block
-block|{
-literal|"-+e1"
-operator|,
-literal|""
-block|}
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_block
-block|{
-literal|"-+e2"
-operator|,
-literal|""
-block|}
-end_block
-
-begin_operator
-operator|,
-end_operator
 
 begin_block
 block|{
@@ -200,6 +160,30 @@ end_operator
 
 begin_block
 block|{
+literal|"-fconst-strings"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fno-const-strings"
+operator|,
+literal|"Make string literals `char[]' instead of `const char[]'"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 literal|"-fdefault-inline"
 operator|,
 literal|""
@@ -214,7 +198,7 @@ begin_block
 block|{
 literal|"-fno-default-inline"
 operator|,
-literal|"Do not inline mmeber functions be default"
+literal|"Do not inline member functions by default"
 block|}
 end_block
 
@@ -394,7 +378,7 @@ begin_block
 block|{
 literal|"-fhandle-exceptions"
 operator|,
-literal|"Enable exception handling"
+literal|""
 block|}
 end_block
 
@@ -442,7 +426,7 @@ begin_block
 block|{
 literal|"-fhonor-std"
 operator|,
-literal|"Do not ignore the namespace standard"
+literal|"Treat the namespace `std' as a normal namespace"
 block|}
 end_block
 
@@ -514,7 +498,7 @@ begin_block
 block|{
 literal|"-fimplicit-templates"
 operator|,
-literal|"Emit implicit instatiations if needed"
+literal|""
 block|}
 end_block
 
@@ -525,6 +509,54 @@ end_operator
 begin_block
 block|{
 literal|"-fno-implicit-templates"
+operator|,
+literal|"Only emit explicit template instatiations"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fimplicit-inline-templates"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fno-implicit-inline-templates"
+operator|,
+literal|"Only emit explicit instatiations of inline templates"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-finit-priority"
+operator|,
+literal|"Handle the init_priority attribute"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fno-init-priority"
 operator|,
 literal|""
 block|}
@@ -562,7 +594,7 @@ begin_block
 block|{
 literal|"-fmemoize-lookups"
 operator|,
-literal|"Enable caching of member function resolutions"
+literal|""
 block|}
 end_block
 
@@ -586,7 +618,7 @@ begin_block
 block|{
 literal|"-fname-mangling-version-"
 operator|,
-literal|"Set the version of name mangling to use"
+literal|""
 block|}
 end_block
 
@@ -692,6 +724,30 @@ end_operator
 
 begin_block
 block|{
+literal|"-fpermissive"
+operator|,
+literal|"Downgrade conformance errors to warnings"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fno-permissive"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 literal|"-frepo"
 operator|,
 literal|"Enable automatic template instantiation"
@@ -718,7 +774,7 @@ begin_block
 block|{
 literal|"-fsave-memoized"
 operator|,
-literal|"Save cache of member function resolutions"
+literal|""
 block|}
 end_block
 
@@ -837,6 +893,30 @@ end_operator
 begin_block
 block|{
 literal|"-fno-this-is-variable"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fvtable-gc"
+operator|,
+literal|"Discard unused virtual functions"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-fno-vtable-gc"
 operator|,
 literal|""
 block|}
@@ -970,7 +1050,7 @@ begin_block
 block|{
 literal|"-Wctor-dtor-privacy"
 operator|,
-literal|"Warn when all ctors/dtors are private"
+literal|""
 block|}
 end_block
 
@@ -982,7 +1062,7 @@ begin_block
 block|{
 literal|"-Wno-ctor-dtor-privacy"
 operator|,
-literal|""
+literal|"Don't warn when all ctors/dtors are private"
 block|}
 end_block
 
@@ -1090,7 +1170,7 @@ begin_block
 block|{
 literal|"-Wpmf-conversions"
 operator|,
-literal|"Warn when type converting pointers to member functions"
+literal|""
 block|}
 end_block
 
@@ -1102,7 +1182,7 @@ begin_block
 block|{
 literal|"-Wno-pmf-conversions"
 operator|,
-literal|""
+literal|"Don't warn when type converting pointers to member functions"
 block|}
 end_block
 
@@ -1175,6 +1255,54 @@ block|{
 literal|"-Wno-old-style-cast"
 operator|,
 literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-Wnon-template-friend"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-Wno-non-template-friend"
+operator|,
+literal|"Don't warn when non-templatized friend functions are declared within a template"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-Wdeprecated"
+operator|,
+literal|""
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"-Wno-deprecated"
+operator|,
+literal|"Don't announce deprecation of compiler features"
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 93, 94, 95, 97, 1998 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 93-95, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -18,34 +18,6 @@ include|#
 directive|include
 file|"config.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -89,16 +61,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_define
+define|#
+directive|define
+name|__proto
+parameter_list|(
+name|x
+parameter_list|)
+value|PARAMS(x)
+end_define
 
 begin_typedef
 typedef|typedef
-name|void
-modifier|*
+name|PTR
 name|PTR_T
 typedef|;
 end_typedef
@@ -106,200 +81,13 @@ end_typedef
 begin_typedef
 typedef|typedef
 specifier|const
-name|void
-modifier|*
-name|CPTR_T
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list,var)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_STDIO_H_
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__STDIO_H__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Ultrix 4.0, SGI */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
 name|PTR_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
 name|CPTR_T
 typedef|;
 end_typedef
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|PTR_T
-typedef|;
-end_typedef
-
 begin_comment
-comment|/* Ultrix 3.1 */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|CPTR_T
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|(va_alist) va_dcl
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Do to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  Ultrix 4.0 and Silicon Graphics    have this fixed, but since the following is correct, and    the fact that including stddef.h gets you GCC's version    instead of the standard one it's not worth it to fix it.  */
+comment|/* Due to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  Ultrix 4.0 and Silicon Graphics    have this fixed, but since the following is correct, and    the fact that including stddef.h gets you GCC's version    instead of the standard one it's not worth it to fix it.  */
 end_comment
 
 begin_if
@@ -363,6 +151,7 @@ name|pfatal_with_name
 name|__proto
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -399,55 +188,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|PTR_T
-name|xmalloc
-name|__proto
-argument_list|(
-operator|(
-name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|PTR_T
-name|xcalloc
-name|__proto
-argument_list|(
-operator|(
-name|Size_t
-operator|,
-name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|PTR_T
-name|xrealloc
-name|__proto
-argument_list|(
-operator|(
-name|PTR_T
-operator|,
-name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|xfree
 name|__proto
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -468,6 +214,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|ATTRIBUTE_PRINTF_1
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +233,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|ATTRIBUTE_PRINTF_1
 decl_stmt|;
 end_decl_stmt
 
@@ -528,6 +276,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -536,6 +285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|input_name
@@ -594,12 +344,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_ifndef
@@ -2671,6 +2415,7 @@ typedef|typedef
 struct|struct
 name|alloc_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|alloc_name
@@ -4293,6 +4038,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|input_name
@@ -4888,6 +4634,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
+specifier|const
 name|char
 modifier|*
 name|st_to_string
@@ -4902,6 +4649,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
+specifier|const
 name|char
 modifier|*
 name|sc_to_string
@@ -5405,6 +5153,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
+specifier|const
+name|char
+modifier|*
+name|my_strsignal
+name|__proto
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -5469,41 +5232,6 @@ modifier|*
 name|version_string
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_SIGLIST
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS_SIGLIST_DECLARED
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_siglist
-index|[
-name|NSIG
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape
@@ -6015,6 +5743,9 @@ name|next
 control|)
 if|if
 condition|(
+operator|(
+name|symint_t
+operator|)
 name|hash_len
 operator|==
 name|ptr
@@ -6128,6 +5859,9 @@ if|if
 condition|(
 name|len
 operator|>=
+operator|(
+name|Ptrdiff_t
+operator|)
 name|PAGE_USIZE
 condition|)
 name|fatal
@@ -6178,6 +5912,9 @@ name|objects_last_page
 operator|+
 name|len
 operator|>=
+operator|(
+name|long
+operator|)
 name|PAGE_USIZE
 condition|)
 block|{
@@ -6994,6 +6731,7 @@ name|st_StaticProc
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sc_str
@@ -7003,6 +6741,7 @@ argument_list|(
 name|storage
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|st_str
@@ -7193,6 +6932,7 @@ operator|>
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sc_str
@@ -7202,6 +6942,7 @@ argument_list|(
 name|storage
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|st_str
@@ -8711,6 +8452,7 @@ operator|>
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|agg_type
@@ -9134,9 +8876,14 @@ name|error
 argument_list|(
 literal|"Did not find a PDR block for %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|func_end_p1
 operator|-
 name|func_start
+argument_list|)
 argument_list|,
 name|func_start
 argument_list|)
@@ -9442,6 +9189,9 @@ name|file_end_p1
 operator|-
 name|file_start
 operator|>
+operator|(
+name|long
+operator|)
 name|PAGE_USIZE
 operator|-
 literal|2
@@ -9749,6 +9499,7 @@ end_comment
 
 begin_function
 name|STATIC
+specifier|const
 name|char
 modifier|*
 name|sc_to_string
@@ -9924,6 +9675,7 @@ end_comment
 
 begin_function
 name|STATIC
+specifier|const
 name|char
 modifier|*
 name|st_to_string
@@ -10510,9 +10262,14 @@ name|error
 argument_list|(
 literal|"Label %.*s not found for #.begin"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end_p1
 operator|-
 name|start
+argument_list|)
 argument_list|,
 name|start
 argument_list|)
@@ -10534,9 +10291,14 @@ name|error
 argument_list|(
 literal|"Procedure table %.*s not found for #.begin"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end_p1
 operator|-
 name|start
+argument_list|)
 argument_list|,
 name|start
 argument_list|)
@@ -10722,9 +10484,14 @@ name|error
 argument_list|(
 literal|"Label %.*s not found for #.bend"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end_p1
 operator|-
 name|start
+argument_list|)
 argument_list|,
 name|start
 argument_list|)
@@ -10746,9 +10513,14 @@ name|error
 argument_list|(
 literal|"Procedure table %.*s not found for #.bend"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end_p1
 operator|-
 name|start
+argument_list|)
 argument_list|,
 name|start
 argument_list|)
@@ -12658,9 +12430,14 @@ name|error
 argument_list|(
 literal|"No tag specified for %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|name_end_p1
 operator|-
 name|name_start
+argument_list|)
 argument_list|,
 name|name_start
 argument_list|)
@@ -13138,6 +12915,10 @@ name|start
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|start_func
 argument_list|)
@@ -13225,9 +13006,14 @@ name|error
 argument_list|(
 literal|"Cannot find .end block for %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end_func_p1
 operator|-
 name|start_func
+argument_list|)
 argument_list|,
 name|start_func
 argument_list|)
@@ -13344,6 +13130,10 @@ name|start
 init|;
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|start_func
 argument_list|)
@@ -13545,6 +13335,7 @@ specifier|const
 name|char
 modifier|*
 name|start
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 comment|/* Start of directive (ignored) */
 block|{
@@ -13821,7 +13612,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Line number (%d) for .stabs/.stabn directive cannot fit in index field (20 bits)"
+literal|"Line number (%lu) for .stabs/.stabn directive cannot fit in index field (20 bits)"
 argument_list|,
 name|code
 argument_list|)
@@ -14596,7 +14387,7 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|int
+name|Size_t
 name|i
 decl_stmt|;
 specifier|register
@@ -14668,6 +14459,10 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -14725,6 +14520,11 @@ literal|0
 operator|&&
 name|ISSPACE
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|p
 index|[
 name|pseudo_ops
@@ -14734,6 +14534,7 @@ index|]
 operator|.
 name|len
 index|]
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -14751,6 +14552,10 @@ while|while
 condition|(
 name|ISSPACE
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -16134,6 +15939,9 @@ name|fatal
 argument_list|(
 literal|"Wrote %d bytes to %s, system returned %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|symbolic_header
@@ -16284,8 +16092,11 @@ name|cbLine
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"Wrote %ld bytes to %s, system returned %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbLine
@@ -16438,7 +16249,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"Wrote %ld bytes to %s, system returned %ld"
 argument_list|,
 name|num_write
 argument_list|,
@@ -16880,6 +16691,9 @@ name|fatal
 argument_list|(
 literal|"Wrote %d bytes to %s, system returned %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|FDR
@@ -17026,11 +16840,14 @@ if|if
 condition|(
 name|sys_write
 operator|!=
+operator|(
+name|long
+operator|)
 name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"Wrote %lu bytes to %s, system returned %ld"
 argument_list|,
 name|num_write
 argument_list|,
@@ -17262,14 +17079,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|symint_t
+operator|)
 name|sys_read
 operator|!=
 name|difference
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %d bytes from %s, system returned %d"
+literal|"Wanted to read %lu bytes from %s, system returned %ld"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size
 argument_list|,
 name|obj_in_name
@@ -17329,12 +17153,19 @@ if|if
 condition|(
 name|sys_read
 operator|!=
+operator|(
+name|long
+operator|)
 name|size
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %d bytes from %s, system returned %d"
+literal|"Wanted to read %lu bytes from %s, system returned %ld"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size
 argument_list|,
 name|obj_in_name
@@ -17518,6 +17349,9 @@ if|if
 condition|(
 name|sys_read
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -17528,6 +17362,9 @@ name|fatal
 argument_list|(
 literal|"Wanted to read %d bytes from %s, system returned %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -17560,6 +17397,9 @@ name|orig_file_header
 operator|.
 name|f_nsyms
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|HDRR
@@ -17626,6 +17466,9 @@ if|if
 condition|(
 name|sys_read
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -17636,6 +17479,9 @@ name|fatal
 argument_list|(
 literal|"Wanted to read %d bytes from %s, system returned %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -18373,6 +18219,9 @@ literal|0
 argument_list|)
 argument_list|,
 operator|(
+operator|(
+name|long
+operator|)
 name|ifd
 operator|<
 name|orig_sym_hdr
@@ -19103,6 +18952,9 @@ operator|=
 operator|(
 name|remaining
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buffer
@@ -19333,11 +19185,17 @@ name|fatal
 argument_list|(
 literal|"Efdr_t has a sizeof %d bytes, when it should be less than %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|efdr_t
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_USIZE
 argument_list|)
 expr_stmt|;
@@ -19354,11 +19212,17 @@ name|fatal
 argument_list|(
 literal|"Page_t has a sizeof %d bytes, when it should be %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|page_t
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_USIZE
 argument_list|)
 expr_stmt|;
@@ -20237,6 +20101,84 @@ end_function
 begin_escape
 end_escape
 
+begin_function
+name|STATIC
+specifier|const
+name|char
+modifier|*
+name|my_strsignal
+parameter_list|(
+name|s
+parameter_list|)
+name|int
+name|s
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_STRSIGNAL
+return|return
+name|strsignal
+argument_list|(
+name|s
+argument_list|)
+return|;
+else|#
+directive|else
+if|if
+condition|(
+name|s
+operator|>=
+literal|0
+operator|&&
+name|s
+operator|<
+name|NSIG
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NO_SYS_SIGLIST
+specifier|static
+name|char
+name|buffer
+index|[
+literal|30
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buffer
+argument_list|,
+literal|"Unknown signal %d"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|buffer
+return|;
+else|#
+directive|else
+return|return
+name|sys_siglist
+index|[
+name|s
+index|]
+return|;
+endif|#
+directive|endif
+block|}
+else|else
+return|return
+name|NULL
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_STRSIGNAL */
+block|}
+end_function
+
 begin_comment
 comment|/* Catch a signal and exit without dumping core.  */
 end_comment
@@ -20263,26 +20205,14 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 comment|/* just in case...  */
-ifdef|#
-directive|ifdef
-name|NO_SYS_SIGLIST
 name|fatal
 argument_list|(
-literal|"caught signal"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fatal
+name|my_strsignal
 argument_list|(
-name|sys_siglist
-index|[
 name|signum
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -20296,6 +20226,7 @@ name|pfatal_with_name
 parameter_list|(
 name|msg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -22652,7 +22583,8 @@ argument_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
+specifier|const
 name|char
 modifier|*
 name|format
@@ -22671,13 +22603,14 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|format
 operator|=
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -22781,7 +22714,7 @@ argument_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|char
 modifier|*
 name|format
@@ -22800,7 +22733,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|format
 operator|=
 name|va_arg
@@ -22936,19 +22869,22 @@ comment|/* Same as `malloc' but report error if no memory available.  */
 end_comment
 
 begin_function
-name|PTR_T
+name|PTR
 name|xmalloc
 parameter_list|(
 name|size
 parameter_list|)
-name|Size_t
+name|size_t
 name|size
 decl_stmt|;
 block|{
 specifier|register
-name|PTR_T
+name|PTR
 name|value
 init|=
+operator|(
+name|PTR
+operator|)
 name|malloc
 argument_list|(
 name|size
@@ -23013,23 +22949,26 @@ comment|/* Same as `calloc' but report error if no memory available.  */
 end_comment
 
 begin_function
-name|PTR_T
+name|PTR
 name|xcalloc
 parameter_list|(
 name|size1
 parameter_list|,
 name|size2
 parameter_list|)
-name|Size_t
+name|size_t
 name|size1
 decl_stmt|,
 name|size2
 decl_stmt|;
 block|{
 specifier|register
-name|PTR_T
+name|PTR
 name|value
 init|=
+operator|(
+name|PTR
+operator|)
 name|calloc
 argument_list|(
 name|size1
@@ -23110,31 +23049,51 @@ comment|/* Same as `realloc' but report error if no memory available.  */
 end_comment
 
 begin_function
-name|PTR_T
+name|PTR
 name|xrealloc
 parameter_list|(
 name|ptr
 parameter_list|,
 name|size
 parameter_list|)
-name|PTR_T
+name|PTR
 name|ptr
 decl_stmt|;
-name|Size_t
+name|size_t
 name|size
 decl_stmt|;
 block|{
 specifier|register
-name|PTR_T
+name|PTR
 name|result
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|ptr
+condition|)
+name|result
+operator|=
+operator|(
+name|PTR
+operator|)
 name|realloc
 argument_list|(
 name|ptr
 argument_list|,
 name|size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+else|else
+name|result
+operator|=
+operator|(
+name|PTR
+operator|)
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -23206,7 +23165,7 @@ name|xfree
 parameter_list|(
 name|ptr
 parameter_list|)
-name|PTR_T
+name|PTR
 name|ptr
 decl_stmt|;
 block|{

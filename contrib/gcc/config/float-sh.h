@@ -206,11 +206,19 @@ name|FLT_MAX_10_EXP
 value|38
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__SH3E__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SH4_SINGLE_ONLY__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Number of base-FLT_RADIX digits in the significand of a double */

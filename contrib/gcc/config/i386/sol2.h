@@ -143,5 +143,18 @@ directive|define
 name|STDC_0_IN_SYSTEM_HEADERS
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
+end_define
+
 end_unit
 

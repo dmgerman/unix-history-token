@@ -7,65 +7,16 @@ begin_comment
 comment|/* Mangled into a form that works on Sparc Solaris 2 by Mark Eichin  * for Cygnus Support, July 1992.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)gmon.c	5.3 (Berkeley) 5/22/91"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
+file|"system.h"
 end_include
 
 begin_if
@@ -334,13 +285,48 @@ name|MSG
 value|"No space for profiling buffer(s)\n"
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|moncontrol
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|monstartup
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_mcleanup
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -826,6 +812,7 @@ name|char
 modifier|*
 name|profdir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proffile
@@ -1149,6 +1136,25 @@ begin_comment
 comment|/*  * The Sparc stack frame is only held together by the frame pointers  * in the register windows. According to the SVR4 SPARC ABI  * Supplement, Low Level System Information/Operating System  * Interface/Software Trap Types, a type 3 trap will flush all of the  * register windows to the stack, which will make it possible to walk  * the frames and find the return addresses.  * 	However, it seems awfully expensive to incur a trap (system  * call) for every function call. It turns out that "call" simply puts  * the return address in %o7 expecting the "save" in the procedure to  * shift it into %i7; this means that before the "save" occurs, %o7  * contains the address of the call to mcount, and %i7 still contains  * the caller above that. The asm mcount here simply saves those  * registers in argument registers and branches to internal_mcount,  * simulating a call with arguments.  * 	Kludges:  * 	1) the branch to internal_mcount is hard coded; it should be  * possible to tell asm to use the assembler-name of a symbol.  * 	2) in theory, the function calling mcount could have saved %i7  * somewhere and reused the register; in practice, I *think* this will  * break longjmp (and maybe the debugger) but I'm not certain. (I take  * some comfort in the knowledge that it will break the native mcount  * as well.)  * 	3) if builtin_return_address worked, this could be portable.  * However, it would really have to be optimized for arguments of 0  * and 1 and do something like what we have here in order to avoid the  * trap per function call performance hit.   * 	4) the atexit and monsetup calls prevent this from simply  * being a leaf routine that doesn't do a "save" (and would thus have  * access to %o7 and %i7 directly) but the call to write() at the end  * would have also prevented this.  *  * -- [eichin:19920702.1107EST]  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|internal_mcount
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+name|short
+operator|*
+operator|)
+argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* i7 == last ret, -> frompcindex */
 end_comment
@@ -1221,9 +1227,11 @@ operator|!
 name|already_setup
 condition|)
 block|{
-extern|extern etext(
-block|)
-empty_stmt|;
+specifier|extern
+name|char
+name|etext
+index|[]
+decl_stmt|;
 name|already_setup
 operator|=
 literal|1
@@ -1232,6 +1240,10 @@ name|monstartup
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|etext
 argument_list|)
 expr_stmt|;
@@ -1255,13 +1267,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|profiling
@@ -1271,19 +1277,10 @@ goto|goto
 name|out
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|profiling
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
-end_comment
-
-begin_expr_stmt
 name|frompcindex
 operator|=
 operator|(
@@ -1303,9 +1300,6 @@ operator|)
 name|s_lowpc
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1321,9 +1315,6 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|frompcindex
 operator|=
 operator|&
@@ -1347,17 +1338,11 @@ argument_list|)
 operator|)
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|toindex
 operator|=
 operator|*
 name|frompcindex
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|toindex
@@ -1422,9 +1407,6 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|top
 operator|=
 operator|&
@@ -1433,9 +1415,6 @@ index|[
 name|toindex
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|top
@@ -1455,13 +1434,7 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 *	have to go looking down chain for it. 	 *	top points to what we are looking at, 	 *	prevtop points to previous top. 	 *	we know it is not at the head of the chain. 	 */
-end_comment
-
-begin_for
 for|for
 control|(
 init|;
@@ -1597,59 +1570,26 @@ name|done
 goto|;
 block|}
 block|}
-end_for
-
-begin_label
 name|done
 label|:
-end_label
-
-begin_expr_stmt
 name|profiling
 operator|--
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* and fall through */
-end_comment
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_return
 return|return;
-end_return
-
-begin_comment
 comment|/* normal return restores saved registers */
-end_comment
-
-begin_label
 name|overflow
 label|:
-end_label
-
-begin_expr_stmt
 name|profiling
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* halt further profiling */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TOLIMIT
 value|"mcount: tos overflow\n"
-end_define
-
-begin_expr_stmt
 name|write
 argument_list|(
 literal|2
@@ -1662,21 +1602,18 @@ name|TOLIMIT
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_goto
 goto|goto
 name|out
 goto|;
-end_goto
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Control profiling  *	profiling is what mcount checks to see if  *	all the data structures are ready.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|moncontrol
 parameter_list|(

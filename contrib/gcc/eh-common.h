@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1997 Free Software Foundation, Inc.    This file is part of GNU CC.  */
+comment|/* EH stuff    Copyright (C) 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/* The runtime flag flag_new_exceptions is used to determine whether the     compiler supports the new runtime typechecking mechanism or not. Under    the new model, runtime info is contained in the exception table, and    the __throw() library routine determines which handler to call based    on the results of a call to a matching function provided by the expcetion    thrower.  Otherwise the old scheme of calling any handler which matches    an exception range is used, and the handler is responsible for all    checking of runtime conditions. If the handler wasn't suppose to    get the exception, it performs a re-throw. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
 
 begin_comment
 comment|/* The handler_label field MUST be the first field in this structure. The     __throw()  library routine expects uses __eh_stub() from except.c, which    simply dereferences the context pointer to get the handler.    The routine get_dynamic_handler_chain() also has a dependancy on    the location of 'dynamic_handler_chain'. If its location is changed,     that routine must be modified as well. */
@@ -39,6 +33,12 @@ name|void
 modifier|*
 name|info
 decl_stmt|;
+comment|/* This is used to remember where we threw for re-throws */
+name|void
+modifier|*
+name|table_index
+decl_stmt|;
+comment|/* address of exception table entry to rethrow from */
 block|}
 struct|;
 end_struct

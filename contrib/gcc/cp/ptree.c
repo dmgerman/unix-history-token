@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prints out trees in human readable form.    Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Prints out trees in human readable form.    Copyright (C) 1992, 93-96, 1998, 1999 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -501,20 +501,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TYPE_HAS_ASSIGNMENT
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" has="
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|TYPE_HAS_ASSIGN_REF
 argument_list|(
 name|node
@@ -597,14 +583,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" n_parents %d n_ancestors %d"
+literal|" n_parents %d"
 argument_list|,
 name|CLASSTYPE_N_BASECLASSES
-argument_list|(
-name|node
-argument_list|)
-argument_list|,
-name|CLASSTYPE_N_SUPERCLASSES
 argument_list|(
 name|node
 argument_list|)
@@ -660,29 +641,6 @@ name|CLASSTYPE_METHOD_VEC
 argument_list|(
 name|node
 argument_list|)
-argument_list|,
-name|indent
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-name|print_node
-argument_list|(
-name|file
-argument_list|,
-literal|"baselinks"
-argument_list|,
-name|TYPE_BINFO_BASETYPES
-argument_list|(
-name|node
-argument_list|)
-condition|?
-name|CLASSTYPE_BASELINK_VEC
-argument_list|(
-name|node
-argument_list|)
-else|:
-name|NULL_TREE
 argument_list|,
 name|indent
 operator|+
@@ -750,9 +708,9 @@ name|print_node
 argument_list|(
 name|file
 argument_list|,
-literal|"local"
+literal|"local bindings"
 argument_list|,
-name|IDENTIFIER_LOCAL_VALUE
+name|IDENTIFIER_BINDING
 argument_list|(
 name|node
 argument_list|)
@@ -861,20 +819,23 @@ block|{
 case|case
 name|CPLUS_BINDING
 case|:
-name|print_node
+name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"scope"
+literal|" scope "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|HOST_PTR_PRINTF
 argument_list|,
 name|BINDING_SCOPE
 argument_list|(
 name|node
 argument_list|)
-argument_list|,
-name|indent
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 name|print_node

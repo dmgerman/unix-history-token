@@ -13,6 +13,25 @@ begin_comment
 comment|/* This describes the machine the compiler is hosted on.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc_v9__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+end_if
+
 begin_undef
 undef|#
 directive|undef
@@ -25,6 +44,11 @@ directive|define
 name|HOST_BITS_PER_LONG
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the C++ front-end.    Copyright (C) 1996, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the C++ front-end.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
 end_include
 
 begin_comment
@@ -75,38 +69,20 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NEED_MATH_LIBRARY
+name|LIBSTDCXX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NEED_MATH_LIBRARY
-value|1
+name|LIBSTDCXX
+value|"-lstdc++"
 end_define
-
-begin_comment
-comment|/* Default is pass MATH_LIBRARY to linker */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-name|PROTO
-argument_list|(
-operator|(
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -215,11 +191,18 @@ name|int
 modifier|*
 name|args
 decl_stmt|;
-comment|/* By default, we throw on the math library.  */
+comment|/* By default, we throw on the math library if we have one.  */
 name|int
 name|need_math
 init|=
-name|NEED_MATH_LIBRARY
+operator|(
+name|MATH_LIBRARY
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
 decl_stmt|;
 comment|/* The total number of arguments with the new stuff.  */
 name|int
@@ -412,6 +395,18 @@ name|i
 index|]
 argument_list|,
 literal|"-lmath"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+name|MATH_LIBRARY
 argument_list|)
 operator|==
 literal|0
@@ -962,7 +957,7 @@ name|j
 operator|++
 index|]
 operator|=
-literal|"-lstdc++"
+name|LIBSTDCXX
 expr_stmt|;
 name|added_libraries
 operator|++

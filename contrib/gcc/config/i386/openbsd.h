@@ -46,6 +46,24 @@ file|<openbsd.h>
 end_include
 
 begin_comment
+comment|/* This goes away when the math-emulator is fixed */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
+end_define
+
+begin_comment
 comment|/* Run-time target specifications */
 end_comment
 
@@ -321,7 +339,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|do {									\     if ((LOG) != 0)							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\   } while (0)
+value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
 end_define
 
 begin_endif

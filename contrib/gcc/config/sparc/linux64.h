@@ -3,13 +3,11 @@ begin_comment
 comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_comment
-comment|/* ??? bi-architecture support will require changes to the linker    related specs, among perhaps other things (multilibs).  */
-end_comment
-
-begin_comment
-comment|/* #define SPARC_BI_ARCH */
-end_comment
+begin_define
+define|#
+directive|define
+name|SPARC_BI_ARCH
+end_define
 
 begin_define
 define|#
@@ -56,6 +54,43 @@ undef|#
 directive|undef
 name|MD_STARTFILE_PREFIX
 end_undef
+
+begin_if
+if|#
+directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_v9
+operator|||
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_ultrasparc
+end_if
+
+begin_comment
+comment|/* A 64 bit v9 compiler with stack-bias,    in a Medium/Low code model environment.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(MASK_V9 + MASK_PTR64 + MASK_64BIT
+comment|/* + MASK_HARD_QUAD */
+value|\    + MASK_STACK_BIAS + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Output at beginning of assembler file.  */
@@ -108,10 +143,71 @@ end_undef
 begin_define
 define|#
 directive|define
-name|STARTFILE_SPEC
+name|STARTFILE_SPEC32
 define|\
 value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC64
+define|\
+value|"%{!shared: \      %{pg:/usr/lib64/gcrt1.o%s} %{!pg:%{p:/usr/lib64/gcrt1.o%s} %{!p:/usr/lib64/crt1.o%s}}}\    /usr/lib64/crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPARC_BI_ARCH
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC32 "}}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC64 "}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|STARTFILE_SPEC64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Provide a ENDFILE_SPEC appropriate for GNU/Linux.  Here we tack on    the GNU/Linux magical crtend.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main', followed by a normal    GNU/Linux "finalizer" file, `crtn.o'.  */
@@ -126,10 +222,71 @@ end_undef
 begin_define
 define|#
 directive|define
-name|ENDFILE_SPEC
+name|ENDFILE_SPEC32
 define|\
 value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC64
+define|\
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s"
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPARC_BI_ARCH
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC32 "}}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC64 "}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+value|ENDFILE_SPEC64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -142,26 +299,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (sparc64 GNU/Linux with ELF)");
-end_define
-
-begin_comment
-comment|/* A 64 bit v9 compiler with stack-bias,    in a Medium/Anywhere code model environment.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_DEFAULT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_DEFAULT
-define|\
-value|(MASK_V9 + MASK_PTR64 + MASK_64BIT
-comment|/* + MASK_HARD_QUAD */
-value|\    + MASK_STACK_BIAS + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU)
 end_define
 
 begin_comment
@@ -178,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|SPARC_DEFAULT_CMODEL
-value|CM_MEDANY
+value|CM_MEDLOW
 end_define
 
 begin_undef
@@ -230,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D_LONGLONG -Dsparc -D__sparc__ -Dlinux -Asystem(unix) -Asystem(posix)"
+value|"-D__ELF__ -Dunix -D_LONGLONG -D__sparc__ -Dlinux -Asystem(unix) -Asystem(posix)"
 end_define
 
 begin_undef
@@ -268,6 +405,55 @@ begin_comment
 comment|/* If ELF is the default format, we should not use /lib/elf. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPARC_BI_ARCH
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "link_arch32",       LINK_ARCH32_SPEC },              \   { "link_arch64",       LINK_ARCH64_SPEC },              \   { "link_arch_default", LINK_ARCH_DEFAULT_SPEC },	  \   { "link_arch",	 LINK_ARCH_SPEC },
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH32_SPEC
+value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \         %{static:-static}}} \ "
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH64_SPEC
+value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib64/ld-linux.so.2}} \         %{static:-static}}} \ "
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH_SPEC
+value|"\ %{m32:%(link_arch32)} \ %{m64:%(link_arch64)} \ %{!m32:%{!m64:%(link_arch_default)}} \ "
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH_DEFAULT_SPEC
+define|\
+value|(DEFAULT_ARCH32_P ? LINK_ARCH32_SPEC : LINK_ARCH64_SPEC)
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -278,8 +464,105 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux64.so.2}} \         %{static:-static}}} \ %{mlittle-endian:-EL} \ "
+value|"\ %(link_arch) \ %{mlittle-endian:-EL} \ "
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CC1_SPEC
+end_undef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|CC1_SPEC
+value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m64:-mptr64 -mcpu=ultrasparc -mstack-bias} \ "
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CC1_SPEC
+value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m32:-mptr32 -mcpu=cypress -mno-stack-bias} \ "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_DEFAULTS
+value|{ "m32" }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_DEFAULTS
+value|{ "m64" }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SPARC_BI_ARCH */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH_SPEC
+value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib64/ld-linux.so.2}} \         %{static:-static}}} \ %{mlittle-endian:-EL} \ "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SPARC_BI_ARCH */
+end_comment
 
 begin_comment
 comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used. */

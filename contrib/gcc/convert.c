@@ -363,6 +363,25 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
+comment|/* An INTEGER_TYPE cannot be incomplete, but an ENUMERAL_TYPE can      be.  Consider `enum E = { a, b = (enum E) 3 };'.  */
+if|if
+condition|(
+operator|!
+name|TYPE_SIZE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"conversion to incomplete type"
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 switch|switch
 condition|(
 name|TREE_CODE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for manipulating rtx's in semantically interesting ways.    Copyright (C) 1987, 91, 94-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Subroutines for manipulating rtx's in semantically interesting ways.    Copyright (C) 1987, 91, 94-97, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
 end_include
 
 begin_include
@@ -68,6 +74,29 @@ include|#
 directive|include
 file|"insn-codes.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|PREFERRED_STACK_BOUNDARY
+operator|&&
+name|defined
+name|STACK_BOUNDARY
+end_if
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_STACK_BOUNDARY
+value|STACK_BOUNDARY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -368,7 +397,7 @@ break|break;
 case|case
 name|PLUS
 case|:
-comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.    	 Use a recursive call in case the remaining operand is something 	 that we handle specially, such as a SYMBOL_REF.  */
+comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.    	 Restart or use a recursive call in case the remaining operand is 	 something that we handle specially, such as a SYMBOL_REF.  	 We may not immediately return from the recursive call here, lest 	 all_constant gets lost.  */
 if|if
 condition|(
 name|GET_CODE
@@ -383,18 +412,9 @@ argument_list|)
 operator|==
 name|CONST_INT
 condition|)
-return|return
-name|plus_constant
-argument_list|(
-name|XEXP
-argument_list|(
-name|x
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
+block|{
 name|c
-operator|+
+operator|+=
 name|INTVAL
 argument_list|(
 name|XEXP
@@ -404,8 +424,20 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|x
+operator|=
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|0
 argument_list|)
-return|;
+expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -419,7 +451,9 @@ literal|0
 argument_list|)
 argument_list|)
 condition|)
-return|return
+block|{
+name|x
+operator|=
 name|gen_rtx_PLUS
 argument_list|(
 name|mode
@@ -443,7 +477,12 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|)
-return|;
+expr_stmt|;
+name|c
+operator|=
+literal|0
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -457,7 +496,9 @@ literal|1
 argument_list|)
 argument_list|)
 condition|)
-return|return
+block|{
+name|x
+operator|=
 name|gen_rtx_PLUS
 argument_list|(
 name|mode
@@ -481,7 +522,12 @@ argument_list|,
 name|c
 argument_list|)
 argument_list|)
-return|;
+expr_stmt|;
+name|c
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 default|default:
 break|break;
@@ -2410,41 +2456,37 @@ name|temp
 argument_list|)
 expr_stmt|;
 comment|/* Mark returned memref with in_struct if it's in an array or 	 structure.  Copy const and volatile from original memref.  */
-name|MEM_IN_STRUCT_P
+name|RTX_UNCHANGING_P
 argument_list|(
 name|mem
 argument_list|)
 operator|=
-name|MEM_IN_STRUCT_P
+name|RTX_UNCHANGING_P
 argument_list|(
 name|x
 argument_list|)
-operator|||
+expr_stmt|;
+name|MEM_COPY_ATTRIBUTES
+argument_list|(
+name|mem
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|GET_CODE
 argument_list|(
 name|addr
 argument_list|)
 operator|==
 name|PLUS
-expr_stmt|;
-name|RTX_UNCHANGING_P
+condition|)
+name|MEM_SET_IN_STRUCT_P
 argument_list|(
 name|mem
-argument_list|)
-operator|=
-name|RTX_UNCHANGING_P
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-name|MEM_VOLATILE_P
-argument_list|(
-name|mem
-argument_list|)
-operator|=
-name|MEM_VOLATILE_P
-argument_list|(
-name|x
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Since the new MEM is just like the old X, it can alias only 	 the things that X could.  */
@@ -2938,6 +2980,7 @@ name|punsignedp
 decl_stmt|;
 name|int
 name|for_call
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|enum
@@ -3213,11 +3256,11 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 name|int
 name|align
 init|=
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 operator|/
 name|BITS_PER_UNIT
 decl_stmt|;
@@ -3345,7 +3388,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* STACK_BOUNDARY */
+comment|/* PREFERRED_STACK_BOUNDARY */
 return|return
 name|size
 return|;
@@ -4152,7 +4195,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 argument_list|)
 define|#
 directive|define
@@ -4163,7 +4206,7 @@ directive|else
 define|#
 directive|define
 name|MUST_ALIGN
-value|(STACK_BOUNDARY< BIGGEST_ALIGNMENT)
+value|(PREFERRED_STACK_BOUNDARY< BIGGEST_ALIGNMENT)
 endif|#
 directive|endif
 if|if
@@ -4260,7 +4303,7 @@ block|{
 name|int
 name|align
 init|=
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 operator|/
 name|BITS_PER_UNIT
 decl_stmt|;
@@ -4270,7 +4313,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 argument_list|)
 operator|||
 operator|!
@@ -4280,7 +4323,7 @@ name|MUST_ALIGN
 argument_list|)
 operator|||
 operator|(
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 operator|!=
 name|BIGGEST_ALIGNMENT
 operator|)
@@ -4425,7 +4468,7 @@ comment|/* SETJMP_VIA_SAVE_AREA */
 comment|/* Round the size to a multiple of the required stack alignment.      Since the stack if presumed to be rounded before this allocation,      this will maintain the required alignment.       If the stack grows downward, we could save an insn by subtracting      SIZE from the stack pointer and then aligning the stack pointer.      The problem with this is that the stack pointer may be unaligned      between the execution of the subtraction and alignment insns and      some machines do not allow this.  Even on those that do, some      signal handlers malfunction if a signal should occur between those      insns.  Since this is an extremely rare event, we have no reliable      way of knowing which systems have this problem.  So we avoid even      momentarily mis-aligning the stack.  */
 ifdef|#
 directive|ifdef
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 comment|/* If we added a variable amount to SIZE,      we can no longer assume it is aligned.  */
 if|#
 directive|if
@@ -4440,7 +4483,7 @@ name|MUST_ALIGN
 operator|||
 name|known_align
 operator|%
-name|STACK_BOUNDARY
+name|PREFERRED_STACK_BOUNDARY
 operator|!=
 literal|0
 condition|)
@@ -4562,6 +4605,20 @@ name|Pmode
 argument_list|)
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|POINTERS_EXTEND_UNSIGNED
+name|target
+operator|=
+name|convert_memory_address
+argument_list|(
+name|Pmode
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|target
 operator|=
 name|copy_to_mode_reg
@@ -4571,6 +4628,8 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|size
 operator|=
 name|convert_modes
@@ -4819,7 +4878,7 @@ directive|endif
 comment|/* Record the new stack level for nonlocal gotos.  */
 if|if
 condition|(
-name|nonlocal_goto_handler_slot
+name|nonlocal_goto_handler_slots
 operator|!=
 literal|0
 condition|)
@@ -5318,7 +5377,7 @@ argument_list|(
 name|test_lab
 argument_list|)
 expr_stmt|;
-name|emit_cmp_insn
+name|emit_cmp_and_jump_insns
 argument_list|(
 name|test_addr
 argument_list|,
@@ -5333,23 +5392,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|emit_jump_insn
-argument_list|(
-call|(
-modifier|*
-name|bcc_gen_fctn
-index|[
-operator|(
-name|int
-operator|)
-name|CMP_OPCODE
-index|]
-call|)
-argument_list|(
+argument_list|,
 name|loop_lab
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|emit_jump
@@ -5413,6 +5457,7 @@ name|valtype
 decl_stmt|;
 name|tree
 name|func
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|rtx

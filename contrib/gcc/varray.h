@@ -18,23 +18,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PROTO
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|HOST_WIDE_INT
 end_ifndef
 
@@ -65,6 +48,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Auxiliary structure used inside the varray structure, used for    function integration data.  */
+end_comment
+
+begin_struct
+struct|struct
+name|const_equiv_data
+block|{
+comment|/* Map pseudo reg number in calling function to equivalent constant.  We      cannot in general substitute constants into parameter pseudo registers,      since some machine descriptions (many RISCs) won't always handle      the resulting insns.  So if an incoming parameter has a constant      equivalent, we record it here, and if the resulting insn is      recognizable, we go with it.       We also use this mechanism to convert references to incoming arguments      and stacked variables.  copy_rtx_and_substitute will replace the virtual      incoming argument and virtual stacked variables registers with new      pseudos that contain pointers into the replacement area allocated for      this inline instance.  These pseudos are then marked as being equivalent      to the appropriate address and substituted if valid.  */
+name|rtx
+name|rtx
+decl_stmt|;
+comment|/* Record the valid age for each entry.  The entry is invalid if its      age is less than const_age.  */
+name|unsigned
+name|age
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Union of various array types that are used.  */
@@ -197,6 +200,21 @@ name|struct
 name|reg_info_def
 modifier|*
 name|reg
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|struct
+name|const_equiv_data
+name|const_equiv
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|struct
+name|basic_block_def
+modifier|*
+name|bb
 index|[
 literal|1
 index|]
@@ -532,6 +550,36 @@ define|\
 value|va = varray_init (num, sizeof (struct reg_info_def *), name)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VARRAY_CONST_EQUIV_INIT
+parameter_list|(
+name|va
+parameter_list|,
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|va = varray_init (num, sizeof (struct const_equiv_data), name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_BB_INIT
+parameter_list|(
+name|va
+parameter_list|,
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|va = varray_init (num, sizeof (struct basic_block_def *), name)
+end_define
+
 begin_comment
 comment|/* Free up memory allocated by the virtual array, but do not free any of the    elements involved.  */
 end_comment
@@ -543,7 +591,8 @@ name|VARRAY_FREE
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)&& (free (vp), (vp = (varray_type)0)))
+define|\
+value|do { if (vp) { free (vp); vp = (varray_type)0; } } while (0)
 end_define
 
 begin_comment
@@ -575,6 +624,16 @@ parameter_list|,
 name|N
 parameter_list|)
 value|((VA) = varray_grow (VA, N))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_SIZE
+parameter_list|(
+name|VA
+parameter_list|)
+value|((VA)->num_elements)
 end_define
 
 begin_comment
@@ -836,6 +895,30 @@ parameter_list|,
 name|N
 parameter_list|)
 value|((VA)->data.reg[ VARRAY_CHECK (VA, N) ])
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_CONST_EQUIV
+parameter_list|(
+name|VA
+parameter_list|,
+name|N
+parameter_list|)
+value|((VA)->data.const_equiv[VARRAY_CHECK (VA, N)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_BB
+parameter_list|(
+name|VA
+parameter_list|,
+name|N
+parameter_list|)
+value|((VA)->data.bb[ VARRAY_CHECK (VA, N) ])
 end_define
 
 begin_endif

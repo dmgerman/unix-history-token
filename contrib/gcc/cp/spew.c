@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Type Analyzer for GNU C++.    Copyright (C) 1987, 89, 92, 93, 94, 1995 Free Software Foundation, Inc.    Hacked... nay, bludgeoned... by Mark Eichin (eichin@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Type Analyzer for GNU C++.    Copyright (C) 1987, 89, 92-97, 1998 Free Software Foundation, Inc.    Hacked... nay, bludgeoned... by Mark Eichin (eichin@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"obstack.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
 end_include
 
 begin_comment
@@ -127,6 +133,7 @@ name|scan_tokens
 name|PROTO
 argument_list|(
 operator|(
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -562,10 +569,12 @@ name|scan_tokens
 parameter_list|(
 name|n
 parameter_list|)
+name|unsigned
 name|int
 name|n
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -957,6 +966,8 @@ name|tmp_token
 decl_stmt|;
 name|tree
 name|trrr
+init|=
+name|NULL_TREE
 decl_stmt|;
 name|int
 name|old_looking_for_typename
@@ -1358,6 +1369,40 @@ break|break;
 case|case
 name|SCSPEC
 case|:
+comment|/* If export, warn that it's unimplemented and go on. */
+if|if
+condition|(
+name|tmp_token
+operator|.
+name|yylval
+operator|.
+name|ttype
+operator|==
+name|get_identifier
+argument_list|(
+literal|"export"
+argument_list|)
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"keyword 'export' not implemented and will be ignored"
+argument_list|)
+expr_stmt|;
+name|consume_token
+argument_list|()
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+else|else
+block|{
+operator|++
+name|first_token
+expr_stmt|;
+break|break;
+block|}
 case|case
 name|NEW
 case|:

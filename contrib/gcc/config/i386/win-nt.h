@@ -224,7 +224,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {	fprintf (FILE, "\t.file\t");				\ 	output_quoted_string (FILE, dump_base_name);		\ 	fprintf (FILE, "\n");					\         fprintf (FILE, ".global\t__fltused\n");			\   } while (0)
+value|do {	output_file_directive (FILE, main_input_filename);	\         fprintf (FILE, ".global\t__fltused\n");			\   } while (0)
 end_define
 
 begin_comment

@@ -149,6 +149,12 @@ name|defined
 argument_list|(
 name|OPEN_VMS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
 end_if
 
 begin_include

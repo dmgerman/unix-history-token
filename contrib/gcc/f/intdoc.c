@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* intdoc.c    Copyright (C) 1997 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* intdoc.c    Copyright (C) 1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -128,6 +128,7 @@ file|"intrin.h"
 end_include
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|family_name
@@ -187,10 +188,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -209,10 +212,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -231,10 +236,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -256,6 +263,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_info_ptr
@@ -271,6 +279,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_info_string
@@ -286,6 +295,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_name_ptr
@@ -301,6 +311,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_name_string
@@ -321,7 +332,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char *elaborate_if_complex (ffeintrinImp imp, int argno); static char *elaborate_if_maybe_complex (ffeintrinImp imp, int argno); static char *elaborate_if_real (ffeintrinImp imp, int argno);
+unit|static const char *elaborate_if_complex (ffeintrinImp imp, int argno); static const char *elaborate_if_maybe_complex (ffeintrinImp imp, int argno); static const char *elaborate_if_real (ffeintrinImp imp, int argno);
 endif|#
 directive|endif
 end_endif
@@ -331,6 +342,7 @@ specifier|static
 name|void
 name|print_type_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|c
@@ -349,6 +361,7 @@ name|char
 modifier|*
 modifier|*
 name|argv
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 if|if
@@ -384,14 +397,17 @@ begin_struct
 struct|struct
 name|_ffeintrin_name_
 block|{
+specifier|const
 name|char
 modifier|*
 name|name_uc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name_lc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name_ic
@@ -410,6 +426,7 @@ begin_struct
 struct|struct
 name|_ffeintrin_gen_
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -429,6 +446,7 @@ begin_struct
 struct|struct
 name|_ffeintrin_spec_
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -452,6 +470,7 @@ begin_struct
 struct|struct
 name|_ffeintrin_imp_
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -466,6 +485,7 @@ comment|/* gfrt index in library. */
 endif|#
 directive|endif
 comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
+specifier|const
 name|char
 modifier|*
 name|control
@@ -540,6 +560,24 @@ name|GFRTGNU
 parameter_list|,
 name|CONTROL
 parameter_list|)
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
 include|#
 directive|include
 file|"intrin.def"
@@ -555,6 +593,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -625,6 +666,24 @@ name|GFRTGNU
 parameter_list|,
 name|CONTROL
 parameter_list|)
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
 include|#
 directive|include
 file|"intrin.def"
@@ -640,6 +699,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -714,6 +776,26 @@ name|CONTROL
 parameter_list|)
 define|\
 value|{ NAME, FFECOM_gfrt ## GFRT, CONTROL },
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
+define|\
+value|{ NAME, FFECOM_gfrt ## GFRT, CONTROL },
 elif|#
 directive|elif
 literal|1
@@ -733,6 +815,26 @@ parameter_list|,
 name|GFRTGNU
 parameter_list|,
 name|CONTROL
+parameter_list|)
+define|\
+value|{ NAME, CONTROL },
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
 parameter_list|)
 define|\
 value|{ NAME, CONTROL },
@@ -757,6 +859,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -827,6 +932,24 @@ name|GFRTGNU
 parameter_list|,
 name|CONTROL
 parameter_list|)
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
 include|#
 directive|include
 file|"intrin.def"
@@ -839,6 +962,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -850,6 +976,7 @@ block|{
 name|ffeintrinImp
 name|imp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -860,6 +987,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|descriptions
@@ -904,6 +1032,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|summaries
@@ -947,6 +1076,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|family_name
@@ -1516,10 +1646,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -1784,10 +1916,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -1847,10 +1981,12 @@ parameter_list|(
 name|int
 name|menu
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name_uc
@@ -1868,6 +2004,7 @@ name|ffeintrinSpec
 name|spec
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|c
@@ -1875,10 +2012,12 @@ decl_stmt|;
 name|bool
 name|subr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|argi
@@ -1971,6 +2110,7 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -2476,10 +2616,12 @@ block|{
 name|int
 name|other_arg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|arg_string
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|arg_info
@@ -4450,6 +4592,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|c
@@ -4623,6 +4766,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_info_ptr
@@ -4634,6 +4778,7 @@ name|int
 name|argno
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|c
@@ -4868,6 +5013,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_info_string
@@ -4879,6 +5025,7 @@ name|int
 name|argno
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -4907,6 +5054,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_name_ptr
@@ -4918,6 +5066,7 @@ name|int
 name|argno
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|c
@@ -5124,6 +5273,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argument_name_string
@@ -5135,6 +5285,7 @@ name|int
 name|argno
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -5166,6 +5317,7 @@ specifier|static
 name|void
 name|print_type_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|c

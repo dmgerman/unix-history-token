@@ -118,6 +118,12 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
+name|__INTERIX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|CROSS_COMPILE
 argument_list|)
 end_if
@@ -1234,6 +1240,7 @@ name|input_file_name
 decl_stmt|;
 name|tree
 name|syms
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -1864,6 +1871,9 @@ case|:
 return|return
 name|T_VOID
 return|;
+case|case
+name|BOOLEAN_TYPE
+case|:
 case|case
 name|INTEGER_TYPE
 case|:
@@ -2993,7 +3003,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 name|leaf_renumber_regs_insn
 argument_list|(
@@ -3483,14 +3493,23 @@ name|C_AUTO
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Effectively do build_pointer_type, but don't cache this type, 	     since it might be temporary whereas the type it points to 	     might have been saved for inlining.  */
+comment|/* Don't use REFERENCE_TYPE because dbx can't handle that.  */
 name|type
 operator|=
-name|build_pointer_type
+name|make_node
 argument_list|(
+name|POINTER_TYPE
+argument_list|)
+expr_stmt|;
+name|TREE_TYPE
+argument_list|(
+name|type
+argument_list|)
+operator|=
 name|TREE_TYPE
 argument_list|(
 name|decl
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4033,6 +4052,44 @@ argument_list|(
 name|tail
 argument_list|)
 control|)
+comment|/* This condition should match the one for emitting the actual members        below.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|tail
+argument_list|)
+operator|==
+name|FIELD_DECL
+operator|&&
+name|DECL_NAME
+argument_list|(
+name|tail
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|DECL_SIZE
+argument_list|(
+name|tail
+argument_list|)
+argument_list|)
+operator|==
+name|INTEGER_CST
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|DECL_FIELD_BITPOS
+argument_list|(
+name|tail
+argument_list|)
+argument_list|)
+operator|==
+name|INTEGER_CST
+condition|)
+block|{
 if|if
 condition|(
 name|POINTER_TYPE_P
@@ -4063,6 +4120,7 @@ name|tail
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4304,6 +4362,17 @@ expr_stmt|;
 name|PUT_SDB_ENDEF
 expr_stmt|;
 comment|/* Print out the base class information with fields 	   named after the types they hold.  */
+comment|/* This is only relevent to aggregate types.  TYPE_BINFO is used 	   for other purposes in an ENUMERAL_TYPE, so we must exclude that 	   case.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|!=
+name|ENUMERAL_TYPE
+condition|)
+block|{
 if|if
 condition|(
 name|TYPE_BINFO
@@ -4478,6 +4547,7 @@ argument_list|)
 expr_stmt|;
 name|PUT_SDB_ENDEF
 expr_stmt|;
+block|}
 block|}
 comment|/* output the individual fields */
 if|if
@@ -5767,6 +5837,7 @@ name|line
 decl_stmt|;
 name|int
 name|n
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|MAKE_LINE_SAFE

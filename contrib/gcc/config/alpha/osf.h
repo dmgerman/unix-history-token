@@ -32,6 +32,24 @@ value|"\ -Dunix -D__osf__ -D_LONGLONG -DSYSTYPE_BSD \ -D_SYSTYPE_BSD -Asystem(un
 end_define
 
 begin_comment
+comment|/* Accept DEC C flags for multithreaded programs.  We use _PTHREAD_USE_D4    instead of PTHREAD_USE_D4 since both have the same effect and the former    doesn't invade the users' namespace.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SUBTARGET_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SUBTARGET_SPEC
+define|\
+value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4}"
+end_define
+
+begin_comment
 comment|/* Under OSF4, -p and -pg require -lprof1, and -lprof1 requires -lpdf.  */
 end_comment
 
@@ -39,7 +57,8 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{p:-lprof1 -lpdf} %{pg:-lprof1 -lpdf} %{a:-lprof2} -lc"
+define|\
+value|"%{p|pg:-lprof1%{pthread|threads:_r} -lpdf} %{a:-lprof2} \  %{threads: -lpthreads} %{pthread|threads: -lpthread -lmach -lexc} -lc"
 end_define
 
 begin_comment

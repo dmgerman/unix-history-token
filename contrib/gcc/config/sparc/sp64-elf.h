@@ -184,7 +184,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{"big-endian", -MASK_LITTLE_ENDIAN}, \ {"little-endian", MASK_LITTLE_ENDIAN},
+value|{"big-endian", -MASK_LITTLE_ENDIAN, "Generate code for big endian" }, \ {"little-endian", MASK_LITTLE_ENDIAN, "Generate code for little endian" },
 end_define
 
 begin_undef
@@ -261,7 +261,7 @@ comment|/* The medium/anywhere code model practically requires us to put jump ta
 end_comment
 
 begin_comment
-comment|/* ??? Revisit this.  */
+comment|/* But we now defer the tables to the end of the function, so we make    this 0 to not confuse the branch shortening code.  */
 end_comment
 
 begin_undef
@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
-value|1
+value|0
 end_define
 
 begin_comment

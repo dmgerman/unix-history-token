@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
 end_include
 
 begin_include
@@ -186,20 +180,6 @@ name|char
 modifier|*
 modifier|*
 name|g77_newargv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-name|PROTO
-argument_list|(
-operator|(
-name|size_t
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1139,6 +1119,19 @@ name|saw_library
 init|=
 literal|0
 decl_stmt|;
+comment|/* By default, we throw on the math library if we have one.  */
+name|int
+name|need_math
+init|=
+operator|(
+name|MATH_LIBRARY
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
+decl_stmt|;
 comment|/* The number of input and output files in the incoming arg list.  */
 name|int
 name|n_infiles
@@ -1399,7 +1392,7 @@ return|return;
 if|#
 directive|if
 literal|0
-block|printf ("\ Usage: g77 [OPTION]... FORTRAN-SOURCE...\n\ \n\ Compile and link Fortran source code to produce an executable program,\n\ which by default is named `a.out', and can be invoked with the UNIX\n\ command `./a.out'.\n\ \n\ Options:\n\ --debug                include debugging information in executable.\n\ --help                 display this help and exit.\n\ --optimize[=LEVEL]     take extra time and memory to make generated\n\                          executable run faster.  LEVEL is 0 for no\n\                          optimization, 1 for normal optimization, and\n\                          increases through 3 for more optimization.\n\ --output=PROGRAM       name the executable PROGRAM instead of a.out;\n\                          invoke with the command `./PROGRAM'.\n\ --version              display version information and exit.\n\ \n\ Many other options exist to tailor the compilation process, specify\n\ the dialect of the Fortran source code, specify details of the\n\ code-generation methodology, and so on.\n\ \n\ For more information on g77 and gcc, type the commands `info -f g77'\n\ and `info -f gcc' to read the Info documentation.\n\ \n\ Report bugs to<egcs-bugs@cygnus.org>.\n"); 	  exit (0); 	  break;
+block|printf ("\ Usage: g77 [OPTION]... FORTRAN-SOURCE...\n\ \n\ Compile and link Fortran source code to produce an executable program,\n\ which by default is named `a.out', and can be invoked with the UNIX\n\ command `./a.out'.\n\ \n\ Options:\n\ --debug                include debugging information in executable.\n\ --help                 display this help and exit.\n\ --optimize[=LEVEL]     take extra time and memory to make generated\n\                          executable run faster.  LEVEL is 0 for no\n\                          optimization, 1 for normal optimization, and\n\                          increases through 3 for more optimization.\n\ --output=PROGRAM       name the executable PROGRAM instead of a.out;\n\                          invoke with the command `./PROGRAM'.\n\ --version              display version information and exit.\n\ \n\ Many other options exist to tailor the compilation process, specify\n\ the dialect of the Fortran source code, specify details of the\n\ code-generation methodology, and so on.\n\ \n\ For more information on g77 and gcc, type the commands `info -f g77'\n\ and `info -f gcc' to read the Info documentation.\n\ \n\ For bug reporting instructions, please see:\n\<URL:http://www.gnu.org/software/gcc/faq.html#bugreport>.\n"); 	  exit (0); 	  break;
 endif|#
 directive|endif
 case|case
@@ -1557,6 +1550,8 @@ condition|(
 name|saw_library
 operator|==
 literal|1
+operator|&&
+name|need_math
 condition|)
 comment|/* -l<library>. */
 name|append_arg
@@ -1775,6 +1770,8 @@ condition|(
 name|saw_library
 operator|==
 literal|1
+operator|&&
+name|need_math
 condition|)
 name|append_arg
 argument_list|(
@@ -1831,6 +1828,10 @@ expr_stmt|;
 case|case
 literal|1
 case|:
+if|if
+condition|(
+name|need_math
+condition|)
 name|append_arg
 argument_list|(
 name|MATH_LIBRARY

@@ -61,6 +61,12 @@ directive|include
 file|"toplev.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"intl.h"
+end_include
+
 begin_comment
 comment|/* Nonzero if we've already printed a "missing braces around initializer"    message within this initializer.  */
 end_comment
@@ -284,6 +290,7 @@ name|tree
 operator|,
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -304,9 +311,11 @@ name|warn_for_assignment
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -340,6 +349,7 @@ name|push_string
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -403,32 +413,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|get_spelling
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|warning_init
 name|PROTO
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -553,6 +543,18 @@ argument_list|(
 name|value
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|value
+argument_list|)
+operator|==
+name|ERROR_MARK
+condition|)
+return|return
+name|error_mark_node
+return|;
 comment|/* First, detect a valid value with a complete type.  */
 if|if
 condition|(
@@ -602,9 +604,10 @@ name|tree
 name|type
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
-name|errmsg
+name|type_code_string
 decl_stmt|;
 comment|/* Avoid duplicate error message.  */
 if|if
@@ -668,25 +671,25 @@ block|{
 case|case
 name|RECORD_TYPE
 case|:
-name|errmsg
+name|type_code_string
 operator|=
-literal|"invalid use of undefined type `struct %s'"
+literal|"struct"
 expr_stmt|;
 break|break;
 case|case
 name|UNION_TYPE
 case|:
-name|errmsg
+name|type_code_string
 operator|=
-literal|"invalid use of undefined type `union %s'"
+literal|"union"
 expr_stmt|;
 break|break;
 case|case
 name|ENUMERAL_TYPE
 case|:
-name|errmsg
+name|type_code_string
 operator|=
-literal|"invalid use of undefined type `enum %s'"
+literal|"enum"
 expr_stmt|;
 break|break;
 case|case
@@ -745,7 +748,9 @@ name|IDENTIFIER_NODE
 condition|)
 name|error
 argument_list|(
-name|errmsg
+literal|"invalid use of undefined type `%s %s'"
+argument_list|,
+name|type_code_string
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -797,40 +802,15 @@ decl_stmt|,
 name|like
 decl_stmt|;
 block|{
-name|int
-name|constflag
-init|=
-name|TYPE_READONLY
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|TYPE_READONLY
-argument_list|(
-name|like
-argument_list|)
-decl_stmt|;
-name|int
-name|volflag
-init|=
-name|TYPE_VOLATILE
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|TYPE_VOLATILE
-argument_list|(
-name|like
-argument_list|)
-decl_stmt|;
 return|return
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|type
 argument_list|,
-name|constflag
-argument_list|,
-name|volflag
+name|TYPE_QUALS
+argument_list|(
+name|like
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1292,62 +1272,34 @@ comment|/* For two pointers, do this recursively on the target type, 	 and combi
 comment|/* This code was turned off; I don't know why. 	 But ANSI C specifies doing this with the qualifiers. 	 So I turned it on again.  */
 block|{
 name|tree
+name|pointed_to_1
+init|=
+name|TREE_TYPE
+argument_list|(
+name|t1
+argument_list|)
+decl_stmt|;
+name|tree
+name|pointed_to_2
+init|=
+name|TREE_TYPE
+argument_list|(
+name|t2
+argument_list|)
+decl_stmt|;
+name|tree
 name|target
 init|=
 name|common_type
 argument_list|(
 name|TYPE_MAIN_VARIANT
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t1
-argument_list|)
+name|pointed_to_1
 argument_list|)
 argument_list|,
 name|TYPE_MAIN_VARIANT
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t2
-argument_list|)
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|int
-name|constp
-init|=
-name|TYPE_READONLY
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t1
-argument_list|)
-argument_list|)
-operator|||
-name|TYPE_READONLY
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t2
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|int
-name|volatilep
-init|=
-name|TYPE_VOLATILE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t1
-argument_list|)
-argument_list|)
-operator|||
-name|TYPE_VOLATILE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t2
+name|pointed_to_2
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -1355,13 +1307,19 @@ name|t1
 operator|=
 name|build_pointer_type
 argument_list|(
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|target
 argument_list|,
-name|constp
-argument_list|,
-name|volatilep
+name|TYPE_QUALS
+argument_list|(
+name|pointed_to_1
+argument_list|)
+operator||
+name|TYPE_QUALS
+argument_list|(
+name|pointed_to_2
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2114,27 +2072,12 @@ return|;
 comment|/* Qualifiers must match.  */
 if|if
 condition|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|t1
 argument_list|)
 operator|!=
-name|TYPE_READONLY
-argument_list|(
-name|t2
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-name|TYPE_VOLATILE
-argument_list|(
-name|t1
-argument_list|)
-operator|!=
-name|TYPE_VOLATILE
+name|TYPE_QUALS
 argument_list|(
 name|t2
 argument_list|)
@@ -4943,12 +4886,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|TYPE_READONLY
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|TYPE_VOLATILE
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
@@ -4959,23 +4897,26 @@ name|volatilep
 condition|)
 name|restype
 operator|=
-name|c_build_type_variant
+name|c_build_qualified_type
 argument_list|(
 name|restype
 argument_list|,
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
-operator|||
+operator||
+operator|(
 name|constp
-argument_list|,
-name|TYPE_VOLATILE
-argument_list|(
-name|type
-argument_list|)
-operator|||
+operator|*
+name|TYPE_QUAL_CONST
+operator|)
+operator||
+operator|(
 name|volatilep
+operator|*
+name|TYPE_QUAL_VOLATILE
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5960,6 +5901,7 @@ parameter_list|)
 name|tree
 name|ptr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errorstring
@@ -12048,12 +11990,6 @@ name|arg
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|char
-modifier|*
-name|errstring
-init|=
-name|NULL
-decl_stmt|;
 name|tree
 name|val
 decl_stmt|;
@@ -12102,10 +12038,16 @@ operator|==
 name|COMPLEX_TYPE
 operator|)
 condition|)
-name|errstring
-operator|=
+block|{
+name|error
+argument_list|(
 literal|"wrong type argument to unary plus"
+argument_list|)
 expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12140,10 +12082,16 @@ operator|==
 name|COMPLEX_TYPE
 operator|)
 condition|)
-name|errstring
-operator|=
+block|{
+name|error
+argument_list|(
 literal|"wrong type argument to unary minus"
+argument_list|)
 expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12192,10 +12140,16 @@ name|typecode
 operator|!=
 name|INTEGER_TYPE
 condition|)
-name|errstring
-operator|=
+block|{
+name|error
+argument_list|(
 literal|"wrong type argument to bit-complement"
+argument_list|)
 expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12230,10 +12184,16 @@ operator|==
 name|COMPLEX_TYPE
 operator|)
 condition|)
-name|errstring
-operator|=
+block|{
+name|error
+argument_list|(
 literal|"wrong type argument to abs"
+argument_list|)
 expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12269,10 +12229,16 @@ operator|==
 name|COMPLEX_TYPE
 operator|)
 condition|)
-name|errstring
-operator|=
+block|{
+name|error
+argument_list|(
 literal|"wrong type argument to conjugation"
+argument_list|)
 expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12318,11 +12284,14 @@ operator|!=
 name|FUNCTION_TYPE
 condition|)
 block|{
-name|errstring
-operator|=
+name|error
+argument_list|(
 literal|"wrong type argument to unary exclamation mark"
+argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|error_mark_node
+return|;
 block|}
 name|arg
 operator|=
@@ -12569,8 +12538,8 @@ operator|!=
 name|REAL_TYPE
 condition|)
 block|{
-if|if
-condition|(
+name|error
+argument_list|(
 name|code
 operator|==
 name|PREINCREMENT_EXPR
@@ -12578,17 +12547,15 @@ operator|||
 name|code
 operator|==
 name|POSTINCREMENT_EXPR
-condition|)
-name|errstring
-operator|=
+condition|?
 literal|"wrong type argument to increment"
-expr_stmt|;
-else|else
-name|errstring
-operator|=
+else|:
 literal|"wrong type argument to decrement"
+argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|error_mark_node
+return|;
 block|}
 block|{
 specifier|register
@@ -12642,10 +12609,6 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"%s of pointer to unknown structure"
-argument_list|,
-operator|(
-operator|(
 name|code
 operator|==
 name|PREINCREMENT_EXPR
@@ -12653,12 +12616,10 @@ operator|||
 name|code
 operator|==
 name|POSTINCREMENT_EXPR
-operator|)
 condition|?
-literal|"increment"
+literal|"increment of pointer to unknown structure"
 else|:
-literal|"decrement"
-operator|)
+literal|"decrement of pointer to unknown structure"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -12694,10 +12655,6 @@ operator|)
 condition|)
 name|pedwarn
 argument_list|(
-literal|"wrong type argument to %s"
-argument_list|,
-operator|(
-operator|(
 name|code
 operator|==
 name|PREINCREMENT_EXPR
@@ -12705,12 +12662,10 @@ operator|||
 name|code
 operator|==
 name|POSTINCREMENT_EXPR
-operator|)
 condition|?
-literal|"increment"
+literal|"wrong type argument to increment"
 else|:
-literal|"decrement"
-operator|)
+literal|"wrong type argument to decrement"
 argument_list|)
 expr_stmt|;
 name|inc
@@ -12972,9 +12927,9 @@ operator|==
 name|POSTINCREMENT_EXPR
 operator|)
 condition|?
-literal|"increment"
+literal|"invalid lvalue in increment"
 else|:
-literal|"decrement"
+literal|"invalid lvalue in decrement"
 operator|)
 argument_list|)
 condition|)
@@ -13217,7 +13172,7 @@ name|lvalue_or_else
 argument_list|(
 name|arg
 argument_list|,
-literal|"unary `&'"
+literal|"invalid lvalue in unary `&'"
 argument_list|)
 condition|)
 return|return
@@ -13231,7 +13186,7 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* If the lvalue is const or volatile, 	 merge that into the type that the address will point to.  */
+comment|/* If the lvalue is const or volatile, merge that into the type          to which the address will point.  Note that you can't get a 	 restricted pointer by taking the address of something, so we 	 only have to deal with `const' and `volatile' here.  */
 if|if
 condition|(
 name|TREE_CODE_CLASS
@@ -13499,12 +13454,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|errstring
-condition|)
-block|{
-if|if
-condition|(
 name|argtype
 operator|==
 literal|0
@@ -13528,15 +13477,6 @@ argument_list|,
 name|arg
 argument_list|)
 argument_list|)
-return|;
-block|}
-name|error
-argument_list|(
-name|errstring
-argument_list|)
-expr_stmt|;
-return|return
-name|error_mark_node
 return|;
 block|}
 end_function
@@ -13692,14 +13632,15 @@ name|lvalue_or_else
 parameter_list|(
 name|ref
 parameter_list|,
-name|string
+name|msgid
 parameter_list|)
 name|tree
 name|ref
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|string
+name|msgid
 decl_stmt|;
 block|{
 name|int
@@ -13717,9 +13658,7 @@ name|win
 condition|)
 name|error
 argument_list|(
-literal|"invalid lvalue in %s"
-argument_list|,
-name|string
+name|msgid
 argument_list|)
 expr_stmt|;
 return|return
@@ -13919,21 +13858,19 @@ name|pedantic
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ANSI C forbids use of %s expressions as lvalues"
-argument_list|,
 name|code
 operator|==
 name|COND_EXPR
 condition|?
-literal|"conditional"
+literal|"ANSI C forbids use of conditional expressions as lvalues"
 else|:
 name|code
 operator|==
 name|COMPOUND_EXPR
 condition|?
-literal|"compound"
+literal|"ANSI C forbids use of compound expressions as lvalues"
 else|:
-literal|"cast"
+literal|"ANSI C forbids use of cast expressions as lvalues"
 argument_list|)
 expr_stmt|;
 block|}
@@ -13952,29 +13889,17 @@ name|readonly_warning
 parameter_list|(
 name|arg
 parameter_list|,
-name|string
+name|msgid
 parameter_list|)
 name|tree
 name|arg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|string
+name|msgid
 decl_stmt|;
 block|{
-name|char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|string
-argument_list|)
-expr_stmt|;
 comment|/* Forbid assignments to iterators.  */
 if|if
 condition|(
@@ -13990,17 +13915,14 @@ argument_list|(
 name|arg
 argument_list|)
 condition|)
-block|{
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" of iterator `%s'"
-argument_list|)
-expr_stmt|;
 name|pedwarn
 argument_list|(
-name|buf
+literal|"%s of iterator `%s'"
+argument_list|,
+name|_
+argument_list|(
+name|msgid
+argument_list|)
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -14011,7 +13933,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|TREE_CODE
@@ -14046,21 +13967,18 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|string
+name|msgid
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" of read-only member `%s'"
-argument_list|)
-expr_stmt|;
 name|pedwarn
 argument_list|(
-name|buf
+literal|"%s of read-only member `%s'"
+argument_list|,
+name|_
+argument_list|(
+name|msgid
+argument_list|)
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -14077,7 +13995,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 elseif|else
 if|if
 condition|(
@@ -14088,17 +14005,14 @@ argument_list|)
 operator|==
 name|VAR_DECL
 condition|)
-block|{
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" of read-only variable `%s'"
-argument_list|)
-expr_stmt|;
 name|pedwarn
 argument_list|(
-name|buf
+literal|"%s of read-only variable `%s'"
+argument_list|,
+name|_
+argument_list|(
+name|msgid
+argument_list|)
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -14109,17 +14023,17 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|pedwarn
 argument_list|(
 literal|"%s of read-only location"
 argument_list|,
-name|buf
+name|_
+argument_list|(
+name|msgid
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -15589,6 +15503,7 @@ condition|(
 name|field
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -15833,38 +15748,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TYPE_VOLATILE
+name|TYPE_QUALS
 argument_list|(
 name|in_otype
 argument_list|)
-operator|&&
-operator|!
-name|TYPE_VOLATILE
+operator|&
+operator|~
+name|TYPE_QUALS
 argument_list|(
 name|in_type
 argument_list|)
 condition|)
+comment|/* There are qualifiers present in IN_OTYPE that are not 	       present in IN_TYPE.  */
 name|pedwarn
 argument_list|(
-literal|"cast discards `volatile' from pointer target type"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_READONLY
-argument_list|(
-name|in_otype
-argument_list|)
-operator|&&
-operator|!
-name|TYPE_READONLY
-argument_list|(
-name|in_type
-argument_list|)
-condition|)
-name|pedwarn
-argument_list|(
-literal|"cast discards `const' from pointer target type"
+literal|"cast discards qualifiers from pointer target type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -16603,7 +16501,7 @@ name|lvalue_or_else
 argument_list|(
 name|lhs
 argument_list|,
-literal|"assignment"
+literal|"invalid lvalue in assignment"
 argument_list|)
 condition|)
 return|return
@@ -16732,7 +16630,10 @@ name|lhstype
 argument_list|,
 name|newrhs
 argument_list|,
+name|_
+argument_list|(
 literal|"assignment"
+argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
@@ -16793,7 +16694,10 @@ name|olhstype
 argument_list|,
 name|result
 argument_list|,
+name|_
+argument_list|(
 literal|"assignment"
+argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
@@ -16809,7 +16713,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Convert value RHS to type TYPE as preparation for an assignment    to an lvalue of type TYPE.    The real work of conversion is done by `convert'.    The purpose of this function is to generate error messages    for assignments that are not allowed in C.    ERRTYPE is a string to use in error messages:    "assignment", "return", etc.  If it is null, this is parameter passing    for a function call (and different error messages are output).  Otherwise,    it may be a name stored in the spelling stack and interpreted by    get_spelling.     FUNNAME is the name of the function being called,    as an IDENTIFIER_NODE, or null.    PARMNUM is the number of the argument, for printing in error messages.  */
+comment|/* Convert value RHS to type TYPE as preparation for an assignment    to an lvalue of type TYPE.    The real work of conversion is done by `convert'.    The purpose of this function is to generate error messages    for assignments that are not allowed in C.    ERRTYPE is a string to use in error messages:    "assignment", "return", etc.  If it is null, this is parameter passing    for a function call (and different error messages are output).     FUNNAME is the name of the function being called,    as an IDENTIFIER_NODE, or null.    PARMNUM is the number of the argument, for printing in error messages.  */
 end_comment
 
 begin_function
@@ -16834,6 +16738,7 @@ name|type
 decl_stmt|,
 name|rhs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errtype
@@ -17183,6 +17088,17 @@ block|{
 comment|/* If this type won't generate any warnings, use it.  */
 if|if
 condition|(
+name|TYPE_QUALS
+argument_list|(
+name|ttl
+argument_list|)
+operator|==
+name|TYPE_QUALS
+argument_list|(
+name|ttr
+argument_list|)
+operator|||
+operator|(
 operator|(
 name|TREE_CODE
 argument_list|(
@@ -17201,56 +17117,39 @@ operator|)
 condition|?
 operator|(
 operator|(
-operator|!
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttl
 argument_list|)
 operator||
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttr
 argument_list|)
 operator|)
-operator|&
-operator|(
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttl
-argument_list|)
-operator||
-name|TYPE_VOLATILE
+operator|==
+name|TYPE_QUALS
 argument_list|(
 name|ttr
 argument_list|)
-operator|)
 operator|)
 else|:
 operator|(
 operator|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttl
 argument_list|)
 operator||
-operator|!
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttr
 argument_list|)
 operator|)
-operator|&
-operator|(
-name|TYPE_VOLATILE
+operator|==
+name|TYPE_QUALS
 argument_list|(
 name|ttl
-argument_list|)
-operator||
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttr
 argument_list|)
 operator|)
 operator|)
@@ -17356,52 +17255,22 @@ block|{
 comment|/* Because const and volatile on functions are 		     restrictions that say the function will not do 		     certain things, it is okay to use a const or volatile 		     function where an ordinary one is wanted, but not 		     vice-versa.  */
 if|if
 condition|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttl
 argument_list|)
-operator|&&
-operator|!
-name|TYPE_READONLY
+operator|&
+operator|~
+name|TYPE_QUALS
 argument_list|(
 name|ttr
 argument_list|)
 condition|)
 name|warn_for_assignment
 argument_list|(
-literal|"%s makes `const *' function pointer from non-const"
+literal|"%s makes qualified function pointer from unqualified"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
-argument_list|,
-name|funname
-argument_list|,
-name|parmnum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_VOLATILE
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttr
-argument_list|)
-condition|)
-name|warn_for_assignment
-argument_list|(
-literal|"%s makes `volatile *' function pointer from non-volatile"
-argument_list|,
-name|get_spelling
-argument_list|(
-name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17409,63 +17278,31 @@ name|parmnum
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
-operator|!
-name|TYPE_READONLY
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttr
+argument_list|)
+operator|&
+operator|~
+name|TYPE_QUALS
+argument_list|(
+name|ttl
 argument_list|)
 condition|)
 name|warn_for_assignment
 argument_list|(
-literal|"%s discards `const' from pointer target type"
+literal|"%s discards qualifiers from pointer target type"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
 name|parmnum
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-name|TYPE_VOLATILE
-argument_list|(
-name|ttr
-argument_list|)
-condition|)
-name|warn_for_assignment
-argument_list|(
-literal|"%s discards `volatile' from pointer target type"
-argument_list|,
-name|get_spelling
-argument_list|(
-name|errtype
-argument_list|)
-argument_list|,
-name|funname
-argument_list|,
-name|parmnum
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -17626,10 +17463,7 @@ name|warn_for_assignment
 argument_list|(
 literal|"ANSI forbids %s between function pointer and `void *'"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17657,53 +17491,22 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|TYPE_READONLY
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttr
+argument_list|)
+operator|&
+operator|~
+name|TYPE_QUALS
+argument_list|(
+name|ttl
 argument_list|)
 condition|)
 name|warn_for_assignment
 argument_list|(
-literal|"%s discards `const' from pointer target type"
+literal|"%s discards qualifiers from pointer target type"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
-argument_list|,
-name|funname
-argument_list|,
-name|parmnum
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-name|TYPE_VOLATILE
-argument_list|(
-name|ttr
-argument_list|)
-condition|)
-name|warn_for_assignment
-argument_list|(
-literal|"%s discards `volatile' from pointer target type"
-argument_list|,
-name|get_spelling
-argument_list|(
-name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17746,10 +17549,7 @@ name|warn_for_assignment
 argument_list|(
 literal|"pointer targets in %s differ in signedness"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17778,52 +17578,22 @@ block|{
 comment|/* Because const and volatile on functions are restrictions 		 that say the function will not do certain things, 		 it is okay to use a const or volatile function 		 where an ordinary one is wanted, but not vice-versa.  */
 if|if
 condition|(
-name|TYPE_READONLY
+name|TYPE_QUALS
 argument_list|(
 name|ttl
 argument_list|)
-operator|&&
-operator|!
-name|TYPE_READONLY
+operator|&
+operator|~
+name|TYPE_QUALS
 argument_list|(
 name|ttr
 argument_list|)
 condition|)
 name|warn_for_assignment
 argument_list|(
-literal|"%s makes `const *' function pointer from non-const"
+literal|"%s makes qualified function pointer from unqualified"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
-argument_list|,
-name|funname
-argument_list|,
-name|parmnum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_VOLATILE
-argument_list|(
-name|ttl
-argument_list|)
-operator|&&
-operator|!
-name|TYPE_VOLATILE
-argument_list|(
-name|ttr
-argument_list|)
-condition|)
-name|warn_for_assignment
-argument_list|(
-literal|"%s makes `volatile *' function pointer from non-volatile"
-argument_list|,
-name|get_spelling
-argument_list|(
-name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17837,10 +17607,7 @@ name|warn_for_assignment
 argument_list|(
 literal|"%s from incompatible pointer type"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17933,10 +17700,7 @@ name|warn_for_assignment
 argument_list|(
 literal|"%s makes pointer from integer without a cast"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -17972,10 +17736,7 @@ name|warn_for_assignment
 argument_list|(
 literal|"%s makes integer from pointer without a cast"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|,
 name|funname
 argument_list|,
@@ -18058,10 +17819,7 @@ name|error
 argument_list|(
 literal|"incompatible types in %s"
 argument_list|,
-name|get_spelling
-argument_list|(
 name|errtype
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -18071,7 +17829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print a warning using MSG.    It gets OPNAME as its one parameter.    If OPNAME is null, it is replaced by "passing arg ARGNUM of `FUNCTION'".    FUNCTION and ARGNUM are handled specially if we are building an    Objective-C selector.  */
+comment|/* Print a warning using MSGID.    It gets OPNAME as its one parameter.    If OPNAME is null, it is replaced by "passing arg ARGNUM of `FUNCTION'".    FUNCTION and ARGNUM are handled specially if we are building an    Objective-C selector.  */
 end_comment
 
 begin_function
@@ -18079,7 +17837,7 @@ specifier|static
 name|void
 name|warn_for_assignment
 parameter_list|(
-name|msg
+name|msgid
 parameter_list|,
 name|opname
 parameter_list|,
@@ -18087,10 +17845,12 @@ name|function
 parameter_list|,
 name|argnum
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|msg
+name|msgid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|opname
@@ -18102,20 +17862,6 @@ name|int
 name|argnum
 decl_stmt|;
 block|{
-specifier|static
-name|char
-name|argstring
-index|[]
-init|=
-literal|"passing arg %d of `%s'"
-decl_stmt|;
-specifier|static
-name|char
-name|argnofun
-index|[]
-init|=
-literal|"passing arg %d"
-decl_stmt|;
 if|if
 condition|(
 name|opname
@@ -18128,6 +17874,10 @@ name|selector
 init|=
 name|maybe_building_objc_message_expr
 argument_list|()
+decl_stmt|;
+name|char
+modifier|*
+name|new_opname
 decl_stmt|;
 if|if
 condition|(
@@ -18153,7 +17903,17 @@ name|function
 condition|)
 block|{
 comment|/* Function name is known; supply it.  */
-name|opname
+specifier|const
+name|char
+modifier|*
+name|argstring
+init|=
+name|_
+argument_list|(
+literal|"passing arg %d of `%s'"
+argument_list|)
+decl_stmt|;
+name|new_opname
 operator|=
 operator|(
 name|char
@@ -18166,10 +17926,12 @@ argument_list|(
 name|function
 argument_list|)
 operator|+
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|argstring
 argument_list|)
+operator|+
+literal|1
 operator|+
 literal|25
 comment|/*%d*/
@@ -18179,7 +17941,7 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|opname
+name|new_opname
 argument_list|,
 name|argstring
 argument_list|,
@@ -18194,8 +17956,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Function name unknown (call through ptr); just give arg number.  */
-name|opname
+comment|/* Function name unknown (call through ptr); just give arg number.*/
+specifier|const
+name|char
+modifier|*
+name|argnofun
+init|=
+name|_
+argument_list|(
+literal|"passing arg %d of pointer to function"
+argument_list|)
+decl_stmt|;
+name|new_opname
 operator|=
 operator|(
 name|char
@@ -18203,10 +17975,12 @@ operator|*
 operator|)
 name|alloca
 argument_list|(
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|argnofun
 argument_list|)
+operator|+
+literal|1
 operator|+
 literal|25
 comment|/*%d*/
@@ -18216,7 +17990,7 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|opname
+name|new_opname
 argument_list|,
 name|argnofun
 argument_list|,
@@ -18224,10 +17998,14 @@ name|argnum
 argument_list|)
 expr_stmt|;
 block|}
+name|opname
+operator|=
+name|new_opname
+expr_stmt|;
 block|}
 name|pedwarn
 argument_list|(
-name|msg
+name|msgid
 argument_list|,
 name|opname
 argument_list|)
@@ -18641,7 +18419,7 @@ argument_list|,
 name|endtype
 argument_list|)
 return|;
-comment|/* Likewise conversions from int to pointers.  */
+comment|/* Likewise conversions from int to pointers, but also allow 	 conversions from 0.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -18668,8 +18446,26 @@ argument_list|)
 argument_list|)
 operator|==
 name|INTEGER_TYPE
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
+name|integer_zerop
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|value
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|null_pointer_node
+return|;
+elseif|else
+if|if
+condition|(
 name|TYPE_PRECISION
 argument_list|(
 name|TREE_TYPE
@@ -18690,7 +18486,6 @@ literal|0
 argument_list|)
 argument_list|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|initializer_constant_valid_p
@@ -18705,6 +18500,7 @@ argument_list|,
 name|endtype
 argument_list|)
 return|;
+block|}
 comment|/* Allow conversions to union types if the value inside is okay.  */
 if|if
 condition|(
@@ -19104,6 +18900,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -19240,6 +19037,7 @@ name|push_string
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -19274,6 +19072,7 @@ name|tree
 name|decl
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|string
@@ -19431,11 +19230,6 @@ init|=
 name|buffer
 decl_stmt|;
 specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
-specifier|register
 name|struct
 name|spelling
 modifier|*
@@ -19486,6 +19280,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -19537,189 +19337,30 @@ block|}
 end_function
 
 begin_comment
-comment|/* Provide a means to pass component names derived from the spelling stack.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|initialization_message
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Interpret the spelling of the given ERRTYPE message.  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|get_spelling
-parameter_list|(
-name|errtype
-parameter_list|)
-name|char
-modifier|*
-name|errtype
-decl_stmt|;
-block|{
-specifier|static
-name|char
-modifier|*
-name|buffer
-decl_stmt|;
-specifier|static
-name|int
-name|size
-init|=
-operator|-
-literal|1
-decl_stmt|;
-if|if
-condition|(
-name|errtype
-operator|==
-operator|&
-name|initialization_message
-condition|)
-block|{
-comment|/* Avoid counting chars */
-specifier|static
-name|char
-name|message
-index|[]
-init|=
-literal|"initialization of `%s'"
-decl_stmt|;
-specifier|register
-name|int
-name|needed
-init|=
-sizeof|sizeof
-argument_list|(
-name|message
-argument_list|)
-operator|+
-name|spelling_length
-argument_list|()
-operator|+
-literal|1
-decl_stmt|;
-name|char
-modifier|*
-name|temp
-decl_stmt|;
-if|if
-condition|(
-name|size
-operator|<
-literal|0
-condition|)
-name|buffer
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|size
-operator|=
-name|needed
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|needed
-operator|>
-name|size
-condition|)
-name|buffer
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xrealloc
-argument_list|(
-name|buffer
-argument_list|,
-name|size
-operator|=
-name|needed
-argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|needed
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-name|message
-argument_list|,
-name|print_spelling
-argument_list|(
-name|temp
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|buffer
-return|;
-block|}
-return|return
-name|errtype
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Issue an error message for a bad initializer component.    FORMAT describes the message.  OFWHAT is the name for the component.    LOCAL is a format string for formatting the insertion of the name    into the message.     If OFWHAT is null, the component name is stored on the spelling stack.    If the component name is a null string, then LOCAL is omitted entirely.  */
+comment|/* Issue an error message for a bad initializer component.    MSGID identifies the message.    The component name is taken from the spelling stack.  */
 end_comment
 
 begin_function
 name|void
 name|error_init
 parameter_list|(
-name|format
-parameter_list|,
-name|local
-parameter_list|,
-name|ofwhat
+name|msgid
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|format
-decl_stmt|,
-decl|*
-name|local
-decl_stmt|,
-modifier|*
-name|ofwhat
+name|msgid
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
-name|buffer
-decl_stmt|;
-if|if
-condition|(
 name|ofwhat
-operator|==
-literal|0
-condition|)
+decl_stmt|;
+name|error
+argument_list|(
+name|msgid
+argument_list|)
+expr_stmt|;
 name|ofwhat
 operator|=
 name|print_spelling
@@ -19737,97 +19378,46 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|buffer
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|strlen
-argument_list|(
-name|local
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|ofwhat
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
 name|ofwhat
 condition|)
-name|sprintf
+name|error
 argument_list|(
-name|buffer
-argument_list|,
-name|local
+literal|"(near initialization for `%s')"
 argument_list|,
 name|ofwhat
 argument_list|)
 expr_stmt|;
-else|else
-name|buffer
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|error
-argument_list|(
-name|format
-argument_list|,
-name|buffer
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Issue a pedantic warning for a bad initializer component.    FORMAT describes the message.  OFWHAT is the name for the component.    LOCAL is a format string for formatting the insertion of the name    into the message.     If OFWHAT is null, the component name is stored on the spelling stack.    If the component name is a null string, then LOCAL is omitted entirely.  */
+comment|/* Issue a pedantic warning for a bad initializer component.    MSGID identifies the message.    The component name is taken from the spelling stack.  */
 end_comment
 
 begin_function
 name|void
 name|pedwarn_init
 parameter_list|(
-name|format
-parameter_list|,
-name|local
-parameter_list|,
-name|ofwhat
+name|msgid
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|format
-decl_stmt|,
-decl|*
-name|local
-decl_stmt|,
-modifier|*
-name|ofwhat
+name|msgid
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
-name|buffer
-decl_stmt|;
-if|if
-condition|(
 name|ofwhat
-operator|==
-literal|0
-condition|)
+decl_stmt|;
+name|pedwarn
+argument_list|(
+name|msgid
+argument_list|)
+expr_stmt|;
 name|ofwhat
 operator|=
 name|print_spelling
@@ -19845,61 +19435,23 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|buffer
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|strlen
-argument_list|(
-name|local
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|ofwhat
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
 name|ofwhat
 condition|)
-name|sprintf
+name|pedwarn
 argument_list|(
-name|buffer
-argument_list|,
-name|local
+literal|"(near initialization for `%s')"
 argument_list|,
 name|ofwhat
 argument_list|)
 expr_stmt|;
-else|else
-name|buffer
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|pedwarn
-argument_list|(
-name|format
-argument_list|,
-name|buffer
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Issue a warning for a bad initializer component.    FORMAT describes the message.  OFWHAT is the name for the component.    LOCAL is a format string for formatting the insertion of the name    into the message.     If OFWHAT is null, the component name is stored on the spelling stack.    If the component name is a null string, then LOCAL is omitted entirely.  */
+comment|/* Issue a warning for a bad initializer component.    MSGID identifies the message.    The component name is taken from the spelling stack.  */
 end_comment
 
 begin_function
@@ -19907,36 +19459,23 @@ specifier|static
 name|void
 name|warning_init
 parameter_list|(
-name|format
-parameter_list|,
-name|local
-parameter_list|,
-name|ofwhat
+name|msgid
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|format
-decl_stmt|,
-decl|*
-name|local
-decl_stmt|,
-modifier|*
-name|ofwhat
+name|msgid
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
-name|buffer
-decl_stmt|;
-if|if
-condition|(
 name|ofwhat
-operator|==
-literal|0
-condition|)
+decl_stmt|;
+name|warning
+argument_list|(
+name|msgid
+argument_list|)
+expr_stmt|;
 name|ofwhat
 operator|=
 name|print_spelling
@@ -19954,58 +19493,20 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|buffer
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|strlen
-argument_list|(
-name|local
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|ofwhat
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
 name|ofwhat
 condition|)
-name|sprintf
+name|warning
 argument_list|(
-name|buffer
-argument_list|,
-name|local
+literal|"(near initialization for `%s')"
 argument_list|,
 name|ofwhat
 argument_list|)
 expr_stmt|;
-else|else
-name|buffer
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|warning
-argument_list|(
-name|format
-argument_list|,
-name|buffer
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -20189,11 +19690,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"char-array%s initialized from wide string"
-argument_list|,
-literal|" `%s'"
-argument_list|,
-name|NULL
+literal|"char-array initialized from wide string"
 argument_list|)
 expr_stmt|;
 return|return
@@ -20230,11 +19727,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"int-array%s initialized from non-wide string"
-argument_list|,
-literal|" `%s'"
-argument_list|,
-name|NULL
+literal|"int-array initialized from non-wide string"
 argument_list|)
 expr_stmt|;
 return|return
@@ -20325,11 +19818,7 @@ operator|)
 condition|)
 name|pedwarn_init
 argument_list|(
-literal|"initializer-string for array of chars%s is too long"
-argument_list|,
-literal|" `%s'"
-argument_list|,
-name|NULL
+literal|"initializer-string for array of chars is too long"
 argument_list|)
 expr_stmt|;
 block|}
@@ -20488,11 +19977,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"array%s initialized from non-constant array expression"
-argument_list|,
-literal|" `%s'"
-argument_list|,
-name|NULL
+literal|"array initialized from non-constant array expression"
 argument_list|)
 expr_stmt|;
 return|return
@@ -20552,21 +20037,13 @@ name|error_mark_node
 condition|)
 name|error_init
 argument_list|(
-literal|"initializer element%s is not constant"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not constant"
 argument_list|)
 expr_stmt|;
 else|else
 name|pedwarn_init
 argument_list|(
-literal|"initializer element%s is not constant"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not constant"
 argument_list|)
 expr_stmt|;
 if|if
@@ -20592,11 +20069,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not constant"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not constant"
 argument_list|)
 expr_stmt|;
 name|inside_init
@@ -20624,11 +20097,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not computable at load time"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not computable at load time"
 argument_list|)
 expr_stmt|;
 name|inside_init
@@ -20673,7 +20142,10 @@ name|type
 argument_list|,
 name|init
 argument_list|,
+name|_
+argument_list|(
 literal|"initialization"
+argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
@@ -20695,11 +20167,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not constant"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not constant"
 argument_list|)
 expr_stmt|;
 name|inside_init
@@ -20727,11 +20195,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not computable at load time"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not computable at load time"
 argument_list|)
 expr_stmt|;
 name|inside_init
@@ -20764,11 +20228,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"variable-sized object%s may not be initialized"
-argument_list|,
-literal|" `%s'"
-argument_list|,
-name|NULL
+literal|"variable-sized object may not be initialized"
 argument_list|)
 expr_stmt|;
 return|return
@@ -20906,11 +20366,7 @@ else|else
 block|{
 name|error_init
 argument_list|(
-literal|"invalid initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"invalid initializer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -20959,11 +20415,7 @@ return|;
 block|}
 name|error_init
 argument_list|(
-literal|"invalid initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"invalid initializer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -21438,6 +20890,7 @@ name|int
 name|top_level
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|locus
@@ -22723,11 +22176,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"extra brace group at end of initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"extra brace group at end of initializer"
 argument_list|)
 expr_stmt|;
 name|constructor_fields
@@ -22762,11 +22211,7 @@ literal|1
 expr_stmt|;
 name|warning_init
 argument_list|(
-literal|"missing braces around initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"missing braces around initializer"
 argument_list|)
 expr_stmt|;
 block|}
@@ -22906,11 +22351,7 @@ else|else
 block|{
 name|warning_init
 argument_list|(
-literal|"braces around scalar initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"braces around scalar initializer"
 argument_list|)
 expr_stmt|;
 name|constructor_fields
@@ -22978,20 +22419,6 @@ name|DECL_C_BIT_FIELD
 argument_list|(
 name|tail
 argument_list|)
-comment|/* This catches cases like `int foo : 8;'.  */
-operator|||
-name|DECL_MODE
-argument_list|(
-name|tail
-argument_list|)
-operator|!=
-name|TYPE_MODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|tail
-argument_list|)
-argument_list|)
 condition|)
 block|{
 name|constructor_incremental
@@ -23009,6 +22436,40 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|UNION_TYPE
+condition|)
+block|{
+name|tree
+name|tail
+init|=
+name|TYPE_FIELDS
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tail
+operator|&&
+name|DECL_C_BIT_FIELD
+argument_list|(
+name|tail
+argument_list|)
+condition|)
+comment|/* We also use the nonincremental algorithm for initiliazation 	   of unions whose first member is a bitfield, becuase the 	   incremental algorithm has no code for dealing with 	   bitfields. */
+name|constructor_incremental
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -23124,11 +22585,7 @@ argument_list|)
 expr_stmt|;
 name|warning_init
 argument_list|(
-literal|"missing initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"missing initializer"
 argument_list|)
 expr_stmt|;
 name|RESTORE_SPELLING_DEPTH
@@ -23148,7 +22605,7 @@ directive|if
 literal|0
 comment|/* c-parse.in warns about {}.  */
 comment|/* In ANSI, each brace level must have at least one element.  */
-block|if (! implicit&& pedantic&& (TREE_CODE (constructor_type) == ARRAY_TYPE 	  ? integer_zerop (constructor_unfilled_index) 	  : constructor_unfilled_fields == TYPE_FIELDS (constructor_type)))     pedwarn_init ("empty braces in initializer%s", " for `%s'", NULL);
+block|if (! implicit&& pedantic&& (TREE_CODE (constructor_type) == ARRAY_TYPE 	  ? integer_zerop (constructor_unfilled_index) 	  : constructor_unfilled_fields == TYPE_FIELDS (constructor_type)))     pedwarn_init ("empty braces in initializer");
 endif|#
 directive|endif
 comment|/* Pad out the end of the structure.  */
@@ -23336,11 +22793,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"empty scalar initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"empty scalar initializer"
 argument_list|)
 expr_stmt|;
 name|constructor
@@ -23361,11 +22814,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"extra elements in scalar initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"extra elements in scalar initializer"
 argument_list|)
 expr_stmt|;
 name|constructor
@@ -23951,11 +23400,7 @@ name|INTEGER_CST
 condition|)
 name|error_init
 argument_list|(
-literal|"nonconstant array index in initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"nonconstant array index in initializer"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -23974,11 +23419,7 @@ name|INTEGER_CST
 condition|)
 name|error_init
 argument_list|(
-literal|"nonconstant array index in initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"nonconstant array index in initializer"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -23989,11 +23430,7 @@ name|constructor_unfilled_index
 condition|)
 name|error_init
 argument_list|(
-literal|"array index in non-array initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"array index in non-array initializer"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -24008,11 +23445,7 @@ argument_list|)
 condition|)
 name|error_init
 argument_list|(
-literal|"duplicate array index in initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"duplicate array index in initializer"
 argument_list|)
 expr_stmt|;
 else|else
@@ -24052,11 +23485,7 @@ argument_list|)
 condition|)
 name|error_init
 argument_list|(
-literal|"empty index range in initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"empty index range in initializer"
 argument_list|)
 expr_stmt|;
 else|else
@@ -25392,11 +24821,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not constant"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not constant"
 argument_list|)
 expr_stmt|;
 name|value
@@ -25424,11 +24849,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"initializer element%s is not computable at load time"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"initializer element is not computable at load time"
 argument_list|)
 expr_stmt|;
 name|value
@@ -25476,11 +24897,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"duplicate initializer%s"
-argument_list|,
-literal|" for `%s'"
-argument_list|,
-name|NULL
+literal|"duplicate initializer"
 argument_list|)
 expr_stmt|;
 name|duplicate
@@ -26641,11 +26058,7 @@ condition|)
 block|{
 name|error_init
 argument_list|(
-literal|"excess elements in struct initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in struct initializer"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -26761,11 +26174,7 @@ condition|)
 block|{
 name|pedwarn_init
 argument_list|(
-literal|"excess elements in struct initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in struct initializer"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -27009,11 +26418,7 @@ condition|)
 block|{
 name|pedwarn_init
 argument_list|(
-literal|"excess elements in union initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in union initializer"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -27309,11 +26714,7 @@ condition|)
 block|{
 name|pedwarn_init
 argument_list|(
-literal|"excess elements in array initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in array initializer"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -27340,11 +26741,7 @@ condition|)
 block|{
 name|pedwarn_init
 argument_list|(
-literal|"excess elements in array initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in array initializer"
 argument_list|)
 expr_stmt|;
 name|TREE_INT_CST_HIGH
@@ -27501,11 +26898,7 @@ condition|)
 block|{
 name|pedwarn_init
 argument_list|(
-literal|"excess elements in scalar initializer%s"
-argument_list|,
-literal|" after `%s'"
-argument_list|,
-name|NULL_PTR
+literal|"excess elements in scalar initializer"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -28051,7 +27444,10 @@ name|valtype
 argument_list|,
 name|retval
 argument_list|,
+name|_
+argument_list|(
 literal|"return"
+argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,

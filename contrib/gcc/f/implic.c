@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* implic.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None.     Description:       The GNU Fortran Front End.     Modifications: */
+comment|/* implic.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None.     Description:       The GNU Fortran Front End.     Modifications: */
 end_comment
 
 begin_comment
@@ -134,6 +134,7 @@ specifier|static
 name|ffeimplic_
 name|ffeimplic_lookup_
 parameter_list|(
+name|unsigned
 name|char
 name|c
 parameter_list|)
@@ -156,6 +157,7 @@ specifier|static
 name|ffeimplic_
 name|ffeimplic_lookup_
 parameter_list|(
+name|unsigned
 name|char
 name|c
 parameter_list|)
@@ -873,7 +875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ffeimplic_peek_symbol_type -- Determine implicit type of a symbol     ffesymbol s;    char *name;	// name for s in case it is NULL, or NULL if s never NULL    if (ffeimplic_peek_symbol_type(s,name) == FFEINFO_basictypeCHARACTER)        // is or will be a CHARACTER-typed name     Like establish_symbol, but doesn't change anything.     If symbol is non-NULL and already has a type, return it.    Get first character of symbol's name or from name arg if symbol is NULL.    Get ffeimplic_ object for it (return FALSE if NULL returned).    Return NONE if object has no assigned type (IMPLICIT NONE).    Return the data type indicated in the object.     24-Oct-91  JCB  2.0       Take a char * instead of ffelexToken, since the latter isn't always       needed anyway (as when ffecom calls it).	*/
+comment|/* ffeimplic_peek_symbol_type -- Determine implicit type of a symbol     ffesymbol s;    const char *name; // name for s in case it is NULL, or NULL if s never NULL    if (ffeimplic_peek_symbol_type(s,name) == FFEINFO_basictypeCHARACTER)        // is or will be a CHARACTER-typed name     Like establish_symbol, but doesn't change anything.     If symbol is non-NULL and already has a type, return it.    Get first character of symbol's name or from name arg if symbol is NULL.    Get ffeimplic_ object for it (return FALSE if NULL returned).    Return NONE if object has no assigned type (IMPLICIT NONE).    Return the data type indicated in the object.     24-Oct-91  JCB  2.0       Take a char * instead of ffelexToken, since the latter isn't always       needed anyway (as when ffecom calls it).	*/
 end_comment
 
 begin_function
@@ -883,6 +885,7 @@ parameter_list|(
 name|ffesymbol
 name|s
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

@@ -5,23 +5,21 @@ directive|include
 file|"sparc/sparc.h"
 end_include
 
+begin_comment
+comment|/* Override the name of the mcount profiling function.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_FUNCTION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|fprintf (FILE, "\tsethi %%hi(LP%d),%%o0\n\tcall .mcount\n\tor %%lo(LP%d),%%o0,%%o0\n", \ 	   (LABELNO), (LABELNO))
+name|MCOUNT_FUNCTION
+value|"*.mcount"
 end_define
 
 begin_comment

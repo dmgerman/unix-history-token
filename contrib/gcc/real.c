@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* real.c - implementation of REAL_ARITHMETIC, REAL_VALUE_ATOF,    and support for XFmode IEEE extended real floating point arithmetic.    Copyright (C) 1993, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by Stephen L. Moshier (moshier@world.std.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* real.c - implementation of REAL_ARITHMETIC, REAL_VALUE_ATOF,    and support for XFmode IEEE extended real floating point arithmetic.    Copyright (C) 1993, 94-98, 1999 Free Software Foundation, Inc.    Contributed by Stephen L. Moshier (moshier@world.std.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -35,7 +35,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Type of computer arithmetic.    Only one of DEC, IBM, IEEE, C4X, or UNK should get defined.     `IEEE', when REAL_WORDS_BIG_ENDIAN is non-zero, refers generically    to big-endian IEEE floating-point data structure.  This definition    should work in SFmode `float' type and DFmode `double' type on    virtually all big-endian IEEE machines.  If LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode (`long double' type) data structure used by the Motorola    680x0 series processors.     `IEEE', when REAL_WORDS_BIG_ENDIAN is zero, refers generally to    little-endian IEEE machines. In this case, if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode `long double' data structure used by the Intel 80x86 series    processors.     `DEC' refers specifically to the Digital Equipment Corp PDP-11    and VAX floating point data structure.  This model currently    supports no type wider than DFmode.     `IBM' refers specifically to the IBM System/370 and compatible    floating point data structure.  This model currently supports    no type wider than DFmode.  The IBM conversions were contributed by    frank@atom.ansto.gov.au (Frank Crawford).     `C4X' refers specifically to the floating point format used on    Texas Instruments TMS320C3x and TMS320C4x digital signal    processors.  This supports QFmode (32-bit float, double) and HFmode    (40-bit long double) where BITS_PER_BYTE is 32.     If LONG_DOUBLE_TYPE_SIZE = 64 (the default, unless tm.h defines it)    then `long double' and `double' are both implemented, but they    both mean DFmode.  In this case, the software floating-point    support available here is activated by writing       #define REAL_ARITHMETIC    in tm.h.      The case LONG_DOUBLE_TYPE_SIZE = 128 activates TFmode support    and may deactivate XFmode since `long double' is used to refer    to both modes.     The macros FLOAT_WORDS_BIG_ENDIAN, HOST_FLOAT_WORDS_BIG_ENDIAN,    contributed by Richard Earnshaw<Richard.Earnshaw@cl.cam.ac.uk>,    separate the floating point unit's endian-ness from that of    the integer addressing.  This permits one to define a big-endian    FPU on a little-endian machine (e.g., ARM).  An extension to    BYTES_BIG_ENDIAN may be required for some machines in the future.    These optional macros may be defined in tm.h.  In real.h, they    default to WORDS_BIG_ENDIAN, etc., so there is no need to define    them for any normal host or target machine on which the floats    and the integers have the same endian-ness.   */
+comment|/* Type of computer arithmetic.    Only one of DEC, IBM, IEEE, C4X, or UNK should get defined.     `IEEE', when REAL_WORDS_BIG_ENDIAN is non-zero, refers generically    to big-endian IEEE floating-point data structure.  This definition    should work in SFmode `float' type and DFmode `double' type on    virtually all big-endian IEEE machines.  If LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode (`long double' type) data structure used by the Motorola    680x0 series processors.     `IEEE', when REAL_WORDS_BIG_ENDIAN is zero, refers generally to    little-endian IEEE machines. In this case, if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode `long double' data structure used by the Intel 80x86 series    processors.     `DEC' refers specifically to the Digital Equipment Corp PDP-11    and VAX floating point data structure.  This model currently    supports no type wider than DFmode.     `IBM' refers specifically to the IBM System/370 and compatible    floating point data structure.  This model currently supports    no type wider than DFmode.  The IBM conversions were contributed by    frank@atom.ansto.gov.au (Frank Crawford).     `C4X' refers specifically to the floating point format used on    Texas Instruments TMS320C3x and TMS320C4x digital signal    processors.  This supports QFmode (32-bit float, double) and HFmode    (40-bit long double) where BITS_PER_BYTE is 32. Unlike IEEE    floats, C4x floats are not rounded to be even. The C4x conversions    were contributed by m.hayes@elec.canterbury.ac.nz (Michael Hayes) and    Haj.Ten.Brugge@net.HCC.nl (Herman ten Brugge).     If LONG_DOUBLE_TYPE_SIZE = 64 (the default, unless tm.h defines it)    then `long double' and `double' are both implemented, but they    both mean DFmode.  In this case, the software floating-point    support available here is activated by writing       #define REAL_ARITHMETIC    in tm.h.     The case LONG_DOUBLE_TYPE_SIZE = 128 activates TFmode support    and may deactivate XFmode since `long double' is used to refer    to both modes.     The macros FLOAT_WORDS_BIG_ENDIAN, HOST_FLOAT_WORDS_BIG_ENDIAN,    contributed by Richard Earnshaw<Richard.Earnshaw@cl.cam.ac.uk>,    separate the floating point unit's endian-ness from that of    the integer addressing.  This permits one to define a big-endian    FPU on a little-endian machine (e.g., ARM).  An extension to    BYTES_BIG_ENDIAN may be required for some machines in the future.    These optional macros may be defined in tm.h.  In real.h, they    default to WORDS_BIG_ENDIAN, etc., so there is no need to define    them for any normal host or target machine on which the floats    and the integers have the same endian-ness.   */
 end_comment
 
 begin_comment
@@ -487,7 +487,8 @@ name|e
 parameter_list|,
 name|r
 parameter_list|)
-value|bcopy ((char *) e, (char *) r, 2*NE)
+define|\
+value|do {						\   if (2*NE< sizeof(*r))			\     bzero((char *)r, sizeof(*r));		\   bcopy ((char *) e, (char *) r, 2*NE);		\ } while (0)
 else|#
 directive|else
 comment|/* no XFmode */
@@ -553,7 +554,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|do {								\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)	\        e53toe ((unsigned EMUSHORT *) (r), (e));			\      else							\        {							\ 	 unsigned EMUSHORT w[4];				\ 	 w[3] = ((EMUSHORT *) r)[0];				\ 	 w[2] = ((EMUSHORT *) r)[1];				\ 	 w[1] = ((EMUSHORT *) r)[2];				\ 	 w[0] = ((EMUSHORT *) r)[3];				\ 	 e53toe (w, (e));					\        }							\    } while (0)
+value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        e53toe ((unsigned EMUSHORT *) (r), (e));				\      else								\        {								\ 	 unsigned EMUSHORT w[4];					\          bcopy (((EMUSHORT *) r),&w[3], sizeof (EMUSHORT));		\          bcopy (((EMUSHORT *) r) + 1,&w[2], sizeof (EMUSHORT));	\ 	 bcopy (((EMUSHORT *) r) + 2,&w[1], sizeof (EMUSHORT));	\ 	 bcopy (((EMUSHORT *) r) + 3,&w[0], sizeof (EMUSHORT));	\ 	 e53toe (w, (e));						\        }								\    } while (0)
 define|#
 directive|define
 name|PUT_REAL
@@ -563,7 +564,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|do {								\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)	\        etoe53 ((e), (unsigned EMUSHORT *) (r));			\      else							\        {							\ 	 unsigned EMUSHORT w[4];				\ 	 etoe53 ((e), w);					\ 	 *((EMUSHORT *) r) = w[3];				\ 	 *((EMUSHORT *) r + 1) = w[2];				\ 	 *((EMUSHORT *) r + 2) = w[1];				\ 	 *((EMUSHORT *) r + 3) = w[0];				\        }							\    } while (0)
+value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        etoe53 ((e), (unsigned EMUSHORT *) (r));				\      else								\        {								\ 	 unsigned EMUSHORT w[4];					\ 	 etoe53 ((e), w);						\          bcopy (&w[3], ((EMUSHORT *) r), sizeof (EMUSHORT));		\          bcopy (&w[2], ((EMUSHORT *) r) + 1, sizeof (EMUSHORT));	\          bcopy (&w[1], ((EMUSHORT *) r) + 2, sizeof (EMUSHORT));	\          bcopy (&w[0], ((EMUSHORT *) r) + 3, sizeof (EMUSHORT));	\        }								\    } while (0)
 else|#
 directive|else
 comment|/* not REAL_ARITHMETIC */
@@ -1743,6 +1744,7 @@ name|asctoe24
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1761,6 +1763,7 @@ name|asctoe53
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1779,6 +1782,7 @@ name|asctoe64
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1797,6 +1801,7 @@ name|asctoe113
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1815,6 +1820,7 @@ name|asctoe
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1833,6 +1839,7 @@ name|asctoeg
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1936,6 +1943,7 @@ name|mtherr
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -3134,7 +3142,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is the REAL_VALUE_ATOF function.  It converts a decimal string to    binary, rounding off as indicated by the machine_mode argument.  Then it    promotes the rounded value to REAL_VALUE_TYPE.  */
+comment|/* This is the REAL_VALUE_ATOF function.  It converts a decimal or hexadecimal    string to binary, rounding off as indicated by the machine_mode argument.    Then it promotes the rounded value to REAL_VALUE_TYPE.  */
 end_comment
 
 begin_function
@@ -3145,6 +3153,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -4949,7 +4958,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The following routines convert REAL_VALUE_TYPE to the various floating    point formats that are meaningful to supported computers.     The results are returned in 32-bit pieces, each piece stored in a `long'.      This is so they can be printed by statements like         fprintf (file, "%lx, %lx", L[0],  L[1]);     that will work on both narrow- and wide-word host computers.  */
+comment|/* The following routines convert REAL_VALUE_TYPE to the various floating    point formats that are meaningful to supported computers.     The results are returned in 32-bit pieces, each piece stored in a `long'.    This is so they can be printed by statements like        fprintf (file, "%lx, %lx", L[0],  L[1]);     that will work on both narrow- and wide-word host computers.  */
 end_comment
 
 begin_comment
@@ -5328,11 +5337,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*   Extended precision IEEE binary floating point arithmetic routines    Numbers are stored in C language as arrays of 16-bit unsigned   short integers.  The arguments of the routines are pointers to   the arrays.    External e type data structure, similar to Intel 8087 chip   temporary real format but possibly with a larger significand:  	NE-1 significand words	(least significant word first, 				 most significant bit is normally set) 	exponent		(value = EXONE for 1.0, 				top bit is the sign)     Internal exploded e-type data structure of a number (a "word" is 16 bits):    ei[0]	sign word	(0 for positive, 0xffff for negative)   ei[1]	biased exponent	(value = EXONE for the number 1.0)   ei[2]	high guard word	(always zero after normalization)   ei[3]   to ei[NI-2]	significand	(NI-4 significand words,  				 most significant word first,  				 most significant bit is set)   ei[NI-1]	low guard word	(0x8000 bit is rounding place)        		Routines for external format e-type numbers    	asctoe (string, e)	ASCII string to extended double e type  	asctoe64 (string,&d)	ASCII string to long double  	asctoe53 (string,&d)	ASCII string to double  	asctoe24 (string,&f)	ASCII string to single  	asctoeg (string, e, prec) ASCII string to specified precision  	e24toe (&f, e)		IEEE single precision to e type  	e53toe (&d, e)		IEEE double precision to e type  	e64toe (&d, e)		IEEE long double precision to e type  	e113toe (&d, e)		128-bit long double precision to e type #if 0  	eabs (e)			absolute value #endif  	eadd (a, b, c)		c = b + a  	eclear (e)		e = 0  	ecmp (a, b)		Returns 1 if a> b, 0 if a == b,  				-1 if a< b, -2 if either a or b is a NaN.  	ediv (a, b, c)		c = b / a  	efloor (a, b)		truncate to integer, toward -infinity  	efrexp (a, exp, s)	extract exponent and significand  	eifrac (e,&l, frac)    e to HOST_WIDE_INT and e type fraction  	euifrac (e,&l, frac)   e to unsigned HOST_WIDE_INT and e type fraction  	einfin (e)		set e to infinity, leaving its sign alone  	eldexp (a, n, b)	multiply by 2**n  	emov (a, b)		b = a  	emul (a, b, c)		c = b * a  	eneg (e)			e = -e #if 0  	eround (a, b)		b = nearest integer value to a #endif  	esub (a, b, c)		c = b - a #if 0  	e24toasc (&f, str, n)	single to ASCII string, n digits after decimal  	e53toasc (&d, str, n)	double to ASCII string, n digits after decimal  	e64toasc (&d, str, n)	80-bit long double to ASCII string  	e113toasc (&d, str, n)	128-bit long double to ASCII string #endif  	etoasc (e, str, n)	e to ASCII string, n digits after decimal  	etoe24 (e,&f)		convert e type to IEEE single precision  	etoe53 (e,&d)		convert e type to IEEE double precision  	etoe64 (e,&d)		convert e type to IEEE long double precision  	ltoe (&l, e)		HOST_WIDE_INT to e type  	ultoe (&l, e)		unsigned HOST_WIDE_INT to e type 	eisneg (e)              1 if sign bit of e != 0, else 0 	eisinf (e)              1 if e has maximum exponent (non-IEEE)  				or is infinite (IEEE)         eisnan (e)              1 if e is a NaN     		Routines for internal format exploded e-type numbers    	eaddm (ai, bi)		add significands, bi = bi + ai  	ecleaz (ei)		ei = 0  	ecleazs (ei)		set ei = 0 but leave its sign alone  	ecmpm (ai, bi)		compare significands, return 1, 0, or -1  	edivm (ai, bi)		divide  significands, bi = bi / ai  	emdnorm (ai,l,s,exp)	normalize and round off  	emovi (a, ai)		convert external a to internal ai  	emovo (ai, a)		convert internal ai to external a  	emovz (ai, bi)		bi = ai, low guard word of bi = 0  	emulm (ai, bi)		multiply significands, bi = bi * ai  	enormlz (ei)		left-justify the significand  	eshdn1 (ai)		shift significand and guards down 1 bit  	eshdn8 (ai)		shift down 8 bits  	eshdn6 (ai)		shift down 16 bits  	eshift (ai, n)		shift ai n bits up (or down if n< 0)  	eshup1 (ai)		shift significand and guards up 1 bit  	eshup8 (ai)		shift up 8 bits  	eshup6 (ai)		shift up 16 bits  	esubm (ai, bi)		subtract significands, bi = bi - ai         eiisinf (ai)            1 if infinite         eiisnan (ai)            1 if a NaN  	eiisneg (ai)		1 if sign bit of ai != 0, else 0         einan (ai)              set ai = NaN #if 0         eiinfin (ai)            set ai = infinity #endif    The result is always normalized and rounded to NI-4 word precision   after each arithmetic operation.    Exception flags are NOT fully supported.     Signaling NaN's are NOT supported; they are treated the same   as quiet NaN's.     Define INFINITY for support of infinity; otherwise a   saturation arithmetic is implemented.     Define NANS for support of Not-a-Number items; otherwise the   arithmetic will never produce a NaN output, and might be confused   by a NaN input.   If NaN's are supported, the output of `ecmp (a,b)' is -2 if   either a or b is a NaN. This means asking `if (ecmp (a,b)< 0)'   may not be legitimate. Use `if (ecmp (a,b) == -1)' for `less than'   if in doubt.     Denormals are always supported here where appropriate (e.g., not   for conversion to DEC numbers).  */
+comment|/*   Extended precision IEEE binary floating point arithmetic routines    Numbers are stored in C language as arrays of 16-bit unsigned   short integers.  The arguments of the routines are pointers to   the arrays.    External e type data structure, similar to Intel 8087 chip   temporary real format but possibly with a larger significand:  	NE-1 significand words	(least significant word first, 				 most significant bit is normally set) 	exponent		(value = EXONE for 1.0, 				top bit is the sign)     Internal exploded e-type data structure of a number (a "word" is 16 bits):    ei[0]	sign word	(0 for positive, 0xffff for negative)   ei[1]	biased exponent	(value = EXONE for the number 1.0)   ei[2]	high guard word	(always zero after normalization)   ei[3]   to ei[NI-2]	significand	(NI-4 significand words,  				 most significant word first,  				 most significant bit is set)   ei[NI-1]	low guard word	(0x8000 bit is rounding place)     		Routines for external format e-type numbers   	asctoe (string, e)	ASCII string to extended double e type  	asctoe64 (string,&d)	ASCII string to long double  	asctoe53 (string,&d)	ASCII string to double  	asctoe24 (string,&f)	ASCII string to single  	asctoeg (string, e, prec) ASCII string to specified precision  	e24toe (&f, e)		IEEE single precision to e type  	e53toe (&d, e)		IEEE double precision to e type  	e64toe (&d, e)		IEEE long double precision to e type  	e113toe (&d, e)		128-bit long double precision to e type #if 0  	eabs (e)			absolute value #endif  	eadd (a, b, c)		c = b + a  	eclear (e)		e = 0  	ecmp (a, b)		Returns 1 if a> b, 0 if a == b,  				-1 if a< b, -2 if either a or b is a NaN.  	ediv (a, b, c)		c = b / a  	efloor (a, b)		truncate to integer, toward -infinity  	efrexp (a, exp, s)	extract exponent and significand  	eifrac (e,&l, frac)    e to HOST_WIDE_INT and e type fraction  	euifrac (e,&l, frac)   e to unsigned HOST_WIDE_INT and e type fraction  	einfin (e)		set e to infinity, leaving its sign alone  	eldexp (a, n, b)	multiply by 2**n  	emov (a, b)		b = a  	emul (a, b, c)		c = b * a  	eneg (e)			e = -e #if 0  	eround (a, b)		b = nearest integer value to a #endif  	esub (a, b, c)		c = b - a #if 0  	e24toasc (&f, str, n)	single to ASCII string, n digits after decimal  	e53toasc (&d, str, n)	double to ASCII string, n digits after decimal  	e64toasc (&d, str, n)	80-bit long double to ASCII string  	e113toasc (&d, str, n)	128-bit long double to ASCII string #endif  	etoasc (e, str, n)	e to ASCII string, n digits after decimal  	etoe24 (e,&f)		convert e type to IEEE single precision  	etoe53 (e,&d)		convert e type to IEEE double precision  	etoe64 (e,&d)		convert e type to IEEE long double precision  	ltoe (&l, e)		HOST_WIDE_INT to e type  	ultoe (&l, e)		unsigned HOST_WIDE_INT to e type 	eisneg (e)              1 if sign bit of e != 0, else 0 	eisinf (e)              1 if e has maximum exponent (non-IEEE)  				or is infinite (IEEE)         eisnan (e)              1 if e is a NaN    		Routines for internal format exploded e-type numbers   	eaddm (ai, bi)		add significands, bi = bi + ai  	ecleaz (ei)		ei = 0  	ecleazs (ei)		set ei = 0 but leave its sign alone  	ecmpm (ai, bi)		compare significands, return 1, 0, or -1  	edivm (ai, bi)		divide  significands, bi = bi / ai  	emdnorm (ai,l,s,exp)	normalize and round off  	emovi (a, ai)		convert external a to internal ai  	emovo (ai, a)		convert internal ai to external a  	emovz (ai, bi)		bi = ai, low guard word of bi = 0  	emulm (ai, bi)		multiply significands, bi = bi * ai  	enormlz (ei)		left-justify the significand  	eshdn1 (ai)		shift significand and guards down 1 bit  	eshdn8 (ai)		shift down 8 bits  	eshdn6 (ai)		shift down 16 bits  	eshift (ai, n)		shift ai n bits up (or down if n< 0)  	eshup1 (ai)		shift significand and guards up 1 bit  	eshup8 (ai)		shift up 8 bits  	eshup6 (ai)		shift up 16 bits  	esubm (ai, bi)		subtract significands, bi = bi - ai         eiisinf (ai)            1 if infinite         eiisnan (ai)            1 if a NaN  	eiisneg (ai)		1 if sign bit of ai != 0, else 0         einan (ai)              set ai = NaN #if 0         eiinfin (ai)            set ai = infinity #endif    The result is always normalized and rounded to NI-4 word precision   after each arithmetic operation.    Exception flags are NOT fully supported.    Signaling NaN's are NOT supported; they are treated the same   as quiet NaN's.    Define INFINITY for support of infinity; otherwise a   saturation arithmetic is implemented.    Define NANS for support of Not-a-Number items; otherwise the   arithmetic will never produce a NaN output, and might be confused   by a NaN input.   If NaN's are supported, the output of `ecmp (a,b)' is -2 if   either a or b is a NaN. This means asking `if (ecmp (a,b)< 0)'   may not be legitimate. Use `if (ecmp (a,b) == -1)' for `less than'   if in doubt.    Denormals are always supported here where appropriate (e.g., not   for conversion to DEC numbers).  */
 end_comment
 
 begin_comment
-comment|/* Definitions for error codes that are passed to the common error handling    routine mtherr.     For Digital Equipment PDP-11 and VAX computers, certain   IBM systems, and others that use numbers with a 56-bit   significand, the symbol DEC should be defined.  In this   mode, most floating point constants are given as arrays   of octal integers to eliminate decimal to binary conversion   errors that might be introduced by the compiler.     For computers, such as IBM PC, that follow the IEEE   Standard for Binary Floating Point Arithmetic (ANSI/IEEE   Std 754-1985), the symbol IEEE should be defined.   These numbers have 53-bit significands.  In this mode, constants   are provided as arrays of hexadecimal 16 bit integers.   The endian-ness of generated values is controlled by   REAL_WORDS_BIG_ENDIAN.     To accommodate other types of computer arithmetic, all   constants are also provided in a normal decimal radix   which one can hope are correctly converted to a suitable   format by the available C language compiler.  To invoke   this mode, the symbol UNK is defined.     An important difference among these modes is a predefined   set of machine arithmetic constants for each.  The numbers   MACHEP (the machine roundoff error), MAXNUM (largest number   represented), and several other parameters are preset by   the configuration symbol.  Check the file const.c to   ensure that these values are correct for your computer.     For ANSI C compatibility, define ANSIC equal to 1.  Currently   this affects only the atan2 function and others that use it.  */
+comment|/* Definitions for error codes that are passed to the common error handling    routine mtherr.     For Digital Equipment PDP-11 and VAX computers, certain   IBM systems, and others that use numbers with a 56-bit   significand, the symbol DEC should be defined.  In this   mode, most floating point constants are given as arrays   of octal integers to eliminate decimal to binary conversion   errors that might be introduced by the compiler.    For computers, such as IBM PC, that follow the IEEE   Standard for Binary Floating Point Arithmetic (ANSI/IEEE   Std 754-1985), the symbol IEEE should be defined.   These numbers have 53-bit significands.  In this mode, constants   are provided as arrays of hexadecimal 16 bit integers.   The endian-ness of generated values is controlled by   REAL_WORDS_BIG_ENDIAN.    To accommodate other types of computer arithmetic, all   constants are also provided in a normal decimal radix   which one can hope are correctly converted to a suitable   format by the available C language compiler.  To invoke   this mode, the symbol UNK is defined.    An important difference among these modes is a predefined   set of machine arithmetic constants for each.  The numbers   MACHEP (the machine roundoff error), MAXNUM (largest number   represented), and several other parameters are preset by   the configuration symbol.  Check the file const.c to   ensure that these values are correct for your computer.    For ANSI C compatibility, define ANSIC equal to 1.  Currently   this affects only the atan2 function and others that use it.  */
 end_comment
 
 begin_comment
@@ -6122,12 +6131,12 @@ comment|/* Absolute value of e-type X.  */
 end_comment
 
 begin_comment
-unit|static void  eabs (x)      unsigned EMUSHORT x[]; {
+unit|static void eabs (x)      unsigned EMUSHORT x[]; {
 comment|/* sign is top bit of last word of external format */
 end_comment
 
 begin_endif
-unit|x[NE - 1]&= 0x7fff;		 }
+unit|x[NE - 1]&= 0x7fff; }
 endif|#
 directive|endif
 end_endif
@@ -8215,7 +8224,7 @@ comment|/* Divide significands */
 end_comment
 
 begin_comment
-unit|int  edivm (den, num)      unsigned EMUSHORT den[], num[]; {   int i;   register unsigned EMUSHORT *p, *q;   unsigned EMUSHORT j;    p =&equot[0];   *p++ = num[0];   *p++ = num[1];    for (i = M; i< NI; i++)     {       *p++ = 0;     }
+unit|int edivm (den, num)      unsigned EMUSHORT den[], num[]; {   int i;   register unsigned EMUSHORT *p, *q;   unsigned EMUSHORT j;    p =&equot[0];   *p++ = num[0];   *p++ = num[1];    for (i = M; i< NI; i++)     {       *p++ = 0;     }
 comment|/* Use faster compare and subtraction if denominator has only 15 bits of      significance.  */
 end_comment
 
@@ -8240,7 +8249,7 @@ comment|/* Multiply significands */
 end_comment
 
 begin_comment
-unit|int  emulm (a, b)      unsigned EMUSHORT a[], b[]; {   unsigned EMUSHORT *p, *q;   int i, j, k;    equot[0] = b[0];   equot[1] = b[1];   for (i = M; i< NI; i++)     equot[i] = 0;    p =&a[NI - 2];   k = NBITS;   while (*p == 0)
+unit|int emulm (a, b)      unsigned EMUSHORT a[], b[]; {   unsigned EMUSHORT *p, *q;   int i, j, k;    equot[0] = b[0];   equot[1] = b[1];   for (i = M; i< NI; i++)     equot[i] = 0;    p =&a[NI - 2];   k = NBITS;   while (*p == 0)
 comment|/* significand is not supposed to be zero */
 end_comment
 
@@ -8666,7 +8675,11 @@ condition|(
 operator|(
 name|tdenm
 operator|*
-literal|0xffffL
+operator|(
+name|unsigned
+name|long
+operator|)
+literal|0xffff
 operator|)
 operator|<
 name|tnum
@@ -9057,7 +9070,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Normalize and round off.    The internal format number to be rounded is S.   Input LOST is 0 if the value is exact.  This is the so-called sticky bit.     Input SUBFLG indicates whether the number was obtained   by a subtraction operation.  In that case if LOST is nonzero   then the number is slightly smaller than indicated.     Input EXP is the biased exponent, which may be negative.   the exponent field of S is ignored but is replaced by   EXP as adjusted by normalization and rounding.     Input RCNTRL is the rounding control.  If it is nonzero, the   returned value will be rounded to RNDPRC bits.    For future reference:  In order for emdnorm to round off denormal    significands at the right point, the input exponent must be    adjusted to be the actual value it would have after conversion to    the final floating point type.  This adjustment has been    implemented for all type conversions (etoe53, etc.) and decimal    conversions, but not for the arithmetic functions (eadd, etc.).     Data types having standard 15-bit exponents are not affected by    this, but SFmode and DFmode are affected. For example, ediv with    rndprc = 24 will not round correctly to 24-bit precision if the    result is denormal.   */
+comment|/* Normalize and round off.    The internal format number to be rounded is S.   Input LOST is 0 if the value is exact.  This is the so-called sticky bit.    Input SUBFLG indicates whether the number was obtained   by a subtraction operation.  In that case if LOST is nonzero   then the number is slightly smaller than indicated.    Input EXP is the biased exponent, which may be negative.   the exponent field of S is ignored but is replaced by   EXP as adjusted by normalization and rounding.    Input RCNTRL is the rounding control.  If it is nonzero, the   returned value will be rounded to RNDPRC bits.    For future reference:  In order for emdnorm to round off denormal    significands at the right point, the input exponent must be    adjusted to be the actual value it would have after conversion to    the final floating point type.  This adjustment has been    implemented for all type conversions (etoe53, etc.) and decimal    conversions, but not for the arithmetic functions (eadd, etc.).    Data types having standard 15-bit exponents are not affected by    this, but SFmode and DFmode are affected. For example, ediv with    rndprc = 24 will not round correctly to 24-bit precision if the    result is denormal.   */
 end_comment
 
 begin_decl_stmt
@@ -9643,6 +9656,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|C4X
 if|if
 condition|(
 name|r
@@ -9688,6 +9704,8 @@ name|mddone
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|eaddm
 argument_list|(
 name|rbit
@@ -15981,7 +15999,7 @@ comment|/* not IBM */
 end_comment
 
 begin_comment
-comment|/* Compare two e type numbers.     Return +1 if a> b            0 if a == b           -1 if a< b           -2 if either a or b is a NaN.  */
+comment|/* Compare two e type numbers.    Return +1 if a> b            0 if a == b           -1 if a< b           -2 if either a or b is a NaN.  */
 end_comment
 
 begin_function
@@ -16257,7 +16275,7 @@ comment|/* Find e-type nearest integer to X, as floor (X + 0.5).  */
 end_comment
 
 begin_endif
-unit|static void  eround (x, y)      unsigned EMUSHORT *x, *y; {   eadd (ehalf, x, y);   efloor (y, y); }
+unit|static void eround (x, y)      unsigned EMUSHORT *x, *y; {   eadd (ehalf, x, y);   efloor (y, y); }
 endif|#
 directive|endif
 end_endif
@@ -18947,22 +18965,22 @@ comment|/* Convert float value X to ASCII string STRING with NDIG digits after  
 end_comment
 
 begin_comment
-unit|static void  e24toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e24toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e24toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e24toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert double value X to ASCII string STRING with NDIG digits after    the decimal point.  */
 end_comment
 
 begin_comment
-unit|static void  e53toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e53toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e53toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e53toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert double extended value X to ASCII string STRING with NDIG digits    after the decimal point.  */
 end_comment
 
 begin_comment
-unit|static void  e64toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e64toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e64toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e64toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert 128-bit long double value X to ASCII string STRING with NDIG digits    after the decimal point.  */
 end_comment
 
 begin_endif
-unit|static void  e113toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e113toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e113toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e113toe (x, w);   etoasc (w, string, ndigs); }
 endif|#
 directive|endif
 end_endif
@@ -20257,6 +20275,9 @@ goto|goto
 name|roun
 goto|;
 comment|/* round to nearest */
+ifndef|#
+directive|ifndef
+name|C4X
 if|if
 condition|(
 operator|(
@@ -20276,6 +20297,8 @@ goto|goto
 name|doexp
 goto|;
 comment|/* round to even */
+endif|#
+directive|endif
 block|}
 comment|/* Round up and propagate carry-outs */
 name|roun
@@ -20443,6 +20466,7 @@ name|s
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -20478,6 +20502,7 @@ name|s
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -20556,6 +20581,7 @@ name|s
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -20591,6 +20617,7 @@ name|s
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -20626,6 +20653,7 @@ name|s
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -20649,7 +20677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert ASCII string SS to e type Y, with a specified rounding precision    of OPREC bits.  */
+comment|/* Convert ASCII string SS to e type Y, with a specified rounding precision    of OPREC bits.  BASE is 16 for C9X hexadecimal floating constants.  */
 end_comment
 
 begin_function
@@ -20663,6 +20691,7 @@ name|y
 parameter_list|,
 name|oprec
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|ss
@@ -20737,6 +20766,11 @@ decl_stmt|,
 modifier|*
 name|lstr
 decl_stmt|;
+name|int
+name|base
+init|=
+literal|10
+decl_stmt|;
 comment|/* Copy the input string.  */
 name|lstr
 operator|=
@@ -20754,20 +20788,16 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|ss
-expr_stmt|;
 while|while
 condition|(
 operator|*
-name|s
+name|ss
 operator|==
 literal|' '
 condition|)
 comment|/* skip leading spaces */
 operator|++
-name|s
+name|ss
 expr_stmt|;
 name|sp
 operator|=
@@ -20781,7 +20811,7 @@ name|sp
 operator|++
 operator|=
 operator|*
-name|s
+name|ss
 operator|++
 operator|)
 operator|!=
@@ -20792,6 +20822,41 @@ name|s
 operator|=
 name|lstr
 expr_stmt|;
+if|if
+condition|(
+name|s
+index|[
+literal|0
+index|]
+operator|==
+literal|'0'
+operator|&&
+operator|(
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'x'
+operator|||
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'X'
+operator|)
+condition|)
+block|{
+name|base
+operator|=
+literal|16
+expr_stmt|;
+name|s
+operator|+=
+literal|2
+expr_stmt|;
+block|}
 name|rndsav
 operator|=
 name|rndprc
@@ -20840,12 +20905,51 @@ literal|0
 expr_stmt|;
 name|nxtcom
 label|:
+if|if
+condition|(
+operator|*
+name|s
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|s
+operator|<=
+literal|'9'
+condition|)
 name|k
 operator|=
 operator|*
 name|s
 operator|-
 literal|'0'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|s
+operator|>=
+literal|'a'
+condition|)
+name|k
+operator|=
+literal|10
+operator|+
+operator|*
+name|s
+operator|-
+literal|'a'
+expr_stmt|;
+else|else
+name|k
+operator|=
+literal|10
+operator|+
+operator|*
+name|s
+operator|-
+literal|'A'
 expr_stmt|;
 if|if
 condition|(
@@ -20857,8 +20961,8 @@ operator|)
 operator|&&
 operator|(
 name|k
-operator|<=
-literal|9
+operator|<
+name|base
 operator|)
 condition|)
 block|{
@@ -20913,13 +21017,43 @@ operator|*
 name|sp
 operator|>=
 literal|'0'
-operator|)
 operator|&&
-operator|(
 operator|*
 name|sp
 operator|<=
 literal|'9'
+operator|)
+operator|||
+operator|(
+name|base
+operator|==
+literal|16
+operator|&&
+operator|(
+operator|(
+operator|*
+name|sp
+operator|>=
+literal|'a'
+operator|&&
+operator|*
+name|sp
+operator|<=
+literal|'f'
+operator|)
+operator|||
+operator|(
+operator|*
+name|sp
+operator|>=
+literal|'A'
+operator|&&
+operator|*
+name|sp
+operator|<=
+literal|'F'
+operator|)
+operator|)
 operator|)
 condition|)
 operator|++
@@ -20936,6 +21070,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|base
+operator|!=
+literal|10
+operator|||
+operator|(
+operator|(
 name|c
 operator|!=
 literal|'e'
@@ -20945,6 +21085,28 @@ operator|(
 name|c
 operator|!=
 literal|'E'
+operator|)
+operator|)
+operator|)
+operator|&&
+operator|(
+name|base
+operator|!=
+literal|16
+operator|||
+operator|(
+operator|(
+name|c
+operator|!=
+literal|'p'
+operator|)
+operator|&&
+operator|(
+name|c
+operator|!=
+literal|'P'
+operator|)
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -21024,6 +21186,46 @@ condition|)
 block|{
 if|if
 condition|(
+name|base
+operator|==
+literal|16
+condition|)
+block|{
+if|if
+condition|(
+name|decflg
+condition|)
+name|nexp
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* count digits after decimal point */
+name|eshup1
+argument_list|(
+name|yy
+argument_list|)
+expr_stmt|;
+comment|/* multiply current number by 16 */
+name|eshup1
+argument_list|(
+name|yy
+argument_list|)
+expr_stmt|;
+name|eshup1
+argument_list|(
+name|yy
+argument_list|)
+expr_stmt|;
+name|eshup1
+argument_list|(
+name|yy
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|decflg
 condition|)
 name|nexp
@@ -21061,6 +21263,8 @@ argument_list|,
 name|yy
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Insert the current digit.  */
 name|ecleaz
 argument_list|(
 name|xt
@@ -21101,10 +21305,23 @@ name|decflg
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|base
+operator|==
+literal|10
+condition|)
 name|nexp
 operator|-=
 literal|1
 expr_stmt|;
+else|else
+name|nexp
+operator|-=
+literal|4
+expr_stmt|;
+block|}
 block|}
 name|prec
 operator|+=
@@ -21129,6 +21346,12 @@ literal|'E'
 case|:
 case|case
 literal|'e'
+case|:
+case|case
+literal|'P'
+case|:
+case|case
+literal|'p'
 case|:
 goto|goto
 name|expnt
@@ -21354,26 +21577,9 @@ if|if
 condition|(
 name|exp
 operator|>
-operator|-
-operator|(
-name|MINDECEXP
-operator|)
+literal|999999
 condition|)
-block|{
-if|if
-condition|(
-name|esign
-operator|<
-literal|0
-condition|)
-goto|goto
-name|zero
-goto|;
-else|else
-goto|goto
-name|infinite
-goto|;
-block|}
+break|break;
 block|}
 if|if
 condition|(
@@ -21388,9 +21594,17 @@ name|exp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|exp
 operator|>
 name|MAXDECEXP
+operator|)
+operator|&&
+operator|(
+name|base
+operator|==
+literal|10
+operator|)
 condition|)
 block|{
 name|infinite
@@ -21414,9 +21628,17 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|exp
 operator|<
 name|MINDECEXP
+operator|)
+operator|&&
+operator|(
+name|base
+operator|==
+literal|10
+operator|)
 condition|)
 block|{
 name|zero
@@ -21432,6 +21654,88 @@ goto|;
 block|}
 name|daldone
 label|:
+if|if
+condition|(
+name|base
+operator|==
+literal|16
+condition|)
+block|{
+comment|/* Base 16 hexadecimal floating constant.  */
+if|if
+condition|(
+operator|(
+name|k
+operator|=
+name|enormlz
+argument_list|(
+name|yy
+argument_list|)
+operator|)
+operator|>
+name|NBITS
+condition|)
+block|{
+name|ecleaz
+argument_list|(
+name|yy
+argument_list|)
+expr_stmt|;
+goto|goto
+name|aexit
+goto|;
+block|}
+comment|/* Adjust the exponent.  NEXP is the number of hex digits,          EXP is a power of 2.  */
+name|lexp
+operator|=
+operator|(
+name|EXONE
+operator|-
+literal|1
+operator|+
+name|NBITS
+operator|)
+operator|-
+name|k
+operator|+
+name|yy
+index|[
+name|E
+index|]
+operator|+
+name|exp
+operator|-
+name|nexp
+expr_stmt|;
+if|if
+condition|(
+name|lexp
+operator|>
+literal|0x7fff
+condition|)
+goto|goto
+name|infinite
+goto|;
+if|if
+condition|(
+name|lexp
+operator|<
+literal|0
+condition|)
+goto|goto
+name|zero
+goto|;
+name|yy
+index|[
+name|E
+index|]
+operator|=
+name|lexp
+expr_stmt|;
+goto|goto
+name|expdon
+goto|;
+block|}
 name|nexp
 operator|=
 name|exp
@@ -21555,6 +21859,10 @@ name|lexp
 argument_list|,
 literal|64
 argument_list|)
+expr_stmt|;
+name|lost
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Convert to external format:       Multiply by 10**nexp.  If precision is 64 bits,      the maximum relative error incurred in forming 10**n      for 0<= n<= 324 is 8.2e-20, at 10**180.      For 0<= n<= 999, the peak relative error is 1.4e-19 at 10**947.      For 0>= n>= -999, it is -1.55e-19 at 10**-435.  */
 name|lexp
@@ -21761,6 +22069,10 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|lost
+operator|=
+name|k
+expr_stmt|;
 name|expdon
 label|:
 comment|/* Round and convert directly to the destination type */
@@ -21871,7 +22183,7 @@ name|emdnorm
 argument_list|(
 name|yy
 argument_list|,
-name|k
+name|lost
 argument_list|,
 literal|0
 argument_list|,
@@ -22280,7 +22592,7 @@ comment|/* Return S and EXP such that  S * 2^EXP = X and .5<= S< 1.    For examp
 end_comment
 
 begin_comment
-unit|static void  efrexp (x, exp, s)      unsigned EMUSHORT x[];      int *exp;      unsigned EMUSHORT s[]; {   unsigned EMUSHORT xi[NI];   EMULONG li;    emovi (x, xi);
+unit|static void efrexp (x, exp, s)      unsigned EMUSHORT x[];      int *exp;      unsigned EMUSHORT s[]; {   unsigned EMUSHORT xi[NI];   EMULONG li;    emovi (x, xi);
 comment|/*  Handle denormalized numbers properly using long integer exponent.  */
 end_comment
 
@@ -22388,7 +22700,7 @@ comment|/* C = remainder after dividing B by A, all e type values.    Least sign
 end_comment
 
 begin_ifdef
-unit|static void  eremain (a, b, c)      unsigned EMUSHORT a[], b[], c[]; {   unsigned EMUSHORT den[NI], num[NI];
+unit|static void eremain (a, b, c)      unsigned EMUSHORT a[], b[], c[]; {   unsigned EMUSHORT den[NI], num[NI];
 ifdef|#
 directive|ifdef
 name|NANS
@@ -22555,47 +22867,8 @@ block|}
 end_block
 
 begin_comment
-comment|/* Report an error condition CODE encountered in function NAME.    CODE is one of the following:      Mnemonic        Value          Significance        DOMAIN            1       argument domain error      SING              2       function singularity      OVERFLOW          3       overflow range error      UNDERFLOW         4       underflow range error      TLOSS             5       total loss of precision      PLOSS             6       partial loss of precision      INVALID           7       NaN - producing operation      EDOM             33       Unix domain error code      ERANGE           34       Unix range error code      The order of appearance of the following messages is bound to the    error codes defined above.  */
+comment|/* Report an error condition CODE encountered in function NAME.      Mnemonic        Value          Significance       DOMAIN            1       argument domain error      SING              2       function singularity      OVERFLOW          3       overflow range error      UNDERFLOW         4       underflow range error      TLOSS             5       total loss of precision      PLOSS             6       partial loss of precision      INVALID           7       NaN - producing operation      EDOM             33       Unix domain error code      ERANGE           34       Unix range error code     The order of appearance of the following messages is bound to the    error codes defined above.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NMSGS
-value|8
-end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|ermsg
-index|[
-name|NMSGS
-index|]
-init|=
-block|{
-literal|"unknown"
-block|,
-comment|/* error code 0 */
-literal|"domain"
-block|,
-comment|/* error code 1 */
-literal|"singularity"
-block|,
-comment|/* et seq.      */
-literal|"overflow"
-block|,
-literal|"underflow"
-block|,
-literal|"total loss of precision"
-block|,
-literal|"partial loss of precision"
-block|,
-literal|"invalid operation"
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -22621,6 +22894,7 @@ name|name
 parameter_list|,
 name|code
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -22629,54 +22903,227 @@ name|int
 name|code
 decl_stmt|;
 block|{
-name|char
-name|errstr
-index|[
-literal|80
-index|]
-decl_stmt|;
 comment|/* The string passed by the calling program is supposed to be the      name of the function in which the error occurred.      The code argument selects which error message string will be printed.  */
 if|if
 condition|(
-operator|(
-name|code
-operator|<=
-literal|0
-operator|)
-operator|||
-operator|(
-name|code
-operator|>=
-name|NMSGS
-operator|)
-condition|)
-name|code
-operator|=
-literal|0
-expr_stmt|;
-name|sprintf
+name|strcmp
 argument_list|(
-name|errstr
-argument_list|,
-literal|" %s %s error"
-argument_list|,
 name|name
 argument_list|,
-name|ermsg
-index|[
-name|code
-index|]
+literal|"esub"
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"subtraction"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"ediv"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"division"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"emul"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"multiplication"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"enormlz"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"normalization"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"etoasc"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"conversion to text"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"asctoe"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"parsing"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"eremain"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"modulus"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"esqrt"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"square root"
 expr_stmt|;
 if|if
 condition|(
 name|extra_warnings
 condition|)
+block|{
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|DOMAIN
+case|:
 name|warning
 argument_list|(
-name|errstr
+literal|"%s: argument domain error"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|SING
+case|:
+name|warning
+argument_list|(
+literal|"%s: function singularity"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OVERFLOW
+case|:
+name|warning
+argument_list|(
+literal|"%s: overflow range error"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|UNDERFLOW
+case|:
+name|warning
+argument_list|(
+literal|"%s: underflow range error"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TLOSS
+case|:
+name|warning
+argument_list|(
+literal|"%s: total loss of precision"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLOSS
+case|:
+name|warning
+argument_list|(
+literal|"%s: partial loss of precision"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|INVALID
+case|:
+name|warning
+argument_list|(
+literal|"%s: NaN - producing operation"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 comment|/* Set global error message word */
 name|merror
 operator|=
@@ -23833,9 +24280,6 @@ name|int
 name|r
 decl_stmt|;
 name|int
-name|rndsav
-decl_stmt|;
-name|int
 name|isnegative
 decl_stmt|;
 name|int
@@ -24228,12 +24672,14 @@ index|[
 name|M
 index|]
 operator|=
+operator|(
 name|d
 index|[
 literal|0
 index|]
 operator|&
 literal|0x7f
+operator|)
 operator||
 literal|0x80
 expr_stmt|;
@@ -24449,9 +24895,6 @@ begin_block
 block|{
 name|int
 name|i
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|int
 name|v
@@ -25360,9 +25803,13 @@ operator|<<
 literal|15
 operator|)
 operator||
+operator|(
 operator|*
 name|p
 operator|++
+operator|&
+literal|0x7fff
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -25393,8 +25840,12 @@ operator|<<
 literal|15
 operator|)
 operator||
+operator|(
 operator|*
 name|p
+operator|&
+literal|0x7fff
+operator|)
 expr_stmt|;
 block|}
 end_function
@@ -25863,6 +26314,11 @@ condition|(
 name|REAL_WORDS_BIG_ENDIAN
 condition|)
 block|{
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|==
+literal|32
 name|s
 index|[
 literal|0
@@ -25895,11 +26351,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-literal|32
 name|s
 index|[
 literal|2
@@ -25937,7 +26388,7 @@ directive|else
 comment|/* In this case the entire target double is contained in the 	 first array element.  The second element of the input is 	 ignored.  */
 name|s
 index|[
-literal|2
+literal|0
 index|]
 operator|=
 call|(
@@ -25955,7 +26406,7 @@ argument_list|)
 expr_stmt|;
 name|s
 index|[
-literal|3
+literal|1
 index|]
 operator|=
 call|(
@@ -25970,6 +26421,38 @@ index|]
 operator|>>
 literal|32
 argument_list|)
+expr_stmt|;
+name|s
+index|[
+literal|2
+index|]
+operator|=
+call|(
+name|unsigned
+name|EMUSHORT
+call|)
+argument_list|(
+name|d
+index|[
+literal|0
+index|]
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
+name|s
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|unsigned
+name|EMUSHORT
+operator|)
+name|d
+index|[
+literal|0
+index|]
 expr_stmt|;
 endif|#
 directive|endif
@@ -26186,7 +26669,7 @@ comment|/* Convert e-type to unsigned 64-bit int.  */
 end_comment
 
 begin_comment
-unit|static void  etoudi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMUSHORT xi[NI];   int j, k;    emovi (x, xi);   if (xi[0])     {       xi[M] = 0;       goto noshift;     }   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   if (k> 16)     {
+unit|static void etoudi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMUSHORT xi[NI];   int j, k;    emovi (x, xi);   if (xi[0])     {       xi[M] = 0;       goto noshift;     }   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   if (k> 16)     {
 comment|/* Shift more than 16 bits: first shift up k-16 mod 16, 	 then shift up by 16's.  */
 end_comment
 
@@ -26201,7 +26684,7 @@ comment|/* Convert e-type to signed 64-bit int.  */
 end_comment
 
 begin_comment
-unit|static void  etodi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMULONG acc;   unsigned EMUSHORT xi[NI];   unsigned EMUSHORT carry;   unsigned EMUSHORT *isave;   int j, k;    emovi (x, xi);   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   isave = i;   if (k> 16)     {
+unit|static void etodi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMULONG acc;   unsigned EMUSHORT xi[NI];   unsigned EMUSHORT carry;   unsigned EMUSHORT *isave;   int j, k;    emovi (x, xi);   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   isave = i;   if (k> 16)     {
 comment|/* Shift more than 16 bits: first shift up k-16 mod 16, 	 then shift up by 16's.  */
 end_comment
 
@@ -26221,7 +26704,7 @@ comment|/* Longhand square root routine.  */
 end_comment
 
 begin_comment
-unit|static int esqinited = 0; static unsigned short sqrndbit[NI];  static void  esqrt (x, y)      unsigned EMUSHORT *x, *y; {   unsigned EMUSHORT temp[NI], num[NI], sq[NI], xx[NI];   EMULONG m, exp;   int i, j, k, n, nlups;    if (esqinited == 0)     {       ecleaz (sqrndbit);       sqrndbit[NI - 2] = 1;       esqinited = 1;     }
+unit|static int esqinited = 0; static unsigned short sqrndbit[NI];  static void esqrt (x, y)      unsigned EMUSHORT *x, *y; {   unsigned EMUSHORT temp[NI], num[NI], sq[NI], xx[NI];   EMULONG m, exp;   int i, j, k, n, nlups;    if (esqinited == 0)     {       ecleaz (sqrndbit);       sqrndbit[NI - 2] = 1;       esqinited = 1;     }
 comment|/* Check for arg<= 0 */
 end_comment
 

@@ -184,7 +184,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG)!=0) \        if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \        else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+value|if ((LOG) != 0) {\        if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \        else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP)); \      }
 end_define
 
 begin_endif

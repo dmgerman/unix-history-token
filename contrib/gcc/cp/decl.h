@@ -89,17 +89,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A list of static class variables.  This is needed, because a    static class variable can be declared inside the class without    an initializer, and then initialized, staticly, outside the class.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|pending_statics
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* A list of objects which have constructors or destructors    which reside in the global scope.  The decl is stored in    the TREE_VALUE slot and the initializer is stored    in the TREE_PURPOSE slot.  */
 end_comment
 

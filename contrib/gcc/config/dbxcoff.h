@@ -98,7 +98,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|fprintf (FILE,							\ 	   "\t.text\n\t.stabs \"\",%d,0,0,Letext\nLetext:\n", N_SO)
+value|asm_fprintf (FILE,							\ 	       "\t.text\n\t.stabs \"\",%d,0,0,%LLetext\n%LLetext:\n", N_SO)
 end_define
 
 begin_comment

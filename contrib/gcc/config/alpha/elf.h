@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
 end_comment
 
 begin_undef
@@ -25,6 +25,12 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEBUGGING_INFO
 end_define
 
 begin_undef
@@ -69,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{G*} %{relax:-relax}"
+value|"%{G*} %{relax:-relax} %{gdwarf*:-no-mdebug}"
 end_define
 
 begin_undef
@@ -103,7 +109,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   output_file_directive (FILE, main_input_filename);		\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");                         \   if (TARGET_BWX | TARGET_MAX | TARGET_CIX)			\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (alpha_cpu == PROCESSOR_EV6 ? "ev6"		\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ }
+value|do {								\   if (write_symbols != DWARF2_DEBUG)				\     {								\       alpha_write_verstamp (FILE);				\       output_file_directive (FILE, main_input_filename);	\     }								\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (alpha_cpu == PROCESSOR_EV6 ? "ev6"		\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ } while (0)
 end_define
 
 begin_function_decl
@@ -168,7 +174,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {				 				\      fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 	      IDENT_ASM_OP, version_string);			\    } while (0)
+value|do {				 				\      if (!flag_no_ident)					\ 	fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 		 IDENT_ASM_OP, version_string);			\    } while (0)
 end_define
 
 begin_endif
@@ -798,7 +804,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);			 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL))); \        }								 \    } while (0)
+value|do {									\   char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			\   if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)			\&& ! AT_END&& TOP_LEVEL						\&& DECL_INITIAL (DECL) == error_mark_node				\&& !size_directive_output)					\     {									\       size_directive_output = 1;					\       fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\       assemble_name (FILE, name);					\       putc (',', FILE);							\       fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,				\ 	       int_size_in_bytes (TREE_TYPE (DECL)));			\       putc ('\n', FILE);						\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -893,6 +899,28 @@ define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
 end_define
+
+begin_comment
+comment|/* Undo the auto-alignment stuff from alpha.h.  ELF has unaligned data    pseudos natively.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|UNALIGNED_SHORT_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UNALIGNED_INT_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UNALIGNED_DOUBLE_INT_ASM_OP
+end_undef
 
 end_unit
 

@@ -13,6 +13,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|ffe_version_string

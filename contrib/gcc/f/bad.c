@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bad.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the displaying of diagnostic messages regarding the user's source       files.     Modifications: */
+comment|/* bad.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the displaying of diagnostic messages regarding the user's source       files.     Modifications: */
 end_comment
 
 begin_comment
@@ -100,6 +100,7 @@ block|{
 name|ffebadSeverity
 name|severity
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|message
@@ -202,6 +203,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ffebad_string_
@@ -237,6 +239,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ffebad_message_
@@ -285,6 +288,7 @@ parameter_list|,
 name|int
 name|bufi
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -339,6 +343,7 @@ parameter_list|,
 name|int
 name|bufi
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -431,6 +436,7 @@ parameter_list|,
 name|ffebadSeverity
 name|sev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|message
@@ -965,13 +971,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Establish string for next index (always in order) of message     ffebad_string(char *string);     Call ffebad_start to establish the message, ffebad_here and ffebad_string    to send run-time data to it as necessary, then ffebad_finish when through    to actually get it to print (to stderr).  Note: don't trash the string    until after calling ffebad_finish, since we just maintain a pointer to    the argument passed in until then.  */
+comment|/* Establish string for next index (always in order) of message     ffebad_string(const char *string);     Call ffebad_start to establish the message, ffebad_here and ffebad_string    to send run-time data to it as necessary, then ffebad_finish when through    to actually get it to print (to stderr).  Note: don't trash the string    until after calling ffebad_finish, since we just maintain a pointer to    the argument passed in until then.  */
 end_comment
 
 begin_function
 name|void
 name|ffebad_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1014,6 +1021,7 @@ directive|define
 name|MAX_SPACES
 value|132
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|spaces
@@ -1052,13 +1060,17 @@ decl_stmt|;
 name|char
 name|pointer
 decl_stmt|;
+name|unsigned
 name|char
 name|c
 decl_stmt|;
+name|unsigned
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fn

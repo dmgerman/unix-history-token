@@ -370,7 +370,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "mcount",		-MASK_NO_MCOUNT},			\      { "no-mcount",		 MASK_NO_MCOUNT},
+value|{ "mcount",		-MASK_NO_MCOUNT, "Profiling uses mcount" },			\      { "no-mcount",		 MASK_NO_MCOUNT, "" },
 end_define
 
 begin_comment

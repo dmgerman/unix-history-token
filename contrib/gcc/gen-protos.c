@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gansidecl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"scan.h"
 end_include
 
@@ -38,6 +32,12 @@ include|#
 directive|include
 file|"cpphash.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|abort
+end_undef
 
 begin_decl_stmt
 name|int
@@ -79,63 +79,6 @@ name|int
 name|next_index
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|hashf
-parameter_list|(
-name|name
-parameter_list|,
-name|len
-parameter_list|,
-name|hashsize
-parameter_list|)
-specifier|register
-specifier|const
-name|U_CHAR
-modifier|*
-name|name
-decl_stmt|;
-specifier|register
-name|int
-name|len
-decl_stmt|;
-name|int
-name|hashsize
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|r
-init|=
-literal|0
-decl_stmt|;
-while|while
-condition|(
-name|len
-operator|--
-condition|)
-name|r
-operator|=
-name|HASHSTEP
-argument_list|(
-name|r
-argument_list|,
-operator|*
-name|name
-operator|++
-argument_list|)
-expr_stmt|;
-return|return
-name|MAKE_POS
-argument_list|(
-name|r
-argument_list|)
-operator|%
-name|hashsize
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -441,6 +384,10 @@ condition|(
 operator|!
 name|ISALNUM
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -475,6 +422,10 @@ while|while
 condition|(
 name|ISALNUM
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -596,6 +547,7 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
@@ -685,7 +637,7 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
-literal|"  {\"\", \"\", \"\"},\n"
+literal|"  {\"\", \"\", \"\", 0},\n"
 argument_list|)
 expr_stmt|;
 name|next_index
@@ -797,7 +749,7 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
-literal|"  {\"%s\", \"%s\", \"%s\"},\n"
+literal|"  {\"%s\", \"%s\", \"%s\", 0},\n"
 argument_list|,
 name|fn_decl
 operator|.
@@ -824,7 +776,7 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
-literal|"  {0, 0, 0}\n};\n"
+literal|"  {0, 0, 0, 0}\n};\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -878,51 +830,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Avoid error if config defines abort as fancy_abort.    It's not worth "really" implementing this because ordinary    compiler users never run fix-header.  */
-end_comment
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|()
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fatal
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-literal|"gen-protos"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

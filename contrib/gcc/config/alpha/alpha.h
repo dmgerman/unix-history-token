@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha.    Copyright (C) 1992, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha.    Copyright (C) 1992, 93-98, 1999 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|MASK_FP
-value|1
+value|(1<< 0)
 end_define
 
 begin_define
@@ -210,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|MASK_FPREGS
-value|2
+value|(1<< 1)
 end_define
 
 begin_define
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|MASK_GAS
-value|4
+value|(1<< 2)
 end_define
 
 begin_define
@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|MASK_IEEE_CONFORMANT
-value|8
+value|(1<< 3)
 end_define
 
 begin_define
@@ -264,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|MASK_IEEE
-value|16
+value|(1<< 4)
 end_define
 
 begin_define
@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|MASK_IEEE_WITH_INEXACT
-value|32
+value|(1<< 5)
 end_define
 
 begin_define
@@ -300,7 +300,7 @@ begin_define
 define|#
 directive|define
 name|MASK_BUILD_CONSTANTS
-value|128
+value|(1<< 6)
 end_define
 
 begin_define
@@ -318,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|MASK_FLOAT_VAX
-value|512
+value|(1<< 7)
 end_define
 
 begin_define
@@ -336,7 +336,7 @@ begin_define
 define|#
 directive|define
 name|MASK_BWX
-value|1024
+value|(1<< 8)
 end_define
 
 begin_define
@@ -347,24 +347,6 @@ value|(target_flags& MASK_BWX)
 end_define
 
 begin_comment
-comment|/* This means that the processor has the CIX extension.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_CIX
-value|2048
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_CIX
-value|(target_flags& MASK_CIX)
-end_define
-
-begin_comment
 comment|/* This means that the processor has the MAX extension.  */
 end_comment
 
@@ -372,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|MASK_MAX
-value|4096
+value|(1<< 9)
 end_define
 
 begin_define
@@ -383,6 +365,42 @@ value|(target_flags& MASK_MAX)
 end_define
 
 begin_comment
+comment|/* This means that the processor has the FIX extension.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_FIX
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_FIX
+value|(target_flags& MASK_FIX)
+end_define
+
+begin_comment
+comment|/* This means that the processor has the CIX extension.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_CIX
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CIX
+value|(target_flags& MASK_CIX)
+end_define
+
+begin_comment
 comment|/* This means that the processor is an EV5, EV56, or PCA56.  This is defined    only in TARGET_CPU_DEFAULT.  */
 end_comment
 
@@ -390,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|MASK_CPU_EV5
-value|8192
+value|(1<< 28)
 end_define
 
 begin_comment
@@ -401,7 +419,7 @@ begin_define
 define|#
 directive|define
 name|MASK_CPU_EV6
-value|16384
+value|(1<< 29)
 end_define
 
 begin_comment
@@ -412,7 +430,7 @@ begin_define
 define|#
 directive|define
 name|MASK_SUPPORT_ARCH
-value|32768
+value|(1<< 30)
 end_define
 
 begin_define
@@ -507,7 +525,7 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ {"no-soft-float", MASK_FP},			\     {"soft-float", - MASK_FP},			\     {"fp-regs", MASK_FPREGS},			\     {"no-fp-regs", - (MASK_FP|MASK_FPREGS)},	\     {"alpha-as", -MASK_GAS},			\     {"gas", MASK_GAS},				\     {"ieee-conformant", MASK_IEEE_CONFORMANT},	\     {"ieee", MASK_IEEE|MASK_IEEE_CONFORMANT},	\     {"ieee-with-inexact", MASK_IEEE_WITH_INEXACT|MASK_IEEE_CONFORMANT}, \     {"build-constants", MASK_BUILD_CONSTANTS},  \     {"float-vax", MASK_FLOAT_VAX},		\     {"float-ieee", -MASK_FLOAT_VAX},		\     {"bwx", MASK_BWX},				\     {"no-bwx", -MASK_BWX},			\     {"cix", MASK_CIX},				\     {"no-cix", -MASK_CIX},			\     {"max", MASK_MAX},				\     {"no-max", -MASK_MAX},			\     {"", TARGET_DEFAULT | TARGET_CPU_DEFAULT} }
+value|{ {"no-soft-float", MASK_FP, "Use hardware fp"},			\     {"soft-float", - MASK_FP, "Do not use hardware fp"},		\     {"fp-regs", MASK_FPREGS, "Use fp registers"},			\     {"no-fp-regs", - (MASK_FP|MASK_FPREGS), "Do not use fp registers"},	\     {"alpha-as", -MASK_GAS, "Do not assume GAS"},			\     {"gas", MASK_GAS, "Assume GAS"},					\     {"ieee-conformant", MASK_IEEE_CONFORMANT,				\      "Request IEEE-conformant math library routines (OSF/1)"},		\     {"ieee", MASK_IEEE|MASK_IEEE_CONFORMANT,				\      "Emit IEEE-conformant code, without inexact exceptions"},		\     {"ieee-with-inexact", MASK_IEEE_WITH_INEXACT|MASK_IEEE_CONFORMANT,	\      "Emit IEEE-conformant code, with inexact exceptions"},		\     {"build-constants", MASK_BUILD_CONSTANTS,				\      "Do not emit complex integer constants to read-only memory"},	\     {"float-vax", MASK_FLOAT_VAX, "Use VAX fp"},			\     {"float-ieee", -MASK_FLOAT_VAX, "Do not use VAX fp"},		\     {"bwx", MASK_BWX, "Emit code for the byte/word ISA extension"},	\     {"no-bwx", -MASK_BWX, ""},						\     {"max", MASK_MAX, "Emit code for the motion video ISA extension"},	\     {"no-max", -MASK_MAX, ""},						\     {"fix", MASK_FIX, "Emit code for the fp move and sqrt ISA extension"}, \     {"no-fix", -MASK_FIX, ""},						\     {"cix", MASK_CIX, "Emit code for the counting ISA extension"},	\     {"no-cix", -MASK_CIX, ""},						\     {"", TARGET_DEFAULT | TARGET_CPU_DEFAULT, ""} }
 end_define
 
 begin_define
@@ -541,6 +559,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|alpha_cpu_string
@@ -553,6 +572,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|alpha_fprm_string
@@ -565,6 +585,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|alpha_fptm_string
@@ -577,6 +598,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|alpha_tp_string
@@ -589,6 +611,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|alpha_mlat_string
@@ -604,7 +627,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{						\   {"cpu=",&alpha_cpu_string},	\   {"fp-rounding-mode=",&alpha_fprm_string},	\   {"fp-trap-mode=",&alpha_fptm_string},	\   {"trap-precision=",&alpha_tp_string},	\   {"memory-latency=",&alpha_mlat_string},	\ }
+value|{							\   {"cpu=",&alpha_cpu_string,		\    "Generate code for a given CPU"},			\   {"fp-rounding-mode=",&alpha_fprm_string,		\    "Control the generated fp rounding mode"},		\   {"fp-trap-mode=",&alpha_fptm_string,		\    "Control the IEEE trap mode"},			\   {"trap-precision=",&alpha_tp_string,		\    "Control the precision given to fp exceptions"},	\   {"memory-latency=",&alpha_mlat_string,		\    "Tune expected memory latency"},			\ }
 end_define
 
 begin_comment
@@ -627,6 +650,13 @@ define|#
 directive|define
 name|CPP_AM_MAX_SPEC
 value|"-D__alpha_max__ -Acpu(max)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_AM_FIX_SPEC
+value|"-D__alpha_fix__ -Acpu(fix)"
 end_define
 
 begin_define
@@ -697,7 +727,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_EV6_SPEC
-value|"%(cpp_im_ev6) %(cpp_am_bwx) %(cpp_am_max) %(cpp_am_cix)"
+value|"%(cpp_im_ev6) %(cpp_am_bwx) %(cpp_am_max) %(cpp_am_fix)"
 end_define
 
 begin_ifndef
@@ -866,7 +896,7 @@ define|#
 directive|define
 name|EXTRA_SPECS
 define|\
-value|{ "cpp_am_bwx", CPP_AM_BWX_SPEC },		\   { "cpp_am_max", CPP_AM_MAX_SPEC },		\   { "cpp_am_cix", CPP_AM_CIX_SPEC },		\   { "cpp_im_ev4", CPP_IM_EV4_SPEC },		\   { "cpp_im_ev5", CPP_IM_EV5_SPEC },		\   { "cpp_im_ev6", CPP_IM_EV6_SPEC },		\   { "cpp_cpu_ev4", CPP_CPU_EV4_SPEC },		\   { "cpp_cpu_ev5", CPP_CPU_EV5_SPEC },		\   { "cpp_cpu_ev56", CPP_CPU_EV56_SPEC },	\   { "cpp_cpu_pca56", CPP_CPU_PCA56_SPEC },	\   { "cpp_cpu_ev6", CPP_CPU_EV6_SPEC },		\   { "cpp_cpu_default", CPP_CPU_DEFAULT_SPEC },	\   { "cpp_cpu", CPP_CPU_SPEC },			\   { "cpp_subtarget", CPP_SUBTARGET_SPEC },	\   SUBTARGET_EXTRA_SPECS
+value|{ "cpp_am_bwx", CPP_AM_BWX_SPEC },		\   { "cpp_am_max", CPP_AM_MAX_SPEC },		\   { "cpp_am_fix", CPP_AM_FIX_SPEC },		\   { "cpp_am_cix", CPP_AM_CIX_SPEC },		\   { "cpp_im_ev4", CPP_IM_EV4_SPEC },		\   { "cpp_im_ev5", CPP_IM_EV5_SPEC },		\   { "cpp_im_ev6", CPP_IM_EV6_SPEC },		\   { "cpp_cpu_ev4", CPP_CPU_EV4_SPEC },		\   { "cpp_cpu_ev5", CPP_CPU_EV5_SPEC },		\   { "cpp_cpu_ev56", CPP_CPU_EV56_SPEC },	\   { "cpp_cpu_pca56", CPP_CPU_PCA56_SPEC },	\   { "cpp_cpu_ev6", CPP_CPU_EV6_SPEC },		\   { "cpp_cpu_default", CPP_CPU_DEFAULT_SPEC },	\   { "cpp_cpu", CPP_CPU_SPEC },			\   { "cpp_subtarget", CPP_SUBTARGET_SPEC },	\   SUBTARGET_EXTRA_SPECS
 end_define
 
 begin_comment
@@ -1230,7 +1260,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALIGN_LABEL_AFTER_BARRIER
+name|LABEL_ALIGN_AFTER_BARRIER
 parameter_list|(
 name|FILE
 parameter_list|)
@@ -1410,11 +1440,11 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((REGNO)< 32 || ((MODE) != QImode&& (MODE) != HImode))
+value|((REGNO)>= 32&& (REGNO)<= 62 					\    ? GET_MODE_UNIT_SIZE (MODE) == 8 || GET_MODE_UNIT_SIZE (MODE) == 4	\    : 1)
 end_define
 
 begin_comment
-comment|/* Value is 1 if it is a good idea to tie two pseudo registers    when one has mode MODE1 and one has mode MODE2.    If HARD_REGNO_MODE_OK could produce different values for MODE1 and MODE2,    for any hard reg, then this must be 0 for correct output.  */
+comment|/* A C expression that is nonzero if a value of mode    MODE1 is accessible in mode MODE2 without copying.     This asymmetric test is true when MODE1 could be put    in an FP register but MODE2 could not.  */
 end_comment
 
 begin_define
@@ -1427,7 +1457,7 @@ parameter_list|,
 name|MODE2
 parameter_list|)
 define|\
-value|((MODE1) == QImode || (MODE1) == HImode			\    ? (MODE2) == QImode || (MODE2) == HImode			\    : 1)
+value|(HARD_REGNO_MODE_OK (32, (MODE1))				\    ? HARD_REGNO_MODE_OK (32, (MODE2))				\    : 1)
 end_define
 
 begin_comment
@@ -1678,8 +1708,16 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'Q' ? GET_CODE (OP) == MEM&& GET_CODE (XEXP (OP, 0)) != AND	\    : (C) == 'R' ? current_file_function_operand (OP, Pmode)		\    : (C) == 'S' ? (GET_CODE (OP) == CONST_INT				\&& (unsigned HOST_WIDE_INT) INTVAL (OP)< 64)	\    : 0)
+value|((C) == 'Q' ? normal_memory_operand (OP, VOIDmode)			\    : (C) == 'R' ? current_file_function_operand (OP, Pmode)		\    : (C) == 'S' ? (GET_CODE (OP) == CONST_INT				\&& (unsigned HOST_WIDE_INT) INTVAL (OP)< 64)	\    : 0)
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|normal_memory_operand
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Given an rtx X being reloaded into a reg required to be    in class CLASS, return the class of reg to actually use.    In general this is just CLASS; but on some machines    in some cases it is preferable to use a more restrictive class.     On the Alpha, all constants except zero go into a floating-point    register via memory.  */
@@ -1714,7 +1752,7 @@ parameter_list|,
 name|IN
 parameter_list|)
 define|\
-value|(((GET_CODE (IN) == MEM 						\    || (GET_CODE (IN) == REG&& REGNO (IN)>= FIRST_PSEUDO_REGISTER)	\    || (GET_CODE (IN) == SUBREG						\&& (GET_CODE (SUBREG_REG (IN)) == MEM				\ 	   || (GET_CODE (SUBREG_REG (IN)) == REG			\&& REGNO (SUBREG_REG (IN))>= FIRST_PSEUDO_REGISTER))))	\&& (((CLASS) == FLOAT_REGS						\&& ((MODE) == SImode || (MODE) == HImode || (MODE) == QImode))	\       || (((MODE) == QImode || (MODE) == HImode)			\&& ! TARGET_BWX&& unaligned_memory_operand (IN, MODE)))) \  ? GENERAL_REGS								\  : ((CLASS) == FLOAT_REGS&& GET_CODE (IN) == MEM			\&& GET_CODE (XEXP (IN, 0)) == AND) ? GENERAL_REGS			\  : ((CLASS) == FLOAT_REGS&& GET_CODE (IN) == SUBREG			\&& (GET_MODE_SIZE (GET_MODE (IN))					\> GET_MODE_SIZE (GET_MODE (SUBREG_REG (IN))))) ? GENERAL_REGS	\  : NO_REGS)
+value|(((GET_CODE (IN) == MEM 						\    || (GET_CODE (IN) == REG&& REGNO (IN)>= FIRST_PSEUDO_REGISTER)	\    || (GET_CODE (IN) == SUBREG						\&& (GET_CODE (SUBREG_REG (IN)) == MEM				\ 	   || (GET_CODE (SUBREG_REG (IN)) == REG			\&& REGNO (SUBREG_REG (IN))>= FIRST_PSEUDO_REGISTER))))	\&& (((CLASS) == FLOAT_REGS						\&& ((MODE) == SImode || (MODE) == HImode || (MODE) == QImode))	\       || (((MODE) == QImode || (MODE) == HImode)			\&& ! TARGET_BWX&& ! aligned_memory_operand (IN, MODE))))	\  ? GENERAL_REGS								\  : ((CLASS) == FLOAT_REGS&& GET_CODE (IN) == MEM			\&& GET_CODE (XEXP (IN, 0)) == AND) ? GENERAL_REGS			\  : ((CLASS) == FLOAT_REGS&& GET_CODE (IN) == SUBREG			\&& (GET_MODE_SIZE (GET_MODE (IN))					\> GET_MODE_SIZE (GET_MODE (SUBREG_REG (IN))))) ? GENERAL_REGS	\  : NO_REGS)
 end_define
 
 begin_define
@@ -1733,7 +1771,7 @@ value|(((GET_CODE (OUT) == MEM 						\    || (GET_CODE (OUT) == REG&& REGNO (OUT
 end_define
 
 begin_comment
-comment|/* If we are copying between general and FP registers, we need a memory    location unless the CIX extension is available.  */
+comment|/* If we are copying between general and FP registers, we need a memory    location unless the FIX extension is available.  */
 end_comment
 
 begin_define
@@ -1748,7 +1786,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(! TARGET_CIX&& (CLASS1) != (CLASS2))
+value|(! TARGET_FIX&& (CLASS1) != (CLASS2))
 end_define
 
 begin_comment
@@ -1808,7 +1846,7 @@ parameter_list|,
 name|CLASS2
 parameter_list|)
 define|\
-value|(((CLASS1) == FLOAT_REGS) == ((CLASS2) == FLOAT_REGS)	\    ? 2							\    : TARGET_CIX ? 3 : 4+2*alpha_memory_latency)
+value|(((CLASS1) == FLOAT_REGS) == ((CLASS2) == FLOAT_REGS)	\    ? 2							\    : TARGET_FIX ? 3 : 4+2*alpha_memory_latency)
 end_define
 
 begin_comment
@@ -2052,7 +2090,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|gen_rtx (REG,							\ 	   ((INTEGRAL_TYPE_P (VALTYPE)				\&& TYPE_PRECISION (VALTYPE)< BITS_PER_WORD)	\ 	    || POINTER_TYPE_P (VALTYPE))			\ 	   ? word_mode : TYPE_MODE (VALTYPE),			\ 	   ((TARGET_FPREGS					\&& (TREE_CODE (VALTYPE) == REAL_TYPE		\ 		 || TREE_CODE (VALTYPE) == COMPLEX_TYPE))	\ 	    ? 32 : 0))
+value|gen_rtx_REG (((INTEGRAL_TYPE_P (VALTYPE)			\&& TYPE_PRECISION (VALTYPE)< BITS_PER_WORD)	\ 	        || POINTER_TYPE_P (VALTYPE))			\ 	       ? word_mode : TYPE_MODE (VALTYPE),		\ 	       ((TARGET_FPREGS					\&& (TREE_CODE (VALTYPE) == REAL_TYPE		\ 		     || TREE_CODE (VALTYPE) == COMPLEX_TYPE))	\ 	        ? 32 : 0))
 end_define
 
 begin_comment
@@ -2067,7 +2105,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|gen_rtx (REG, MODE,						\ 	    (TARGET_FPREGS					\&& (GET_MODE_CLASS (MODE) == MODE_FLOAT		\ 		 || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT) \ 	     ? 32 : 0))
+value|gen_rtx_REG (MODE,						\ 	        (TARGET_FPREGS					\&& (GET_MODE_CLASS (MODE) == MODE_FLOAT	\ 		     || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT) \ 	         ? 32 : 0))
 end_define
 
 begin_comment
@@ -2362,6 +2400,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Define the information needed to modify the epilogue for EH.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|alpha_eh_epilogue_sp_ofs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Make (or fake) .linkage entry for function call.    IS_LOCAL is 0 if name is used in call, 1 if name is used in definition.  */
 end_comment
 
@@ -2590,6 +2641,14 @@ define|\
 value|alpha_initialize_trampoline (TRAMP, FNADDR, CXT, 16, 24, 8)
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_initialize_trampoline
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* A C expression whose value is RTL representing the value of the return    address for the frame COUNT steps up from the current frame.    FRAMEADDR is the frame pointer of the COUNT frame, or the frame pointer of    the COUNT-1 frame if RETURN_ADDR_IN_PREVIOUS_FRAME is defined.  */
 end_comment
@@ -2610,6 +2669,17 @@ name|alpha_return_addr
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Before the prologue, RA lives in $26. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCOMING_RETURN_ADDR_RTX
+value|gen_rtx_REG (Pmode, 26)
+end_define
 
 begin_comment
 comment|/* Initialize data used by insn expanders.  This is called from insn_emit,    once for every function before code is generated.  */
@@ -2638,19 +2708,19 @@ comment|/* Addressing modes, and classification of registers for them.  */
 end_comment
 
 begin_comment
-comment|/* #define HAVE_POST_INCREMENT */
+comment|/* #define HAVE_POST_INCREMENT 0 */
 end_comment
 
 begin_comment
-comment|/* #define HAVE_POST_DECREMENT */
+comment|/* #define HAVE_POST_DECREMENT 0 */
 end_comment
 
 begin_comment
-comment|/* #define HAVE_PRE_DECREMENT */
+comment|/* #define HAVE_PRE_DECREMENT 0 */
 end_comment
 
 begin_comment
-comment|/* #define HAVE_PRE_INCREMENT */
+comment|/* #define HAVE_PRE_INCREMENT 0 */
 end_comment
 
 begin_comment
@@ -2765,6 +2835,21 @@ define|\
 value|(REGNO (X)< 32 || REGNO (X) == 63 || REGNO (X)>= FIRST_PSEUDO_REGISTER)
 end_define
 
+begin_comment
+comment|/* ??? Nonzero if X is the frame pointer, or some virtual register    that may eliminate to the frame pointer.  These will be allowed to    have offsets greater than 32K.  This is done because register    elimination offsets will change the hi/lo split, and if we split    before reload, we will require additional instructions.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FP_BASE_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(REGNO (X) == 31 || REGNO (X) == 63		\    || (REGNO (X)>= FIRST_PSEUDO_REGISTER	\&& REGNO (X)< LAST_VIRTUAL_REGISTER))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2798,6 +2883,16 @@ parameter_list|)
 value|REGNO_OK_FOR_BASE_P (REGNO (X))
 end_define
 
+begin_define
+define|#
+directive|define
+name|REG_OK_FP_BASE_P
+parameter_list|(
+name|X
+parameter_list|)
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2822,7 +2917,7 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|{ if (REG_P (X)&& REG_OK_FOR_BASE_P (X))	\     goto ADDR;					\   if (CONSTANT_ADDRESS_P (X))			\     goto ADDR;					\   if (GET_CODE (X) == PLUS			\&& REG_P (XEXP (X, 0))			\&& REG_OK_FOR_BASE_P (XEXP (X, 0))	\&& CONSTANT_ADDRESS_P (XEXP (X, 1)))	\     goto ADDR;					\ }
+value|{									\   rtx tmp = (X);							\   if (GET_CODE (tmp) == SUBREG						\&& (GET_MODE_SIZE (GET_MODE (tmp))				\< GET_MODE_SIZE (GET_MODE (SUBREG_REG (tmp)))))		\     tmp = SUBREG_REG (tmp);						\   if (REG_P (tmp)&& REG_OK_FOR_BASE_P (tmp))				\     goto ADDR;								\   if (CONSTANT_ADDRESS_P (X))						\     goto ADDR;								\   if (GET_CODE (X) == PLUS)						\     {									\       tmp = XEXP (X, 0);						\       if (GET_CODE (tmp) == SUBREG					\&& (GET_MODE_SIZE (GET_MODE (tmp))				\< GET_MODE_SIZE (GET_MODE (SUBREG_REG (tmp)))))		\         tmp = SUBREG_REG (tmp);						\       if (REG_P (tmp))							\ 	{								\ 	  if (REG_OK_FP_BASE_P (tmp)					\&& GET_CODE (XEXP (X, 1)) == CONST_INT)			\ 	    goto ADDR;							\ 	  if (REG_OK_FOR_BASE_P (tmp)					\&& CONSTANT_ADDRESS_P (XEXP (X, 1)))			\ 	    goto ADDR;							\ 	}								\     }									\ }
 end_define
 
 begin_comment
@@ -3021,7 +3116,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Controls how many units are moved by expr.c before resorting to movstr.    Without byte/word accesses, we want no more than one; with, several single    byte accesses are better.   */
+comment|/* If a memory-to-memory move would take MOVE_RATIO or more simple    move-instruction pairs, we will do a movstr or libcall instead.     Without byte/word accesses, we want no more than four instructions;    with, several single byte accesses are better.   */
 end_comment
 
 begin_define
@@ -3206,6 +3301,27 @@ define|#
 directive|define
 name|ISSUE_RATE
 value|(alpha_cpu == PROCESSOR_EV4 ? 2 : 4)
+end_define
+
+begin_comment
+comment|/* Describe the fact that MULTI instructions are multiple instructions    and so to assume they don't pair with anything.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_SCHED_VARIABLE_ISSUE
+parameter_list|(
+name|DUMP
+parameter_list|,
+name|SCHED_VERBOSE
+parameter_list|,
+name|INSN
+parameter_list|,
+name|CAN_ISSUE_MORE
+parameter_list|)
+define|\
+value|if (recog_memoized (INSN)< 0 || get_attr_type (INSN) == TYPE_MULTI)	   \      (CAN_ISSUE_MORE) = 0
 end_define
 
 begin_comment
@@ -3495,7 +3611,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*$%s%d", PREFIX, NUM)
+value|sprintf ((LABEL), "*$%s%ld", (PREFIX), (long)(NUM))
 end_define
 
 begin_comment
@@ -3634,6 +3750,31 @@ define|\
 value|do {									      \     FILE *_hide_asm_out_file = (MYFILE);				      \     unsigned char *_hide_p = (unsigned char *) (MYSTRING);		      \     int _hide_thissize = (MYLENGTH);					      \     int _size_so_far = 0;						      \     {									      \       FILE *asm_out_file = _hide_asm_out_file;				      \       unsigned char *p = _hide_p;					      \       int thissize = _hide_thissize;					      \       int i;								      \       fprintf (asm_out_file, "\t.ascii \"");				      \ 									      \       for (i = 0; i< thissize; i++)					      \ 	{								      \ 	  register int c = p[i];					      \ 									      \ 	  if (_size_so_far ++> 50&& i< thissize - 4)			      \ 	    _size_so_far = 0, fprintf (asm_out_file, "\"\n\t.ascii \"");      \ 									      \ 	  if (c == '\"' || c == '\\')					      \ 	    putc ('\\', asm_out_file);					      \ 	  if (c>= ' '&& c< 0177)					      \ 	    putc (c, asm_out_file);					      \ 	  else								      \ 	    {								      \ 	      fprintf (asm_out_file, "\\%o", c);			      \
 comment|/* After an octal-escape, if a digit follows,		      \ 		 terminate one string constant and start another.	      \ 		 The Vax assembler fails to stop reading the escape	      \ 		 after three digits, so this is the only way we		      \ 		 can get it to parse the data properly.  */
 value|\ 	      if (i< thissize - 1					      \&& p[i + 1]>= '0'&& p[i + 1]<= '9')		      \ 		_size_so_far = 0, fprintf (asm_out_file, "\"\n\t.ascii \"");  \ 	  }								      \ 	}								      \       fprintf (asm_out_file, "\"\n");					      \     }									      \   }									      \   while (0)
+end_define
+
+begin_comment
+comment|/* To get unaligned data, we have to turn off auto alignment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNALIGNED_SHORT_ASM_OP
+value|".align 0\n\t.word"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNALIGNED_INT_ASM_OP
+value|".align 0\n\t.long"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNALIGNED_DOUBLE_INT_ASM_OP
+value|".align 0\n\t.quad"
 end_define
 
 begin_comment
@@ -3968,7 +4109,7 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|{ rtx addr = (ADDR);					\   int basereg = 31;					\   HOST_WIDE_INT offset = 0;				\ 							\   if (GET_CODE (addr) == AND)				\     addr = XEXP (addr, 0);				\ 							\   if (GET_CODE (addr) == REG)				\     basereg = REGNO (addr);				\   else if (GET_CODE (addr) == CONST_INT)		\     offset = INTVAL (addr);				\   else if (GET_CODE (addr) == PLUS			\&& GET_CODE (XEXP (addr, 0)) == REG		\&& GET_CODE (XEXP (addr, 1)) == CONST_INT)	\     basereg = REGNO (XEXP (addr, 0)), offset = INTVAL (XEXP (addr, 1)); \   else							\     abort ();						\ 							\   fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, offset);		\   fprintf (FILE, "($%d)", basereg);		\ }
+value|print_operand_address((FILE), (ADDR))
 end_define
 
 begin_comment
@@ -3980,7 +4121,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\   {"cint8_operand", {CONST_INT, CONSTANT_P_RTX}},                       \   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\   {"add_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},		\   {"sext_add_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},		\   {"or_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},		\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"reg_or_fp0_operand", {SUBREG, REG, CONST_DOUBLE}},			\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"fp0_operand", {CONST_DOUBLE}},					\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     SYMBOL_REF, CONST, LABEL_REF, CONSTANT_P_RTX}},	\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    SYMBOL_REF, CONST, LABEL_REF, CONSTANT_P_RTX}},	\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},
+value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT}},			\   {"cint8_operand", {CONST_INT}},					\   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			\   {"add_operand", {SUBREG, REG, CONST_INT}},				\   {"sext_add_operand", {SUBREG, REG, CONST_INT}},			\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT}},				\   {"or_operand", {SUBREG, REG, CONST_INT}},				\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"reg_or_fp0_operand", {SUBREG, REG, CONST_DOUBLE}},			\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"fp0_operand", {CONST_DOUBLE}},					\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     SYMBOL_REF, CONST, LABEL_REF}},			\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    SYMBOL_REF, CONST, LABEL_REF}},			\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},				\   {"reg_not_elim_operand", {SUBREG, REG}},				\   {"reg_no_subreg_operand", {REG}},
 end_define
 
 begin_escape
@@ -4555,6 +4696,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|print_operand_address
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|reg_or_0_operand
 parameter_list|()
@@ -4709,6 +4858,14 @@ begin_function_decl
 specifier|extern
 name|int
 name|hard_fp_register_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|reg_not_elim_operand
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 89, 92, 97, 98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -8,34 +8,6 @@ include|#
 directive|include
 file|"hconfig.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -126,25 +98,12 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|char
-modifier|*
-name|xmalloc
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|fatal
 name|PVPROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -152,6 +111,7 @@ operator|...
 operator|)
 argument_list|)
 name|ATTRIBUTE_PRINTF_1
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +124,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,24 +1674,21 @@ begin_escape
 end_escape
 
 begin_function
-name|char
-modifier|*
+name|PTR
 name|xmalloc
 parameter_list|(
 name|size
 parameter_list|)
-name|unsigned
+name|size_t
 name|size
 decl_stmt|;
 block|{
 specifier|register
-name|char
-modifier|*
+name|PTR
 name|val
 init|=
 operator|(
-name|char
-operator|*
+name|PTR
 operator|)
 name|malloc
 argument_list|(
@@ -1755,41 +1713,55 @@ block|}
 end_function
 
 begin_function
-name|char
-modifier|*
+name|PTR
 name|xrealloc
 parameter_list|(
-name|ptr
+name|old
 parameter_list|,
 name|size
 parameter_list|)
-name|char
-modifier|*
-name|ptr
+name|PTR
+name|old
 decl_stmt|;
-name|unsigned
+name|size_t
 name|size
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|result
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|realloc
-argument_list|(
+specifier|register
+name|PTR
 name|ptr
-argument_list|,
-name|size
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|old
+condition|)
+name|ptr
+operator|=
+operator|(
+name|PTR
+operator|)
+name|realloc
+argument_list|(
+name|old
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+else|else
+name|ptr
+operator|=
+operator|(
+name|PTR
+operator|)
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
-name|result
+name|ptr
 condition|)
 name|fatal
 argument_list|(
@@ -1797,18 +1769,18 @@ literal|"virtual memory exhausted"
 argument_list|)
 expr_stmt|;
 return|return
-name|result
+name|ptr
 return|;
 block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|void
 name|fatal
 name|VPROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|format
@@ -1819,7 +1791,8 @@ argument_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1838,13 +1811,14 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|ANSI_PROTOTYPES
 name|format
 operator|=
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -2009,6 +1983,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"insn-config.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -2025,6 +2004,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"real.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"recog.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf

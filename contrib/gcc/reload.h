@@ -173,22 +173,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|enum
-name|reg_class
-name|reload_address_base_reg_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|reg_class
-name|reload_address_index_reg_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|rtx
 name|reload_in
 index|[
@@ -211,6 +195,16 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|reload_in_reg
+index|[
+name|MAX_RELOADS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|reload_out_reg
 index|[
 name|MAX_RELOADS
 index|]
@@ -511,6 +505,13 @@ name|double_reg_address_ok
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|num_not_at_initial_offset
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -536,6 +537,195 @@ name|enum
 name|insn_code
 name|reload_out_optab
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|needs
+block|{
+comment|/* [0] is normal, [1] is nongroup.  */
+name|short
+name|regs
+index|[
+literal|2
+index|]
+index|[
+name|N_REG_CLASSES
+index|]
+decl_stmt|;
+name|short
+name|groups
+index|[
+name|N_REG_CLASSES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+name|SET_HARD_REG_BIT
+operator|&&
+name|defined
+name|CLEAR_REG_SET
+end_if
+
+begin_comment
+comment|/* This structure describes instructions which are relevant for reload.    Apart from all regular insns, this also includes CODE_LABELs, since they    must be examined for register elimination.  */
+end_comment
+
+begin_struct
+struct|struct
+name|insn_chain
+block|{
+comment|/* Links to the neighbour instructions.  */
+name|struct
+name|insn_chain
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+comment|/* Link through a chains set up by calculate_needs_all_insns, containing      all insns that need reloading.  */
+name|struct
+name|insn_chain
+modifier|*
+name|next_need_reload
+decl_stmt|;
+comment|/* The basic block this insn is in.  */
+name|int
+name|block
+decl_stmt|;
+comment|/* The rtx of the insn.  */
+name|rtx
+name|insn
+decl_stmt|;
+comment|/* Register life information: record all live hard registers, and all      live pseudos that have a hard register.      This information is recorded for the point immediately before the insn      (in live_before), and for the point within the insn at which all      outputs have just been written to (in live_after).  */
+name|regset
+name|live_before
+decl_stmt|;
+name|regset
+name|live_after
+decl_stmt|;
+comment|/* For each class, size of group of consecutive regs      that is needed for the reloads of this class.  */
+name|char
+name|group_size
+index|[
+name|N_REG_CLASSES
+index|]
+decl_stmt|;
+comment|/* For each class, the machine mode which requires consecutive      groups of regs of that class.      If two different modes ever require groups of one class,      they must be the same size and equally restrictive for that class,      otherwise we can't handle the complexity.  */
+name|enum
+name|machine_mode
+name|group_mode
+index|[
+name|N_REG_CLASSES
+index|]
+decl_stmt|;
+comment|/* Indicates if a register was counted against the need for      groups.  0 means it can count against max_nongroup instead.  */
+name|HARD_REG_SET
+name|counted_for_groups
+decl_stmt|;
+comment|/* Indicates if a register was counted against the need for      non-groups.  0 means it can become part of a new group.      During choose_reload_regs, 1 here means don't use this reg      as part of a group, even if it seems to be otherwise ok.  */
+name|HARD_REG_SET
+name|counted_for_nongroups
+decl_stmt|;
+comment|/* Indicates which registers have already been used for spills.  */
+name|HARD_REG_SET
+name|used_spill_regs
+decl_stmt|;
+comment|/* Describe the needs for reload registers of this insn.  */
+name|struct
+name|needs
+name|need
+decl_stmt|;
+comment|/* Nonzero if find_reloads said the insn requires reloading.  */
+name|unsigned
+name|int
+name|need_reload
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if find_reloads needs to be run during reload_as_needed to      perform modifications on any operands.  */
+name|unsigned
+name|int
+name|need_operand_change
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if eliminate_regs_in_insn said it requires eliminations.  */
+name|unsigned
+name|int
+name|need_elim
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if this insn was inserted by perform_caller_saves.  */
+name|unsigned
+name|int
+name|is_caller_save_insn
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* A chain of insn_chain structures to describe all non-note insns in    a function.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|insn_chain
+modifier|*
+name|reload_insn_chain
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allocate a new insn_chain structure.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|insn_chain
+modifier|*
+name|new_insn_chain
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|compute_use_by_pseudos
+name|PROTO
+argument_list|(
+operator|(
+name|HARD_REG_SET
+operator|*
+operator|,
+name|regset
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -610,17 +800,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Remove all replacements in reload FROM.  */
+comment|/* IN_RTX is the value loaded by a reload that we now decided to inherit,    or a subpart of it.  If we have any replacements registered for IN_RTX,    chancel the reloads that were supposed to load them.    Return non-zero if we chanceled any reloads.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|remove_replacements
+name|int
+name|remove_address_replacements
 name|PROTO
 argument_list|(
 operator|(
-name|int
+name|rtx
+name|in_rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -640,26 +831,6 @@ operator|(
 name|rtx
 operator|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Return the number of times character C occurs in string S.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|n_occurrences
-name|PROTO
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -690,7 +861,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|find_reloads
 name|PROTO
 argument_list|(
@@ -1053,6 +1224,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Deallocate the reload register used by reload number R.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|deallocate_reload_reg
+name|PROTO
+argument_list|(
+operator|(
+name|int
+name|r
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Functions in caller-save.c:  */
 end_comment
 
@@ -1096,13 +1285,12 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|setup_save_areas
 name|PROTO
 argument_list|(
 operator|(
-name|int
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1119,8 +1307,24 @@ name|save_call_clobbered_regs
 name|PROTO
 argument_list|(
 operator|(
-expr|enum
-name|machine_mode
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Replace (subreg (reg)) with the appropriate (reg) for any operands.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cleanup_subreg_operands
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;

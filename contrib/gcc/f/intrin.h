@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* intrin.h -- Public interface for intrin.c    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* intrin.h -- Public interface for intrin.c    Copyright (C) 1995-1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -145,6 +145,24 @@ name|GFRTGNU
 parameter_list|,
 name|CONTROL
 parameter_list|)
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
 include|#
 directive|include
 file|"intrin.def"
@@ -160,6 +178,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 name|FFEINTRIN_gen
 block|}
 name|ffeintrinGen
@@ -227,6 +248,24 @@ name|GFRTGNU
 parameter_list|,
 name|CONTROL
 parameter_list|)
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
 include|#
 directive|include
 file|"intrin.def"
@@ -242,6 +281,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 name|FFEINTRIN_spec
 block|}
 name|ffeintrinSpec
@@ -310,6 +352,26 @@ name|CONTROL
 parameter_list|)
 define|\
 value|FFEINTRIN_imp ## CODE,
+define|#
+directive|define
+name|DEFIMPY
+parameter_list|(
+name|CODE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|GFRTDIRECT
+parameter_list|,
+name|GFRTF2C
+parameter_list|,
+name|GFRTGNU
+parameter_list|,
+name|CONTROL
+parameter_list|,
+name|Y2KBAD
+parameter_list|)
+define|\
+value|FFEINTRIN_imp ## CODE,
 include|#
 directive|include
 file|"intrin.def"
@@ -325,6 +387,9 @@ name|DEFSPEC
 undef|#
 directive|undef
 name|DEFIMP
+undef|#
+directive|undef
+name|DEFIMPY
 name|FFEINTRIN_imp
 block|}
 name|ffeintrinImp
@@ -498,6 +563,7 @@ begin_function_decl
 name|bool
 name|ffeintrin_is_intrinsic
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -547,6 +613,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ffeintrin_name_generic
@@ -558,6 +625,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ffeintrin_name_implementation
@@ -569,6 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ffeintrin_name_specific

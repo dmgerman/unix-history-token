@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler.    Intel 386 (OSF/1 with OSF/rose) version.    Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler.    Intel 386 (OSF/1 with OSF/rose) version.    Copyright (C) 1991, 1992, 1993, 1996, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -99,17 +99,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_NO_IDENT
-value|001000000000
-end_define
-
-begin_comment
-comment|/* suppress .ident */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MASK_NO_UNDERSCORES
 value|000400000000
 end_define
@@ -178,13 +167,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_IDENT
-value|((target_flags& MASK_NO_IDENT) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_UNDERSCORES
 value|((target_flags& MASK_NO_UNDERSCORES) == 0)
 end_define
@@ -214,7 +196,11 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "half-pic",		 MASK_HALF_PIC},			\      { "no-half-pic",		-MASK_HALF_PIC},			\      { "debug-half-pic",	 MASK_HALF_PIC_DEBUG},			\      { "debugb",		 MASK_HALF_PIC_DEBUG},			\      { "elf",			 MASK_ELF},				\      { "rose",			-MASK_ELF},				\      { "ident",			-MASK_NO_IDENT},			\      { "no-ident",		 MASK_NO_IDENT},			\      { "underscores",		-MASK_NO_UNDERSCORES},			\      { "no-underscores",	 MASK_NO_UNDERSCORES},			\      { "large-align",		 MASK_LARGE_ALIGN},			\      { "no-large-align",	-MASK_LARGE_ALIGN},			\      { "mcount",		-MASK_NO_MCOUNT},			\      { "mcount-ptr",		 MASK_NO_MCOUNT},			\      { "no-mcount",		 MASK_NO_MCOUNT},
+value|{ "half-pic",		 MASK_HALF_PIC, "Emit half-PIC code" },			\      { "no-half-pic",		-MASK_HALF_PIC, "" }			\      { "debug-half-pic",	 MASK_HALF_PIC_DEBUG, 0
+comment|/* intentionally undoc */
+value|},			\      { "debugb",		 MASK_HALF_PIC_DEBUG, 0
+comment|/* intentionally undoc */
+value|},			\      { "elf",			 MASK_ELF, "Emit ELF object code" },				\      { "rose",			-MASK_ELF, "Emit ROSE object code" },				\      { "underscores",		-MASK_NO_UNDERSCORES, "Symbols have a leading underscore" },			\      { "no-underscores",	 MASK_NO_UNDERSCORES, "" },			\      { "large-align",		 MASK_LARGE_ALIGN, "Align to>word boundaries" },			\      { "no-large-align",	-MASK_LARGE_ALIGN, "" },			\      { "mcount",		-MASK_NO_MCOUNT, "Use mcount for profiling" },			\      { "mcount-ptr",		 MASK_NO_MCOUNT, "Use mcount_ptr for profiling" },			\      { "no-mcount",		 MASK_NO_MCOUNT, "" },
 end_define
 
 begin_comment
@@ -1212,7 +1198,7 @@ parameter_list|(
 name|STREAM
 parameter_list|)
 define|\
-value|do									\   {									\     if (HALF_PIC_P ())							\       HALF_PIC_FINISH (STREAM);						\ 									\     if (TARGET_IDENT)							\       {									\ 	char *fstart = main_input_filename;				\ 	char *fname;							\ 									\ 	if (!fstart)							\ 	  fstart = "<no file>";						\ 									\ 	fname = fstart + strlen (fstart) - 1;				\ 	while (fname> fstart&& *fname != '/')				\ 	  fname--;							\ 									\ 	if (*fname == '/')						\ 	  fname++;							\ 									\ 	fprintf ((STREAM), "\t%s\t\"GCC: (GNU) %s %s -O%d",		\ 		 IDENT_ASM_OP, version_string, fname, optimize);	\ 									\ 	if (write_symbols == PREFERRED_DEBUGGING_TYPE)			\ 	  fprintf ((STREAM), " -g%d", (int)debug_info_level);		\ 									\ 	else if (write_symbols == DBX_DEBUG)				\ 	  fprintf ((STREAM), " -gstabs%d", (int)debug_info_level);	\ 									\ 	else if (write_symbols == DWARF_DEBUG)				\ 	  fprintf ((STREAM), " -gdwarf%d", (int)debug_info_level);	\ 									\ 	else if (write_symbols != NO_DEBUG)				\ 	  fprintf ((STREAM), " -g??%d", (int)debug_info_level);		\ 									\ 	if (flag_omit_frame_pointer)					\ 	  fprintf ((STREAM), " -fomit-frame-pointer");			\ 									\ 	if (flag_strength_reduce)					\ 	  fprintf ((STREAM), " -fstrength-reduce");			\ 									\ 	if (flag_unroll_loops)						\ 	  fprintf ((STREAM), " -funroll-loops");			\ 									\ 	if (flag_schedule_insns)					\ 	  fprintf ((STREAM), " -fschedule-insns");			\ 									\ 	if (flag_schedule_insns_after_reload)				\ 	  fprintf ((STREAM), " -fschedule-insns2");			\ 									\ 	if (flag_force_mem)						\ 	  fprintf ((STREAM), " -fforce-mem");				\ 									\ 	if (flag_force_addr)						\ 	  fprintf ((STREAM), " -fforce-addr");				\ 									\ 	if (flag_inline_functions)					\ 	  fprintf ((STREAM), " -finline-functions");			\ 									\ 	if (flag_caller_saves)						\ 	  fprintf ((STREAM), " -fcaller-saves");			\ 									\ 	if (flag_pic)							\ 	  fprintf ((STREAM), (flag_pic> 1) ? " -fPIC" : " -fpic");	\ 									\ 	if (flag_inhibit_size_directive)				\ 	  fprintf ((STREAM), " -finhibit-size-directive");		\ 									\ 	if (flag_gnu_linker)						\ 	  fprintf ((STREAM), " -fgnu-linker");				\ 									\ 	if (profile_flag)						\ 	  fprintf ((STREAM), " -p");					\ 									\ 	if (profile_block_flag)						\ 	  fprintf ((STREAM), " -a");					\ 									\ 	if (TARGET_IEEE_FP)						\ 	  fprintf ((STREAM), " -mieee-fp");				\ 									\ 	if (TARGET_HALF_PIC)						\ 	  fprintf ((STREAM), " -mhalf-pic");				\ 									\ 	if (!TARGET_MOVE)						\ 	  fprintf ((STREAM), " -mno-move");				\ 									\ 	if (TARGET_386)							\ 	  fprintf ((STREAM), " -m386");					\ 									\ 	else if (TARGET_486)						\ 	  fprintf ((STREAM), " -m486");					\ 									\ 	else								\ 	  fprintf ((STREAM), " -munknown-machine");			\ 									\ 	fprintf ((STREAM), (TARGET_ELF) ? " -melf\"\n" : " -mrose\"\n"); \       }									\   }									\ while (0)
+value|do									\   {									\     if (HALF_PIC_P ())							\       HALF_PIC_FINISH (STREAM);						\ 									\     if (!flag_no_ident)							\       {									\ 	char *fstart = main_input_filename;				\ 	char *fname;							\ 									\ 	if (!fstart)							\ 	  fstart = "<no file>";						\ 									\ 	fname = fstart + strlen (fstart) - 1;				\ 	while (fname> fstart&& *fname != '/')				\ 	  fname--;							\ 									\ 	if (*fname == '/')						\ 	  fname++;							\ 									\ 	fprintf ((STREAM), "\t%s\t\"GCC: (GNU) %s %s -O%d",		\ 		 IDENT_ASM_OP, version_string, fname, optimize);	\ 									\ 	if (write_symbols == PREFERRED_DEBUGGING_TYPE)			\ 	  fprintf ((STREAM), " -g%d", (int)debug_info_level);		\ 									\ 	else if (write_symbols == DBX_DEBUG)				\ 	  fprintf ((STREAM), " -gstabs%d", (int)debug_info_level);	\ 									\ 	else if (write_symbols == DWARF_DEBUG)				\ 	  fprintf ((STREAM), " -gdwarf%d", (int)debug_info_level);	\ 									\ 	else if (write_symbols != NO_DEBUG)				\ 	  fprintf ((STREAM), " -g??%d", (int)debug_info_level);		\ 									\ 	if (flag_omit_frame_pointer)					\ 	  fprintf ((STREAM), " -fomit-frame-pointer");			\ 									\ 	if (flag_strength_reduce)					\ 	  fprintf ((STREAM), " -fstrength-reduce");			\ 									\ 	if (flag_unroll_loops)						\ 	  fprintf ((STREAM), " -funroll-loops");			\ 									\ 	if (flag_schedule_insns)					\ 	  fprintf ((STREAM), " -fschedule-insns");			\ 									\ 	if (flag_schedule_insns_after_reload)				\ 	  fprintf ((STREAM), " -fschedule-insns2");			\ 									\ 	if (flag_force_mem)						\ 	  fprintf ((STREAM), " -fforce-mem");				\ 									\ 	if (flag_force_addr)						\ 	  fprintf ((STREAM), " -fforce-addr");				\ 									\ 	if (flag_inline_functions)					\ 	  fprintf ((STREAM), " -finline-functions");			\ 									\ 	if (flag_caller_saves)						\ 	  fprintf ((STREAM), " -fcaller-saves");			\ 									\ 	if (flag_pic)							\ 	  fprintf ((STREAM), (flag_pic> 1) ? " -fPIC" : " -fpic");	\ 									\ 	if (flag_inhibit_size_directive)				\ 	  fprintf ((STREAM), " -finhibit-size-directive");		\ 									\ 	if (flag_gnu_linker)						\ 	  fprintf ((STREAM), " -fgnu-linker");				\ 									\ 	if (profile_flag)						\ 	  fprintf ((STREAM), " -p");					\ 									\ 	if (profile_block_flag)						\ 	  fprintf ((STREAM), " -a");					\ 									\ 	if (TARGET_IEEE_FP)						\ 	  fprintf ((STREAM), " -mieee-fp");				\ 									\ 	if (TARGET_HALF_PIC)						\ 	  fprintf ((STREAM), " -mhalf-pic");				\ 									\ 	if (!TARGET_MOVE)						\ 	  fprintf ((STREAM), " -mno-move");				\ 									\ 	if (TARGET_386)							\ 	  fprintf ((STREAM), " -m386");					\ 									\ 	else if (TARGET_486)						\ 	  fprintf ((STREAM), " -m486");					\ 									\ 	else								\ 	  fprintf ((STREAM), " -munknown-machine");			\ 									\ 	fprintf ((STREAM), (TARGET_ELF) ? " -melf\"\n" : " -mrose\"\n"); \       }									\   }									\ while (0)
 end_define
 
 begin_comment

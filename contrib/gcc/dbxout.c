@@ -403,20 +403,42 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If there is a system stabs.h, use it.  Otherwise, use our own.  */
+comment|/* If there is a system stab.h, use it.  Otherwise, use our own.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STABS_H
-end_ifndef
+begin_comment
+comment|/* ??? This is supposed to describe the target's stab format, so using    the host HAVE_STAB_H appears to be wrong.  For now, we use our own file    when cross compiling.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STAB_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CROSS_COMPILE
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|"gstab.h"
 end_include
+
+begin_comment
+comment|/* If doing DBX on sysV, use our own stab.h.  */
+end_comment
 
 begin_else
 else|#
@@ -1756,6 +1778,7 @@ parameter_list|)
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -2095,10 +2118,12 @@ parameter_list|)
 name|FILE
 modifier|*
 name|file
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -7670,7 +7695,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 name|leaf_renumber_regs_insn
 argument_list|(
@@ -8582,6 +8607,7 @@ name|decl
 parameter_list|)
 name|tree
 name|decl
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -8823,7 +8849,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 block|{
 name|leaf_renumber_regs_insn
@@ -10487,6 +10513,7 @@ name|decl
 parameter_list|)
 name|tree
 name|decl
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#

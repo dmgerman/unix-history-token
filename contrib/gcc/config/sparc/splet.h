@@ -41,7 +41,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{"big-endian", -MASK_LITTLE_ENDIAN},		\ {"little-endian", MASK_LITTLE_ENDIAN},		\ {"live-g0", MASK_LIVE_G0},			\ {"no-live-g0", -MASK_LIVE_G0},			\ {"broken-saverestore", MASK_BROKEN_SAVERESTORE},	\ {"no-broken-saverestore", -MASK_BROKEN_SAVERESTORE},
+value|{"big-endian", -MASK_LITTLE_ENDIAN, "Generate code for big endian" }, \ {"little-endian", MASK_LITTLE_ENDIAN, "Generate code for little endian" }, \ {"live-g0", MASK_LIVE_G0, "Use g0 as a normal register" }, \ {"no-live-g0", -MASK_LIVE_G0, "Register g0 is fixed with a zero value" }, \ {"broken-saverestore", MASK_BROKEN_SAVERESTORE, "Enable save/restore bug workarounds" }, \ {"no-broken-saverestore", -MASK_BROKEN_SAVERESTORE, "Disable save/restore bug workarouns" },
 end_define
 
 begin_undef
@@ -115,6 +115,20 @@ define|#
 directive|define
 name|WORDS_BIG_ENDIAN
 value|(! TARGET_LITTLE_ENDIAN)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_OVERRIDE_OPTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OVERRIDE_OPTIONS
+define|\
+value|do {									\     if (TARGET_LIVE_G0)							\       {									\ 	warning ("Option '-mlive-g0' deprecated.");			\         target_flags&= ~MASK_LIVE_G0;					\       }									\     else if (TARGET_BROKEN_SAVERESTORE)					\       {									\ 	warning ("Option '-mbroken-saverestore' deprecated.");		\         target_flags&= ~MASK_BROKEN_SAVERESTORE;			\       }									\   } while (0)
 end_define
 
 end_unit

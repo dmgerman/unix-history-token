@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 93-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -224,8 +224,6 @@ name|BUILT_IN_RETURN_ADDRESS
 block|,
 name|BUILT_IN_AGGREGATE_INCOMING_ADDRESS
 block|,
-name|BUILT_IN_CALLER_RETURN_ADDRESS
-block|,
 name|BUILT_IN_APPLY_ARGS
 block|,
 name|BUILT_IN_APPLY
@@ -239,11 +237,9 @@ block|,
 name|BUILT_IN_TRAP
 block|,
 comment|/* Various hooks for the DWARF 2 __throw routine.  */
-name|BUILT_IN_FP
-block|,
-name|BUILT_IN_SP
-block|,
 name|BUILT_IN_UNWIND_INIT
+block|,
+name|BUILT_IN_DWARF_CFA
 block|,
 name|BUILT_IN_DWARF_FP_REGNUM
 block|,
@@ -253,13 +249,7 @@ name|BUILT_IN_FROB_RETURN_ADDR
 block|,
 name|BUILT_IN_EXTRACT_RETURN_ADDR
 block|,
-name|BUILT_IN_SET_RETURN_ADDR_REG
-block|,
-name|BUILT_IN_EH_STUB_OLD
-block|,
-name|BUILT_IN_EH_STUB
-block|,
-name|BUILT_IN_SET_EH_REGS
+name|BUILT_IN_EH_RETURN
 block|,
 comment|/* C++ extensions */
 name|BUILT_IN_NEW
@@ -448,7 +438,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in    	   VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, LABEL_DECL, ..._TYPE 	   IDENTIFIER_NODE     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL        TREE_VIA_PUBLIC in            TREE_LIST or TREE_VEC     private_flag:         TREE_VIA_PRIVATE in            TREE_LIST or TREE_VEC        TREE_PRIVATE in            ??? unspecified nodes     protected_flag:         TREE_VIA_PROTECTED in            TREE_LIST        TREE_PROTECTED in            BLOCK 	   ??? unspecified nodes     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        ITERATOR_BOUND_P in            VAR_DECL if iterator (C)        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     permanent_flag: TREE_PERMANENT in all nodes     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        DECL_BUILT_IN_NONANSI in            FUNCTION_DECL        TREE_PARMLIST in            TREE_PARMLIST (C++)        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     raises_flag:         TREE_RAISES in            expressions  							  */
+comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in    	   VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, LABEL_DECL, ..._TYPE 	   IDENTIFIER_NODE     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL        TREE_VIA_PUBLIC in            TREE_LIST or TREE_VEC        EXPR_WFL_EMIT_LINE_NOTE in            EXPR_WITH_FILE_LOCATION     private_flag:         TREE_VIA_PRIVATE in            TREE_LIST or TREE_VEC        TREE_PRIVATE in            ??? unspecified nodes     protected_flag:         TREE_VIA_PROTECTED in            TREE_LIST        TREE_PROTECTED in            BLOCK 	   ??? unspecified nodes     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        ITERATOR_BOUND_P in            VAR_DECL if iterator (C)        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     permanent_flag: TREE_PERMANENT in all nodes     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        DECL_BUILT_IN_NONANSI in            FUNCTION_DECL        TREE_PARMLIST in            TREE_PARMLIST (C++)        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     raises_flag:         TREE_RAISES in            expressions  							  */
 end_comment
 
 begin_comment
@@ -620,9 +610,9 @@ define|#
 directive|define
 name|TYPE_CHECK
 parameter_list|(
-name|t
+name|tree
 parameter_list|)
-value|DO_CHECK (tree_class_check, t, 't')
+value|DO_CHECK (tree_class_check, tree, 't')
 end_define
 
 begin_define
@@ -630,9 +620,9 @@ define|#
 directive|define
 name|TYPE_CHECK1
 parameter_list|(
-name|t
+name|tree
 parameter_list|)
-value|DO_CHECK1 (tree_class_check, t, 't')
+value|DO_CHECK1 (tree_class_check, tree, 't')
 end_define
 
 begin_define
@@ -1772,7 +1762,69 @@ value|(EXPR_CHECK (NODE)->exp.complexity)
 end_define
 
 begin_comment
-comment|/* In expression with file location information.  */
+comment|/* In a LABELED_BLOCK_EXPR node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABELED_BLOCK_LABEL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (NODE, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LABELED_BLOCK_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (NODE, 1)
+end_define
+
+begin_comment
+comment|/* In a EXIT_BLOCK_EXPR node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXIT_BLOCK_LABELED_BLOCK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (NODE, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_BLOCK_RETURN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (NODE, 1)
+end_define
+
+begin_comment
+comment|/* In a LOOP_EXPR node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_EXPR_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (NODE, 0)
+end_define
+
+begin_comment
+comment|/* In a EXPR_WITH_FILE_LOCATION node.  */
 end_comment
 
 begin_define
@@ -1857,7 +1909,7 @@ name|EXPR_WFL_EMIT_LINE_NOTE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.lang_flag_0)
+value|((NODE)->common.public_flag)
 end_define
 
 begin_struct
@@ -2358,16 +2410,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TYPE_BINFO
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(TYPE_CHECK (NODE)->type.binfo)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TYPE_NONCOPIED_PARTS
 parameter_list|(
 name|NODE
@@ -2403,6 +2445,20 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(TYPE_CHECK (NODE)->type.lang_specific)
+end_define
+
+begin_comment
+comment|/* For aggregate types, information about this type, as a base type    for itself.  Used in a language-dependent way for types that are    neither a RECORD_TYPE, QUAL_UNION_TYPE, nor a UNION_TYPE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_BINFO
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK (NODE)->type.binfo)
 end_define
 
 begin_comment
@@ -2512,6 +2568,67 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|((NODE)->common.readonly_flag)
+end_define
+
+begin_comment
+comment|/* If nonzero, this type is `restrict'-qualified, in the C sense of    the term.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_RESTRICT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK (NODE)->type.restrict_flag)
+end_define
+
+begin_comment
+comment|/* There is a TYPE_QUAL value for each type qualifier.  They can be    combined by bitwise-or to form the complete set of qualifiers for a    type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_UNQUALIFIED
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_QUAL_CONST
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_QUAL_VOLATILE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_QUAL_RESTRICT
+value|0x4
+end_define
+
+begin_comment
+comment|/* The set of type qualifiers for this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_QUALS
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|((TYPE_READONLY(NODE) * TYPE_QUAL_CONST) |	\    (TYPE_VOLATILE(NODE) * TYPE_QUAL_VOLATILE) |	\    (TYPE_RESTRICT(NODE) * TYPE_QUAL_RESTRICT))
 end_define
 
 begin_comment
@@ -2743,6 +2860,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|restrict_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|lang_flag_0
 range|:
 literal|1
@@ -2777,7 +2899,7 @@ name|lang_flag_6
 range|:
 literal|1
 decl_stmt|;
-comment|/* room for 4 more bits */
+comment|/* room for 3 more bits */
 name|unsigned
 name|int
 name|align
@@ -3075,6 +3197,20 @@ end_escape
 begin_comment
 comment|/* Define fields and accessors for nodes representing declared names.  */
 end_comment
+
+begin_comment
+comment|/* Nonzero if DECL represents a decl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_P
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(TREE_CODE_CLASS (TREE_CODE (DECL)) == 'd')
+end_define
 
 begin_comment
 comment|/* This is the name of the object as written by the user.    It is an IDENTIFIER_NODE.  */
@@ -3523,6 +3659,21 @@ value|(DECL_CHECK (NODE)->decl.abstract_origin)
 end_define
 
 begin_comment
+comment|/* Like DECL_ABSTRACT_ORIGIN, but returns NODE if there's no abstract    origin.  This is useful when setting the DECL_ABSTRACT_ORIGIN.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ORIGIN
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_ABSTRACT_ORIGIN (NODE) ? DECL_ABSTRACT_ORIGIN (NODE) : NODE)
+end_define
+
+begin_comment
 comment|/* Nonzero for any sort of ..._DECL node means this decl node represents    an inline instance of some original (abstract) decl from an inline function;    suppress any warnings about shadowing some other variable.  */
 end_comment
 
@@ -3618,6 +3769,31 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(DECL_CHECK (NODE)->decl.external_flag)
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL for a RECORD_TYPE, sets number for non-init_priority    initializatons. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_INIT_PRIORITY
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_INIT_PRIORITY
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_RESERVED_INIT_PRIORITY
+value|100
 end_define
 
 begin_comment
@@ -3897,6 +4073,48 @@ value|(DECL_CHECK (NODE)->decl.transparent_union)
 end_define
 
 begin_comment
+comment|/* Used in a DECL to indicate that, even if it TREE_PUBLIC, it need    not be put out unless it is needed in this translation unit.    Entities like this are shared across translation units (like weak    entities), but are guaranteed to be generated by any translation    unit that needs them, and therefore need not be put out anywhere    where they are not needed.  DECL_COMDAT is just a hint to the    back-end; it is up to front-ends which set this flag to ensure    that there will never be any harm, other than bloat, in putting out    something which is DECL_COMDAT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_COMDAT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.comdat_flag)
+end_define
+
+begin_comment
+comment|/* Used in FUNCTION_DECLs to indicate that function entry and exit should    be instrumented with calls to support routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->decl.no_instrument_function_entry_exit)
+end_define
+
+begin_comment
+comment|/* Used in FUNCTION_DECLs to indicate that in this function,    check-memory-usage should be disabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_CHECK_MEMORY_USAGE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->decl.no_check_memory_usage)
+end_define
+
+begin_comment
 comment|/* Additional flags for language-specific uses.  */
 end_comment
 
@@ -3992,6 +4210,36 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(DECL_CHECK (NODE)->decl.non_addr_const_p)
+end_define
+
+begin_comment
+comment|/* Used to indicate an alias set for the memory pointed to by this    particular FIELD_DECL, PARM_DECL, or VAR_DECL, which must have    pointer (or reference) type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_POINTER_ALIAS_SET
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_CHECK (NODE)->decl.pointer_alias_set)
+end_define
+
+begin_comment
+comment|/* Nonzero if an alias set has been assigned to this declaration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_POINTER_ALIAS_SET_KNOWN_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_POINTER_ALIAS_SET (NODE) != - 1)
 end_define
 
 begin_struct
@@ -4122,7 +4370,6 @@ name|weak_flag
 range|:
 literal|1
 decl_stmt|;
-comment|/* room for no more */
 name|unsigned
 name|lang_flag_0
 range|:
@@ -4165,6 +4412,21 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|non_addr_const_p
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|no_instrument_function_entry_exit
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|no_check_memory_usage
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|comdat_flag
 range|:
 literal|1
 decl_stmt|;
@@ -4260,6 +4522,9 @@ name|tree_node
 modifier|*
 name|vindex
 decl_stmt|;
+name|int
+name|pointer_alias_set
+decl_stmt|;
 comment|/* Points to a structure whose details depend on the language in use.  */
 name|struct
 name|lang_decl
@@ -4336,12 +4601,6 @@ end_union
 begin_escape
 end_escape
 
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -4407,69 +4666,6 @@ argument_list|(
 operator|(
 name|unsigned
 name|HOST_WIDE_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* At present, don't prototype xrealloc, since all of the callers don't    cast their pointers to char *, and all of the xrealloc's don't use    void * yet.  */
-end_comment
-
-begin_else
-unit|extern char *xmalloc			PROTO((size_t)); extern char *xcalloc			PROTO((size_t, size_t)); extern char *xrealloc			PROTO((void *, size_t));
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xcalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xrealloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xstrdup
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4611,6 +4807,7 @@ name|get_identifier
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4629,6 +4826,7 @@ name|maybe_get_identifier
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4774,6 +4972,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4892,6 +5091,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -5435,6 +5635,7 @@ name|is_attribute_p
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -5455,6 +5656,7 @@ name|lookup_attribute
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -5484,25 +5686,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Given a type node TYPE, and CONSTP and VOLATILEP, return a type    for the same kind of data as TYPE describes.    Variants point to the "main variant" (which has neither CONST nor VOLATILE)    via TYPE_MAIN_VARIANT, and it points to a chain of other variants    so that duplicate variants are never made.    Only main variants should ever appear as types of expressions.  */
+comment|/* Given a type node TYPE and a TYPE_QUALIFIER_SET, return a type for    the same kind of data as TYPE describes.  Variants point to the    "main variant" (which has no qualifiers set) via TYPE_MAIN_VARIANT,    and it points to a chain of other variants so that duplicate    variants are never made.  Only main variants should ever appear as    types of expressions.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|tree
-name|build_type_variant
+name|build_qualified_type
 name|PROTO
 argument_list|(
 operator|(
 name|tree
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Like build_qualified_type, but only deals with the `const' and    `volatile' qualifiers.  This interface is retained for backwards    compatiblity with the various front-ends; new code should use    build_qualified_type instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|build_type_variant
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|CONST_P
+parameter_list|,
+name|VOLATILE_P
+parameter_list|)
+define|\
+value|build_qualified_type (TYPE,						\ 			((CONST_P) ? TYPE_QUAL_CONST : 0)		\ 			| ((VOLATILE_P) ? TYPE_QUAL_VOLATILE : 0))
+end_define
 
 begin_comment
 comment|/* Make a copy of a type node.  */
@@ -6161,6 +6380,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -6551,6 +6771,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|function_cannot_inline_p
@@ -6876,6 +7097,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
+name|get_file_function_name_long
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
 name|get_set_constructor_bits
 name|PROTO
 argument_list|(
@@ -6918,6 +7154,19 @@ name|PROTO
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|new_alias_set
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7275,6 +7524,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|optimize_tail_recursion
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|expand_start_bindings
 name|PROTO
@@ -7433,6 +7699,7 @@ name|tree
 operator|,
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7515,6 +7782,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|using_eh_for_cleanups
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stmt_loop_nest_empty
 name|PROTO
 argument_list|(
 operator|(
@@ -8842,6 +9122,7 @@ name|print_obstack_statistics
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -8872,6 +9153,7 @@ operator|,
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -9010,6 +9292,7 @@ operator|,
 expr|enum
 name|tree_code
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -9032,6 +9315,7 @@ name|tree
 operator|,
 name|char
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -9054,6 +9338,7 @@ name|tree
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -9480,6 +9765,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -9501,6 +9787,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -10028,6 +10315,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,

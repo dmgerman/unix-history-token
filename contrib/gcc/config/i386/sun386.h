@@ -112,9 +112,9 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {							\     extern char *version_string, *language_string;	\     {							\       int len = strlen (dump_base_name);		\       char *na = dump_base_name + len;			\       char shorter[15];					\
-comment|/* NA gets DUMP_BASE_NAME sans directory names.  */
-value|\       while (na> dump_base_name)			\ 	{						\ 	  if (na[-1] == '/')				\ 	    break;					\ 	  na--;						\ 	}						\       strncpy (shorter, na, 14);			\       shorter[14] = 0;					\       fprintf (FILE, "\t.file\t");			\       output_quoted_string (FILE, shorter);		\       fprintf (FILE, "\n");				\     }							\     fprintf (FILE, "\t.version\t\"%s %s\"\n",		\ 	     language_string, version_string);		\     if (optimize) ASM_FILE_START_1 (FILE);		\   } while (0)
+value|do {							\     extern char *version_string, *language_string;	\     {							\       int len = strlen (main_input_filename);		\       char *na = main_input_filename + len;		\       char shorter[15];					\
+comment|/* NA gets MAIN_INPUT_FILENAME sans directory names.  */
+value|\       while (na> main_input_filename)			\ 	{						\ 	  if (na[-1] == '/')				\ 	    break;					\ 	  na--;						\ 	}						\       strncpy (shorter, na, 14);			\       shorter[14] = 0;					\       fprintf (FILE, "\t.file\t");			\       output_quoted_string (FILE, shorter);		\       fprintf (FILE, "\n");				\     }							\     fprintf (FILE, "\t.version\t\"%s %s\"\n",		\ 	     language_string, version_string);		\     if (optimize) ASM_FILE_START_1 (FILE);		\   } while (0)
 end_define
 
 begin_define

@@ -215,10 +215,16 @@ name|int
 name|contains_functions
 decl_stmt|;
 name|int
+name|has_computed_jump
+decl_stmt|;
+name|int
 name|is_thunk
 decl_stmt|;
 name|rtx
-name|nonlocal_goto_handler_slot
+name|nonlocal_goto_handler_slots
+decl_stmt|;
+name|rtx
+name|nonlocal_goto_handler_labels
 decl_stmt|;
 name|rtx
 name|nonlocal_goto_stack_level
@@ -316,6 +322,9 @@ name|target_temp_slot_level
 decl_stmt|;
 name|int
 name|var_temp_slot_level
+decl_stmt|;
+name|int
+name|instrument_entry_exit
 decl_stmt|;
 comment|/* This slot is initialized as 0 and is added to      during the nested function.  */
 name|struct
@@ -416,6 +425,9 @@ decl_stmt|;
 name|rtx
 name|ehc
 decl_stmt|;
+name|rtx
+name|eh_return_stub_label
+decl_stmt|;
 comment|/* For expr.c.  */
 name|rtx
 name|pending_chain
@@ -434,6 +446,9 @@ name|apply_args_value
 decl_stmt|;
 name|rtx
 name|forced_labels
+decl_stmt|;
+name|int
+name|check_memory_usage
 decl_stmt|;
 comment|/* For emit-rtl.c.  */
 name|int
@@ -621,6 +636,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Label that will go on parm cleanup code, if any.    Jumping to this label runs cleanup code for parameters, if    such code must be run.  Following this code is the logical return label.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|cleanup_label
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Label that will go on function epilogue.    Jumping to this label serves as a "return" instruction    on machines which require execution of the epilogue on all returns.  */
 end_comment
 
@@ -628,6 +654,61 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|return_label
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Offset to end of allocated area of stack frame.    If stack grows down, this is the address of the last stack slot allocated.    If stack grows up, this is the address for the next slot.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|frame_offset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Label to jump back to for tail recursion, or 0 if we have    not yet needed one for this function.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|tail_recursion_label
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Place after which to insert the tail_recursion_label if we need one.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|tail_recursion_reentry
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Location at which to save the argument pointer if it will need to be    referenced.  There are two cases where this is done: if nonlocal gotos    exist, or if vars whose is an offset from the argument pointer will be    needed by inner routines.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|arg_pointer_save_area
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Chain of all RTL_EXPRs that have insns in them.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|rtl_expr_chain
 decl_stmt|;
 end_decl_stmt
 

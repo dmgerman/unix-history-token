@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* fini.c    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley (burley@gnu.org).  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* fini.c    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_HCONFIG
+end_define
 
 begin_include
 include|#
@@ -14,6 +20,12 @@ include|#
 directive|include
 file|"malloc.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|MAXNAMELEN
+end_undef
 
 begin_define
 define|#
@@ -163,9 +175,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
-name|spaces
+name|xspaces
 index|[]
 init|=
 block|{
@@ -2336,7 +2349,7 @@ literal|4
 operator|<
 name|ARRAY_SIZE
 argument_list|(
-name|spaces
+name|xspaces
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2404,7 +2417,7 @@ name|out
 argument_list|,
 literal|"\ %s{\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|-
@@ -2418,7 +2431,7 @@ name|out
 argument_list|,
 literal|"\ %sif ((c = ffesrc_strcmp_2c (ffe_case_match (), p, \"%s\", \"%s\", \"%s\")) == 0)\n\ %sreturn %s%s%s;\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2435,7 +2448,7 @@ name|nhalf
 operator|->
 name|name_ic
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|+
@@ -2464,7 +2477,7 @@ name|out
 argument_list|,
 literal|"\ %selse if (c< 0)\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2482,7 +2495,7 @@ name|out
 argument_list|,
 literal|"\ %s;\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|+
@@ -2521,7 +2534,7 @@ name|out
 argument_list|,
 literal|"\ %selse\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2554,7 +2567,7 @@ name|out
 argument_list|,
 literal|"\ %s}\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|-
@@ -2620,7 +2633,7 @@ literal|4
 operator|<
 name|ARRAY_SIZE
 argument_list|(
-name|spaces
+name|xspaces
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2688,7 +2701,7 @@ name|out
 argument_list|,
 literal|"\ %s{\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|-
@@ -2702,7 +2715,7 @@ name|out
 argument_list|,
 literal|"\ %sif ((c = ffesrc_strncmp_2c (ffe_case_match (), p, \"%s\", \"%s\", \"%s\", %d)) == 0)\n\ %sreturn %s%s%s;\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2721,7 +2734,7 @@ name|name_ic
 argument_list|,
 name|len
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|+
@@ -2750,7 +2763,7 @@ name|out
 argument_list|,
 literal|"\ %selse if (c< 0)\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2768,7 +2781,7 @@ name|out
 argument_list|,
 literal|"\ %s;\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|+
@@ -2809,7 +2822,7 @@ name|out
 argument_list|,
 literal|"\ %selse\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 index|]
@@ -2844,7 +2857,7 @@ name|out
 argument_list|,
 literal|"\ %s}\n\ "
 argument_list|,
-name|spaces
+name|xspaces
 index|[
 name|indent
 operator|-
