@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.72 2000/04/14 14:13:56 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.81 2000/10/24 15:01:26 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3231,6 +3231,119 @@ name|UC_BUS_POWERED
 condition|)
 block|{
 comment|/* Must ask device. */
+if|if
+condition|(
+name|dev
+operator|->
+name|quirks
+operator|->
+name|uq_flags
+operator|&
+name|UQ_POWER_CLAIM
+condition|)
+block|{
+comment|/* 				 * Hub claims to be self powered, but isn't. 				 * It seems that the power status can be 				 * determined by the hub characteristics. 				 */
+name|usb_hub_descriptor_t
+name|hd
+decl_stmt|;
+name|usb_device_request_t
+name|req
+decl_stmt|;
+name|req
+operator|.
+name|bmRequestType
+operator|=
+name|UT_READ_CLASS_DEVICE
+expr_stmt|;
+name|req
+operator|.
+name|bRequest
+operator|=
+name|UR_GET_DESCRIPTOR
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wValue
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wIndex
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|,
+name|USB_HUB_DESCRIPTOR_SIZE
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|usbd_do_request
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|req
+argument_list|,
+operator|&
+name|hd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|err
+operator|&&
+operator|(
+name|UGETW
+argument_list|(
+name|hd
+operator|.
+name|wHubCharacteristics
+argument_list|)
+operator|&
+name|UHD_PWR_INDIVIDUAL
+operator|)
+condition|)
+name|selfpowered
+operator|=
+literal|1
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: charac=0x%04x"
+literal|", error=%s\n"
+operator|,
+name|UGETW
+argument_list|(
+name|hd
+operator|.
+name|wHubCharacteristics
+argument_list|)
+operator|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|err
 operator|=
 name|usbd_get_device_status
@@ -3264,8 +3377,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_set_config_index: status=0x%04x, "
-literal|"error=%s\n"
+literal|"usbd_set_config_index: status=0x%04x"
+literal|", error=%s\n"
 operator|,
 name|UGETW
 argument_list|(
@@ -3282,6 +3395,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 name|selfpowered
 operator|=
@@ -3291,8 +3405,12 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_set_config_index: (addr %d) attr=0x%02x, "
+literal|"usbd_set_config_index: (addr %d) cno=%d attr=0x%02x, "
 literal|"selfpowered=%d, power=%d\n"
+operator|,
+name|cdp
+operator|->
+name|bConfigurationValue
 operator|,
 name|dev
 operator|->
@@ -3359,21 +3477,6 @@ operator|->
 name|power
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"power exceeded %d %d\n"
-operator|,
-name|power
-operator|,
-name|dev
-operator|->
-name|powersrc
-operator|->
-name|power
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX print nicer message. */
 if|if
 condition|(
@@ -4842,7 +4945,7 @@ name|int
 name|depth
 parameter_list|,
 name|int
-name|lowspeed
+name|speed
 parameter_list|,
 name|int
 name|port
@@ -4872,7 +4975,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_new_device bus=%p port=%d depth=%d lowspeed=%d\n"
+literal|"usbd_new_device bus=%p port=%d depth=%d speed=%d\n"
 operator|,
 name|bus
 operator|,
@@ -4880,7 +4983,7 @@ name|port
 operator|,
 name|depth
 operator|,
-name|lowspeed
+name|speed
 operator|)
 argument_list|)
 expr_stmt|;
