@@ -5388,8 +5388,9 @@ decl_stmt|;
 comment|/* Initialize keepalive handler. */
 if|if
 condition|(
-operator|!
 name|spppq
+operator|!=
+name|NULL
 condition|)
 name|TIMEOUT
 argument_list|(
@@ -5775,8 +5776,9 @@ block|}
 comment|/* Stop keepalive handler. */
 if|if
 condition|(
-operator|!
 name|spppq
+operator|!=
+name|NULL
 condition|)
 name|UNTIMEOUT
 argument_list|(
