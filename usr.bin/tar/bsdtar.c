@@ -441,6 +441,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OPTION_TOTALS
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPTION_VERSION
 value|30
 end_define
@@ -822,6 +829,16 @@ block|,
 name|NULL
 block|,
 literal|'O'
+block|}
+block|,
+block|{
+literal|"totals"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_TOTALS
 block|}
 block|,
 block|{
@@ -1749,6 +1766,16 @@ expr_stmt|;
 name|bsdtar
 operator|->
 name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_TOTALS
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|option_totals
 operator|++
 expr_stmt|;
 break|break;
