@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.2	%G%	*/
+comment|/*	conf.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -30,6 +30,13 @@ name|int
 function_decl|(
 modifier|*
 name|d_strategy
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|d_dump
 function_decl|)
 parameter_list|()
 function_decl|;
