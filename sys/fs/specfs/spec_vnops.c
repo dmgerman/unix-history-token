@@ -1282,6 +1282,11 @@ name|error
 decl_stmt|,
 name|resid
 decl_stmt|;
+name|struct
+name|cdevsw
+modifier|*
+name|dsw
+decl_stmt|;
 name|vp
 operator|=
 name|ap
@@ -1312,11 +1317,6 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-name|struct
-name|cdevsw
-modifier|*
-name|dsw
-decl_stmt|;
 if|if
 condition|(
 name|resid
