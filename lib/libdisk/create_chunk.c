@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.31 1998/09/15 10:23:17 gibbs Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.32 1998/10/27 21:14:03 msmith Exp $  *  */
 end_comment
 
 begin_include
@@ -883,6 +883,9 @@ literal|"X"
 argument_list|)
 condition|)
 continue|continue;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|c2
 operator|->
 name|oname
@@ -1011,6 +1014,28 @@ operator|->
 name|oname
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|free
+argument_list|(
+name|c2
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|c2
+operator|->
+name|name
+operator|=
+name|strdup
+argument_list|(
+name|c1
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -1700,6 +1725,9 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|__alpha__
 if|if
 condition|(
 operator|*
@@ -1785,6 +1813,14 @@ name|slice
 operator|+
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|slice
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

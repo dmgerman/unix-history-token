@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.23 1998/10/06 11:57:08 dfr Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.24 1998/10/27 21:14:03 msmith Exp $  *  */
 end_comment
 
 begin_include
@@ -695,6 +695,36 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
+comment|/* 	 * Tell SRM where the bootstrap is. 	 */
+name|lp
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
+name|buf
+expr_stmt|;
+name|lp
+index|[
+literal|60
+index|]
+operator|=
+literal|15
+expr_stmt|;
+name|lp
+index|[
+literal|61
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|lp
+index|[
+literal|62
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Generate the bootblock checksum for the SRM console. 	 */
 for|for
 control|(
@@ -1651,6 +1681,9 @@ name|dp_flag
 operator|=
 literal|0x80
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|mbr
 operator|=
 name|read_block
@@ -1729,6 +1762,8 @@ argument_list|,
 name|mbr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 literal|1
