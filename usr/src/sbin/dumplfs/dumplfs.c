@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1990,7 +1990,7 @@ name|FINFO
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|daddr_t
 modifier|*
 name|dp
 decl_stmt|;

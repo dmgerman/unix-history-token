@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.5 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1555,7 +1555,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|long
+name|int32_t
 modifier|*
 name|sump
 init|=

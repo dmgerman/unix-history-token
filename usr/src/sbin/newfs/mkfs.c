@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	8.6 (Berkeley) %G%"
+literal|"@(#)mkfs.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4959,7 +4959,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|long
+name|int32_t
 modifier|*
 name|sump
 init|=

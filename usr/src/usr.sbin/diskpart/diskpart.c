@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diskpart.c	8.2 (Berkeley) %G%"
+literal|"@(#)diskpart.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1952,7 +1952,7 @@ name|char
 modifier|*
 name|f_defaults
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|f_location
 decl_stmt|;
