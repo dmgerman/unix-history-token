@@ -18136,10 +18136,7 @@ if|if
 condition|(
 operator|!
 name|kdb_active
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|sio_inited
 operator|==
 literal|2
@@ -18162,7 +18159,6 @@ name|need_unlock
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 name|siocnopen
 argument_list|(
@@ -18198,12 +18194,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|kdb_active
-condition|)
-block|{
-if|if
-condition|(
 name|need_unlock
 condition|)
 name|mtx_unlock_spin
@@ -18212,7 +18202,6 @@ operator|&
 name|sio_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
