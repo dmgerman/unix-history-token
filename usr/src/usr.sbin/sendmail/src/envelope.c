@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.8 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2050,13 +2050,6 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 name|cataddr

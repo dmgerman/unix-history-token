@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.14 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.15 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.14 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1500,6 +1500,10 @@ comment|/* set verbose mode */
 name|Verbose
 operator|=
 name|TRUE
+expr_stmt|;
+name|SendMode
+operator|=
+name|SM_DELIVER
 expr_stmt|;
 name|message
 argument_list|(
