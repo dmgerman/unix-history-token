@@ -5118,7 +5118,7 @@ name|char
 modifier|*
 name|badchars
 init|=
-literal|"*/\[]:<>=;?"
+literal|"*/\\[]:<>=;?"
 decl_stmt|;
 specifier|static
 specifier|const
