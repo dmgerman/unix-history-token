@@ -29,6 +29,12 @@ begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|ucred
@@ -129,6 +135,15 @@ end_define
 
 begin_comment
 comment|/* filesystem credential */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
