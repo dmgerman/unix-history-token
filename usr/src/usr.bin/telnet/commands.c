@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.12 (Berkeley) %G%"
+literal|"@(#)commands.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4029,9 +4029,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|argc
 operator|<
 literal|2
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"notmuch"
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -4139,6 +4151,44 @@ name|defined
 argument_list|(
 name|unix
 argument_list|)
+if|if
+condition|(
+operator|(
+name|argc
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"everything"
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SIGIO received %d time%s.\n"
+argument_list|,
+name|sigiocount
+argument_list|,
+operator|(
+name|sigiocount
+operator|==
+literal|1
+operator|)
+condition|?
+literal|""
+else|:
+literal|"s"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|In3270

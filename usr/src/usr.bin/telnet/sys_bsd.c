@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.14 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,14 +116,8 @@ name|tin
 decl_stmt|,
 comment|/* Input file descriptor */
 name|net
-decl_stmt|,
-name|HaveInput
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* There is input available to scan */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1180,7 +1174,7 @@ name|TN3270
 argument_list|)
 if|if
 condition|(
-name|noasynch
+name|noasynchtty
 operator|==
 literal|0
 condition|)
@@ -1592,7 +1586,7 @@ name|TN3270
 argument_list|)
 if|if
 condition|(
-name|noasynch
+name|noasynchnet
 operator|==
 literal|0
 condition|)

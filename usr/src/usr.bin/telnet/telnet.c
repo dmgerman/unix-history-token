@@ -326,7 +326,12 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-name|noasynch
+name|noasynchtty
+init|=
+literal|0
+decl_stmt|,
+comment|/* User specified "-noasynch" on command line */
+name|noasynchnet
 init|=
 literal|0
 decl_stmt|,
@@ -613,24 +618,6 @@ name|donebinarytoggle
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-name|HaveInput
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(unix)&& defined(TN3270) */
 name|SYNCHing
 operator|=
 literal|0
