@@ -2159,7 +2159,7 @@ name|tmp
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"%s/%s/%s"
+literal|"%s/%s"
 argument_list|,
 name|db_dir
 argument_list|,
@@ -2167,6 +2167,26 @@ name|installed
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+comment|/* 	 * SPECIAL CASE: ignore empty dirs, since we can can see them 	 * during port installation. 	 */
+if|if
+condition|(
+name|isemptydir
+argument_list|(
+name|tmp
+argument_list|)
+condition|)
+continue|continue;
+name|snprintf
+argument_list|(
+name|tmp
+argument_list|,
+name|PATH_MAX
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|tmp
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
