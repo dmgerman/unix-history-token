@@ -129,6 +129,13 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|unsigned
+name|long
+name|fpr_spare
+index|[
+literal|12
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
