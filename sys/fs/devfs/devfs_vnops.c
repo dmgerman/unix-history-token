@@ -3861,16 +3861,29 @@ operator|(
 name|error
 operator|)
 return|;
+if|#
+directive|if
+literal|0
+comment|/* /dev/console */
+block|KASSERT(ap->a_fdidx>= 0, 	     ("Could not vnode bypass device on fd %d", ap->a_fdidx));
+else|#
+directive|else
 if|if
 condition|(
 name|ap
 operator|->
 name|a_fdidx
-operator|>=
+operator|<
 literal|0
 condition|)
-block|{
-comment|/* 		 * This is a pretty disgustingly long chain, but I am not 		 * sure there is any better way.  Passing the fdidx into 		 * VOP_OPEN() offers us more information than just passing 		 * the file *. 		 */
+return|return
+operator|(
+name|error
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* 	 * This is a pretty disgustingly long chain, but I am not 	 * sure there is any better way.  Passing the fdidx into 	 * VOP_OPEN() offers us more information than just passing 	 * the file *. 	 */
 name|fp
 operator|=
 name|ap
@@ -3888,22 +3901,24 @@ operator|->
 name|a_fdidx
 index|]
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|fp
 operator|->
 name|f_ops
 operator|==
 operator|&
 name|badfileops
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|printf("devfs_open(%s)\n", devtoname(dev));
-endif|#
-directive|endif
+argument_list|,
+operator|(
+literal|"Could not vnode bypass device on fdops %p"
+operator|,
+name|fp
+operator|->
+name|f_ops
+operator|)
+argument_list|)
+expr_stmt|;
 name|fp
 operator|->
 name|f_ops
@@ -3917,8 +3932,6 @@ name|f_data
 operator|=
 name|dev
 expr_stmt|;
-block|}
-block|}
 return|return
 operator|(
 name|error
