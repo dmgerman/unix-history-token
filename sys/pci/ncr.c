@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82.2.5 1997/01/06 21:12:40 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82.2.6 1997/03/01 06:23:33 bde Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -3152,7 +3152,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.82.2.5 1997/01/06 21:12:40 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.82.2.6 1997/03/01 06:23:33 bde Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3307,6 +3307,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCR_820_ID
+value|(0x00021000ul)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NCR_825_ID
 value|(0x00031000ul)
 end_define
@@ -3323,6 +3330,34 @@ define|#
 directive|define
 name|NCR_875_ID
 value|(0x000f1000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_875_ID2
+value|(0x008f1000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_885_ID
+value|(0x000d1000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_895_ID
+value|(0x000c1000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_896_ID
+value|(0x000b1000ul)
 end_define
 
 begin_ifdef
@@ -8558,6 +8593,30 @@ operator|->
 name|pa_id
 operator|!=
 name|NCR_875_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_875_ID2
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_885_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_895_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_896_ID
 condition|)
 return|return
 literal|0
@@ -8660,15 +8719,42 @@ name|NCR_860_ID
 case|:
 return|return
 operator|(
-literal|"ncr 53c860 scsi"
+literal|"ncr 53c860 ultra scsi"
 operator|)
 return|;
 case|case
 name|NCR_875_ID
 case|:
+case|case
+name|NCR_875_ID2
+case|:
 return|return
 operator|(
-literal|"ncr 53c875 wide scsi"
+literal|"ncr 53c875 ultra wide scsi"
+operator|)
+return|;
+case|case
+name|NCR_885_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c885 ultra wide scsi"
+operator|)
+return|;
+case|case
+name|NCR_895_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c895 ultra wide scsi"
+operator|)
+return|;
+case|case
+name|NCR_896_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c896 ultra wide scsi"
 operator|)
 return|;
 block|}
@@ -9110,6 +9196,18 @@ comment|/* always assume 80MHz clock for 860 */
 break|break;
 case|case
 name|NCR_875_ID
+case|:
+case|case
+name|NCR_875_ID2
+case|:
+case|case
+name|NCR_885_ID
+case|:
+case|case
+name|NCR_895_ID
+case|:
+case|case
+name|NCR_896_ID
 case|:
 name|np
 operator|->
