@@ -679,6 +679,13 @@ begin_comment
 comment|/* OK to create/remove node */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ngt_ldisc
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/****************************************************************** 		    LINE DISCIPLINE METHODS ******************************************************************/
 end_comment
@@ -2810,14 +2817,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|struct
-name|ng_type
-modifier|*
-specifier|const
-name|type
-init|=
-name|data
-decl_stmt|;
+comment|/* struct ng_type *const type = data;*/
 name|int
 name|s
 decl_stmt|,
