@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.8 1997/08/30 01:23:40 smp Exp smp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.10 1997/08/31 03:04:36 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -135,27 +135,148 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/smp.h>
+file|<machine/smptests.h>
 end_include
+
+begin_comment
+comment|/** USE_COMLOCK */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_COMLOCK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DISABLE_INTR
+parameter_list|()
+define|\
+value|__asm __volatile("cli" : : : "memory");		\  	s_lock(&com_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENABLE_INTR
+parameter_list|()
+define|\
+value|s_unlock(&com_lock);				\ 	__asm __volatile("sti");
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_LOCK
+parameter_list|()
+value|s_lock(&com_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_UNLOCK
+parameter_list|()
+value|s_unlock(&com_lock);
+end_define
 
 begin_else
 else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* USE_COMLOCK */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|POSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
+name|DISABLE_INTR
+parameter_list|()
+value|disable_intr()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENABLE_INTR
+parameter_list|()
+value|enable_intr()
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_UNLOCK
+parameter_list|()
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USE_COMLOCK */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DISABLE_INTR
+parameter_list|()
+value|disable_intr()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENABLE_INTR
+parameter_list|()
+value|enable_intr()
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_UNLOCK
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_include
 include|#
@@ -2429,7 +2550,7 @@ name|com_s
 modifier|*
 name|com
 decl_stmt|;
-name|MPINTR_LOCK
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com
@@ -2471,7 +2592,7 @@ name|id_unit
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPINTR_UNLOCK
+name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2748,18 +2869,8 @@ operator|->
 name|id_iobase
 expr_stmt|;
 comment|/* 	 * We don't want to get actual interrupts, just masked ones. 	 * Interrupts from this line should already be masked in the ICU, 	 * but mask them in the processor as well in case there are some 	 * (misconfigured) shared interrupts. 	 */
-name|POSTCODE_HI
-argument_list|(
-literal|0x8
-argument_list|)
-expr_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
-expr_stmt|;
-name|POSTCODE_HI
-argument_list|(
-literal|0x9
-argument_list|)
 expr_stmt|;
 comment|/* EXTRA DELAY? */
 comment|/* 	 * Initialize the speed and the word size and wait long enough to 	 * drain the maximum of 16 bytes of junk in device output queues. 	 * The speed is undefined after a master reset and must be set 	 * before relying on anything related to output.  There may be 	 * junk after a (very fast) soft reboot and (apparently) after 	 * master reset. 	 * XXX what about the UART bug avoided by waiting in comparam()? 	 * We don't want to to wait long enough to drain at 2 bps. 	 */
@@ -3158,18 +3269,8 @@ operator|)
 operator|-
 name|IIR_NOPEND
 expr_stmt|;
-name|POSTCODE_HI
-argument_list|(
-literal|0xa
-argument_list|)
-expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
-expr_stmt|;
-name|POSTCODE_HI
-argument_list|(
-literal|0xb
-argument_list|)
 expr_stmt|;
 name|result
 operator|=
@@ -5183,7 +5284,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 operator|(
@@ -5236,7 +5337,7 @@ operator||
 name|IER_EMSC
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Handle initial DCD.  Callout devices get a fake initial 		 * DCD (trapdoor DCD).  If we are callout, then any sleeping 		 * callin opens get woken up and resume sleeping on "siobi" 		 * instead of "siodcd". 		 */
@@ -6310,7 +6411,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|COM_MULTIPORT
-name|MPINTR_LOCK
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|siointr1
@@ -6321,7 +6422,7 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPINTR_UNLOCK
+name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 else|#
@@ -6336,7 +6437,7 @@ name|bool_t
 name|possibly_more_intrs
 decl_stmt|;
 comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on. 	 */
-name|MPINTR_LOCK
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 do|do
@@ -6366,7 +6467,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX MPINTR_LOCK(); 			 * would it work here, or be counter-productive? 			 */
+comment|/* 			 * XXX COM_LOCK(); 			 * would it work here, or be counter-productive? 			 */
 if|if
 condition|(
 name|com
@@ -6402,7 +6503,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* XXX MPINTR_UNLOCK(); */
+comment|/* XXX COM_UNLOCK(); */
 block|}
 block|}
 do|while
@@ -6410,7 +6511,7 @@ condition|(
 name|possibly_more_intrs
 condition|)
 do|;
-name|MPINTR_UNLOCK
+name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 endif|#
@@ -8334,7 +8435,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * XXX forget any events related to closed devices 			 * (actually never opened devices) so that we don't 			 * loop. 			 */
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|incc
@@ -8380,7 +8481,7 @@ name|com_events
 operator|-=
 name|incc
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -8434,7 +8535,7 @@ name|buf
 operator|=
 name|ibuf
 expr_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|incc
@@ -8534,7 +8635,7 @@ operator||=
 name|MCR_RTS
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 name|com
@@ -8556,7 +8657,7 @@ block|{
 name|u_char
 name|delta_modem_status
 decl_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|delta_modem_status
@@ -8588,7 +8689,7 @@ operator|&=
 operator|~
 name|CS_CHECKMSR
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -8628,7 +8729,7 @@ operator|&
 name|CS_ODONE
 condition|)
 block|{
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|com_events
@@ -8642,7 +8743,7 @@ operator|&=
 operator|~
 name|CS_ODONE
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -9306,7 +9407,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Some UARTs lock up if the divisor latch registers are selected 	 * while the UART is doing output (they refuse to transmit anything 	 * more until given a hard reset).  Fix this by stopping filling 	 * the device buffers and waiting for them to drain.  Reading the 	 * line status port outside of siointr1() might lose some receiver 	 * error bits, but that is acceptable here. 	 */
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|retry
@@ -9324,7 +9425,7 @@ name|tp
 operator|->
 name|t_timeout
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 while|while
@@ -9441,7 +9542,7 @@ name|TS_TTSTOP
 operator|)
 condition|)
 block|{
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|com
@@ -9450,7 +9551,7 @@ name|state
 operator||=
 name|CS_TTGO
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 block|}
@@ -9466,7 +9567,7 @@ operator|)
 return|;
 block|}
 block|}
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 comment|/* very important while com_data is hidden */
@@ -9871,7 +9972,7 @@ argument_list|(
 name|com
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 name|splx
@@ -9937,7 +10038,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10041,7 +10142,7 @@ name|MCR_RTS
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10150,7 +10251,7 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10252,7 +10353,7 @@ operator||=
 name|CS_BUSY
 expr_stmt|;
 block|}
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 block|}
@@ -10329,7 +10430,7 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10431,7 +10532,7 @@ operator||=
 name|CS_BUSY
 expr_stmt|;
 block|}
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 block|}
@@ -10442,7 +10543,7 @@ operator||=
 name|TS_BUSY
 expr_stmt|;
 block|}
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10463,7 +10564,7 @@ name|com
 argument_list|)
 expr_stmt|;
 comment|/* fake interrupt to start output */
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 name|ttwwakeup
@@ -10521,7 +10622,7 @@ operator|->
 name|gone
 condition|)
 return|return;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
@@ -10684,7 +10785,7 @@ operator|->
 name|ibuf
 expr_stmt|;
 block|}
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 name|comstart
@@ -10924,7 +11025,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -10993,7 +11094,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 return|return
@@ -11258,7 +11359,7 @@ name|poll
 operator|)
 condition|)
 block|{
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|siointr1
@@ -11266,7 +11367,7 @@ argument_list|(
 name|com
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 block|}
@@ -11344,7 +11445,7 @@ decl_stmt|;
 name|u_long
 name|total
 decl_stmt|;
-name|disable_intr
+name|DISABLE_INTR
 argument_list|()
 expr_stmt|;
 name|delta
@@ -11365,7 +11466,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|enable_intr
+name|ENABLE_INTR
 argument_list|()
 expr_stmt|;
 if|if
