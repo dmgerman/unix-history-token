@@ -459,13 +459,12 @@ begin_comment
 comment|/* wall CMOS clock assumed if != 0 */
 end_comment
 
-begin_expr_stmt
-name|MUTEX_DECLARE
-argument_list|(,
+begin_decl_stmt
+name|struct
+name|mtx
 name|clock_lock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

@@ -134,15 +134,13 @@ name|vm86pcb
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MUTEX_DECLARE
-argument_list|(
+begin_decl_stmt
 specifier|static
-argument_list|,
+name|struct
+name|mtx
 name|vm86pcb_lock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -1806,8 +1804,6 @@ argument_list|,
 literal|"vm86pcb lock"
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_COLD
 argument_list|)
 expr_stmt|;
 name|bzero

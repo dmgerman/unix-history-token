@@ -230,19 +230,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTX_COLD
-value|0x100
-end_define
-
-begin_comment
-comment|/* Mutex init'd before malloc works */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MTX_QUIET
-value|0x200
+value|0x100
 end_define
 
 begin_comment
@@ -361,35 +350,51 @@ begin_define
 define|#
 directive|define
 name|mtx_description
-value|mtx_debug->mtxd_description
+value|mtx_union.mtxu_debug->mtxd_description
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_held
-value|mtx_debug->mtxd_held
+value|mtx_union.mtxu_debug->mtxd_held
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_line
-value|mtx_debug->mtxd_line
+value|mtx_union.mtxu_debug->mtxd_line
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_file
-value|mtx_debug->mtxd_file
+value|mtx_union.mtxu_debug->mtxd_file
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_witness
-value|mtx_debug->mtxd_witness
+value|mtx_union.mtxu_debug->mtxd_witness
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WITNESS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtx_description
+value|mtx_union.mtxu_description
 end_define
 
 begin_endif
@@ -423,23 +428,25 @@ name|u_int
 name|mtx_saveintr
 decl_stmt|;
 comment|/* saved flags (for spin locks) */
-ifdef|#
-directive|ifdef
-name|WITNESS
+name|int
+name|mtx_flags
+decl_stmt|;
+comment|/* flags passed to mtx_init() */
+union|union
+block|{
 name|struct
 name|mtx_debug
 modifier|*
-name|mtx_debug
+name|mtxu_debug
 decl_stmt|;
-else|#
-directive|else
 specifier|const
 name|char
 modifier|*
-name|mtx_description
+name|mtxu_description
 decl_stmt|;
-endif|#
-directive|endif
+block|}
+name|mtx_union
+union|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -467,47 +474,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITNESS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MUTEX_DECLARE
-parameter_list|(
-name|modifiers
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|static struct mtx_debug __mtx_debug_##name;			\ 	modifiers struct mtx name = { 0, 0, 0,&__mtx_debug_##name }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MUTEX_DECLARE
-parameter_list|(
-name|modifiers
-parameter_list|,
-name|name
-parameter_list|)
-value|modifiers struct mtx name
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

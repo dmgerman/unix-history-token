@@ -166,15 +166,13 @@ name|lock_mtx_array
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MUTEX_DECLARE
-argument_list|(
+begin_decl_stmt
 specifier|static
-argument_list|,
+name|struct
+name|mtx
 name|lock_mtx
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -256,8 +254,6 @@ argument_list|,
 literal|"lockmgr"
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_COLD
 argument_list|)
 expr_stmt|;
 else|else
@@ -2135,8 +2131,6 @@ argument_list|,
 literal|"lockmgr"
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_COLD
 argument_list|)
 expr_stmt|;
 name|lock_mtx_selector

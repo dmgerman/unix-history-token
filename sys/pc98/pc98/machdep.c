@@ -1323,21 +1323,19 @@ name|cpuhead
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MUTEX_DECLARE
-argument_list|(,
+begin_decl_stmt
+name|struct
+name|mtx
 name|sched_lock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|MUTEX_DECLARE
-argument_list|(,
+begin_decl_stmt
+name|struct
+name|mtx
 name|Giant
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -2121,8 +2119,6 @@ argument_list|,
 literal|"sched lock"
 argument_list|,
 name|MTX_SPIN
-operator||
-name|MTX_COLD
 operator||
 name|MTX_RECURSE
 argument_list|)
@@ -9870,8 +9866,6 @@ literal|"clk"
 argument_list|,
 name|MTX_SPIN
 operator||
-name|MTX_COLD
-operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
@@ -9901,8 +9895,6 @@ argument_list|,
 literal|"Giant"
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_COLD
 operator||
 name|MTX_RECURSE
 argument_list|)
