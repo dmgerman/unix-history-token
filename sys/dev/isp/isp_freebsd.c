@@ -10313,6 +10313,14 @@ operator|->
 name|isp_lock
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * The first loop is for our usage where we have yet to have 	 * gotten good fibre channel state. 	 */
