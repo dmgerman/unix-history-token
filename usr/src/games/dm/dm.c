@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.2 (Berkeley) %G%"
+literal|"@(#)dm.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,14 +111,14 @@ begin_define
 define|#
 directive|define
 name|NOGAMING
-value|"/etc/nogames"
+value|"/usr/games/nogames"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONTROL
-value|"/usr/games/game.control"
+value|"/usr/games/dm.config"
 end_define
 
 begin_ifdef
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|LOGFILE
-value|"/usr/adm/gamelog"
+value|"/usr/adm/dm.log"
 end_define
 
 begin_endif
@@ -351,6 +351,8 @@ block|}
 if|if
 condition|(
 name|priority
+operator|>
+literal|0
 operator|&&
 name|setpriority
 argument_list|(
@@ -1000,16 +1002,6 @@ argument_list|(
 operator|*
 name|f4
 argument_list|)
-operator|||
-operator|*
-name|f4
-operator|==
-literal|'-'
-operator|||
-operator|*
-name|f4
-operator|==
-literal|'+'
 condition|)
 name|priority
 operator|=
