@@ -787,7 +787,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Not sure if the 570 needs the clkrun hack */
 block|{
 literal|0x1014
 block|,
@@ -799,7 +798,7 @@ name|amp_none
 block|,
 name|NULL
 block|,
-name|clkrun_hack
+name|NULL
 block|,
 literal|0
 block|}
