@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5147,18 +5147,18 @@ literal|0
 operator|)
 condition|)
 block|{
-name|un
-operator|->
-name|un_flags
-operator||=
-name|UN_ULOCK
-expr_stmt|;
 name|VOP_LOCK
 argument_list|(
 name|un
 operator|->
 name|un_uppervp
 argument_list|)
+expr_stmt|;
+name|un
+operator|->
+name|un_flags
+operator||=
+name|UN_ULOCK
 expr_stmt|;
 block|}
 ifdef|#
@@ -5172,9 +5172,18 @@ name|un_flags
 operator|&
 name|UN_KLOCK
 condition|)
+name|vprint
+argument_list|(
+literal|"union: dangling klock"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
-literal|"union: dangling upper lock"
+literal|"union: dangling upper lock (%lx)"
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5286,6 +5295,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * When operations want to vput() a union node yet retain a lock on  * the upper vnode (say, to do some further operations like link(),  * mkdir(), ...), they set UN_KLOCK on the union node, then call  * vput() which calls VOP_UNLOCK() and comes here.  union_unlock()  * unlocks the union node (leaving the upper vnode alone), clears the  * KLOCK flag, and then returns to vput().  The caller then does whatever  * is left to do with the upper vnode, and ensures that it gets unlocked.  *  * If UN_KLOCK isn't set, then the upper vnode is unlocked here.  */
+end_comment
 
 begin_function
 name|int
@@ -5586,6 +5599,44 @@ name|UPPERVP
 argument_list|(
 name|vp
 argument_list|)
+argument_list|,
+name|LOWERVP
+argument_list|(
+name|vp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|UPPERVP
+argument_list|(
+name|vp
+argument_list|)
+operator|!=
+name|NULLVP
+condition|)
+name|vprint
+argument_list|(
+literal|"union: upper"
+argument_list|,
+name|UPPERVP
+argument_list|(
+name|vp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LOWERVP
+argument_list|(
+name|vp
+argument_list|)
+operator|!=
+name|NULLVP
+condition|)
+name|vprint
+argument_list|(
+literal|"union: lower"
 argument_list|,
 name|LOWERVP
 argument_list|(
