@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.42 1997/03/29 03:32:28 imp Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.43 1997/06/02 05:02:33 julian Exp $  *  */
 end_comment
 
 begin_include
@@ -146,14 +146,6 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2375,18 +2367,11 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|warnx
-argument_list|(
-literal|"error"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-literal|"  %s [options]\n"
+literal|"usage: ipfw [options]\n"
 literal|"    flush\n"
 literal|"    add [number] rule\n"
 literal|"    delete number ...\n"
@@ -2409,17 +2394,11 @@ literal|"    {established|setup}\n"
 literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
 literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
 literal|"    icmptypes {type[,type]}...\n"
-argument_list|,
-name|__progname
 argument_list|)
 expr_stmt|;
-name|errx
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"see man %s(8) for proper usage."
-argument_list|,
-name|__progname
 argument_list|)
 expr_stmt|;
 block|}
@@ -6280,9 +6259,7 @@ break|break;
 default|default:
 name|show_usage
 argument_list|(
-literal|"invalid flag ``-%c''"
-argument_list|,
-name|ch
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
