@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.4	%H%	*/
+comment|/*	dh.c	3.5	%H%	*/
 end_comment
 
 begin_comment
@@ -882,6 +882,15 @@ name|tty
 modifier|*
 name|tp0
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
+comment|/* see comment in clock.c */
 name|addr
 operator|=
 name|DHADDR
@@ -1059,7 +1068,7 @@ name|tp
 operator|->
 name|t_line
 operator|==
-name|BNETLDIS
+name|NETLDISC
 condition|)
 block|{
 name|c
@@ -1095,6 +1104,11 @@ name|tp
 operator|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

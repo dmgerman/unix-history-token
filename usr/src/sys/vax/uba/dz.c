@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.3	%H%	*/
+comment|/*	dz.c	3.4	%H%	*/
 end_comment
 
 begin_comment
@@ -1466,6 +1466,15 @@ name|tty
 operator|*
 name|tp0
 block|;
+name|int
+name|s
+block|;
+name|s
+operator|=
+name|spl6
+argument_list|()
+block|;
+comment|/* see comment in clock.c */
 comment|/* as long as we are here, service them all */
 for|for
 control|(
@@ -1689,7 +1698,7 @@ name|tp
 operator|->
 name|t_line
 operator|==
-name|BNETLDIS
+name|NETLDISC
 condition|)
 block|{
 name|c
@@ -1726,8 +1735,17 @@ operator|)
 expr_stmt|;
 end_if
 
+begin_expr_stmt
+unit|} 	}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-unit|} 	} }
+unit|}
 comment|/*ARGSUSED*/
 end_comment
 
