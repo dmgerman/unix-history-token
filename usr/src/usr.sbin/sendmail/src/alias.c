@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -1085,13 +1085,9 @@ if|if
 condition|(
 operator|*
 name|p
-operator|==
-literal|'\0'
-operator|||
-operator|*
-name|p
-operator|==
-literal|'\n'
+operator|++
+operator|!=
+literal|':'
 condition|)
 block|{
 name|syserr
