@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.10 (Berkeley) %G%"
+literal|"@(#)snake.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -77,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -325,10 +331,6 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|long
 name|atol
 parameter_list|()
