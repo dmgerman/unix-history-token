@@ -482,6 +482,8 @@ expr_stmt|;
 if|if
 condition|(
 name|grp
+operator|!=
+name|NULL
 condition|)
 name|g
 operator|->
@@ -490,6 +492,16 @@ operator|=
 name|grp
 operator|->
 name|gr_gid
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"%s: no such group"
+argument_list|,
+name|g
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 name|makemsg
@@ -794,7 +806,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: wall [file]\n"
+literal|"usage: wall [-g group] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
