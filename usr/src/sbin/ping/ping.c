@@ -237,6 +237,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|npackets
@@ -346,6 +354,12 @@ modifier|*
 name|av
 init|=
 name|argv
+decl_stmt|;
+name|char
+modifier|*
+name|toaddr
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -571,6 +585,17 @@ name|hp
 operator|->
 name|h_name
 expr_stmt|;
+name|toaddr
+operator|=
+name|inet_ntoa
+argument_list|(
+name|to
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -782,9 +807,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PING %s: %d data bytes\n"
+literal|"PING %s"
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|toaddr
+condition|)
+name|printf
+argument_list|(
+literal|" (%s)"
+argument_list|,
+name|toaddr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|": %d data bytes\n"
 argument_list|,
 name|datalen
 argument_list|)
@@ -1362,11 +1403,6 @@ name|hlen
 decl_stmt|,
 name|triptime
 decl_stmt|;
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 name|from
 operator|->
 name|sin_addr
