@@ -3228,7 +3228,7 @@ name|pcic_iw_isa
 expr_stmt|;
 name|sc
 operator|->
-name|csc_route
+name|func_route
 operator|=
 name|pcic_iw_isa
 expr_stmt|;
