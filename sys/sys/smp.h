@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.3 1997/06/25 20:43:48 smp Exp smp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.12 1997/06/25 20:59:15 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -48,7 +48,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP&& NCPU */
+comment|/* SMP&& !APIC_IO */
 end_comment
 
 begin_if
@@ -95,6 +95,20 @@ argument_list|(
 name|APIC_IO
 argument_list|)
 end_if
+
+begin_comment
+comment|/*  * For sending values to POST displays.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSTCODE
+parameter_list|(
+name|X
+parameter_list|)
+value|outb(0x80, (X))
+end_define
 
 begin_include
 include|#
@@ -181,6 +195,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* global data in apic_vector.s */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|stopped_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|started_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* global data in mp_machdep.c */
 end_comment
 
@@ -216,13 +250,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|mp_picmode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mpenabled
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +312,13 @@ specifier|extern
 name|int
 name|apic_id_to_logical
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|all_cpus
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +572,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|stop_cpus
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|restart_cpus
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* global data in mpapic.c */
 end_comment
@@ -777,6 +835,10 @@ name|invltlb_ok
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 'private' global data in locore.s */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 specifier|volatile
@@ -790,6 +852,14 @@ specifier|extern
 specifier|volatile
 name|u_int
 name|cpu_lockid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|other_cpus
 decl_stmt|;
 end_decl_stmt
 
