@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -355,6 +355,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|short
+name|fj2361_off
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|13
+block|,
+literal|0
+block|,
+literal|294
+block|,
+literal|307
+block|,
+literal|547
+block|,
+literal|294
+block|,
+literal|66
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* END SHOULD BE READ IN */
 end_comment
@@ -412,6 +439,10 @@ operator|-
 literal|1
 block|,
 comment|/* 9766 */
+operator|-
+literal|1
+block|,
+comment|/* 2361 */
 literal|0
 block|}
 decl_stmt|;
@@ -675,6 +706,23 @@ block|,
 name|rm05_off
 block|,
 comment|/* CDC 9766 */
+define|#
+directive|define
+name|HPDT_2361
+value|15
+literal|64
+block|,
+literal|20
+block|,
+literal|64
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|fj2361_off
+block|,
+comment|/* Fuji 2361 */
 block|}
 decl_stmt|;
 end_decl_stmt
