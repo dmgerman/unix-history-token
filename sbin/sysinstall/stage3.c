@@ -165,7 +165,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fatal
+name|Fatal
 argument_list|(
 literal|"Couldn't open /etc/fstab"
 argument_list|)
@@ -232,7 +232,7 @@ operator|!
 name|diskname
 condition|)
 block|{
-name|fatal
+name|Fatal
 argument_list|(
 literal|"malloc failed"
 argument_list|)
@@ -316,7 +316,7 @@ operator|.
 name|fspec
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -388,7 +388,7 @@ operator|.
 name|fspec
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -424,7 +424,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -460,7 +460,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -496,7 +496,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -532,7 +532,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -601,7 +601,7 @@ operator|.
 name|fspec
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -632,7 +632,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -662,7 +662,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -697,7 +697,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
@@ -728,7 +728,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|Fatal
 argument_list|(
 name|errmsg
 argument_list|)
