@@ -1402,13 +1402,6 @@ comment|/* 		 * If, for some reason, we can't set the MTRR (N/A?) we may still c
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|retval
-operator|==
-literal|0
-condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1425,17 +1418,6 @@ operator|.
 name|mr_base
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Couldn't Set MTRR\n"
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
