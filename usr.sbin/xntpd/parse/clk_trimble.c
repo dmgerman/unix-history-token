@@ -213,6 +213,17 @@ name|clockformat_t
 name|clock_trimsv6
 init|=
 block|{
+operator|(
+name|unsigned
+name|LONG
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+block|,
+comment|/* XXX?: no input handling */
 name|cvt_trimsv6
 block|,
 comment|/* Trimble conversion */
@@ -255,6 +266,9 @@ operator||
 name|SYNC_ONE
 block|,
 comment|/* paket START/END delimiter, START synchronisation, PPS ONE sampling */
+literal|0
+block|,
+comment|/* XXX?: no private data (complete messages) */
 block|{
 literal|0
 block|,
