@@ -895,6 +895,10 @@ operator|*
 name|grp
 operator|!=
 name|CHAR_MAX
+operator|&&
+name|sval
+operator|>
+literal|9
 condition|)
 block|{
 operator|*
@@ -1202,6 +1206,10 @@ name|ndig
 operator|==
 operator|*
 name|grp
+operator|&&
+name|sval
+operator|>
+literal|9
 condition|)
 block|{
 operator|*
