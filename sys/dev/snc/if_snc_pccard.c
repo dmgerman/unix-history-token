@@ -225,7 +225,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *      snc_pccard_detach - unload the driver and clear the table.  *      XXX TODO:  *      This is usually called when the card is ejected, but  *      can be caused by a modunload of a controller driver.  *      The idea is to reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
+comment|/*  *      snc_pccard_detach - detach this instance from the device.  */
 end_comment
 
 begin_function
@@ -327,7 +327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Probe framework for pccards.  Replicates the standard framework,  * minus the pccard driver registration and ignores the ether address  * supplied (from the CIS), relying on the probe to find it instead.  */
+comment|/*   * Probe the pccard.  */
 end_comment
 
 begin_function
