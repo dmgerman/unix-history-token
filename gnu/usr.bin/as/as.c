@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: as.c,v 1.2 1993/11/03 00:51:09 paul Exp $"
+literal|"$Id: as.c,v 1.3 1995/05/30 04:46:01 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,15 +762,6 @@ expr_stmt|;
 comment|/* Finished with this arg. */
 break|break;
 block|}
-if|#
-directive|if
-literal|00000
-case|case
-literal|'k'
-case|:
-break|break;
-endif|#
-directive|endif
 case|case
 literal|'L'
 case|:
@@ -956,6 +947,27 @@ name|NULL
 expr_stmt|;
 comment|/* NULL means 'not a file-name' */
 block|}
+ifdef|#
+directive|ifdef
+name|PIC
+if|if
+condition|(
+name|flagseen
+index|[
+literal|'K'
+index|]
+operator|||
+name|flagseen
+index|[
+literal|'k'
+index|]
+condition|)
+name|picmode
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DONTDEF

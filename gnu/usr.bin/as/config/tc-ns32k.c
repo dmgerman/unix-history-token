@@ -5932,10 +5932,7 @@ operator|==
 literal|6
 operator|)
 operator|&&
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 operator|(
 name|iif
@@ -7355,7 +7352,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|atof_ns32k
+name|atof_ieee
 parameter_list|()
 function_decl|;
 name|char
@@ -7395,7 +7392,7 @@ return|;
 block|}
 name|t
 operator|=
-name|atof_ns32k
+name|atof_ieee
 argument_list|(
 name|input_line_pointer
 argument_list|,
@@ -8386,10 +8383,7 @@ name|fx_addsy
 operator|!=
 name|got_symbol
 operator|&&
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|)
 condition|?
 literal|0x10
@@ -8428,10 +8422,7 @@ name|RELOC_32
 case|:
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_IS_EXTERNAL
 argument_list|(
@@ -9559,6 +9550,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -9831,7 +9823,7 @@ name|got_offset_size
 operator|=
 literal|4
 expr_stmt|;
-break|break;
+comment|/*FALLTHROUGH*/
 case|case
 literal|'k'
 case|:

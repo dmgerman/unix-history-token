@@ -343,27 +343,33 @@ modifier|*
 name|words
 decl_stmt|;
 block|{
+comment|/* Zero the leftmost bit */
 name|words
 index|[
 literal|0
 index|]
 operator|=
-operator|(
+call|(
+name|LITTLENUM_TYPE
+call|)
+argument_list|(
 operator|(
 name|unsigned
 operator|)
 operator|-
 literal|1
-operator|)
+argument_list|)
 operator|>>
 literal|1
 expr_stmt|;
-comment|/* Zero the leftmost bit */
 name|words
 index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -372,6 +378,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -380,6 +389,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;

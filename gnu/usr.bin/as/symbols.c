@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: symbols.c,v 1.2 1993/11/03 00:52:22 paul Exp $"
+literal|"$Id: symbols.c,v 1.3 1995/05/30 04:46:36 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1089,19 +1089,6 @@ else|else
 block|{
 comment|/* 				 *	There are still several cases to check: 				 *		A .comm/.lcomm symbol being redefined as 				 *			initialized data is OK 				 *		A .comm/.lcomm symbol being redefined with 				 *			a larger size is also OK 				 * 				 * This only used to be allowed on VMS gas, but Sun cc 				 * on the sparc also depends on it. 				 */
 comment|/*			  char New_Type = SEGMENT_TO_SYMBOL_TYPE((int) now_seg); */
-ifdef|#
-directive|ifdef
-name|MANY_SEGMENTS
-define|#
-directive|define
-name|SEG_BSS
-value|SEG_E2
-define|#
-directive|define
-name|SEG_DATA
-value|SEG_E1
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(

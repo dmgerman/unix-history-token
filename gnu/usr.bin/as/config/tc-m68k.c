@@ -152,6 +152,7 @@ comment|/* Also be aware that MAXIMUM_NUMBER_OF_CHARS_FOR_FLOAT may have to be  
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -5476,10 +5477,7 @@ comment|/* this operand is just here to indicate a jump-table branch */
 if|if
 condition|(
 operator|!
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 condition|)
 name|losing
 operator|++
@@ -7263,10 +7261,7 @@ name|PIC
 comment|/* Use GLOB_DAT for operand references in PIC mode */
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 condition|)
 name|reloc_type
 operator|=
@@ -7387,10 +7382,7 @@ index|]
 operator|==
 literal|'l'
 operator|&&
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|gots
 argument_list|(
@@ -9610,10 +9602,7 @@ name|PIC
 comment|/* If we have the optional kludgey 2nd operand, 				   make this go via the jump table. */
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|s
 index|[
@@ -15580,9 +15569,7 @@ ifdef|#
 directive|ifdef
 name|PIC
 comment|/* With -k, make all external branches go via the jump table. */
-argument|(flagseen[
-literal|'k'
-argument|]? RELOC_JMP_TBL: NO_RELOC)
+argument|(picmode? RELOC_JMP_TBL: NO_RELOC)
 argument_list|,
 argument|NULL
 else|#
@@ -16680,10 +16667,7 @@ name|RELOC_32
 case|:
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_IS_EXTERNAL
 argument_list|(
@@ -18435,6 +18419,26 @@ name|m68040
 operator||
 name|MAYBE_FLOAT_TOO
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argP
+argument_list|,
+literal|"68060"
+argument_list|)
+condition|)
+block|{
+name|current_architecture
+operator||=
+name|m68040
+operator||
+name|MAYBE_FLOAT_TOO
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_68881
@@ -18566,6 +18570,9 @@ directive|ifdef
 name|PIC
 case|case
 literal|'k'
+case|:
+case|case
+literal|'K'
 case|:
 comment|/* Predefine GOT symbol */
 name|GOT_symbol

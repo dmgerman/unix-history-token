@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.6 1994/12/23 22:36:22 nate Exp $"
+literal|"$Id: write.c,v 1.7 1995/05/30 04:46:40 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2940,36 +2940,12 @@ operator|>=
 literal|32767
 condition|)
 block|{
-if|if
-condition|(
-name|flagseen
-index|[
-literal|'K'
-index|]
-condition|)
-name|as_warn
-argument_list|(
-literal|".word %s-%s+%ld didn't fit"
-argument_list|,
-name|S_GET_NAME
-argument_list|(
-name|lie
-operator|->
-name|add
-argument_list|)
-argument_list|,
-name|S_GET_NAME
-argument_list|(
-name|lie
-operator|->
-name|sub
-argument_list|)
-argument_list|,
-name|lie
-operator|->
-name|addnum
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (flagseen['K']) 							    as_warn(".word %s-%s+%ld didn't fit", 								    S_GET_NAME(lie->add), 								    S_GET_NAME(lie->sub), 								    lie->addnum);
+endif|#
+directive|endif
 name|lie
 operator|->
 name|added
@@ -4032,10 +4008,7 @@ directive|ifdef
 name|PIC
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_IS_EXTERNAL
 argument_list|(
@@ -4290,10 +4263,7 @@ comment|/* 					 * Do not fixup refs to global data 					 * even if defined here
 if|if
 condition|(
 operator|!
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|||
 ifdef|#
 directive|ifdef

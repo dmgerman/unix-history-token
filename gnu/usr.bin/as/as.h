@@ -4,7 +4,7 @@ comment|/* as.h - global header file    Copyright (C) 1987, 1990, 1991, 1992 Fre
 end_comment
 
 begin_comment
-comment|/*  * $Id: as.h,v 1.3 1994/12/23 22:36:01 nate Exp $  */
+comment|/*  * $Id: as.h,v 1.4 1995/05/30 04:46:02 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -881,6 +881,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* TRUE if we need a second pass. */
+end_comment
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|picmode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE if "-k" or "-K" seen. */
 end_comment
 
 begin_typedef

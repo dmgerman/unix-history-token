@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atof-ieee.c,v 1.3 1995/05/30 04:46:46 rgrimes Exp $"
+literal|"$Id: atof-ieee.c,v 1.4 1996/09/22 00:55:46 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,21 +412,33 @@ argument_list|(
 literal|"cannot create floating-point number"
 argument_list|)
 expr_stmt|;
+comment|/* Zero the leftmost bit */
 name|words
 index|[
 literal|0
 index|]
 operator|=
-name|LITTLENUM_MASK
+call|(
+name|LITTLENUM_TYPE
+call|)
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+operator|-
+literal|1
+argument_list|)
 operator|>>
 literal|1
 expr_stmt|;
-comment|/* Zero the leftmost bit */
 name|words
 index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -435,6 +447,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -443,6 +458,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -451,6 +469,9 @@ index|[
 literal|4
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -459,6 +480,9 @@ index|[
 literal|5
 index|]
 operator|=
+operator|(
+name|LITTLENUM_TYPE
+operator|)
 operator|-
 literal|1
 expr_stmt|;

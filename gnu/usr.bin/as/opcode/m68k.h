@@ -2771,7 +2771,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ce"
@@ -2791,7 +2791,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ceas"
@@ -2811,7 +2811,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ceas"
@@ -2831,7 +2831,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ce"
@@ -2851,7 +2851,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ceas"
@@ -2871,7 +2871,7 @@ argument_list|)
 block|,
 name|one
 argument_list|(
-literal|0xff20
+literal|0xff38
 argument_list|)
 block|,
 literal|"ceas"
@@ -4393,9 +4393,6 @@ name|mfloat
 block|}
 block|,
 comment|/* FIXME-NOW: The '040 book that I have claims that these should be    coded exactly like fadd.  In fact, the table of opmodes calls them    fadd, fsadd, fdadd.  That can't be right.  If someone can give me the    right encoding, I'll fix it.  By induction, I *think* the right    encoding is 38& 3c, but I'm not sure.     in the mean time, if you know the encoding for the opmode field, you    can replace all of the "38),"'s and "3c),"'s below with the corrected    values and these guys should then just work.  xoxorich. 31Aug91 */
-ifdef|#
-directive|ifdef
-name|comment
 block|{
 literal|"fsabsb"
 block|,
@@ -4403,7 +4400,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5838
+literal|0x5858
 argument_list|)
 block|,
 name|two
@@ -4425,7 +4422,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5438
+literal|0x5458
 argument_list|)
 block|,
 name|two
@@ -4447,7 +4444,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4038
+literal|0x4058
 argument_list|)
 block|,
 name|two
@@ -4469,7 +4466,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C38
+literal|0x4C58
 argument_list|)
 block|,
 name|two
@@ -4491,7 +4488,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4438
+literal|0x4458
 argument_list|)
 block|,
 name|two
@@ -4513,7 +4510,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5038
+literal|0x5058
 argument_list|)
 block|,
 name|two
@@ -4535,7 +4532,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0038
+literal|0x0058
 argument_list|)
 block|,
 name|two
@@ -4557,7 +4554,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4838
+literal|0x4858
 argument_list|)
 block|,
 name|two
@@ -4579,7 +4576,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0038
+literal|0x0058
 argument_list|)
 block|,
 name|two
@@ -4601,7 +4598,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x583c
+literal|0x585c
 argument_list|)
 block|,
 name|two
@@ -4623,7 +4620,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x543c
+literal|0x545c
 argument_list|)
 block|,
 name|two
@@ -4645,7 +4642,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x403c
+literal|0x405c
 argument_list|)
 block|,
 name|two
@@ -4667,7 +4664,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C3c
+literal|0x4C5c
 argument_list|)
 block|,
 name|two
@@ -4689,7 +4686,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x443c
+literal|0x445c
 argument_list|)
 block|,
 name|two
@@ -4711,7 +4708,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x503c
+literal|0x505c
 argument_list|)
 block|,
 name|two
@@ -4733,7 +4730,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x003c
+literal|0x005c
 argument_list|)
 block|,
 name|two
@@ -4755,7 +4752,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x483c
+literal|0x485c
 argument_list|)
 block|,
 name|two
@@ -4777,7 +4774,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x003c
+literal|0x005c
 argument_list|)
 block|,
 name|two
@@ -4792,9 +4789,6 @@ block|,
 name|m68040
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* comment */
 block|{
 literal|"facosb"
 block|,
@@ -5177,7 +5171,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5832
+literal|0x5862
 argument_list|)
 block|,
 name|two
@@ -5199,7 +5193,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5432
+literal|0x5462
 argument_list|)
 block|,
 name|two
@@ -5221,7 +5215,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4032
+literal|0x4062
 argument_list|)
 block|,
 name|two
@@ -5243,7 +5237,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C32
+literal|0x4C62
 argument_list|)
 block|,
 name|two
@@ -5265,7 +5259,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4432
+literal|0x4462
 argument_list|)
 block|,
 name|two
@@ -5287,7 +5281,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5032
+literal|0x5062
 argument_list|)
 block|,
 name|two
@@ -5309,7 +5303,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0032
+literal|0x0062
 argument_list|)
 block|,
 name|two
@@ -5331,7 +5325,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4832
+literal|0x4862
 argument_list|)
 block|,
 name|two
@@ -5346,7 +5340,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"fsaddx",	two(0xF000, 0x0032),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, JF removed */
+comment|/* {"fsaddx",	two(0xF000, 0x0062),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, JF removed */
 block|{
 literal|"fdaddb"
 block|,
@@ -5354,7 +5348,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5836
+literal|0x5866
 argument_list|)
 block|,
 name|two
@@ -5376,7 +5370,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5436
+literal|0x5466
 argument_list|)
 block|,
 name|two
@@ -5398,7 +5392,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4036
+literal|0x4066
 argument_list|)
 block|,
 name|two
@@ -5420,7 +5414,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C36
+literal|0x4C66
 argument_list|)
 block|,
 name|two
@@ -5442,7 +5436,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4436
+literal|0x4466
 argument_list|)
 block|,
 name|two
@@ -5464,7 +5458,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5036
+literal|0x5066
 argument_list|)
 block|,
 name|two
@@ -5486,7 +5480,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0036
+literal|0x0066
 argument_list|)
 block|,
 name|two
@@ -5508,7 +5502,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4836
+literal|0x4866
 argument_list|)
 block|,
 name|two
@@ -5523,7 +5517,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"faddx",	two(0xF000, 0x0036),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, JF removed */
+comment|/* {"faddx",	two(0xF000, 0x0066),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, JF removed */
 block|{
 literal|"fasinb"
 block|,
@@ -8733,7 +8727,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5830
+literal|0x5860
 argument_list|)
 block|,
 name|two
@@ -8755,7 +8749,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5430
+literal|0x5460
 argument_list|)
 block|,
 name|two
@@ -8777,7 +8771,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4030
+literal|0x4060
 argument_list|)
 block|,
 name|two
@@ -8799,7 +8793,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C30
+literal|0x4C60
 argument_list|)
 block|,
 name|two
@@ -8821,7 +8815,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4430
+literal|0x4460
 argument_list|)
 block|,
 name|two
@@ -8843,7 +8837,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5030
+literal|0x5060
 argument_list|)
 block|,
 name|two
@@ -8865,7 +8859,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0030
+literal|0x0060
 argument_list|)
 block|,
 name|two
@@ -8887,7 +8881,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4830
+literal|0x4860
 argument_list|)
 block|,
 name|two
@@ -8902,7 +8896,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"fsdivx",	two(0xF000, 0x0030),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
+comment|/* {"fsdivx",	two(0xF000, 0x0060),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
 block|{
 literal|"fddivb"
 block|,
@@ -8910,7 +8904,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5834
+literal|0x5864
 argument_list|)
 block|,
 name|two
@@ -8932,7 +8926,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5434
+literal|0x5464
 argument_list|)
 block|,
 name|two
@@ -8954,7 +8948,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4034
+literal|0x4064
 argument_list|)
 block|,
 name|two
@@ -8976,7 +8970,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C34
+literal|0x4C64
 argument_list|)
 block|,
 name|two
@@ -8998,7 +8992,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4434
+literal|0x4464
 argument_list|)
 block|,
 name|two
@@ -9020,7 +9014,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5034
+literal|0x5064
 argument_list|)
 block|,
 name|two
@@ -9042,7 +9036,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0034
+literal|0x0064
 argument_list|)
 block|,
 name|two
@@ -9064,7 +9058,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4834
+literal|0x4864
 argument_list|)
 block|,
 name|two
@@ -9079,7 +9073,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"fddivx",	two(0xF000, 0x0034),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
+comment|/* {"fddivx",	two(0xF000, 0x0064),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
 block|{
 literal|"fetoxb"
 block|,
@@ -11660,7 +11654,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5800
+literal|0x5840
 argument_list|)
 block|,
 name|two
@@ -11683,7 +11677,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5400
+literal|0x5440
 argument_list|)
 block|,
 name|two
@@ -11706,7 +11700,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4000
+literal|0x4040
 argument_list|)
 block|,
 name|two
@@ -11729,7 +11723,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4400
+literal|0x4440
 argument_list|)
 block|,
 name|two
@@ -11752,7 +11746,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5000
+literal|0x5040
 argument_list|)
 block|,
 name|two
@@ -11775,7 +11769,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0000
+literal|0x0040
 argument_list|)
 block|,
 name|two
@@ -11798,7 +11792,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4800
+literal|0x4840
 argument_list|)
 block|,
 name|two
@@ -11814,7 +11808,7 @@ name|m68040
 block|}
 block|,
 comment|/* fmove from<ea> to fp<n> */
-comment|/* JF removed {"fsmovex",	two(0xF000, 0x0000),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, / * fmove from<ea> to fp<n> */
+comment|/* JF removed {"fsmovex",	two(0xF000, 0x0040),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, / * fmove from<ea> to fp<n> */
 block|{
 literal|"fdmoveb"
 block|,
@@ -11822,7 +11816,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5800
+literal|0x5844
 argument_list|)
 block|,
 name|two
@@ -11845,7 +11839,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5400
+literal|0x5444
 argument_list|)
 block|,
 name|two
@@ -11868,7 +11862,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4000
+literal|0x4044
 argument_list|)
 block|,
 name|two
@@ -11891,7 +11885,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4400
+literal|0x4444
 argument_list|)
 block|,
 name|two
@@ -11914,7 +11908,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5000
+literal|0x5044
 argument_list|)
 block|,
 name|two
@@ -11937,7 +11931,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0000
+literal|0x0044
 argument_list|)
 block|,
 name|two
@@ -11960,7 +11954,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4800
+literal|0x4844
 argument_list|)
 block|,
 name|two
@@ -11976,7 +11970,7 @@ name|m68040
 block|}
 block|,
 comment|/* fmove from<ea> to fp<n> */
-comment|/* JF removed {"fdmovex",	two(0xF000, 0x0000),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, / * fmove from<ea> to fp<n> */
+comment|/* JF removed {"fdmovex",	two(0xF000, 0x0044),	two(0xF1C0, 0xE07F),	"IiFt", m68040 }, / * fmove from<ea> to fp<n> */
 block|{
 literal|"fmovecrx"
 block|,
@@ -12983,7 +12977,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5833
+literal|0x5863
 argument_list|)
 block|,
 name|two
@@ -13005,7 +12999,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5433
+literal|0x5463
 argument_list|)
 block|,
 name|two
@@ -13027,7 +13021,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4033
+literal|0x4063
 argument_list|)
 block|,
 name|two
@@ -13049,7 +13043,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C33
+literal|0x4C63
 argument_list|)
 block|,
 name|two
@@ -13071,7 +13065,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4433
+literal|0x4463
 argument_list|)
 block|,
 name|two
@@ -13093,7 +13087,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5033
+literal|0x5063
 argument_list|)
 block|,
 name|two
@@ -13115,7 +13109,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0033
+literal|0x0063
 argument_list|)
 block|,
 name|two
@@ -13137,7 +13131,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4833
+literal|0x4863
 argument_list|)
 block|,
 name|two
@@ -13152,7 +13146,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"fsmulx",	two(0xF000, 0x0033),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
+comment|/* {"fsmulx",	two(0xF000, 0x0063),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
 block|{
 literal|"fdmulb"
 block|,
@@ -13160,7 +13154,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5837
+literal|0x5867
 argument_list|)
 block|,
 name|two
@@ -13182,7 +13176,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5437
+literal|0x5467
 argument_list|)
 block|,
 name|two
@@ -13204,7 +13198,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4037
+literal|0x4067
 argument_list|)
 block|,
 name|two
@@ -13226,7 +13220,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C37
+literal|0x4C67
 argument_list|)
 block|,
 name|two
@@ -13248,7 +13242,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4437
+literal|0x4467
 argument_list|)
 block|,
 name|two
@@ -13270,7 +13264,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5037
+literal|0x5067
 argument_list|)
 block|,
 name|two
@@ -13292,7 +13286,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0037
+literal|0x0067
 argument_list|)
 block|,
 name|two
@@ -13314,7 +13308,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4837
+literal|0x4867
 argument_list|)
 block|,
 name|two
@@ -13329,7 +13323,7 @@ block|,
 name|m68040
 block|}
 block|,
-comment|/* {"dfmulx",	two(0xF000, 0x0037),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
+comment|/* {"dfmulx",	two(0xF000, 0x0067),	two(0xF1C0, 0xE07F),	"IiFt",   m68040 }, JF */
 block|{
 literal|"fnegb"
 block|,
@@ -16844,7 +16838,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5838
+literal|0x5868
 argument_list|)
 block|,
 name|two
@@ -16866,7 +16860,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5438
+literal|0x5468
 argument_list|)
 block|,
 name|two
@@ -16888,7 +16882,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4038
+literal|0x4068
 argument_list|)
 block|,
 name|two
@@ -16910,7 +16904,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C38
+literal|0x4C68
 argument_list|)
 block|,
 name|two
@@ -16932,7 +16926,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4438
+literal|0x4468
 argument_list|)
 block|,
 name|two
@@ -16954,7 +16948,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x5038
+literal|0x5068
 argument_list|)
 block|,
 name|two
@@ -16976,7 +16970,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0038
+literal|0x0068
 argument_list|)
 block|,
 name|two
@@ -16998,7 +16992,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4838
+literal|0x4868
 argument_list|)
 block|,
 name|two
@@ -17020,7 +17014,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x0038
+literal|0x0068
 argument_list|)
 block|,
 name|two
@@ -17042,7 +17036,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x583c
+literal|0x586c
 argument_list|)
 block|,
 name|two
@@ -17064,7 +17058,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x543c
+literal|0x546c
 argument_list|)
 block|,
 name|two
@@ -17086,7 +17080,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x403c
+literal|0x406c
 argument_list|)
 block|,
 name|two
@@ -17108,7 +17102,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x4C3c
+literal|0x4C6c
 argument_list|)
 block|,
 name|two
@@ -17130,7 +17124,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x443c
+literal|0x446c
 argument_list|)
 block|,
 name|two
@@ -17152,7 +17146,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x503c
+literal|0x506c
 argument_list|)
 block|,
 name|two
@@ -17174,7 +17168,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x003c
+literal|0x006c
 argument_list|)
 block|,
 name|two
@@ -17196,7 +17190,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x483c
+literal|0x486c
 argument_list|)
 block|,
 name|two
@@ -17218,7 +17212,7 @@ name|two
 argument_list|(
 literal|0xF000
 argument_list|,
-literal|0x003c
+literal|0x006c
 argument_list|)
 block|,
 name|two
@@ -23945,7 +23939,7 @@ literal|"pflusha"
 block|,
 name|one
 argument_list|(
-literal|0xf510
+literal|0xf518
 argument_list|)
 block|,
 name|one
@@ -24107,7 +24101,25 @@ literal|"pflush"
 block|,
 name|one
 argument_list|(
-literal|0xf500
+literal|0xf508
+argument_list|)
+block|,
+name|one
+argument_list|(
+literal|0xfff8
+argument_list|)
+block|,
+literal|"as"
+block|,
+name|m68040
+block|}
+block|,
+block|{
+literal|"pflush"
+block|,
+name|one
+argument_list|(
+literal|0xf508
 argument_list|)
 block|,
 name|one
@@ -24125,7 +24137,7 @@ literal|"pflushan"
 block|,
 name|one
 argument_list|(
-literal|0xf518
+literal|0xf510
 argument_list|)
 block|,
 name|one
@@ -24143,7 +24155,25 @@ literal|"pflushn"
 block|,
 name|one
 argument_list|(
-literal|0xf508
+literal|0xf500
+argument_list|)
+block|,
+name|one
+argument_list|(
+literal|0xfff8
+argument_list|)
+block|,
+literal|"as"
+block|,
+name|m68040
+block|}
+block|,
+block|{
+literal|"pflushn"
+block|,
+name|one
+argument_list|(
+literal|0xf500
 argument_list|)
 block|,
 name|one
@@ -25255,7 +25285,7 @@ argument_list|(
 literal|0xfff8
 argument_list|)
 block|,
-literal|"As"
+literal|"as"
 block|,
 name|m68040
 block|}
@@ -25417,7 +25447,7 @@ argument_list|(
 literal|0xfff8
 argument_list|)
 block|,
-literal|"As"
+literal|"as"
 block|,
 name|m68040
 block|}

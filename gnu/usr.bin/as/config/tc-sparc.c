@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-sparc.c,v 1.3 1994/12/23 22:37:40 nate Exp $"
+literal|"$Id: tc-sparc.c,v 1.4 1995/05/30 04:47:49 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1923,7 +1923,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (flagseen['k']) 		GOT_symbol = symbol_find_or_make("__GLOBAL_OFFSET_TABLE_");
+block|if (picmode) 		GOT_symbol = symbol_find_or_make("__GLOBAL_OFFSET_TABLE_");
 endif|#
 directive|endif
 block|}
@@ -3687,10 +3687,7 @@ operator|=
 ifdef|#
 directive|ifdef
 name|PIC
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 condition|?
 name|RELOC_JMP_TBL
 else|:
@@ -4049,10 +4046,7 @@ block|}
 block|}
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|the_insn
 operator|.
@@ -5704,10 +5698,7 @@ else|else
 block|{
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|fixP
 operator|->
@@ -5839,10 +5830,7 @@ else|else
 block|{
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|fixP
 operator|->
@@ -6079,10 +6067,7 @@ directive|ifdef
 name|PIC
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 condition|)
 block|{
 switch|switch
@@ -7146,6 +7131,12 @@ operator|*
 name|argP
 operator|==
 literal|'k'
+operator|||
+operator|*
+operator|*
+name|argP
+operator|==
+literal|'K'
 condition|)
 block|{
 comment|/* Predefine GOT symbol */

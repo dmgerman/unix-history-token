@@ -77,6 +77,7 @@ name|OBJ_COFF
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -98,6 +99,7 @@ comment|/* OBJ_COFF */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=

@@ -473,6 +473,14 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"weak"
+block|,
+name|s_weak
+block|,
+literal|0
+block|}
+block|,
 comment|/* stabs-in-coff (?) debug pseudos (ignored) */
 block|{
 literal|"optim"
@@ -1404,26 +1412,6 @@ operator|->
 name|sy_name_offset
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Put aux info in lower four bits of `n_other' field 		 * Do this only now, because things like S_IS_DEFINED() 		 * depend on S_GET_OTHER() for some unspecified reason. 		 */
-if|if
-condition|(
-name|symbolP
-operator|->
-name|sy_aux
-condition|)
-name|S_SET_OTHER
-argument_list|(
-name|symbolP
-argument_list|,
-operator|(
-name|symbolP
-operator|->
-name|sy_aux
-operator|&
-literal|0xf
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Any symbol still undefined and is not a dbg symbol is made N_EXT. */
 if|if
 condition|(
@@ -1442,6 +1430,28 @@ condition|)
 name|S_SET_EXTERNAL
 argument_list|(
 name|symbolP
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Put aux info in lower four bits of `n_other' field 		 * Do this only now, because things like S_IS_DEFINED() 		 * depend on S_GET_OTHER() for some unspecified reason. 		 */
+name|S_SET_OTHER
+argument_list|(
+name|symbolP
+argument_list|,
+operator|(
+name|symbolP
+operator|->
+name|sy_bind
+operator|<<
+literal|4
+operator|)
+operator||
+operator|(
+name|symbolP
+operator|->
+name|sy_aux
+operator|&
+literal|0xf
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2273,8 +2283,26 @@ condition|(
 name|symbolP
 operator|->
 name|sy_forward
+operator|&&
+name|symbolP
+operator|->
+name|sy_forward
+operator|!=
+name|symbolP
 condition|)
 block|{
+name|S_SET_SEGMENT
+argument_list|(
+name|symbolP
+argument_list|,
+name|S_GET_SEGMENT
+argument_list|(
+name|symbolP
+operator|->
+name|sy_forward
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|S_SET_VALUE
 argument_list|(
 name|symbolP
@@ -2302,12 +2330,46 @@ argument_list|)
 expr_stmt|;
 name|symbolP
 operator|->
+name|sy_aux
+operator||=
+name|symbolP
+operator|->
+name|sy_forward
+operator|->
+name|sy_aux
+expr_stmt|;
+name|symbolP
+operator|->
+name|sy_sizexp
+operator|=
+name|symbolP
+operator|->
+name|sy_forward
+operator|->
+name|sy_sizexp
+expr_stmt|;
+if|if
+condition|(
+name|S_IS_EXTERNAL
+argument_list|(
+name|symbolP
+operator|->
+name|sy_forward
+argument_list|)
+condition|)
+name|S_SET_EXTERNAL
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* if it has a forward reference */
+name|symbolP
+operator|->
 name|sy_forward
 operator|=
 literal|0
 expr_stmt|;
-block|}
-comment|/* if it has a forward reference */
 block|}
 comment|/* walk the symbol chain */
 name|tc_crawl_symbol_chain
@@ -2358,7 +2420,7 @@ name|SEG_TEXT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if pusing data into text */
+comment|/* if pushing data into text */
 name|S_SET_VALUE
 argument_list|(
 name|symbolP
@@ -2442,10 +2504,7 @@ directive|ifdef
 name|PIC
 operator|||
 operator|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|symbolP
 operator|->
@@ -2461,10 +2520,7 @@ name|PIC
 operator|&&
 operator|(
 operator|!
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|||
 name|symbolP
 operator|!=
@@ -2526,10 +2582,7 @@ expr_stmt|;
 comment|/* 			 * If symbol has a known size, output an extra symbol 			 * of type N_SIZE and with the same name. 			 * We cannot evaluate the size expression just yet, as 			 * some its terms may not have had their final values 			 * set. We defer this until `obj_emit_symbols()' 			 */
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_GET_TYPE
 argument_list|(
@@ -2686,10 +2739,7 @@ name|PIC
 operator|&&
 operator|(
 operator|!
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|||
 name|symbolP
 operator|!=

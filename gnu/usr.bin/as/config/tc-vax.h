@@ -13,6 +13,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOCAL_LABELS_FB
+end_define
+
+begin_define
+define|#
+directive|define
 name|NO_LISTING
 end_define
 

@@ -107,6 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 decl_stmt|;

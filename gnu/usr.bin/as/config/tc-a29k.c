@@ -374,6 +374,7 @@ name|RELSZ
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -391,6 +392,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -413,6 +415,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=

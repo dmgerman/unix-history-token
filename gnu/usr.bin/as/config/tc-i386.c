@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-i386.c,v 1.3 1994/12/23 22:37:35 nate Exp $"
+literal|"$Id: tc-i386.c,v 1.4 1995/05/30 04:47:29 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8549,10 +8549,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 operator|(
 name|cp
@@ -9389,10 +9386,7 @@ directive|ifdef
 name|PIC
 comment|/* XXX - oops, the JMP_TBL relocation info should have percolated through  * here, define a field in frag to this?  */
 operator|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_GET_SEGMENT
 argument_list|(
@@ -9480,10 +9474,7 @@ directive|ifdef
 name|PIC
 comment|/*XXX*/
 operator|(
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|&&
 name|S_GET_SEGMENT
 argument_list|(
@@ -9894,6 +9885,7 @@ comment|/* size of dword displacement jmp */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=
@@ -10159,23 +10151,22 @@ modifier|*
 name|vecP
 decl_stmt|;
 block|{
+switch|switch
+condition|(
+operator|*
+operator|*
+name|argP
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|PIC
-if|if
-condition|(
-name|argP
-operator|&&
-operator|*
-name|argP
-operator|&&
-operator|*
-operator|*
-name|argP
-operator|==
+case|case
 literal|'k'
-condition|)
-block|{
+case|:
+case|case
+literal|'K'
+case|:
 if|#
 directive|if
 literal|00
@@ -10253,9 +10244,14 @@ argument_list|(
 literal|"__GLOBAL_OFFSET_TABLE_"
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
 endif|#
 directive|endif
+default|default:
+return|return
+literal|0
+return|;
+block|}
 return|return
 literal|1
 return|;
@@ -10878,10 +10874,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|flagseen
-index|[
-literal|'k'
-index|]
+name|picmode
 operator|||
 operator|!
 name|S_IS_EXTERNAL

@@ -4,7 +4,7 @@ comment|/* read.h - of read.c     Copyright (C) 1986, 1990, 1992 Free Software F
 end_comment
 
 begin_comment
-comment|/*  * $Id: read.h,v 1.4 1994/12/23 22:36:17 nate Exp $  */
+comment|/*  * $Id: read.h,v 1.5 1995/05/30 04:46:32 rgrimes Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -611,6 +611,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|s_weak
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -883,6 +892,13 @@ end_function_decl
 begin_function_decl
 name|void
 name|s_type
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|s_weak
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: expr.c,v 1.2 1993/11/03 00:51:28 paul Exp $"
+literal|"$Id: expr.c,v 1.3 1995/05/30 04:46:10 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,7 +432,7 @@ operator|(
 operator|!
 name|strchr
 argument_list|(
-literal|"+-.0123456789"
+literal|"+-.0123456789iInN"
 argument_list|,
 operator|*
 name|input_line_pointer

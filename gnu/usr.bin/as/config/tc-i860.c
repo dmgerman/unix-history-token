@@ -4645,7 +4645,7 @@ name|vecP
 decl_stmt|;
 block|{
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -4946,6 +4946,7 @@ comment|/* on i860: first 4 bytes are normal unsigned long address, next three  
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|md_reloc_size
 init|=

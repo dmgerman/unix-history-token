@@ -4,7 +4,7 @@ comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright (C) 1989, 1991
 end_comment
 
 begin_comment
-comment|/* $Id: i386.h,v 1.2 1994/12/11 20:46:55 sef Exp $ */
+comment|/* $Id: i386.h,v 1.3 1995/05/30 04:48:01 rgrimes Exp $ */
 end_comment
 
 begin_decl_stmt
@@ -119,9 +119,9 @@ name|SReg3
 operator||
 name|SReg2
 block|,
-name|Reg16
+name|WordReg
 operator||
-name|Mem16
+name|WordMem
 block|,
 literal|0
 block|}
@@ -9633,6 +9633,54 @@ block|}
 block|,
 block|{
 literal|"db7"
+block|,
+name|Debug
+block|,
+literal|7
+block|}
+block|,
+block|{
+literal|"dr0"
+block|,
+name|Debug
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dr1"
+block|,
+name|Debug
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"dr2"
+block|,
+name|Debug
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"dr3"
+block|,
+name|Debug
+block|,
+literal|3
+block|}
+block|,
+block|{
+literal|"dr6"
+block|,
+name|Debug
+block|,
+literal|6
+block|}
+block|,
+block|{
+literal|"dr7"
 block|,
 name|Debug
 block|,

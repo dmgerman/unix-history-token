@@ -4,7 +4,7 @@ comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 19
 end_comment
 
 begin_comment
-comment|/*  * $Id: struc-symbol.h,v 1.4 1994/12/23 22:36:20 nate Exp $  */
+comment|/*  * $Id: struc-symbol.h,v 1.5 1995/05/30 04:46:33 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -89,7 +89,8 @@ name|sy_sizexp
 decl_stmt|;
 comment|/* (expressionS *) */
 comment|/* Auxiliary type information as given by the .type directive */
-name|int
+name|unsigned
+name|char
 name|sy_aux
 decl_stmt|;
 define|#
@@ -99,6 +100,24 @@ value|1
 define|#
 directive|define
 name|AUX_FUNC
+value|2
+name|unsigned
+name|char
+name|sy_bind
+decl_stmt|;
+define|#
+directive|define
+name|BIND_LOCAL
+value|0
+comment|/* currently not used */
+define|#
+directive|define
+name|BIND_GLOBAL
+value|1
+comment|/* currently not used */
+define|#
+directive|define
+name|BIND_WEAK
 value|2
 block|}
 struct|;
