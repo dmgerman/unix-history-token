@@ -25,23 +25,6 @@ begin_comment
 comment|/*  * FreeBSD implementation by Paul Herman<pherman@frenchfries.net>  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -76,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"blowfish.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypt.h"
 end_include
 
 begin_comment
@@ -122,77 +111,66 @@ begin_comment
 comment|/* we have log2(rounds) in salt */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|bcrypt_gensalt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int8_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|encode_salt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int8_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|,
+parameter_list|,
 name|u_int8_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|encode_base64
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int8_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int8_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|decode_base64
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int8_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|,
+parameter_list|,
+specifier|const
 name|u_int8_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -231,8 +209,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|u_int8_t
 name|Base64Code
 index|[]
@@ -242,8 +220,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|u_int8_t
 name|index_64
 index|[
@@ -520,12 +498,6 @@ parameter_list|)
 value|( (c)> 127 ? 255 : index_64[(c)])
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -538,33 +510,11 @@ parameter_list|,
 name|u_int16_t
 name|len
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 name|data
 parameter_list|)
-else|#
-directive|else
-function|static void decode_base64
-parameter_list|(
-name|buffer
-parameter_list|,
-name|len
-parameter_list|,
-name|data
-parameter_list|)
-name|u_int8_t
-modifier|*
-name|buffer
-decl_stmt|;
-name|u_int16_t
-name|len
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|data
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int8_t
 modifier|*
@@ -572,6 +522,7 @@ name|bp
 init|=
 name|buffer
 decl_stmt|;
+specifier|const
 name|u_int8_t
 modifier|*
 name|p
@@ -632,6 +583,10 @@ operator|*
 name|bp
 operator|++
 operator|=
+call|(
+name|u_int8_t
+call|)
+argument_list|(
 operator|(
 name|c1
 operator|<<
@@ -647,6 +602,7 @@ operator|)
 operator|>>
 literal|4
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -752,12 +708,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -777,34 +727,6 @@ parameter_list|,
 name|u_int8_t
 name|logr
 parameter_list|)
-else|#
-directive|else
-function|static void encode_salt
-parameter_list|(
-name|salt
-parameter_list|,
-name|csalt
-parameter_list|,
-name|clen
-parameter_list|,
-name|logr
-parameter_list|)
-name|char
-modifier|*
-name|salt
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|csalt
-decl_stmt|;
-name|u_int16_t
-name|clen
-decl_stmt|;
-name|u_int8_t
-name|logr
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|salt
 index|[
@@ -869,12 +791,6 @@ begin_comment
 comment|/* Generates a salt for this version of crypt.    Since versions may change. Keeping this here    seems sensible.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|char
 modifier|*
@@ -883,17 +799,6 @@ parameter_list|(
 name|u_int8_t
 name|log_rounds
 parameter_list|)
-else|#
-directive|else
-function|char * bcrypt_gensalt
-parameter_list|(
-name|log_rounds
-parameter_list|)
-name|u_int8_t
-name|log_rounds
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int8_t
 name|csalt
@@ -988,20 +893,16 @@ name|char
 modifier|*
 name|crypt_blowfish
 parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|key
 parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|salt
 parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|key
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|salt
-decl_stmt|;
 block|{
 name|blf_ctx
 name|state
@@ -1023,7 +924,7 @@ name|salt_len
 decl_stmt|,
 name|logr
 decl_stmt|,
-name|minor
+name|minr
 decl_stmt|;
 name|u_int8_t
 name|ciphertext
@@ -1048,6 +949,7 @@ name|BCRYPT_BLOCKS
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|magic
@@ -1055,7 +957,7 @@ init|=
 literal|"$2a$04$"
 decl_stmt|;
 comment|/* Defaults */
-name|minor
+name|minr
 operator|=
 literal|'a'
 expr_stmt|;
@@ -1143,8 +1045,11 @@ case|case
 literal|'a'
 case|:
 comment|/* 'ab' should not yield the same as 'abab' */
-name|minor
+name|minr
 operator|=
+operator|(
+name|u_int8_t
+operator|)
 name|salt
 index|[
 literal|1
@@ -1161,7 +1066,7 @@ return|;
 block|}
 block|}
 else|else
-name|minor
+name|minr
 operator|=
 literal|0
 expr_stmt|;
@@ -1184,25 +1089,25 @@ return|return
 name|error
 return|;
 comment|/* Computer power doesnt increase linear, 2^x should be fine */
-if|if
-condition|(
-operator|(
-name|rounds
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-literal|1
-operator|<<
-operator|(
 name|logr
 operator|=
+operator|(
+name|u_int8_t
+operator|)
 name|atoi
 argument_list|(
 name|salt
 argument_list|)
-operator|)
-operator|)
+expr_stmt|;
+name|rounds
+operator|=
+literal|1
+operator|<<
+name|logr
+expr_stmt|;
+if|if
+condition|(
+name|rounds
 operator|<
 name|BCRYPT_MINROUNDS
 condition|)
@@ -1222,10 +1127,6 @@ name|csalt
 argument_list|,
 name|BCRYPT_MAXSALT
 argument_list|,
-operator|(
-name|u_int8_t
-operator|*
-operator|)
 name|salt
 argument_list|)
 expr_stmt|;
@@ -1235,13 +1136,17 @@ name|BCRYPT_MAXSALT
 expr_stmt|;
 name|key_len
 operator|=
+call|(
+name|u_int8_t
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|key
 argument_list|)
 operator|+
 operator|(
-name|minor
+name|minr
 operator|>=
 literal|'a'
 condition|?
@@ -1249,6 +1154,7 @@ literal|1
 else|:
 literal|0
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Setting up S-Boxes and Subkeys */
 name|Blowfish_initstate
@@ -1267,6 +1173,7 @@ argument_list|,
 name|salt_len
 argument_list|,
 operator|(
+specifier|const
 name|u_int8_t
 operator|*
 operator|)
@@ -1295,6 +1202,7 @@ operator|&
 name|state
 argument_list|,
 operator|(
+specifier|const
 name|u_int8_t
 operator|*
 operator|)
@@ -1512,7 +1420,7 @@ name|BCRYPT_VERSION
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|minr
 condition|)
 name|encrypted
 index|[
@@ -1520,7 +1428,10 @@ name|i
 operator|++
 index|]
 operator|=
-name|minor
+operator|(
+name|int8_t
+operator|)
+name|minr
 expr_stmt|;
 name|encrypted
 index|[
@@ -1588,12 +1499,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -1610,29 +1515,6 @@ parameter_list|,
 name|u_int16_t
 name|len
 parameter_list|)
-else|#
-directive|else
-function|static void encode_base64
-parameter_list|(
-name|buffer
-parameter_list|,
-name|data
-parameter_list|,
-name|len
-parameter_list|)
-name|u_int8_t
-modifier|*
-name|buffer
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|data
-decl_stmt|;
-name|u_int16_t
-name|len
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int8_t
 modifier|*

@@ -77,8 +77,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|v
 parameter_list|,
 name|int

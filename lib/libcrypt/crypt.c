@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"crypt.h"
 end_include
 
@@ -118,6 +124,8 @@ block|{
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|}
 struct|;
@@ -145,7 +153,7 @@ name|char
 modifier|*
 name|def
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -222,6 +230,9 @@ condition|)
 block|{
 name|crypt_type
 operator|=
+operator|(
+name|int
+operator|)
 name|i
 expr_stmt|;
 return|return;
@@ -263,12 +274,13 @@ begin_function
 name|int
 name|crypt_set_format
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|type
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|crypt_setdefault
@@ -320,6 +332,9 @@ condition|)
 block|{
 name|crypt_type
 operator|=
+operator|(
+name|int
+operator|)
 name|i
 expr_stmt|;
 return|return
@@ -342,16 +357,18 @@ name|char
 modifier|*
 name|crypt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|passwd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|salt
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|crypt_setdefault
