@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.11 92/04/23$  *  *	@(#)sysv_shm.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.11 92/04/23$  *  *	@(#)sysv_shm.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -840,7 +846,7 @@ name|uap
 operator|->
 name|shmflg
 operator|&
-literal|0777
+name|ACCESSPERMS
 operator|)
 expr_stmt|;
 name|shp
@@ -929,7 +935,7 @@ name|uap
 operator|->
 name|shmflg
 operator|&
-literal|0777
+name|ACCESSPERMS
 argument_list|,
 name|cred
 argument_list|)
@@ -1265,7 +1271,7 @@ operator|.
 name|mode
 operator|&
 operator|~
-literal|0777
+name|ACCESSPERMS
 operator|)
 operator||
 operator|(
@@ -1275,7 +1281,7 @@ name|shm_perm
 operator|.
 name|mode
 operator|&
-literal|0777
+name|ACCESSPERMS
 operator|)
 expr_stmt|;
 name|shp
