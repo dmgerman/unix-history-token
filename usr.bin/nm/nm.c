@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)nm.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)nm.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stab.h>
+file|<ar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ar.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -86,25 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ranlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<stab.h>
 end_include
 
 begin_include
@@ -123,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -255,6 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -597,14 +612,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: cannot read %s.\n"
+literal|"cannot read %s"
 argument_list|,
 name|fname
 argument_list|)
@@ -662,14 +672,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: bad format.\n"
+literal|"%s: bad format"
 argument_list|,
 name|fname
 argument_list|)
@@ -733,14 +738,9 @@ name|SARMAG
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: not object file or archive.\n"
+literal|"%s: not object file or archive"
 argument_list|,
 name|fname
 argument_list|)
@@ -987,14 +987,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: bad format archive header"
+literal|"%s: bad format archive header"
 argument_list|,
 name|fname
 argument_list|)
@@ -1093,11 +1088,9 @@ operator|>
 name|MAXNAMLEN
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: Illegal length for format 1 long name.\n"
+literal|"illegal length for format 1 long name"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1120,14 +1113,9 @@ operator|!=
 name|len
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: EOF reading format 1 long name.\n"
+literal|"EOF reading format 1 long name"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1282,14 +1270,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: premature EOF.\n"
+literal|"%s: premature EOF"
 argument_list|,
 name|name
 argument_list|)
@@ -1322,14 +1305,9 @@ operator|!
 name|ignore_bad_archive_entries
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: bad format.\n"
+literal|"%s: bad format"
 argument_list|,
 name|name
 argument_list|)
@@ -1421,21 +1399,11 @@ name|SEEK_SET
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1546,14 +1514,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: cannot read header.\n"
+literal|"%s: cannot read header"
 argument_list|,
 name|objname
 argument_list|)
@@ -1584,21 +1547,11 @@ name|SEEK_CUR
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|objname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1616,14 +1569,9 @@ name|head
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: bad format.\n"
+literal|"%s: bad format"
 argument_list|,
 name|objname
 argument_list|)
@@ -1643,14 +1591,9 @@ operator|.
 name|a_syms
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: no name list.\n"
+literal|"%s: no name list"
 argument_list|,
 name|objname
 argument_list|)
@@ -1679,21 +1622,11 @@ name|SEEK_CUR
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|objname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1755,14 +1688,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: cannot read symbol table.\n"
+literal|"%s: cannot read symbol table"
 argument_list|,
 name|objname
 argument_list|)
@@ -1813,14 +1741,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: cannot read stab size.\n"
+literal|"%s: cannot read stab size"
 argument_list|,
 name|objname
 argument_list|)
@@ -1883,14 +1806,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s: stab truncated..\n"
+literal|"%s: stab truncated.."
 argument_list|,
 name|objname
 argument_list|)
@@ -3111,30 +3029,18 @@ operator|(
 name|p
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"nm: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3148,7 +3054,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nm [-agnopruw] [file ...]\n"
+literal|"usage: nm [-agnoprtuwW] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
