@@ -277,9 +277,14 @@ case|:
 case|case
 name|PT_GETFPREGS
 case|:
+ifdef|#
+directive|ifdef
+name|PT_GETDBREGS
 case|case
 name|PT_GETDBREGS
 case|:
+endif|#
+directive|endif
 break|break;
 case|case
 name|PT_SETREGS
@@ -327,6 +332,9 @@ name|fpreg
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PT_SETDBREGS
 case|case
 name|PT_SETDBREGS
 case|:
@@ -350,6 +358,8 @@ name|dbreg
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|PT_IO
 case|:
@@ -497,6 +507,9 @@ name|fpreg
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PT_GETDBREGS
 case|case
 name|PT_GETDBREGS
 case|:
@@ -520,6 +533,8 @@ name|dbreg
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
