@@ -814,6 +814,7 @@ name|d_strategy_t
 modifier|*
 name|d_strategy
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d_name
@@ -1290,6 +1291,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|devtoname
