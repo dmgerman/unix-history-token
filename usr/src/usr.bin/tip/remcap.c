@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remcap.c	4.2	81/05/20	*/
+comment|/*	remcap.c	4.3	81/05/21	*/
 end_comment
 
 begin_comment
@@ -109,18 +109,22 @@ begin_define
 define|#
 directive|define
 name|E_TERMCAP
-value|"/etc/remote"
+value|RM = "/etc/remote"
 end_define
 
 begin_define
 define|#
 directive|define
-name|V6
+name|V_TERMCAP
+value|"REMOTE"
 end_define
 
-begin_comment
-comment|/* don't look in environment */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_TERM
+value|"HOST"
+end_define
 
 begin_decl_stmt
 name|char
@@ -128,6 +132,25 @@ modifier|*
 name|RM
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|V_TERMCAP
+value|"TERMCAP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TERM
+value|"TERM"
+end_define
 
 begin_endif
 endif|#
@@ -261,7 +284,7 @@ name|cp
 operator|=
 name|getenv
 argument_list|(
-literal|"TERMCAP"
+name|V_TERMCAP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TERMCAP can have one of two things in it. It can be the 	 * name of a file to use instead of /etc/termcap. In this 	 * case it better start with a "/". Or it can be an entry to 	 * use so we don't have to read the file. In this case it 	 * has to already have the newlines crunched out. 	 */
@@ -285,7 +308,7 @@ name|cp2
 operator|=
 name|getenv
 argument_list|(
-literal|"TERM"
+name|V_TERM
 argument_list|)
 expr_stmt|;
 if|if
@@ -336,6 +359,22 @@ expr_stmt|;
 block|}
 block|}
 else|else
+ifdef|#
+directive|ifdef
+name|REMOTE
+name|tf
+operator|=
+name|open
+argument_list|(
+name|RM
+operator|=
+name|cp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|tf
 operator|=
 name|open
@@ -345,6 +384,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -363,41 +404,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|REMOTE
-if|if
-condition|(
-operator|(
-name|RM
-operator|=
-name|getenv
-argument_list|(
-literal|"REMOTE"
-argument_list|)
-operator|)
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-condition|)
-name|RM
-operator|=
-name|E_TERMCAP
-expr_stmt|;
-name|tf
-operator|=
-name|open
-argument_list|(
-name|RM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|tf
 operator|=
 name|open
