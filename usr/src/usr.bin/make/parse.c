@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.20 (Berkeley) %G%"
+literal|"@(#)parse.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6207,6 +6207,23 @@ block|{
 name|lineno
 operator|++
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'#'
+condition|)
+block|{
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|curFILE
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 else|else
 block|{
