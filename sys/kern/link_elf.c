@@ -3411,7 +3411,7 @@ ifdef|#
 directive|ifdef
 name|SPARSE_MAPPING
 comment|/* 	 * Wire down the pages 	 */
-name|vm_map_pageable
+name|vm_map_wire
 argument_list|(
 name|kernel_map
 argument_list|,
