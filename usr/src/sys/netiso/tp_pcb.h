@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -719,9 +719,14 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* Last unsent packet that may be append to */
+name|tp_notdetached
+range|:
+literal|1
+decl_stmt|,
+comment|/* Call tp_detach before freeing XXXXXXX */
 name|tp_unused
 range|:
-literal|15
+literal|14
 decl_stmt|;
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -510,6 +510,30 @@ name|tp_state
 operator|==
 name|TP_CLOSED
 condition|)
+block|{
+if|if
+condition|(
+name|tpcb
+operator|->
+name|tp_notdetached
+condition|)
+block|{
+name|IFDEBUG
+argument_list|(
+argument|D_CONN
+argument_list|)
+name|printf
+argument_list|(
+literal|"PRU_DETACH: not detached\n"
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+name|tp_detach
+argument_list|(
+name|tpcb
+argument_list|)
+decl_stmt|;
+block|}
 name|free
 argument_list|(
 operator|(
@@ -521,6 +545,7 @@ name|M_PCB
 argument_list|)
 expr_stmt|;
 comment|/* XXX wart; where else to do it? */
+block|}
 block|}
 block|}
 end_function
