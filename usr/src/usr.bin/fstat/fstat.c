@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.7 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,10 @@ name|dev
 decl_stmt|;
 name|int
 name|inum
+decl_stmt|;
+name|char
+modifier|*
+name|name
 decl_stmt|;
 block|}
 name|DEVS
@@ -701,7 +705,22 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE\tTYPE\n"
+literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE TYPE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fflg
+condition|)
+name|printf
+argument_list|(
+literal|" NAME\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|openfiles
@@ -1530,6 +1549,17 @@ modifier|*
 name|itype
 argument_list|()
 decl_stmt|;
+name|char
+modifier|*
+name|name
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+comment|/* set by devmatch() on a match */
 if|if
 condition|(
 name|g
@@ -1609,6 +1639,9 @@ argument_list|,
 name|inode
 operator|.
 name|i_number
+argument_list|,
+operator|&
+name|name
 argument_list|)
 condition|)
 return|return;
@@ -1716,7 +1749,7 @@ name|DTYPE_INODE
 case|:
 name|printf
 argument_list|(
-literal|"\t%2d, %2d\t%5lu\t%6ld\t%3s\n"
+literal|"\t%2d, %2d\t%5lu\t%6ld\t%3s %s\n"
 argument_list|,
 name|major
 argument_list|(
@@ -1754,6 +1787,12 @@ name|inode
 operator|.
 name|i_mode
 argument_list|)
+argument_list|,
+name|name
+condition|?
+name|name
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2839,6 +2878,8 @@ argument_list|(
 argument|idev
 argument_list|,
 argument|inum
+argument_list|,
+argument|name
 argument_list|)
 name|dev_t
 name|idev
@@ -2848,6 +2889,14 @@ end_expr_stmt
 begin_decl_stmt
 name|ino_t
 name|inum
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|name
 decl_stmt|;
 end_decl_stmt
 
@@ -2881,10 +2930,11 @@ operator|==
 name|idev
 operator|&&
 operator|(
-operator|!
 name|d
 operator|->
 name|inum
+operator|==
+literal|0
 operator|||
 name|d
 operator|->
@@ -2893,11 +2943,20 @@ operator|==
 name|inum
 operator|)
 condition|)
+block|{
+operator|*
+name|name
+operator|=
+name|d
+operator|->
+name|name
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3047,6 +3106,12 @@ operator|.
 name|st_rdev
 expr_stmt|;
 block|}
+name|cur
+operator|->
+name|name
+operator|=
+name|filename
+expr_stmt|;
 block|}
 end_block
 
