@@ -35,6 +35,29 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APPLE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -571,6 +594,23 @@ argument_list|(
 literal|"SMB connections:\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APPLE
+if|if
+condition|(
+name|loadsmbvfs
+argument_list|()
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"SMB filesystem is not available"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|smb_dumptree
