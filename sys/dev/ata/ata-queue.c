@@ -1442,6 +1442,26 @@ modifier|*
 name|request
 parameter_list|)
 block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|request
+operator|->
+name|device
+operator|->
+name|channel
+decl_stmt|;
+name|int
+name|quiet
+init|=
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_QUIET
+decl_stmt|;
 comment|/* clear timeout etc */
 name|request
 operator|->
@@ -1451,13 +1471,50 @@ name|callout
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* call interrupt to try finish up the command */
-block|request->device->channel->hw.interrupt(request->device->channel);      if (request->device->channel->running == NULL) { 	if (!(request->flags& ATA_R_QUIET)) 	    ata_prtdev(request->device, 		       "WARNING - %s recovered from missing interrupt\n", 		       ata_cmd2str(request)); 	return;     }
-endif|#
-directive|endif
+comment|/* call hw.interrupt to try finish up the command */
+name|ch
+operator|->
+name|hw
+operator|.
+name|interrupt
+argument_list|(
+name|request
+operator|->
+name|device
+operator|->
+name|channel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|running
+operator|!=
+name|request
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|ata_prtdev
+argument_list|(
+name|request
+operator|->
+name|device
+argument_list|,
+literal|"WARNING - %s recovered from missing interrupt\n"
+argument_list|,
+name|ata_cmd2str
+argument_list|(
+name|request
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* if this was a DMA request stop the engine to be on the safe side */
 if|if
 condition|(
