@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.28 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +421,7 @@ name|strcpy
 argument_list|(
 name|line
 argument_list|,
-literal|"../conf/Makefile."
+literal|"Makefile."
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1158,7 +1158,7 @@ name|strcpy
 argument_list|(
 name|fname
 argument_list|,
-literal|"files"
+literal|"../../conf/files"
 argument_list|)
 expr_stmt|;
 name|openit
@@ -2407,7 +2407,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"../%s "
+literal|"$S/%s "
 argument_list|,
 name|tp
 operator|->
@@ -2503,7 +2503,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"../%s/%s "
+literal|"$S/%s/%s/%s "
+argument_list|,
+name|machinename
 argument_list|,
 name|machinename
 argument_list|,
@@ -2699,7 +2701,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so:\n\t-cp ../%so .\n\n"
+literal|"%so:\n\t-cp $S/%so .\n\n"
 argument_list|,
 name|tail
 argument_list|(
@@ -2715,7 +2717,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so: ../%s%c\n"
+literal|"%so: $S/%s%c\n"
 argument_list|,
 name|tail
 argument_list|(
@@ -2745,7 +2747,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t-ln -s ../%ss %sc\n"
+literal|"\t-ln -s $S/%ss %sc\n"
 argument_list|,
 name|np
 argument_list|,
@@ -2816,7 +2818,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c -S ${COPTS} %s../%sc\n"
+literal|"\t${CC} -c -S ${COPTS} %s$S/%sc\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2851,7 +2853,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c ${CFLAGS} %s../%sc\n\n"
+literal|"\t${CC} -c ${CFLAGS} %s$S/%sc\n\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2879,7 +2881,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c -S ${COPTS} %s../%sc\n"
+literal|"\t${CC} -c -S ${COPTS} %s$S/%sc\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2914,7 +2916,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c ${CFLAGS} %s../%sc\n\n"
+literal|"\t${CC} -c ${CFLAGS} %s$S/%sc\n\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2964,7 +2966,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c -S %s %s../%sc\n"
+literal|"\t${CC} -c -S %s %s$S/%sc\n"
 argument_list|,
 name|COPTS
 argument_list|,
@@ -3010,7 +3012,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c -S %s %s../%sc\n"
+literal|"\t${CC} -c -S %s %s$S/%sc\n"
 argument_list|,
 name|COPTS
 argument_list|,
@@ -3056,7 +3058,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -c -S %s %s../%sc\n"
+literal|"\t${CC} -c -S %s %s$S/%sc\n"
 argument_list|,
 name|COPTS
 argument_list|,
@@ -3267,7 +3269,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: Makefile machine/symbols.sort"
+literal|"%s: Makefile symbols.sort"
 argument_list|,
 name|fl
 operator|->
@@ -3344,7 +3346,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@sh ../conf/newvers.sh\n"
+literal|"\t@sh $S/conf/newvers.sh\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3467,7 +3469,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@-symorder machine/symbols.sort %s\n"
+literal|"\t@-symorder symbols.sort %s\n"
 argument_list|,
 name|fl
 operator|->
@@ -3597,7 +3599,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"swapgeneric.o: ../%s/swapgeneric.c\n"
+literal|"swapgeneric.o: $S/%s/%s/swapgeneric.c\n"
+argument_list|,
+name|machinename
 argument_list|,
 name|machinename
 argument_list|)
@@ -3624,7 +3628,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"../%s/swapgeneric.c\n"
+literal|"$S/%s/%s/swapgeneric.c\n"
+argument_list|,
+name|machinename
 argument_list|,
 name|machinename
 argument_list|)
@@ -3665,7 +3671,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"../%s/swapgeneric.c\n\n"
+literal|"$S/%s/%s/swapgeneric.c\n\n"
+argument_list|,
+name|machinename
 argument_list|,
 name|machinename
 argument_list|)
