@@ -416,6 +416,21 @@ name|ieee80211_frame
 argument_list|)
 condition|)
 block|{
+name|IEEE80211_DPRINTF2
+argument_list|(
+operator|(
+literal|"%s: frame too short, len %u\n"
+operator|,
+name|__func__
+operator|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX statistic */
 goto|goto
 name|out
@@ -536,15 +551,14 @@ comment|/* not interested in */
 name|IEEE80211_DPRINTF2
 argument_list|(
 operator|(
-literal|"%s: other bss %s\n"
+literal|"%s: discard frame from "
+literal|"bss %s\n"
 operator|,
 name|__func__
 operator|,
 name|ether_sprintf
 argument_list|(
-name|wh
-operator|->
-name|i_addr3
+name|bssid
 argument_list|)
 operator|)
 argument_list|)
@@ -2711,7 +2725,7 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
-name|IEEE80211_DPRINTF
+name|IEEE80211_DPRINTF2
 argument_list|(
 operator|(
 literal|"%s: element id %u/len %u "
