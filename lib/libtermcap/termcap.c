@@ -599,6 +599,11 @@ name|tok
 operator|==
 literal|'\0'
 operator|||
+operator|*
+name|tok
+operator|==
+literal|'\\'
+operator|||
 operator|!
 name|isgraph
 argument_list|(
