@@ -80,7 +80,7 @@ name|TRAPF_USERMODE
 parameter_list|(
 name|frame
 parameter_list|)
-value|((frame)->srr1& PSL_PR) != 0)
+value|(((frame)->srr1& PSL_PR) != 0)
 end_define
 
 begin_define
