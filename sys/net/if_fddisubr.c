@@ -2254,19 +2254,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s(): no lladdr for %s%d!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"%s() no lladdr!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;

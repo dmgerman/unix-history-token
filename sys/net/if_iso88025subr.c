@@ -399,9 +399,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"iso88025_ifattach: no lladdr!\n"
+name|ifp
+argument_list|,
+literal|"%s() no lladdr!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
