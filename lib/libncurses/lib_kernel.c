@@ -1140,5 +1140,22 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|resizeterm
+parameter_list|(
+name|int
+name|ToLines
+parameter_list|,
+name|int
+name|ToCols
+parameter_list|)
+block|{
+return|return
+name|OK
+return|;
+block|}
+end_function
+
 end_unit
 
