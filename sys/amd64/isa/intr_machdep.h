@@ -255,6 +255,21 @@ comment|/* 0x9A */
 end_comment
 
 begin_comment
+comment|/* lazy pmap release */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XLAZYPMAP_OFFSET
+value|(ICU_OFFSET + 123)
+end_define
+
+begin_comment
+comment|/* 0x9B */
+end_comment
+
+begin_comment
 comment|/* IPI to generate an additional software trap at the target CPU */
 end_comment
 
@@ -983,11 +998,14 @@ name|Xspuriousint
 decl_stmt|,
 comment|/* handle APIC "spurious INTs" */
 name|Xrendezvous
+decl_stmt|,
+comment|/* handle CPU rendezvous */
+name|Xlazypmap
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* handle CPU rendezvous */
+comment|/* handle lazy pmap release */
 end_comment
 
 begin_ifdef

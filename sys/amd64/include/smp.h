@@ -240,6 +240,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_LAZYPMAP
+value|XLAZYPMAP_OFFSET
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_RENDEZVOUS
 value|XRENDEZVOUS_OFFSET
 end_define

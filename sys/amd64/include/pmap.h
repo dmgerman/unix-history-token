@@ -937,7 +937,7 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|int
+name|u_int
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

@@ -5242,8 +5242,44 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX Shouldn't cpu_throw() here. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+name|cpu_throw
+argument_list|(
+name|td
+argument_list|,
+name|choosethread
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|cpu_throw
 argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|panic
+argument_list|(
+literal|"I'm a teapot!"
+argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}

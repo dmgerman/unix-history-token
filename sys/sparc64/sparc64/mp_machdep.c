@@ -1557,7 +1557,12 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 name|cpu_throw
+argument_list|(
+name|NULL
+argument_list|,
+name|choosethread
 argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* doesn't return */
 block|}

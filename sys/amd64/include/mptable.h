@@ -15,6 +15,12 @@ directive|include
 file|"opt_kstack_pages.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_swtch.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2682,6 +2688,30 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LAZY_SWITCH
+comment|/* install an inter-CPU IPI for lazy pmap release */
+name|setidt
+argument_list|(
+name|XLAZYPMAP_OFFSET
+argument_list|,
+name|Xlazypmap
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* install an inter-CPU IPI for all-CPU rendezvous */
 name|setidt
 argument_list|(
@@ -10943,7 +10973,12 @@ name|ticks
 argument_list|)
 expr_stmt|;
 name|cpu_throw
+argument_list|(
+name|NULL
+argument_list|,
+name|choosethread
 argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* doesn't return */
 name|panic
