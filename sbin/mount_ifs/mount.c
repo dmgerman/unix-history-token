@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.19 1997/08/24 21:02:49 steve Exp $"
+literal|"$Id: mount.c,v 1.20 1997/09/27 13:44:17 kato Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,6 +450,12 @@ block|{
 name|MNT_NOCLUSTERW
 block|,
 literal|"noclusterw"
+block|}
+block|,
+block|{
+name|MNT_SUIDDIR
+block|,
+literal|"suiddir"
 block|}
 block|,
 block|{
