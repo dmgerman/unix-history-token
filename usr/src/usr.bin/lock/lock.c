@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lock.c	5.8 (Berkeley) %G%"
+literal|"@(#)lock.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,9 +229,6 @@ modifier|*
 name|mypw
 decl_stmt|,
 modifier|*
-name|rootpw
-decl_stmt|,
-modifier|*
 name|ttynam
 decl_stmt|,
 modifier|*
@@ -392,26 +389,6 @@ operator|=
 name|sectimeout
 operator|*
 literal|60
-expr_stmt|;
-name|rootpw
-operator|=
-operator|(
-name|pw
-operator|=
-name|getpwnam
-argument_list|(
-literal|"root"
-argument_list|)
-operator|)
-condition|?
-name|strdup
-argument_list|(
-name|pw
-operator|->
-name|pw_passwd
-argument_list|)
-else|:
-name|NULL
 expr_stmt|;
 name|setuid
 argument_list|(
@@ -841,24 +818,6 @@ argument_list|(
 name|s
 argument_list|,
 name|s1
-argument_list|)
-condition|)
-break|break;
-if|if
-condition|(
-name|rootpw
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|rootpw
-argument_list|,
-name|crypt
-argument_list|(
-name|s
-argument_list|,
-name|rootpw
-argument_list|)
 argument_list|)
 condition|)
 break|break;
