@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_lnc_p.c,v 1.8 1999/04/24 20:14:00 peter Exp $  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_lnc_p.c,v 1.9 1999/05/09 17:06:55 peter Exp $  */
 end_comment
 
 begin_include
@@ -228,12 +228,15 @@ block|{
 name|unsigned
 name|iobase
 decl_stmt|;
+name|unsigned
+name|data
+decl_stmt|;
+comment|/* scratch to make this device a bus master*/
 name|void
 modifier|*
 name|lnc
 decl_stmt|;
 comment|/* device specific data for interrupt handler ... */
-comment|/* pci_map_port correctly initializes bridge chips -- tvf */
 if|if
 condition|(
 operator|!
@@ -256,6 +259,35 @@ argument_list|(
 literal|"lnc%d: pci_port_map_attach failed?!\n"
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+comment|/* Make this device a bus master.  This was implictly done by  	   pci_map_port under 2.2.x -- tvf */
+name|data
+operator|=
+name|pci_cfgread
+argument_list|(
+name|config_id
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|data
+operator||=
+name|PCIM_CMD_PORTEN
+operator||
+name|PCIM_CMD_BUSMASTEREN
+expr_stmt|;
+name|pci_cfgwrite
+argument_list|(
+name|config_id
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|data
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|lnc
