@@ -97,7 +97,7 @@ name|CLKF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|TRAPF_PC(&(framep)->ct_tf)
+value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
 begin_define
