@@ -731,7 +731,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|ACPI_STATUS
-name|acpi_EvaluateNumber
+name|acpi_EvaluateInteger
 parameter_list|(
 name|ACPI_HANDLE
 name|handle

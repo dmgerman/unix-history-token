@@ -209,7 +209,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|acpi_EvaluateNumber
+name|acpi_EvaluateInteger
 argument_list|(
 name|h
 argument_list|,

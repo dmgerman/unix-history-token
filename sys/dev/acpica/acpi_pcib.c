@@ -557,7 +557,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|acpi_EvaluateNumber
+name|acpi_EvaluateInteger
 argument_list|(
 name|sc
 operator|->
@@ -614,7 +614,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|acpi_EvaluateNumber
+name|acpi_EvaluateInteger
 argument_list|(
 name|sc
 operator|->

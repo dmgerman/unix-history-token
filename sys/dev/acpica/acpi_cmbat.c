@@ -220,7 +220,7 @@ name|dest
 parameter_list|,
 name|label
 parameter_list|)
-value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp->Type != ACPI_TYPE_NUMBER)				\ 		goto label ;						\ 	dest = tmp->Number.Value;					\ } while(0)
+value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label ;						\ 	dest = tmp->Integer.Value;					\ } while(0)
 end_define
 
 begin_define

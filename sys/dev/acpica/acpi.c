@@ -3050,7 +3050,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|AcpiSetSystemSleepState
+name|AcpiEnterSleepState
 argument_list|(
 name|ACPI_STATE_S5
 argument_list|)
@@ -3543,7 +3543,7 @@ case|:
 comment|/* XXX only for testing */
 name|status
 operator|=
-name|AcpiSetSystemSleepState
+name|AcpiEnterSleepState
 argument_list|(
 operator|(
 name|UINT8
@@ -3564,7 +3564,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-literal|"AcpiSetSystemSleepState failed - %s\n"
+literal|"AcpiEnterSleepState failed - %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
@@ -3608,7 +3608,7 @@ name|state
 expr_stmt|;
 name|status
 operator|=
-name|AcpiSetSystemSleepState
+name|AcpiEnterSleepState
 argument_list|(
 operator|(
 name|UINT8
@@ -3629,7 +3629,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-literal|"AcpiSetSystemSleepState failed - %s\n"
+literal|"AcpiEnterSleepState failed - %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
@@ -3908,12 +3908,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evaluate a path that should return a number  */
+comment|/*  * Evaluate a path that should return an integer.  */
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|acpi_EvaluateNumber
+name|acpi_EvaluateInteger
 parameter_list|(
 name|ACPI_HANDLE
 name|handle
@@ -3933,11 +3933,8 @@ decl_stmt|;
 name|ACPI_BUFFER
 name|buf
 decl_stmt|;
-name|int
+name|ACPI_OBJECT
 name|param
-index|[
-literal|4
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -3955,9 +3952,6 @@ name|Pointer
 operator|=
 operator|&
 name|param
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|buf
 operator|.
@@ -3992,20 +3986,20 @@ block|{
 if|if
 condition|(
 name|param
-index|[
-literal|0
-index|]
+operator|.
+name|Type
 operator|==
-name|ACPI_TYPE_NUMBER
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 operator|*
 name|number
 operator|=
 name|param
-index|[
-literal|1
-index|]
+operator|.
+name|Integer
+operator|.
+name|Value
 expr_stmt|;
 block|}
 else|else
