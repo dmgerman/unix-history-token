@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.5 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.6 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
@@ -796,10 +796,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|doforce
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UMAPFS_DIAGNOSTIC
@@ -818,23 +814,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-comment|/* lofs can never be rootfs so don't check for it */
-if|if
-condition|(
-operator|!
-name|doforce
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -867,10 +867,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|doforce
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UNION_DIAGNOSTIC
@@ -889,23 +885,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-comment|/* union can never be rootfs so don't check for it */
-if|if
-condition|(
-operator|!
-name|doforce
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
