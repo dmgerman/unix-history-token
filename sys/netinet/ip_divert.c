@@ -1590,7 +1590,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
