@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mpool.c	8.1 (Berkeley) %G%"
+literal|"@(#)mpool.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|void
-name|err
+name|__mpoolerr
 name|__P
 argument_list|(
 operator|(
@@ -754,7 +754,7 @@ name|flags
 operator|&
 name|MPOOL_PINNED
 condition|)
-name|err
+name|__mpoolerr
 argument_list|(
 literal|"mpool_get: page %d already pinned"
 argument_list|,
@@ -1072,7 +1072,7 @@ operator|&
 name|MPOOL_PINNED
 operator|)
 condition|)
-name|err
+name|__mpoolerr
 argument_list|(
 literal|"mpool_put: page %d not pinned"
 argument_list|,
@@ -1122,7 +1122,7 @@ name|mp
 operator|->
 name|lru
 condition|)
-name|err
+name|__mpoolerr
 argument_list|(
 literal|"mpool_put: %0x: bad address"
 argument_list|,
@@ -2154,7 +2154,7 @@ name|void
 if|#
 directive|if
 name|__STDC__
-name|err
+name|__mpoolerr
 parameter_list|(
 specifier|const
 name|char
@@ -2165,7 +2165,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|err
+function|__mpoolerr
 parameter_list|(
 name|fmt
 parameter_list|,
