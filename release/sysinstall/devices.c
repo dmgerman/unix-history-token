@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.49 1996/10/05 11:56:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -194,6 +206,14 @@ literal|"IDE/ESDI/MFM/ST506 disk device"
 block|}
 block|,
 block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"od"
+block|,
+literal|"SCSI optical disk device"
+block|}
+block|,
+block|{
 name|DEVICE_TYPE_FLOPPY
 block|,
 literal|"fd0"
@@ -207,6 +227,14 @@ block|,
 literal|"fd1"
 block|,
 literal|"floppy drive unit B"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_FLOPPY
+block|,
+literal|"od0"
+block|,
+literal|"SCSI optical disk/floppy format"
 block|}
 block|,
 block|{
@@ -260,22 +288,6 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"sl"
-block|,
-literal|"Serial-line IP (SLIP) interface"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"ppp"
-block|,
-literal|"Point-to-Point Protocol (PPP) interface"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"de"
 block|,
 literal|"DEC DE435 PCI NIC or other DC21040-AA based card"
@@ -294,7 +306,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ed"
 block|,
-literal|"WD/SMC 80xx; Novell NE1000/2000; 3Com 3C503 cards"
+literal|"WD/SMC 80xx; Novell NE1000/2000; 3Com 3C503 card"
 block|}
 block|,
 block|{
@@ -311,6 +323,14 @@ block|,
 literal|"el"
 block|,
 literal|"3Com 3C501 ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"ex"
+block|,
+literal|"Intel EtherExpress Pro/10 ethernet card"
 block|}
 block|,
 block|{
@@ -351,6 +371,14 @@ block|,
 literal|"lnc"
 block|,
 literal|"Lance/PCnet (Isolan/Novell NE2100/NE32-VL) ethernet"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"vx"
+block|,
+literal|"3COM 3c590 / 3c595 / 3c9xx ethernet card"
 block|}
 block|,
 block|{
@@ -414,7 +442,7 @@ if|if
 condition|(
 name|name
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|dev
 operator|->
@@ -449,7 +477,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|FILE
+modifier|*
 name|dummyGet
 parameter_list|(
 name|Device
@@ -465,37 +494,7 @@ name|probe
 parameter_list|)
 block|{
 return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-name|Boolean
-name|dummyClose
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|close
-argument_list|(
-name|fd
-argument_list|)
-condition|)
-return|return
-name|TRUE
-return|;
-return|return
-name|FALSE
+name|NULL
 return|;
 block|}
 end_function
@@ -547,7 +546,7 @@ name|open
 argument_list|(
 name|try
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -586,7 +585,7 @@ name|open
 argument_list|(
 name|try
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 return|return
@@ -632,7 +631,8 @@ name|Device
 modifier|*
 parameter_list|)
 parameter_list|,
-name|int
+name|FILE
+modifier|*
 function_decl|(
 modifier|*
 name|get
@@ -645,18 +645,6 @@ name|char
 modifier|*
 parameter_list|,
 name|Boolean
-parameter_list|)
-parameter_list|,
-name|Boolean
-function_decl|(
-modifier|*
-name|close
-function_decl|)
-parameter_list|(
-name|Device
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 parameter_list|,
 name|void
@@ -743,16 +731,6 @@ condition|?
 name|get
 else|:
 name|dummyGet
-expr_stmt|;
-name|newdev
-operator|->
-name|close
-operator|=
-name|close
-condition|?
-name|close
-else|:
-name|dummyClose
 expr_stmt|;
 name|newdev
 operator|->
@@ -935,14 +913,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type disk named: %s\n"
+literal|"Found a disk device named %s\n"
 argument_list|,
 name|names
 index|[
@@ -1032,8 +1008,6 @@ name|mediaInitDOS
 argument_list|,
 name|mediaGetDOS
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownDOS
 argument_list|,
 name|NULL
@@ -1106,7 +1080,10 @@ argument_list|(
 literal|"ifconfig: socket"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|skipif
+goto|;
+comment|/* Jump over network iface probing */
 block|}
 if|if
 condition|(
@@ -1132,7 +1109,10 @@ argument_list|(
 literal|"ifconfig (SIOCGIFCONF)"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|skipif
+goto|;
+comment|/* Jump over network iface probing */
 block|}
 name|ifflags
 operator|=
@@ -1203,6 +1183,40 @@ name|ifptr
 operator|->
 name|ifr_name
 argument_list|,
+literal|"lo0"
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+continue|continue;
+comment|/* If we have a slip device, don't register it */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|ifptr
+operator|->
+name|ifr_name
+argument_list|,
+literal|"sl"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* And the same for ppp */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|ifptr
+operator|->
+name|ifr_name
+argument_list|,
 literal|"tun"
 argument_list|,
 literal|3
@@ -1215,21 +1229,24 @@ name|ifptr
 operator|->
 name|ifr_name
 argument_list|,
-literal|"lo0"
+literal|"ppp"
 argument_list|,
 literal|3
 argument_list|)
 condition|)
+block|{
 continue|continue;
-name|descr
-operator|=
-name|NULL
-expr_stmt|;
+block|}
+comment|/* Try and find its description */
 for|for
 control|(
 name|i
 operator|=
 literal|0
+operator|,
+name|descr
+operator|=
+name|NULL
 init|;
 name|device_names
 index|[
@@ -1319,8 +1336,6 @@ name|mediaInitNetwork
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownNetwork
 argument_list|,
 name|NULL
@@ -1328,7 +1343,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type network named: %s\n"
+literal|"Found a network device named %s\n"
 argument_list|,
 name|ifptr
 operator|->
@@ -1401,6 +1416,8 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+name|skipif
+label|:
 comment|/* Finally, try to find all the types of devices one might need      * during the second stage of the installation.      */
 for|for
 control|(
@@ -1521,8 +1538,6 @@ name|mediaInitCDROM
 argument_list|,
 name|mediaGetCDROM
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownCDROM
 argument_list|,
 name|NULL
@@ -1530,7 +1545,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type CDROM named: %s\n"
+literal|"Found a CDROM device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1566,10 +1581,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|fd
-condition|)
 name|close
 argument_list|(
 name|fd
@@ -1604,8 +1615,6 @@ name|mediaInitTape
 argument_list|,
 name|mediaGetTape
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownTape
 argument_list|,
 name|NULL
@@ -1613,7 +1622,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type TAPE named: %s\n"
+literal|"Found a TAPE device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1649,10 +1658,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|fd
-condition|)
 name|close
 argument_list|(
 name|fd
@@ -1687,8 +1692,6 @@ name|mediaInitFloppy
 argument_list|,
 name|mediaGetFloppy
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownFloppy
 argument_list|,
 name|NULL
@@ -1696,7 +1699,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type floppy named: %s\n"
+literal|"Found a floppy device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1740,16 +1743,11 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-if|if
-condition|(
-name|fd
-condition|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* Serial devices get a slip and ppp device each */
 name|cp
 operator|=
 name|device_names
@@ -1759,6 +1757,7 @@ index|]
 operator|.
 name|description
 expr_stmt|;
+comment|/* Serial devices get a slip and ppp device each, if supported */
 name|newdesc
 operator|=
 name|safe_malloc
@@ -1799,11 +1798,23 @@ name|mediaInitNetwork
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownNetwork
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Add mapping for %s on %s to sl0\n"
+argument_list|,
+name|device_names
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|try
 argument_list|)
 expr_stmt|;
 name|newdesc
@@ -1846,8 +1857,6 @@ name|mediaInitNetwork
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 name|mediaShutdownNetwork
 argument_list|,
 name|NULL
@@ -1855,7 +1864,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type network named: %s\n"
+literal|"Add mapping for %s on %s to ppp0\n"
 argument_list|,
 name|device_names
 index|[
@@ -1863,6 +1872,8 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|try
 argument_list|)
 expr_stmt|;
 block|}
@@ -1905,13 +1916,13 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|j
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
-operator|=
-literal|0
-operator|,
-name|j
 operator|=
 literal|0
 init|;
@@ -1940,6 +1951,137 @@ operator|->
 name|name
 argument_list|,
 name|name
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|class
+operator|==
+name|DEVICE_TYPE_ANY
+operator|||
+name|class
+operator|==
+name|Devices
+index|[
+name|i
+index|]
+operator|->
+name|type
+operator|)
+condition|)
+name|found
+index|[
+name|j
+operator|++
+index|]
+operator|=
+name|Devices
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|found
+index|[
+name|j
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|j
+condition|?
+name|found
+else|:
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+name|Device
+modifier|*
+modifier|*
+name|deviceFindDescr
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|DeviceType
+name|class
+parameter_list|)
+block|{
+specifier|static
+name|Device
+modifier|*
+name|found
+index|[
+name|DEV_MAX
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|j
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|numDevs
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+operator|!
+name|name
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|Devices
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|,
+name|name
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|desc
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|Devices
+index|[
+name|i
+index|]
+operator|->
+name|description
+argument_list|,
+name|desc
 argument_list|)
 operator|)
 operator|&&

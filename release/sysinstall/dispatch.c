@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dispatch.c,v 1.6 1996/11/04 12:56:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -14,6 +14,18 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_function_decl
+specifier|static
+name|int
+name|_shutdown
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 specifier|static
@@ -293,6 +305,24 @@ name|optionsEditor
 block|}
 block|,
 block|{
+literal|"addGroup"
+block|,
+name|userAddGroup
+block|}
+block|,
+block|{
+literal|"addUser"
+block|,
+name|userAddUser
+block|}
+block|,
+block|{
+literal|"shutdown"
+block|,
+name|_shutdown
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -388,6 +418,31 @@ block|}
 end_function
 
 begin_comment
+comment|/* Just convenience */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|_shutdown
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|systemShutdown
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* For a given string, call it or spit out an undefined command diagnostic */
 end_comment
 
@@ -426,6 +481,27 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+comment|/* If it's got a newline, trim it */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|index
+argument_list|(
+name|str
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* A command might be a pathname if it's encoded in argv[0], as we also support */
 if|if
 condition|(
@@ -442,11 +518,13 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-return|return
+name|i
+operator|=
 name|DITEM_SUCCESS
-return|;
+expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -489,9 +567,11 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-return|return
+name|i
+operator|=
 name|DITEM_FAILURE
-return|;
+expr_stmt|;
+block|}
 block|}
 return|return
 name|i

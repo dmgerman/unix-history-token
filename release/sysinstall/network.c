@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.16 1996/08/03 10:11:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -56,6 +56,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|pppPID
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|Boolean
 name|mediaInitNetwork
@@ -78,7 +85,7 @@ name|cp
 decl_stmt|,
 name|ifconfig
 index|[
-literal|64
+literal|255
 index|]
 decl_stmt|;
 if|if
@@ -111,31 +118,29 @@ condition|)
 name|configResolv
 argument_list|()
 expr_stmt|;
-comment|/* Old process lying around? */
+comment|/* Old PPP process lying around? */
 if|if
 condition|(
-name|dev
-operator|->
-name|private
+name|pppPID
 condition|)
 block|{
+name|msgNotify
+argument_list|(
+literal|"Killing previous PPP process %d."
+argument_list|,
+name|pppPID
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
-operator|(
-name|pid_t
-operator|)
-name|dev
-operator|->
-name|private
+name|pppPID
 argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|private
+name|pppPID
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -158,14 +163,8 @@ if|if
 condition|(
 operator|!
 operator|(
-name|dev
-operator|->
-name|private
+name|pppPID
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|startPPP
 argument_list|(
 name|dev
@@ -255,17 +254,25 @@ condition|(
 operator|!
 name|val
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"slattach command was empty.  Try again!"
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 else|else
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|attach
 argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Doing this with vsystem() is actually bogus since we should be storing the pid of slattach 	 * for later killing.  It's just too convenient to call vsystem(), however, rather than 	 * constructing a proper argument for exec() so we punt on doing slip right for now. 	 */
 if|if
 condition|(
 name|vsystem
@@ -277,7 +284,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"slattach returned a bad status!  Please verify that\n"
-literal|"the command is correct and try again."
+literal|"the command is correct and try this operation again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -329,11 +336,13 @@ return|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Configuring network device %s."
+literal|"ifconfig %s %s"
 argument_list|,
 name|dev
 operator|->
 name|name
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 name|i
@@ -410,6 +419,11 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Network initialized successfully.\n"
@@ -521,7 +535,7 @@ condition|)
 return|return;
 name|msgNotify
 argument_list|(
-literal|"Shutting interface %s down."
+literal|"ifconfig %s down"
 argument_list|,
 name|dev
 operator|->
@@ -575,55 +589,36 @@ literal|"route delete default"
 argument_list|)
 expr_stmt|;
 block|}
-name|networkInitialized
-operator|=
-name|FALSE
-expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|dev
-operator|->
-name|private
+name|pppPID
 condition|)
 block|{
-comment|/* ppp sticks its PID there */
 name|msgNotify
 argument_list|(
-literal|"Killing PPP process %d."
+literal|"Killing previous PPP process %d."
 argument_list|,
-operator|(
-name|int
-operator|)
-name|dev
-operator|->
-name|private
+name|pppPID
 argument_list|)
 expr_stmt|;
 name|kill
 argument_list|(
-operator|(
-name|pid_t
-operator|)
-name|dev
-operator|->
-name|private
+name|pppPID
 argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|private
+name|pppPID
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
+block|}
 name|networkInitialized
 operator|=
 name|FALSE
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -720,7 +715,7 @@ literal|"computer and at another speed to the remote end.\n\n"
 literal|"If you're not sure what to put here, just select the default."
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|speed
 argument_list|,
@@ -736,22 +731,31 @@ else|:
 literal|"115200"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|val
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_GATEWAY
+argument_list|)
+expr_stmt|;
+name|SAFE_STRCPY
 argument_list|(
 name|provider
 argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_GATEWAY
-argument_list|)
+operator|(
+name|val
+operator|&&
+operator|*
+name|val
+operator|)
 condition|?
-name|variable_get
-argument_list|(
-name|VAR_GATEWAY
-argument_list|)
+name|val
 else|:
 literal|"0"
 argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 name|val
 operator|=
@@ -763,11 +767,16 @@ literal|"Enter the IP address of your service provider or 0 if you\n"
 literal|"don't know it and would prefer to negotiate it dynamically."
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|provider
 argument_list|,
+operator|(
 name|val
+operator|&&
+operator|*
+name|val
+operator|)
 condition|?
 name|val
 else|:
@@ -795,7 +804,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|myaddr
 argument_list|,
@@ -1006,6 +1015,13 @@ argument_list|,
 name|provider
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set timeout 0\n"
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
@@ -1050,6 +1066,24 @@ return|;
 block|}
 if|if
 condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"About to start PPP on device %s @ %s baud.  Provider = %s\n"
+argument_list|,
+name|devp
+operator|->
+name|devname
+argument_list|,
+name|speed
+argument_list|,
+name|provider
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|Fake
 operator|&&
@@ -1082,14 +1116,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|getdtablesize
+argument_list|()
 init|;
 name|i
-operator|<
-literal|64
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 name|close
 argument_list|(
@@ -1097,8 +1132,6 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* We're going over to VTY2 */
-name|DebugFD
-operator|=
 name|fd
 operator|=
 name|open
@@ -1131,6 +1164,10 @@ literal|0
 argument_list|,
 literal|2
 argument_list|)
+expr_stmt|;
+name|DebugFD
+operator|=
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -1230,6 +1267,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"NOTICE: The PPP command is now started on VTY3 (type ALT-F3 to\n"

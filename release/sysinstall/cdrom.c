@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.26 1996/10/14 21:32:22 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -73,13 +73,9 @@ directive|undef
 name|CD9660
 end_undef
 
-begin_comment
-comment|/*  * This isn't a boolean like the others since we have 3 states for it:  * 0 = cdrom isn't mounted, 1 = cdrom is mounted and we mounted it, 2 = cdrom  * was already mounted when we came in and we should leave it that way when  * we leave.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
-name|int
+name|Boolean
 name|cdromMounted
 decl_stmt|;
 end_decl_stmt
@@ -106,13 +102,19 @@ modifier|*
 name|cp
 decl_stmt|;
 name|Boolean
-name|dontRead
+name|readInfo
+init|=
+name|TRUE
+decl_stmt|;
+name|char
+modifier|*
+name|mountpoint
+init|=
+literal|"/dist"
 decl_stmt|;
 if|if
 condition|(
 name|cdromMounted
-operator|!=
-name|CD_UNMOUNTED
 condition|)
 return|return
 name|TRUE
@@ -158,23 +160,9 @@ name|cp
 operator|=
 name|NULL
 expr_stmt|;
-name|dontRead
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* If this cdrom's not already mounted or can't be mounted, yell */
-if|if
-condition|(
-operator|!
-name|file_readable
-argument_list|(
-literal|"/cdrom/cdrom.inf"
-argument_list|)
-condition|)
-block|{
 name|Mkdir
 argument_list|(
-literal|"/cdrom"
+name|mountpoint
 argument_list|)
 expr_stmt|;
 if|if
@@ -183,7 +171,7 @@ name|mount
 argument_list|(
 name|MOUNT_CD9660
 argument_list|,
-literal|"/cdrom"
+name|mountpoint
 argument_list|,
 name|MNT_RDONLY
 argument_list|,
@@ -201,17 +189,36 @@ block|{
 if|if
 condition|(
 name|errno
+operator|==
+name|EINVAL
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The CD in your drive looks more like an Audio CD than a FreeBSD release."
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|errno
 operator|!=
 name|EBUSY
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error mounting %s on /cdrom: %s (%u)"
+literal|"Error mounting %s on %s: %s (%u)"
 argument_list|,
 name|dev
 operator|->
 name|devname
+argument_list|,
+name|mountpoint
 argument_list|,
 name|strerror
 argument_list|(
@@ -225,13 +232,22 @@ return|return
 name|FALSE
 return|;
 block|}
+name|cdromMounted
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/cdrom/cdrom.inf"
+name|string_concat
+argument_list|(
+name|mountpoint
+argument_list|,
+literal|"/cdrom.inf"
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -249,7 +265,7 @@ condition|)
 block|{
 name|unmount
 argument_list|(
-literal|"/cdrom"
+name|mountpoint
 argument_list|,
 name|MNT_FORCE
 argument_list|)
@@ -258,25 +274,15 @@ return|return
 name|FALSE
 return|;
 block|}
-name|dontRead
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-name|cdromMounted
-operator|=
-name|CD_WE_MOUNTED_IT
-expr_stmt|;
-block|}
 else|else
-name|cdromMounted
+name|readInfo
 operator|=
-name|CD_ALREADY_MOUNTED
+name|FALSE
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
-name|dontRead
+name|readInfo
 operator|&&
 operator|(
 name|DITEM_STATUS
@@ -285,7 +291,12 @@ name|attr_parse_file
 argument_list|(
 name|cd_attr
 argument_list|,
-literal|"/cdrom/cdrom.inf"
+name|string_concat
+argument_list|(
+name|mountpoint
+argument_list|,
+literal|"/cdrom.inf"
+argument_list|)
 argument_list|)
 argument_list|)
 operator|==
@@ -303,6 +314,7 @@ literal|"CD_VERSION"
 argument_list|)
 operator|)
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 name|cp
@@ -312,16 +324,20 @@ argument_list|(
 name|VAR_RELNAME
 argument_list|)
 argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+literal|"none"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
-name|unmount
-argument_list|(
-literal|"/cdrom"
-argument_list|,
-name|MNT_FORCE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -329,22 +345,25 @@ name|cp
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Unable to find a /cdrom/cdrom.inf file.\n"
+literal|"Unable to find a %s/cdrom.inf file.\n"
 literal|"Either this is not a FreeBSD CDROM, there is a problem with\n"
 literal|"the CDROM driver or something is wrong with your hardware.\n"
 literal|"Please fix this problem (check the console logs on VTY2) and\n"
 literal|"try again."
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
 literal|"Warning: The version of the FreeBSD CD currently in the drive\n"
-literal|"(%s) does not match the version of this boot floppy\n"
+literal|"(%s) does not match the version of the boot floppy\n"
 literal|"(%s).\n\n"
-literal|"If this is intentional, then please visit the Options editor\n"
-literal|"to set the boot floppy version string to match that of the CD\n"
-literal|"before selecting it as an installation media to avoid this warning"
+literal|"If this is intentional, to avoid this message in the future\n"
+literal|"please visit the Options editor to set the boot floppy version\n"
+literal|"string to match that of the CD before selecting it as your\n"
+literal|"installation media."
 argument_list|,
 name|cp
 argument_list|,
@@ -354,10 +373,35 @@ name|VAR_RELNAME
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Would you like to try and use this CDROM anyway?"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|unmount
+argument_list|(
+name|mountpoint
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+name|cdromMounted
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 block|}
 name|msgDebug
 argument_list|(
-literal|"Mounted FreeBSD CDROM on device %s as /cdrom\n"
+literal|"Mounted FreeBSD CDROM from device %s\n"
 argument_list|,
 name|dev
 operator|->
@@ -371,7 +415,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|FILE
+modifier|*
 name|mediaGetCDROM
 parameter_list|(
 name|Device
@@ -410,7 +455,7 @@ name|buf
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"/cdrom/%s"
+literal|"/dist/%s"
 argument_list|,
 name|file
 argument_list|)
@@ -423,11 +468,11 @@ name|buf
 argument_list|)
 condition|)
 return|return
-name|open
+name|fopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 return|;
 name|snprintf
@@ -436,7 +481,7 @@ name|buf
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"/cdrom/dists/%s"
+literal|"/dist/dists/%s"
 argument_list|,
 name|file
 argument_list|)
@@ -449,11 +494,11 @@ name|buf
 argument_list|)
 condition|)
 return|return
-name|open
+name|fopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 return|;
 name|snprintf
@@ -462,7 +507,7 @@ name|buf
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"/cdrom/%s/%s"
+literal|"/dist/%s/%s"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -480,11 +525,11 @@ name|buf
 argument_list|)
 condition|)
 return|return
-name|open
+name|fopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 return|;
 name|snprintf
@@ -493,7 +538,7 @@ name|buf
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"/cdrom/%s/dists/%s"
+literal|"/dist/%s/dists/%s"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -504,11 +549,11 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-name|open
+name|fopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 return|;
 block|}
@@ -523,38 +568,45 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-comment|/* Only undo it if we did it */
+name|char
+modifier|*
+name|mountpoint
+init|=
+literal|"/dist"
+decl_stmt|;
 if|if
 condition|(
+operator|!
 name|cdromMounted
-operator|!=
-name|CD_WE_MOUNTED_IT
 condition|)
 return|return;
 name|msgDebug
 argument_list|(
-literal|"Unmounting %s from /cdrom\n"
+literal|"Unmounting %s from %s\n"
 argument_list|,
 name|dev
 operator|->
 name|devname
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|unmount
 argument_list|(
-literal|"/cdrom"
+name|mountpoint
 argument_list|,
 name|MNT_FORCE
 argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|msgConfirm
 argument_list|(
-literal|"Could not unmount the CDROM from /cdrom: %s"
+literal|"Could not unmount the CDROM from %s: %s"
+argument_list|,
+name|mountpoint
 argument_list|,
 name|strerror
 argument_list|(
@@ -562,22 +614,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cdromMounted
-operator|=
-name|CD_ALREADY_MOUNTED
-expr_stmt|;
-comment|/* Guess somebody else got it */
-block|}
 else|else
 block|{
 name|msgDebug
 argument_list|(
-literal|"Unmount successful\n"
+literal|"Unmount of CDROM successful\n"
 argument_list|)
 expr_stmt|;
 name|cdromMounted
 operator|=
-name|CD_UNMOUNTED
+name|FALSE
 expr_stmt|;
 block|}
 block|}

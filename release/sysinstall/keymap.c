@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"sysinstall.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -56,12 +62,6 @@ begin_include
 include|#
 directive|include
 file|"keymap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysinstall.h"
 end_include
 
 begin_comment

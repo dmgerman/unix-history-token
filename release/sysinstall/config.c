@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.64 1996/11/07 09:16:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -78,6 +78,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nchunks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rootdev_is_od
 decl_stmt|;
 end_decl_stmt
 
@@ -315,6 +322,90 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|check_rootdev
+parameter_list|(
+name|Chunk
+modifier|*
+modifier|*
+name|list
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|Chunk
+modifier|*
+name|c
+decl_stmt|;
+name|rootdev_is_od
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|c
+operator|=
+operator|*
+name|list
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|type
+operator|==
+name|part
+operator|&&
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHUNK_IS_ROOT
+operator|)
+operator|&&
+name|strncmp
+argument_list|(
+name|c
+operator|->
+name|disk
+operator|->
+name|name
+argument_list|,
+literal|"od"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|rootdev_is_od
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|char
 modifier|*
 name|name_of
@@ -517,9 +608,34 @@ name|subtype
 operator|!=
 name|FS_SWAP
 condition|)
+block|{
+if|if
+condition|(
+name|rootdev_is_od
+operator|==
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|c1
+operator|->
+name|name
+argument_list|,
+literal|"od"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|"rw,noauto"
+return|;
+else|else
 return|return
 literal|"rw"
 return|;
+block|}
 else|else
 return|return
 literal|"sw"
@@ -534,9 +650,30 @@ name|type
 operator|==
 name|fat
 condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|c1
+operator|->
+name|name
+argument_list|,
+literal|"od"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|"ro,noauto"
+return|;
+else|else
 return|return
 literal|"ro"
 return|;
+block|}
 return|return
 literal|"bog"
 return|;
@@ -567,9 +704,34 @@ name|subtype
 operator|!=
 name|FS_SWAP
 condition|)
+block|{
+if|if
+condition|(
+name|rootdev_is_od
+operator|==
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|c1
+operator|->
+name|name
+argument_list|,
+literal|"od"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+else|else
 return|return
 literal|1
 return|;
+block|}
 return|return
 literal|0
 return|;
@@ -852,10 +1014,31 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+name|check_rootdev
+argument_list|(
+name|chunk_list
+argument_list|,
+name|nchunks
+argument_list|)
+expr_stmt|;
 comment|/* Go for the burn */
 name|msgDebug
 argument_list|(
 literal|"Generating /etc/fstab file\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"# Device\t\tMountpoint\tFStype\tOptions\t\tDump?\tfsck pass#\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"#\t\t\t\t\t\t\t\t\t(0=no) (0=no fsck)\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -875,7 +1058,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\t%s\t%s %d %d\n"
+literal|"/dev/%s\t\t%s\t%s\t%s\t\t%d\t%d\n"
 argument_list|,
 name|name_of
 argument_list|(
@@ -935,7 +1118,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"proc\t\t\t\t/proc\t\tprocfs\trw 0 0\n"
+literal|"proc\t\t/proc\tprocfs\t\trw\t0\t0\n"
 argument_list|)
 expr_stmt|;
 comment|/* Now look for the CDROMs */
@@ -980,7 +1163,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t/cdrom\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t/cdrom\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
@@ -1042,7 +1225,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t%s\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
@@ -1263,7 +1446,7 @@ operator|==
 literal|'#'
 condition|)
 continue|continue;
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|tmp
 argument_list|,
@@ -1721,6 +1904,37 @@ end_function
 
 begin_function
 name|int
+name|configUsers
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuUsermgmt
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|configXFree86
 parameter_list|(
 name|dialogMenuItem
@@ -1728,14 +1942,83 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|config
+decl_stmt|,
+modifier|*
+name|execfile
+decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuXF86Config
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|config
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_XF86_CONFIG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|config
+condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+name|execfile
+operator|=
+name|string_concat
+argument_list|(
+literal|"/usr/X11R6/bin/"
+argument_list|,
+name|config
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|file_executable
 argument_list|(
-literal|"/usr/X11R6/bin/XF86Setup"
+name|execfile
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/dev/mouse"
+argument_list|)
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Does this system have a mouse attached to it?"
+argument_list|)
+condition|)
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMouse
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1746,7 +2029,7 @@ argument_list|)
 expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"/usr/X11R6/bin/XF86Setup"
+name|execfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1757,6 +2040,9 @@ return|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"XFree86 does not appear to be installed!  Please install\n"
@@ -1802,22 +2088,6 @@ literal|"/etc/resolv.conf"
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|Mkdir
-argument_list|(
-literal|"/etc"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to create /etc directory.  Network configuration\n"
-literal|"files will therefore not be written!"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|cp
 operator|=
 name|variable_get
@@ -1989,7 +2259,7 @@ literal|'\0'
 expr_stmt|;
 else|else
 block|{
-name|strcpy
+name|SAFE_STRCPY
 argument_list|(
 name|cp2
 argument_list|,
@@ -2078,7 +2348,7 @@ literal|"as an optional package which this installation system\n"
 literal|"will attempt to load if you select gated.  Any other\n"
 literal|"choice of routing daemon will be assumed to be something\n"
 literal|"the user intends to install themselves before rebooting\n"
-literal|"the system.  If you don't want any routing daemon, say NO"
+literal|"the system.  If you don't want any routing daemon, choose NO"
 argument_list|)
 condition|?
 name|DITEM_SUCCESS
@@ -2128,7 +2398,10 @@ if|if
 condition|(
 name|package_add
 argument_list|(
-name|PACKAGE_GATED
+name|variable_get
+argument_list|(
+name|VAR_GATED_PKG
+argument_list|)
 argument_list|)
 operator|!=
 name|DITEM_SUCCESS
@@ -2136,14 +2409,14 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to load gated package.  Falling back to routed."
+literal|"Unable to load gated package.  Falling back to no router."
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
 name|VAR_ROUTER
 argument_list|,
-literal|"routed"
+literal|"NO"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2215,8 +2488,9 @@ decl_stmt|;
 name|PkgNodePtr
 name|tmp
 decl_stmt|;
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 if|if
 condition|(
@@ -2251,7 +2525,7 @@ argument_list|(
 literal|"Attempting to fetch packages/INDEX file from selected media."
 argument_list|)
 expr_stmt|;
-name|fd
+name|fp
 operator|=
 name|mediaDevice
 operator|->
@@ -2266,9 +2540,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
+operator|!
+name|fp
 condition|)
 block|{
 name|dialog_clear_norefresh
@@ -2285,6 +2558,13 @@ literal|"carry the packages collection, then we recommend either a CD\n"
 literal|"distribution or the master distribution on ftp.freebsd.org."
 argument_list|)
 expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
@@ -2293,7 +2573,7 @@ return|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Got INDEX successfully, now building packages menu.."
+literal|"Located INDEX, now reading package data from it..."
 argument_list|)
 expr_stmt|;
 name|index_init
@@ -2309,7 +2589,7 @@ if|if
 condition|(
 name|index_read
 argument_list|(
-name|fd
+name|fp
 argument_list|,
 operator|&
 name|top
@@ -2322,13 +2602,9 @@ literal|"I/O or format error on packages/INDEX file.\n"
 literal|"Please verify media (or path to media) and try again."
 argument_list|)
 expr_stmt|;
-name|mediaDevice
-operator|->
-name|close
+name|fclose
 argument_list|(
-name|mediaDevice
-argument_list|,
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2337,13 +2613,9 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
-name|mediaDevice
-operator|->
-name|close
+name|fclose
 argument_list|(
-name|mediaDevice
-argument_list|,
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 name|index_sort
@@ -2512,8 +2784,6 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_RESTORE
-operator||
-name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -2644,7 +2914,10 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-name|PACKAGE_PCNFSD
+name|variable_get
+argument_list|(
+name|VAR_PCNFSD_PKG
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

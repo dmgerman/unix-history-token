@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.51 1996/11/07 09:16:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -226,44 +226,6 @@ if|if
 condition|(
 name|d
 operator|->
-name|bios_hd
-operator|<=
-literal|1
-operator|&&
-name|d
-operator|->
-name|bios_sect
-operator|<=
-literal|1
-condition|)
-block|{
-name|All_FreeBSD
-argument_list|(
-name|d
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|d
-operator|->
-name|bios_hd
-operator|=
-name|d
-operator|->
-name|bios_sect
-operator|=
-name|d
-operator|->
-name|bios_cyl
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|d
-operator|->
 name|bios_cyl
 operator|>
 literal|65536
@@ -287,10 +249,10 @@ expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  A geometry of %d/%d/%d for %s is incorrect.  Using\n"
-literal|"a default geometry of 64 heads and 32 sectors.  If this geometry\n"
-literal|"is incorrect or you are unsure as to whether or not it's correct,\n"
-literal|"please consult the Hardware Guide in the Documentation submenu\n"
-literal|"or use the (G)eometry command to change it now."
+literal|"a more likely geometry.  If this geometry is incorrect or you\n"
+literal|"are unsure as to whether or not it's correct, please consult\n"
+literal|"the Hardware Guide in the Documentation submenu or use the\n"
+literal|" (G)eometry command to change it now."
 argument_list|,
 name|d
 operator|->
@@ -309,25 +271,10 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|Sanitize_Bios_Geom
+argument_list|(
 name|d
-operator|->
-name|bios_hd
-operator|=
-literal|64
-expr_stmt|;
-name|d
-operator|->
-name|bios_sect
-operator|=
-literal|32
-expr_stmt|;
-name|d
-operator|->
-name|bios_cyl
-operator|=
-name|Total
-operator|/
-name|ONE_MEG
+argument_list|)
 expr_stmt|;
 block|}
 name|attrset
@@ -389,7 +336,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"DISK Geometry:\t%lu cyls/%lu heads/%lu sectors"
+literal|"DISK Geometry:\t%lu cyls/%lu heads/%lu sectors = %lu sectors"
 argument_list|,
 name|d
 operator|->
@@ -399,6 +346,18 @@ name|d
 operator|->
 name|bios_hd
 argument_list|,
+name|d
+operator|->
+name|bios_sect
+argument_list|,
+name|d
+operator|->
+name|bios_cyl
+operator|*
+name|d
+operator|->
+name|bios_hd
+operator|*
 name|d
 operator|->
 name|bios_sect
@@ -505,15 +464,22 @@ index|]
 operator|->
 name|type
 argument_list|,
-name|chunk_n
-index|[
+name|slice_type_name
+argument_list|(
 name|chunk_info
 index|[
 name|i
 index|]
 operator|->
 name|type
+argument_list|,
+name|chunk_info
+index|[
+name|i
 index|]
+operator|->
+name|subtype
+argument_list|)
 argument_list|,
 name|chunk_info
 index|[
@@ -567,7 +533,7 @@ literal|16
 argument_list|,
 literal|0
 argument_list|,
-literal|"A = Use Entire Disk    B = Bad Block Scan     C = Create Partition"
+literal|"A = Use Entire Disk    B = Bad Block Scan       C = Create Slice"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -576,7 +542,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Partition   G = Set Drive Geometry S = Set Bootable"
+literal|"D = Delete Slice       G = Set Drive Geometry   S = Set Bootable"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -597,7 +563,7 @@ name|mvprintw
 argument_list|(
 literal|18
 argument_list|,
-literal|46
+literal|48
 argument_list|,
 literal|"W = Write Changes"
 argument_list|)
@@ -861,6 +827,10 @@ literal|80
 index|]
 decl_stmt|;
 comment|/* Now print our overall state */
+if|if
+condition|(
+name|d
+condition|)
 name|print_chunks
 argument_list|(
 name|d
@@ -941,6 +911,10 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 case|case
@@ -956,6 +930,10 @@ operator|--
 name|current_chunk
 expr_stmt|;
 break|break;
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:
@@ -1080,24 +1058,6 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rv
-condition|)
-name|d
-operator|->
-name|bios_hd
-operator|=
-name|d
-operator|->
-name|bios_sect
-operator|=
-name|d
-operator|->
-name|bios_cyl
-operator|=
-literal|1
-expr_stmt|;
 name|variable_set2
 argument_list|(
 name|DISK_PARTITIONED
@@ -1130,7 +1090,7 @@ name|freebsd
 condition|)
 name|msg
 operator|=
-literal|"Can only scan for bad blocks in FreeBSD partition."
+literal|"Can only scan for bad blocks in FreeBSD slice."
 expr_stmt|;
 elseif|else
 if|if
@@ -1206,7 +1166,7 @@ name|unused
 condition|)
 name|msg
 operator|=
-literal|"Partition in use, delete it first or move to an unused one."
+literal|"Slice in use, delete it first or move to an unused one."
 expr_stmt|;
 else|else
 block|{
@@ -1252,7 +1212,7 @@ name|msgGetInput
 argument_list|(
 name|tmp
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks\n"
+literal|"Please specify the size for new FreeBSD slice in blocks\n"
 literal|"or append a trailing `M' for megabytes (e.g. 20M)."
 argument_list|)
 expr_stmt|;
@@ -1309,7 +1269,7 @@ name|tmp
 argument_list|,
 literal|"Enter type of partition to create:\n\n"
 literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"partition (type 165).  You can choose other types, 6 for a\n"
+literal|"slice (type 165).  You can choose other types, 6 for a\n"
 literal|"DOS partition or 131 for a Linux partition, for example.\n\n"
 literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
 literal|"be formatted or otherwise prepared, it will simply reserve space\n"
@@ -1430,7 +1390,7 @@ name|unused
 condition|)
 name|msg
 operator|=
-literal|"Partition is already unused!"
+literal|"Slice is already unused!"
 expr_stmt|;
 else|else
 block|{
@@ -1498,9 +1458,14 @@ condition|(
 name|val
 condition|)
 block|{
-name|d
-operator|->
-name|bios_cyl
+name|long
+name|nc
+decl_stmt|,
+name|nh
+decl_stmt|,
+name|ns
+decl_stmt|;
+name|nc
 operator|=
 name|strtol
 argument_list|(
@@ -1512,9 +1477,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|d
-operator|->
-name|bios_hd
+name|nh
 operator|=
 name|strtol
 argument_list|(
@@ -1528,9 +1491,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|d
-operator|->
-name|bios_sect
+name|ns
 operator|=
 name|strtol
 argument_list|(
@@ -1541,6 +1502,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|Set_Bios_Geom
+argument_list|(
+name|d
+argument_list|,
+name|nc
+argument_list|,
+name|nh
+argument_list|,
+name|ns
 argument_list|)
 expr_stmt|;
 block|}
@@ -1602,13 +1574,36 @@ literal|"Are you SURE you want to Undo everything?"
 argument_list|)
 condition|)
 block|{
+name|char
+name|cp
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|sstrncpy
+argument_list|(
+name|cp
+argument_list|,
+name|d
+operator|->
+name|name
+argument_list|,
+sizeof|sizeof
+name|cp
+argument_list|)
+expr_stmt|;
+name|Free_Disk
+argument_list|(
+name|dev
+operator|->
+name|private
+argument_list|)
+expr_stmt|;
 name|d
 operator|=
 name|Open_Disk
 argument_list|(
-name|d
-operator|->
-name|name
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1616,26 +1611,11 @@ condition|(
 operator|!
 name|d
 condition|)
-block|{
 name|msgConfirm
 argument_list|(
 literal|"Can't reopen disk %s! Internal state is probably corrupted"
 argument_list|,
-name|d
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
-name|Free_Disk
-argument_list|(
-name|dev
-operator|->
-name|private
+name|cp
 argument_list|)
 expr_stmt|;
 name|dev
@@ -1654,6 +1634,10 @@ argument_list|(
 name|DISK_LABELLED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|d
+condition|)
 name|record_chunks
 argument_list|(
 name|d
@@ -1719,6 +1703,7 @@ expr_stmt|;
 comment|/* Don't trash the MBR if the first (and therefore only) chunk is marked for a truly dedicated 		 * disk (i.e., the disklabel starts at sector 0), even in cases where the user has requested 		 * booteasy or a "standard" MBR -- both would be fatal in this case. 		 */
 if|if
 condition|(
+operator|!
 operator|(
 name|d
 operator|->
@@ -1730,8 +1715,6 @@ name|flags
 operator|&
 name|CHUNK_FORCE_ALL
 operator|)
-operator|!=
-name|CHUNK_FORCE_ALL
 operator|&&
 operator|(
 name|mbrContents
@@ -1828,6 +1811,10 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+literal|'\033'
+case|:
+comment|/* ESC */
+case|case
 literal|'Q'
 case|:
 name|chunking
@@ -1906,7 +1893,7 @@ argument_list|()
 expr_stmt|;
 name|use_helpline
 argument_list|(
-literal|"Press F1 to read more about disk partitioning."
+literal|"Press F1 to read more about disk slices."
 argument_list|)
 expr_stmt|;
 name|use_helpfile
@@ -1921,7 +1908,7 @@ argument_list|)
 expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
-literal|"Disk partitioning warning:"
+literal|"Disk slicing warning:"
 argument_list|,
 name|p
 argument_list|,
@@ -2273,7 +2260,7 @@ name|i
 operator|=
 name|i
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 expr_stmt|;
 block|}
 return|return
@@ -2500,7 +2487,7 @@ name|ret
 decl_stmt|;
 name|msgNotify
 argument_list|(
-literal|"Running bad block scan on partition %s"
+literal|"Running bad block scan on slice %s"
 argument_list|,
 name|c1
 operator|->

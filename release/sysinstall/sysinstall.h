@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.71 1996/11/07 09:18:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,18 @@ define|#
 directive|define
 name|_SYSINSTALL_H_INCLUDE
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
 
 begin_include
 include|#
@@ -48,13 +60,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<dialog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|"ui_objects.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"colors.h"
 end_include
 
 begin_include
@@ -94,14 +118,14 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_APACHE
-value|"apache-1.1.1"
+value|"apache-1.2b4"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PACKAGE_NETCON
-value|"commerce/netcon/bsd60"
+value|"commerce/netcon/bsd61"
 end_define
 
 begin_define
@@ -122,25 +146,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_LYNX
-value|"lynx-2.6"
-end_define
-
-begin_comment
-comment|/* variable limits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VAR_NAME_MAX
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_VALUE_MAX
-value|1024
+value|"lynx-2.6fm"
 end_define
 
 begin_comment
@@ -190,6 +196,17 @@ end_define
 begin_comment
 comment|/* Status code for I/O error rather than normal EOF */
 end_comment
+
+begin_comment
+comment|/* Number of seconds to wait for data to come off even the slowest media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIA_TIMEOUT
+value|300
+end_define
 
 begin_comment
 comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
@@ -251,6 +268,13 @@ end_define
 begin_comment
 comment|/* Ones that can be tweaked from config files */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VAR_APACHE_PKG
+value|"apache_pkg"
+end_define
 
 begin_define
 define|#
@@ -374,6 +398,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_GATED_PKG
+value|"gated_pkg"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_GATEWAY
 value|"defaultrouter"
 end_define
@@ -439,6 +470,13 @@ define|#
 directive|define
 name|VAR_MEDIA_TYPE
 value|"mediaType"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_MEDIA_TIMEOUT
+value|"MEDIA_TIMEOUT"
 end_define
 
 begin_define
@@ -514,6 +552,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_PCNFSD_PKG
+value|"pcnfsd_pkg"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_PKG_TMPDIR
 value|"PKG_TMPDIR"
 end_define
@@ -551,6 +596,13 @@ define|#
 directive|define
 name|VAR_ROUTERFLAGS
 value|"routerflags"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_SAMBA_PKG
+value|"samba_pkg"
 end_define
 
 begin_define
@@ -605,6 +657,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_XF86_CONFIG
+value|"xf86config"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_TAPE_BLOCKSIZE
 value|"20"
 end_define
@@ -636,6 +695,22 @@ define|#
 directive|define
 name|ATTR_TITLE
 value|button_active_attr
+end_define
+
+begin_comment
+comment|/* Handy strncpy() macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_STRCPY
+parameter_list|(
+name|to
+parameter_list|,
+name|from
+parameter_list|)
+value|sstrncpy((to), (from), sizeof (to) - 1)
 end_define
 
 begin_comment
@@ -770,19 +845,98 @@ modifier|*
 name|next
 decl_stmt|;
 name|char
+modifier|*
 name|name
-index|[
-name|VAR_NAME_MAX
-index|]
 decl_stmt|;
 name|char
+modifier|*
 name|value
-index|[
-name|VAR_VALUE_MAX
-index|]
 decl_stmt|;
 block|}
 name|Variable
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|NO_ECHO_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type) | (DITEM_NO_ECHO<< 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_OF_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_OF_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type)>> 16)
+end_define
+
+begin_comment
+comment|/* A screen layout structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_layout
+block|{
+name|int
+name|y
+decl_stmt|;
+comment|/* x& Y co-ordinates */
+name|int
+name|x
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+comment|/* The size of the dialog on the screen */
+name|int
+name|maxlen
+decl_stmt|;
+comment|/* How much the user can type in ... */
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
+comment|/* The string for the prompt */
+name|char
+modifier|*
+name|help
+decl_stmt|;
+comment|/* The display for the help line */
+name|void
+modifier|*
+name|var
+decl_stmt|;
+comment|/* The var to set when this changes */
+name|int
+name|type
+decl_stmt|;
+comment|/* The type of the dialog to create */
+name|void
+modifier|*
+name|obj
+decl_stmt|;
+comment|/* The obj pointer returned by libdialog */
+block|}
+name|Layout
 typedef|;
 end_typedef
 
@@ -929,7 +1083,8 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
-name|int
+name|FILE
+modifier|*
 function_decl|(
 modifier|*
 name|get
@@ -946,21 +1101,6 @@ name|file
 parameter_list|,
 name|Boolean
 name|probe
-parameter_list|)
-function_decl|;
-name|Boolean
-function_decl|(
-modifier|*
-name|close
-function_decl|)
-parameter_list|(
-name|struct
-name|_device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|fd
 parameter_list|)
 function_decl|;
 name|void
@@ -1913,6 +2053,71 @@ begin_comment
 comment|/* HTML Documentation menu			*/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuUsermgmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* User management menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuFixit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Fixit floppy/CDROM/shell menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86Config
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Select XFree86 configuration type		*/
+end_comment
+
+begin_comment
+comment|/* Stuff from libdialog which isn't properly declared outside */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|display_helpfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|display_helpline
+parameter_list|(
+name|WINDOW
+modifier|*
+name|w
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|width
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*** Prototypes ***/
 end_comment
@@ -1995,8 +2200,9 @@ name|Attribs
 modifier|*
 name|attr
 parameter_list|,
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2019,7 +2225,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetCDROM
 parameter_list|(
 name|Device
@@ -2195,6 +2402,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|configNTP
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configUsers
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2391,6 +2610,27 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|Device
+modifier|*
+modifier|*
+name|deviceFindDescr
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|DeviceType
+name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|deviceCount
 parameter_list|(
@@ -2450,7 +2690,8 @@ modifier|*
 name|mediadev
 parameter_list|)
 parameter_list|,
-name|int
+name|FILE
+modifier|*
 function_decl|(
 modifier|*
 name|get
@@ -2466,20 +2707,6 @@ name|file
 parameter_list|,
 name|Boolean
 name|probe
-parameter_list|)
-parameter_list|,
-name|Boolean
-function_decl|(
-modifier|*
-name|close
-function_decl|)
-parameter_list|(
-name|Device
-modifier|*
-name|mediadev
-parameter_list|,
-name|int
-name|fd
 parameter_list|)
 parameter_list|,
 name|void
@@ -2514,7 +2741,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|dummyGet
 parameter_list|(
 name|Device
@@ -2527,21 +2755,6 @@ name|dist
 parameter_list|,
 name|Boolean
 name|probe
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|Boolean
-name|dummyClose
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|fd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3031,6 +3244,22 @@ end_comment
 begin_function_decl
 specifier|extern
 name|Boolean
+name|mediaCloseDOS
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
 name|mediaInitDOS
 parameter_list|(
 name|Device
@@ -3042,7 +3271,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetDOS
 parameter_list|(
 name|Device
@@ -3099,7 +3329,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetFloppy
 parameter_list|(
 name|Device
@@ -3141,8 +3372,9 @@ name|Device
 modifier|*
 name|dev
 parameter_list|,
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3161,7 +3393,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetFTP
 parameter_list|(
 name|Device
@@ -3210,24 +3443,11 @@ end_comment
 
 begin_function_decl
 name|int
-name|index_get
-parameter_list|(
-name|char
-modifier|*
-name|fname
-parameter_list|,
-name|PkgNodePtr
-name|papa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|index_read
 parameter_list|(
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 parameter_list|,
 name|PkgNodePtr
 name|papa
@@ -3397,6 +3617,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|installNovice
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installFixitHoloShell
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -3681,6 +3913,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|mediaTimeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|mediaSetCDROM
 parameter_list|(
 name|dialogMenuItem
@@ -3831,8 +4073,13 @@ name|char
 modifier|*
 name|dir
 parameter_list|,
-name|int
-name|fd
+name|char
+modifier|*
+name|dist
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4208,6 +4455,98 @@ begin_function_decl
 specifier|extern
 name|WINDOW
 modifier|*
+name|openLayoutDialog
+parameter_list|(
+name|char
+modifier|*
+name|helpfile
+parameter_list|,
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|width
+parameter_list|,
+name|int
+name|height
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ComposeObj
+modifier|*
+name|initLayoutDialog
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|Layout
+modifier|*
+name|layout
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+modifier|*
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|layoutDialogLoop
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|Layout
+modifier|*
+name|layout
+parameter_list|,
+name|ComposeObj
+modifier|*
+modifier|*
+name|obj
+parameter_list|,
+name|int
+modifier|*
+name|n
+parameter_list|,
+name|int
+name|max
+parameter_list|,
+name|int
+modifier|*
+name|cbutton
+parameter_list|,
+name|int
+modifier|*
+name|cancel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|WINDOW
+modifier|*
 name|savescr
 parameter_list|(
 name|void
@@ -4223,6 +4562,27 @@ parameter_list|(
 name|WINDOW
 modifier|*
 name|w
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|sstrncpy
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4468,7 +4828,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetNFS
 parameter_list|(
 name|Device
@@ -4765,7 +5126,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetTape
 parameter_list|(
 name|Device
@@ -4824,18 +5186,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|tcpInstallDevice
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|Boolean
 name|tcpDeviceSelect
 parameter_list|(
@@ -4888,7 +5238,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|mediaGetUFS
 parameter_list|(
 name|Device
@@ -4901,6 +5252,34 @@ name|file
 parameter_list|,
 name|Boolean
 name|probe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* user.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|userAddGroup
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|userAddUser
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl

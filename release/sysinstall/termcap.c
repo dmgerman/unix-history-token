@@ -6,25 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"sysinstall.h"
 end_include
 
 begin_include
@@ -55,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<machine/console.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysinstall.h"
 end_include
 
 begin_define
@@ -418,6 +394,8 @@ condition|?
 name|ts
 operator|.
 name|ts_lines
+operator|-
+literal|1
 else|:
 operator|(
 name|OnVTY
