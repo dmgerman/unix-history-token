@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.16	(Berkeley)	83/12/30"
+literal|"@(#)utilities.c	3.17	(Berkeley)	85/01/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -1781,8 +1781,18 @@ argument_list|)
 operator|!=
 literal|'\n'
 condition|)
-comment|/* void */
-empty_stmt|;
+if|if
+condition|(
+name|feof
+argument_list|(
+name|terminal
+argument_list|)
+condition|)
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(

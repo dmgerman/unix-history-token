@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.23	(Berkeley)	85/01/14"
+literal|"@(#)tape.c	3.24	(Berkeley)	85/01/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,7 +359,28 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"open(\"/dev/tty\")"
+literal|"Cannot open(\"/dev/tty\")"
+argument_list|)
+expr_stmt|;
+name|terminal
+operator|=
+name|fopen
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|terminal
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Cannot open(\"/dev/null\")"
 argument_list|)
 expr_stmt|;
 name|done
@@ -367,6 +388,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|pipein
 operator|++
@@ -1316,7 +1338,18 @@ argument_list|)
 operator|!=
 literal|'\n'
 condition|)
-empty_stmt|;
+if|if
+condition|(
+name|feof
+argument_list|(
+name|terminal
+argument_list|)
+condition|)
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RRESTORE
