@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	5.1 (Berkeley) %G%"
+literal|"@(#)quotaon.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,7 +1120,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 name|strcmp
