@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.5 (Berkeley) %G%"
+literal|"@(#)glob.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2023,25 +2023,25 @@ condition|(
 operator|*
 name|pp
 condition|)
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|*
 name|pp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
-name|pp
+name|pglob
+operator|->
+name|gl_pathv
 argument_list|)
 expr_stmt|;
 block|}
