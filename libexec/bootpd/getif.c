@@ -502,16 +502,9 @@ operator|=
 name|ifrq
 expr_stmt|;
 block|}
-comment|/* XXX - Could this be just #ifndef IFNAMSIZ instead? -gwr */
-if|#
-directive|if
-operator|(
-name|BSD
-operator|-
-literal|0
-operator|)
-operator|<
-literal|43
+ifndef|#
+directive|ifndef
+name|IFNAMSIZ
 comment|/* BSD not defined or earlier than 4.3 */
 name|incr
 operator|=
@@ -523,7 +516,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NetBSD */
 name|incr
 operator|=
 name|ifrq
@@ -536,7 +528,6 @@ name|IFNAMSIZ
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NetBSD */
 name|p
 operator|+=
 name|incr
