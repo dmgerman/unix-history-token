@@ -1395,7 +1395,7 @@ operator|.
 name|dqb_btime
 argument_list|)
 else|:
-literal|""
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1447,7 +1447,7 @@ operator|.
 name|dqb_itime
 argument_list|)
 else|:
-literal|""
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|fup
