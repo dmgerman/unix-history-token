@@ -205,11 +205,11 @@ name|CISS_CDB_DIRECTION_NONE
 value|0
 define|#
 directive|define
-name|CISS_CDB_DIRECTION_READ
+name|CISS_CDB_DIRECTION_WRITE
 value|1
 define|#
 directive|define
-name|CISS_CDB_DIRECTION_WRITE
+name|CISS_CDB_DIRECTION_READ
 value|2
 name|u_int16_t
 name|timeout
