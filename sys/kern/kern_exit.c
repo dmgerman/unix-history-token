@@ -1816,7 +1816,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid any possibly context 	 * switches while marked as a zombie including blocking on 	 * a mutex. 	 */
+comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid all possible context 	 * switches (including ones from blocking on a mutex) while 	 * marked as a zombie. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1943,7 +1943,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * MPSAFE.  The dirty work is handled by kern_wait().  */
+comment|/*  * The dirty work is handled by kern_wait().  *  * MPSAFE.  */
 end_comment
 
 begin_function
@@ -2016,7 +2016,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * MPSAFE.  The dirty work is handled by kern_wait().  */
+comment|/*  * The dirty work is handled by kern_wait().  *  * MPSAFE.  */
 end_comment
 
 begin_function
@@ -2156,9 +2156,6 @@ modifier|*
 name|rusage
 parameter_list|)
 block|{
-name|int
-name|nfound
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -2172,6 +2169,8 @@ name|t
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|nfound
 decl_stmt|;
 name|q
 operator|=
@@ -2564,7 +2563,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Free credentials, arguments, and sigacts 			 */
+comment|/* 			 * Free credentials, arguments, and sigacts. 			 */
 name|crfree
 argument_list|(
 name|p
@@ -2604,7 +2603,7 @@ name|p_sigacts
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * do any thread-system specific cleanups 			 */
+comment|/* 			 * Do any thread-system specific cleanups. 			 */
 name|thread_wait
 argument_list|(
 name|p
@@ -2679,7 +2678,6 @@ argument_list|(
 name|p
 argument_list|)
 operator|&&
-operator|(
 name|p
 operator|->
 name|p_suspcount
@@ -2687,9 +2685,7 @@ operator|==
 name|p
 operator|->
 name|p_numthreads
-operator|)
 operator|&&
-operator|(
 operator|(
 name|p
 operator|->
@@ -2699,7 +2695,6 @@ name|P_WAITED
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|p
