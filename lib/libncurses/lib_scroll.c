@@ -662,7 +662,7 @@ operator|+
 name|win
 operator|->
 name|_regbottom
-operator|==
+operator|!=
 name|lines
 operator|-
 literal|1
@@ -773,7 +773,7 @@ operator|+
 name|win
 operator|->
 name|_regbottom
-operator|==
+operator|!=
 name|lines
 operator|-
 literal|1
@@ -993,7 +993,7 @@ operator|+
 name|win
 operator|->
 name|_regbottom
-operator|==
+operator|!=
 name|lines
 operator|-
 literal|1
@@ -1101,7 +1101,7 @@ operator|+
 name|win
 operator|->
 name|_regbottom
-operator|==
+operator|!=
 name|lines
 operator|-
 literal|1
