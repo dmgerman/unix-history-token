@@ -2473,6 +2473,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPV6CTL_PREFER_TEMPADDR
+value|37
+end_define
+
+begin_comment
+comment|/* prefer temporary addr as src */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPV6CTL_ADDRCTLPOLICY
 value|38
 end_define
