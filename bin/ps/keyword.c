@@ -1454,7 +1454,7 @@ literal|"RE"
 block|,
 name|NULL
 block|,
-literal|0
+name|INF127
 block|,
 name|kvar
 block|,
@@ -1776,7 +1776,7 @@ literal|"SL"
 block|,
 name|NULL
 block|,
-literal|0
+name|INF127
 block|,
 name|kvar
 block|,

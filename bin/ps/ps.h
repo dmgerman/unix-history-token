@@ -143,6 +143,11 @@ directive|define
 name|DSIZ
 value|0x08
 comment|/* field size is dynamic*/
+define|#
+directive|define
+name|INF127
+value|0x10
+comment|/* values>127 displayed as 127 */
 name|u_int
 name|flag
 decl_stmt|;

@@ -3834,6 +3834,13 @@ operator|++
 operator|)
 condition|)
 empty_stmt|;
+define|#
+directive|define
+name|CHKINF127
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)> 127)&& (v->flag& INF127) ? 127 : (n))
 switch|switch
 condition|(
 name|v
@@ -3970,12 +3977,15 @@ name|v
 operator|->
 name|width
 argument_list|,
+name|CHKINF127
+argument_list|(
 operator|*
 operator|(
 name|u_int
 operator|*
 operator|)
 name|bp
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
