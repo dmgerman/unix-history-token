@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.11 1999/07/24 17:06:05 green Exp $  *  */
+comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.12 1999/07/25 23:15:03 green Exp $  *  */
 end_comment
 
 begin_include
@@ -1370,10 +1370,6 @@ comment|/*  * RFC1413 Identification Protocol. Given a TCP port number pair, ret
 end_comment
 
 begin_comment
-comment|/*  * NOTE: If any of the asprintf()s here fail, rest assured that faulting  * in the buffers for using snprintf() would have also failed.  * Asprintf() is the proper way to do what we do.  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1389,6 +1385,7 @@ name|s
 parameter_list|,
 name|er
 parameter_list|)
+comment|/* Generic ident_stream error-sending func */
 name|int
 name|lport
 decl_stmt|,
@@ -1488,7 +1485,7 @@ name|s
 parameter_list|,
 name|sep
 parameter_list|)
-comment|/* Ident service */
+comment|/* Ident service (AKA "auth") */
 name|int
 name|s
 decl_stmt|;
@@ -1593,6 +1590,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset getopt() since we are a fork() but not an exec() from 	 * a parent which used getopt() already. 	 */
 name|optind
 operator|=
 literal|1
@@ -1601,6 +1599,7 @@ name|optreset
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Take the internal argument vector and count it out to make an 	 * argument count for getopt. This can be used for any internal 	 * service to read arguments and use getopt() easily. 	 */
 for|for
 control|(
 name|av
@@ -1866,6 +1865,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We're going to prepare for and execute reception of a 	 * packet of data from the user. The data is in the format 	 * "local_port , foreign_port\r\n" (with local being the 	 * server's port and foreign being the client's.) 	 */
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -2026,6 +2026,7 @@ condition|(
 operator|!
 name|rflag
 condition|)
+comment|/* Send HIDDEN-USER immediately if not "real" */
 name|iderror
 argument_list|(
 name|lport
@@ -2038,6 +2039,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We take the input and construct an array of two sockaddr_ins 	 * which contain the local address information and foreign 	 * address information, respectively, used to look up the 	 * credentials for the socket (which are returned by the 	 * sysctl "net.inet.tcp.getcred" when we call it.) The 	 * arrays have been filled in above via get{peer,sock}name(), 	 * so right here we are only setting the ports. 	 */
 name|sin
 index|[
 literal|0
@@ -2112,6 +2114,7 @@ operator|.
 name|cr_uid
 argument_list|)
 expr_stmt|;
+comment|/* Look up the pw to get the username */
 if|if
 condition|(
 name|pw
@@ -2129,6 +2132,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If enabled, we check for a file named ".noident" in the user's 	 * home directory. If found, we return HIDDEN-USER. 	 */
 if|if
 condition|(
 name|nflag
@@ -2199,6 +2203,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Here, if enabled, we read a user's ".fakeid" file in their 	 * home directory. It consists of a line containing the name 	 * they want. 	 */
 if|if
 condition|(
 name|fflag
@@ -2238,6 +2243,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Here we set ourself to effectively be the user, so we don't 		 * open any files we have no permission to open, especially 		 * symbolic links to sensitive root-owned files or devices. 		 */
 name|seteuid
 argument_list|(
 name|pw
@@ -2252,6 +2258,7 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we were to lstat() here, it would do no good, since it 		 * would introduce a race condition and could be defeated. 		 * Therefore, we open the file we have permissions to open 		 * and if it's not a regular file, we close it and end up 		 * returning the user's real username. 		 */
 name|fakeid
 operator|=
 name|fopen
@@ -2343,6 +2350,7 @@ argument_list|(
 name|fakeid
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Usually, the file will have the desired identity 			 * in the form "identity\n", so we use strtok() to 			 * end the string (which fgets() doesn't do.) 			 */
 name|strtok
 argument_list|(
 name|buf
@@ -2350,6 +2358,7 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+comment|/* User names of>16 characters are invalid */
 if|if
 condition|(
 name|strlen
@@ -2370,6 +2379,7 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
+comment|/* Allow for beginning white space... */
 while|while
 condition|(
 name|isspace
@@ -2381,6 +2391,7 @@ condition|)
 name|cp
 operator|++
 expr_stmt|;
+comment|/* ...and ending white space. */
 name|strtok
 argument_list|(
 name|cp
@@ -2388,6 +2399,7 @@ argument_list|,
 literal|" \t"
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If the name is a zero-length string or matches 			 * the name of another user, it's invalid, so 			 * we will return their real identity instead. 			 */
 if|if
 condition|(
 operator|!
@@ -2428,6 +2440,7 @@ name|pw_name
 expr_stmt|;
 name|printit
 label|:
+comment|/* Finally, we make and send the reply. */
 if|if
 condition|(
 name|asprintf
