@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.6 %G%"
+literal|"@(#)runtime.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,7 @@ name|prev_frame
 decl_stmt|,
 name|callpc
 decl_stmt|;
-name|private
+specifier|static
 name|Integer
 name|ntramp
 init|=
@@ -320,7 +320,7 @@ name|frp
 operator|->
 name|save_fp
 expr_stmt|;
-comment|/*  The check for interrupt generated frames is taken from adb with only  *  partial understanding : say you're in sub and on a sigxxx siggsub  *  gets control and dies; the stack does NOT look like main, sub, sigsub.  *  *  As best I can make out it looks like:  *   main (machine check exception block + sub) sysframe  sigsub.  *  ie when the sig occurs push an exception block on the user stack  *  and a frame for the routine in which it occured then push another  *  frame corresponding to a call from the kernel to sigsub.  *  *  The addr in sub at which the exception occured is not in sub.save_pc  *  but in the machine check exception block. It can be referenced as  *  sub.save_reg[11].  *  *  The current approach ignores the sys_frame (what adb reports as sigtramp)  *  and takes the pc for sub from the exception block. This  *  allows where to report: main sub sigsub, which seems reasonable  */
+comment|/*  *  The check for interrupt generated frames is taken from adb with only  *  partial understanding.  If you're in "sub" and on a sigxxx "sigsub"  *  gets control, then the stack does NOT look like<main, sub, sigsub>.  *  *  As best I can make out it looks like:  *  *<main, (machine check exception block + sub), sysframe, sigsub>.  *  *  When the signal occurs an exception block and a frame for the routine  *  in which it occured are pushed on the user stack.  Then another frame  *  is pushed corresponding to a call from the kernel to sigsub.  *  *  The addr in sub at which the exception occured is not in sub.save_pc  *  but in the machine check exception block.  It is at the magic address  *  fp + 76.  *  *  The current approach ignores the sys_frame (what adb reports as sigtramp)  *  and takes the pc for sub from the exception block.  This allows the  *  "where" command to report<main, sub, sigsub>, which seems reasonable.  */
 name|nextf
 label|:
 name|dread
@@ -343,25 +343,32 @@ name|ntramp
 operator|==
 literal|1
 condition|)
+block|{
+name|dread
+argument_list|(
+operator|&
 name|callpc
-operator|=
-operator|(
-name|Address
-operator|)
-name|frame
-operator|.
-name|save_reg
-index|[
-literal|11
-index|]
+argument_list|,
+name|prev_frame
+operator|+
+literal|76
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|callpc
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|callpc
 operator|=
 name|frame
 operator|.
 name|save_pc
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|frame
