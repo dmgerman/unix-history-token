@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Poul-Henning Kamp  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Poul-Henning Kamp  * and NAI Labs, the Security Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The names of the authors may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002 Poul-Henning Kamp  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Poul-Henning Kamp  * and NAI Labs, the Security Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The names of the authors may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -433,7 +447,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Couldn't find media and/or sector size of %s)"
+literal|"couldn't find media and/or sector size of %s"
 argument_list|,
 name|device
 argument_list|)
@@ -504,7 +518,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Error reading last dump header at offset %lld in %s"
+literal|"error reading last dump header at offset %lld in %s"
 argument_list|,
 operator|(
 name|long
@@ -542,7 +556,7 @@ name|verbose
 condition|)
 name|warnx
 argument_list|(
-literal|"Magic mismatch on last dump header on %s"
+literal|"magic mismatch on last dump header on %s"
 argument_list|,
 name|device
 argument_list|)
@@ -565,7 +579,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Unknown version (%d) in last dump header on %s"
+literal|"unknown version (%d) in last dump header on %s"
 argument_list|,
 name|dtoh32
 argument_list|(
@@ -602,7 +616,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Parity error on last dump header on %s"
+literal|"parity error on last dump header on %s"
 argument_list|,
 name|device
 argument_list|)
@@ -661,7 +675,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Error reading first dump header at offset %lld in %s"
+literal|"error reading first dump header at offset %lld in %s"
 argument_list|,
 operator|(
 name|long
@@ -693,7 +707,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"First and last dump headers disagree on %s"
+literal|"first and last dump headers disagree on %s"
 argument_list|,
 name|device
 argument_list|)
@@ -775,7 +789,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Error while checking for pre-saved core file"
+literal|"error while checking for pre-saved core file"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -954,7 +968,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Read error on %s"
+literal|"read error on %s"
 argument_list|,
 name|device
 argument_list|)
@@ -983,7 +997,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Write error on %s.core file"
+literal|"write error on %s.core file"
 argument_list|,
 name|md5
 argument_list|)
@@ -1077,7 +1091,7 @@ name|kdhl
 condition|)
 name|warn
 argument_list|(
-literal|"Error while clearing the dump header"
+literal|"error while clearing the dump header"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1117,11 +1131,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
-literal|"usage: savecore [-cfkv] [directory [device...]]"
+literal|"usage: savecore [-cfkv] [directory [device...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
