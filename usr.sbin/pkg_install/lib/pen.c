@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.11 1995/04/21 06:30:41 jkh Exp $"
+literal|"$Id: pen.c,v 1.12 1995/04/22 13:58:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"lib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -278,6 +284,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|void
+function_decl|(
+modifier|*
+name|oldsig
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Don't interrupt while we're cleaning up */
+name|oldsig
+operator|=
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Cwd
@@ -328,6 +353,13 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|oldsig
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

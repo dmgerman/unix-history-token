@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.19 1995/04/22 13:58:20 jkh Exp $"
+literal|"$Id: perform.c,v 1.20 1995/04/26 06:56:05 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,7 +527,7 @@ name|name
 argument_list|)
 operator|&&
 operator|!
-name|NoInstall
+name|Fake
 condition|)
 block|{
 if|if
@@ -683,7 +683,7 @@ name|where_to
 operator|!=
 name|PlayPen
 operator|&&
-name|NoInstall
+name|Fake
 condition|)
 goto|goto
 name|success
@@ -790,67 +790,7 @@ name|success
 goto|;
 comment|/* close enough for government work */
 block|}
-comment|/* Finally unpack the whole mess */
-if|if
-condition|(
-name|unpack
-argument_list|(
-name|pkg_fullname
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|whinge
-argument_list|(
-literal|"Unable to extract `%s'!"
-argument_list|,
-name|pkg_fullname
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bomb
-goto|;
-block|}
-if|if
-condition|(
-name|sanity_check
-argument_list|(
-name|pkg_fullname
-argument_list|)
-condition|)
-goto|goto
-name|bomb
-goto|;
-comment|/* If we're running in MASTER mode, just output the plist and return */
-if|if
-condition|(
-name|AddMode
-operator|==
-name|MASTER
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|where_playpen
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|write_plist
-argument_list|(
-operator|&
-name|Plist
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-block|}
+comment|/* Now check the packing list for dependencies */
 for|for
 control|(
 name|p
@@ -885,7 +825,7 @@ name|printf
 argument_list|(
 literal|"Package `%s' depends on `%s'"
 argument_list|,
-name|PkgName
+name|pkg
 argument_list|,
 name|p
 operator|->
@@ -1049,8 +989,8 @@ condition|(
 operator|!
 name|Force
 condition|)
-name|code
 operator|++
+name|code
 expr_stmt|;
 block|}
 elseif|else
@@ -1088,13 +1028,13 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Package dependency on %s from %s not found%s\n"
+literal|"Package dependency %s for %s not found%s\n"
 argument_list|,
 name|p
 operator|->
 name|name
 argument_list|,
-name|PkgName
+name|pkg
 argument_list|,
 name|Force
 condition|?
@@ -1108,8 +1048,8 @@ condition|(
 operator|!
 name|Force
 condition|)
-name|code
 operator|++
+name|code
 expr_stmt|;
 block|}
 block|}
@@ -1124,16 +1064,69 @@ literal|" - already installed.\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Finally unpack the whole mess */
 if|if
 condition|(
-name|code
-operator|!=
-literal|0
+name|unpack
+argument_list|(
+name|pkg_fullname
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Unable to extract `%s'!"
+argument_list|,
+name|pkg_fullname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bomb
+goto|;
+block|}
+comment|/* Check for sanity and dependencies */
+if|if
+condition|(
+name|sanity_check
+argument_list|(
+name|pkg_fullname
+argument_list|)
 condition|)
 goto|goto
-name|success
+name|bomb
 goto|;
-comment|/* close enough for government work */
+comment|/* If we're running in MASTER mode, just output the plist and return */
+if|if
+condition|(
+name|AddMode
+operator|==
+name|MASTER
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|where_playpen
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|write_plist
+argument_list|(
+operator|&
+name|Plist
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+comment|/* Look for the requirements file */
 if|if
 condition|(
 name|fexists
@@ -1206,6 +1199,7 @@ comment|/* close enough for government work */
 block|}
 block|}
 block|}
+comment|/* If we're really installing, and have an installation file, run it */
 if|if
 condition|(
 operator|!
@@ -1271,6 +1265,16 @@ goto|;
 comment|/* nothing to uninstall yet */
 block|}
 block|}
+comment|/* Now finally extract the entire show if we're not going direct */
+if|if
+condition|(
+name|where_to
+operator|==
+name|PlayPen
+operator|&&
+operator|!
+name|Fake
+condition|)
 name|extract_plist
 argument_list|(
 name|home
@@ -1282,7 +1286,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|NoInstall
+name|Fake
 operator|&&
 name|fexists
 argument_list|(
@@ -1965,6 +1969,14 @@ modifier|*
 name|pkg
 parameter_list|)
 block|{
+name|PackingList
+name|p
+decl_stmt|;
+name|int
+name|code
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1981,10 +1993,12 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-return|return
+name|code
+operator|=
 literal|1
-return|;
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -2001,10 +2015,12 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-return|return
+name|code
+operator|=
 literal|1
-return|;
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -2021,12 +2037,13 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-return|return
+name|code
+operator|=
 literal|1
-return|;
+expr_stmt|;
 block|}
 return|return
-literal|0
+name|code
 return|;
 block|}
 end_function
