@@ -7355,7 +7355,6 @@ name|uap
 operator|->
 name|name
 argument_list|,
-operator|&
 name|name
 argument_list|,
 name|uap
@@ -7434,6 +7433,8 @@ name|newlen
 argument_list|,
 operator|&
 name|j
+argument_list|,
+name|SCTL_MASK32
 argument_list|)
 expr_stmt|;
 if|if
@@ -7453,7 +7454,6 @@ name|uap
 operator|->
 name|oldlenp
 condition|)
-block|{
 name|suword32
 argument_list|(
 name|uap
@@ -7463,7 +7463,6 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-block|}
 name|done2
 label|:
 name|mtx_unlock

@@ -402,6 +402,40 @@ comment|/* locked and wired */
 end_comment
 
 begin_comment
+comment|/* definitions for sysctl_req 'flags' member */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTL_MASK32
+value|1
+end_define
+
+begin_comment
+comment|/* 32 bit emulation */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * This describes the access space for a sysctl request.  This is needed  * so that we can use the interface from the kernel or from user-space.  */
 end_comment
 
@@ -474,6 +508,9 @@ parameter_list|)
 function_decl|;
 name|size_t
 name|validlen
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -3095,6 +3132,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|retval
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3130,6 +3170,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|retval
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3171,6 +3214,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|retval
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

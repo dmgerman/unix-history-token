@@ -726,6 +726,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -793,6 +795,8 @@ operator|&
 name|len
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -872,6 +876,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -903,7 +909,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	name = KERN_VERSION; 	len = sizeof uap->name->version; 	error = userland_sysctl(td, name, 2, uap->name->version,&len,  		1, 0, 0, 0); 	if (error) 		goto done2; 	subyte( uap->name->version + sizeof(uap->name->version) - 1, 0); */
+comment|/* 	name = KERN_VERSION; 	len = sizeof uap->name->version; 	error = userland_sysctl(td, name, 2, uap->name->version,&len,  		1, 0, 0, 0, 0); 	if (error) 		goto done2; 	subyte( uap->name->version + sizeof(uap->name->version) - 1, 0); */
 comment|/*  * this stupid hackery to make the version field look like FreeBSD 1.1  */
 for|for
 control|(
@@ -1024,6 +1030,8 @@ operator|&
 name|len
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
