@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.4	86/07/31	*/
+comment|/*	vdreg.h	1.5	86/08/12	*/
 end_comment
 
 begin_comment
@@ -2292,28 +2292,56 @@ block|,
 literal|26400
 block|}
 block|,
-comment|/* egl0a */
+comment|/* egl0a cyl   0 - 59 */
 block|{
 literal|26400
 block|,
 literal|33000
 block|}
 block|,
-comment|/* egl0b */
+comment|/* egl0b cyl  60 - 134 */
 block|{
 literal|59400
 block|,
 literal|308880
 block|}
 block|,
-comment|/* egl0c */
+comment|/* egl0c cyl 135 - 836 */
+block|{
+literal|368280
+block|,
+literal|2640
+block|}
+block|,
+comment|/* egl0d cyl 837 - 842 */
 block|{
 literal|0
 block|,
-literal|367840
+literal|368280
+block|}
+block|,
+comment|/* egl0e cyl 0 - 836 */
+block|{
+literal|0
+block|,
+literal|370920
+block|}
+block|,
+comment|/* egl0f cyl 0 - 842 */
+block|{
+literal|59400
+block|,
+literal|155320
+block|}
+block|,
+comment|/* egl0g cyl 135 - 487 */
+block|{
+literal|214720
+block|,
+literal|153560
 block|}
 block|}
-comment|/* egl0d */
+comment|/* egl0h cyl 488 - 836 */
 block|}
 block|,
 block|{
