@@ -3778,7 +3778,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|newlen
+name|new
+operator|!=
+name|NULL
 condition|)
 block|{
 name|req
@@ -5181,7 +5183,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|newlen
+name|new
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
