@@ -75,7 +75,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -661,6 +673,13 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|imgp
+operator|->
+name|proc
+argument_list|)
+expr_stmt|;
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
@@ -719,6 +738,13 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_svgid
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|proc
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
