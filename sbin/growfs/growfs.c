@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.5 2000/12/12 19:31:00 tomsoft Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.5 2000/12/12 19:31:00 tomsoft Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -4522,7 +4522,7 @@ operator|.
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read original cylinder group from disk, and make a copy. 	 */
+comment|/* 	 * Read original cylinder group from disk, and make a copy. 	 * XXX	If Nflag is set in some very rare cases we now miss 	 *	some changes done in updjcg by reading the unmodified 	 *	block from disk. 	 */
 name|rdfs
 argument_list|(
 name|fsbtodb
@@ -5321,6 +5321,21 @@ name|fscs
 operator|+
 name|ncscg
 expr_stmt|;
+comment|/* 		 * If Nflag is specified, we would now read random data instead 		 * of an empty cg structure from disk. So we can't simulate that 		 * part for now. 		 */
+if|if
+condition|(
+name|Nflag
+condition|)
+block|{
+name|DBG_PRINT0
+argument_list|(
+literal|"nscg update skipped\n"
+argument_list|)
+expr_stmt|;
+name|DBG_LEAVE
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * Read the future cylinder group containing the cylinder 		 * summary from disk, and make a copy. 		 */
 name|rdfs
 argument_list|(
