@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.13	82/10/21	*/
+comment|/*	dmf.c	4.14	82/10/22	*/
 end_comment
 
 begin_include
@@ -1178,6 +1178,31 @@ expr_stmt|;
 name|br
 operator|=
 name|cvec
+expr_stmt|;
+name|dmfxint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|dmfrint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|dmfsrint
+argument_list|()
+expr_stmt|;
+name|dmfsxint
+argument_list|()
+expr_stmt|;
+name|dmfdaint
+argument_list|()
+expr_stmt|;
+name|dmfdbint
+argument_list|()
+expr_stmt|;
+name|dmflint
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.24	82/10/21	*/
+comment|/*	if_acc.c	4.25	82/10/22	*/
 end_comment
 
 begin_include
@@ -525,8 +525,8 @@ name|accreset
 expr_stmt|;
 name|sc
 operator|->
-name|acc_ifuba
-operator|.
+name|acc_if
+operator|->
 name|ifu_flags
 operator|=
 name|UBA_CANTWAIT
