@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)help.c	5.1 (Berkeley) %G%"
+literal|"@(#)help.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,11 +47,14 @@ block|{
 name|char
 name|cmd
 index|[
-name|FILENAME
+name|MAXPATHLEN
 operator|+
 literal|100
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmd
