@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.32 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4072,36 +4072,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* codes for options that have no short name */
-end_comment
-
-begin_comment
-comment|/* NOTE: some of these values may be in the list of "safe" options below */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_BSP
-value|0x80
-end_define
-
-begin_comment
-comment|/* have broken SMTP peers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_SQBH
-value|0x81
-end_define
-
-begin_comment
-comment|/* sort queue by host */
-end_comment
-
 begin_struct
 struct|struct
 name|optioninfo
@@ -4424,15 +4394,53 @@ literal|'Z'
 block|,
 name|FALSE
 block|,
+define|#
+directive|define
+name|O_BSP
+value|0x80
 literal|"BrokenSmtpPeers"
 block|,
 name|O_BSP
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_SQBH
+value|0x81
 literal|"SortQueueByHost"
 block|,
 name|O_SQBH
+block|,
+name|TRUE
+block|,
+define|#
+directive|define
+name|O_DNICE
+value|0x82
+literal|"DeliveryNiceness"
+block|,
+name|O_DNICE
+block|,
+name|TRUE
+block|,
+define|#
+directive|define
+name|O_MQA
+value|0x83
+literal|"MinQueueAge"
+block|,
+name|O_MQA
+block|,
+name|TRUE
+block|,
+define|#
+directive|define
+name|O_MHSA
+value|0x84
+literal|"MaxHostStatAge"
+block|,
+name|O_MHSA
 block|,
 name|TRUE
 block|,
@@ -6283,6 +6291,46 @@ operator|=
 name|atobool
 argument_list|(
 name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_DNICE
+case|:
+comment|/* delivery nice value */
+name|DeliveryNiceness
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_MQA
+case|:
+comment|/* minimum queue age between deliveries */
+name|MinQueueAge
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|,
+literal|'m'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_MHSA
+case|:
+comment|/* maximum age of cached host status */
+name|MaxHostStatAge
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 break|break;
