@@ -1678,6 +1678,15 @@ block|}
 block|}
 else|else
 block|{
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"no free chunk available\n"
+argument_list|)
+expr_stmt|;
 name|bulkxfer
 operator|=
 name|STAILQ_FIRST
