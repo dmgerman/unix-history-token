@@ -38,7 +38,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char sccsid[] = "@(#)cap_mkdb.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)cap_mkdb.c	8.2 (Berkeley) 4/27/95";
 endif|#
 directive|endif
 end_endif
@@ -172,6 +172,32 @@ literal|8
 operator|*
 literal|1024
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|HASHINFO
+name|openinfo
+init|=
+block|{
+literal|4096
+block|,
+comment|/* bsize */
+literal|0
+block|,
+comment|/* ffactor */
+literal|0
+block|,
+comment|/* nelem */
+literal|0
+block|,
+comment|/* cachesize */
+name|NULL
+block|,
+comment|/* hash() */
+literal|0
+comment|/* lorder */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -328,7 +354,8 @@ name|DEFFILEMODE
 argument_list|,
 name|DB_HASH
 argument_list|,
-name|NULL
+operator|&
+name|openinfo
 argument_list|)
 operator|)
 operator|==
