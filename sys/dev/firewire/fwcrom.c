@@ -1305,8 +1305,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|desc
-decl_stmt|,
-name|st
 decl_stmt|;
 name|uint16_t
 name|crc
