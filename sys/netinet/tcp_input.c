@@ -2681,26 +2681,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-else|#
-directive|else
-name|char
-name|dbuf
-index|[
-literal|4
-operator|*
-sizeof|sizeof
-expr|"123"]
-operator|,
-name|sbuf
-index|[
-literal|4
-operator|*
-sizeof|sizeof
-expr|"123"]
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 if|if
 condition|(
 name|isipv6
@@ -2763,6 +2743,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+else|#
+directive|else
+comment|/* INET6 */
+name|char
+name|dbuf
+index|[
+literal|4
+operator|*
+sizeof|sizeof
+expr|"123"]
+operator|,
+name|sbuf
+index|[
+literal|4
+operator|*
+sizeof|sizeof
+expr|"123"]
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* INET6 */
 name|strcpy
 argument_list|(
 name|dbuf
@@ -2787,7 +2788,13 @@ name|ip_src
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 block|}
+endif|#
+directive|endif
+comment|/* INET6 */
 switch|switch
 condition|(
 name|log_in_vain
