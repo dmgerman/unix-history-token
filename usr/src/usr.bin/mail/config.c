@@ -10,7 +10,7 @@ modifier|*
 name|SccsID
 index|[]
 init|=
-literal|"@(#)config.c	1.6 %G%"
+literal|"@(#)config.c	1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,31 +58,7 @@ name|netmach
 index|[]
 init|=
 block|{
-literal|"c70"
-block|,
-literal|'7'
-block|,
-name|AN
-operator||
-name|SN
-block|,
 literal|"berkeley"
-block|,
-literal|'7'
-block|,
-name|AN
-operator||
-name|SN
-block|,
-literal|"berk-c70"
-block|,
-literal|'7'
-block|,
-name|AN
-operator||
-name|SN
-block|,
-literal|"ucb-c70"
 block|,
 literal|'7'
 block|,
@@ -226,14 +202,6 @@ literal|"mathstat"
 block|,
 literal|'t'
 block|,
-name|SN
-block|,
-literal|"csvax"
-block|,
-literal|'v'
-block|,
-name|BN
-operator||
 name|SN
 block|,
 literal|"vax"
