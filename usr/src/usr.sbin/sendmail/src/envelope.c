@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.12 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +420,13 @@ name|StatFile
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Extract state information from dregs of send list. 	*/
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_QUEUERUN
+expr_stmt|;
 for|for
 control|(
 name|q
@@ -1995,6 +2002,38 @@ argument_list|(
 literal|"!Can't create transcript stream %s"
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|46
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"openxscript(%s):\n  "
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|dumpfd
+argument_list|(
+name|fileno
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

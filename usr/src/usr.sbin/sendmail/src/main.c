@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.31 (Berkeley) %G%"
+literal|"@(#)main.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4737,7 +4737,30 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|2
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printopenfds
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
 comment|/* clean up temp files */
+end_comment
+
+begin_expr_stmt
 name|CurEnv
 operator|->
 name|e_to
