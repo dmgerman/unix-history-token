@@ -1593,6 +1593,17 @@ name|slotnum
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Disable any pending timeouts for this slot since we're 	 * powering it down/disabling now. 	 */
+name|untimeout
+argument_list|(
+name|power_off_slot
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|slt
+argument_list|)
+expr_stmt|;
 name|slt
 operator|->
 name|ctrl
