@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.22 1997/07/16 09:27:53 dfr Exp $"
+literal|"$Id: mountd.c,v 1.23 1997/08/29 19:22:28 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4935,24 +4935,19 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad netgroup %s"
+literal|"Bad host %s in netgroup %s, skipping"
+argument_list|,
+name|hst
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|getexp_err
-argument_list|(
-name|ep
-argument_list|,
-name|tgrp
-argument_list|)
+name|grp
+operator|->
+name|gr_type
+operator|=
+name|GT_IGNORE
 expr_stmt|;
-name|endnetgrent
-argument_list|()
-expr_stmt|;
-goto|goto
-name|nextline
-goto|;
 block|}
 block|}
 elseif|else
@@ -4968,16 +4963,21 @@ name|tgrp
 argument_list|)
 condition|)
 block|{
-name|getexp_err
+name|syslog
 argument_list|(
-name|ep
+name|LOG_ERR
 argument_list|,
-name|tgrp
+literal|"Bad host %s, skipping"
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|nextline
-goto|;
+name|grp
+operator|->
+name|gr_type
+operator|=
+name|GT_IGNORE
+expr_stmt|;
 block|}
 name|has_host
 operator|=
@@ -5172,6 +5172,47 @@ expr_stmt|;
 goto|goto
 name|nextline
 goto|;
+comment|/* 	         * If an export list was specified on this line, make sure 		 * that we have at least one valid entry, otherwise skip it. 		 */
+block|}
+else|else
+block|{
+name|grp
+operator|=
+name|tgrp
+expr_stmt|;
+while|while
+condition|(
+name|grp
+operator|&&
+name|grp
+operator|->
+name|gr_type
+operator|==
+name|GT_IGNORE
+condition|)
+name|grp
+operator|=
+name|grp
+operator|->
+name|gr_next
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|grp
+condition|)
+block|{
+name|getexp_err
+argument_list|(
+name|ep
+argument_list|,
+name|tgrp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|nextline
+goto|;
+block|}
 block|}
 comment|/* 		 * Loop through hosts, pushing the exports into the kernel. 		 * After loop, tgrp points to the start of the list and 		 * grp points to the last entry in the list. 		 */
 name|grp
