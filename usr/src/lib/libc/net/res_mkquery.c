@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.4 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,12 +501,6 @@ condition|)
 block|{
 case|case
 name|QUERY
-case|:
-case|case
-name|CQUERYM
-case|:
-case|case
-name|CQUERYU
 case|:
 name|buflen
 operator|-=
