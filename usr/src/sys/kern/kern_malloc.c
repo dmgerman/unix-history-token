@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)kern_malloc.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)kern_malloc.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -756,6 +756,16 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+name|kbp
+operator|=
+operator|&
+name|bucket
+index|[
+name|kup
+operator|->
+name|ku_indx
+index|]
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -880,6 +890,12 @@ operator|->
 name|ks_inuse
 operator|--
 expr_stmt|;
+name|kbp
+operator|->
+name|kb_total
+operator|-=
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
 name|splx
@@ -889,16 +905,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|kbp
-operator|=
-operator|&
-name|bucket
-index|[
-name|kup
-operator|->
-name|ku_indx
-index|]
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KMEMSTATS
@@ -1028,6 +1034,9 @@ specifier|register
 name|long
 name|indx
 decl_stmt|;
+name|int
+name|npg
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1065,13 +1074,17 @@ argument_list|(
 literal|"kmeminit: MAXALLOCSAVE too small"
 argument_list|)
 expr_stmt|;
+name|npg
+operator|=
+name|ekmempt
+operator|-
+name|kmempt
+expr_stmt|;
 name|rminit
 argument_list|(
 name|kmemmap
 argument_list|,
-name|ekmempt
-operator|-
-name|kmempt
+name|npg
 argument_list|,
 operator|(
 name|long
@@ -1080,9 +1093,7 @@ name|CLSIZE
 argument_list|,
 literal|"malloc map"
 argument_list|,
-name|ekmempt
-operator|-
-name|kmempt
+name|npg
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1174,15 +1185,11 @@ index|]
 operator|.
 name|ks_limit
 operator|=
-operator|(
-name|ekmempt
-operator|-
-name|kmempt
-operator|)
+name|npg
 operator|*
 name|CLBYTES
 operator|*
-literal|9
+literal|8
 operator|/
 literal|10
 expr_stmt|;
