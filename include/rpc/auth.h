@@ -396,9 +396,6 @@ end_typedef
 
 begin_function_decl
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|extern
 name|bool_t
 name|xdr_des_block
@@ -411,24 +408,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|bool_t
-name|xdr_des_block
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__END_DECLS

@@ -90,24 +90,21 @@ name|authsys_parms
 value|authunix_parms
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
 name|xdr_authunix_parms
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|authunix_parms
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

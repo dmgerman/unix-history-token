@@ -29,36 +29,30 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|char
 modifier|*
 name|basename
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|dirname
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -67,7 +61,7 @@ literal|0
 end_if
 
 begin_endif
-unit|char	*regcmp __P((const char *, ...)); char	*regex __P((const char *, const char *, ...));  extern char *__loc1;
+unit|char	*regcmp(const char *, ...); char	*regex(const char *, const char *, ...);  extern char *__loc1;
 endif|#
 directive|endif
 end_endif

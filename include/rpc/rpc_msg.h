@@ -347,136 +347,118 @@ name|rjcted_rply
 value|ru.RM_rmb.ru.RP_dr
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * XDR routine to handle a rpc message.  * xdr_callmsg(xdrs, cmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *cmsg;  */
 specifier|extern
 name|bool_t
 name|xdr_callmsg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|rpc_msg
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XDR routine to pre-serialize the static part of a rpc message.  * xdr_callhdr(xdrs, cmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *cmsg;  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_callhdr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|rpc_msg
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XDR routine to handle a rpc reply.  * xdr_replymsg(xdrs, rmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *rmsg;  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_replymsg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|rpc_msg
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XDR routine to handle a accepted rpc reply.  * xdr_accepted_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct accepted_reply *rej;  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_accepted_reply
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|accepted_reply
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XDR routine to handle a rejected rpc reply.  * xdr_rejected_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct rejected_reply *rej;  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_rejected_reply
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|rejected_reply
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Fills in the error part of a reply message.  * _seterr_reply(msg, error)  * 	struct rpc_msg *msg;  * 	struct rpc_err *error;  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_seterr_reply
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|rpc_msg
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|rpc_err
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

@@ -66,12 +66,6 @@ parameter_list|)
 value|assert(e)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -82,34 +76,6 @@ parameter_list|)
 value|((e) ? (void)0 : __assert(__func__, __FILE__, \ 			    __LINE__, #e))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|assert
-parameter_list|(
-name|e
-parameter_list|)
-value|((e) ? (void)0 : __assert(__func__, __FILE__, \ 			    __LINE__, "e"))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -119,30 +85,27 @@ begin_comment
 comment|/* NDEBUG */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|void
 name|__assert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS
