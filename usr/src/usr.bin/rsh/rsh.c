@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.11 85/03/02"
+literal|"@(#)rsh.c	4.12 85/04/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,7 +425,35 @@ goto|goto
 name|another
 goto|;
 block|}
-comment|/* 	 * Ignore the -e and -8 flags to allow aliases with rlogin 	 * to work 	 */
+comment|/* 	 * Ignore the -w, -e and -8 flags to allow aliases with rlogin 	 * to work 	 */
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-w"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+goto|goto
+name|another
+goto|;
+block|}
 if|if
 condition|(
 name|argc
