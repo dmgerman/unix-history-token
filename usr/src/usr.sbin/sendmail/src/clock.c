@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.6 (Berkeley) %G%"
+literal|"@(#)clock.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,11 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+name|int
+name|olderrno
+init|=
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIG_UNBLOCK
@@ -707,6 +712,10 @@ endif|#
 directive|endif
 comment|/* SIG_UNBLOCK */
 comment|/* call ev_func */
+name|errno
+operator|=
+name|olderrno
+expr_stmt|;
 call|(
 modifier|*
 name|f
@@ -761,6 +770,10 @@ operator|-
 name|now
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|olderrno
 expr_stmt|;
 block|}
 end_function

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.41 (Berkeley) %G%"
+literal|"@(#)conf.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3399,6 +3399,11 @@ name|void
 name|reapchild
 parameter_list|()
 block|{
+name|int
+name|olderrno
+init|=
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HASWAITPID
@@ -3525,6 +3530,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|errno
+operator|=
+name|olderrno
+expr_stmt|;
 block|}
 end_function
 
