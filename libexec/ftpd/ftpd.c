@@ -1932,6 +1932,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gai_strerror
 argument_list|(
 name|error
@@ -1947,6 +1949,8 @@ condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
