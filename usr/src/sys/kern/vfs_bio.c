@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.41	82/12/19	*/
+comment|/*	vfs_bio.c	4.42	83/04/04	*/
 end_comment
 
 begin_include
@@ -2991,6 +2991,15 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+operator|==
+literal|0
+condition|)
+comment|/* XXX */
 name|u
 operator|.
 name|u_error
