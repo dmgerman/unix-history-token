@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pppctl.c,v 1.10 1997/11/18 00:22:07 brian Exp $  */
+comment|/*  * $Id: pppctl.c,v 1.11 1997/12/17 00:26:58 brian Exp $  */
 end_comment
 
 begin_include
@@ -2063,7 +2063,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No reply from ppp\n"
+literal|"Connection closed\n"
 argument_list|)
 expr_stmt|;
 break|break;
