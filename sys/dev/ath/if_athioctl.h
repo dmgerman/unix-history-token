@@ -132,6 +132,14 @@ name|ast_tx_shortpre
 decl_stmt|;
 comment|/* tx frames with short preamble */
 name|u_int32_t
+name|ast_tx_altrate
+decl_stmt|;
+comment|/* tx frames with alternate rate */
+name|u_int32_t
+name|ast_tx_protect
+decl_stmt|;
+comment|/* tx frames with protection */
+name|u_int32_t
 name|ast_rx_nombuf
 decl_stmt|;
 comment|/* rx setup failed 'cuz no mbuf */
@@ -170,6 +178,10 @@ name|u_int32_t
 name|ast_rx_tooshort
 decl_stmt|;
 comment|/* rx discarded 'cuz frame too short */
+name|u_int32_t
+name|ast_rx_toobig
+decl_stmt|;
+comment|/* rx discarded 'cuz frame too large */
 name|u_int32_t
 name|ast_rx_ctl
 decl_stmt|;
