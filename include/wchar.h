@@ -43,6 +43,12 @@ directive|include
 file|<machine/_limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<_ctype.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1338,6 +1344,16 @@ name|wchar_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|wcwidth
+parameter_list|(
+name|_c
+parameter_list|)
+value|__wcwidth(_c)
+end_define
 
 begin_endif
 endif|#
