@@ -140,6 +140,9 @@ define|#
 directive|define
 name|DS_IMMUTABLE
 value|0x001
+name|int
+name|ds_running
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2884,26 +2887,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dk
-operator|->
-name|dk_ruleset
-operator|==
 name|ds
+operator|->
+name|ds_running
 condition|)
-block|{
-comment|/* XXX: Do a better job of detecting loops. */
 name|printf
 argument_list|(
-literal|"Warning: Ruleset %d including itself!\n"
+literal|"Warning: avoiding loop through ruleset %d\n"
 argument_list|,
-name|dk
-operator|->
-name|dk_ruleset
+name|ds
 operator|->
 name|ds_number
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|devfs_ruleset_applyde
 argument_list|(
@@ -2941,6 +2937,28 @@ name|devfs_krule
 modifier|*
 name|dk
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|ds
+operator|->
+name|ds_running
+argument_list|,
+operator|(
+literal|"ruleset %d already running"
+operator|,
+name|ds
+operator|->
+name|ds_number
+operator|)
+argument_list|)
+expr_stmt|;
+name|ds
+operator|->
+name|ds_running
+operator|=
+literal|1
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|dk
@@ -2958,6 +2976,12 @@ name|de
 argument_list|)
 expr_stmt|;
 block|}
+name|ds
+operator|->
+name|ds_running
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -2986,6 +3010,28 @@ name|devfs_krule
 modifier|*
 name|dk
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|ds
+operator|->
+name|ds_running
+argument_list|,
+operator|(
+literal|"ruleset %d already running"
+operator|,
+name|ds
+operator|->
+name|ds_number
+operator|)
+argument_list|)
+expr_stmt|;
+name|ds
+operator|->
+name|ds_running
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * XXX: Does it matter whether we do 	 * 	 *	foreach(dk in ds) 	 *		foreach(de in dm) 	 *			apply(dk to de) 	 * 	 * as opposed to 	 * 	 *	foreach(de in dm) 	 *		foreach(dk in ds) 	 *			apply(dk to de) 	 * 	 * The end result is obviously the same, but does the order 	 * matter? 	 */
 name|SLIST_FOREACH
 argument_list|(
@@ -3004,6 +3050,12 @@ name|dm
 argument_list|)
 expr_stmt|;
 block|}
+name|ds
+operator|->
+name|ds_running
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
