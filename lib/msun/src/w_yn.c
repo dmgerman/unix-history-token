@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* w_jnf.c -- float version of w_jn.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* from: @(#)w_jn.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
@@ -28,6 +28,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * wrapper yn(int n, double x)  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -47,26 +51,26 @@ name|__STDC__
 end_ifdef
 
 begin_function
-name|float
-name|jnf
+name|double
+name|yn
 parameter_list|(
 name|int
 name|n
 parameter_list|,
-name|float
+name|double
 name|x
 parameter_list|)
-comment|/* wrapper jnf */
+comment|/* wrapper yn */
 else|#
 directive|else
-function|float jnf
+function|double yn
 parameter_list|(
 name|n
 parameter_list|,
 name|x
 parameter_list|)
-comment|/* wrapper jnf */
-name|float
+comment|/* wrapper yn */
+name|double
 name|x
 decl_stmt|;
 name|int
@@ -79,7 +83,7 @@ ifdef|#
 directive|ifdef
 name|_IEEE_LIBM
 return|return
-name|__ieee754_jnf
+name|__ieee754_yn
 argument_list|(
 name|n
 argument_list|,
@@ -88,12 +92,12 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|float
+name|double
 name|z
 decl_stmt|;
 name|z
 operator|=
-name|__ieee754_jnf
+name|__ieee754_yn
 argument_list|(
 name|n
 argument_list|,
@@ -106,7 +110,7 @@ name|_LIB_VERSION
 operator|==
 name|_IEEE_
 operator|||
-name|isnanf
+name|isnan
 argument_list|(
 name|x
 argument_list|)
@@ -116,22 +120,19 @@ name|z
 return|;
 if|if
 condition|(
-name|fabsf
-argument_list|(
 name|x
-argument_list|)
-operator|>
-operator|(
-name|float
-operator|)
-name|X_TLOSS
+operator|<=
+literal|0.0
 condition|)
 block|{
-comment|/* jn(|x|>X_TLOSS,n) */
+if|if
+condition|(
+name|x
+operator|==
+literal|0.0
+condition|)
+comment|/* d= -one/(x-x); */
 return|return
-operator|(
-name|float
-operator|)
 name|__kernel_standard
 argument_list|(
 operator|(
@@ -139,14 +140,48 @@ name|double
 operator|)
 name|n
 argument_list|,
+name|x
+argument_list|,
+literal|12
+argument_list|)
+return|;
+else|else
+comment|/* d = zero/(x-x); */
+return|return
+name|__kernel_standard
+argument_list|(
 operator|(
 name|double
 operator|)
+name|n
+argument_list|,
 name|x
 argument_list|,
-literal|138
+literal|13
 argument_list|)
 return|;
+block|}
+if|if
+condition|(
+name|x
+operator|>
+name|X_TLOSS
+condition|)
+block|{
+return|return
+name|__kernel_standard
+argument_list|(
+operator|(
+name|double
+operator|)
+name|n
+argument_list|,
+name|x
+argument_list|,
+literal|39
+argument_list|)
+return|;
+comment|/* yn(x>X_TLOSS,n) */
 block|}
 else|else
 return|return

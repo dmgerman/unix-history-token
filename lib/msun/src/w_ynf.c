@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* w_jnf.c -- float version of w_jn.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* w_ynf.c -- float version of w_yn.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ end_ifdef
 
 begin_function
 name|float
-name|jnf
+name|ynf
 parameter_list|(
 name|int
 name|n
@@ -56,16 +56,16 @@ parameter_list|,
 name|float
 name|x
 parameter_list|)
-comment|/* wrapper jnf */
+comment|/* wrapper ynf */
 else|#
 directive|else
-function|float jnf
+function|float ynf
 parameter_list|(
 name|n
 parameter_list|,
 name|x
 parameter_list|)
-comment|/* wrapper jnf */
+comment|/* wrapper ynf */
 name|float
 name|x
 decl_stmt|;
@@ -79,7 +79,7 @@ ifdef|#
 directive|ifdef
 name|_IEEE_LIBM
 return|return
-name|__ieee754_jnf
+name|__ieee754_ynf
 argument_list|(
 name|n
 argument_list|,
@@ -93,7 +93,7 @@ name|z
 decl_stmt|;
 name|z
 operator|=
-name|__ieee754_jnf
+name|__ieee754_ynf
 argument_list|(
 name|n
 argument_list|,
@@ -116,18 +116,24 @@ name|z
 return|;
 if|if
 condition|(
-name|fabsf
-argument_list|(
 name|x
-argument_list|)
-operator|>
+operator|<=
 operator|(
 name|float
 operator|)
-name|X_TLOSS
+literal|0.0
 condition|)
 block|{
-comment|/* jn(|x|>X_TLOSS,n) */
+if|if
+condition|(
+name|x
+operator|==
+operator|(
+name|float
+operator|)
+literal|0.0
+condition|)
+comment|/* d= -one/(x-x); */
 return|return
 operator|(
 name|float
@@ -144,7 +150,59 @@ name|double
 operator|)
 name|x
 argument_list|,
-literal|138
+literal|112
+argument_list|)
+return|;
+else|else
+comment|/* d = zero/(x-x); */
+return|return
+operator|(
+name|float
+operator|)
+name|__kernel_standard
+argument_list|(
+operator|(
+name|double
+operator|)
+name|n
+argument_list|,
+operator|(
+name|double
+operator|)
+name|x
+argument_list|,
+literal|113
+argument_list|)
+return|;
+block|}
+if|if
+condition|(
+name|x
+operator|>
+operator|(
+name|float
+operator|)
+name|X_TLOSS
+condition|)
+block|{
+comment|/* yn(x>X_TLOSS,n) */
+return|return
+operator|(
+name|float
+operator|)
+name|__kernel_standard
+argument_list|(
+operator|(
+name|double
+operator|)
+name|n
+argument_list|,
+operator|(
+name|double
+operator|)
+name|x
+argument_list|,
+literal|139
 argument_list|)
 return|;
 block|}
