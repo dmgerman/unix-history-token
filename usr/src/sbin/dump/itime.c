@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.7 (Berkeley) %G%"
+literal|"@(#)itime.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +427,30 @@ return|return;
 name|fname
 operator|=
 name|disk
+expr_stmt|;
+name|free
+argument_list|(
+name|idatev
+argument_list|)
+expr_stmt|;
+name|idatev
+operator|=
+literal|0
+expr_stmt|;
+name|nidates
+operator|=
+literal|0
+expr_stmt|;
+name|ithead
+operator|=
+literal|0
+expr_stmt|;
+name|idates_in
+operator|=
+literal|0
+expr_stmt|;
+name|inititimes
+argument_list|()
 expr_stmt|;
 name|spcl
 operator|.
