@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prompt.c	5.1 (Berkeley) %G%"
+literal|"@(#)prompt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -966,13 +966,8 @@ modifier|*
 name|wp
 decl_stmt|;
 block|{
-name|int
-name|c
-decl_stmt|;
 switch|switch
 condition|(
-name|c
-operator|=
 operator|*
 name|p
 condition|)
