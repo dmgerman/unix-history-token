@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.5 (Berkeley) %G%"
+literal|"@(#)langpats.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +299,7 @@ block|,
 block|{
 literal|"2,__queue\n"
 block|,
-literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	insque	r1,*4(r0)\n"
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	insque	(r1),*4(r0)\n"
 block|}
 block|,
 block|{
