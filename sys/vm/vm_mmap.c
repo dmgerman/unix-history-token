@@ -3321,6 +3321,14 @@ comment|/* 				 * if the page is resident, then gather information about 				 * 
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
+operator|&&
+name|m
+operator|->
+name|valid
+operator|!=
+literal|0
 condition|)
 block|{
 name|mincoreinfo
