@@ -53,7 +53,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|ReturnStatus
+name|void
 name|Lst_Remove
 parameter_list|(
 name|Lst
@@ -65,29 +65,6 @@ modifier|*
 name|ln
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|Lst_Valid
-argument_list|(
-name|list
-argument_list|)
-operator|||
-operator|!
-name|Lst_NodeValid
-argument_list|(
-name|ln
-argument_list|,
-name|list
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|FAILURE
-operator|)
-return|;
-block|}
 comment|/*      * unlink it from the list      */
 if|if
 condition|(
@@ -97,7 +74,7 @@ name|nextPtr
 operator|!=
 name|NULL
 condition|)
-block|{
+comment|/* unlink from the backward chain */
 name|ln
 operator|->
 name|nextPtr
@@ -108,7 +85,16 @@ name|ln
 operator|->
 name|prevPtr
 expr_stmt|;
-block|}
+else|else
+comment|/* this was the last element */
+name|list
+operator|->
+name|lastPtr
+operator|=
+name|ln
+operator|->
+name|prevPtr
+expr_stmt|;
 if|if
 condition|(
 name|ln
@@ -117,7 +103,7 @@ name|prevPtr
 operator|!=
 name|NULL
 condition|)
-block|{
+comment|/* unlink from the forward chain */
 name|ln
 operator|->
 name|prevPtr
@@ -128,17 +114,8 @@ name|ln
 operator|->
 name|nextPtr
 expr_stmt|;
-block|}
-comment|/*      * if either the firstPtr or lastPtr of the list point to this node,      * adjust them accordingly      */
-if|if
-condition|(
-name|list
-operator|->
-name|firstPtr
-operator|==
-name|ln
-condition|)
-block|{
+else|else
+comment|/* this was the first element */
 name|list
 operator|->
 name|firstPtr
@@ -147,42 +124,6 @@ name|ln
 operator|->
 name|nextPtr
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|list
-operator|->
-name|lastPtr
-operator|==
-name|ln
-condition|)
-block|{
-name|list
-operator|->
-name|lastPtr
-operator|=
-name|ln
-operator|->
-name|prevPtr
-expr_stmt|;
-block|}
-comment|/*      * the only way firstPtr can still point to ln is if ln is the last      * node on the list. The list is, therefore, empty and is marked as such      */
-if|if
-condition|(
-name|list
-operator|->
-name|firstPtr
-operator|==
-name|ln
-condition|)
-block|{
-name|list
-operator|->
-name|firstPtr
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/*      * note that the datum is unmolested. The caller must free it as      * necessary and as expected.      */
 if|if
 condition|(
@@ -208,11 +149,6 @@ operator||=
 name|LN_DELETED
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|SUCCESS
-operator|)
-return|;
 block|}
 end_function
 
