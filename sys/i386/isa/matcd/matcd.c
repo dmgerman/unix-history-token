@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.32 1998/01/24 02:54:32 eivind Exp $ */
+comment|/* $Id: matcd.c,v 1.33 1998/06/07 17:11:16 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -159,6 +159,12 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	Defines and structures ---------------------------------------------------------------------------*/
