@@ -1188,6 +1188,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|ttywflush
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splimp
