@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -526,8 +532,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: last [-#] [-y] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
-literal|"\t[-t tty] [-s|w] [user ...]\n"
+literal|"usage: last [-y] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
+literal|"\t[-n maxrec] [-t tty] [-s|w] [user ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -600,7 +606,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789d:f:h:st:wy"
+literal|"0123456789d:f:h:n:st:wy"
 argument_list|)
 operator|)
 operator|!=
@@ -732,6 +738,54 @@ expr_stmt|;
 name|addarg
 argument_list|(
 name|HOST_TYPE
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|maxrec
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|optarg
+operator|||
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|||
+name|errno
+operator|!=
+literal|0
+operator|||
+name|maxrec
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bad line count"
 argument_list|,
 name|optarg
 argument_list|)
