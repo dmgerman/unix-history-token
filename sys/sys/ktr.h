@@ -622,7 +622,7 @@ directive|define
 name|_TR
 parameter_list|()
 define|\
-value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	int _tr_intrsave = save_intr();				\ 	disable_intr();						\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1) % KTR_ENTRIES;	\ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	restore_intr(_tr_intrsave);				\ 	nanotime(&_ktrptr->ktr_tv);				\ 	snprintf (_ktrptr->ktr_filename, KTRFILENAMESIZE, "%s", __FILE__); \         _ktrptr->ktr_line = __LINE__;				\ 	_ktrptr->ktr_cpu = _TR_CPU;
+value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	int _tr_intrsave = save_intr();				\ 	disable_intr();						\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1)& (KTR_ENTRIES - 1); \ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	restore_intr(_tr_intrsave);				\ 	nanotime(&_ktrptr->ktr_tv);				\ 	snprintf (_ktrptr->ktr_filename, KTRFILENAMESIZE, "%s", __FILE__); \         _ktrptr->ktr_line = __LINE__;				\ 	_ktrptr->ktr_cpu = _TR_CPU;
 end_define
 
 begin_endif
@@ -761,7 +761,7 @@ parameter_list|(
 name|_desc
 parameter_list|)
 define|\
-value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1) % KTR_ENTRIES;	\ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	nanotime(&_ktrptr->ktr_tv);				\ 	_ktrptr->ktr_desc = (_desc);
+value|struct ktr_entry *_ktrptr;				\ 	int _ktr_newidx, _ktr_saveidx;				\ 	do {							\ 		_ktr_saveidx = ktr_idx;				\ 		_ktr_newidx = (ktr_idx + 1)& (KTR_ENTRIES - 1); \ 	} while (atomic_cmpset_int(&ktr_idx, _ktr_saveidx, _ktr_newidx) == 0); \ 	_ktrptr =&ktr_buf[_ktr_saveidx];			\ 	nanotime(&_ktrptr->ktr_tv);				\ 	_ktrptr->ktr_desc = (_desc);
 end_define
 
 begin_endif
