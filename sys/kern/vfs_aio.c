@@ -3895,12 +3895,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mycp
-operator|->
-name|p_fd
-operator|=
-name|NULL
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
