@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uudecode.c,v 1.9 1997/08/22 06:51:43 charnier Exp $"
+literal|"$Id: uudecode.c,v 1.4.2.3 1997/09/17 03:04:44 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,11 @@ begin_decl_stmt
 name|int
 name|cflag
 decl_stmt|,
+name|iflag
+decl_stmt|,
 name|pflag
+decl_stmt|,
+name|sflag
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +214,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cp"
+literal|"cips"
 argument_list|)
 operator|)
 operator|!=
@@ -233,6 +237,15 @@ expr_stmt|;
 comment|/* multiple uudecode'd files */
 break|break;
 case|case
+literal|'i'
+case|:
+name|iflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* ask before override files */
+break|break;
+case|case
 literal|'p'
 case|:
 name|pflag
@@ -240,6 +253,15 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* print output to stdout */
+break|break;
+case|case
+literal|'s'
+case|:
+name|sflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* do not strip pathnames for output */
 break|break;
 default|default:
 name|usage
@@ -416,6 +438,8 @@ specifier|register
 name|char
 name|ch
 decl_stmt|,
+name|first
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -516,6 +540,81 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sflag
+operator|&&
+operator|!
+name|pflag
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|buffn
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffn
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strrchr
+argument_list|(
+name|buffn
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|strncpy
+argument_list|(
+name|buf
+argument_list|,
+name|strrchr
+argument_list|(
+name|buffn
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: illegal filename"
+argument_list|,
+name|buffn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
 comment|/* handle ~user/file format */
 if|if
 condition|(
@@ -559,7 +658,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -672,7 +771,32 @@ name|pflag
 condition|)
 empty_stmt|;
 comment|/* print to stdout */
-elseif|else
+else|else
+block|{
+if|if
+condition|(
+name|iflag
+operator|&&
+operator|!
+name|access
+argument_list|(
+name|buf
+argument_list|,
+name|F_OK
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"not overwritten: %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -712,6 +836,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 name|strcpy
 argument_list|(
@@ -1197,7 +1322,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uudecode [-cp] [file ...]\n"
+literal|"usage: uudecode [-cips] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
