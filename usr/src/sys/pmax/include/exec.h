@@ -1,15 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.3 (Berkeley) %G%  */
 end_comment
 
-begin_comment
-comment|/*  * Portions of this file are subject to the following copyright notice:  *  * Copyright (C) 1989 Digital Equipment Corporation.  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies.    * Digital Equipment Corporation makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  */
-end_comment
-
-begin_comment
-comment|/*  * /sprite/src/kernel/proc/ds3100.md/RCS/procMach.h,v 9.3 90/02/20 15:35:50  * shirriff Exp $ SPRITE (Berkeley)  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
 
 begin_comment
 comment|/* Size of a page in an object file. */
@@ -46,33 +44,29 @@ define|#
 directive|define
 name|N_TXTADDR
 parameter_list|(
-name|ex
+name|X
 parameter_list|)
-value|0x400000
+value|__LDPGSZ
 end_define
 
 begin_comment
 comment|/* Address of the bottom of the data segment. */
 end_comment
 
-begin_comment
-comment|/* NOT DEFINED FOR THE MIPS. */
-end_comment
-
-begin_comment
-comment|/* Text segment offset. */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|__N_TXTOFF_ROUND
+name|N_DATADDR
 parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|((ex).ex_aout.verStamp< 23 ? 7 : 15)
+value|(N_TXTADDR(ex) + ((ex).a_magic == OMAGIC ? (ex).a_text \ 	: __LDPGSZ + ((ex).a_text - 1& ~(__LDPGSZ - 1))))
 end_define
+
+begin_comment
+comment|/* Text segment offset. */
+end_comment
 
 begin_define
 define|#
@@ -82,7 +76,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|((ex).ex_aout.magic == ZMAGIC ? 0 : (sizeof(struct exec) + \ 	    (ex).ex_fhdr.numSections * sizeof(ProcSectionHeader) + \ 	    __N_TXTOFF_ROUND(ex))& ~__N_TXTOFF_ROUND(ex))
+value|((ex).a_magic == ZMAGIC ? 0 : sizeof(struct exec))
 end_define
 
 begin_comment
@@ -97,223 +91,99 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|(N_TXTOFF(ex) + (ex).ex_aout.codeSize)
+value|(N_TXTOFF(ex) + ((ex).a_magic != ZMAGIC ? (ex).a_text : \ 	__LDPGSZ + ((ex).a_text - 1& ~(__LDPGSZ - 1))))
 end_define
 
 begin_comment
 comment|/* Symbol table offset. */
 end_comment
 
-begin_comment
-comment|/* NOT DEFINED FOR THE MIPS. */
-end_comment
+begin_define
+define|#
+directive|define
+name|N_SYMOFF
+parameter_list|(
+name|ex
+parameter_list|)
+define|\
+value|(N_TXTOFF(ex) + (ex).a_text + (ex).a_data + (ex).a_trsize + \ 	    (ex).a_drsize)
+end_define
 
 begin_comment
 comment|/* String table offset. */
 end_comment
 
-begin_comment
-comment|/* NOT DEFINED FOR THE MIPS. */
-end_comment
-
-begin_comment
-comment|/*  * XXX  * The ProcFileHeader structure and the ProcAOUTHeader structure should be  * folded together into a single struct exec.  */
-end_comment
-
-begin_comment
-comment|/* Description of the COFF section. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
+begin_define
 define|#
 directive|define
-name|COFF_MAGIC
-value|0x0162
-name|u_short
-name|magic
-decl_stmt|;
-comment|/* The magic number. */
-name|u_short
-name|numSections
-decl_stmt|;
-comment|/* The number of sections. */
-name|long
-name|timeDateStamp
-decl_stmt|;
-comment|/* Time and date stamp. */
-name|long
-name|symPtr
-decl_stmt|;
-comment|/* File pointer to symbolic header. */
-name|long
-name|numSyms
-decl_stmt|;
-comment|/* Size of symbolic header. */
-name|u_short
-name|optHeader
-decl_stmt|;
-comment|/* Size of optional header. */
-name|u_short
-name|flags
-decl_stmt|;
-comment|/* Flags. */
-block|}
-name|ProcFileHeader
-typedef|;
-end_typedef
+name|N_STROFF
+parameter_list|(
+name|ex
+parameter_list|)
+value|(N_SYMOFF(ex) + (ex).a_syms)
+end_define
 
 begin_comment
-comment|/* Description of the a.out section. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-define|#
-directive|define
-name|OMAGIC
-value|0407
-comment|/* old impure format */
-define|#
-directive|define
-name|NMAGIC
-value|0410
-comment|/* read-only text */
-define|#
-directive|define
-name|ZMAGIC
-value|0413
-comment|/* demand load format */
-name|short
-name|magic
-decl_stmt|;
-comment|/* Magic number. */
-name|short
-name|verStamp
-decl_stmt|;
-comment|/* Version stamp. */
-name|long
-name|codeSize
-decl_stmt|;
-comment|/* Code size in bytes. */
-name|long
-name|heapSize
-decl_stmt|;
-comment|/* Initialized data size in bytes. */
-name|long
-name|bssSize
-decl_stmt|;
-comment|/* Uninitialized data size in bytes. */
-name|long
-name|entry
-decl_stmt|;
-comment|/* Entry point. */
-name|long
-name|codeStart
-decl_stmt|;
-comment|/* Base of code used for this file. */
-name|long
-name|heapStart
-decl_stmt|;
-comment|/* Base of heap used for this file. */
-name|long
-name|bssStart
-decl_stmt|;
-comment|/* Base of bss used for this file. */
-name|long
-name|gprMask
-decl_stmt|;
-comment|/* General purpose register mask. */
-name|long
-name|cprMask
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Co-processor register masks. */
-name|long
-name|gpValue
-decl_stmt|;
-comment|/* The gp value for this object. */
-block|}
-name|ProcAOUTHeader
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Section header. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-name|name
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Section name. */
-name|long
-name|physAddr
-decl_stmt|;
-comment|/* Section physical address. */
-name|long
-name|virtAddr
-decl_stmt|;
-comment|/* Section virtual address. */
-name|long
-name|size
-decl_stmt|;
-comment|/* Section size. */
-name|long
-name|sectionPtr
-decl_stmt|;
-comment|/* File pointer to section data. */
-name|long
-name|relocPtr
-decl_stmt|;
-comment|/* File pointer to relocation data. */
-name|long
-name|lnnoPtr
-decl_stmt|;
-comment|/* File pointer to gp tables. */
-name|u_short
-name|numReloc
-decl_stmt|;
-comment|/* Number of relocation entries. */
-name|u_short
-name|numLnno
-decl_stmt|;
-comment|/* Numberof gp tables. */
-name|long
-name|flags
-decl_stmt|;
-comment|/* Section flags. */
-block|}
-name|ProcSectionHeader
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Description of the object file header. */
+comment|/* Description of the object file header (a.out format). */
 end_comment
 
 begin_struct
 struct|struct
 name|exec
 block|{
-name|ProcFileHeader
-name|ex_fhdr
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_short
+name|a_mid
 decl_stmt|;
-name|ProcAOUTHeader
-name|ex_aout
+comment|/* machine ID */
+name|u_short
+name|a_magic
 decl_stmt|;
+comment|/* magic number */
+else|#
+directive|else
+name|u_short
+name|a_magic
+decl_stmt|;
+comment|/* magic number */
+name|u_short
+name|a_mid
+decl_stmt|;
+comment|/* machine ID */
+endif|#
+directive|endif
+name|u_long
+name|a_text
+decl_stmt|;
+comment|/* text segment size */
+name|u_long
+name|a_data
+decl_stmt|;
+comment|/* initialized data size */
+name|u_long
+name|a_bss
+decl_stmt|;
+comment|/* uninitialized data size */
+name|u_long
+name|a_syms
+decl_stmt|;
+comment|/* symbol table size */
+name|u_long
+name|a_entry
+decl_stmt|;
+comment|/* entry point */
+name|u_long
+name|a_trsize
+decl_stmt|;
+comment|/* text relocation size */
+name|u_long
+name|a_drsize
+decl_stmt|;
+comment|/* data relocation size */
 block|}
 struct|;
 end_struct
@@ -321,37 +191,178 @@ end_struct
 begin_define
 define|#
 directive|define
-name|a_magic
-value|ex_aout.magic
+name|a_machtype
+value|a_mid
 end_define
+
+begin_comment
+comment|/* SUN compatibility */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|a_text
-value|ex_aout.codeSize
+name|MID_ZERO
+value|0
 end_define
+
+begin_comment
+comment|/* unknown - implementation dependent */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|a_data
-value|ex_aout.heapSize
+name|MID_SUN010
+value|1
 end_define
+
+begin_comment
+comment|/* sun 68010/68020 binary */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|a_bss
-value|ex_aout.bssSize
+name|MID_SUN020
+value|2
 end_define
+
+begin_comment
+comment|/* sun 68020-only binary */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|a_entry
-value|ex_aout.entry
+name|MID_SUN_SPARC
+value|3
 end_define
+
+begin_comment
+comment|/* sparc binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_386
+value|100
+end_define
+
+begin_comment
+comment|/* Intel 80386 binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_29K
+value|101
+end_define
+
+begin_comment
+comment|/* AMD 29000 binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_MIPSI
+value|151
+end_define
+
+begin_comment
+comment|/* MIPS R2000/R3000 binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_MIPSII
+value|152
+end_define
+
+begin_comment
+comment|/* MIPS R4000 binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HP200
+value|200
+end_define
+
+begin_comment
+comment|/* hp200 (68010) BSD binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HP300
+value|300
+end_define
+
+begin_comment
+comment|/* hp300 (68020+68881) BSD binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HPUX
+value|0x20C
+end_define
+
+begin_comment
+comment|/* hp200/300 HP-UX binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HPUX800
+value|0x20B
+end_define
+
+begin_comment
+comment|/* hp800 HP-UX binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMAGIC
+value|0407
+end_define
+
+begin_comment
+comment|/* old impure format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NMAGIC
+value|0410
+end_define
+
+begin_comment
+comment|/* read-only text */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZMAGIC
+value|0413
+end_define
+
+begin_comment
+comment|/* demand load format */
+end_comment
 
 end_unit
 
