@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -25,36 +39,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +60,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/* Many bug fixes are from Jim Guyton<guyton@rand-unix> */
@@ -278,13 +272,6 @@ name|toplevel
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|servent
@@ -320,6 +307,18 @@ operator|,
 name|char
 operator|*
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|intr
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -578,6 +577,36 @@ name|settftpmode
 name|__P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tail
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cmd
+modifier|*
+name|getcmd
+name|__P
+argument_list|(
+operator|(
 name|char
 operator|*
 operator|)
@@ -596,6 +625,7 @@ begin_struct
 struct|struct
 name|cmd
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -852,28 +882,15 @@ name|help
 block|}
 block|,
 block|{
-literal|0
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|cmd
-modifier|*
-name|getcmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|tail
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -894,7 +911,7 @@ decl_stmt|;
 block|{
 name|struct
 name|sockaddr_in
-name|sin
+name|lsin
 decl_stmt|;
 name|sp
 operator|=
@@ -949,15 +966,15 @@ name|char
 operator|*
 operator|)
 operator|&
-name|sin
+name|lsin
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|lsin
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|lsin
 operator|.
 name|sin_family
 operator|=
@@ -975,11 +992,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|lsin
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|lsin
 argument_list|)
 argument_list|)
 operator|<
@@ -1368,10 +1385,12 @@ begin_struct
 struct|struct
 name|modes
 block|{
+specifier|const
 name|char
 modifier|*
 name|m_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|m_mode
@@ -1438,12 +1457,12 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|modes
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sep
@@ -1599,11 +1618,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 decl_stmt|;
 block|{
 name|settftpmode
@@ -1624,11 +1645,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 decl_stmt|;
 block|{
 name|settftpmode
@@ -1646,6 +1669,7 @@ name|settftpmode
 parameter_list|(
 name|newmode
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|newmode
@@ -1696,11 +1720,9 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1804,7 +1826,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|cp
+name|lcp
 decl_stmt|;
 name|struct
 name|hostent
@@ -1849,7 +1871,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|cp
+name|lcp
 operator|=
 name|argv
 index|[
@@ -1862,7 +1884,7 @@ name|targ
 operator|=
 name|index
 argument_list|(
-name|cp
+name|lcp
 argument_list|,
 literal|':'
 argument_list|)
@@ -1877,7 +1899,7 @@ name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|cp
+name|lcp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1893,7 +1915,7 @@ name|stderr
 argument_list|,
 literal|"tftp: %s: "
 argument_list|,
-name|cp
+name|lcp
 argument_list|)
 expr_stmt|;
 name|herror
@@ -2239,11 +2261,9 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2987,11 +3007,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 decl_stmt|;
 block|{
 if|if
@@ -3045,7 +3067,13 @@ end_function
 begin_function
 name|void
 name|intr
-parameter_list|()
+parameter_list|(
+name|dummy
+parameter_list|)
+name|int
+name|dummy
+name|__unused
+decl_stmt|;
 block|{
 name|signal
 argument_list|(
@@ -3082,7 +3110,6 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -3166,7 +3193,6 @@ block|{
 name|HistEvent
 name|he
 decl_stmt|;
-specifier|register
 name|struct
 name|cmd
 modifier|*
@@ -3196,9 +3222,9 @@ name|len
 decl_stmt|,
 name|num
 decl_stmt|,
-name|verbose
+name|vrbose
 decl_stmt|;
-name|verbose
+name|vrbose
 operator|=
 name|isatty
 argument_list|(
@@ -3207,7 +3233,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vrbose
 condition|)
 block|{
 name|el
@@ -3294,7 +3320,7 @@ control|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vrbose
 condition|)
 block|{
 if|if
@@ -3506,13 +3532,12 @@ name|getcmd
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3520,7 +3545,6 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|cmd
 modifier|*
@@ -3529,7 +3553,6 @@ decl_stmt|,
 modifier|*
 name|found
 decl_stmt|;
-specifier|register
 name|int
 name|nmatches
 decl_stmt|,
@@ -3677,12 +3700,10 @@ name|void
 name|makeargv
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -3803,11 +3824,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 decl_stmt|;
 block|{
 name|exit
@@ -3839,7 +3862,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cmd
 modifier|*
@@ -3898,7 +3920,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|arg
@@ -3978,11 +3999,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
+name|__unused
 decl_stmt|;
 block|{
 name|trace
@@ -4014,11 +4037,13 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
+name|__unused
 decl_stmt|;
 block|{
 name|verbose
