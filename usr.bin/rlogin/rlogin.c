@@ -4363,14 +4363,14 @@ name|KERBEROS
 ifdef|#
 directive|ifdef
 name|CRYPT
-literal|"8EKLx"
+literal|"8DEKLx"
 argument_list|,
 literal|" [-k realm] "
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|"8EKL"
+literal|"8DEKL"
 operator|,
 literal|" [-k realm] "
 block|)
@@ -4388,7 +4388,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-literal|"8EL"
+literal|"8DEL"
 operator|,
 literal|" "
 end_expr_stmt
