@@ -1899,8 +1899,6 @@ argument_list|(
 name|req
 operator|->
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|inp
 argument_list|)

@@ -4922,9 +4922,9 @@ name|int
 name|prison_xinpcb
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|inpcb
@@ -4937,9 +4937,9 @@ condition|(
 operator|!
 name|jailed
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 condition|)
 return|return
@@ -4960,9 +4960,9 @@ argument_list|)
 operator|==
 name|prison_getip
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 condition|)
 return|return

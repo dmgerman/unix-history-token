@@ -1415,9 +1415,9 @@ name|int
 name|prison_xinpcb
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|inpcb
