@@ -3072,6 +3072,8 @@ expr_stmt|;
 if|if
 condition|(
 name|pdep
+operator|!=
+name|NULL
 condition|)
 block|{
 name|pde
