@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2229,7 +2229,7 @@ name|u_r
 operator|.
 name|r_val1
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX from copen */
 if|if
 condition|(
 operator|(
@@ -2331,44 +2331,6 @@ operator|(
 name|EACCES
 operator|)
 return|;
-comment|/* 	 * Delete references to this pseudo-device. 	 * Note that fp->f_count is guaranteed == 1, and 	 * that fp references the vnode for this driver. 	 */
-if|if
-condition|(
-name|fp
-operator|->
-name|f_count
-operator|!=
-literal|1
-operator|||
-name|fp
-operator|->
-name|f_type
-operator|!=
-name|DTYPE_VNODE
-condition|)
-name|panic
-argument_list|(
-literal|"fdopen"
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-name|fp
-operator|->
-name|f_data
-argument_list|)
-expr_stmt|;
-name|fp
-operator|->
-name|f_count
-operator|=
-literal|0
-expr_stmt|;
 comment|/*  	 * Dup the file descriptor.  	 */
 name|dupit
 argument_list|(
@@ -2384,9 +2346,11 @@ name|dfd
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Delete references to this pseudo-device by returning 	 * a special error (-1) that will cause all resources to 	 * be freed, then detected and cleared by copen. 	 */
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
