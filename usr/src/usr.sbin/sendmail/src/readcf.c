@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.41 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5462,6 +5462,8 @@ case|case
 literal|'g'
 case|:
 comment|/* default gid */
+name|g_opt
+label|:
 if|if
 condition|(
 name|isascii
@@ -5511,7 +5513,9 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"readcf: option g: unknown group %s"
+literal|"readcf: option %c: unknown group %s"
+argument_list|,
+name|opt
 argument_list|,
 name|val
 argument_list|)
@@ -6336,6 +6340,48 @@ case|case
 literal|'u'
 case|:
 comment|/* set default uid */
+for|for
+control|(
+name|p
+operator|=
+name|val
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'.'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'/'
+operator|||
+operator|*
+name|p
+operator|==
+literal|':'
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+block|}
+block|}
 if|if
 condition|(
 name|isascii
@@ -6391,17 +6437,40 @@ name|val
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|DefUid
 operator|=
 name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
+name|DefGid
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
+block|}
 block|}
 name|setdefuser
 argument_list|()
 expr_stmt|;
+comment|/* handle the group if it is there */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
 break|break;
+name|val
+operator|=
+name|p
+expr_stmt|;
+goto|goto
+name|g_opt
+goto|;
 case|case
 literal|'V'
 case|:
