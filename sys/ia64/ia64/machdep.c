@@ -2516,14 +2516,6 @@ operator|+
 literal|16
 operator|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curproc
-argument_list|,
-operator|&
-name|proc0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Record all cpus in a list. 	 */
 name|SLIST_INIT
 argument_list|(
@@ -2539,6 +2531,31 @@ argument_list|,
 name|GLOBALP
 argument_list|,
 name|gd_allcpu
+argument_list|)
+expr_stmt|;
+comment|/* Setup curproc so that mutexes work */
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|proc0
+operator|.
+name|p_heldmtx
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|proc0
+operator|.
+name|p_contested
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialise mutexes. 	 */
@@ -2564,6 +2581,14 @@ argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|#
