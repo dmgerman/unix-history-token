@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.8 (Berkeley) %G%"
+literal|"@(#)tape.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5096,9 +5096,9 @@ name|FAIL
 operator|||
 name|header
 operator|->
-name|c_ddate
+name|c_date
 operator|!=
-name|dumptime
+name|dumpdate
 condition|)
 name|skipcnt
 operator|++
