@@ -657,7 +657,7 @@ name|open
 argument_list|(
 name|procfile
 argument_list|,
-name|O_RDWR
+name|O_WRONLY
 argument_list|,
 literal|0
 argument_list|)
@@ -802,7 +802,7 @@ name|open
 argument_list|(
 name|procfile
 argument_list|,
-name|O_RDWR
+name|O_WRONLY
 argument_list|,
 literal|0
 argument_list|)
