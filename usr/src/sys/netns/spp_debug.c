@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_debug.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_debug.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -227,7 +227,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|tanames
+name|sanames
 index|[]
 decl_stmt|;
 specifier|extern
@@ -397,7 +397,7 @@ name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
-name|tanames
+name|sanames
 index|[
 name|act
 index|]
