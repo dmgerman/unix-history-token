@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.1	%G%	*/
+comment|/*	conf.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ end_function_decl
 begin_include
 include|#
 directive|include
-file|"hp.h"
+file|"../conf/hp.h"
 end_include
 
 begin_if
@@ -186,7 +186,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ht.h"
+file|"../conf/ht.h"
 end_include
 
 begin_if
@@ -278,7 +278,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"up.h"
+file|"../conf/up.h"
 end_include
 
 begin_if
@@ -454,7 +454,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"dh.h"
+file|"../conf/dh.h"
 end_include
 
 begin_if
@@ -722,7 +722,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"va.h"
+file|"../conf/va.h"
 end_include
 
 begin_if
@@ -807,7 +807,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"vp.h"
+file|"../conf/vp.h"
 end_include
 
 begin_if
