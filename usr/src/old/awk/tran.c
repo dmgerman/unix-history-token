@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tran.c	4.3 %G%"
+literal|"@(#)tran.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,11 +1094,12 @@ operator|&
 name|FLD
 operator|)
 operator|&&
+name|isnull
+argument_list|(
 name|vp
 operator|->
 name|nval
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|donerec
 operator|=
@@ -1187,11 +1188,12 @@ operator|&
 name|FLD
 operator|)
 operator|&&
+name|isnull
+argument_list|(
 name|vp
 operator|->
 name|nval
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|donerec
 operator|=
