@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.17	82/06/20	*/
+comment|/*	ip_icmp.c	4.18	82/09/12	*/
 end_comment
 
 begin_include
@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/clock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../net/in.h"
 end_include
 
@@ -61,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|"../net/ip_icmp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_comment
@@ -1127,15 +1133,25 @@ name|t
 operator|=
 operator|(
 name|time
+operator|.
+name|tv_sec
 operator|%
-name|SECDAY
+operator|(
+literal|24
+operator|*
+literal|60
+operator|*
+literal|60
+operator|)
 operator|)
 operator|*
 literal|1000
 operator|+
-name|lbolt
-operator|*
-name|hz
+name|time
+operator|.
+name|tv_usec
+operator|/
+literal|1000
 expr_stmt|;
 name|splx
 argument_list|(

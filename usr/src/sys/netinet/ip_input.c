@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.48	82/08/22	*/
+comment|/*	ip_input.c	1.49	82/09/12	*/
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/clock.h"
 end_include
 
 begin_include
@@ -83,6 +77,18 @@ begin_include
 include|#
 directive|include
 file|"../net/tcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -239,6 +245,8 @@ expr_stmt|;
 name|ip_id
 operator|=
 name|time
+operator|.
+name|tv_sec
 operator|&
 literal|0xffff
 expr_stmt|;
