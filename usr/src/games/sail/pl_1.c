@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.3 83/03/19"
+literal|"@(#)pl_1.c	1.4 83/05/19"
 decl_stmt|;
 end_decl_stmt
 
