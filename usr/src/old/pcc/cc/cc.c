@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.1 %G%"
+literal|"@(#)cc.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,6 +473,26 @@ case|:
 name|proflag
 operator|++
 expr_stmt|;
+name|crt0
+operator|=
+literal|"/lib/mcrt0.o"
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|2
+index|]
+operator|==
+literal|'g'
+condition|)
+name|crt0
+operator|=
+literal|"/usr/lib/gcrt0.o"
+expr_stmt|;
 continue|continue;
 case|case
 literal|'g'
@@ -833,14 +853,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-if|if
-condition|(
-name|proflag
-condition|)
-name|crt0
-operator|=
-literal|"/lib/mcrt0.o"
-expr_stmt|;
 if|if
 condition|(
 name|nc
@@ -1511,6 +1523,19 @@ index|]
 operator|=
 literal|"-lg"
 expr_stmt|;
+if|if
+condition|(
+name|proflag
+condition|)
+name|av
+index|[
+name|na
+operator|++
+index|]
+operator|=
+literal|"-lc_p"
+expr_stmt|;
+else|else
 name|av
 index|[
 name|na
