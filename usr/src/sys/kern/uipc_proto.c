@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.14	82/01/25	*/
+comment|/*	uipc_proto.c	4.15	82/02/01	*/
 end_comment
 
 begin_include
@@ -505,6 +505,8 @@ block|,
 name|IPPROTO_RAW
 block|,
 name|PR_ATOMIC
+operator||
+name|PR_ADDR
 block|,
 name|rip_input
 block|,
