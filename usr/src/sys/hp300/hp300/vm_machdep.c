@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.18 89/08/23$  *  *	@(#)vm_machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.18 89/08/23$  *  *	@(#)vm_machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -384,19 +384,11 @@ argument_list|,
 name|v
 argument_list|)
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EFAULT
 operator|)
 return|;
-block|}
 name|tp
 operator|=
 name|vtotp
@@ -495,7 +487,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -418,19 +418,11 @@ argument_list|,
 name|v
 argument_list|)
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EFAULT
 operator|)
 return|;
-block|}
 name|tp
 operator|=
 name|vtotp
@@ -534,7 +526,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
