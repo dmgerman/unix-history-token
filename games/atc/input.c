@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|RETTOKEN
-value|'\n'
+value|'\r'
 end_define
 
 begin_ifdef
