@@ -745,6 +745,17 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_AESCTR
+block|{
+name|SADB_X_EALG_AESCTR
+block|,
+literal|"aes-ctr"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1

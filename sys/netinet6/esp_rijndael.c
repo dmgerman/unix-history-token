@@ -100,7 +100,7 @@ comment|/* as rijndael uses assymetric scheduled keys, we need to do it twice. *
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|esp_rijndael_schedlen
 parameter_list|(
 name|algo

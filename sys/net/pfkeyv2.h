@@ -1112,7 +1112,7 @@ begin_define
 define|#
 directive|define
 name|SADB_EALG_MAX
-value|12
+value|250
 end_define
 
 begin_comment
@@ -1158,14 +1158,31 @@ name|SADB_X_EALG_SKIPJACK
 value|249
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_comment
+comment|/*250*/
+end_comment
 
 begin_comment
-comment|/*nonstandard */
+comment|/* for FAST_IPSEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESCTR
+value|250
+end_define
+
+begin_comment
+comment|/*249*/
+end_comment
+
+begin_comment
+comment|/* draft-ietf-ipsec-ciph-aes-ctr-03 */
+end_comment
+
+begin_comment
+comment|/* private allocations - based on RFC2407/IANA assignment */
 end_comment
 
 begin_define
@@ -1202,11 +1219,6 @@ directive|define
 name|SADB_X_CALG_MAX
 value|4
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

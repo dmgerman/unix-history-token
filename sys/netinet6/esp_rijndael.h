@@ -12,7 +12,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_decl_stmt
-name|int
+name|size_t
 name|esp_rijndael_schedlen
 name|__P
 argument_list|(

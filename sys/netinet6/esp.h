@@ -170,7 +170,7 @@ name|int
 name|keymax
 decl_stmt|;
 comment|/* in bits */
-name|int
+name|size_t
 argument_list|(
 argument|*schedlen
 argument_list|)

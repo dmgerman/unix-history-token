@@ -214,6 +214,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/esp_aesctr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfkeyv2.h>
 end_include
 
@@ -383,7 +389,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|esp_des_schedlen
 name|__P
 argument_list|(
@@ -486,7 +492,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|esp_blowfish_schedlen
 name|__P
 argument_list|(
@@ -574,7 +580,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|esp_cast128_schedlen
 name|__P
 argument_list|(
@@ -662,7 +668,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|esp_3des_schedlen
 name|__P
 argument_list|(
@@ -890,7 +896,7 @@ literal|0
 block|,
 literal|2048
 block|,
-literal|0
+name|NULL
 block|,
 literal|"null"
 block|,
@@ -986,6 +992,30 @@ name|esp_rijndael_blockdecrypt
 block|,
 name|esp_rijndael_blockencrypt
 block|}
+block|,
+block|{
+literal|16
+block|,
+literal|8
+block|,
+name|esp_aesctr_mature
+block|,
+literal|160
+block|,
+literal|288
+block|,
+name|esp_aesctr_schedlen
+block|,
+literal|"aes-ctr"
+block|,
+name|esp_common_ivlen
+block|,
+name|esp_aesctr_decrypt
+block|,
+name|esp_aesctr_encrypt
+block|,
+name|esp_aesctr_schedule
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1066,6 +1096,16 @@ operator|&
 name|esp_algorithms
 index|[
 literal|5
+index|]
+return|;
+case|case
+name|SADB_X_EALG_AESCTR
+case|:
+return|return
+operator|&
+name|esp_algorithms
+index|[
+literal|6
 index|]
 return|;
 default|default:
@@ -1271,17 +1311,6 @@ argument_list|(
 name|algo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sav
-operator|->
-name|schedlen
-operator|<
-literal|0
-condition|)
-return|return
-name|EINVAL
-return|;
 name|sav
 operator|->
 name|sched
@@ -1347,6 +1376,17 @@ name|name
 operator|,
 name|error
 operator|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sav
+operator|->
+name|sched
+argument_list|,
+name|sav
+operator|->
+name|schedlen
 argument_list|)
 expr_stmt|;
 name|free
@@ -1759,7 +1799,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|esp_des_schedlen
 parameter_list|(
 name|algo
@@ -2301,7 +2341,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|esp_blowfish_schedlen
 parameter_list|(
 name|algo
@@ -2646,7 +2686,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|esp_cast128_schedlen
 parameter_list|(
 name|algo
@@ -2661,10 +2701,8 @@ block|{
 return|return
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|cast128_key
 argument_list|)
-operator|*
-literal|32
 return|;
 block|}
 end_function
@@ -2831,7 +2869,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|esp_3des_schedlen
 parameter_list|(
 name|algo
