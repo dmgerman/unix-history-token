@@ -147,8 +147,9 @@ decl_stmt|;
 name|int
 name|compress
 init|=
-literal|0
+name|TRUE
 decl_stmt|;
+comment|/* default is to compress packages */
 comment|/* Preliminary setup */
 name|sanity_check
 argument_list|()
@@ -314,12 +315,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-else|else
-comment|/* default is to compress packages */
-name|compress
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 if|if
 condition|(
