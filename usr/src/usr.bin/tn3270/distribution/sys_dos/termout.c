@@ -700,8 +700,16 @@ argument_list|,
 name|scrseg
 argument_list|()
 argument_list|,
+sizeof|sizeof
+expr|*
+name|source
+operator|*
 name|offset
 argument_list|,
+sizeof|sizeof
+expr|*
+name|source
+operator|*
 name|length
 argument_list|)
 expr_stmt|;
@@ -747,11 +755,6 @@ name|ds
 argument_list|,
 name|buffer
 argument_list|,
-name|scrseg
-argument_list|()
-argument_list|,
-literal|0
-argument_list|,
 name|crt_cols
 operator|*
 name|crt_lins
@@ -778,8 +781,6 @@ name|scrwrite
 argument_list|(
 name|buffer
 argument_list|,
-literal|2
-operator|*
 name|crt_cols
 operator|*
 name|crt_lins
@@ -803,6 +804,7 @@ define|#
 directive|define
 name|STANDOUT
 value|0x0a
+comment|/* Highlighted mode */
 define|#
 directive|define
 name|NORMAL
@@ -810,14 +812,20 @@ value|0x02
 comment|/* Normal mode */
 define|#
 directive|define
+name|NONDISPLAY
+value|0x00
+comment|/* Don't display */
+define|#
+directive|define
 name|DoAttribute
 parameter_list|(
 name|a
 parameter_list|)
-value|if (IsHighlightedAttr(a)) { \ 				a = STANDOUT; \ 			    } else { \ 				a = NORMAL; \ 			    } \ 			    if (IsNonDisplayAttr(a)) { \ 				a = 0;
-comment|/* zero == don't display */
-value|\ 			    } \ 			    if (!FormattedScreen()) { \ 				a = 1;
-comment|/* one ==> do display on unformatted */
+define|\
+value|if (screenIsFormatted) { \ 				if (IsNonDisplayAttr(a)) { \ 				    a = NONDISPLAY;
+comment|/* don't display */
+value|\ 				} else if (IsHighlightedAttr(a)) { \ 				    a = STANDOUT; \ 				} else { \ 				    a = NORMAL; \ 				} \ 			    } else  { \ 				a = NORMAL;
+comment|/* do display on unformatted */
 value|\ 			    }
 name|ScreenImage
 modifier|*
@@ -834,6 +842,12 @@ name|int
 name|fieldattr
 decl_stmt|;
 comment|/* spends most of its time == 0 or 1 */
+name|int
+name|screenIsFormatted
+init|=
+name|FormattedScreen
+argument_list|()
+decl_stmt|;
 comment|/* OK.  We want to do this a quickly as possible.  So, we assume we  * only need to go from Lowest to Highest.  However, if we find a  * field in the middle, we do the whole screen.  *  * In particular, we separate out the two cases from the beginning.  */
 if|if
 condition|(
@@ -852,10 +866,6 @@ argument_list|()
 operator|)
 condition|)
 block|{
-specifier|register
-name|int
-name|columnsleft
-decl_stmt|;
 name|sp
 operator|=
 operator|&
@@ -893,17 +903,6 @@ name|fieldattr
 argument_list|)
 expr_stmt|;
 comment|/* Set standout, non-display status */
-name|columnsleft
-operator|=
-name|NumberColumns
-operator|-
-name|ScreenLineOffset
-argument_list|(
-name|p
-operator|-
-name|Host
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|p
@@ -943,23 +942,18 @@ name|fieldattr
 condition|)
 block|{
 comment|/* Should we display? */
+comment|/* Display translated data */
 name|sp
 operator|->
 name|data
 operator|=
 name|disp_asc
 index|[
+name|GetHostPointer
+argument_list|(
 name|p
-operator|->
-name|data
+argument_list|)
 index|]
-expr_stmt|;
-comment|/* Display translated data */
-name|sp
-operator|->
-name|attr
-operator|=
-name|fieldattr
 expr_stmt|;
 block|}
 else|else
@@ -970,14 +964,13 @@ name|data
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 name|sp
 operator|->
 name|attr
 operator|=
-name|NORMAL
+name|fieldattr
 expr_stmt|;
-block|}
-comment|/* If the physical screen is larger than what we 			 * are using, we need to make sure that each line 			 * starts at the beginning of the line.  Otherwise, 			 * we will just string all the lines together. 			 */
 name|p
 operator|++
 expr_stmt|;
@@ -1054,8 +1047,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Set standout, non-display */
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|fieldattr
@@ -1069,16 +1060,11 @@ name|data
 operator|=
 name|disp_asc
 index|[
+name|GetHostPointer
+argument_list|(
 name|p
-operator|->
-name|data
+argument_list|)
 index|]
-expr_stmt|;
-name|sp
-operator|->
-name|attr
-operator|=
-name|fieldattr
 expr_stmt|;
 block|}
 else|else
@@ -1089,15 +1075,13 @@ name|data
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 name|sp
 operator|->
 name|attr
 operator|=
-name|NORMAL
+name|fieldattr
 expr_stmt|;
-block|}
-block|}
-comment|/* If the physical screen is larger than what we 			 * are using, we need to make sure that each line 			 * starts at the beginning of the line.  Otherwise, 			 * we will just string all the lines together. 			 */
 name|p
 operator|++
 expr_stmt|;
@@ -1111,19 +1095,23 @@ operator|=
 name|CorrectTerminalCursor
 argument_list|()
 expr_stmt|;
+comment|/*      * We might be here just to update the cursor address.      */
+if|if
+condition|(
+name|Highest
+operator|>=
+name|Lowest
+condition|)
+block|{
 name|scrwrite
 argument_list|(
 name|Screen
 operator|+
 name|Lowest
 argument_list|,
-sizeof|sizeof
-name|Screen
-index|[
-literal|0
-index|]
-operator|*
 operator|(
+literal|1
+operator|+
 name|Highest
 operator|-
 name|Lowest
@@ -1132,6 +1120,7 @@ argument_list|,
 name|Lowest
 argument_list|)
 expr_stmt|;
+block|}
 name|setcursor
 argument_list|(
 name|ScreenLine

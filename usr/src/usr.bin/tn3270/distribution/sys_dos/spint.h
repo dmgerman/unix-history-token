@@ -28,7 +28,7 @@ name|rc
 decl_stmt|;
 comment|/* return code */
 block|}
-name|Spawn
+name|Spint
 typedef|;
 end_typedef
 
