@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.h,v 1.7 1997/09/21 11:41:12 peter Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.h,v 1.8 1997/12/05 19:55:52 bde Exp $  */
 end_comment
 
 begin_if
@@ -330,6 +330,13 @@ define|#
 directive|define
 name|ZONE_ERROR_ALREADYFREE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_ROUNDING
+value|32
 end_define
 
 begin_define

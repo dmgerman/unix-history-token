@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.10 1997/10/12 20:26:33 phk Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.11 1997/12/05 19:55:52 bde Exp $  */
 end_comment
 
 begin_include
@@ -167,14 +167,14 @@ operator|=
 operator|(
 name|size
 operator|+
-literal|32
+name|ZONE_ROUNDING
 operator|-
 literal|1
 operator|)
 operator|&
 operator|~
 operator|(
-literal|32
+name|ZONE_ROUNDING
 operator|-
 literal|1
 operator|)
@@ -1324,6 +1324,36 @@ index|[
 literal|14
 index|]
 decl_stmt|;
+name|sprintf
+argument_list|(
+name|tmpbuf
+argument_list|,
+literal|"\nITEM            SIZE     LIMIT    USED    FREE  REQUESTS\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|tmpbuf
+argument_list|,
+name|strlen
+argument_list|(
+name|tmpbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 for|for
 control|(
 name|curzone
@@ -1464,9 +1494,13 @@ name|tmpbuf
 operator|+
 name|offset
 argument_list|,
-literal|"%s limit=%8.8u, used=%6.6u, free=%6.6u, requests=%8.8u\n"
+literal|"%s %6.6u, %8.8u, %6.6u, %6.6u, %8.8u\n"
 argument_list|,
 name|tmpname
+argument_list|,
+name|curzone
+operator|->
+name|zsize
 argument_list|,
 name|curzone
 operator|->
