@@ -3969,7 +3969,7 @@ name|sc
 operator|->
 name|txb_next_len
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|len
 argument_list|,
