@@ -1950,7 +1950,7 @@ operator|&=
 operator|~
 name|RTF_UP
 expr_stmt|;
-comment|/*  		 * If there is llinfo or similar associated with the  		 * route, give the interface a chance to deal with it.. 		 */
+comment|/*  		 * If there is llinfo or similar associated with the  		 * route, give the protocol a chance to deal with it.. 		 */
 if|if
 condition|(
 operator|(
