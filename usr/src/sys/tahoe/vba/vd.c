@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.8	86/01/23	*/
+comment|/*	vd.c	1.9	86/07/16	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"fsd.h"
+file|"dk.h"
 end_include
 
 begin_if
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * VDDC - Versabus SMD/ESMD driver.  */
+comment|/*  * VDDC - Versabus SMD/SMDE driver.  */
 end_comment
 
 begin_ifdef
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dk.h"
+file|"dkstat.h"
 end_include
 
 begin_include
@@ -203,20 +203,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTLR_ERROR
 value|1
 end_define
@@ -273,7 +259,7 @@ name|vba_device
 modifier|*
 name|vddinfo
 index|[
-name|NFSD
+name|NDK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -310,7 +296,7 @@ name|vddgo
 block|,
 name|vddcaddr
 block|,
-literal|"smd/fsd"
+literal|"dk"
 block|,
 name|vddinfo
 block|,
@@ -473,7 +459,7 @@ begin_decl_stmt
 name|unit_tab
 name|vdunit_info
 index|[
-name|NFSD
+name|NDK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -857,7 +843,7 @@ name|SMDCTLR
 condition|?
 literal|"smd"
 else|:
-literal|"xsmd"
+literal|"smde"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1243,7 +1229,7 @@ block|{
 comment|/* 		 * If reached here, a drive which is not defined in the  		 * 'vdst' tables is connected. Cannot set it's type. 		 */
 name|printf
 argument_list|(
-literal|"vd%d: unknown drive type\n"
+literal|"dk%d: unknown drive type\n"
 argument_list|,
 name|vi
 operator|->
@@ -1294,16 +1280,6 @@ operator|->
 name|ui_dk
 operator|=
 literal|1
-expr_stmt|;
-name|vddriver
-operator|.
-name|ud_dname
-operator|=
-name|ui
-operator|->
-name|info
-operator|.
-name|type_name
 expr_stmt|;
 return|return
 operator|(
@@ -2266,6 +2242,19 @@ operator|->
 name|xfer_queue
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"dk%d: %s\n"
+argument_list|,
+name|vi
+operator|->
+name|ui_unit
+argument_list|,
+name|fs
+operator|->
+name|type_name
+argument_list|)
+expr_stmt|;
 comment|/* 	 * (60 / rpm) / (number of sectors per track * (bytes per sector / 2)) 	 */
 name|dk_mspw
 index|[
@@ -4796,7 +4785,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NFSD
+name|NDK
 condition|)
 return|return
 operator|(
@@ -4876,7 +4865,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NFSD
+name|NDK
 condition|)
 return|return
 operator|(
