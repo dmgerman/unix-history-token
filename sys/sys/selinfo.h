@@ -25,12 +25,6 @@ begin_comment
 comment|/* for struct klist */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * Used to maintain information about processes that wish to be  * notified when I/O becomes possible.  */
 end_comment
@@ -93,12 +87,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|void
 name|clear_selinfo_list
@@ -106,6 +94,7 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -124,6 +113,7 @@ operator|,
 expr|struct
 name|selinfo
 operator|*
+name|sip
 operator|)
 argument_list|)
 decl_stmt|;
@@ -138,6 +128,7 @@ operator|(
 expr|struct
 name|selinfo
 operator|*
+name|sip
 operator|)
 argument_list|)
 decl_stmt|;
