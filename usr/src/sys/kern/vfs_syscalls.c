@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1203,12 +1203,6 @@ name|sc_ap
 struct|;
 specifier|register
 name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-specifier|register
-name|struct
 name|mount
 modifier|*
 name|mp
@@ -1238,8 +1232,6 @@ operator|=
 name|LOOKUP
 operator||
 name|FOLLOW
-operator||
-name|LOCKLEAF
 expr_stmt|;
 name|ndp
 operator|->
@@ -1269,17 +1261,20 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
-name|vp
+name|mp
 operator|=
 name|ndp
 operator|->
 name|ni_vp
-expr_stmt|;
-name|mp
-operator|=
-name|vp
 operator|->
 name|v_mount
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_vp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1293,9 +1288,11 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+name|RETURN
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
 name|sb
 operator|.
 name|f_flags
@@ -1314,8 +1311,8 @@ name|mp
 operator|->
 name|m_fsid
 expr_stmt|;
-name|error
-operator|=
+name|RETURN
+argument_list|(
 name|copyout
 argument_list|(
 operator|(
@@ -1336,17 +1333,6 @@ argument_list|(
 name|sb
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
-name|error
 argument_list|)
 expr_stmt|;
 block|}
