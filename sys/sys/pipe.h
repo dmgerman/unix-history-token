@@ -164,13 +164,6 @@ name|maxpipekva
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxpipekvawired
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Pipe buffer information.  * Separate in, out, cnt are used to simplify calculations.  * Buffered write is active when the buffer.cnt field is set.  */
 end_comment
@@ -211,10 +204,6 @@ begin_struct
 struct|struct
 name|pipemapping
 block|{
-name|vm_offset_t
-name|kva
-decl_stmt|;
-comment|/* kernel virtual address */
 name|vm_size_t
 name|cnt
 decl_stmt|;

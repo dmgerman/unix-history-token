@@ -256,16 +256,6 @@ comment|/* Limit on pipe KVA */
 end_comment
 
 begin_decl_stmt
-name|int
-name|maxpipekvawired
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Limit on wired pipe KVA */
-end_comment
-
-begin_decl_stmt
 name|u_quad_t
 name|maxtsiz
 decl_stmt|;
@@ -648,7 +638,7 @@ name|long
 name|kmempages
 parameter_list|)
 block|{
-comment|/* 	 * Limit pageable pipe memory usage to 5% of the kernel map 	 * (via pipe_map), and nonpageable pipe memory usage to 2.5% 	 * of the same.  Ensure that all have reasonable floors. 	 * (See sys_pipe.c for more info.) 	 */
+comment|/* 	 * Limit pageable pipe memory usage to 5% of the kernel map 	 * (via pipe_map).  Ensure that all have reasonable floors. 	 * (See sys_pipe.c for more info.) 	 */
 name|maxpipekva
 operator|=
 operator|(
@@ -659,16 +649,6 @@ operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|maxpipekvawired
-operator|=
-operator|(
-name|kmempages
-operator|/
-literal|40
-operator|)
-operator|*
-name|PAGE_SIZE
-expr_stmt|;
 if|if
 condition|(
 name|maxpipekva
@@ -678,20 +658,6 @@ operator|*
 literal|1024
 condition|)
 name|maxpipekva
-operator|=
-literal|512
-operator|*
-literal|1024
-expr_stmt|;
-if|if
-condition|(
-name|maxpipekvawired
-operator|<
-literal|512
-operator|*
-literal|1024
-condition|)
-name|maxpipekvawired
 operator|=
 literal|512
 operator|*
