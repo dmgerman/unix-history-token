@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.7 1997/02/22 15:02:41 peter Exp $"
+literal|"$Id: vfscanf.c,v 1.8 1997/03/03 17:53:02 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2906,6 +2906,14 @@ name|n
 operator|==
 literal|']'
 operator|||
+operator|(
+name|__collate_load_error
+operator|&&
+name|n
+operator|<
+name|c
+operator|)
+operator|||
 name|__collate_range_cmp
 argument_list|(
 name|n
@@ -2927,6 +2935,32 @@ name|fmt
 operator|++
 expr_stmt|;
 comment|/* fill in the range */
+if|if
+condition|(
+name|__collate_load_error
+condition|)
+block|{
+do|do
+block|{
+name|tab
+index|[
+operator|++
+name|c
+index|]
+operator|=
+name|v
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|c
+operator|<
+name|n
+condition|)
+do|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -2967,6 +3001,7 @@ index|]
 operator|=
 name|v
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|1
