@@ -1391,7 +1391,7 @@ name|PCIS_STORAGE_IDE
 operator|)
 condition|)
 return|return
-literal|"Unknown PCI ATA controller (generic mode)"
+literal|"Generic PCI ATA controller"
 return|;
 block|}
 return|return
