@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|MAXINDEXSIZE
-value|60
+value|59
 end_define
 
 begin_endif
