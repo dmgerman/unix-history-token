@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.6	81/10/11	*/
+comment|/*	ufs_inode.c	4.7	81/11/08	*/
 end_comment
 
 begin_include
@@ -916,7 +916,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|prele
+name|irele
 argument_list|(
 name|ip
 argument_list|)
@@ -1047,7 +1047,7 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-name|prele
+name|irele
 argument_list|(
 name|ip
 argument_list|)
@@ -1426,17 +1426,6 @@ name|struct
 name|inode
 name|itmp
 decl_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_vfdcnt
-condition|)
-name|panic
-argument_list|(
-literal|"itrunc"
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|ip
@@ -2073,13 +2062,13 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|plock
+name|ilock
 end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|plock
+name|ilock
 end_undef
 
 begin_endif
@@ -2090,13 +2079,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|prele
+name|irele
 end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|prele
+name|irele
 end_undef
 
 begin_endif
@@ -2105,11 +2094,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Lock an inode (should be called ilock).  * If its already locked,  * set the WANT bit and sleep.  */
+comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */
 end_comment
 
 begin_expr_stmt
-name|plock
+name|ilock
 argument_list|(
 name|ip
 argument_list|)
@@ -2159,11 +2148,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Unlock an inode.  * If WANT bit is on,  * wakeup.  */
+comment|/*  * Unlock an inode.  If WANT bit is on, wakeup.  */
 end_comment
 
 begin_expr_stmt
-name|prele
+name|irele
 argument_list|(
 name|ip
 argument_list|)
