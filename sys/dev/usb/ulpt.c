@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ulpt.c,v 1.10 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ulpt.c,v 1.5 1999/01/10 18:42:52 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ begin_decl_stmt
 name|int
 name|ulptdebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2067,7 +2067,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|CDEV_DRIVER_MODULE
 argument_list|(
 name|ulpt
 argument_list|,
@@ -2076,6 +2076,10 @@ argument_list|,
 name|ulpt_driver
 argument_list|,
 name|ulpt_devclass
+argument_list|,
+name|ULPT_CDEV_MAJOR
+argument_list|,
+name|ulpt_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,
