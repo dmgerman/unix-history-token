@@ -1482,11 +1482,6 @@ name|defined
 argument_list|(
 name|tulip_ifmedia
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|IFM_ETHER
-argument_list|)
 name|struct
 name|ifmedia
 name|tulip_ifmedia
@@ -2201,15 +2196,6 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IFM_ETHER
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -2219,26 +2205,6 @@ name|sc
 parameter_list|)
 value|(IFM_SUBTYPE((sc)->tulip_ifmedia.ifm_media) == IFM_AUTO)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TULIP_DO_AUTOSENSE
-parameter_list|(
-name|sc
-parameter_list|)
-value|(((sc)->tulip_flags& TULIP_NOAUTOSENSE) == 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -2338,15 +2304,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IFM_ETHER
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2424,15 +2381,6 @@ comment|/* TULIP_MEDIA_100BASEFX_FD */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(IFM_ETHER) */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3353,14 +3301,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199506
-end_if
-
 begin_define
 define|#
 directive|define
@@ -3486,45 +3426,6 @@ name|addr
 parameter_list|)
 value|addr, ":"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bootverbose
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TULIP_IFP_TO_SOFTC
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(TULIP_UNIT_TO_SOFTC((ifp)->if_unit))
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|TULIP_DEVCONF
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -3981,10 +3882,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * While I think FreeBSD's 2.2 change to the bpf is a nice simplification,  * it does add yet more conditional code to this driver.  Sigh.  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -4229,10 +4126,6 @@ end_endif
 
 begin_comment
 comment|/* TULIP_PERFSTATS */
-end_comment
-
-begin_comment
-comment|/*  * However, this change to FreeBSD I am much less enamored with.  */
 end_comment
 
 begin_if
