@@ -182,10 +182,6 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
 specifier|extern
 name|char
 name|edata
@@ -194,23 +190,14 @@ decl_stmt|,
 name|end
 index|[]
 decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
+name|bzero
+argument_list|(
 name|edata
-init|;
-name|p
-operator|<
+argument_list|,
 name|end
-condition|;
-name|p
-operator|++
-control|)
-operator|*
-name|p
-operator|=
-literal|0
+operator|-
+name|edata
+argument_list|)
 expr_stmt|;
 comment|/* Zero BSS */
 ifdef|#
@@ -223,7 +210,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\rBoot from Network (Y/N) ? "
+literal|"\nBoot from Network (Y/N) ? "
 argument_list|)
 expr_stmt|;
 name|c
@@ -281,12 +268,97 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|" - bad response\n\r"
+literal|" - bad response\n"
 argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* get the bios's idea about the disks geometry */
+ifdef|#
+directive|ifdef
+name|PC98
+for|for
+control|(
+name|c
+operator|=
+literal|0
+init|;
+name|c
+operator|<
+literal|2
+condition|;
+name|c
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|0xa155d
+operator|&
+operator|(
+literal|1
+operator|<<
+name|c
+operator|)
+condition|)
+block|{
+comment|/* check DISK_EQUIP */
+name|bootinfo
+operator|.
+name|bi_bios_geom
+index|[
+name|c
+index|]
+operator|=
+name|get_diskinfo
+argument_list|(
+name|c
+operator|+
+literal|0x80
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|#
+directive|else
+comment|/* IBM-PC */
+for|for
+control|(
+name|c
+operator|=
+literal|0
+init|;
+name|c
+operator|<
+name|N_BIOS_GEOM
+condition|;
+name|c
+operator|++
+control|)
+name|bootinfo
+operator|.
+name|bi_bios_geom
+index|[
+name|c
+index|]
+operator|=
+name|get_diskinfo
+argument_list|(
+name|c
+operator|+
+literal|0x80
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PC98 */
 name|gateA20
 argument_list|()
 expr_stmt|;
@@ -294,17 +366,15 @@ ifdef|#
 directive|ifdef
 name|PC98
 comment|/* set machine type to PC98_SYSTEM_PARAMETER */
-comment|/* machine_check(); */
+name|machine_check
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"\r\nBOOTP/TFTP/NFS bootstrap loader    ESC for menu\n\r"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\r\nSearching for adapter..."
+literal|"\nBOOTP/TFTP/NFS bootstrap loader    ESC for menu\n"
+literal|"\nSearching for adapter..."
 argument_list|)
 expr_stmt|;
 if|if
@@ -316,7 +386,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No adapter found.\r\n"
+literal|"No adapter found.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -499,10 +569,21 @@ name|addr
 decl_stmt|,
 name|broadcast
 decl_stmt|;
+name|int
+name|swsize
+decl_stmt|;
 name|unsigned
 name|long
 name|pad
 decl_stmt|;
+name|config_buffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* clear; bootp might fill this up */
 comment|/* Initialize this early on */
 name|nfsdiskless
 operator|.
@@ -554,6 +635,8 @@ operator|(
 name|NFSMNT_WSIZE
 operator||
 name|NFSMNT_RSIZE
+operator||
+name|NFSMNT_RESVPORT
 operator|)
 expr_stmt|;
 name|nfsdiskless
@@ -574,6 +657,8 @@ operator|(
 name|NFSMNT_WSIZE
 operator||
 name|NFSMNT_RSIZE
+operator||
+name|NFSMNT_RESVPORT
 operator|)
 expr_stmt|;
 comment|/* Find a server to get BOOTP reply from */
@@ -598,7 +683,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\r\nSearching for server...\r\n"
+literal|"\nSearching for server...\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -610,7 +695,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No Server found.\r\n"
+literal|"No Server found.\n"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -624,7 +709,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"My IP %I, Server IP %I, GW IP %I\r\n"
+literal|"My IP %I, Server IP %I, GW IP %I\n"
 argument_list|,
 name|arptable
 index|[
@@ -661,6 +746,20 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*** check if have got info from bootp ***/
+if|if
+condition|(
+name|config_buffer
+index|[
+literal|0
+index|]
+condition|)
+goto|goto
+name|cfg_done
+goto|;
+ifndef|#
+directive|ifndef
+name|NO_TFTP
 comment|/* Now use TFTP to load configuration file */
 name|sprintf
 argument_list|(
@@ -748,6 +847,9 @@ condition|)
 goto|goto
 name|cfg_done
 goto|;
+endif|#
+directive|endif
+comment|/* not found; using default values... */
 name|sprintf
 argument_list|(
 name|config_buffer
@@ -764,7 +866,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Unable to load config file, guessing:\r\n\t%s\r\n"
+literal|"Unable to load config file, guessing:\n\t%s\n"
 argument_list|,
 name|config_buffer
 argument_list|)
@@ -831,7 +933,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\r\n"
+literal|"%s\n"
 argument_list|,
 name|cmd_line
 argument_list|)
@@ -877,7 +979,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No ROOT filesystem server!\r\n"
+literal|"No ROOT filesystem server!\n"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -1188,7 +1290,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unable to get SWAP NFS/MOUNT ports\r\n"
+literal|"Unable to get SWAP NFS/MOUNT ports\n"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -1269,6 +1371,9 @@ operator|&
 name|nfsdiskless
 operator|.
 name|swap_fh
+argument_list|,
+operator|&
+name|swsize
 argument_list|)
 condition|)
 block|{
@@ -1289,6 +1394,32 @@ argument_list|(
 name|jmp_bootmenu
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|nfsdiskless
+operator|.
+name|swap_nblks
+condition|)
+block|{
+name|nfsdiskless
+operator|.
+name|swap_nblks
+operator|=
+name|swsize
+operator|/
+literal|1024
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Swap size is: %d blocks\n"
+argument_list|,
+name|nfsdiskless
+operator|.
+name|swap_nblks
 argument_list|)
 expr_stmt|;
 block|}
@@ -1400,7 +1531,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unable to get ROOT NFS/MOUNT ports\r\n"
+literal|"Unable to get ROOT NFS/MOUNT ports\n"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -1549,6 +1680,8 @@ name|kernel
 argument_list|,
 operator|&
 name|kernel_handle
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -1575,7 +1708,7 @@ block|}
 comment|/* Load the kernel using NFS */
 name|printf
 argument_list|(
-literal|"Loading %s...\r\n"
+literal|"Loading %s...\n"
 argument_list|,
 name|kernel
 argument_list|)
@@ -1640,7 +1773,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad executable format!\r\n"
+literal|"Bad executable format!\n"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -1675,6 +1808,16 @@ operator|.
 name|a_text
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|set_twiddle_max
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nfsload
 argument_list|(
 name|head
@@ -1884,7 +2027,7 @@ name|loadpoint
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"entry=0x%X.\n\r"
+literal|"entry=0x%X.\n"
 argument_list|,
 name|head
 operator|.
@@ -2415,7 +2558,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 condition|;
 name|i
 operator|++
@@ -2437,7 +2580,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 condition|)
 block|{
 comment|/* Need to do arp request */
@@ -2463,7 +2606,7 @@ name|arpreq
 operator|.
 name|hwlen
 operator|=
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|arpreq
 operator|.
@@ -2493,7 +2636,7 @@ name|arpreq
 operator|.
 name|shwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|convert_ipaddr
@@ -2517,7 +2660,7 @@ name|arpreq
 operator|.
 name|thwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|convert_ipaddr
@@ -2661,7 +2804,7 @@ name|code
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Loading %s...\r\n"
+literal|"Loading %s...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -2769,7 +2912,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -2786,7 +2929,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"TFTP error %d (%s)\r\n"
+literal|"TFTP error %d (%s)\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -2903,7 +3046,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Config file too large.\r\n"
+literal|"Config file too large.\n"
 argument_list|)
 expr_stmt|;
 name|config_buffer
@@ -3011,7 +3154,7 @@ name|bp
 operator|.
 name|bp_hlen
 operator|=
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|bp
 operator|.
@@ -3035,7 +3178,7 @@ name|bp
 operator|.
 name|bp_hwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 while|while
@@ -3167,7 +3310,7 @@ decl_stmt|;
 name|int
 name|protohdrlen
 init|=
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3218,7 +3361,7 @@ operator|&&
 operator|(
 name|packetlen
 operator|>=
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3258,7 +3401,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3299,7 +3442,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -3350,7 +3493,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3393,7 +3536,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3413,7 +3556,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3428,7 +3571,7 @@ operator|(
 name|packetlen
 operator|>=
 operator|(
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3500,7 +3643,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Kill arp */
@@ -3528,7 +3671,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Kill arp */
@@ -3607,7 +3750,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3678,6 +3821,69 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_function
+name|void
+name|bootp_string
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|bootp_ptr
+parameter_list|)
+block|{
+name|char
+name|tmp_buf
+index|[
+literal|512
+index|]
+decl_stmt|;
+comment|/* oversized, but who cares ! */
+name|bzero
+argument_list|(
+name|tmp_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp_buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|bootp_ptr
+operator|+
+literal|2
+argument_list|,
+name|tmp_buf
+argument_list|,
+name|TAG_LEN
+argument_list|(
+name|bootp_ptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|config_buffer
+operator|+
+name|strlen
+argument_list|(
+name|config_buffer
+argument_list|)
+argument_list|,
+literal|"%s %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|tmp_buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/************************************************************************** DECODE_RFC1048 - Decodes RFC1048 header **************************************************************************/
@@ -3836,6 +4042,84 @@ operator|~
 literal|3
 expr_stmt|;
 break|break;
+case|case
+name|RFC1048_ROOT_PATH
+case|:
+comment|/* XXX check len */
+name|bootp_string
+argument_list|(
+literal|"rootfs"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RFC1048_SWAP_PATH
+case|:
+name|bootp_string
+argument_list|(
+literal|"swapfs"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RFC1048_SWAP_LEN
+case|:
+comment|/* T129 */
+name|sprintf
+argument_list|(
+name|config_buffer
+operator|+
+name|strlen
+argument_list|(
+name|config_buffer
+argument_list|)
+argument_list|,
+literal|"swapsize %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
+name|p
+operator|+
+literal|2
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|130
+case|:
+comment|/* root mount options */
+name|bootp_string
+argument_list|(
+literal|"rootopts"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|131
+case|:
+comment|/* swap mount options */
+name|bootp_string
+argument_list|(
+literal|"swapopts"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -3872,7 +4156,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\r"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

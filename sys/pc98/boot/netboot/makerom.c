@@ -224,7 +224,6 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
 name|sum
 operator|+=
 name|rom
@@ -235,6 +234,8 @@ expr_stmt|;
 if|if
 condition|(
 name|sum
+operator|&
+literal|0x00FF
 condition|)
 name|printf
 argument_list|(
