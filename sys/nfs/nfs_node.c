@@ -282,13 +282,15 @@ name|nhpp
 operator|=
 name|NFSNOHASH
 argument_list|(
-name|fnv32_hashbuf
+name|fnv_32_buf
 argument_list|(
 name|fhp
 operator|->
 name|fh_bytes
 argument_list|,
 name|fhsize
+argument_list|,
+name|FNV1_32_INIT
 argument_list|)
 argument_list|)
 expr_stmt|;

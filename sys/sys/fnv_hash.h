@@ -3,39 +3,53 @@ begin_comment
 comment|/*  * Fowler / Noll / Vo Hash (FNV Hash)  * http://www.isthe.com/chongo/tech/comp/fnv/  *  * This is an implementation of the algorithms posted above.  * This file is placed in the public domain by Peter Wemm.  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FNV_32_PRIME
-value|((u_int32_t) 0x01000193UL)
-end_define
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|Fnv32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|Fnv64_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
 directive|define
 name|FNV1_32_INIT
-value|((u_int32_t) 33554467UL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FNV_64_PRIME
-value|((u_int64_t) 0x100000001b3ULL)
+value|((Fnv32_t) 33554467UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FNV1_64_INIT
-value|((u_int64_t) 0xcbf29ce484222325ULL)
+value|((Fnv64_t) 0xcbf29ce484222325ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNV_32_PRIME
+value|((Fnv32_t) 0x01000193UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNV_64_PRIME
+value|((Fnv64_t) 0x100000001b3ULL)
 end_define
 
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
-name|fnv32_hashbuf
+name|Fnv32_t
+name|fnv_32_buf
 parameter_list|(
 specifier|const
 name|void
@@ -44,6 +58,9 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|Fnv32_t
+name|hval
 parameter_list|)
 block|{
 specifier|const
@@ -58,13 +75,6 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
-name|u_int32_t
-name|hval
-decl_stmt|;
-name|hval
-operator|=
-name|FNV1_32_INIT
-expr_stmt|;
 while|while
 condition|(
 name|len
@@ -93,13 +103,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
-name|fnv32_hashstr
+name|Fnv32_t
+name|fnv_32_str
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|,
+name|Fnv32_t
+name|hval
 parameter_list|)
 block|{
 specifier|const
@@ -114,15 +127,9 @@ operator|*
 operator|)
 name|str
 decl_stmt|;
-name|u_int32_t
-name|hval
-decl_stmt|,
+name|Fnv32_t
 name|c
 decl_stmt|;
-name|hval
-operator|=
-name|FNV1_32_INIT
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -154,8 +161,8 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
-name|fnv64_hashbuf
+name|Fnv64_t
+name|fnv_64_buf
 parameter_list|(
 specifier|const
 name|void
@@ -164,6 +171,9 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|Fnv64_t
+name|hval
 parameter_list|)
 block|{
 specifier|const
@@ -178,13 +188,6 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
-name|u_int64_t
-name|hval
-decl_stmt|;
-name|hval
-operator|=
-name|FNV1_64_INIT
-expr_stmt|;
 while|while
 condition|(
 name|len
@@ -213,13 +216,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
-name|fnv64_hashstr
+name|Fnv64_t
+name|fnv_64_str
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|,
+name|Fnv64_t
+name|hval
 parameter_list|)
 block|{
 specifier|const
@@ -233,18 +239,11 @@ name|u_int8_t
 operator|*
 operator|)
 name|str
-decl_stmt|;
-name|u_int64_t
-name|hval
 decl_stmt|;
 name|u_register_t
 name|c
 decl_stmt|;
 comment|/* 32 bit on i386, 64 bit on alpha,ia64 */
-name|hval
-operator|=
-name|FNV1_64_INIT
-expr_stmt|;
 while|while
 condition|(
 operator|(
