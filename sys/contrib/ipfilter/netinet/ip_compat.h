@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.1.2.3 1999/11/18 13:55:26 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.46 2002/06/27 14:39:40 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1029,6 +1029,17 @@ comment|/* header length */
 name|int
 name|qf_sap
 decl_stmt|;
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|8
+name|int
+name|qf_tunoff
+decl_stmt|;
+comment|/* tunnel offset */
+endif|#
+directive|endif
 name|size_t
 name|qf_incnt
 decl_stmt|;
@@ -1203,11 +1214,33 @@ directive|ifndef
 name|__FreeBSD_version
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFILTER_LKM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/osreldate.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.1 2000/07/08 02:15:35 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.13 2002/06/27 14:40:29 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -347,6 +347,9 @@ decl_stmt|;
 block|}
 name|is_ps
 union|;
+name|u_32_t
+name|is_group
+decl_stmt|;
 name|char
 name|is_ifname
 index|[
@@ -610,6 +613,12 @@ name|isl_state
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|u_32_t
+name|isl_rulen
+decl_stmt|;
+name|u_32_t
+name|isl_group
 decl_stmt|;
 block|}
 name|ipslog_t

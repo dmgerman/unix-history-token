@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.2 1999/08/06 06:26:38 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.7 2002/07/06 14:17:51 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -175,8 +175,6 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
-operator|,
-name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -194,8 +192,6 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
-operator|,
-name|u_int
 operator|,
 expr|struct
 name|nat

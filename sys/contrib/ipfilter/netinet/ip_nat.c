@@ -689,7 +689,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_nat.c,v 2.37.2.16 2000/07/18 13:57:40 darrenr Exp $";*/
+comment|/*static const char rcsid[] = "@(#)$Id: ip_nat.c,v 2.37.2.70 2002/08/28 12:45:48 darrenr Exp $";*/
 end_comment
 
 begin_decl_stmt
@@ -2722,7 +2722,26 @@ argument_list|,
 name|IPN_CMPSIZ
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|in_redir
+operator|==
+name|NAT_REDIRECT
+operator|&&
+name|n
+operator|->
+name|in_pnext
+operator|!=
+name|nat
+operator|->
+name|in_pnext
+condition|)
+continue|continue;
 break|break;
+block|}
 block|}
 switch|switch
 condition|(
@@ -11613,9 +11632,12 @@ index|[
 literal|0
 index|]
 operator|=
+name|ntohs
+argument_list|(
 name|np
 operator|->
 name|nl_inport
+argument_list|)
 expr_stmt|;
 name|fi
 operator|.
@@ -11624,9 +11646,12 @@ index|[
 literal|1
 index|]
 operator|=
+name|ntohs
+argument_list|(
 name|np
 operator|->
 name|nl_outport
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If nl_inip is non null, this is a lookup based on the real 	 * ip address. Else, we use the fake. 	 */
 if|if
@@ -12729,8 +12754,6 @@ name|ip
 argument_list|,
 name|fin
 argument_list|,
-literal|0
-argument_list|,
 name|nat
 argument_list|)
 expr_stmt|;
@@ -13263,6 +13286,22 @@ condition|)
 name|i
 operator|=
 literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|1
+index|]
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -14043,8 +14082,6 @@ name|ip
 argument_list|,
 name|fin
 argument_list|,
-literal|0
-argument_list|,
 name|nat
 argument_list|)
 expr_stmt|;
@@ -14100,6 +14137,14 @@ operator|-
 literal|1
 condition|)
 block|{
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|0
+index|]
+operator|++
+expr_stmt|;
 name|RWLOCK_EXIT
 argument_list|(
 operator|&

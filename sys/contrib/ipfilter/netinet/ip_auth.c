@@ -709,7 +709,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_auth.c,v 2.1.2.2 2000/01/16 10:12:14 darrenr Exp $";*/
+comment|/*static const char rcsid[] = "@(#)$Id: ip_auth.c,v 2.11.2.20 2002/06/04 14:40:42 darrenr Exp $";*/
 end_comment
 
 begin_decl_stmt
@@ -3254,12 +3254,23 @@ operator|->
 name|fae_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fae_list
+operator|!=
+name|NULL
+condition|)
 name|ipauth
 operator|=
 operator|&
 name|fae_list
 operator|->
 name|fae_fr
+expr_stmt|;
+else|else
+name|ipauth
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

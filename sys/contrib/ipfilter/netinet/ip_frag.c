@@ -599,7 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $";*/
+comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.10.2.24 2002/08/28 12:41:04 darrenr Exp $";*/
 end_comment
 
 begin_decl_stmt
@@ -805,8 +805,6 @@ operator|,
 name|fr_info_t
 operator|*
 operator|,
-name|u_int
-operator|,
 name|ipfr_t
 operator|*
 operator|*
@@ -896,8 +894,6 @@ name|ip
 parameter_list|,
 name|fin
 parameter_list|,
-name|pass
-parameter_list|,
 name|table
 parameter_list|)
 name|ip_t
@@ -907,9 +903,6 @@ decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
-decl_stmt|;
-name|u_int
-name|pass
 decl_stmt|;
 name|ipfr_t
 modifier|*
@@ -1196,7 +1189,7 @@ name|fr_ref
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Instert the fragment into the fragment table, copy the struct used 	 * in the search using bcopy rather than reassign each field. 	 * Set the ttl to the default and mask out logging from "pass" 	 */
+comment|/* 	 * Instert the fragment into the fragment table, copy the struct used 	 * in the search using bcopy rather than reassign each field. 	 * Set the ttl to the default. 	 */
 if|if
 condition|(
 operator|(
@@ -1326,8 +1319,6 @@ parameter_list|(
 name|ip
 parameter_list|,
 name|fin
-parameter_list|,
-name|pass
 parameter_list|)
 name|ip_t
 modifier|*
@@ -1336,9 +1327,6 @@ decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
-decl_stmt|;
-name|u_int
-name|pass
 decl_stmt|;
 block|{
 name|ipfr_t
@@ -1376,8 +1364,6 @@ argument_list|(
 name|ip
 argument_list|,
 name|fin
-argument_list|,
-name|pass
 argument_list|,
 name|ipfr_heads
 argument_list|)
@@ -1438,8 +1424,6 @@ name|ip
 parameter_list|,
 name|fin
 parameter_list|,
-name|pass
-parameter_list|,
 name|nat
 parameter_list|)
 name|ip_t
@@ -1449,9 +1433,6 @@ decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
-decl_stmt|;
-name|u_int
-name|pass
 decl_stmt|;
 name|nat_t
 modifier|*
@@ -1514,7 +1495,8 @@ literal|0
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1529,8 +1511,6 @@ argument_list|(
 name|ip
 argument_list|,
 name|fin
-argument_list|,
-name|pass
 argument_list|,
 name|ipfr_nattab
 argument_list|)
