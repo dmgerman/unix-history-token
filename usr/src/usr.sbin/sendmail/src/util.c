@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.30 (Berkeley) %G%"
+literal|"@(#)util.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,9 +1007,6 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
-name|bool
-name|quoteit
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1033,10 +1030,6 @@ comment|/* see if the full name needs to be quoted */
 name|l
 operator|=
 literal|0
-expr_stmt|;
-name|quoteit
-operator|=
-name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -1070,22 +1063,6 @@ control|)
 block|{
 if|if
 condition|(
-name|index
-argument_list|(
-literal|"<>()'."
-argument_list|,
-operator|*
-name|p
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|quoteit
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|p
 operator|==
@@ -1103,25 +1080,7 @@ name|l
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|quoteit
-condition|)
-name|l
-operator|+=
-literal|2
-expr_stmt|;
 comment|/* now fill in buf */
-if|if
-condition|(
-name|quoteit
-condition|)
-operator|*
-name|bp
-operator|++
-operator|=
-literal|'"'
-expr_stmt|;
 for|for
 control|(
 name|p
@@ -1201,16 +1160,6 @@ operator|*
 name|p
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|quoteit
-condition|)
-operator|*
-name|bp
-operator|++
-operator|=
-literal|'"'
-expr_stmt|;
 operator|*
 name|bp
 operator|=
