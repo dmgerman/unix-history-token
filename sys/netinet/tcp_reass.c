@@ -7544,22 +7544,18 @@ name|incr
 operator|/
 name|cw
 expr_stmt|;
+comment|/* 		 * If t_dupacks != 0 here, it indicates that we are still 		 * in NewReno fast recovery mode, so we leave the congestion 		 * window alone. 		 */
 if|if
 condition|(
 name|tcp_do_newreno
 operator|==
 literal|0
 operator|||
-name|SEQ_GEQ
-argument_list|(
-name|th
-operator|->
-name|th_ack
-argument_list|,
 name|tp
 operator|->
-name|snd_recover
-argument_list|)
+name|t_dupacks
+operator|==
+literal|0
 condition|)
 name|tp
 operator|->
