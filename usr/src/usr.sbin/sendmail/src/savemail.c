@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -93,6 +93,12 @@ if|if
 condition|(
 name|exclusive
 operator|++
+operator|||
+name|CurEnv
+operator|->
+name|e_class
+operator|<=
+name|PRI_JUNK
 condition|)
 return|return;
 name|ForceMail

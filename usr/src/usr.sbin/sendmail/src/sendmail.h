@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.67		%G%"
+literal|"@(#)sendmail.h	3.68		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,6 +884,10 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* function used to put the message */
+name|short
+name|e_class
+decl_stmt|;
+comment|/* message class (priority, junk, etc.) */
 block|}
 struct|;
 end_struct
@@ -959,28 +963,28 @@ comment|/* queue of things to be done */
 end_comment
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRI_ALERT
-value|20
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_QUICK
-value|10
+value|30
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_FIRSTCL
-value|3
+value|10
 end_define
 
 begin_define
@@ -1001,7 +1005,14 @@ begin_define
 define|#
 directive|define
 name|PRI_THIRDCL
-value|-20
+value|-40
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_JUNK
+value|-100
 end_define
 
 begin_define
