@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	8.1 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3957,7 +3957,7 @@ operator|--
 expr_stmt|;
 name|offset
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 comment|/* Check if we need to allocate a new bitmap page */
