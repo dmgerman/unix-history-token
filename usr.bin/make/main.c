@@ -3420,6 +3420,7 @@ decl_stmt|;
 name|void
 modifier|*
 name|q
+name|__unused
 decl_stmt|;
 block|{
 name|char

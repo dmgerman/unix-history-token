@@ -1478,7 +1478,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
@@ -2692,7 +2692,7 @@ index|[
 name|SARMAG
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|,
 name|tlen
