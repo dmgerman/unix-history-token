@@ -3522,6 +3522,10 @@ name|atv
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|time_adjtime
 argument_list|)
 expr_stmt|;
@@ -3608,6 +3612,10 @@ name|atv
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|time_adjtime
 argument_list|)
 expr_stmt|;
