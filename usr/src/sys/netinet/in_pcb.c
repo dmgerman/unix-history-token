@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2022,6 +2022,14 @@ name|ro_rt
 operator|)
 condition|)
 block|{
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2134,20 +2142,13 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|inp
-operator|->
-name|inp_route
-operator|.
-name|ro_rt
-operator|=
-literal|0
-expr_stmt|;
+else|else
+comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
 name|rtfree
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
 block|}
 block|}
 end_block
