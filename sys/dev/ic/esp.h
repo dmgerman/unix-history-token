@@ -114,6 +114,17 @@ begin_comment
 comment|/* set board mode (1 byte) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ESP_SETCLOCK
+value|0x23
+end_define
+
+begin_comment
+comment|/* set UART clock prescaler */
+end_comment
+
 begin_comment
 comment|/* Mode bits (ESP_SETMODE). */
 end_comment
