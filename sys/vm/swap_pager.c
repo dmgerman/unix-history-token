@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.    *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *  * $Id: swap_pager.c,v 1.108 1999/01/21 08:29:09 dillon Exp $  */
+comment|/*  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.    *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *  * $Id: swap_pager.c,v 1.109 1999/01/21 09:33:07 dillon Exp $  */
 end_comment
 
 begin_include
@@ -2432,7 +2432,7 @@ comment|/*  *	swap_pager_putpages:   *  *	Assign swap (if necessary) and initiat
 end_comment
 
 begin_function
-name|int
+name|void
 name|swap_pager_putpages
 parameter_list|(
 name|object
@@ -2470,11 +2470,6 @@ name|int
 name|n
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|grv
-init|=
-name|VM_PAGER_OK
 decl_stmt|;
 if|#
 directive|if
@@ -2652,10 +2647,6 @@ operator|=
 name|VM_PAGER_FAIL
 expr_stmt|;
 block|}
-name|grv
-operator|=
-name|VM_PAGER_FAIL
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Oops, too big if it crosses a stripe 		 * 		 * 1111000000 		 *     111111 		 *    1000001 		 */
@@ -2999,10 +2990,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|grv
-operator|=
-name|VM_PAGER_PEND
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * synchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
@@ -3047,20 +3034,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
-condition|)
-block|{
-name|grv
-operator|=
-name|VM_PAGER_ERROR
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+block|if (bp->b_flags& B_ERROR) { 			grv = VM_PAGER_ERROR; 		}
+endif|#
+directive|endif
 for|for
 control|(
 name|j
@@ -3083,20 +3062,12 @@ index|]
 operator|=
 name|VM_PAGER_PEND
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
-condition|)
-block|{
-name|grv
-operator|=
-name|VM_PAGER_ERROR
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+block|if (bp->b_flags& B_ERROR) { 			grv = VM_PAGER_ERROR; 		}
+endif|#
+directive|endif
 comment|/* 		 * Now that we are through with the bp, we can call the 		 * normal async completion, which frees everything up. 		 */
 name|swp_pager_async_iodone
 argument_list|(
@@ -3109,11 +3080,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|grv
-operator|)
-return|;
 block|}
 end_function
 
