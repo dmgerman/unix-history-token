@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -877,22 +877,21 @@ name|aac_ioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|aac_ioctl_sendfib
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|aac_softc
-operator|*
+modifier|*
 name|sc
-argument_list|,
+parameter_list|,
 name|caddr_t
 name|ufib
-argument_list|)
-name|__unused
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1029,11 +1028,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                  Device Interface  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 				Device Interface  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Initialise the controller and softc  */
+comment|/******************************************************************************  * Initialise the controller and softc  */
 end_comment
 
 begin_function
@@ -1283,7 +1282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Probe for containers, create disks.  */
+comment|/******************************************************************************  * Probe for containers, create disks.  */
 end_comment
 
 begin_function
@@ -1438,7 +1437,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  	 * Check container volume type for validity.  Note that many of the possible types 	 * may never show up. 	 */
+comment|/*  	 * Check container volume type for validity.  Note that many of the 	 * possible types may never show up. 	 */
 if|if
 condition|(
 operator|(
@@ -1656,7 +1655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Free all of the resources associated with (sc)  *  * Should not be called if the controller is active.  */
+comment|/******************************************************************************  * Free all of the resources associated with (sc)  *  * Should not be called if the controller is active.  */
 end_comment
 
 begin_function
@@ -1870,7 +1869,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Disconnect from the controller completely, in preparation for unload.  */
+comment|/******************************************************************************  * Disconnect from the controller completely, in preparation for unload.  */
 end_comment
 
 begin_function
@@ -1942,7 +1941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach or system shutdown.  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
+comment|/******************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach or system shutdown.  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
 end_comment
 
 begin_function
@@ -2104,7 +2103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller to a quiescent state, ready for system suspend.  */
+comment|/******************************************************************************  * Bring the controller to a quiescent state, ready for system suspend.  */
 end_comment
 
 begin_function
@@ -2163,7 +2162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller back to a state ready for operation.  */
+comment|/******************************************************************************  * Bring the controller back to a state ready for operation.  */
 end_comment
 
 begin_function
@@ -2210,7 +2209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  * Take an interrupt.  */
+comment|/******************************************************************************  * Take an interrupt.  */
 end_comment
 
 begin_function
@@ -2355,7 +2354,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* spurious interrupts that we don't use - reset the mask and clear the interrupts */
+comment|/*      * spurious interrupts that we don't use - reset the mask and clear the      * interrupts      */
 if|if
 condition|(
 name|reason
@@ -2390,11 +2389,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                Command Processing  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 				Command Processing  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Start as much queued I/O as possible on the controller  */
+comment|/******************************************************************************  * Start as much queued I/O as possible on the controller  */
 end_comment
 
 begin_function
@@ -2479,7 +2478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Deliver a command to the controller; allocate controller resources at the  * last moment when possible.  */
+comment|/******************************************************************************  * Deliver a command to the controller; allocate controller resources at the  * last moment when possible.  */
 end_comment
 
 begin_function
@@ -2558,7 +2557,7 @@ name|u_int32_t
 operator|)
 name|cm
 expr_stmt|;
-comment|/* XXX 64-bit physical address issue */
+comment|/* XXX 64-bit physical 							 * address issue */
 comment|/* put the FIB on the outbound queue */
 if|if
 condition|(
@@ -2612,7 +2611,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle notification of one or more FIBs coming from the controller.  */
+comment|/******************************************************************************  * Handle notification of one or more FIBs coming from the controller.  */
 end_comment
 
 begin_function
@@ -2719,7 +2718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle notification of one or more FIBs completed by the controller  */
+comment|/******************************************************************************  * Handle notification of one or more FIBs completed by the controller  */
 end_comment
 
 begin_function
@@ -2855,7 +2854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Process completed commands.  */
+comment|/******************************************************************************  * Process completed commands.  */
 end_comment
 
 begin_function
@@ -2958,7 +2957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle a bio submitted from a disk device.  */
+comment|/******************************************************************************  * Handle a bio submitted from a disk device.  */
 end_comment
 
 begin_function
@@ -3018,7 +3017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Get a bio and build a command to go with it.  */
+comment|/******************************************************************************  * Get a bio and build a command to go with it.  */
 end_comment
 
 begin_function
@@ -3420,7 +3419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle a bio-instigated command that has been completed.  */
+comment|/******************************************************************************  * Handle a bio-instigated command that has been completed.  */
 end_comment
 
 begin_function
@@ -3578,7 +3577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Submit a command to the controller, return when it completes.  */
+comment|/******************************************************************************  * Submit a command to the controller, return when it completes.  */
 end_comment
 
 begin_function
@@ -3673,11 +3672,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                         Command Buffer Management  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Command Buffer Management  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Allocate a command.  */
+comment|/******************************************************************************  * Allocate a command.  */
 end_comment
 
 begin_function
@@ -3739,7 +3738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Release a command back to the freelist.  */
+comment|/******************************************************************************  * Release a command back to the freelist.  */
 end_comment
 
 begin_function
@@ -3864,7 +3863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Map helper for command/FIB allocation.  */
+comment|/******************************************************************************  * Map helper for command/FIB allocation.  */
 end_comment
 
 begin_function
@@ -3919,7 +3918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Allocate and initialise commands/FIBs for this adapter.  */
+comment|/******************************************************************************  * Allocate and initialise commands/FIBs for this adapter.  */
 end_comment
 
 begin_function
@@ -4100,7 +4099,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Free FIBs owned by this adapter.  */
+comment|/******************************************************************************  * Free FIBs owned by this adapter.  */
 end_comment
 
 begin_function
@@ -4181,7 +4180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Command-mapping helper function - populate this command's s/g table.  */
+comment|/******************************************************************************  * Command-mapping helper function - populate this command's s/g table.  */
 end_comment
 
 begin_function
@@ -4326,7 +4325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Map a command into controller-visible space.  */
+comment|/******************************************************************************  * Map a command into controller-visible space.  */
 end_comment
 
 begin_function
@@ -4451,7 +4450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Unmap a command from controller-visible space.  */
+comment|/******************************************************************************  * Unmap a command from controller-visible space.  */
 end_comment
 
 begin_function
@@ -4565,11 +4564,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                Hardware Interface  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 				Hardware Interface  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Initialise the adapter.  */
+comment|/******************************************************************************  * Initialise the adapter.  */
 end_comment
 
 begin_function
@@ -4729,7 +4728,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"FATAL: controller not coming ready, status %x\n"
+literal|"FATAL: controller not coming ready, "
+literal|"status %x\n"
 argument_list|,
 name|code
 argument_list|)
@@ -4765,7 +4765,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -4900,7 +4900,7 @@ name|aac_common
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Fill in the init structure.  This tells the adapter about the physical location      * of various important shared data structures.      */
+comment|/*      * Fill in the init structure.  This tells the adapter about the physical      * location of various important shared data structures.      */
 name|ip
 operator|=
 operator|&
@@ -5004,7 +5004,7 @@ operator|=
 name|time_second
 expr_stmt|;
 comment|/* reset later if invalid */
-comment|/*      * Initialise FIB queues.  Note that it appears that the layout of the indexes      * and the segmentation of the entries may be mandated by the adapter, which is       * only told about the base of the queue index fields.      *      * The initial values of the indices are assumed to inform the adapter      * of the sizes of the respective queues, and theoretically it could work out      * the entire layout of the queue structures from this.  We take the easy      * route and just lay this area out like everyone else does.      *      * The Linux driver uses a much more complex scheme whereby several header      * records are kept for each queue.  We use a couple of generic list manipulation      * functions which 'know' the size of each list by virtue of a table.      */
+comment|/*      * Initialise FIB queues.  Note that it appears that the layout of the      * indexes and the segmentation of the entries may be mandated by the      * adapter, which is only told about the base of the queue index fields.      *      * The initial values of the indices are assumed to inform the adapter      * of the sizes of the respective queues, and theoretically it could work      * out the entire layout of the queue structures from this.  We take the      * easy route and just lay this area out like everyone else does.      *      * The Linux driver uses a much more complex scheme whereby several header      * records are kept for each queue.  We use a couple of generic list      * manipulation functions which 'know' the size of each list by virtue of a      * table.      */
 name|qaddr
 operator|=
 operator|&
@@ -5514,7 +5514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a synchronous command to the controller and wait for a result.  */
+comment|/******************************************************************************  * Send a synchronous command to the controller and wait for a result.  */
 end_comment
 
 begin_function
@@ -5671,7 +5671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a synchronous FIB to the controller and wait for a result.  */
+comment|/******************************************************************************  * Send a synchronous FIB to the controller and wait for a result.  */
 end_comment
 
 begin_function
@@ -6009,7 +6009,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Atomically insert an entry into the nominated queue, returns 0 on success or EBUSY  * if the queue is full.  *  * Note: it would be more efficient to defer notifying the controller in  *       the case where we may be inserting several entries in rapid succession, but  *       implementing this usefully may be difficult (it would involve a separate  *       queue/notify interface).  */
+comment|/*  * Atomically insert an entry into the nominated queue, returns 0 on success or  * EBUSY if the queue is full.  *  * Note: it would be more efficient to defer notifying the controller in  *       the case where we may be inserting several entries in rapid succession,  *       but implementing this usefully may be difficult (it would involve a  *       separate queue/notify interface).  */
 end_comment
 
 begin_function
@@ -6209,7 +6209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Atomically remove one entry from the nominated queue, returns 0 on success or ENOENT  * if the queue is empty.  */
+comment|/*  * Atomically remove one entry from the nominated queue, returns 0 on success or  * ENOENT if the queue is empty.  */
 end_comment
 
 begin_function
@@ -6428,7 +6428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Check for commands that have been outstanding for a suspiciously long time,  * and complain about them.  */
+comment|/******************************************************************************  * Check for commands that have been outstanding for a suspiciously long time,  * and complain about them.  */
 end_comment
 
 begin_function
@@ -6569,11 +6569,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                        Interface Function Vectors  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Interface Function Vectors  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Read the current firmware status word.  */
+comment|/******************************************************************************  * Read the current firmware status word.  */
 end_comment
 
 begin_function
@@ -6635,7 +6635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Notify the controller of a change in a given queue  */
+comment|/******************************************************************************  * Notify the controller of a change in a given queue  */
 end_comment
 
 begin_function
@@ -6701,7 +6701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Get the interrupt reason bits  */
+comment|/******************************************************************************  * Get the interrupt reason bits  */
 end_comment
 
 begin_function
@@ -6763,7 +6763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Clear some interrupt reason bits  */
+comment|/******************************************************************************  * Clear some interrupt reason bits  */
 end_comment
 
 begin_function
@@ -6829,7 +6829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Populate the mailbox and set the command word  */
+comment|/******************************************************************************  * Populate the mailbox and set the command word  */
 end_comment
 
 begin_function
@@ -7007,7 +7007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Fetch the immediate command status word  */
+comment|/******************************************************************************  * Fetch the immediate command status word  */
 end_comment
 
 begin_function
@@ -7069,7 +7069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Set/clear interrupt masks  */
+comment|/******************************************************************************  * Set/clear interrupt masks  */
 end_comment
 
 begin_function
@@ -7194,11 +7194,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                         Debugging and Diagnostics  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Debugging and Diagnostics  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Print some information about the controller.  */
+comment|/******************************************************************************  * Print some information about the controller.  */
 end_comment
 
 begin_function
@@ -7218,7 +7218,7 @@ index|[
 name|AAC_FIB_DATASIZE
 index|]
 decl_stmt|;
-comment|/* XXX really a bit big for the stack */
+comment|/* XXX really a bit big 							 * for the stack */
 name|u_int16_t
 name|bufsize
 decl_stmt|;
@@ -7293,7 +7293,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"RequestAdapterInfo returned wrong data size (%d != %d)\n"
+literal|"RequestAdapterInfo returned wrong data "
+literal|"size (%d != %d)\n"
 argument_list|,
 name|bufsize
 argument_list|,
@@ -7416,12 +7417,12 @@ operator|->
 name|SerialNumber
 argument_list|)
 expr_stmt|;
-comment|/* XXX how is this meant to be formatted? */
+comment|/* XXX format? */
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Look up a text description of a numeric error code and return a pointer to  * same.  */
+comment|/******************************************************************************  * Look up a text description of a numeric error code and return a pointer to  * same.  */
 end_comment
 
 begin_function
@@ -7497,7 +7498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *****************************************************************************                                                     Management Interface  *****************************************************************************  *****************************************************************************/
+comment|/*****************************************************************************  ***************************************************************************** 				Management Interface  *****************************************************************************  *****************************************************************************/
 end_comment
 
 begin_function
@@ -7883,7 +7884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a FIB supplied from userspace  */
+comment|/******************************************************************************  * Send a FIB supplied from userspace  */
 end_comment
 
 begin_function
@@ -8154,7 +8155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle an AIF sent to us by the controller; queue it for later reference.  *  * XXX what's the right thing to do here when the queue is full?  Drop the older  * or newer entries?  */
+comment|/******************************************************************************  * Handle an AIF sent to us by the controller; queue it for later reference.  *  * XXX what's the right thing to do here when the queue is full?  Drop the older  * or newer entries?  */
 end_comment
 
 begin_function
@@ -8266,7 +8267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                        Linux Management Interface  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Linux Management Interface  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_ifdef
@@ -8449,7 +8450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus right now  * because I have no idea how to handle the versioning of this driver.  It is  * needed, though, to get aaccli working.  */
+comment|/******************************************************************************  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus right now  * because I have no idea how to handle the versioning of this driver.  It is  * needed, though, to get aaccli working.  */
 end_comment
 
 begin_function
@@ -8587,7 +8588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Pass the caller the next AIF in their queue  */
+comment|/******************************************************************************  * Pass the caller the next AIF in their queue  */
 end_comment
 
 begin_function
@@ -8760,7 +8761,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Hand the next AIF off the top of the queue out to userspace.  */
+comment|/******************************************************************************  * Hand the next AIF off the top of the queue out to userspace.  */
 end_comment
 
 begin_function

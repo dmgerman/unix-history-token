@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_include
@@ -308,7 +308,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/********************************************************************************  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */
+comment|/******************************************************************************  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */
 end_comment
 
 begin_function
@@ -474,7 +474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle last close of the disk device.  */
+comment|/******************************************************************************  * Handle last close of the disk device.  */
 end_comment
 
 begin_function
@@ -543,7 +543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle an I/O request.  */
+comment|/******************************************************************************  * Handle an I/O request.  */
 end_comment
 
 begin_function
@@ -625,7 +625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle completion of an I/O request.  */
+comment|/******************************************************************************  * Handle completion of an I/O request.  */
 end_comment
 
 begin_function
@@ -706,7 +706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Stub only.  */
+comment|/******************************************************************************  * Stub only.  */
 end_comment
 
 begin_function
@@ -732,7 +732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Attach a unit to the controller.  */
+comment|/******************************************************************************  * Attach a unit to the controller.  */
 end_comment
 
 begin_function
@@ -803,7 +803,7 @@ name|ad_dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* require that extended translation be enabled - other drivers read the disk! */
+comment|/*      * require that extended translation be enabled - other drivers read the      * disk!      */
 name|sc
 operator|->
 name|ad_size
@@ -1002,7 +1002,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * We can calculate the maximum number of s/g entries based on the size of the      * FIB and the command structures packed within it.      */
+comment|/*      * We can calculate the maximum number of s/g entries based on the size of      * the FIB and the command structures packed within it.      */
 name|sgspace
 operator|=
 operator|(
@@ -1052,7 +1052,7 @@ expr|struct
 name|aac_sg_entry
 argument_list|)
 expr_stmt|;
-comment|/* set the maximum I/O size to the theoretical worst maximum allowed by the S/G list size */
+comment|/*            * set the maximum I/O size to the theoretical worst maximum allowed by the      * S/G list size      */
 name|sc
 operator|->
 name|ad_dev_t
@@ -1076,7 +1076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Disconnect ourselves from the system.  */
+comment|/******************************************************************************  * Disconnect ourselves from the system.  */
 end_comment
 
 begin_function

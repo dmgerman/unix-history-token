@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/********************************************************************************  * Dump the command queue indices  */
+comment|/******************************************************************************  * Dump the command queue indices  */
 end_comment
 
 begin_function
@@ -568,7 +568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Print the command queue states for controller 0 (callable from DDB)  */
+comment|/******************************************************************************  * Print the command queue states for controller 0 (callable from DDB)  */
 end_comment
 
 begin_function
@@ -672,7 +672,7 @@ argument_list|,
 name|AAC_RX_OIMR
 argument_list|,
 literal|0
-comment|/*~(AAC_DB_COMMAND_READY | AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)*/
+comment|/*~(AAC_DB_COMMAND_READY | 		AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)*/
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -715,7 +715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * simulate an interrupt for controller 0  */
+comment|/******************************************************************************  * simulate an interrupt for controller 0  */
 end_comment
 
 begin_function
@@ -746,7 +746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Panic in a slightly informative fashion  */
+comment|/******************************************************************************  * Panic in a slightly informative fashion  */
 end_comment
 
 begin_function
@@ -777,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Print a FIB  */
+comment|/******************************************************************************  * Print a FIB  */
 end_comment
 
 begin_function
@@ -1074,7 +1074,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  BlockWrite: container %d  0x%x/%d (%s)\n"
+literal|"  BlockWrite: container %d  0x%x/%d "
+literal|"(%s)\n"
 argument_list|,
 name|bw
 operator|->
@@ -1211,7 +1212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Describe an AIF we have received.  */
+comment|/******************************************************************************  * Describe an AIF we have received.  */
 end_comment
 
 begin_function
@@ -1322,7 +1323,7 @@ break|break;
 case|case
 name|AifEnConfigChange
 case|:
-comment|/* Adapter configuration change occurred */
+comment|/* Adapter configuration change 						 * occurred */
 name|device_printf
 argument_list|(
 name|sc
@@ -1336,7 +1337,7 @@ break|break;
 case|case
 name|AifEnContainerChange
 case|:
-comment|/* Adapter specific container configuration change */
+comment|/* Adapter specific container 						 * configuration change */
 name|device_printf
 argument_list|(
 name|sc
@@ -1402,7 +1403,7 @@ operator|.
 name|deviceHandle
 argument_list|)
 expr_stmt|;
-comment|/* XXX interpret */
+comment|/* XXX 								 * interpret */
 break|break;
 case|case
 name|AifEnMirrorFailover
@@ -1414,7 +1415,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(MirrorFailover) container %d failed, migrating from slice %d to %d\n"
+literal|"(MirrorFailover) container %d failed, "
+literal|"migrating from slice %d to %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1457,14 +1459,15 @@ break|break;
 case|case
 name|AifEnContainerEvent
 case|:
-comment|/* Significant container event */
+comment|/* Significant container 						 * event */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ContainerEvent) container %d event %d\n"
+literal|"(ContainerEvent) container %d event "
+literal|"%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1491,7 +1494,7 @@ operator|.
 name|eventType
 argument_list|)
 expr_stmt|;
-comment|/* XXX interpret? */
+comment|/* XXX 								 * interpret? */
 break|break;
 case|case
 name|AifEnFileSystemChange
@@ -1538,7 +1541,7 @@ break|break;
 case|case
 name|AifEnFailoverChange
 case|:
-comment|/* Failover space assignment changed */
+comment|/* Failover space assignment 						 * changed */
 name|device_printf
 argument_list|(
 name|sc
@@ -1573,7 +1576,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(EnclosureManagement) EMPID %d unit %d event %d\n"
+literal|"(EnclosureManagement) EMPID %d unit %d "
+literal|"event %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1616,14 +1620,15 @@ break|break;
 case|case
 name|AifEnBatteryEvent
 case|:
-comment|/* Significant NV battery event */
+comment|/* Significant NV battery 						 * event */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(BatteryEvent) %d (state was %d, is %d)\n"
+literal|"(BatteryEvent) %d (state was %d, "
+literal|"is %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1637,7 +1642,6 @@ name|EBE
 operator|.
 name|transition_type
 argument_list|,
-comment|/* XXX interpret */
 name|aif
 operator|->
 name|data
@@ -1650,6 +1654,7 @@ name|EBE
 operator|.
 name|current_state
 argument_list|,
+comment|/* XXX */
 name|aif
 operator|->
 name|data
@@ -1663,11 +1668,12 @@ operator|.
 name|prior_state
 argument_list|)
 expr_stmt|;
+comment|/* interpret? */
 break|break;
 case|case
 name|AifEnAddContainer
 case|:
-comment|/* A new container was created. */
+comment|/* A new container was 						 * created. */
 name|device_printf
 argument_list|(
 name|sc
@@ -1695,7 +1701,7 @@ break|break;
 case|case
 name|AifEnBatteryNeedsRecond
 case|:
-comment|/* The battery needs reconditioning */
+comment|/* The battery needs 						 * reconditioning */
 name|device_printf
 argument_list|(
 name|sc
@@ -1742,7 +1748,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(DiskSetEvent) event %d diskset %lld creator %lld\n"
+literal|"(DiskSetEvent) event %d diskset %lld "
+literal|"creator %lld\n"
 argument_list|,
 name|aif
 operator|->
@@ -1785,7 +1792,7 @@ break|break;
 case|case
 name|AifDenMorphComplete
 case|:
-comment|/* A morph operation completed */
+comment|/* A morph operation 						 * completed */
 name|device_printf
 argument_list|(
 name|sc
@@ -1799,7 +1806,7 @@ break|break;
 case|case
 name|AifDenVolumeExtendComplete
 case|:
-comment|/* A volume expand operation completed */
+comment|/* A volume expand operation 						 * completed */
 name|device_printf
 argument_list|(
 name|sc
@@ -1964,7 +1971,7 @@ block|{
 case|case
 name|AifJobScsiZero
 case|:
-comment|/* SCSI device clear operation */
+comment|/* SCSI dev clear operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -1993,7 +2000,7 @@ break|break;
 case|case
 name|AifJobScsiVerify
 case|:
-comment|/* SCSI device Verify operation NO REPAIR */
+comment|/* SCSI device Verify operation 						 * NO REPAIR */
 name|device_printf
 argument_list|(
 name|sc
@@ -2022,7 +2029,7 @@ break|break;
 case|case
 name|AifJobScsiExercise
 case|:
-comment|/* SCSI device Exercise operation */
+comment|/* SCSI device Exercise 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2051,7 +2058,7 @@ break|break;
 case|case
 name|AifJobScsiVerifyRepair
 case|:
-comment|/* SCSI device Verify operation WITH repair */
+comment|/* SCSI device Verify operation 						 * WITH repair */
 name|device_printf
 argument_list|(
 name|sc
@@ -2159,14 +2166,15 @@ break|break;
 case|case
 name|AifJobCtrCreateMirror
 case|:
-comment|/* Container Create Mirror operation */
+comment|/* Container Create Mirror 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerCreateMirror) container %d\n"
+literal|"(ConatainerCreateMirror) container "
+literal|"%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2191,7 +2199,7 @@ break|break;
 case|case
 name|AifJobCtrMergeMirror
 case|:
-comment|/* Container Merge Mirror operation */
+comment|/* Container Merge Mirror 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2223,7 +2231,7 @@ break|break;
 case|case
 name|AifJobCtrScrubMirror
 case|:
-comment|/* Container Scrub Mirror operation */
+comment|/* Container Scrub Mirror 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2254,14 +2262,15 @@ break|break;
 case|case
 name|AifJobCtrRebuildRaid5
 case|:
-comment|/* Container Rebuild Raid5 operation */
+comment|/* Container Rebuild Raid5 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerRebuildRaid5) container %d\n"
+literal|"(ConatainerRebuildRaid5) container "
+literal|"%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2285,7 +2294,7 @@ break|break;
 case|case
 name|AifJobCtrScrubRaid5
 case|:
-comment|/* Container Scrub Raid5 operation */
+comment|/* Container Scrub Raid5 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2348,14 +2357,15 @@ break|break;
 case|case
 name|AifJobCtrPartCopy
 case|:
-comment|/* Container Partition copy operation */
+comment|/* Container Partition copy 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerPartCopy) container %d to %d\n"
+literal|"(ConatainerPartCopy) container %d to "
+literal|"%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2396,14 +2406,15 @@ break|break;
 case|case
 name|AifJobCtrRebuildMirror
 case|:
-comment|/* Container Rebuild Mirror operation */
+comment|/* Container Rebuild Mirror 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerRebuildMirror) container %d\n"
+literal|"(ConatainerRebuildMirror) container "
+literal|"%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2459,7 +2470,7 @@ break|break;
 case|case
 name|AifJobFsCreate
 case|:
-comment|/* File System Create operation */
+comment|/* File System Create 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2473,7 +2484,7 @@ break|break;
 case|case
 name|AifJobFsVerify
 case|:
-comment|/* File System Verify operation */
+comment|/* File System Verify 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2487,7 +2498,7 @@ break|break;
 case|case
 name|AifJobFsExtend
 case|:
-comment|/* File System Extend operation */
+comment|/* File System Extend 						 * operation */
 name|device_printf
 argument_list|(
 name|sc
@@ -2529,7 +2540,7 @@ break|break;
 case|case
 name|AifJobApiUpdateSnapshot
 case|:
-comment|/* update the read/write half of a snapshot */
+comment|/* update the read/write half 						 * of a snapshot */
 name|device_printf
 argument_list|(
 name|sc

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                      Driver Parameter Definitions  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Driver Parameter Definitions  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * The controller reports status events in AIFs.  We hang on to a number of these  * in order to pass them out to user-space management tools.  */
+comment|/*  * The controller reports status events in AIFs.  We hang on to a number of  * these in order to pass them out to user-space management tools.  */
 end_comment
 
 begin_define
@@ -67,7 +67,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * We wait this many seconds for the adapter to come ready if it is still booting  */
+comment|/*  * We wait this many seconds for the adapter to come ready if it is still   * booting  */
 end_comment
 
 begin_define
@@ -134,7 +134,7 @@ value|200
 end_define
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                       Driver Variable Definitions  ********************************************************************************  ********************************************************************************/
+comment|/******************************************************************************  ****************************************************************************** 			Driver Variable Definitions  ******************************************************************************  ******************************************************************************/
 end_comment
 
 begin_include
@@ -266,7 +266,7 @@ name|aac_fib
 modifier|*
 name|cm_fib
 decl_stmt|;
-comment|/* FIB associated with this command */
+comment|/* FIB associated with this 						 * command */
 name|u_int32_t
 name|cm_fibphys
 decl_stmt|;
@@ -276,7 +276,7 @@ name|bio
 modifier|*
 name|cm_data
 decl_stmt|;
-comment|/* pointer to data in kernel space */
+comment|/* pointer to data in kernel 						 * space */
 name|u_int32_t
 name|cm_datalen
 decl_stmt|;
@@ -290,7 +290,7 @@ name|aac_sg_table
 modifier|*
 name|cm_sgtable
 decl_stmt|;
-comment|/* pointer to s/g table in command */
+comment|/* pointer to s/g table in 						 * command */
 name|int
 name|cm_flags
 decl_stmt|;
@@ -298,17 +298,17 @@ define|#
 directive|define
 name|AAC_CMD_MAPPED
 value|(1<<0)
-comment|/* command has had its data mapped */
+comment|/* command has had its data 						 * mapped */
 define|#
 directive|define
 name|AAC_CMD_DATAIN
 value|(1<<1)
-comment|/* command involves data moving from controller to host */
+comment|/* command involves data moving 						 * from controller to host */
 define|#
 directive|define
 name|AAC_CMD_DATAOUT
 value|(1<<2)
-comment|/* command involves data moving from host to controller */
+comment|/* command involves data moving 						 * from host to controller */
 define|#
 directive|define
 name|AAC_CMD_COMPLETED
@@ -570,7 +570,7 @@ name|sc
 parameter_list|,
 name|mask
 parameter_list|)
-value|((sc)->aac_if.aif_set_istatus((sc), (mask)))
+value|((sc)->aac_if.aif_set_istatus((sc), \ 					(mask)))
 end_define
 
 begin_define
@@ -591,7 +591,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|((sc)->aac_if.aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), (arg3)))
+value|((sc)->aac_if.aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), \ 	(arg3)))
 end_define
 
 begin_define
@@ -635,7 +635,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_4(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -647,7 +647,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_4 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_4 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_define
@@ -661,7 +661,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_2(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_2(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -673,7 +673,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_2 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_2 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_define
@@ -687,7 +687,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_1(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -699,7 +699,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_1 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_comment
@@ -719,7 +719,7 @@ name|resource
 modifier|*
 name|aac_regs_resource
 decl_stmt|;
-comment|/* register interface window */
+comment|/* register interface 							 * window */
 name|int
 name|aac_regs_rid
 decl_stmt|;
@@ -739,7 +739,7 @@ comment|/* parent DMA tag */
 name|bus_dma_tag_t
 name|aac_buffer_dmat
 decl_stmt|;
-comment|/* data buffer/command DMA tag */
+comment|/* data buffer/command 							 * DMA tag */
 name|struct
 name|resource
 modifier|*
@@ -797,11 +797,11 @@ value|-1
 name|bus_dma_tag_t
 name|aac_common_dmat
 decl_stmt|;
-comment|/* common structure DMA tag */
+comment|/* common structure 							 * DMA tag */
 name|bus_dmamap_t
 name|aac_common_dmamap
 decl_stmt|;
-comment|/* common structure DMA map */
+comment|/* common structure 							 * DMA map */
 name|struct
 name|aac_common
 modifier|*
@@ -818,7 +818,7 @@ comment|/* command/fib resources */
 name|bus_dma_tag_t
 name|aac_fib_dmat
 decl_stmt|;
-comment|/* DMA tag for allocating FIBs */
+comment|/* DMA tag for allocing FIBs */
 name|struct
 name|aac_fib
 modifier|*
@@ -845,7 +845,7 @@ argument|aac_command
 argument_list|)
 name|aac_free
 expr_stmt|;
-comment|/* command structures available for reuse */
+comment|/* command structures  						 * available for reuse */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -853,7 +853,7 @@ argument|aac_command
 argument_list|)
 name|aac_ready
 expr_stmt|;
-comment|/* commands on hold for controller resources */
+comment|/* commands on hold for 						 * controller resources */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -868,7 +868,7 @@ argument|aac_command
 argument_list|)
 name|aac_complete
 expr_stmt|;
-comment|/* commands which have been returned by the controller */
+comment|/* commands which have been 						 * returned by the controller */
 name|struct
 name|bio_queue_head
 name|aac_bioq
@@ -912,7 +912,7 @@ name|struct
 name|task
 name|aac_task_complete
 decl_stmt|;
-comment|/* deferred-completion task */
+comment|/* deferred-completion 							 * task */
 endif|#
 directive|endif
 name|struct
@@ -1082,7 +1082,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	if (level<= AAC_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);	\     } while(0)
+value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); \     } while(0)
 end_define
 
 begin_define
@@ -1269,7 +1269,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Queue primitives for driver queues.  */
+comment|/******************************************************************************  * Queue primitives for driver queues.  */
 end_comment
 
 begin_define
