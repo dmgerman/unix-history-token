@@ -1203,13 +1203,16 @@ name|uniarp_pdu_print
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|ipvcc
 operator|*
 operator|,
+specifier|const
 name|KBuffer
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)

@@ -854,13 +854,16 @@ name|sscop_pdu_print
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sscop
 operator|*
 operator|,
+specifier|const
 name|KBuffer
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)

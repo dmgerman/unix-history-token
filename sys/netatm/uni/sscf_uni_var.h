@@ -362,13 +362,16 @@ name|sscf_uni_pdu_print
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|univcc
 operator|*
 operator|,
+specifier|const
 name|KBuffer
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
