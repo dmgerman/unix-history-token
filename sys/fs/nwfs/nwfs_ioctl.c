@@ -332,7 +332,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|ENOTTY
 expr_stmt|;
 block|}
 return|return

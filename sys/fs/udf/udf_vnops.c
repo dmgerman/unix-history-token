@@ -1909,7 +1909,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EOPNOTSUPP
+name|ENOTTY
 operator|)
 return|;
 block|}
