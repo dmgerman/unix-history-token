@@ -34,6 +34,17 @@ value|15
 end_define
 
 begin_comment
+comment|/*  * Maximum number of physical devices we support.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISS_MAX_PHYSICAL
+value|1024
+end_define
+
+begin_comment
 comment|/*  * Interrupt reduction can be controlled by tuning the interrupt  * coalesce delay and count paramters.  The delay (in microseconds)  * defers delivery of interrupts to increase the chance of there being  * more than one completed command ready when the interrupt is  * delivered.  The count expedites the delivery of the interrupt when  * the given number of commands are ready.  *  * If the delay is set to 0, interrupts are delivered immediately.  */
 end_comment
 
@@ -60,17 +71,6 @@ define|#
 directive|define
 name|CISS_HEARTBEAT_RATE
 value|10
-end_define
-
-begin_comment
-comment|/*  * Maximum number of events we will queue for a monitoring utility.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISS_MAX_EVENTS
-value|32
 end_define
 
 begin_comment
@@ -132,8 +132,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CISSQ_COUNT
+name|CISSQ_NOTIFY
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISSQ_COUNT
+value|4
 end_define
 
 begin_struct
@@ -286,6 +293,11 @@ name|union
 name|ciss_device_address
 name|cl_address
 decl_stmt|;
+name|union
+name|ciss_device_address
+modifier|*
+name|cl_controller
+decl_stmt|;
 name|int
 name|cl_status
 decl_stmt|;
@@ -301,6 +313,9 @@ define|#
 directive|define
 name|CISS_LD_OFFLINE
 value|2
+name|int
+name|cl_update
+decl_stmt|;
 name|struct
 name|ciss_bmic_id_ldrive
 modifier|*
@@ -470,6 +485,19 @@ argument_list|)
 name|ciss_complete
 expr_stmt|;
 comment|/* requests which have been returned by the adapter */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ciss_request
+argument_list|)
+name|ciss_notify
+expr_stmt|;
+comment|/* requests which are defered for processing */
+name|struct
+name|proc
+modifier|*
+name|ciss_notify_thread
+decl_stmt|;
 name|struct
 name|callout_handle
 name|ciss_periodic
@@ -482,26 +510,21 @@ name|ciss_periodic_notify
 decl_stmt|;
 comment|/* notify callback request */
 name|struct
-name|ciss_notify
-name|ciss_notify
-index|[
-name|CISS_MAX_EVENTS
-index|]
-decl_stmt|;
-name|int
-name|ciss_notify_head
-decl_stmt|;
-comment|/* saved-event ringbuffer */
-name|int
-name|ciss_notify_tail
-decl_stmt|;
-name|struct
 name|ciss_ldrive
+modifier|*
+modifier|*
 name|ciss_logical
-index|[
-name|CISS_MAX_LOGICAL
-index|]
 decl_stmt|;
+name|union
+name|ciss_device_address
+modifier|*
+name|ciss_controllers
+decl_stmt|;
+comment|/* controller address */
+name|int
+name|ciss_max_bus_number
+decl_stmt|;
+comment|/* maximum bus number */
 name|struct
 name|cam_devq
 modifier|*
@@ -510,12 +533,8 @@ decl_stmt|;
 name|struct
 name|cam_sim
 modifier|*
-name|ciss_cam_sim
-decl_stmt|;
-name|struct
-name|cam_path
 modifier|*
-name|ciss_cam_path
+name|ciss_cam_sim
 decl_stmt|;
 name|int
 name|ciss_flags
@@ -550,6 +569,11 @@ directive|define
 name|CISS_FLAG_BMIC_ABORT
 value|(1<<17)
 comment|/* use BMIC command to abort Notify on Event */
+define|#
+directive|define
+name|CISS_FLAG_THREAD_SHUT
+value|(1<<20)
+comment|/* shutdown the kthread */
 name|struct
 name|ciss_qstat
 name|ciss_qstat
@@ -856,6 +880,16 @@ argument_list|(
 name|complete
 argument_list|,
 name|CISSQ_COMPLETE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CISSQ_REQUEST_QUEUE
+argument_list|(
+name|notify
+argument_list|,
+name|CISSQ_NOTIFY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
