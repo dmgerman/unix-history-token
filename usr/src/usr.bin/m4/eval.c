@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.3 (Berkeley) %G%"
+literal|"@(#)eval.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,30 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mdef.h"
 end_include
 
@@ -48,24 +72,6 @@ begin_function_decl
 specifier|extern
 name|ndptr
 name|lookup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strsave
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mktemp
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1030,7 +1036,7 @@ operator|>
 literal|2
 operator|)
 condition|?
-name|strsave
+name|strdup
 argument_list|(
 name|argv
 index|[

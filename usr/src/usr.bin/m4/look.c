@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	5.2 (Berkeley) %G%"
+literal|"@(#)look.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mdef.h"
 end_include
 
@@ -43,15 +61,6 @@ include|#
 directive|include
 file|"extr.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strsave
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  *  hash - compute hash value using the proverbial  *	   hashing function. Taken from K&R.  */
@@ -231,7 +240,7 @@ name|p
 operator|->
 name|name
 operator|=
-name|strsave
+name|strdup
 argument_list|(
 name|name
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.5 (Berkeley) %G%"
+literal|"@(#)misc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,30 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mdef.h"
 end_include
 
@@ -44,14 +68,11 @@ directive|include
 file|"extr.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_comment
 comment|/*  * indx - find the index of second str in the  *        first str.  */
@@ -582,12 +603,10 @@ literal|"\ninterrupted."
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|error
 argument_list|(
@@ -595,7 +614,7 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * killdiv - get rid of the diversion files  *  */
@@ -667,70 +686,6 @@ block|}
 block|}
 end_block
 
-begin_comment
-comment|/*  * save a string somewhere..  *  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|strsave
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|n
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|malloc
-argument_list|(
-name|n
-operator|=
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|memcpy
-argument_list|(
-name|p
-argument_list|,
-name|s
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|p
-operator|)
-return|;
-block|}
-end_function
-
 begin_macro
 name|usage
 argument_list|()
@@ -742,7 +697,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: m4 [-Dname[=val]] [-Uname]\n"
+literal|"usage: m4 [-Dname[=val]] [-Uname]\n"
 argument_list|)
 expr_stmt|;
 name|exit

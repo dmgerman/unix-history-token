@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c	5.2 (Berkeley) %G%"
+literal|"@(#)expr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_comment
 comment|/*  *      expression evaluator: performs a standard recursive  *      descent parse to evaluate any expression permissible  *      within the following grammar:  *  *      expr    :       query EOS  *      query   :       lor  *              |       lor "?" query ":" query  *      lor     :       land { "||" land }  *      land    :       bor { "&&" bor }  *      bor     :       bxor { "|" bxor }  *      bxor    :       band { "^" band }  *      band    :       eql { "&" eql }  *      eql     :       relat { eqrel relat }  *      relat   :       shift { rel shift }  *      shift   :       primary { shop primary }  *      primary :       term { addop term }  *      term    :       unary { mulop unary }  *      unary   :       factor  *              |       unop unary  *      factor  :       constant  *              |       "(" query ")"  *      constant:       num  *              |       "'" CHAR "'"  *      num     :       DIGIT  *              |       DIGIT num  *      shop    :       "<<"  *              |       ">>"  *      eqlrel  :       "="  *              |       "=="  *              |       "!="  *      rel     :       "<"  *              |       ">"  *              |       "<="  *              |       ">="  *  *  *      This expression evaluator is lifted from a public-domain  *      C Pre-Processor included with the DECUS C Compiler distribution.  *      It is hacked somewhat to be suitable for m4.  *  *      Originally by:  Mike Lutz  *                      Bob Harper  */
@@ -124,12 +136,6 @@ end_comment
 begin_comment
 comment|/*  * For longjmp  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
 
 begin_decl_stmt
 specifier|static
