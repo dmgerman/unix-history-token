@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.31 1998/12/24 23:27:33 dillon Exp $"
+literal|"$Id: w.c,v 1.32 1999/01/10 15:28:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -543,11 +545,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
 name|struct
 name|kinfo_proc
 modifier|*
@@ -574,9 +571,6 @@ name|ut
 decl_stmt|;
 name|u_long
 name|l
-decl_stmt|;
-name|size_t
-name|arglen
 decl_stmt|;
 name|int
 name|ch
@@ -943,11 +937,13 @@ argument_list|(
 name|utmp
 operator|.
 name|ut_line
+argument_list|,
+name|UT_LINESIZE
 argument_list|)
 operator|)
 condition|)
-comment|/* corrupted record */
 continue|continue;
+comment|/* corrupted record */
 operator|++
 name|nusers
 expr_stmt|;
@@ -1275,7 +1271,7 @@ block|{
 name|struct
 name|proc
 modifier|*
-name|p
+name|pr
 init|=
 operator|&
 name|kp
@@ -1289,13 +1285,13 @@ name|e
 decl_stmt|;
 if|if
 condition|(
-name|p
+name|pr
 operator|->
 name|p_stat
 operator|==
 name|SIDL
 operator|||
-name|p
+name|pr
 operator|->
 name|p_stat
 operator|==
@@ -1367,7 +1363,7 @@ name|kp
 operator|->
 name|kp_proc
 argument_list|,
-name|p
+name|pr
 argument_list|)
 condition|)
 name|ep
@@ -2042,9 +2038,9 @@ control|)
 block|{
 name|char
 modifier|*
-name|p
+name|ptr
 decl_stmt|;
-name|p
+name|ptr
 operator|=
 name|fmt_argv
 argument_list|(
@@ -2068,11 +2064,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|ptr
 operator|==
 name|NULL
 condition|)
-name|p
+name|ptr
 operator|=
 literal|"-"
 expr_stmt|;
@@ -2089,7 +2085,7 @@ name|kp_proc
 operator|.
 name|p_pid
 argument_list|,
-name|p
+name|ptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2671,10 +2667,15 @@ modifier|*
 name|ttystat
 parameter_list|(
 name|line
+parameter_list|,
+name|sz
 parameter_list|)
 name|char
 modifier|*
 name|line
+decl_stmt|;
+name|int
+name|sz
 decl_stmt|;
 block|{
 specifier|static
@@ -2700,9 +2701,11 @@ argument_list|(
 name|ttybuf
 argument_list|)
 argument_list|,
-literal|"%s/%s"
+literal|"%s%.*s"
 argument_list|,
 name|_PATH_DEV
+argument_list|,
+name|sz
 argument_list|,
 name|line
 argument_list|)
