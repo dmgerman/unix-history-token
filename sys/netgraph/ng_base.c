@@ -1526,15 +1526,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-operator|||
-name|name
-index|[
-literal|1
-index|]
-operator|==
-literal|'0'
 condition|)
-comment|/* "[0]" is not valid */
 return|return
 operator|(
 literal|0
@@ -1568,6 +1560,10 @@ operator|||
 name|val
 operator|==
 name|ULONG_MAX
+operator|||
+name|val
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
