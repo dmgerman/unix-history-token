@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.13 1999/01/19 22:16:01 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.14 1999/01/28 01:56:31 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
-comment|/*  *   Actions  */
+comment|/* Actions */
 end_comment
 
 begin_define
@@ -50,7 +50,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  *   Known protocols  */
+comment|/* Known protocols */
 end_comment
 
 begin_define
@@ -82,7 +82,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  *   Operations  */
+comment|/* Operations */
 end_comment
 
 begin_define
@@ -113,6 +113,31 @@ name|OP_LT
 value|4
 end_define
 
+begin_comment
+comment|/* srctype or dsttype */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ADDR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_MYADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_HISADDR
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|filterent
@@ -121,34 +146,28 @@ name|int
 name|action
 decl_stmt|;
 comment|/* Filtering action */
-name|int
-name|swidth
+name|unsigned
+name|srctype
+range|:
+literal|2
 decl_stmt|;
-comment|/* Effective source address width */
+comment|/* T_ value of src */
 name|struct
-name|in_addr
-name|saddr
+name|in_range
+name|src
 decl_stmt|;
 comment|/* Source address */
-name|struct
-name|in_addr
-name|smask
+name|unsigned
+name|dsttype
+range|:
+literal|2
 decl_stmt|;
-comment|/* Source address mask */
-name|int
-name|dwidth
-decl_stmt|;
-comment|/* Effective destination address width */
+comment|/* T_ value of dst */
 name|struct
-name|in_addr
-name|daddr
+name|in_range
+name|dst
 decl_stmt|;
 comment|/* Destination address */
-name|struct
-name|in_addr
-name|dmask
-decl_stmt|;
-comment|/* Destination address mask */
 name|int
 name|proto
 decl_stmt|;
@@ -367,6 +386,26 @@ name|in_addr
 name|bits2mask
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|filter_AdjustAddr
+parameter_list|(
+name|struct
+name|filter
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.76 1999/05/08 11:06:45 brian Exp $  *  *	TODO:  *		o Support IPADDRS properly  *		o Validate the length in IpcpDecodeConfig  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.77 1999/05/09 20:02:19 brian Exp $  *  *	TODO:  *		o Support IPADDRS properly  *		o Validate the length in IpcpDecodeConfig  */
 end_comment
 
 begin_include
@@ -5801,6 +5801,20 @@ name|my_ip
 operator|=
 name|ipaddr
 expr_stmt|;
+name|bundle_AdjustFilters
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|,
+operator|&
+name|ipcp
+operator|->
+name|my_ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7486,9 +7500,7 @@ name|src
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|ipcp
@@ -7639,9 +7651,22 @@ else|else
 return|return
 literal|0
 return|;
+name|bundle_AdjustFilters
+argument_list|(
+name|bundle
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ipcp
+operator|->
+name|peer_ip
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
+comment|/* Ok */
 block|}
 end_function
 
