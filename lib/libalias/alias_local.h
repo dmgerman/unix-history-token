@@ -1,44 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It also includes macros, globals and     struct definitions shared by more than one alias*.c file.      This include file is intended to be used only within the aliasing     software.  Outside world interfaces are defined in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eklund>      $FreeBSD$ */
+comment|/*  * Alias_local.h contains the function prototypes for alias.c,  * alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well  * as any future add-ons).  It also includes macros, globals and  * struct definitions shared by more than one alias*.c file.  *  * This include file is intended to be used only within the aliasing  * software.  Outside world interfaces are defined in alias.h  *  * This software is placed into the public domain with no restrictions  * on its distribution.  *  * Initial version:  August, 1996  (cjm)      *  *<updated several times by original author and Eivind Eklund>  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALIAS_LOCAL_H
+name|_ALIAS_LOCAL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALIAS_LOCAL_H
+name|_ALIAS_LOCAL_H_
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/*     Macros  */
+comment|/* Macros */
 end_comment
 
 begin_comment
-comment|/*    The following macro is used to update an    internet checksum.  "delta" is a 32-bit    accumulation of all the changes to the    checksum (adding in new 16-bit words and    subtracting out old words), and "cksum"    is the checksum value to be updated. */
+comment|/*  * The following macro is used to update an  * internet checksum.  "delta" is a 32-bit  * accumulation of all the changes to the  * checksum (adding in new 16-bit words and  * subtracting out old words), and "cksum"  * is the checksum value to be updated.  */
 end_comment
 
 begin_define
@@ -50,11 +32,12 @@ name|acc
 parameter_list|,
 name|cksum
 parameter_list|)
-value|{ \     acc += cksum; \     if (acc< 0) \     { \         acc = -acc; \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) ~acc; \     } \     else \     { \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) acc; \     } \ }
+define|\
+value|do { \ 		acc += cksum; \ 		if (acc< 0) { \ 			acc = -acc; \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) ~acc; \ 		} else { \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) acc; \ 		} \ 	} while (0)
 end_define
 
 begin_comment
-comment|/*     Globals */
+comment|/* Globals */
 end_comment
 
 begin_decl_stmt
@@ -65,21 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*     Structs */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|alias_link
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* Incomplete structure */
-end_comment
-
-begin_comment
-comment|/*     Prototypes */
+comment|/* Prototypes */
 end_comment
 
 begin_comment
@@ -93,6 +62,7 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -104,6 +74,7 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -114,14 +85,18 @@ name|DifferentialChecksum
 parameter_list|(
 name|u_short
 modifier|*
+name|_cksum
 parameter_list|,
 name|u_short
 modifier|*
+name|_new
 parameter_list|,
 name|u_short
 modifier|*
+name|_old
 parameter_list|,
 name|int
+name|_n
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -138,13 +113,17 @@ name|FindIcmpIn
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_short
+name|_id_alias
 parameter_list|,
 name|int
+name|_create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -157,13 +136,17 @@ name|FindIcmpOut
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_short
+name|_id
 parameter_list|,
 name|int
+name|_create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -176,11 +159,14 @@ name|FindFragmentIn1
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_short
+name|_ip_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -193,11 +179,14 @@ name|FindFragmentIn2
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_short
+name|_ip_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -210,8 +199,10 @@ name|AddFragmentPtrLink
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_short
+name|_ip_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -224,8 +215,10 @@ name|FindFragmentPtr
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_short
+name|_ip_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -238,11 +231,14 @@ name|FindProtoIn
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -255,11 +251,14 @@ name|FindProtoOut
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -272,17 +271,23 @@ name|FindUdpTcpIn
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_short
+name|_dst_port
 parameter_list|,
 name|u_short
+name|_alias_port
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|,
 name|int
+name|_create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -295,17 +300,23 @@ name|FindUdpTcpOut
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_short
+name|_src_port
 parameter_list|,
 name|u_short
+name|_dst_port
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|,
 name|int
+name|_create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -318,14 +329,18 @@ name|AddPptp
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_int16_t
+name|_src_call_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -338,11 +353,14 @@ name|FindPptpOutByCallId
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_int16_t
+name|_src_call_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -355,11 +373,14 @@ name|FindPptpInByCallId
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_int16_t
+name|_dst_call_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -372,11 +393,14 @@ name|FindPptpOutByPeerCallId
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_int16_t
+name|_dst_call_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -389,11 +413,14 @@ name|FindPptpInByPeerCallId
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_int16_t
+name|_alias_call_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -406,15 +433,20 @@ name|FindRtspOut
 parameter_list|(
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|u_short
+name|_src_port
 parameter_list|,
 name|u_short
+name|_alias_port
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -426,6 +458,7 @@ name|FindOriginalAddress
 parameter_list|(
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -437,6 +470,7 @@ name|FindAliasAddress
 parameter_list|(
 name|struct
 name|in_addr
+name|_original_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -451,19 +485,26 @@ name|FindNewPortGroup
 parameter_list|(
 name|struct
 name|in_addr
+name|_dst_addr
 parameter_list|,
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|,
 name|u_short
+name|_src_port
 parameter_list|,
 name|u_short
+name|_dst_port
 parameter_list|,
 name|u_short
+name|_port_count
 parameter_list|,
 name|u_char
+name|_proto
 parameter_list|,
 name|u_char
+name|_align
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -475,10 +516,12 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|in_addr
 modifier|*
+name|_src_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -490,9 +533,11 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|in_addr
+name|_src_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -504,10 +549,12 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+name|_fptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -519,9 +566,11 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|char
 modifier|*
+name|fptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -533,8 +582,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_state
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -546,8 +597,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_state
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -559,6 +612,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -570,6 +624,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -582,6 +637,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -594,6 +650,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -606,6 +663,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -626,6 +684,7 @@ name|SetDefaultAliasAddress
 parameter_list|(
 name|struct
 name|in_addr
+name|_alias_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -637,6 +696,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -648,6 +708,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,6 +721,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -671,9 +733,11 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|in_addr
+name|_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -685,6 +749,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -696,8 +761,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|u_short
+name|_port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -709,6 +776,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -720,6 +788,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -731,10 +800,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -746,10 +817,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -761,12 +834,15 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_delta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -778,8 +854,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_expire
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -800,8 +878,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_yes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -813,6 +893,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -824,8 +905,10 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|u_int16_t
+name|_cid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -843,6 +926,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -870,7 +954,7 @@ comment|/* Tcp specfic routines */
 end_comment
 
 begin_comment
-comment|/*lint -save -library Suppress flexelint warnings */
+comment|/* lint -save -library Suppress flexelint warnings */
 end_comment
 
 begin_comment
@@ -884,12 +968,15 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_maxpacketsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -905,12 +992,15 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_maxsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -926,12 +1016,15 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|int
+name|_maxpacketsize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -947,10 +1040,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -962,10 +1057,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -977,6 +1074,7 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -988,6 +1086,7 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1003,16 +1102,20 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|in_addr
 modifier|*
+name|_alias_address
 parameter_list|,
 name|u_short
+name|_alias_port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1024,24 +1127,30 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|in_addr
 modifier|*
+name|_alias_address
 parameter_list|,
 name|u_short
 modifier|*
+name|_alias_port
 parameter_list|,
 name|struct
 name|in_addr
 modifier|*
+name|_original_address
 parameter_list|,
 name|u_short
 modifier|*
+name|_original_port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1057,10 +1166,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1072,9 +1183,11 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|in_addr
+name|_original_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1090,13 +1203,16 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|struct
 name|in_addr
 modifier|*
+name|_proxy_server_addr
 parameter_list|,
 name|u_short
 modifier|*
+name|_proxy_server_port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1108,14 +1224,18 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
+name|_link
 parameter_list|,
 name|struct
 name|ip
 modifier|*
+name|_pip
 parameter_list|,
 name|int
+name|_maxpacketsize
 parameter_list|,
 name|int
+name|_proxy_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1143,7 +1263,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(ALIAS_LOCAL_H) */
+comment|/* !_ALIAS_LOCAL_H_ */
 end_comment
 
 end_unit
