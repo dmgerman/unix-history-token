@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.38 1998/04/04 13:26:12 phk Exp $  */
+comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.39 1998/04/15 17:47:30 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -372,207 +372,207 @@ name|sysinit_sub_id
 block|{
 name|SI_SUB_DUMMY
 init|=
-literal|0x00000000
+literal|0x0000000
 block|,
 comment|/* not executed; for linker*/
 name|SI_SUB_CONSOLE
 init|=
-literal|0x08000000
+literal|0x0800000
 block|,
 comment|/* console*/
 name|SI_SUB_COPYRIGHT
 init|=
-literal|0x08000001
+literal|0x0800001
 block|,
 comment|/* first use of console*/
 name|SI_SUB_VM
 init|=
-literal|0x10000000
+literal|0x1000000
 block|,
 comment|/* virtual memory system init*/
 name|SI_SUB_KMEM
 init|=
-literal|0x18000000
+literal|0x1800000
 block|,
 comment|/* kernel memory*/
 name|SI_SUB_CPU
 init|=
-literal|0x20000000
+literal|0x2000000
 block|,
 comment|/* CPU resource(s)*/
 name|SI_SUB_DEVFS
 init|=
-literal|0x22000000
+literal|0x2200000
 block|,
 comment|/* get DEVFS ready */
 name|SI_SUB_DRIVERS
 init|=
-literal|0x23000000
+literal|0x2300000
 block|,
 comment|/* Let Drivers initialize */
 name|SI_SUB_CONFIGURE
 init|=
-literal|0x24000000
+literal|0x2400000
 block|,
 comment|/* Configure devices */
 name|SI_SUB_INTRINSIC
 init|=
-literal|0x28000000
+literal|0x2800000
 block|,
 comment|/* proc 0*/
 name|SI_SUB_RUN_QUEUE
 init|=
-literal|0x30000000
+literal|0x3000000
 block|,
 comment|/* the run queue*/
 name|SI_SUB_VM_CONF
 init|=
-literal|0x38000000
+literal|0x3800000
 block|,
 comment|/* config VM, set limits*/
 name|SI_SUB_VFS
 init|=
-literal|0x40000000
+literal|0x4000000
 block|,
 comment|/* virtual file system*/
 name|SI_SUB_CLOCKS
 init|=
-literal|0x48000000
+literal|0x4800000
 block|,
 comment|/* real time and stat clocks*/
 name|SI_SUB_MBUF
 init|=
-literal|0x50000000
+literal|0x5000000
 block|,
 comment|/* mbufs*/
 name|SI_SUB_CLIST
 init|=
-literal|0x58000000
+literal|0x5800000
 block|,
 comment|/* clists*/
 name|SI_SUB_SYSV_SHM
 init|=
-literal|0x64000000
+literal|0x6400000
 block|,
 comment|/* System V shared memory*/
 name|SI_SUB_SYSV_SEM
 init|=
-literal|0x68000000
+literal|0x6800000
 block|,
 comment|/* System V semaphores*/
 name|SI_SUB_SYSV_MSG
 init|=
-literal|0x6C000000
+literal|0x6C00000
 block|,
 comment|/* System V message queues*/
 name|SI_SUB_P1003_1B
 init|=
-literal|0x6E000000
+literal|0x6E00000
 block|,
 comment|/* P1003.1B realtime */
 name|SI_SUB_PSEUDO
 init|=
-literal|0x70000000
+literal|0x7000000
 block|,
 comment|/* pseudo devices*/
 name|SI_SUB_PROTO_BEGIN
 init|=
-literal|0x80000000
+literal|0x8000000
 block|,
 comment|/* XXX: set splimp (kludge)*/
 name|SI_SUB_PROTO_IF
 init|=
-literal|0x84000000
+literal|0x8400000
 block|,
 comment|/* interfaces*/
 name|SI_SUB_PROTO_DOMAIN
 init|=
-literal|0x88000000
+literal|0x8800000
 block|,
 comment|/* domains (address families?)*/
 name|SI_SUB_PROTO_END
 init|=
-literal|0x8fffffff
+literal|0x8ffffff
 block|,
 comment|/* XXX: set splx (kludge)*/
 name|SI_SUB_KPROF
 init|=
-literal|0x90000000
+literal|0x9000000
 block|,
 comment|/* kernel profiling*/
 name|SI_SUB_KICK_SCHEDULER
 init|=
-literal|0xa0000000
+literal|0xa000000
 block|,
 comment|/* start the timeout events*/
 name|SI_SUB_INT_CONFIG_HOOKS
 init|=
-literal|0xa8000000
+literal|0xa800000
 block|,
 comment|/* Interrupts enabled config */
 name|SI_SUB_ROOT_CONF
 init|=
-literal|0xb0000000
+literal|0xb000000
 block|,
 comment|/* Find root devices */
 name|SI_SUB_DUMP_CONF
 init|=
-literal|0xb2000000
+literal|0xb200000
 block|,
 comment|/* Find dump devices */
 name|SI_SUB_MOUNT_ROOT
 init|=
-literal|0xb4000000
+literal|0xb400000
 block|,
 comment|/* root mount*/
 name|SI_SUB_ROOT_FDTAB
 init|=
-literal|0xb8000000
+literal|0xb800000
 block|,
 comment|/* root vnode in fd table...*/
 name|SI_SUB_SWAP
 init|=
-literal|0xc0000000
+literal|0xc000000
 block|,
 comment|/* swap*/
 name|SI_SUB_INTRINSIC_POST
 init|=
-literal|0xd0000000
+literal|0xd000000
 block|,
 comment|/* proc 0 cleanup*/
 name|SI_SUB_KTHREAD_INIT
 init|=
-literal|0xe0000000
+literal|0xe000000
 block|,
 comment|/* init process*/
 name|SI_SUB_KTHREAD_PAGE
 init|=
-literal|0xe4000000
+literal|0xe400000
 block|,
 comment|/* pageout daemon*/
 name|SI_SUB_KTHREAD_VM
 init|=
-literal|0xe8000000
+literal|0xe800000
 block|,
 comment|/* vm daemon*/
 name|SI_SUB_KTHREAD_UPDATE
 init|=
-literal|0xec000000
+literal|0xec00000
 block|,
 comment|/* update daemon*/
 name|SI_SUB_KTHREAD_IDLE
 init|=
-literal|0xee000000
+literal|0xee00000
 block|,
 comment|/* idle procs*/
 name|SI_SUB_SMP
 init|=
-literal|0xf0000000
+literal|0xf000000
 block|,
 comment|/* idle procs*/
 name|SI_SUB_RUN_SCHEDULER
 init|=
-literal|0xffffffff
+literal|0xfffffff
 comment|/* scheduler: no return*/
 block|}
 enum|;
@@ -588,27 +588,27 @@ name|sysinit_elem_order
 block|{
 name|SI_ORDER_FIRST
 init|=
-literal|0x00000000
+literal|0x0000000
 block|,
 comment|/* first*/
 name|SI_ORDER_SECOND
 init|=
-literal|0x00000001
+literal|0x0000001
 block|,
 comment|/* second*/
 name|SI_ORDER_THIRD
 init|=
-literal|0x00000002
+literal|0x0000002
 block|,
 comment|/* third*/
 name|SI_ORDER_MIDDLE
 init|=
-literal|0x10000000
+literal|0x1000000
 block|,
 comment|/* somewhere in the middle */
 name|SI_ORDER_ANY
 init|=
-literal|0xffffffff
+literal|0xfffffff
 comment|/* last*/
 block|}
 enum|;
