@@ -5390,6 +5390,11 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_print_prettyname
 argument_list|(
 name|dev
@@ -5400,6 +5405,7 @@ argument_list|(
 literal|"not probed (disabled)\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|error
