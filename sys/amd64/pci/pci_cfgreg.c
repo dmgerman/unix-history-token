@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pci_cfgreg.h>
 end_include
 
