@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -177,12 +183,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
 end_include
 
 begin_include
@@ -529,34 +529,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|t_or_u_flag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user has specified -t or -u */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|disktype
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|unlabeled
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 name|device
 index|[
@@ -569,7 +541,33 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
+name|disktype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
 name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|t_or_u_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user has specified -t or -u */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unlabeled
 decl_stmt|;
 end_decl_stmt
 
