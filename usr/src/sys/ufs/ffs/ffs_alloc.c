@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1544,18 +1544,6 @@ begin_comment
 comment|/*  * Reallocate a sequence of blocks into a contiguous sequence of blocks.  *  * The vnode and an array of buffer pointers for a range of sequential  * logical blocks to be made contiguous is given. The allocator attempts  * to find a range of sequential blocks starting as close as possible to  * an fs_rotdelay offset from the end of the allocation for the logical  * block immediately preceeding the current range. If successful, the  * physical block numbers in the buffer pointers and in the inode are  * changed to reflect the new allocation. If unsuccessful, the allocation  * is left unchanged. The success in doing the reallocation is returned.  * Note that the error return is not reflected back to the user. Rather  * the previous block allocation will be used.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_decl_stmt
 name|int
 name|doasyncfree
@@ -1565,16 +1553,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ctldebug
-name|debug14
+name|int
+name|doreallocblks
 init|=
-block|{
-literal|"doasyncfree"
-block|,
-operator|&
-name|doasyncfree
-block|}
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1585,37 +1567,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ctldebug
-name|debug15
-init|=
-block|{
-literal|"prtrealloc"
-block|,
-operator|&
-name|prtrealloc
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|doasyncfree
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -1713,6 +1664,17 @@ name|pref
 decl_stmt|,
 name|ssize
 decl_stmt|;
+if|if
+condition|(
+name|doreallocblks
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 name|vp
 operator|=
 name|ap
