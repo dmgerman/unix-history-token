@@ -148,8 +148,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_AOPEN_VA1000
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|19
 end_define
 
 begin_define

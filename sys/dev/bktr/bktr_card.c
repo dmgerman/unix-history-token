@@ -1227,6 +1227,49 @@ literal|0x10f00
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_AOPEN_VA1000
+block|,
+comment|/* the card id */
+literal|"AOpen VA1000"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm unknown */
+literal|0
+block|,
+comment|/* size unknown */
+block|{
+literal|0x02
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x18e0
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
