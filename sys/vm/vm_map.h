@@ -443,10 +443,6 @@ name|u_char
 name|system_map
 decl_stmt|;
 comment|/* Am I a system map? */
-name|u_char
-name|infork
-decl_stmt|;
-comment|/* Am I in fork processing? */
 name|vm_flags_t
 name|flags
 decl_stmt|;
@@ -1345,6 +1341,35 @@ end_function_decl
 begin_function_decl
 name|int
 name|vm_map_lookup
+parameter_list|(
+name|vm_map_t
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|,
+name|vm_map_entry_t
+modifier|*
+parameter_list|,
+name|vm_object_t
+modifier|*
+parameter_list|,
+name|vm_pindex_t
+modifier|*
+parameter_list|,
+name|vm_prot_t
+modifier|*
+parameter_list|,
+name|boolean_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_map_lookup_locked
 parameter_list|(
 name|vm_map_t
 modifier|*
