@@ -377,9 +377,6 @@ name|ATAPI_DRQT_INTR
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|ata_dmainit
 argument_list|(
 name|atp
@@ -443,7 +440,7 @@ argument_list|(
 name|ATP_PARAM
 argument_list|)
 argument_list|)
-condition|)
+expr_stmt|;
 block|}
 else|else
 endif|#
