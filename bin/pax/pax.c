@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -690,6 +696,19 @@ break|break;
 case|case
 name|APPND
 case|:
+if|if
+condition|(
+name|gzip_program
+operator|!=
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"can not gzip while appending"
+argument_list|)
+expr_stmt|;
 name|append
 argument_list|()
 expr_stmt|;

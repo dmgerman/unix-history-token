@@ -26,6 +26,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|gzip_program
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ar_open
 name|__P

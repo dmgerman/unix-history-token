@@ -332,6 +332,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|GZIP_CMD
+value|"gzip"
+end_define
+
+begin_comment
+comment|/* command to run as gzip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPRESS_CMD
+value|"compress"
+end_define
+
+begin_comment
+comment|/* command to run as compress */
+end_comment
+
 begin_comment
 comment|/*  *	Format specific routine table - MUST BE IN SORTED ORDER BY NAME  *	(see pax.h for description of each function)  *  * 	name, blksz, hdsz, udev, hlk, blkagn, inhead, id, st_read,  *	read, end_read, st_write, write, end_write, trail,  *	rd_data, wr_data, options  */
 end_comment
@@ -889,7 +911,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:cdf:iklno:p:rs:tuvwx:B:DE:G:HLPT:U:XYZ"
+literal|"ab:cdf:iklno:p:rs:tuvwx:zB:DE:G:HLPT:U:XYZ"
 argument_list|)
 operator|)
 operator|!=
@@ -1378,6 +1400,15 @@ argument_list|)
 expr_stmt|;
 name|pax_usage
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+comment|/* 			 * use gzip.  Non standard option. 			 */
+name|gzip_program
+operator|=
+name|GZIP_CMD
 expr_stmt|;
 break|break;
 case|case
@@ -2273,6 +2304,15 @@ name|EXTRACT
 expr_stmt|;
 break|break;
 case|case
+literal|'z'
+case|:
+comment|/* 			 * use gzip.  Non standard option. 			 */
+name|gzip_program
+operator|=
+name|GZIP_CMD
+expr_stmt|;
+break|break;
+case|case
 literal|'B'
 case|:
 comment|/* 			 * Nothing to do here, this is pax default 			 */
@@ -2311,6 +2351,15 @@ comment|/* 			 * do not pass over mount points in the file system 			 */
 name|Xflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+comment|/* 			 * use compress. 			 */
+name|gzip_program
+operator|=
+name|COMPRESS_CMD
 expr_stmt|;
 break|break;
 case|case
@@ -3518,7 +3567,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"usage: pax [-cdnv] [-E limit] [-f archive] "
+literal|"usage: pax [-cdnvz] [-E limit] [-f archive] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3568,7 +3617,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"       pax -r [-cdiknuvDYZ] [-E limit] "
+literal|"       pax -r [-cdiknuvzDYZ] [-E limit] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3628,7 +3677,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"       pax -w [-dituvHLPX] [-b blocksize] "
+literal|"       pax -w [-dituvzHLPX] [-b blocksize] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3780,7 +3829,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"usage: tar -{txru}[cevfbmopwBHLPX014578] [tapefile] "
+literal|"usage: tar -{txru}[cevfbmopwzBHLPXZ014578] [tapefile] "
 argument_list|,
 name|stderr
 argument_list|)

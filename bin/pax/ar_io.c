@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -68,31 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -104,7 +86,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -337,6 +349,32 @@ comment|/* printable name of archive */
 end_comment
 
 begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|gzip_program
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of gzip program */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|zpid
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pid of child process */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|get_phys
@@ -353,6 +391,25 @@ begin_decl_stmt
 specifier|extern
 name|sigset_t
 name|s_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ar_start_gzip
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +543,26 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arfd
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|gzip_program
+operator|!=
+name|NULL
+condition|)
+name|ar_start_gzip
+argument_list|(
+name|arfd
+argument_list|,
+name|gzip_program
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|ARCHIVE
@@ -539,6 +616,26 @@ else|else
 name|can_unlnk
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|arfd
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|gzip_program
+operator|!=
+name|NULL
+condition|)
+name|ar_start_gzip
+argument_list|(
+name|arfd
+argument_list|,
+name|gzip_program
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1199,6 +1296,47 @@ expr_stmt|;
 name|can_unlnk
 operator|=
 literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * for a quick extract/list, pax frequently exits before the child 	 * process is done 	 */
+if|if
+condition|(
+operator|(
+name|act
+operator|==
+name|LIST
+operator|||
+name|act
+operator|==
+name|EXTRACT
+operator|)
+operator|&&
+name|nflag
+operator|&&
+name|zpid
+operator|>
+literal|0
+condition|)
+block|{
+name|int
+name|status
+decl_stmt|;
+name|kill
+argument_list|(
+name|zpid
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
+name|waitpid
+argument_list|(
+name|zpid
+argument_list|,
+operator|&
+name|status
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
@@ -2078,6 +2216,52 @@ literal|"Cannot open %s, try again\n"
 argument|, buf); 		continue; 	} 	return(
 literal|0
 argument|); }
+comment|/*  * ar_start_gzip()  * starts the gzip compression/decompression process as a child, using magic  * to keep the fd the same in the calling function (parent).  */
+argument|void ar_start_gzip(int fd, const char *gzip_program, int wr) { 	int fds[
+literal|2
+argument|]; 	char *gzip_flags;  	if (pipe(fds)<
+literal|0
+argument|) 		err(
+literal|1
+argument|,
+literal|"could not pipe"
+argument|); 	zpid = fork(); 	if (zpid<
+literal|0
+argument|) 		err(
+literal|1
+argument|,
+literal|"could not fork"
+argument|);
+comment|/* parent */
+argument|if (zpid) { 		if (wr) 			dup2(fds[
+literal|1
+argument|], fd); 		else 			dup2(fds[
+literal|0
+argument|], fd); 		close(fds[
+literal|0
+argument|]); 		close(fds[
+literal|1
+argument|]); 	} else { 		if (wr) { 			dup2(fds[
+literal|0
+argument|], STDIN_FILENO); 			dup2(fd, STDOUT_FILENO); 			gzip_flags =
+literal|"-c"
+argument|; 		} else { 			dup2(fds[
+literal|1
+argument|], STDOUT_FILENO); 			dup2(fd, STDIN_FILENO); 			gzip_flags =
+literal|"-dc"
+argument|; 		} 		close(fds[
+literal|0
+argument|]); 		close(fds[
+literal|1
+argument|]); 		if (execlp(gzip_program, gzip_program, gzip_flags, NULL)<
+literal|0
+argument|) 			err(
+literal|1
+argument|,
+literal|"could not exec"
+argument|);
+comment|/* NOTREACHED */
+argument|} }
 end_decl_stmt
 
 end_unit
