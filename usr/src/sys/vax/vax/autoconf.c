@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.38	82/05/19	*/
+comment|/*	autoconf.c	4.39	82/07/13	*/
 end_comment
 
 begin_comment
@@ -998,6 +998,13 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|mdp
+operator|->
+name|mba_sr
+operator||=
+name|MBSR_NED
+expr_stmt|;
+comment|/* si kludge */
 name|dt
 operator|=
 name|mbd
@@ -1013,6 +1020,16 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|mdp
+operator|->
+name|mba_sr
+operator|&
+name|MBSR_NED
+condition|)
+continue|continue;
+comment|/* si kludge */
 if|if
 condition|(
 name|dt
