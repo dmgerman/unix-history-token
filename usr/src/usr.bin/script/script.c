@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.2 (Berkeley) %G%"
+literal|"@(#)script.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,6 +755,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|t
@@ -796,6 +799,9 @@ argument_list|(
 name|fscript
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|slave
@@ -803,6 +809,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|slave
@@ -810,6 +819,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|slave
@@ -875,6 +887,9 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -928,6 +943,9 @@ operator|!
 name|subchild
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -978,9 +996,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|stb
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|pty
 operator|=
@@ -1115,6 +1130,9 @@ condition|(
 name|ok
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1129,6 +1147,9 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1143,6 +1164,9 @@ operator|&
 name|tc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1157,6 +1181,9 @@ operator|&
 name|l
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1171,6 +1198,9 @@ operator|&
 name|lc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1185,6 +1215,9 @@ operator|&
 name|lb
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -1201,6 +1234,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|master
@@ -1264,6 +1300,9 @@ name|fail
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
@@ -1278,6 +1317,9 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
@@ -1292,6 +1334,9 @@ operator|&
 name|tc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
@@ -1306,6 +1351,9 @@ operator|&
 name|lc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
@@ -1320,6 +1368,9 @@ operator|&
 name|lb
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
@@ -1334,6 +1385,9 @@ operator|&
 name|l
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|slave
