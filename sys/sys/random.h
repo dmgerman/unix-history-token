@@ -21,20 +21,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|u_int
 name|read_random
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|,
 name|void
 modifier|*
 parameter_list|,

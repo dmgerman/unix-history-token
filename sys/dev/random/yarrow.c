@@ -1612,11 +1612,6 @@ begin_function
 name|u_int
 name|read_random
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|proc
-parameter_list|,
 name|void
 modifier|*
 name|buf

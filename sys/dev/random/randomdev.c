@@ -529,10 +529,6 @@ name|ret
 operator|=
 name|read_random
 argument_list|(
-name|uio
-operator|->
-name|uio_procp
-argument_list|,
 name|random_buf
 argument_list|,
 name|c
