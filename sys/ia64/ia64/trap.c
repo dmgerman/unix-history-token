@@ -2626,7 +2626,13 @@ name|char
 modifier|*
 name|ip
 decl_stmt|;
-comment|/* Always fatal in kernel. Should never happen. */
+if|if
+condition|(
+name|fpswa_interface
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2639,13 +2645,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fpswa_interface
-operator|==
-name|NULL
-condition|)
-block|{
 name|sig
 operator|=
 name|SIGFPE
@@ -2690,6 +2689,11 @@ name|ip
 operator|-=
 literal|16
 expr_stmt|;
+if|if
+condition|(
+name|user
+condition|)
+block|{
 name|error
 operator|=
 name|copyin
@@ -2719,6 +2723,18 @@ expr_stmt|;
 comment|/* exception summary */
 break|break;
 block|}
+block|}
+else|else
+name|bcopy
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|bundle
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 comment|/* f6-f15 are saved in exception_save */
 name|fp_state
 operator|.
@@ -2997,7 +3013,11 @@ literal|"fpswa fatal error on fp fault"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|user
+condition|)
 block|{
 name|sig
 operator|=
@@ -3010,6 +3030,10 @@ expr_stmt|;
 comment|/* XXX exception summary */
 break|break;
 block|}
+else|else
+goto|goto
+name|out
+goto|;
 block|}
 case|case
 name|IA64_VEC_IA32_EXCEPTION
