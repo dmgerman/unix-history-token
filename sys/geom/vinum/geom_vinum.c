@@ -539,19 +539,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|sectorsize
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 comment|/* Check if we already have a VINUM geom, or create a new one. */
 if|if
 condition|(
