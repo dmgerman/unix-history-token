@@ -4357,13 +4357,6 @@ modifier|*
 name|priv
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|dCBWtag
-init|=
-literal|42
-decl_stmt|;
-comment|/* unique for CBW of transfer */
 name|KASSERT
 argument_list|(
 name|sc
@@ -4528,7 +4521,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Determine the direction of the data transfer and the length. 	 * 	 * dCBWDataTransferLength (datalen) : 	 *   This field indicates the number of bytes of data that the host 	 *   intends to transfer on the IN or OUT Bulk endpoint(as indicated by 	 *   the Direction bit) during the execution of this command. If this 	 *   field is set to 0, the device will expect that no data will be 	 *   transferred IN or OUT during this command, regardless of the value 	 *   of the Direction bit defined in dCBWFlags. 	 * 	 * dCBWFlags (dir) : 	 *   The bits of the Flags field are defined as follows: 	 *     Bits 0-6  reserved 	 *     Bit  7    Direction - this bit shall be ignored if the 	 *                           dCBWDataTransferLength field is zero. 	 *               0 = data Out from host to device 	 *               1 = data In from device to host 	 */
-comment|/* Fill in the Command Block Wrapper */
+comment|/* Fill in the Command Block Wrapper 	 * We fill in all the fields, so there is no need to bzero it first. 	 */
 name|USETDW
 argument_list|(
 name|sc
@@ -4540,21 +4533,15 @@ argument_list|,
 name|CBWSIGNATURE
 argument_list|)
 expr_stmt|;
-name|USETDW
-argument_list|(
+comment|/* We don't care what the initial value was, as long as the values are unique */
 name|sc
 operator|->
 name|cbw
 operator|.
 name|dCBWTag
-argument_list|,
-name|dCBWtag
-argument_list|)
-expr_stmt|;
-name|dCBWtag
 operator|++
 expr_stmt|;
-comment|/* cannot be done in macro (it will be done 4 times) */
+comment|/* Increase the tag number */
 name|USETDW
 argument_list|(
 name|sc
