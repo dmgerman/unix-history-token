@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pass5.c,v 1.12 1998/06/28 19:23:02 bde Exp $"
+literal|"$Id: pass5.c,v 1.13 1998/08/04 09:19:03 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,7 +599,7 @@ name|fs_cpg
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|newcg
@@ -620,7 +620,7 @@ name|fs_nrpos
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|newcg
@@ -705,7 +705,7 @@ name|cg_nextfreeoff
 operator|-
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|newcg
@@ -720,7 +720,7 @@ name|cg_clustersumoff
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -742,7 +742,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|newcg
