@@ -334,6 +334,15 @@ literal|"Fast Etherlink 3C574-TX"
 operator|)
 return|;
 case|case
+literal|0x2b57
+case|:
+comment|/* 3CXSH572BT */
+return|return
+operator|(
+literal|"3Com OfficeConnect 572BT"
+operator|)
+return|;
+case|case
 literal|0x9058
 case|:
 comment|/* 3C589 */
@@ -383,32 +392,14 @@ case|case
 literal|0x6055
 case|:
 comment|/* 3C556 */
-name|epb
-operator|->
-name|mii_trans
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+case|case
+literal|0x2b57
+case|:
+comment|/* 3C572BT */
 case|case
 literal|0x4057
 case|:
 comment|/* 3C574 */
-name|epb
-operator|->
-name|mii_trans
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 case|case
 literal|0x4b57
 case|:
