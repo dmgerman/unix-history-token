@@ -2847,11 +2847,6 @@ condition|(
 name|error
 condition|)
 block|{
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|free
 argument_list|(
 name|buf
@@ -2859,6 +2854,11 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|vp
 operator|=
