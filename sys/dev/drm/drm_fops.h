@@ -1613,6 +1613,7 @@ argument_list|)
 expr_stmt|;
 name|pgsigio
 argument_list|(
+operator|&
 name|dev
 operator|->
 name|buf_sigio
