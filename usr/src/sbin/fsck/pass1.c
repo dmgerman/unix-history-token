@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.1 (Berkeley) %G%"
+literal|"@(#)pass1.c	8.1.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -922,9 +922,26 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|NIADDR
+condition|;
+name|j
+operator|++
+control|)
+block|{
 name|printf
 argument_list|(
-literal|"bad indirect addr: %ld\n"
+literal|"bad indirect addr[%d]: %lx\n"
+argument_list|,
+name|j
 argument_list|,
 name|dp
 operator|->
@@ -934,6 +951,59 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"flags: %x, blocks %d\n"
+argument_list|,
+name|dp
+operator|->
+name|di_flags
+argument_list|,
+name|dp
+operator|->
+name|di_blocks
+argument_list|)
+expr_stmt|;
+name|pfatal
+argument_list|(
+literal|"BAD THIRD INDIRECT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"ZERO"
+argument_list|)
+condition|)
+block|{
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|di_ib
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|inodirty
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+goto|goto
+name|unknown
+goto|;
+block|}
+else|else
 goto|goto
 name|unknown
 goto|;
