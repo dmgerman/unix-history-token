@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.28 (Berkeley) %G%"
+literal|"@(#)ps.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2428,6 +2428,10 @@ argument_list|,
 name|nl
 argument_list|)
 expr_stmt|;
+name|nttys
+operator|=
+literal|0
+expr_stmt|;
 name|getdev
 argument_list|()
 expr_stmt|;
@@ -3334,26 +3338,6 @@ case|:
 name|cp
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'r'
-operator|||
-operator|*
-name|cp
-operator|==
-literal|'u'
-operator|||
-operator|*
-name|cp
-operator|==
-literal|'h'
-condition|)
-name|cp
-operator|++
-expr_stmt|;
 define|#
 directive|define
 name|is
@@ -3367,9 +3351,16 @@ if|if
 condition|(
 name|is
 argument_list|(
-name|r
+name|h
 argument_list|,
 name|p
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|r
+argument_list|,
+name|a
 argument_list|)
 operator|||
 name|is
