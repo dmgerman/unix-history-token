@@ -3703,20 +3703,6 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|ap
-operator|->
-name|a_m
-index|[
-name|ap
-operator|->
-name|a_reqpage
-index|]
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3796,6 +3782,13 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Free the buffer header back to the swap buffer pool. 		 */
 name|relpbuf
 argument_list|(
@@ -3808,6 +3801,20 @@ return|return
 name|VM_PAGER_ERROR
 return|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|ap
+operator|->
+name|a_m
+index|[
+name|ap
+operator|->
+name|a_reqpage
+index|]
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Free the buffer header back to the swap buffer pool. 	 */
 name|relpbuf
 argument_list|(
