@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cvs.h"
 end_include
 
@@ -1512,6 +1518,9 @@ name|list
 operator|,
 name|int
 name|sticky
+operator|,
+name|int
+name|check_existing_dirs
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2012,11 +2021,22 @@ literal|"/"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If the -d flag in the modules file specified an absolute            directory, let the user override it with the command-line            -d option. */
 if|if
 condition|(
+operator|(
 name|mwhere
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+operator|!
+name|isabsolute
+argument_list|(
+name|mwhere
+argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -2490,21 +2510,19 @@ argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: this should be written in terms of last_component instead 	   of hardcoding '/'.  This presumably affects OS/2, NT,&c, if 	   the user specifies '\'.  Likewise for the call to findslash.  */
+comment|/* FIXME: this should be written in terms of last_component 	   instead of hardcoding '/'.  This presumably affects OS/2, 	   NT,&c, if the user specifies '\'.  Likewise for the call 	   to findslash.  */
 name|cp
 operator|=
-name|strrchr
+name|where
+operator|+
+name|strlen
 argument_list|(
 name|where
-argument_list|,
-literal|'/'
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|cp
-operator|!=
-name|NULL
+literal|1
 condition|)
 block|{
 name|struct
@@ -2512,6 +2530,25 @@ name|dir_to_build
 modifier|*
 name|new
 decl_stmt|;
+name|cp
+operator|=
+name|findslash
+argument_list|(
+name|where
+argument_list|,
+name|cp
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+break|break;
+comment|/* we're done */
 name|new
 operator|=
 operator|(
@@ -2540,6 +2577,14 @@ name|where
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If the user specified an absolute path for where, the                last path element we create should be the top-level                directory. */
+if|if
+condition|(
+name|cp
+operator|-
+name|where
+condition|)
+block|{
 name|strncpy
 argument_list|(
 name|new
@@ -2564,6 +2609,28 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* where should always be at least one character long. */
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|where
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|new
+operator|->
+name|dirpath
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Now figure out what repository directory to generate.                The most complete case would be something like this:  	       The modules file contains 	         foo -d bar/baz quux  	       The command issued was: 	         cvs co -d what/ever -N foo 	        	       The results in the CVS/Repository files should be: 	         .     -> .          (this is where we executed the cmd) 		 what  -> Emptydir   (generated dir -- not in repos) 		 ever  -> .          (same as "cd what/ever; cvs co -N foo") 		 bar   -> Emptydir   (generated dir -- not in repos) 		 baz   -> quux       (finally!) */
 if|if
 condition|(
@@ -2742,17 +2809,6 @@ name|head
 operator|=
 name|new
 expr_stmt|;
-name|cp
-operator|=
-name|findslash
-argument_list|(
-name|where
-argument_list|,
-name|cp
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* clean up */
 name|free
@@ -2760,7 +2816,23 @@ argument_list|(
 name|reposcopy
 argument_list|)
 expr_stmt|;
-comment|/* The top-level CVSADM directory should always be            CVSroot_directory.  Create it. 	 	   It may be argued that we shouldn't set any sticky bits for 	   the top-level repository.  FIXME?  */
+block|{
+name|int
+name|where_is_absolute
+init|=
+name|isabsolute
+argument_list|(
+name|where
+argument_list|)
+decl_stmt|;
+comment|/* The top-level CVSADM directory should always be 	       CVSroot_directory.  Create it, but only if WHERE is 	       relative.  If WHERE is absolute, our current directory 	       may not have a thing to do with where the sources are 	       being checked out.  If it does, build_dirs_and_chdir 	       will take care of creating adm files here. */
+if|if
+condition|(
+operator|!
+name|where_is_absolute
+condition|)
+block|{
+comment|/* It may be argued that we shouldn't set any sticky 		   bits for the top-level repository.  FIXME?  */
 name|build_one_dir
 argument_list|(
 name|CVSroot_directory
@@ -2773,7 +2845,8 @@ operator|<=
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * build dirs on the path if necessary and leave us in the bottom 	 * directory (where if where was specified) doesn't contain a CVS 	 * subdir yet, but all the others contain CVS and Entries.Static 	 * files 	 */
+block|}
+comment|/* Build dirs on the path if necessary and leave us in the 	       bottom directory (where if where was specified) doesn't 	       contain a CVS subdir yet, but all the others contain 	       CVS and Entries.Static files */
 if|if
 condition|(
 name|build_dirs_and_chdir
@@ -2784,6 +2857,8 @@ operator|*
 name|pargc
 operator|<=
 literal|1
+argument_list|,
+name|where_is_absolute
 argument_list|)
 operator|!=
 literal|0
@@ -2807,6 +2882,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* set up the repository (or make sure the old one matches) */
 if|if
@@ -3380,6 +3456,8 @@ operator|=
 name|Entries_Open
 argument_list|(
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -3854,7 +3932,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build all the dirs along the path to DIRS with CVS subdirs with appropriate    repositories.  If ->repository is NULL, do not create a CVSADM directory    for that subdirectory; just CVS_CHDIR into it.  */
+comment|/* Build all the dirs along the path to DIRS with CVS subdirs with    appropriate repositories.  If ->repository is NULL, do not create a    CVSADM directory for that subdirectory; just CVS_CHDIR into it.  If    check_existing_dirs is nonzero, don't create directories if they    already exist, and don't try to write adm files in directories    where we don't have write permission.  We use this last option    primarily when a user has specified an absolute path for checkout    -- we will often not have permission to top-level directories, so    we shouldn't complain. */
 end_comment
 
 begin_function
@@ -3865,6 +3943,8 @@ parameter_list|(
 name|dirs
 parameter_list|,
 name|sticky
+parameter_list|,
+name|check_existing_dirs
 parameter_list|)
 name|struct
 name|dir_to_build
@@ -3873,6 +3953,9 @@ name|dirs
 decl_stmt|;
 name|int
 name|sticky
+decl_stmt|;
+name|int
+name|check_existing_dirs
 decl_stmt|;
 block|{
 name|int
@@ -3903,6 +3986,24 @@ operator|->
 name|dirpath
 argument_list|)
 decl_stmt|;
+name|int
+name|dir_is_writeable
+decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|check_existing_dirs
+operator|)
+operator|||
+operator|(
+operator|!
+name|isdir
+argument_list|(
+name|dir
+argument_list|)
+operator|)
+condition|)
 name|mkdir_if_needed
 argument_list|(
 name|dir
@@ -3914,6 +4015,18 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+comment|/* This is an expensive call -- only make it if necessary. */
+if|if
+condition|(
+name|check_existing_dirs
+condition|)
+name|dir_is_writeable
+operator|=
+name|iswritable
+argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
@@ -3948,11 +4061,22 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|dirs
 operator|->
 name|repository
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|!
+name|check_existing_dirs
+operator|)
+operator|||
+name|dir_is_writeable
+operator|)
 condition|)
 block|{
 name|build_one_dir

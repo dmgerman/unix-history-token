@@ -1072,21 +1072,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|buf_memory_error
-name|PROTO
-argument_list|(
-operator|(
-expr|struct
-name|buffer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|size_t
 name|try_read_from_server
 name|PROTO
@@ -1366,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change mode of FILENAME to MODE_STRING.  * Returns 0 for success or errno code.  */
+comment|/*  * Change mode of FILENAME to MODE_STRING.  * Returns 0 for success or errno code.  * If RESPECT_UMASK is set, then honor the umask.  */
 end_comment
 
 begin_function
@@ -1376,6 +1361,8 @@ parameter_list|(
 name|filename
 parameter_list|,
 name|mode_string
+parameter_list|,
+name|respect_umask
 parameter_list|)
 name|char
 modifier|*
@@ -1384,6 +1371,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|mode_string
+decl_stmt|;
+name|int
+name|respect_umask
 decl_stmt|;
 block|{
 ifdef|#
@@ -1508,6 +1498,7 @@ operator|++
 name|p
 expr_stmt|;
 block|}
+comment|/* xchmod honors the umask for us.  In the !respect_umask case, we        don't try to cope with it (probably to handle that well, the server        needs to deal with modes in data structures, rather than via the        modes in temporary files).  */
 name|xchmod
 argument_list|(
 name|filename
@@ -1529,6 +1520,9 @@ name|mode_t
 name|mode
 init|=
 literal|0
+decl_stmt|;
+name|mode_t
+name|oumask
 decl_stmt|;
 name|p
 operator|=
@@ -1785,6 +1779,32 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|respect_umask
+condition|)
+block|{
+name|oumask
+operator|=
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|oumask
+argument_list|)
+expr_stmt|;
+name|mode
+operator|&=
+operator|~
+name|oumask
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|filename
@@ -1907,38 +1927,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* This routine is called when one of the buffer routines runs out of    memory.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|buf_memory_error
-parameter_list|(
-name|buf
-parameter_list|)
-name|struct
-name|buffer
-modifier|*
-name|buf
-decl_stmt|;
-block|{
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"out of memory"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_escape
 end_escape
@@ -5046,6 +5034,8 @@ operator|=
 name|Entries_Open
 argument_list|(
 literal|0
+argument_list|,
+name|dir_name
 argument_list|)
 expr_stmt|;
 comment|/* If this is a newly created directory, we will record 	       all subdirectory information, so call Subdirs_Known in 	       case there are no subdirectories.  If this is not a 	       newly created directory, it may be an old working 	       directory from before we recorded subdirectory 	       information in the Entries file.  We force a search for 	       all subdirectories now, to make sure our subdirectory 	       information is up to date.  If the Entries file does 	       record subdirectory information, then this call only 	       does list manipulation.  */
@@ -7813,7 +7803,6 @@ expr_stmt|;
 return|return;
 block|}
 block|{
-comment|/* FIXME: we should be respecting the umask.  */
 name|int
 name|status
 init|=
@@ -7822,6 +7811,8 @@ argument_list|(
 name|filename
 argument_list|,
 name|mode_string
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 if|if
@@ -7862,6 +7853,8 @@ argument_list|(
 name|filename
 argument_list|,
 name|stored_mode
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|stored_mode_valid
@@ -16629,7 +16622,10 @@ name|server_sock
 argument_list|,
 literal|0
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|from_server
@@ -16640,7 +16636,10 @@ name|server_sock
 argument_list|,
 literal|1
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -16726,7 +16725,10 @@ name|to_server_fp
 argument_list|,
 literal|0
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|from_server_fp
@@ -16763,7 +16765,10 @@ name|from_server_fp
 argument_list|,
 literal|1
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -16859,7 +16864,10 @@ name|fp
 argument_list|,
 literal|0
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -16906,7 +16914,10 @@ name|fp
 argument_list|,
 literal|1
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -17394,7 +17405,10 @@ name|sched
 argument_list|,
 name|kblock
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|from_server
@@ -17409,7 +17423,10 @@ name|sched
 argument_list|,
 name|kblock
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -17461,7 +17478,12 @@ literal|0
 argument_list|,
 name|gcontext
 argument_list|,
-name|buf_memory_error
+operator|(
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
+operator|)
 argument_list|)
 expr_stmt|;
 name|from_server
@@ -17474,7 +17496,12 @@ literal|1
 argument_list|,
 name|gcontext
 argument_list|,
-name|buf_memory_error
+operator|(
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
+operator|)
 argument_list|)
 expr_stmt|;
 name|cvs_gssapi_encrypt
@@ -17571,7 +17598,10 @@ literal|0
 argument_list|,
 name|gzip_level
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|from_server
@@ -17584,7 +17614,10 @@ literal|1
 argument_list|,
 name|gzip_level
 argument_list|,
-name|buf_memory_error
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -17712,7 +17745,12 @@ literal|0
 argument_list|,
 name|gcontext
 argument_list|,
-name|buf_memory_error
+operator|(
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
+operator|)
 argument_list|)
 expr_stmt|;
 name|from_server
@@ -17725,7 +17763,12 @@ literal|1
 argument_list|,
 name|gcontext
 argument_list|,
-name|buf_memory_error
+operator|(
+operator|(
+name|BUFMEMERRPROC
+operator|)
+name|NULL
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -20427,6 +20470,8 @@ operator|=
 name|Entries_Open
 argument_list|(
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|node

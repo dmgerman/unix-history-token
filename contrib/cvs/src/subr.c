@@ -1055,7 +1055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the username by which the caller should be identified in    CVS, in contexts such as the author field of RCS files, various    logs, etc.     Returns a pointer to storage that we manage; it is good until the    next call to getcaller () (provided that the caller doesn't call    getlogin () or some such themself).  */
+comment|/* Return the username by which the caller should be identified in    CVS, in contexts such as the author field of RCS files, various    logs, etc.  */
 end_comment
 
 begin_function
@@ -1069,19 +1069,13 @@ directive|ifndef
 name|SYSTEM_GETCALLER
 specifier|static
 name|char
-name|uidname
-index|[
-literal|20
-index|]
+modifier|*
+name|cache
 decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|;
-name|char
-modifier|*
-name|name
 decl_stmt|;
 name|uid_t
 name|uid
@@ -1113,6 +1107,15 @@ return|;
 else|#
 directive|else
 comment|/* Get the caller's login from his uid.  If the real uid is "root"        try LOGNAME USER or getlogin(). If getlogin() and getpwuid()        both fail, return the uid as a string.  */
+if|if
+condition|(
+name|cache
+operator|!=
+name|NULL
+condition|)
+return|return
+name|cache
+return|;
 name|uid
 operator|=
 name|getuid
@@ -1128,6 +1131,10 @@ operator|)
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
 comment|/* super-user; try getlogin() to distinguish */
 if|if
 condition|(
@@ -1161,11 +1168,18 @@ operator|&&
 operator|*
 name|name
 condition|)
-return|return
-operator|(
+block|{
+name|cache
+operator|=
+name|xstrdup
+argument_list|(
 name|name
-operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|cache
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1186,6 +1200,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|uidname
+index|[
+literal|20
+index|]
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1202,18 +1222,28 @@ operator|)
 name|uid
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|cache
+operator|=
+name|xstrdup
+argument_list|(
 name|uidname
-operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|cache
 return|;
 block|}
-return|return
-operator|(
+name|cache
+operator|=
+name|xstrdup
+argument_list|(
 name|pw
 operator|->
 name|pw_name
-operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|cache
 return|;
 endif|#
 directive|endif
@@ -2289,7 +2319,7 @@ else|else
 block|{
 if|if
 condition|(
-name|CVS_STAT
+name|CVS_LSTAT
 argument_list|(
 name|name
 argument_list|,
@@ -2310,6 +2340,25 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+comment|/* Don't attempt to read special files or symlinks. */
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|s
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+operator|*
+name|len
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 comment|/* Convert from signed to unsigned.  */
 name|filesize
 operator|=
