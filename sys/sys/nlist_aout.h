@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NLIST_H_
+name|_SYS_NLIST_AOUT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NLIST_H_
+name|_SYS_NLIST_AOUT_H_
 end_define
 
 begin_comment
@@ -384,39 +384,13 @@ begin_comment
 comment|/* namelist value format; XXX */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_function_decl
-name|__BEGIN_DECLS
-name|int
-name|nlist
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|nlist
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_NLIST_H_ */
+comment|/* !_SYS_NLIST_AOUT_H_ */
 end_comment
 
 end_unit
