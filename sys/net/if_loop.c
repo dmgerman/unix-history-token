@@ -1413,7 +1413,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|netisr_dispatch
+name|netisr_queue
 argument_list|(
 name|isr
 argument_list|,
