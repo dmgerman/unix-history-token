@@ -531,6 +531,13 @@ name|ic_curmode
 operator|=
 name|IEEE80211_MODE_AUTO
 expr_stmt|;
+name|ic
+operator|->
+name|ic_des_chan
+operator|=
+name|IEEE80211_CHAN_ANYC
+expr_stmt|;
+comment|/* any channel is ok */
 operator|(
 name|void
 operator|)
@@ -543,13 +550,6 @@ operator|->
 name|ic_curmode
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_des_chan
-operator|=
-name|IEEE80211_CHAN_ANYC
-expr_stmt|;
-comment|/* any channel is ok */
 if|if
 condition|(
 name|ic
@@ -2962,7 +2962,7 @@ name|chanflags
 argument_list|)
 argument_list|,
 operator|(
-literal|"Unexpected mode %u\n"
+literal|"Unexpected mode %u"
 operator|,
 name|mode
 operator|)
