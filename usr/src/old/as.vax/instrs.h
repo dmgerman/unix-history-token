@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)instrs.h 4.4 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)instrs.h 4.5 %G%  */
 end_comment
 
 begin_comment
@@ -350,70 +350,70 @@ value|A_CONS(ACCA, TYPH)
 end_define
 
 begin_comment
-comment|/*  *	For real memory addresses, or register addresses [sic]  */
+comment|/*  *	For real memory addresses, or register addresses [sic]  *  *	CHEAT! we just call these read access, since  *	registers are allowed. All field instruction, except insv,  *	are are read access fields.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|A_VB
-value|A_CONS(ACCV, TYPB)
+value|A_CONS(ACCR, TYPB)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VW
-value|A_CONS(ACCV, TYPW)
+value|A_CONS(ACCR, TYPW)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VL
-value|A_CONS(ACCV, TYPL)
+value|A_CONS(ACCR, TYPL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VQ
-value|A_CONS(ACCV, TYPQ)
+value|A_CONS(ACCR, TYPQ)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VO
-value|A_CONS(ACCV, TYPO)
+value|A_CONS(ACCR, TYPO)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VF
-value|A_CONS(ACCV, TYPF)
+value|A_CONS(ACCR, TYPF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VD
-value|A_CONS(ACCV, TYPD)
+value|A_CONS(ACCR, TYPD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VG
-value|A_CONS(ACCV, TYPG)
+value|A_CONS(ACCR, TYPG)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A_VH
-value|A_CONS(ACCV, TYPH)
+value|A_CONS(ACCR, TYPH)
 end_define
 
 begin_comment
