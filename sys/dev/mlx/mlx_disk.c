@@ -923,7 +923,27 @@ name|mlxd_drive
 operator|->
 name|ms_heads
 expr_stmt|;
-comment|/*       * Set maximum I/O size to the lesser of the recommended maximum and the practical      * maximum.      */
+comment|/*       * Set maximum I/O size to the lesser of the recommended maximum and the practical      * maximum except on v2 cards where the maximum is set to 8 pages.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|mlxd_controller
+operator|->
+name|mlx_iftype
+operator|==
+name|MLX_IFTYPE_2
+condition|)
+name|dsk
+operator|->
+name|si_iosize_max
+operator|=
+literal|8
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+else|else
+block|{
 name|s1
 operator|=
 name|sc
@@ -952,11 +972,9 @@ operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|sc
+name|dsk
 operator|->
-name|mlxd_disk
-operator|.
-name|d_maxsize
+name|si_iosize_max
 operator|=
 name|imin
 argument_list|(
@@ -965,6 +983,7 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
+block|}
 name|disk_create
 argument_list|(
 name|sc
