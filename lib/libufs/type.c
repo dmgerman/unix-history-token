@@ -288,6 +288,11 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+name|DEBUG
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|open

@@ -362,7 +362,7 @@ break|break;
 block|}
 name|DEBUG
 argument_list|(
-name|NULL
+literal|"unknown UFS filesystem"
 argument_list|)
 expr_stmt|;
 return|return

@@ -359,6 +359,11 @@ name|i
 decl_stmt|,
 name|rofd
 decl_stmt|;
+name|DEBUG
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 operator|&
