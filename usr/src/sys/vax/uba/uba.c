@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.17	%G%	*/
+comment|/*	uba.c	4.18	%G%	*/
 end_comment
 
 begin_define
@@ -568,7 +568,7 @@ condition|(
 operator|(
 name|reg
 operator|=
-name|malloc
+name|rmalloc
 argument_list|(
 name|uh
 operator|->
@@ -644,7 +644,7 @@ operator|&
 name|UBA_CANTWAIT
 condition|)
 block|{
-name|mfree
+name|rmfree
 argument_list|(
 name|uh
 operator|->
@@ -1303,7 +1303,7 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
-name|mfree
+name|rmfree
 argument_list|(
 name|uh
 operator|->
@@ -1834,6 +1834,11 @@ specifier|register
 name|int
 name|uban
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+condition|)
+return|return;
 for|for
 control|(
 name|uban

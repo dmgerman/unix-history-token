@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.16	81/02/27	*/
+comment|/*	hp.c	4.17	81/02/28	*/
 end_comment
 
 begin_include
@@ -1940,25 +1940,6 @@ name|hpec2
 operator|&
 literal|0xffff
 expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|==
-literal|0
-condition|)
-block|{
-name|rp
-operator|->
-name|hpof
-operator|=
-name|HP_FMT22
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|i
 operator|=
 operator|(

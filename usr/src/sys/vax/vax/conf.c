@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.20	%G%	*/
+comment|/*	conf.c	4.21	%G%	*/
 end_comment
 
 begin_include
@@ -1930,6 +1930,20 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|"bk.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
+end_if
+
 begin_decl_stmt
 name|int
 name|bkopen
@@ -1948,6 +1962,11 @@ name|bkioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -2008,6 +2027,11 @@ block|,
 name|nulldev
 block|,
 comment|/* 0 */
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
 name|bkopen
 block|,
 name|bkclose
@@ -2029,6 +2053,30 @@ block|,
 name|nulldev
 block|,
 comment|/* 1 */
+else|#
+directive|else
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+endif|#
+directive|endif
 name|ntyopen
 block|,
 name|ntyclose

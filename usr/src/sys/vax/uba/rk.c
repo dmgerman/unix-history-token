@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.16	%G%	*/
+comment|/*	rk.c	4.17	%G%	*/
 end_comment
 
 begin_include
@@ -16,18 +16,6 @@ name|NHK
 operator|>
 literal|0
 end_if
-
-begin_decl_stmt
-name|int
-name|rkflags
-decl_stmt|,
-name|rkerrs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* GROT */
-end_comment
 
 begin_comment
 comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * THIS DRIVER DOESN'T DEAL WITH DRIVES SPINNING DOWN AND UP  */
@@ -1991,9 +1979,6 @@ argument_list|(
 literal|"recal CERR\n"
 argument_list|)
 expr_stmt|;
-name|rkerrs
-operator|++
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -2149,7 +2134,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rk%d cs2 %b ds %b er %b\n"
+literal|"rk%d cs2=%b ds=%b er=%b\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2883,25 +2868,6 @@ name|rk
 operator|->
 name|rkec2
 expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|==
-literal|0
-condition|)
-block|{
-name|rk
-operator|->
-name|rkatt
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|ubapurge
 argument_list|(
 name|um

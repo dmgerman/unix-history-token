@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.18	81/02/27	*/
+comment|/*	autoconf.c	4.19	81/02/28	*/
 end_comment
 
 begin_comment
@@ -1897,7 +1897,7 @@ name|map
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mfree
+name|rminit
 argument_list|(
 name|uhp
 operator|->
@@ -1906,6 +1906,10 @@ argument_list|,
 name|NUBMREG
 argument_list|,
 literal|1
+argument_list|,
+literal|"uba"
+argument_list|,
+name|UAMSIZ
 argument_list|)
 expr_stmt|;
 switch|switch

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.26	81/02/27	*/
+comment|/*	up.c	4.27	81/02/28	*/
 end_comment
 
 begin_include
@@ -2562,7 +2562,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"up%d cs2 %b er1 %b er2 %b\n"
+literal|"up%d cs2=%b er1=%b er2=%b\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -3267,26 +3267,6 @@ name|up
 operator|->
 name|upec2
 expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|==
-literal|0
-condition|)
-block|{
-name|up
-operator|->
-name|upof
-operator|=
-name|UP_FMT22
-expr_stmt|;
-comment|/* == RTC ???? */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * Flush the buffered data path, and compute the 	 * byte and bit position of the error.  The variable i 	 * is the byte offset in the transfer, the variable byte 	 * is the offset from a page boundary in main memory. 	 */
 name|ubapurge
 argument_list|(

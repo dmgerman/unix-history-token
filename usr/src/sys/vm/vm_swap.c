@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.2	%G%	*/
+comment|/*	vm_swap.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -498,7 +498,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Can't free a block starting at 0 in the swapmap 			 * but need some space for argmap so use this 			 * hunk which needs special treatment anyways. 			 */
+comment|/* 			 * Can't free a block starting at 0 in the swapmap 			 * but need some space for argmap so use 1/2 this 			 * hunk which needs special treatment anyways. 			 */
 name|argdev
 operator|=
 name|swdevt
@@ -508,22 +508,44 @@ index|]
 operator|.
 name|sw_dev
 expr_stmt|;
-name|mfree
+name|rminit
 argument_list|(
 name|argmap
 argument_list|,
 name|blk
+operator|/
+literal|2
 operator|-
 name|CLSIZE
 argument_list|,
-name|vsbase
-operator|+
 name|CLSIZE
+argument_list|,
+literal|"argmap"
+argument_list|,
+name|ARGMAPSIZE
+argument_list|)
+expr_stmt|;
+comment|/* 			 * First of all chunks... initialize the swapmap 			 * the second half of the hunk. 			 */
+name|rminit
+argument_list|(
+name|swapmap
+argument_list|,
+name|blk
+operator|/
+literal|2
+argument_list|,
+name|blk
+operator|/
+literal|2
+argument_list|,
+literal|"swap"
+argument_list|,
+name|nswapmap
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|mfree
+name|rmfree
 argument_list|(
 name|swapmap
 argument_list|,
