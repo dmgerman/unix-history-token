@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: value.c,v 1.7 2001/10/24 18:38:58 millert Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: value.c,v 1.6 1997/02/11 09:24:09 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,13 +17,25 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)value.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)value.c	8.1 (Berkeley) 6/6/93"
+literal|"$OpenBSD: value.c,v 1.7 2001/10/24 18:38:58 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,19 +83,15 @@ begin_comment
 comment|/*  * Variable manipulation  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|value_t
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -87,7 +103,7 @@ decl_stmt|;
 name|char
 name|file
 index|[
-literal|256
+name|FILENAME_MAX
 index|]
 decl_stmt|;
 for|for
@@ -116,6 +132,7 @@ name|ENVIRON
 condition|)
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|getenv
@@ -124,6 +141,7 @@ name|p
 operator|->
 name|v_name
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|->
@@ -139,13 +157,12 @@ name|v_type
 operator|&
 name|IREMOTE
 condition|)
-name|number
+name|setnumber
 argument_list|(
 name|p
 operator|->
 name|v_value
-argument_list|)
-operator|=
+argument_list|,
 operator|*
 name|address
 argument_list|(
@@ -153,12 +170,39 @@ name|p
 operator|->
 name|v_value
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Read the .tiprc file in the HOME directory 	 *  for sets 	 */
-name|strcpy
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|value
+argument_list|(
+name|HOME
+argument_list|)
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|"/.tiprc"
+argument_list|)
+operator|>
+sizeof|sizeof
 argument_list|(
 name|file
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Home directory path too long: %s\n"
 argument_list|,
 name|value
 argument_list|(
@@ -166,11 +210,22 @@ name|HOME
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+block|}
+else|else
+block|{
+name|snprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"/.tiprc"
+sizeof|sizeof
+name|file
+argument_list|,
+literal|"%s/.tiprc"
+argument_list|,
+name|value
+argument_list|(
+name|HOME
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -189,7 +244,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|tp
@@ -226,14 +280,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|tp
@@ -252,6 +308,7 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* 	 * To allow definition of exception prior to fork 	 */
 name|vtable
 index|[
@@ -268,7 +325,7 @@ name|PUBLIC
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -282,28 +339,22 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vassign
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|v
-argument_list|)
-specifier|register
+parameter_list|)
 name|value_t
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -382,14 +433,9 @@ name|p
 operator|->
 name|v_value
 operator|=
-name|malloc
-argument_list|(
-name|size
+name|strdup
 argument_list|(
 name|v
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 operator|)
 operator|==
@@ -414,15 +460,6 @@ operator||
 name|INIT
 operator|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|p
-operator|->
-name|v_value
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|NUMBER
@@ -442,16 +479,16 @@ name|v
 argument_list|)
 condition|)
 return|return;
-name|number
+name|setnumber
 argument_list|(
 name|p
 operator|->
 name|v_value
-argument_list|)
-operator|=
+argument_list|,
 name|number
 argument_list|(
 name|v
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -475,19 +512,19 @@ literal|'!'
 operator|)
 condition|)
 return|return;
-name|boolean
+name|setboolean
 argument_list|(
 name|p
 operator|->
 name|v_value
-argument_list|)
-operator|=
+argument_list|,
 operator|(
 operator|*
 name|v
 operator|!=
 literal|'!'
 operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -506,15 +543,15 @@ operator|*
 name|v
 condition|)
 return|return;
-name|character
+name|setcharacter
 argument_list|(
 name|p
 operator|->
 name|v_value
-argument_list|)
-operator|=
+argument_list|,
 operator|*
 name|v
+argument_list|)
 expr_stmt|;
 block|}
 name|p
@@ -524,7 +561,7 @@ operator||=
 name|CHANGED
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -534,30 +571,29 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|vlex
-argument_list|(
-name|s
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|value_t
-modifier|*
-name|p
-decl_stmt|;
+begin_function_decl
 specifier|static
 name|void
 name|vtoken
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|vlex
+parameter_list|(
+name|s
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|value_t
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|equal
@@ -600,7 +636,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -609,6 +644,7 @@ do|do
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|vinterp
@@ -617,6 +653,7 @@ name|s
 argument_list|,
 literal|' '
 argument_list|)
+operator|)
 condition|)
 name|cp
 operator|++
@@ -655,7 +692,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -664,18 +701,15 @@ name|vtoken
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|value_t
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -687,14 +721,16 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -704,12 +740,14 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|vlookup
 argument_list|(
 name|s
 argument_list|)
+operator|)
 condition|)
 block|{
 name|cp
@@ -767,14 +805,16 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
 literal|'?'
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -871,13 +911,11 @@ name|vprint
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|value_t
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1024,7 +1062,7 @@ literal|6
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s=%-5d"
+literal|"%s=%-5ld"
 argument_list|,
 name|p
 operator|->
@@ -1120,7 +1158,6 @@ name|mode
 parameter_list|,
 name|rw
 parameter_list|)
-specifier|register
 name|unsigned
 name|mode
 decl_stmt|,
@@ -1186,13 +1223,11 @@ name|vlookup
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|value_t
 modifier|*
 name|p
@@ -1258,7 +1293,6 @@ name|s
 parameter_list|,
 name|stop
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1267,7 +1301,6 @@ name|char
 name|stop
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1363,7 +1396,6 @@ operator|)
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|char
 modifier|*
 name|q
@@ -1519,31 +1551,23 @@ begin_comment
 comment|/*  * assign variable s with value v (for NUMBER or STRING or CHAR types)  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vstring
-argument_list|(
+parameter_list|(
 name|s
-argument_list|,
+parameter_list|,
 name|v
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
+decl_stmt|;
 name|char
 modifier|*
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|value_t
 modifier|*
 name|p
@@ -1623,7 +1647,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

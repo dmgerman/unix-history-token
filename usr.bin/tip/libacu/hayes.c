@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: hayes.c,v 1.8 2001/10/24 18:38:58 millert Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: hayes.c,v 1.6 1997/02/11 09:24:17 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,13 +17,25 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)hayes.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)hayes.c	8.1 (Berkeley) 6/6/93"
+literal|"$OpenBSD: hayes.c,v 1.8 2001/10/24 18:38:58 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,13 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tipconf.h"
+file|"tip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tip.h"
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_define
@@ -146,35 +172,27 @@ name|IDLE
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+name|int
 name|hay_dialer
-argument_list|(
+parameter_list|(
 name|num
-argument_list|,
+parameter_list|,
 name|acu
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|num
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|acu
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|connected
 init|=
@@ -183,8 +201,12 @@ decl_stmt|;
 name|char
 name|dummy
 decl_stmt|;
-if|#
-directive|if
+name|struct
+name|termios
+name|cntrl
+decl_stmt|;
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|char
 name|line
@@ -227,11 +249,36 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|acu_hupcl
-argument_list|()
+name|tcgetattr
+argument_list|(
+name|FD
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
 expr_stmt|;
-name|acu_flush
-argument_list|()
+name|cntrl
+operator|.
+name|c_cflag
+operator||=
+name|HUPCL
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|FD
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
+name|tcflush
+argument_list|(
+name|FD
+argument_list|,
+name|TCIOFLUSH
+argument_list|)
 expr_stmt|;
 name|write
 argument_list|(
@@ -263,6 +310,30 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|/* send dial command */
+for|for
+control|(
+name|cp
+operator|=
+name|num
+init|;
+operator|*
+name|cp
+condition|;
+name|cp
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'='
+condition|)
+operator|*
+name|cp
+operator|=
+literal|','
+expr_stmt|;
 name|write
 argument_list|(
 name|FD
@@ -345,28 +416,29 @@ operator|)
 return|;
 comment|/* lets get out of here.. */
 block|}
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 if|if
 condition|(
 name|timeout
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%d second dial timeout"
+literal|"%ld second dial timeout"
 argument_list|,
 name|number
 argument_list|(
@@ -408,23 +480,13 @@ name|connected
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|hay_disconnect
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|char
-name|c
-decl_stmt|;
-name|int
-name|len
-decl_stmt|,
-name|rlen
-decl_stmt|;
 comment|/* first hang up the modem*/
 ifdef|#
 directive|ifdef
@@ -463,18 +525,13 @@ name|goodbye
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|hay_abort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|char
-name|c
-decl_stmt|;
 name|write
 argument_list|(
 name|FD
@@ -489,7 +546,7 @@ name|hay_disconnect
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -523,7 +580,6 @@ name|gobble
 parameter_list|(
 name|match
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|match
@@ -696,18 +752,16 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|error_rep
-argument_list|(
+parameter_list|(
 name|c
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -791,38 +845,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * set modem back to normal verbose status codes.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|goodbye
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|len
-decl_stmt|,
-name|rlen
 decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-operator|&
-name|len
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
-comment|/* get rid of trash */
 if|if
 condition|(
 name|hay_sync
@@ -837,13 +883,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1020,16 +1064,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
-comment|/* clear the input buffer */
 name|ioctl
 argument_list|(
 name|FD
@@ -1046,7 +1087,7 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1055,12 +1096,10 @@ name|MAXRETRY
 value|5
 end_define
 
-begin_macro
+begin_function
+name|int
 name|hay_sync
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|len
@@ -1124,7 +1163,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|dumbuf
 argument_list|,
@@ -1132,14 +1171,14 @@ literal|'0'
 argument_list|)
 operator|||
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|dumbuf
 argument_list|,
 literal|'O'
 argument_list|)
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|dumbuf
 argument_list|,
@@ -1204,7 +1243,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
