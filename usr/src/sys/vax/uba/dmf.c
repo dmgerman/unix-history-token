@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1164,6 +1164,16 @@ name|DMFL_DEFLINES
 else|:
 name|lines
 expr_stmt|;
+name|cbase
+index|[
+name|ui
+operator|->
+name|ui_ubanum
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_block
 
@@ -1352,7 +1362,8 @@ operator|->
 name|ui_ubanum
 index|]
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|dmf_ubinfo
@@ -1391,14 +1402,15 @@ operator|->
 name|ui_ubanum
 index|]
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|dmf_ubinfo
 index|[
 name|ui
 operator|->
 name|ui_ubanum
 index|]
-operator|&
-literal|0x3ffff
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4313,12 +4325,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cbase
+name|dmf_ubinfo
 index|[
 name|uban
 index|]
-operator|==
-literal|0
 condition|)
 block|{
 name|dmf_ubinfo
@@ -4351,12 +4361,13 @@ index|[
 name|uban
 index|]
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|dmf_ubinfo
 index|[
 name|uban
 index|]
-operator|&
-literal|0x3ffff
+argument_list|)
 expr_stmt|;
 block|}
 name|addr
