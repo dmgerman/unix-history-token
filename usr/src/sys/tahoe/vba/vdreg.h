@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.2	86/01/12	*/
+comment|/*	vdreg.h	1.3	86/01/20	*/
 end_comment
 
 begin_comment
@@ -1421,26 +1421,6 @@ parameter_list|,
 name|type
 parameter_list|)
 value|{\ 	if (type == SMDCTLR) { \ 		movow(ctlr, ((int)mdcbadr& 0xffff0000)>> 16) ; \ 		movow((int)(ctlr)+2, (int)mdcbadr& 0xffff); \ 	} else \ 		(ctlr)->cdr_mdcb_ptr = mdcbadr; \ }
-end_define
-
-begin_comment
-comment|/*  * Poll controller until operation completes  * or timeout expires.  * YECH!!!! THIS SHOULD BE A SUBROUTINE!!!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLLTILLDONE
-parameter_list|(
-name|c
-parameter_list|,
-name|a
-parameter_list|,
-name|x
-parameter_list|,
-name|t
-parameter_list|)
-value|{ \ 	vdtimeout = 1000 * (x); \ 	uncache(&(a)->operrsta); \ 	while ((((a)->operrsta)& (DCBCMP|DCBABT)) == 0) { \ 		DELAY(1000); \ 		vdtimeout--; \ 		uncache(&(a)->operrsta); \ 		if (vdtimeout<= 0) { \ 			printf("vd%d: controller timeout", c); \ 			VDDC_ABORT(c, t); \ 			DELAY(30000); \ 			break; \ 		} \ 	} \ 	if (vdtimeout> 0) \ 		if ((t) == SMD_ECTLR&& vdtimeout> 0) { \ 			uncache(&(c)->cdr_csr); \ 			while((c)->cdr_csr&CS_GO) { \ 				DELAY(50); \ 				uncache(&(c)->cdr_csr); \ 			} \ 			DELAY(500); \ 		} else \ 			DELAY(200); \ 	uncache(&(a)->operrsta); \ }
 end_define
 
 begin_comment
