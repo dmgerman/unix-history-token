@@ -80,7 +80,11 @@ function_decl|(
 modifier|*
 name|ht_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|harp_timer
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* Function to call */
 block|}
@@ -293,6 +297,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|format_ip_addr
@@ -344,7 +349,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|timer_proc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -352,7 +359,9 @@ begin_function_decl
 specifier|extern
 name|int
 name|init_timer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -360,7 +369,9 @@ begin_function_decl
 specifier|extern
 name|int
 name|block_timer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

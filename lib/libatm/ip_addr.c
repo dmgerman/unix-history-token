@@ -136,21 +136,21 @@ decl_stmt|;
 specifier|static
 name|struct
 name|sockaddr_in
-name|sin
+name|s
 decl_stmt|;
 comment|/* 	 * Get IP address of specified host name 	 */
 name|bzero
 argument_list|(
 operator|&
-name|sin
+name|s
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|s
 operator|.
 name|sin_family
 operator|=
@@ -177,7 +177,7 @@ comment|/* 		 * IP address is in dotted decimal format 		 */
 if|if
 condition|(
 operator|(
-name|sin
+name|s
 operator|.
 name|sin_addr
 operator|.
@@ -189,8 +189,7 @@ name|p
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 block|{
 return|return
@@ -238,7 +237,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|sin
+name|s
 operator|.
 name|sin_addr
 operator|.
@@ -260,7 +259,7 @@ block|}
 return|return
 operator|(
 operator|&
-name|sin
+name|s
 operator|)
 return|;
 block|}
@@ -271,6 +270,7 @@ comment|/*  * Format an IP address  *  * Return a text-formatted string with an 
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|format_ip_addr

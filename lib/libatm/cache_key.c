@@ -185,6 +185,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buff

@@ -132,7 +132,9 @@ begin_function
 specifier|static
 name|void
 name|timer_tick
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Bump the timer flag 	 */
 name|harp_timer_exec
@@ -148,7 +150,9 @@ end_comment
 begin_function
 name|void
 name|timer_proc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Harp_timer
 modifier|*
@@ -159,7 +163,10 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|Harp_timer
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* 	 * Reset marks in all timers on the queue 	 */
 for|for
@@ -305,6 +312,9 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|timer_tick
 argument_list|)
 operator|==
