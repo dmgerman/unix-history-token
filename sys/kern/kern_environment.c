@@ -1804,7 +1804,6 @@ if|if
 condition|(
 name|rval
 condition|)
-block|{
 operator|*
 name|data
 operator|=
@@ -1813,7 +1812,6 @@ name|int
 operator|)
 name|tmp
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|rval
@@ -1851,16 +1849,16 @@ decl_stmt|;
 name|quad_t
 name|iv
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|value
 operator|=
 name|getenv
 argument_list|(
 name|name
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|value
 operator|==
 name|NULL
 condition|)

@@ -185,7 +185,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* config supplied nothing */
+comment|/* loader hints in environment only */
 break|break;
 case|case
 literal|1
@@ -415,12 +415,10 @@ return|;
 block|}
 block|}
 else|else
-block|{
 name|cp
 operator|=
 name|hintp
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|cp
