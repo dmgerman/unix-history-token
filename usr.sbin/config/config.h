@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -29,11 +35,12 @@ begin_struct
 struct|struct
 name|file_list
 block|{
-name|struct
-name|file_list
-modifier|*
+name|STAILQ_ENTRY
+argument_list|(
+argument|file_list
+argument_list|)
 name|f_next
-decl_stmt|;
+expr_stmt|;
 name|char
 modifier|*
 name|f_fn
@@ -196,11 +203,12 @@ directive|define
 name|UNKNOWN
 value|-2
 comment|/* -2 means not set yet */
-name|struct
-name|device
-modifier|*
+name|STAILQ_ENTRY
+argument_list|(
+argument|device
+argument_list|)
 name|d_next
-decl_stmt|;
+expr_stmt|;
 comment|/* Next one in list */
 block|}
 struct|;
@@ -241,16 +249,28 @@ name|char
 modifier|*
 name|cpu_name
 decl_stmt|;
-name|struct
-name|cputype
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|cputype
+argument_list|)
 name|cpu_next
-decl_stmt|;
+expr_stmt|;
 block|}
-modifier|*
-name|cputype
 struct|;
 end_struct
+
+begin_macro
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|cputype
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|cputype
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * A set of options may also be specified which are like CPU types,  * but which may also specify values for the options.  * A separate set of options may be defined for make-style options.  */
@@ -272,19 +292,31 @@ name|int
 name|op_ownfile
 decl_stmt|;
 comment|/* true = own file, false = makefile */
-name|struct
-name|opt
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|opt
+argument_list|)
 name|op_next
-decl_stmt|;
+expr_stmt|;
 block|}
-modifier|*
-name|opt
-struct|,
-modifier|*
-name|mkopt
 struct|;
 end_struct
+
+begin_macro
+name|SLIST_HEAD
+argument_list|(
+argument|opt_head
+argument_list|,
+argument|opt
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|opt
+operator|,
+name|mkopt
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -298,16 +330,28 @@ name|char
 modifier|*
 name|o_file
 decl_stmt|;
-name|struct
-name|opt_list
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|opt_list
+argument_list|)
 name|o_next
-decl_stmt|;
+expr_stmt|;
 block|}
-modifier|*
-name|otab
 struct|;
 end_struct
+
+begin_macro
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|opt_list
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|otab
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -470,14 +514,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|device
-modifier|*
+begin_extern
+extern|extern STAILQ_HEAD(device_head
+operator|,
+extern|device
+end_extern
+
+begin_expr_stmt
+unit|)
 name|dtab
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -505,14 +552,17 @@ name|yyfile
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|file_list
-modifier|*
+begin_extern
+extern|extern STAILQ_HEAD(file_list_head
+operator|,
+extern|file_list
+end_extern
+
+begin_expr_stmt
+unit|)
 name|ftab
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
