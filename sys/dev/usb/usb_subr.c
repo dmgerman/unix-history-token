@@ -634,6 +634,9 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+name|int
+name|actlen
+decl_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -672,13 +675,13 @@ name|req
 operator|.
 name|wLength
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* only size byte first */
 name|err
 operator|=
-name|usbd_do_request
+name|usbd_do_request_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -686,6 +689,13 @@ operator|&
 name|req
 argument_list|,
 name|sdesc
+argument_list|,
+name|USBD_SHORT_XFER_OK
+argument_list|,
+operator|&
+name|actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 expr_stmt|;
 if|if
@@ -695,6 +705,17 @@ condition|)
 return|return
 operator|(
 name|err
+operator|)
+return|;
+if|if
+condition|(
+name|actlen
+operator|<
+literal|1
+condition|)
+return|return
+operator|(
+name|USBD_SHORT_XFER
 operator|)
 return|;
 name|USETW
