@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assert.c	5.4 (Berkeley) %G%"
+literal|"@(#)assert.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,11 @@ file|<errno.h>
 end_include
 
 begin_comment
-comment|/*******  *	assert - print out assetion error  *  *	return code - none  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	print out assetion error  */
 end_comment
 
 begin_macro
@@ -81,11 +85,6 @@ name|struct
 name|tm
 modifier|*
 name|localtime
-parameter_list|()
-function_decl|;
-specifier|extern
-name|time_t
-name|time
 parameter_list|()
 function_decl|;
 name|time_t
@@ -162,6 +161,9 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -204,8 +206,11 @@ operator|->
 name|tm_min
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|USG
 name|fprintf
 argument_list|(
 name|errlog
@@ -260,6 +265,9 @@ name|errlog
 operator|!=
 name|stderr
 condition|)
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|errlog
