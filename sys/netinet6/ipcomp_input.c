@@ -324,9 +324,6 @@ name|sav
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|proto
-decl_stmt|;
 if|if
 condition|(
 name|m
@@ -383,7 +380,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|m
+name|md
 condition|)
 block|{
 name|m
@@ -431,12 +428,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|proto
-operator|=
-name|ip
-operator|->
-name|ip_p
 expr_stmt|;
 name|nxt
 operator|=
@@ -1089,7 +1080,7 @@ name|sav
 init|=
 name|NULL
 decl_stmt|;
-name|char
+name|u_int8_t
 modifier|*
 name|prvnxtp
 decl_stmt|;
