@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.123 2002/05/19 06:24:31 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.124 2002/05/26 03:10:02 minoura Exp $	*/
 end_comment
 
 begin_comment
@@ -5855,6 +5855,14 @@ operator|~
 name|OHCI_DONE_INTRS
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|sc_hcca
+operator|->
+name|hcca_done_head
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 name|intrs
@@ -6024,14 +6032,6 @@ operator|&
 operator|~
 name|OHCI_DONE_INTRS
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_hcca
-operator|->
-name|hcca_done_head
-operator|=
-literal|0
 expr_stmt|;
 name|usb_schedsoftintr
 argument_list|(
