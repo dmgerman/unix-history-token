@@ -555,10 +555,12 @@ argument_list|,
 literal|"hardclock fired"
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 name|hardclock_process
@@ -571,10 +573,12 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If no separate statistics clock is available, run it from here. 	 * 	 * XXX: this only works for UP 	 */
@@ -593,10 +597,12 @@ name|tc_windup
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
-name|mtx_lock_spin
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|callout_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 name|ticks
@@ -635,10 +641,12 @@ condition|)
 operator|++
 name|softticks
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|callout_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 comment|/* 	 * swi_sched acquires sched_lock, so we don't want to call it with 	 * callout_lock held; incorrect locking order. 	 */
@@ -1435,10 +1443,12 @@ argument_list|,
 literal|"statclock fired"
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 if|if
@@ -1469,10 +1479,12 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MTX_QUIET
 argument_list|)
 expr_stmt|;
 block|}
