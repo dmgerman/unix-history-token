@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	1.2 83/10/14"
+literal|"@(#)sync.c	1.3 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -1109,7 +1109,19 @@ block|}
 case|case
 name|W_SIGNAL
 case|:
-comment|/* 		(void) putchar('\7'); 		*/
+if|if
+condition|(
+name|isplayer
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'\7'
+argument_list|)
+expr_stmt|;
 name|Signal
 argument_list|(
 literal|"%s (%c%c): %s"
@@ -1119,7 +1131,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* 		(void) strncpy(ship->file->signal, (char *)a, 			sizeof ship->file->signal - 1); 		ship->file->signal[sizeof ship->file->signal - 1] = 0; 		*/
+block|}
 break|break;
 case|case
 name|W_CREW
