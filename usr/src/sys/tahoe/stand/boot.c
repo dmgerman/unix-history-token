@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.2	86/07/16	*/
+comment|/*	boot.c	1.3	86/11/25	*/
 end_comment
 
 begin_include
@@ -68,9 +68,6 @@ literal|2
 index|]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
 literal|0
 block|,
 literal|0
@@ -80,7 +77,7 @@ literal|'d'
 block|,
 literal|'k'
 block|,
-comment|/* 1 = vd */
+comment|/* 1 = vd/dk */
 literal|0
 block|,
 literal|0
@@ -91,15 +88,6 @@ block|,
 literal|'y'
 block|,
 comment|/* 3 = cy */
-else|#
-directive|else
-literal|'d'
-block|,
-literal|'k'
-block|,
-comment|/* default = vd */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -110,6 +98,17 @@ directive|define
 name|MAXTYPE
 value|(sizeof(devname) / sizeof(devname[0]))
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_DFLT
+value|1
+end_define
+
+begin_comment
+comment|/* vd/dk */
+end_comment
 
 begin_define
 define|#
@@ -194,6 +193,23 @@ name|RB_SINGLE
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+operator|(
+name|devtype
+operator|&
+name|B_MAGICMASK
+operator|)
+operator|!=
+name|B_DEVMAGIC
+condition|)
+name|devtype
+operator|=
+name|DEV_DFLT
+operator|<<
+name|B_TYPESHIFT
+expr_stmt|;
+comment|/* unit, partition 0 */
 name|type
 operator|=
 operator|(
@@ -334,11 +350,29 @@ operator|++
 operator|=
 literal|','
 expr_stmt|;
+if|if
+condition|(
+name|part
+operator|>=
+literal|10
+condition|)
 operator|*
 name|cp
 operator|++
 operator|=
 name|part
+operator|/
+literal|10
+operator|+
+literal|'0'
+expr_stmt|;
+operator|*
+name|cp
+operator|++
+operator|=
+name|part
+operator|%
+literal|10
 operator|+
 literal|'0'
 expr_stmt|;
