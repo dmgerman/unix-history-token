@@ -509,16 +509,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|ncyls
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # complete cylinders */
-end_comment
-
-begin_decl_stmt
-name|int
 name|nphyssectors
 decl_stmt|;
 end_decl_stmt
@@ -664,7 +654,7 @@ begin_decl_stmt
 name|int
 name|cpg
 init|=
-literal|0
+name|DESCPG
 decl_stmt|;
 end_decl_stmt
 
@@ -3052,59 +3042,6 @@ name|mfs_mtpt
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|ncyls
-operator|=
-name|fssize
-operator|/
-name|secpercyl
-expr_stmt|;
-if|if
-condition|(
-name|ncyls
-operator|==
-literal|0
-condition|)
-name|ncyls
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|cpg
-operator|==
-literal|0
-condition|)
-name|cpg
-operator|=
-name|DESCPG
-operator|<
-name|ncyls
-condition|?
-name|DESCPG
-else|:
-name|ncyls
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|cpg
-operator|>
-name|ncyls
-condition|)
-block|{
-name|cpg
-operator|=
-name|ncyls
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Number of cylinders restricts cylinders per group to %d.\n"
-argument_list|,
-name|cpg
-argument_list|)
-expr_stmt|;
 block|}
 name|mkfs
 argument_list|(
