@@ -10,11 +10,12 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
-name|copyright
+name|sccsid
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#)ar.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +32,11 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|char
-name|sccsid
+name|copyright
 index|[]
 init|=
-literal|"@(#)ar.c	5.1 (Berkeley) %G%"
+literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
