@@ -15971,9 +15971,16 @@ operator|)
 return|;
 block|}
 block|}
-name|mp_fixme
+comment|/* 		 * XXX We could delay dropping the lock above but 		 * union_dircheckp complicates things. 		 */
+name|vn_lock
 argument_list|(
-literal|"Accessing vflags w/o vn lock."
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -16029,7 +16036,7 @@ name|f_offset
 operator|=
 literal|0
 expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
 name|tvp
 argument_list|)
@@ -16038,6 +16045,15 @@ goto|goto
 name|unionread
 goto|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=
@@ -16502,9 +16518,16 @@ operator|)
 return|;
 block|}
 block|}
-name|mp_fixme
+comment|/* 		 * XXX We could delay dropping the lock above but 		 * union_dircheckp complicates things. 		 */
+name|vn_lock
 argument_list|(
-literal|"Accessing vflag without vn lock."
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -16560,7 +16583,7 @@ name|f_offset
 operator|=
 literal|0
 expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
 name|tvp
 argument_list|)
@@ -16569,6 +16592,15 @@ goto|goto
 name|unionread
 goto|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
