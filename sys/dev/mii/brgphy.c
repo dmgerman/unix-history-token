@@ -2600,6 +2600,32 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Enable Link LED on Dell boxes */
+if|if
+condition|(
+name|bge_sc
+operator|->
+name|bge_no_3_led
+condition|)
+block|{
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_PHY_EXTCTL
+argument_list|,
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_PHY_EXTCTL
+argument_list|)
+operator|&
+operator|~
+name|BRGPHY_PHY_EXTCTL_3_LED
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

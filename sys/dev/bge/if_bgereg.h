@@ -10318,6 +10318,17 @@ value|0x03ea
 end_define
 
 begin_comment
+comment|/*  * Dell PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELL_VENDORID
+value|0x1028
+end_define
+
+begin_comment
 comment|/*  * Offset of MAC address inside EEPROM.  */
 end_comment
 
@@ -11736,6 +11747,9 @@ name|bge_asicrev
 decl_stmt|;
 name|u_int8_t
 name|bge_chiprev
+decl_stmt|;
+name|u_int8_t
+name|bge_no_3_led
 decl_stmt|;
 name|struct
 name|bge_ring_data
