@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.117 1999/06/04 02:38:18 mharo Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.118 1999/06/09 11:46:43 ache Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -4818,73 +4818,95 @@ case|case
 literal|0x12308086
 case|:
 return|return
+operator|(
 literal|"Intel PIIX IDE controller"
+operator|)
 return|;
 case|case
 literal|0x70108086
 case|:
 return|return
+operator|(
 literal|"Intel PIIX3 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x71118086
 case|:
 return|return
+operator|(
 literal|"Intel PIIX4 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x4d33105a
 case|:
 return|return
+operator|(
 literal|"Promise Ultra/33 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x522910b9
 case|:
 return|return
+operator|(
 literal|"AcerLabs Aladdin IDE controller"
+operator|)
 return|;
 case|case
 literal|0x05711106
 case|:
 return|return
+operator|(
 literal|"VIA Apollo IDE controller"
+operator|)
 return|;
 case|case
 literal|0x06401095
 case|:
 return|return
+operator|(
 literal|"CMD 640 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x06461095
 case|:
 return|return
+operator|(
 literal|"CMD 646 IDE controller"
+operator|)
 return|;
 case|case
 literal|0xc6931080
 case|:
 return|return
+operator|(
 literal|"Cypress 82C693 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x01021078
 case|:
 return|return
+operator|(
 literal|"Cyrix 5530 IDE controller"
+operator|)
 return|;
 case|case
 literal|0x55131039
 case|:
 return|return
 operator|(
-literal|"SiS 5591 IDE Controller"
+literal|"SiS 5591 IDE controller"
 operator|)
 return|;
 default|default:
 return|return
+operator|(
 literal|"Unknown PCI IDE controller"
+operator|)
 return|;
 block|}
 block|}
@@ -6367,7 +6389,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|"Intel 82451NX Memory and I/O Controller"
+literal|"Intel 82451NX Memory and I/O controller"
 operator|)
 return|;
 case|case
@@ -6461,7 +6483,7 @@ literal|0x71008086
 case|:
 return|return
 operator|(
-literal|"Intel 82439TX System Controller (MTXC)"
+literal|"Intel 82439TX System controller (MTXC)"
 operator|)
 return|;
 case|case
@@ -6485,6 +6507,27 @@ operator|(
 literal|"Intel 82440FX (Natoma) PCI and memory controller"
 operator|)
 return|;
+case|case
+literal|0x70208086
+case|:
+return|return
+operator|(
+literal|"Intel 82371SB (PIIX3) USB controller"
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|NWH
+case|case
+literal|0x71128086
+case|:
+return|return
+operator|(
+literal|"Intel 82371AB/EB (PIIX4) USB controller"
+operator|)
+return|;
+endif|#
+directive|endif
 case|case
 literal|0x84c58086
 case|:
@@ -6548,7 +6591,7 @@ literal|0x01011004
 case|:
 return|return
 operator|(
-literal|"VLSI 82C532 Eagle II Peripheral Controller"
+literal|"VLSI 82C532 Eagle II Peripheral controller"
 operator|)
 return|;
 case|case
@@ -6556,7 +6599,7 @@ literal|0x01041004
 case|:
 return|return
 operator|(
-literal|"VLSI 82C535 Eagle II System Controller"
+literal|"VLSI 82C535 Eagle II System controller"
 operator|)
 return|;
 case|case
@@ -6564,7 +6607,7 @@ literal|0x01051004
 case|:
 return|return
 operator|(
-literal|"VLSI 82C147 IrDA Controller"
+literal|"VLSI 82C147 IrDA controller"
 operator|)
 return|;
 comment|/* VIA Technologies -- vendor 0x1106  	 * Note that the old Apollo Master chipset is not in here, as VIA 	 * does not seem to have any docs on their website for it, and I do 	 * not have a Master board in my posession. -LC */
@@ -6627,7 +6670,7 @@ literal|0x30381106
 case|:
 return|return
 operator|(
-literal|"VIA 82C586B USB controller"
+literal|"VIA 83C572 USB controller"
 operator|)
 return|;
 comment|/* NEC -- vendor 0x1033 */
@@ -6659,6 +6702,14 @@ literal|"AcerLabs M1541 (Aladdin-V) PCI host bridge"
 operator|)
 return|;
 case|case
+literal|0x523710b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M5237 (Aladdin-V) USB controller"
+operator|)
+return|;
+case|case
 literal|0x710110b9
 case|:
 return|return
@@ -6675,6 +6726,19 @@ operator|(
 literal|"OPTi 82C822 host to PCI Bridge"
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|NWH
+case|case
+literal|0xc8611045
+case|:
+return|return
+operator|(
+literal|"OPTi 82C861 (FireLink) USB controller"
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* Ross (?) -- vendor 0x1166 */
 case|case
 literal|0x00051166
@@ -6703,6 +6767,31 @@ literal|0x003b1033
 case|:
 return|return
 name|NULL
+return|;
+case|case
+literal|0x00351033
+case|:
+return|return
+operator|(
+literal|"NEC uPD 9210 USB controller"
+operator|)
+return|;
+comment|/* CMD Tech -- vendor 0x1095 */
+case|case
+literal|0x06701095
+case|:
+return|return
+operator|(
+literal|"CMD Tech 670 (USB0670) USB controller"
+operator|)
+return|;
+case|case
+literal|0x06731095
+case|:
+return|return
+operator|(
+literal|"CMD Tech 673 (USB0673) USB controller"
+operator|)
 return|;
 block|}
 empty_stmt|;
@@ -6742,6 +6831,67 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_SERIALBUS
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_SERIALBUS_USB
+condition|)
+block|{
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x00
+comment|/* UHCI */
+condition|)
+block|{
+return|return
+operator|(
+literal|"UHCI USB controller"
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x10
+comment|/* OHCI */
+condition|)
+block|{
+return|return
+operator|(
+literal|"OHCI USB controller"
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|"USB controller"
+operator|)
+return|;
+block|}
+block|}
 return|return
 name|NULL
 return|;
