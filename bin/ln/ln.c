@@ -328,16 +328,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|fflag
-operator|=
-name|iflag
-operator|=
-name|sflag
-operator|=
-name|vflag
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -372,7 +362,6 @@ name|iflag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* -f overrides iflag */
 break|break;
 case|case
 literal|'i'
@@ -385,7 +374,6 @@ name|fflag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* -i overrides fflag */
 break|break;
 case|case
 literal|'s'
@@ -596,9 +584,9 @@ name|stat
 name|sb
 decl_stmt|;
 name|int
-name|exists
-decl_stmt|,
 name|ch
+decl_stmt|,
+name|exists
 decl_stmt|,
 name|first
 decl_stmt|;
@@ -769,13 +757,16 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the file exists, and -f was specified, unlink it. 	 * Attempt the link. 	 */
+comment|/* 	 * If the file exists, then unlink it forcibly if -f was specified 	 * and interactively if -i was specified. 	 */
 if|if
 condition|(
 name|fflag
 operator|&&
 name|exists
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|source
@@ -795,6 +786,7 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -803,6 +795,11 @@ operator|&&
 name|exists
 condition|)
 block|{
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -810,11 +807,6 @@ argument_list|,
 literal|"replace %s? "
 argument_list|,
 name|source
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 name|first
@@ -841,16 +833,30 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|first
-operator|==
+operator|!=
 literal|'y'
-operator|||
-name|first
-operator|==
-literal|'Y'
-operator|)
 operator|&&
+name|first
+operator|!=
+literal|'Y'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"not replaced\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|source
@@ -871,6 +877,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Attempt the link. */
 if|if
 condition|(
 call|(
