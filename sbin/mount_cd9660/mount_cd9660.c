@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -98,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/iconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
