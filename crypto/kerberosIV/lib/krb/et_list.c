@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: et_list.c,v 1.12 1997/05/13 09:45:01 bg Exp $"
+literal|"$Id: et_list.c,v 1.1.1.1 1997/09/04 06:04:22 markm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -48,25 +48,6 @@ argument_list|(
 name|__GNUC__
 argument_list|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_asm
-asm|asm(".globl __et_list");
-end_asm
-
-begin_comment
-comment|/* FreeBSD bug workaround */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
