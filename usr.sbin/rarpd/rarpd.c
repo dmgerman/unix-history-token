@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: rarpd.c,v 1.6 91/01/09 14:47:00 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: /a/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.1.1.1 1995/03/02 06:41:39 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2926,7 +2926,7 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
-name|SIOCSARP_IS_DEPRECATED_IN_4_4BSD
+name|SIOCSARP
 name|int
 name|s
 decl_stmt|;
@@ -3043,13 +3043,33 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|arptab_set
+argument_list|(
+name|ep
+argument_list|,
+name|ipaddr
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"couldn't update arp table"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
 end_block
 
 begin_comment
-comment|/*  * Build a reverse ARP packet and sent it out on the interface.  * 'ep' points to a valid REVARP_REQUEST.  The REVARP_REPLY is built   * on top of the request, then written to the network.  *  * RFC 903 defines the ether_arp fields as follows.  The following comments  * are taken (more or less) straight from this document.  *  * REVARP_REQUEST  *  * arp_sha is the hardware address of the sender of the packet.  * arp_spa is undefined.  * arp_tha is the 'target' hardware address.  *   In the case where the sender wishes to determine his own  *   protocol address, this, like arp_sha, will be the hardware  *   address of the sender.  * arp_tpa is undefined.  *  * REVARP_REPLY  *  * arp_sha is the hardware address of the responder (the sender of the  *   reply packet).  * arp_spa is the protocol address of the responder (see the note below).  * arp_tha is the hardware address of the target, and should be the same as  *   that which was given in the request.  * arp_tpa is the protocol address of the target, that is, the desired address.  *   * Note that the requirement that arp_spa be filled in with the responder's  * protocol is purely for convenience.  For instance, if a system were to use   * both ARP and RARP, then the inclusion of the valid protocol-hardware   * address pair (arp_spa, arp_sha) may eliminate the need for a subsequent   * ARP request.  */
+comment|/*  * Build a reverse ARP packet and sent it out on the interface.  * 'ep' points to a valid ARPOP_REVREQUEST.  The ARPOP_REVREPLY is built   * on top of the request, then written to the network.  *  * RFC 903 defines the ether_arp fields as follows.  The following comments  * are taken (more or less) straight from this document.  *  * ARPOP_REVREQUEST  *  * arp_sha is the hardware address of the sender of the packet.  * arp_spa is undefined.  * arp_tha is the 'target' hardware address.  *   In the case where the sender wishes to determine his own  *   protocol address, this, like arp_sha, will be the hardware  *   address of the sender.  * arp_tpa is undefined.  *  * ARPOP_REVREPLY  *  * arp_sha is the hardware address of the responder (the sender of the  *   reply packet).  * arp_spa is the protocol address of the responder (see the note below).  * arp_tha is the hardware address of the target, and should be the same as  *   that which was given in the request.  * arp_tpa is the protocol address of the target, that is, the desired address.  *   * Note that the requirement that arp_spa be filled in with the responder's  * protocol is purely for convenience.  For instance, if a system were to use   * both ARP and RARP, then the inclusion of the valid protocol-hardware   * address pair (arp_spa, arp_sha) may eliminate the need for a subsequent   * ARP request.  */
 end_comment
 
 begin_macro
