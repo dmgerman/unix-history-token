@@ -320,14 +320,14 @@ value|8192
 end_define
 
 begin_comment
-comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use 16 cylinders  * per group.  */
+comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use 22 cylinders  * per group, which seems to be the largest value allowed given  * all the other default values.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DESCPG
-value|16
+value|22
 end_define
 
 begin_comment
