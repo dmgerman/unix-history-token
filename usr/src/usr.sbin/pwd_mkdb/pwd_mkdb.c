@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	8.1 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -125,6 +131,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pw_scan.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -178,15 +190,6 @@ comment|/* hash() */
 literal|0
 comment|/* lorder */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-init|=
-literal|"pwd_mkdb"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,24 +319,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|register
-name|int
-name|len
-decl_stmt|,
-name|makeold
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|;
 name|DB
 modifier|*
 name|dp
@@ -361,7 +346,18 @@ name|ch
 decl_stmt|,
 name|cnt
 decl_stmt|,
+name|len
+decl_stmt|,
+name|makeold
+decl_stmt|,
 name|tfd
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|t
 decl_stmt|;
 name|char
 name|buf
@@ -1731,14 +1727,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pwd_mkdb: line too long\n"
+literal|"line too long"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1761,14 +1752,9 @@ name|pw
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pwd_mkdb: at line #%d.\n"
+literal|"at line #%d"
 argument_list|,
 name|lcnt
 argument_list|)
@@ -1779,12 +1765,18 @@ name|errno
 operator|=
 name|EFTYPE
 expr_stmt|;
+comment|/* XXX */
 name|error
 argument_list|(
 name|pname
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1807,9 +1799,6 @@ end_function
 
 begin_block
 block|{
-name|int
-name|sverrno
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1826,10 +1815,11 @@ name|to
 argument_list|)
 condition|)
 block|{
+name|int
 name|sverrno
-operator|=
+init|=
 name|errno
-expr_stmt|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1873,21 +1863,9 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pwd_mkdb: %s: %s\n"
-argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cleanup
