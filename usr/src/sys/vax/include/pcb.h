@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	4.5	81/05/14	*/
+comment|/*	pcb.h	4.6	82/10/31	*/
 end_comment
 
 begin_comment
@@ -168,6 +168,13 @@ define|#
 directive|define
 name|AST_CLR
 value|0x07000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PME_CLR
+value|0x80000000
 end_define
 
 begin_define
