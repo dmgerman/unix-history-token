@@ -4649,15 +4649,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|variable_set2
-argument_list|(
-name|VAR_MOUSED_PORT
-argument_list|,
-literal|"/dev/psm0"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
