@@ -364,6 +364,13 @@ return|;
 block|}
 else|else
 block|{
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pm
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PMAP_STATS_INC
 argument_list|(
 name|tsb_nlookup_u
