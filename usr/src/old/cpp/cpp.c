@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.5 %G%"
+literal|"@(#)cpp.c	1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,8 @@ directive|if
 name|pdp11
 operator||
 name|vax
+operator||
+name|mc68000
 end_if
 
 begin_define
@@ -557,6 +559,18 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(pbeg>=(a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cputc
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|if(!flslvl) putc(a,b)
 end_define
 
 begin_decl_stmt
@@ -1130,7 +1144,7 @@ begin_define
 define|#
 directive|define
 name|symsiz
-value|1500
+value|2000
 end_define
 
 begin_comment
@@ -2439,7 +2453,7 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* last char written is '*' */
-name|putc
+name|cputc
 argument_list|(
 literal|'/'
 argument_list|,
@@ -2570,14 +2584,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|putc
+name|cputc
 argument_list|(
 literal|'*'
 argument_list|,
 name|fout
 argument_list|)
 expr_stmt|;
-name|putc
+name|cputc
 argument_list|(
 literal|'/'
 argument_list|,
@@ -7043,7 +7057,14 @@ index|[
 name|MAXFRM
 index|]
 decl_stmt|;
-comment|/* actual[n] is text of nth actual */
+comment|/* actual[n] is text of nth actual   */
+name|char
+name|actused
+index|[
+name|MAXFRM
+index|]
+decl_stmt|;
+comment|/* for newline processing in actuals */
 name|char
 name|acttxt
 index|[
@@ -7051,6 +7072,11 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* space for actuals */
+name|int
+name|nlines
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 literal|0
@@ -7433,6 +7459,16 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|actused
+index|[
+name|pa
+operator|-
+name|actual
+index|]
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|pa
 operator|++
@@ -7440,6 +7476,24 @@ operator|=
 name|ca
 expr_stmt|;
 block|}
+block|}
+name|nlines
+operator|=
+name|lineno
+index|[
+name|ifno
+index|]
+operator|-
+name|maclin
+expr_stmt|;
+name|lineno
+index|[
+name|ifno
+index|]
+operator|=
+name|maclin
+expr_stmt|;
+comment|/* don't count newlines here */
 block|}
 if|if
 condition|(
@@ -7576,6 +7630,45 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Actuals with newlines confuse line numbering */
+if|if
+condition|(
+operator|*
+name|ca
+operator|==
+literal|'\n'
+operator|&&
+name|actused
+index|[
+operator|*
+name|vp
+operator|-
+literal|1
+index|]
+condition|)
+if|if
+condition|(
+operator|*
+operator|(
+name|ca
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'\\'
+condition|)
+name|ca
+operator|--
+expr_stmt|;
+else|else
+operator|*
+operator|--
+name|p
+operator|=
+literal|' '
+expr_stmt|;
+else|else
+block|{
 operator|*
 operator|--
 name|p
@@ -7583,10 +7676,52 @@ operator|=
 operator|*
 name|ca
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ca
+operator|==
+literal|'\n'
+condition|)
+name|nlines
+operator|--
+expr_stmt|;
 block|}
+block|}
+name|actused
+index|[
+operator|*
+name|vp
+operator|-
+literal|1
+index|]
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|nlines
+operator|>
+literal|0
+condition|)
+while|while
+condition|(
+name|nlines
+operator|--
+operator|>
+literal|0
+condition|)
+operator|*
+operator|--
+name|p
+operator|=
+literal|'\n'
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|outp
 operator|=
