@@ -6138,6 +6138,8 @@ operator|.
 name|xl_rx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -6347,6 +6349,8 @@ operator|.
 name|xl_tx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -6534,28 +6538,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|xl_ldata
-operator|.
-name|xl_tx_list
-argument_list|,
-name|XL_TX_LIST_SZ
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|xl_ldata
-operator|.
-name|xl_rx_list
-argument_list|,
-name|XL_RX_LIST_SZ
-argument_list|)
-expr_stmt|;
 comment|/* We need a spare DMA map for the RX ring. */
 name|error
 operator|=
