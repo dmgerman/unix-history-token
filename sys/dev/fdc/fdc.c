@@ -8207,9 +8207,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|int
-name|flags
-decl_stmt|;
 name|struct
 name|fdc_ivars
 modifier|*
