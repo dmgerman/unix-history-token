@@ -1397,7 +1397,6 @@ name|arg
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1415,6 +1414,13 @@ name|disk
 modifier|*
 name|dp
 decl_stmt|;
+if|if
+condition|(
+name|flag
+operator|==
+name|EV_CANCEL
+condition|)
+return|return;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
