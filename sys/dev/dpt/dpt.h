@@ -5480,6 +5480,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|dpt_conf_t
+modifier|*
+name|dpt_pio_get_conf
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
