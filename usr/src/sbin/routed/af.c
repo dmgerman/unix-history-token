@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.7 %G%"
+literal|"@(#)af.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ name|hp
 operator|->
 name|afh_nethash
 operator|=
-name|in_netof
+name|inet_netof
 argument_list|(
 name|sin
 operator|->
@@ -281,14 +281,14 @@ begin_block
 block|{
 return|return
 operator|(
-name|in_netof
+name|inet_netof
 argument_list|(
 name|sin1
 operator|->
 name|sin_addr
 argument_list|)
 operator|==
-name|in_netof
+name|inet_netof
 argument_list|(
 name|sin2
 operator|->
@@ -549,7 +549,7 @@ begin_block
 block|{
 return|return
 operator|(
-name|in_lnaof
+name|inet_lnaof
 argument_list|(
 name|sin
 operator|->
