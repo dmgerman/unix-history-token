@@ -7739,7 +7739,7 @@ name|NGE_RXCFG_RX_FDX
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Enable the delivery of PHY interrupts based on 	 * link/speed/duplex status changes. 	 */
+comment|/* 	 * Enable the delivery of PHY interrupts based on 	 * link/speed/duplex status changes. Also enable the 	 * extsts field in the DMA descriptors (needed for 	 * TCP/IP checksum offload on transmit). 	 */
 name|NGE_SETBIT
 argument_list|(
 name|sc
@@ -7753,6 +7753,8 @@ operator||
 name|NGE_CFG_PHYINTR_LNK
 operator||
 name|NGE_CFG_PHYINTR_DUP
+operator||
+name|NGE_CFG_EXTSTS_ENB
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable interrupts. 	 */

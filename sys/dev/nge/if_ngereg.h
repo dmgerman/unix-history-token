@@ -1443,22 +1443,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGE_TXCFG_100
-define|\
-value|(NGE_TXDMA_64BYTES|NGE_TXCFG_AUTOPAD|\ 	 NGE_TXCFG_FILL(64)|NGE_TXCFG_DRAIN(1536))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NGE_TXCFG_10
-define|\
-value|(NGE_TXDMA_32BYTES|NGE_TXCFG_AUTOPAD|\ 	 NGE_TXCFG_FILL(64)|NGE_TXCFG_DRAIN(1536))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NGE_TXCFG
 define|\
 value|(NGE_TXDMA_512BYTES|NGE_TXCFG_AUTOPAD|\ 	 NGE_TXCFG_FILL(64)|NGE_TXCFG_DRAIN(6400))
@@ -2648,6 +2632,14 @@ name|mbuf
 modifier|*
 name|nge_mbuf
 decl_stmt|;
+name|u_int64_t
+name|nge_dummy
+decl_stmt|;
+block|}
+name|nge_mb_u
+union|;
+union|union
+block|{
 name|struct
 name|nge_desc_64
 modifier|*
@@ -2655,12 +2647,9 @@ name|nge_nextdesc
 decl_stmt|;
 name|u_int64_t
 name|nge_dummy
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
-name|nge_u
+name|nge_nd_u
 union|;
 block|}
 struct|;
@@ -2703,6 +2692,14 @@ name|mbuf
 modifier|*
 name|nge_mbuf
 decl_stmt|;
+name|u_int64_t
+name|nge_dummy
+decl_stmt|;
+block|}
+name|nge_mb_u
+union|;
+union|union
+block|{
 name|struct
 name|nge_desc_32
 modifier|*
@@ -2710,12 +2707,9 @@ name|nge_nextdesc
 decl_stmt|;
 name|u_int64_t
 name|nge_dummy
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
-name|nge_u
+name|nge_nd_u
 union|;
 block|}
 struct|;
@@ -2732,14 +2726,14 @@ begin_define
 define|#
 directive|define
 name|nge_mbuf
-value|nge_u.nge_mbuf
+value|nge_mb_u.nge_mbuf
 end_define
 
 begin_define
 define|#
 directive|define
 name|nge_nextdesc
-value|nge_u.nge_nextdesc
+value|nge_nd_u.nge_nextdesc
 end_define
 
 begin_define
