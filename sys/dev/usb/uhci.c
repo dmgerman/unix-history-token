@@ -1691,7 +1691,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
-comment|/* PR1 The VIA 823C572 reset FLBASEADDR as well */
+comment|/* NWH PR1 The 823C572 resets FLBASEADDR as well, moved busreset up */
 name|uhci_busreset
 argument_list|(
 name|sc
@@ -1764,31 +1764,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list */
-comment|/* PR1 moved uhci_busreset up */
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-comment|/* PR1 */
-name|printf
-argument_list|(
-literal|"PR1:after busreset: FLBASEADDR=0x%08x, DMADDR(&dma)=0x%08x\n"
-argument_list|,
-name|UREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_FLBASEADDR
-argument_list|)
-argument_list|,
-name|DMAADDR
-argument_list|(
-operator|&
-name|dma
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* NWH PR1 moved uhci_busreset up */
 comment|/* Allocate the dummy QH where bulk traffic will be queued. */
 name|bsqh
 operator|=
@@ -4703,21 +4679,6 @@ name|n
 decl_stmt|,
 name|running
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"PR1:uhci_run:start: "
-argument_list|)
-expr_stmt|;
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splusb
@@ -4752,21 +4713,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"PR1:uhci_run:do_nothing: "
-argument_list|)
-expr_stmt|;
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -4830,23 +4776,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"PR1:uhci_run:succeed(%d): "
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -4889,21 +4818,6 @@ else|:
 literal|"stop"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"PR1:uhci_run:fail: "
-argument_list|)
-expr_stmt|;
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|USBD_IOERROR
@@ -6461,6 +6375,25 @@ operator|->
 name|timeout_handle
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+block|}
+else|else
+block|{
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
@@ -8472,6 +8405,25 @@ operator|->
 name|timeout_handle
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+block|}
+else|else
+block|{
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
@@ -11765,7 +11717,7 @@ name|buffer
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|2
+literal|10
 argument_list|,
 operator|(
 literal|"uhci_root_ctrl_control type=0x%02x request=%02x\n"
