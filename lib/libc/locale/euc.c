@@ -516,7 +516,6 @@ name|rl
 operator|->
 name|variable
 operator|=
-operator|&
 name|ei
 expr_stmt|;
 block|}
