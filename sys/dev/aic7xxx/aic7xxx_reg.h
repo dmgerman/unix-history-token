@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.3 1996/01/07 19:18:28 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.4 1996/01/11 06:17:49 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -201,73 +201,6 @@ end_define
 begin_comment
 comment|/* Powered Termination */
 end_comment
-
-begin_comment
-comment|/*  * SCSI Interrrupt Mode 1 (pp. 3-28,29).  * Set bits in this register enable the corresponding  * interrupt source.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIMODE1
-value|0x011
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENSELTIMO
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENATNTARG
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENSCSIRST
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENPHASEMIS
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENBUSFREE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENSCSIPERR
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENPHASECHG
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENREQINIT
-value|0x01
-end_define
 
 begin_comment
 comment|/*  * SCSI Control Signal Read Register (p. 3-15).  * Reads the actual state of the SCSI bus pins  */
@@ -963,6 +896,34 @@ name|SHADDR
 value|0x014
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHADDR0
+value|0x014
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHADDR1
+value|0x015
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHADDR2
+value|0x016
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHADDR3
+value|0x017
+end_define
+
 begin_comment
 comment|/*  * Selection/Reselection ID (p. 3-31)  * Upper four bits are the device id.  The ONEBIT is set when the re/selecting  * device did not set its own ID.  */
 end_comment
@@ -1039,6 +1000,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SELBUS_MASK
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
 name|SELBUSB
 value|0x08
 end_define
@@ -1057,6 +1025,13 @@ end_define
 begin_comment
 comment|/*  UNUSED			0x01 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SELNARROW
+value|0x00
+end_define
 
 begin_comment
 comment|/*  * Sequencer Control (p. 3-33)  * Error detection mode and speed configuration  */
@@ -1702,6 +1677,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PARITY_ERROR
+value|0xe1
+end_define
+
+begin_comment
+comment|/* 						 * Sequencer detected a parity 						 * error. 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BRKADRINT
 value|0x08
 end_define
@@ -2032,13 +2018,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEEDDMA
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
 name|DISCONNECTED
 value|0x04
 end_define
@@ -2250,60 +2229,17 @@ name|SCB_CMDLEN
 value|0x0b8
 end_define
 
-begin_comment
-comment|/* RESERVED - MUST BE ZERO	0x0b9 */
-end_comment
-
-begin_comment
-comment|/* RESERVED - MUST BE ZERO	0x0ba */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SCB_NEXT_WAITING
-value|0x0bb
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PHYSADDR
-value|0x0bc
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PHYSADDR0
-value|0x0bc
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PHYSADDR1
-value|0x0bd
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PHYSADDR2
-value|0x0be
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PHYSADDR3
-value|0x0bf
+value|0x0b9
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 end_ifdef
 
 begin_define
@@ -2338,17 +2274,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SCB_SIZEOF
-value|0x1a
-end_define
-
-begin_comment
-comment|/* sizeof SCB to DMA */
-end_comment
-
 begin_comment
 comment|/* --------------------- AHA-2840-only definitions -------------------- */
 end_comment
@@ -2357,7 +2282,7 @@ begin_define
 define|#
 directive|define
 name|SEECTL_2840
-value|0xcc0
+value|0x0c0
 end_define
 
 begin_comment
@@ -2389,7 +2314,7 @@ begin_define
 define|#
 directive|define
 name|STATUS_2840
-value|0xcc1
+value|0x0c1
 end_define
 
 begin_define
@@ -2620,6 +2545,13 @@ end_define
 begin_comment
 comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LASTPHASE
+value|0x049
+end_define
 
 begin_define
 define|#
