@@ -4951,6 +4951,10 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|mflag
+operator|||
+operator|(
 name|thisjob
 operator|->
 name|foreground
@@ -4960,6 +4964,7 @@ name|WIFSTOPPED
 argument_list|(
 name|status
 argument_list|)
+operator|)
 condition|)
 block|{
 name|i
