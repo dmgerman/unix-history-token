@@ -3283,15 +3283,22 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*  			 * If HCRC the header is screwed up and the sector  			 * might be in the bad sector table, better check.. 			 * 			 * Note: If the header is screwed up on a skip sector 			 * track, then the appropriate replacement sector 			 * cannot be found.  			 */
+comment|/*  			 * HCRC means the header is screwed up and the sector  			 * might well exist in the bad sector table,  			 * better check....  			 */
 if|if
 condition|(
+operator|(
 name|er1
 operator|&
 name|HPER1_HCRC
+operator|)
 operator|&&
 operator|!
 name|ML11
+operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_hdr
 operator|&&
 name|hpecc
 argument_list|(
@@ -3360,6 +3367,22 @@ name|hpda
 operator|&
 literal|0x1f
 operator|)
+expr_stmt|;
+comment|/* 			 * If we have a data check error or a hard 			 * ecc error the bad sector has been read/written, 			 * and the controller registers are pointing to 			 * the next sector... 			 */
+if|if
+condition|(
+name|er1
+operator|&&
+operator|(
+name|HPER1_DCK
+operator||
+name|HPER1_ECH
+operator|)
+condition|)
+name|bp
+operator|->
+name|b_blkno
+operator|--
 expr_stmt|;
 name|harderr
 argument_list|(
@@ -3443,6 +3466,17 @@ name|hpaddr
 operator|->
 name|hpmr2
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_hdr
+condition|)
+name|printf
+argument_list|(
+literal|" (hdr i/o)"
 argument_list|)
 expr_stmt|;
 name|printf
