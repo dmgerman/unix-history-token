@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.47	82/07/24	*/
+comment|/*	ip_input.c	1.48	82/08/22	*/
 end_comment
 
 begin_include
@@ -3012,7 +3012,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|min
+name|imin
 argument_list|(
 name|ip
 operator|->
