@@ -2054,15 +2054,8 @@ argument_list|,
 name|M_NTFSMNT
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|ntmp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ntmp
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|bcopy

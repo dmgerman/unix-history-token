@@ -3370,6 +3370,8 @@ argument_list|,
 name|M_LINKER
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3387,13 +3389,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|shdr
-argument_list|,
-name|nbytes
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vn_rdwr

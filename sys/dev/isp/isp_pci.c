@@ -1266,6 +1266,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1288,17 +1290,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|pcs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|isp_pcisoftc
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Figure out which we should try first - memory mapping or i/o mapping? 	 */
 ifdef|#
 directive|ifdef
@@ -1979,6 +1970,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2001,15 +1994,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|isp
-operator|->
-name|isp_param
-argument_list|,
-name|psize
-argument_list|)
-expr_stmt|;
 name|isp
 operator|->
 name|isp_mdvec
@@ -4064,6 +4048,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4090,15 +4076,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|isp
-operator|->
-name|isp_xflist
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof

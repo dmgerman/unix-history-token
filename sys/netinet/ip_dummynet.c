@@ -3648,8 +3648,11 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
+comment|/* M_ZERO needed */
 if|if
 condition|(
 name|q
@@ -3666,18 +3669,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|bzero
-argument_list|(
-name|q
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|q
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* needed */
 name|q
 operator|->
 name|fs
@@ -4925,6 +4916,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
+comment|/* XXX expensive to zero, see if we can remove it*/
 name|pkt
 operator|=
 operator|(
@@ -4943,6 +4935,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4956,18 +4950,6 @@ name|dropit
 goto|;
 comment|/* cannot allocate packet header	*/
 comment|/* ok, i can handle the pkt now... */
-name|bzero
-argument_list|(
-name|pkt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pkt
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX expensive, see if we can remove it*/
 comment|/* build and enqueue packet + parameters */
 name|pkt
 operator|->
@@ -6547,6 +6529,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6567,28 +6551,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-operator|->
-name|rq
-argument_list|,
-operator|(
-literal|1
-operator|+
-name|x
-operator|->
-name|rq_size
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_flow_queue
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|rq_elements
@@ -6890,6 +6852,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6908,17 +6872,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_pipe
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|pipe_nr
@@ -7193,6 +7146,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -7211,17 +7166,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_flow_set
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|fs_nr

@@ -630,6 +630,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -642,15 +644,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|vn
-argument_list|,
-sizeof|sizeof
-expr|*
-name|vn
-argument_list|)
-expr_stmt|;
 name|vn
 operator|->
 name|sc_unit

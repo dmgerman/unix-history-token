@@ -2171,15 +2171,8 @@ argument_list|,
 name|M_PCB
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|ddp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ddp
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|ddp

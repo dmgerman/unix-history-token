@@ -378,6 +378,8 @@ argument_list|,
 name|M_MEMDESC
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -391,23 +393,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"k6_mrinit: malloc returns NULL"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|mr_desc
-argument_list|,
-name|sc
-operator|->
-name|mr_ndesc
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mem_range_desc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg

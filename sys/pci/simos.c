@@ -378,6 +378,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|simosp
@@ -386,15 +388,6 @@ name|unit
 index|]
 operator|=
 name|sc
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|sc
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->

@@ -371,6 +371,8 @@ argument_list|,
 name|M_PCB
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -384,17 +386,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|ifen_next

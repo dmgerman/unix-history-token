@@ -3787,6 +3787,8 @@ name|M_DEVBUF
 comment|/* XXX */
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3796,15 +3798,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|bzero
-argument_list|(
-name|ivar
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ivar
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|resource_int_value

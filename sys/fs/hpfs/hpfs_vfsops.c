@@ -1742,17 +1742,8 @@ argument_list|,
 name|M_HPFSMNT
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|hpmp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hpfsmount
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* Read in SuperBlock */

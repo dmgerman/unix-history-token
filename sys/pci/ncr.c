@@ -22015,6 +22015,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -22028,17 +22030,6 @@ name|NULL
 operator|)
 return|;
 comment|/* 		**	Initialize it 		*/
-name|bzero
-argument_list|(
-name|lp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|lp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|lp
 operator|->
 name|jump_lcb
@@ -22163,6 +22154,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -22190,18 +22183,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**	Initialize it 	*/
-name|bzero
-argument_list|(
-name|cp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|cp
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	**	Fill in physical addresses 	*/
 name|cp
 operator|->

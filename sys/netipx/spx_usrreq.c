@@ -6621,6 +6621,8 @@ argument_list|,
 name|M_PCB
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6638,15 +6640,6 @@ goto|goto
 name|spx_attach_end
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|cb
-argument_list|,
-sizeof|sizeof
-expr|*
-name|cb
-argument_list|)
-expr_stmt|;
 name|sb
 operator|=
 operator|&

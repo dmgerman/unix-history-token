@@ -466,6 +466,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -477,17 +479,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 name|sc

@@ -565,6 +565,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 condition|)
@@ -580,17 +582,6 @@ return|return
 name|rv
 return|;
 block|}
-name|bzero
-argument_list|(
-name|bsc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bs_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&

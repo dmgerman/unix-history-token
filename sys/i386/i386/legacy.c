@@ -1542,6 +1542,8 @@ argument_list|,
 name|M_NEXUSDEV
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1554,17 +1556,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|ndev
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nexus_device
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|resource_list_init
 argument_list|(
 operator|&

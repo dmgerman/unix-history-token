@@ -2459,6 +2459,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|MPASS
@@ -2466,17 +2468,6 @@ argument_list|(
 name|debug
 operator|!=
 name|NULL
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|debug
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx_debug
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

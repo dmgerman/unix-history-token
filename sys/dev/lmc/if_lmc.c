@@ -5842,6 +5842,8 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5857,13 +5859,6 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
-name|bzero
-argument_list|(
-name|resp
-argument_list|,
-name|resplen
-argument_list|)
-expr_stmt|;
 name|arg
 operator|=
 operator|(

@@ -557,6 +557,8 @@ argument_list|,
 name|mtype
 argument_list|,
 name|mflags
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -567,15 +569,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|bzero
-argument_list|(
-name|obj
-argument_list|,
-name|cls
-operator|->
-name|size
-argument_list|)
-expr_stmt|;
 name|kobj_init
 argument_list|(
 name|obj

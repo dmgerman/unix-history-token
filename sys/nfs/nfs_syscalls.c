@@ -1998,20 +1998,8 @@ argument_list|,
 name|M_NFSSVC
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|slp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfssvc_sock
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -2248,20 +2236,8 @@ argument_list|,
 name|M_NFSD
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|nfsd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfsd
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|s
@@ -4498,7 +4474,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|nfs_udpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK); 	bzero((caddr_t)nfs_udpsock, sizeof (struct nfssvc_sock)); 	STAILQ_INIT(&nfs_udpsock->ns_rec); 	TAILQ_INIT(&nfs_udpsock->ns_uidlruhead); 	TAILQ_INSERT_HEAD(&nfssvc_sockhead, nfs_udpsock, ns_chain);  	nfs_cltpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK); 	bzero((caddr_t)nfs_cltpsock, sizeof (struct nfssvc_sock)); 	STAILQ_INIT(&nfs_cltpsock->ns_rec); 	TAILQ_INIT(&nfs_cltpsock->ns_uidlruhead); 	TAILQ_INSERT_TAIL(&nfssvc_sockhead, nfs_cltpsock, ns_chain);
+block|nfs_udpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK | M_ZERO); 	STAILQ_INIT(&nfs_udpsock->ns_rec); 	TAILQ_INIT(&nfs_udpsock->ns_uidlruhead); 	TAILQ_INSERT_HEAD(&nfssvc_sockhead, nfs_udpsock, ns_chain);  	nfs_cltpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK | M_ZERO); 	STAILQ_INIT(&nfs_cltpsock->ns_rec); 	TAILQ_INIT(&nfs_cltpsock->ns_uidlruhead); 	TAILQ_INSERT_TAIL(&nfssvc_sockhead, nfs_cltpsock, ns_chain);
 endif|#
 directive|endif
 block|}

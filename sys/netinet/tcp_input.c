@@ -4522,6 +4522,8 @@ argument_list|,
 name|M_SONAME
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4533,17 +4535,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-name|bzero
-argument_list|(
-name|sin6
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin6
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sin6
 operator|->
 name|sin6_family

@@ -12116,15 +12116,8 @@ argument_list|,
 name|M_TTYS
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|tp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|tp
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|ttyregister

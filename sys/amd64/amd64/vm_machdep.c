@@ -1032,6 +1032,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1042,16 +1044,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|bzero
-argument_list|(
-name|tempuser
-argument_list|,
-name|ctob
-argument_list|(
-name|UPAGES
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|p

@@ -807,17 +807,8 @@ argument_list|,
 name|M_TAP
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|tp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|tp
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* select device: tap or vmnet */

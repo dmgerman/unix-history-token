@@ -2312,6 +2312,8 @@ argument_list|,
 name|M_IFADDR
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2323,17 +2325,6 @@ condition|)
 return|return
 name|ENOMEM
 return|;
-name|bzero
-argument_list|(
-name|efp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|efp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|efp
 operator|->
 name|ef_ifp

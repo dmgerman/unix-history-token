@@ -3692,6 +3692,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3713,15 +3715,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|pool
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 comment|/* Align pool on PAGE_SIZE */
 name|pool
 operator|=

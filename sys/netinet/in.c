@@ -1296,6 +1296,8 @@ argument_list|,
 name|M_IFADDR
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1314,18 +1316,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ia
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ia
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Protect from ipintr() traversing address list 			 * while we're modifying it. 			 */
 name|s
 operator|=
@@ -3950,6 +3940,8 @@ argument_list|,
 name|M_IPMADDR
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3970,15 +3962,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|inm
-argument_list|,
-sizeof|sizeof
-expr|*
-name|inm
-argument_list|)
-expr_stmt|;
 name|inm
 operator|->
 name|inm_addr

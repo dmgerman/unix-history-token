@@ -2009,6 +2009,8 @@ argument_list|,
 name|M_ISADEV
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2019,15 +2021,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|bzero
-argument_list|(
-name|idev
-argument_list|,
-sizeof|sizeof
-expr|*
-name|idev
-argument_list|)
-expr_stmt|;
 name|resource_list_init
 argument_list|(
 operator|&

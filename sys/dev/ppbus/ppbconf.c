@@ -232,6 +232,8 @@ argument_list|,
 name|M_PPBUSDEV
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -242,15 +244,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|bzero
-argument_list|(
-name|ppbdev
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ppbdev
-argument_list|)
-expr_stmt|;
 comment|/* initialize the ivars */
 name|ppbdev
 operator|->

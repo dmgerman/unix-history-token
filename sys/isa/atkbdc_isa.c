@@ -633,6 +633,8 @@ argument_list|,
 name|M_ATKBDDEV
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -641,15 +643,6 @@ operator|!
 name|kdev
 condition|)
 return|return;
-name|bzero
-argument_list|(
-name|kdev
-argument_list|,
-sizeof|sizeof
-expr|*
-name|kdev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|resource_int_value

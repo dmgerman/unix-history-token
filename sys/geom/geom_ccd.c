@@ -2391,18 +2391,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|cs
-operator|->
-name|sc_itable
-argument_list|,
-name|size
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Trivial case: no interleave (actually interleave of disk size). 	 * Each table entry represents a single component in its entirety. 	 * 	 * An interleave of 0 may not be used with a mirror or parity setup. 	 */

@@ -336,6 +336,8 @@ argument_list|,
 name|M_VNODE
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -348,20 +350,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"no memory for vop_t ** vector"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|*
-name|opv_desc_vector_p
-argument_list|,
-name|vfs_opv_numops
-operator|*
-sizeof|sizeof
-argument_list|(
-name|vop_t
-operator|*
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Fill in, with slot 0 being to return EOPNOTSUPP */

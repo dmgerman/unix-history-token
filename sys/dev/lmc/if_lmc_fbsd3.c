@@ -462,6 +462,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -471,18 +473,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Zero out the softc*/
 name|revinfo
 operator|=
 name|PCI_CONF_READ

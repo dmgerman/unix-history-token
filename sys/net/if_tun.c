@@ -726,15 +726,8 @@ argument_list|,
 name|M_TUN
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|sc
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|sc

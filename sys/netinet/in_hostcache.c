@@ -222,15 +222,8 @@ argument_list|,
 name|M_HOSTCACHE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|inhc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|inhc
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|inhc

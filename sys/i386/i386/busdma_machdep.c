@@ -1031,6 +1031,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1040,29 +1042,12 @@ name|mapp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
-else|else
-block|{
 comment|/* Initialize the new map */
-name|bzero
-argument_list|(
-operator|*
-name|mapp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-operator|*
-name|mapp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -1076,7 +1061,6 @@ name|bpages
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Attempt to add pages to our pool on a per-instance 		 * basis up to a sane limit. 		 */
 name|maxpages
 operator|=
@@ -2257,6 +2241,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2266,17 +2252,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|bzero
-argument_list|(
-name|bpage
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bpage
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bpage
 operator|->
 name|vaddr

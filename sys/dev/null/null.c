@@ -398,13 +398,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|zbuf
-argument_list|,
-name|PAGE_SIZE
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|zero_dev

@@ -859,6 +859,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -874,21 +876,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|ida
-operator|->
-name|qcbs
-argument_list|,
-name|IDA_QCB_MAX
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ida_qcb
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Create our DMA tags 	 */
 comment|/* DMA tag for our hardware QCB structures */
 name|error

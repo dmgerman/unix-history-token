@@ -798,6 +798,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -823,17 +825,6 @@ name|wfdnlun
 index|]
 operator|=
 name|t
-expr_stmt|;
-name|bzero
-argument_list|(
-name|t
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wfd
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|bioq_init
 argument_list|(

@@ -3058,6 +3058,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3080,17 +3082,6 @@ return|return
 name|ti
 return|;
 block|}
-name|bzero
-argument_list|(
-name|ti
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ti
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ti
 operator|->
 name|ti_bsc
