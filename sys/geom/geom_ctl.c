@@ -225,6 +225,21 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|g_debugflags
+operator|&
+name|G_F_CTLDUMP
+condition|)
+name|printf
+argument_list|(
+literal|"gctl %p error \"%s\"\n"
+argument_list|,
+name|req
+argument_list|,
+name|errtxt
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
@@ -1697,7 +1712,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|gctl_create_geom
 parameter_list|(
 name|struct
@@ -1716,6 +1731,9 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -1732,7 +1750,16 @@ name|mp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Class not found"
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|mp
@@ -1741,16 +1768,16 @@ name|create_geom
 operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"Class has no create_geom method"
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|pp
 operator|=
 name|gctl_get_provider
@@ -1758,6 +1785,8 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mp
 operator|->
 name|create_geom
@@ -1772,12 +1801,17 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|gctl_destroy_geom
 parameter_list|(
 name|struct
@@ -1796,6 +1830,9 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -1812,7 +1849,16 @@ name|mp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Class not found"
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|mp
@@ -1821,16 +1867,16 @@ name|destroy_geom
 operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"Class has no destroy_geom method"
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|gp
 operator|=
 name|gctl_get_geom
@@ -1846,16 +1892,16 @@ name|gp
 operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"Geom not specified"
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|gp
@@ -1864,16 +1910,18 @@ name|class
 operator|!=
 name|mp
 condition|)
-block|{
+return|return
+operator|(
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"Geom not of specificed class"
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
+name|error
+operator|=
 name|mp
 operator|->
 name|destroy_geom
@@ -1888,6 +1936,11 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -2083,12 +2136,6 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|g_stall_events();
-endif|#
-directive|endif
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2102,6 +2149,8 @@ block|{
 case|case
 name|GCTL_CREATE_GEOM
 case|:
+name|error
+operator|=
 name|gctl_create_geom
 argument_list|(
 name|req
@@ -2111,6 +2160,8 @@ break|break;
 case|case
 name|GCTL_DESTROY_GEOM
 case|:
+name|error
+operator|=
 name|gctl_destroy_geom
 argument_list|(
 name|req
@@ -2118,6 +2169,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
 name|gctl_error
 argument_list|(
 name|req
@@ -2130,15 +2183,9 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|g_release_events();
-endif|#
-directive|endif
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
