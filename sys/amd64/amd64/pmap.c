@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.157 1997/08/07 03:52:50 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.158 1997/08/07 05:15:48 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -1171,6 +1171,9 @@ name|newaddr
 init|=
 name|addr
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|DISABLE_PSE
 if|if
 condition|(
 name|cpu_feature
@@ -1198,6 +1201,8 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|newaddr
 return|;
@@ -7277,26 +7282,18 @@ begin_function
 name|void
 name|pmap_protect
 parameter_list|(
-name|pmap
-parameter_list|,
-name|sva
-parameter_list|,
-name|eva
-parameter_list|,
-name|prot
-parameter_list|)
-specifier|register
 name|pmap_t
 name|pmap
-decl_stmt|;
+parameter_list|,
 name|vm_offset_t
 name|sva
-decl_stmt|,
+parameter_list|,
+name|vm_offset_t
 name|eva
-decl_stmt|;
+parameter_list|,
 name|vm_prot_t
 name|prot
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -7664,33 +7661,21 @@ begin_function
 name|void
 name|pmap_enter
 parameter_list|(
-name|pmap
-parameter_list|,
-name|va
-parameter_list|,
-name|pa
-parameter_list|,
-name|prot
-parameter_list|,
-name|wired
-parameter_list|)
-specifier|register
 name|pmap_t
 name|pmap
-decl_stmt|;
+parameter_list|,
 name|vm_offset_t
 name|va
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|vm_offset_t
 name|pa
-decl_stmt|;
+parameter_list|,
 name|vm_prot_t
 name|prot
-decl_stmt|;
+parameter_list|,
 name|boolean_t
 name|wired
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -11298,16 +11283,12 @@ begin_function
 name|void
 name|pmap_page_protect
 parameter_list|(
-name|phys
-parameter_list|,
-name|prot
-parameter_list|)
 name|vm_offset_t
 name|phys
-decl_stmt|;
+parameter_list|,
 name|vm_prot_t
 name|prot
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -11745,7 +11726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a set of physical memory pages into the kernel virtual  * address space. Return a pointer to where it is mapped. This  * routine is intended to be used for mapping device memory,  * NOT real memory. The non-cacheable bits are set on each  * mapped page.  */
+comment|/*  * Map a set of physical memory pages into the kernel virtual  * address space. Return a pointer to where it is mapped. This  * routine is intended to be used for mapping device memory,  * NOT real memory.  */
 end_comment
 
 begin_function
