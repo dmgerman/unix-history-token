@@ -1220,6 +1220,7 @@ comment|/*  * Startup initialization  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aio_onceonly
 parameter_list|(
@@ -1374,6 +1375,7 @@ comment|/*  * Init the per-process aioinfo structure.  The aioinfo limits are se
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aio_init_aioinfo
 parameter_list|(
@@ -1530,6 +1532,7 @@ comment|/*  * Free a job entry.  Wait for completion if it is currently active, 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|aio_free_entry
 parameter_list|(
@@ -1611,17 +1614,6 @@ operator|==
 name|JOBST_JOBRUNNING
 condition|)
 block|{
-if|if
-condition|(
-name|aiocbe
-operator|->
-name|jobflags
-operator|&
-name|AIOCBLIST_ASYNCFREE
-condition|)
-return|return
-literal|0
-return|;
 name|aiocbe
 operator|->
 name|jobflags
@@ -1640,13 +1632,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|aiocbe
-operator|->
-name|jobflags
-operator|&=
-operator|~
-name|AIOCBLIST_ASYNCFREE
-expr_stmt|;
 if|if
 condition|(
 name|aiocbe
@@ -2883,6 +2868,7 @@ comment|/*  * The AIO processing activity.  This is the code that does the I/O r
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aio_process
 parameter_list|(
@@ -3894,41 +3880,11 @@ name|jobstate
 operator|=
 name|JOBST_JOBFINISHED
 expr_stmt|;
-comment|/* 			 * If the I/O request should be automatically rundown, 			 * do the needed cleanup.  Otherwise, place the queue 			 * entry for the just finished I/O request into the done 			 * queue for the associated client. 			 */
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|aiocbe
-operator|->
-name|jobflags
-operator|&
-name|AIOCBLIST_ASYNCFREE
-condition|)
-block|{
-name|aiocbe
-operator|->
-name|jobflags
-operator|&=
-operator|~
-name|AIOCBLIST_ASYNCFREE
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|aio_freejobs
-argument_list|,
-name|aiocbe
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3953,7 +3909,6 @@ argument_list|,
 name|plist
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -6856,15 +6811,6 @@ block|{
 name|num_aio_resv_start
 operator|--
 expr_stmt|;
-name|p
-operator|->
-name|p_retval
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|retryproc
 goto|;
@@ -7157,7 +7103,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -7188,7 +7134,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -7578,9 +7524,6 @@ name|intptr_t
 operator|)
 name|fuword
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|cbptr
 index|[
@@ -9500,9 +9443,6 @@ name|intptr_t
 operator|)
 name|fuword
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|cbptr
 index|[
@@ -9528,7 +9468,7 @@ name|intptr_t
 operator|)
 name|iocb
 operator|!=
-name|NULL
+literal|0
 operator|)
 condition|)
 block|{
@@ -9638,9 +9578,6 @@ name|intptr_t
 operator|)
 name|fuword
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|cbptr
 index|[
@@ -9743,7 +9680,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -9774,7 +9711,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10569,7 +10506,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10600,7 +10537,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->

@@ -347,22 +347,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AIOCBLIST_CANCELLED
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|AIOCBLIST_RUNDOWN
 value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIOCBLIST_ASYNCFREE
-value|0x8
 end_define
 
 begin_define
