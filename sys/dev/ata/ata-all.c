@@ -3894,8 +3894,6 @@ name|SLAVE
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|NATAPICAM
@@ -3909,6 +3907,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
