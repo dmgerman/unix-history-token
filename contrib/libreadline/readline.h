@@ -720,6 +720,17 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_unbind_function_in_map
+argument_list|()
+decl_stmt|,
+name|rl_unbind_command_in_map
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
