@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6952,6 +6952,35 @@ operator|!=
 name|kernel_pmap
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+operator|&&
+name|NCPUS
+operator|==
+literal|1
+comment|/* 		 * XXX this recursive use of the VM won't work on a MP 		 * (or when otherwise debugging simple locks).  We might 		 * be called with the page queue lock held (e.g. from 		 * the pageout daemon) and vm_map_pageable might call 		 * vm_fault_unwire which would try to lock the page queues 		 * again.  For debugging we hack and drop the lock. 		 */
+name|int
+name|hadit
+init|=
+operator|!
+name|simple_lock_try
+argument_list|(
+operator|&
+name|vm_page_queue_lock
+argument_list|)
+decl_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -6993,6 +7022,23 @@ name|pte
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCPUS
+operator|==
+literal|1
+if|if
+condition|(
+name|hadit
+condition|)
+name|simple_lock
+argument_list|(
+operator|&
+name|vm_page_queue_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
