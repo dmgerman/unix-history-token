@@ -181,7 +181,7 @@ specifier|static
 name|void
 name|printval
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|VAR
@@ -3655,7 +3655,7 @@ specifier|static
 name|void
 name|printval
 parameter_list|(
-name|char
+name|void
 modifier|*
 name|bp
 parameter_list|,
