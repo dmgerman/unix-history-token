@@ -586,7 +586,7 @@ operator|>>
 literal|24
 operator|)
 operator|&
-literal|15
+literal|255
 expr_stmt|;
 name|rte
 operator|.
@@ -598,7 +598,7 @@ operator|>>
 literal|16
 operator|)
 operator|&
-literal|15
+literal|255
 expr_stmt|;
 name|rte
 operator|.
