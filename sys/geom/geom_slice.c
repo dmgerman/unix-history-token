@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -1679,7 +1685,6 @@ name|flags
 operator||=
 name|G_GEOM_WITHER
 expr_stmt|;
-comment|/* First prevent any new requests */
 name|error
 operator|=
 name|cp
