@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2899,7 +2899,30 @@ name|p
 argument_list|)
 operator|)
 condition|)
+block|{
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+name|nmp
+operator|=
+name|mp
+operator|->
+name|mnt_list
+operator|.
+name|cqe_next
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|sp
 operator|->
 name|f_flags
