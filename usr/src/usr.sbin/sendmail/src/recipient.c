@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.79 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.80 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,6 +851,12 @@ operator|>
 name|MAXRCRSN
 condition|)
 block|{
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.4.6"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"554 aliasing/forwarding loop broken (%d aliases deep; %d max"
@@ -968,6 +974,12 @@ name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"550 Cannot mail directly to programs"
@@ -994,6 +1006,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1029,6 +1047,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1300,6 +1324,12 @@ name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"550 Cannot mail directly to :include:s"
@@ -1428,6 +1458,12 @@ name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.2.4"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"550 Cannot open %s: %s"
@@ -1474,6 +1510,12 @@ name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"550 Cannot mail directly to files"
@@ -1500,6 +1542,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1535,6 +1583,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1909,6 +1963,12 @@ name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.1.1"
+expr_stmt|;
 name|giveresponse
 argument_list|(
 name|EX_NOUSER
@@ -1970,6 +2030,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"5.4.6"
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -2304,6 +2370,12 @@ operator|->
 name|q_flags
 operator||=
 name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator|=
+literal|"5.4.6"
 expr_stmt|;
 name|usrerr
 argument_list|(

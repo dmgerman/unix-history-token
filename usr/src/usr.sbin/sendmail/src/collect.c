@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.36 (Berkeley) %G%"
+literal|"@(#)collect.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1938,6 +1938,12 @@ operator|>
 name|MaxMessageSize
 condition|)
 block|{
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.2.3"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"552 Message exceeds maximum fixed size (%ld)"
@@ -1970,11 +1976,19 @@ argument_list|,
 name|MimeMode
 argument_list|)
 condition|)
+block|{
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.6.1"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"554 Eight bit data not allowed"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2250,6 +2264,12 @@ name|avail
 argument_list|)
 expr_stmt|;
 block|}
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"4.3.1"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"452 Out of disk space for temp file"

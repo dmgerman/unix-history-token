@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.81 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.82 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.81 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.82 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -804,6 +804,12 @@ literal|"553 Invalid numeric domain spec \"%s\""
 argument_list|,
 name|host
 argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.1.2"
 expr_stmt|;
 return|return
 operator|(
@@ -3039,6 +3045,12 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
+name|CurEnv
+operator|->
+name|e_status
+operator|=
+literal|"4.4.3"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"451 %s: Name server timeout"
@@ -3263,6 +3275,12 @@ condition|(
 name|UseNameServer
 condition|)
 block|{
+name|CurEnv
+operator|->
+name|e_status
+operator|=
+literal|"4.4.3"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"451 %s: Name server timeout"

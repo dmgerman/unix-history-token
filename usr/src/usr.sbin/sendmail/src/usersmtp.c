@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.46 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.47 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.46 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.47 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,6 +1466,12 @@ operator|->
 name|mci_host
 argument_list|)
 expr_stmt|;
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.6.3"
+expr_stmt|;
 return|return
 name|EX_DATAERR
 return|;
@@ -1835,13 +1841,34 @@ condition|(
 name|r
 operator|==
 literal|501
-operator|||
+condition|)
+block|{
+comment|/* syntax error in arguments */
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.5.2"
+expr_stmt|;
+return|return
+name|EX_DATAERR
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|r
 operator|==
 literal|553
 condition|)
 block|{
-comment|/* syntax error in arguments/mailbox name not allowed */
+comment|/* mailbox name not allowed */
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.1.3"
+expr_stmt|;
 return|return
 name|EX_DATAERR
 return|;
@@ -1855,6 +1882,12 @@ literal|552
 condition|)
 block|{
 comment|/* exceeded storage allocation */
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.2.2"
+expr_stmt|;
 return|return
 name|EX_UNAVAILABLE
 return|;
@@ -1966,6 +1999,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|smtptodsn
+parameter_list|()
+function_decl|;
 name|strcpy
 argument_list|(
 name|optbuf
@@ -2217,6 +2256,15 @@ argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
+name|to
+operator|->
+name|q_status
+operator|=
+name|smtptodsn
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|r
@@ -2231,9 +2279,7 @@ operator|==
 literal|4
 condition|)
 return|return
-operator|(
 name|EX_TEMPFAIL
-operator|)
 return|;
 elseif|else
 if|if
@@ -2246,9 +2292,7 @@ operator|==
 literal|2
 condition|)
 return|return
-operator|(
 name|EX_OK
-operator|)
 return|;
 elseif|else
 if|if
@@ -2266,9 +2310,7 @@ operator|==
 literal|553
 condition|)
 return|return
-operator|(
 name|EX_NOUSER
-operator|)
 return|;
 elseif|else
 if|if
@@ -2282,9 +2324,7 @@ operator|==
 literal|554
 condition|)
 return|return
-operator|(
 name|EX_UNAVAILABLE
-operator|)
 return|;
 ifdef|#
 directive|ifdef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.152 (Berkeley) %G%"
+literal|"@(#)conf.c	8.153 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2702,7 +2702,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	EF_NO_BODY_RETN can be set in e->e_flags to suppress the **	body during the return-to-sender function; this should be done **	on huge messages.  This bit may already be set by the ESMTP **	protocol. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
+comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and an EX_ code **	should be returned.  You can also set to->q_status to **	a DSN-style status code. ** **	EF_NO_BODY_RETN can be set in e->e_flags to suppress the **	body during the return-to-sender function; this should be done **	on huge messages.  This bit may already be set by the ESMTP **	protocol. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
 begin_function
@@ -2819,6 +2819,12 @@ literal|"553 No ARPA mail through this machine: see your system administration"
 argument_list|)
 expr_stmt|;
 comment|/* e->e_flags |= EF_NO_BODY_RETN; to supress body on return */
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"5.7.1"
+expr_stmt|;
 return|return
 operator|(
 name|EX_UNAVAILABLE

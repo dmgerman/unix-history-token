@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.145 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.146 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3147,6 +3147,12 @@ name|e_flags
 operator||=
 name|EF_NO_BODY_RETN
 expr_stmt|;
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"5.2.3"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"552 Message is too large; %ld bytes max"
@@ -3806,6 +3812,12 @@ expr_stmt|;
 name|rcode
 operator|=
 name|EX_DATAERR
+expr_stmt|;
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.6.3"
 expr_stmt|;
 goto|goto
 name|give_up
@@ -6765,6 +6777,7 @@ name|QBADADDR
 expr_stmt|;
 break|break;
 block|}
+comment|/* find most specific error code possible */
 if|if
 condition|(
 name|q
@@ -6785,6 +6798,31 @@ name|mci
 operator|->
 name|mci_status
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_status
+operator|==
+name|NULL
+condition|)
+name|q
+operator|->
+name|q_status
+operator|=
+name|e
+operator|->
+name|e_status
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_status
+operator|==
+name|NULL
+condition|)
+block|{
 switch|switch
 condition|(
 name|rcode
@@ -6809,12 +6847,17 @@ break|break;
 case|case
 name|EX_NOUSER
 case|:
+name|stat
+operator|=
+literal|"5.1.1"
+expr_stmt|;
+break|break;
 case|case
 name|EX_NOHOST
 case|:
 name|stat
 operator|=
-literal|"5.1.1"
+literal|"5.1.2"
 expr_stmt|;
 break|break;
 case|case
@@ -6883,6 +6926,7 @@ name|q_status
 operator|=
 name|stat
 expr_stmt|;
+block|}
 name|q
 operator|->
 name|q_statdate

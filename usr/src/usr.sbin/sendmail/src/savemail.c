@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.65 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4285,6 +4285,15 @@ name|int
 name|smtpstat
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|smtpstat
+operator|<
+literal|0
+condition|)
+return|return
+literal|"4.4.2"
+return|;
 switch|switch
 condition|(
 name|smtpstat
