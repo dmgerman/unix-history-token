@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.48	83/03/31	*/
+comment|/*	init_main.c	4.49	83/04/04	*/
 end_comment
 
 begin_include
@@ -762,34 +762,10 @@ name|CLSIZE
 operator|*
 name|KLMAX
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOPAGING
-for|for
-control|(
-init|;
-condition|;
-control|)
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|u
-argument_list|,
-name|PSLEP
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-else|#
-directive|else
 name|pageout
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
-endif|#
-directive|endif
 block|}
 comment|/* 	 * make init process and 	 * enter scheduling loop 	 */
 name|mpid
