@@ -4524,12 +4524,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|RTF_CLONED
+name|RTF_WASCLONED
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__bsdi__
+name|__FreeBSD__
 argument_list|)
 comment|/* ignore cloned routes 		 */
 if|if
@@ -4538,7 +4538,7 @@ name|rtm
 operator|->
 name|rtm_flags
 operator|&
-name|RTF_CLONED
+name|RTF_WASCLONED
 condition|)
 continue|continue;
 endif|#
@@ -5315,12 +5315,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|RTF_CLONED
+name|RTF_WASCLONED
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__bsdi__
+name|__FreeBSD__
 argument_list|)
 if|if
 condition|(
@@ -5332,7 +5332,7 @@ name|rtm
 operator|.
 name|rtm_flags
 operator|&
-name|RTF_CLONED
+name|RTF_WASCLONED
 condition|)
 block|{
 name|trace_act
