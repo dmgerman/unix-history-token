@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	1.5	87/12/10	*/
+comment|/*	macdefs.h	1.6	88/04/24	*/
 end_comment
 
 begin_ifndef
@@ -203,6 +203,18 @@ end_typedef
 
 begin_comment
 comment|/* size in which constants are converted */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|U_CONSZ
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* unsigned version of the above */
 end_comment
 
 begin_typedef
