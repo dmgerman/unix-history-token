@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.7 1996/01/11 17:48:51 phk Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.8 1996/01/30 11:08:35 dfr Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -482,7 +482,7 @@ name|new
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Phase: %s\n"
 argument_list|,
@@ -516,9 +516,20 @@ name|lcp
 operator|->
 name|his_auth
 expr_stmt|;
+if|if
+condition|(
+name|lcp
+operator|->
+name|his_auth
+operator|||
+name|lcp
+operator|->
+name|want_auth
+condition|)
+block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|" his = %x, mine = %x\n"
 argument_list|,
@@ -531,17 +542,6 @@ operator|->
 name|want_auth
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lcp
-operator|->
-name|his_auth
-operator|||
-name|lcp
-operator|->
-name|want_auth
-condition|)
-block|{
 if|if
 condition|(
 name|lcp
@@ -1112,7 +1112,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s [%d] %s\n"
 argument_list|,
@@ -1134,7 +1134,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s [%d] %08x\n"
 argument_list|,
@@ -1177,7 +1177,7 @@ block|}
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s [%d] %d\n"
 argument_list|,
@@ -1251,7 +1251,7 @@ name|req
 decl_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: SendConfigReq\n"
 argument_list|,
@@ -1299,7 +1299,7 @@ literal|2
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -1339,7 +1339,7 @@ literal|2
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -1503,7 +1503,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s (%d)\n"
 argument_list|,
@@ -1620,7 +1620,7 @@ name|LcpFsm
 decl_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: SendProtoRej\n"
 argument_list|,
@@ -1679,7 +1679,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: SendTerminateAck.\n"
 argument_list|,
@@ -1722,7 +1722,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerStart\n"
 argument_list|,
@@ -1818,7 +1818,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerFinish\n"
 argument_list|,
@@ -1875,7 +1875,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerUp\n"
 argument_list|,
@@ -1960,7 +1960,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerDown\n"
 argument_list|,
@@ -2198,7 +2198,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s %d\n"
 argument_list|,
@@ -2358,7 +2358,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s %08x\n"
 argument_list|,
@@ -2446,7 +2446,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s proto = %04x\n"
 argument_list|,
@@ -2480,7 +2480,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s bad length (%d)\n"
 argument_list|,
@@ -2591,7 +2591,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s bad length (%d)\n"
 argument_list|,
@@ -2694,7 +2694,7 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s not implemented, NAK.\n"
 argument_list|,
@@ -2751,7 +2751,7 @@ name|cp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s proto: %x, interval: %dms\n"
 argument_list|,
@@ -2900,7 +2900,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s %08x\n"
 argument_list|,
@@ -2990,7 +2990,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s magic %08x has NAKed\n"
 argument_list|,
@@ -3012,7 +3012,7 @@ name|MODE_REJ
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s magic has REJected\n"
 argument_list|,
@@ -3043,7 +3043,7 @@ name|TY_PROTOCOMP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3164,7 +3164,7 @@ name|TY_ACFCOMP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3285,7 +3285,7 @@ name|TY_SDP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3312,7 +3312,7 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|" ???[%02x]\n"
 argument_list|,

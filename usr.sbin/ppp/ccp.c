@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.5 1996/01/11 17:48:37 phk Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.6 1996/01/30 20:04:24 phk Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -542,7 +542,7 @@ name|ReqBuff
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: SendConfigReq\n"
 argument_list|,
@@ -620,7 +620,7 @@ expr_stmt|;
 comment|/* Initialize Input part */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: SendResetReq\n"
 argument_list|,
@@ -679,7 +679,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"  %s: SendTerminateAck\n"
 argument_list|,
@@ -743,7 +743,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerStart.\n"
 argument_list|,
@@ -770,7 +770,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerFinish.\n"
 argument_list|,
@@ -797,7 +797,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerDown.\n"
 argument_list|,
@@ -848,7 +848,7 @@ endif|#
 directive|endif
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: LayerUp.\n"
 argument_list|,
@@ -859,7 +859,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"myproto = %d, hisproto = %d\n"
 argument_list|,
@@ -894,7 +894,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"CCP Up event!!\n"
 argument_list|)
@@ -1028,7 +1028,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.17 1996/03/30 18:27:45 ache Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.18 1996/04/13 15:47:34 bde Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -695,7 +695,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"PPP Terminated.\n"
 argument_list|)
@@ -738,7 +738,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Signal %d, hangup.\n"
 argument_list|,
@@ -766,7 +766,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Signal %d, terminate.\n"
 argument_list|,
@@ -1720,7 +1720,7 @@ block|}
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Listening at %d.\n"
 argument_list|,
@@ -1850,7 +1850,7 @@ expr_stmt|;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"PPP Started.\n"
 argument_list|)
@@ -2461,7 +2461,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Redialing timer expired.\n"
 argument_list|)
@@ -2485,7 +2485,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Enter pause for redialing.\n"
 argument_list|)
@@ -2621,7 +2621,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Packet mode enabled\n"
 argument_list|)
@@ -2756,7 +2756,7 @@ operator|++
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Dial attempt %u\n"
 argument_list|,

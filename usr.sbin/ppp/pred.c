@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.4 1996/01/10 21:27:59 phk Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.5 1996/01/30 11:08:48 dfr Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -948,7 +948,7 @@ block|{
 comment|/* Error is detected. Send reset request */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LOG_LCP_BIT
 argument_list|,
 literal|"%s: Length Error\n"
 argument_list|,

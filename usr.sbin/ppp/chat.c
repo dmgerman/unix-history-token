@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.8 1996/03/08 13:22:21 ache Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.9 1996/04/06 02:00:17 ache Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -642,7 +642,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"Phone: %s\n"
 argument_list|,
@@ -750,6 +750,176 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MAXLOGBUFF
+value|200
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+name|logbuff
+index|[
+name|MAXLOGBUFF
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|loglen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|clear_log
+parameter_list|()
+block|{
+name|memset
+argument_list|(
+name|logbuff
+argument_list|,
+literal|0
+argument_list|,
+name|MAXLOGBUFF
+argument_list|)
+expr_stmt|;
+name|loglen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|flush_log
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|(
+name|loglevel
+operator|&
+name|LOG_CONNECT_BIT
+operator|)
+operator|||
+operator|(
+operator|(
+name|loglevel
+operator|&
+name|LOG_CARRIER_BIT
+operator|)
+operator|&&
+name|strstr
+argument_list|(
+name|logbuff
+argument_list|,
+literal|"CARRIER"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CONNECT_BIT
+operator||
+name|LOG_CARRIER_BIT
+argument_list|,
+literal|"Chat: %s\n"
+argument_list|,
+name|logbuff
+argument_list|)
+expr_stmt|;
+block|}
+name|clear_log
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|connect_log
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|single_p
+parameter_list|)
+block|{
+name|int
+name|space
+init|=
+name|MAXLOGBUFF
+operator|-
+name|loglen
+operator|-
+literal|1
+decl_stmt|;
+while|while
+condition|(
+name|space
+operator|--
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|str
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|flush_log
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|logbuff
+index|[
+name|loglen
+operator|++
+index|]
+operator|=
+operator|*
+name|str
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|single_p
+operator|||
+operator|!
+operator|*
+operator|++
+name|str
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|space
+condition|)
+name|flush_log
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|WaitforString
@@ -787,6 +957,8 @@ decl_stmt|,
 name|nfds
 decl_stmt|,
 name|nb
+decl_stmt|,
+name|msg
 decl_stmt|;
 name|char
 name|buff
@@ -812,6 +984,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|clear_log
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -826,7 +1001,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Wait for (%d): %s --> %s\n"
 argument_list|,
@@ -864,7 +1039,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Truncating String to %d character: %s\n"
 argument_list|,
@@ -883,6 +1058,10 @@ expr_stmt|;
 name|s
 operator|=
 name|str
+expr_stmt|;
+name|msg
+operator|=
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -1004,7 +1183,7 @@ name|inbuff
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"got: %s\n"
 argument_list|,
@@ -1013,7 +1192,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"can't get (%d).\n"
 argument_list|,
@@ -1124,6 +1303,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|connect_log
+argument_list|(
+name|inbuff
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strstr
@@ -1144,6 +1330,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|flush_log
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|MATCH
@@ -1179,7 +1368,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Abort: %s\n"
 argument_list|,
@@ -1199,6 +1388,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|flush_log
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ABORT
@@ -1213,6 +1405,14 @@ name|read
 argument_list|(
 name|modem
 argument_list|,
+operator|&
+name|ch
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|connect_log
+argument_list|(
 operator|&
 name|ch
 argument_list|,
@@ -1258,6 +1458,9 @@ operator|*
 name|inp
 operator|=
 literal|0
+expr_stmt|;
+name|flush_log
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1363,7 +1566,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Abort: %s\n"
 argument_list|,
@@ -1385,6 +1588,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|flush_log
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ABORT
@@ -1614,7 +1820,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"exec: %s\n"
 argument_list|,
@@ -1632,7 +1838,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"execvp failed for (%d/%d): %s\n"
 argument_list|,
@@ -1877,7 +2083,7 @@ block|{
 comment|/* Do not log the password itself. */
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"sending: %s\n"
 argument_list|,
@@ -1889,7 +2095,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"sending: %s\n"
 argument_list|,
@@ -2006,7 +2212,7 @@ return|;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_CHAT_BIT
 argument_list|,
 literal|"Expecting %s\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.5 1996/01/11 17:48:52 phk Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.6 1996/01/30 11:08:37 dfr Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -174,7 +174,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"Send echo LQR [%d]\n"
 argument_list|,
@@ -288,7 +288,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"Got echo LQR [%d]\n"
 argument_list|,
@@ -425,7 +425,7 @@ block|{
 comment|/*        * XXX: Should implement LQM strategy        */
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"** 1 Too many ECHO packets are lost. **\n"
 argument_list|)
@@ -487,7 +487,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE
+name|LOG_PHASE_BIT
 argument_list|,
 literal|"** 2 Too many ECHO packets are lost. **\n"
 argument_list|)
@@ -773,7 +773,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"LQM method = %d\n"
 argument_list|,
@@ -845,7 +845,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"Will send LQR every %d.%d secs\n"
 argument_list|,
@@ -863,7 +863,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"LQR is not activated.\n"
 argument_list|)
@@ -900,7 +900,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"StopLqr method = %x\n"
 argument_list|,
@@ -915,7 +915,7 @@ name|LQM_LQR
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"Stop sending LQR, Use LCP ECHO instead.\n"
 argument_list|)
@@ -928,7 +928,7 @@ name|LQM_ECHO
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LQM
+name|LOG_LQM_BIT
 argument_list|,
 literal|"Stop sending LCP ECHO.\n"
 argument_list|)

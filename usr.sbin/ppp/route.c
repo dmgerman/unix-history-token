@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.4 1995/07/08 06:08:52 amurai Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.5 1996/01/11 17:48:56 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -501,7 +501,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_TCPIP
+name|LOG_TCPIP_BIT
 argument_list|,
 literal|"Already set route addr dst=%x, gateway=%x\n"
 argument_list|,
@@ -1332,6 +1332,8 @@ name|in_addr
 name|dstnet
 decl_stmt|,
 name|gateway
+decl_stmt|,
+name|maddr
 decl_stmt|;
 name|int
 name|needed
@@ -1915,6 +1917,15 @@ operator|=
 name|INADDR_ANY
 expr_stmt|;
 block|}
+name|maddr
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 name|OsSetRoute
 argument_list|(
 name|RTM_DELETE
@@ -1923,10 +1934,7 @@ name|dstnet
 argument_list|,
 name|gateway
 argument_list|,
-name|htonl
-argument_list|(
-name|mask
-argument_list|)
+name|maddr
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	            PPP logging facility  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.c,v 1.2 1995/02/26 12:17:38 amurai Exp $  *  */
+comment|/*  *	            PPP logging facility  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.c,v 1.3 1995/05/30 03:50:43 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -158,17 +158,11 @@ begin_decl_stmt
 name|int
 name|loglevel
 init|=
-operator|(
-literal|1
-operator|<<
-name|LOG_LCP
-operator|)
+name|LOG_LINK_BIT
 operator||
-operator|(
-literal|1
-operator|<<
-name|LOG_PHASE
-operator|)
+name|LOG_CARRIER_BIT
+operator||
+name|LOG_PHASE_BIT
 decl_stmt|;
 end_decl_stmt
 
@@ -1147,11 +1141,7 @@ operator|!
 operator|(
 name|loglevel
 operator|&
-operator|(
-literal|1
-operator|<<
 name|level
-operator|)
 operator|)
 condition|)
 return|return;

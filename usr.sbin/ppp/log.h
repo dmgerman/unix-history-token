@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.h,v 1.4 1995/02/27 03:18:16 amurai Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.h,v 1.5 1996/01/11 17:48:51 phk Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG_PHASE_BIT
+value|(1<< LOG_PHASE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LM_PHASE
 value|"Phase"
 end_define
@@ -44,6 +51,13 @@ define|#
 directive|define
 name|LOG_CHAT
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_CHAT_BIT
+value|(1<< LOG_CHAT)
 end_define
 
 begin_define
@@ -63,6 +77,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG_LQM_BIT
+value|(1<< LOG_LQM)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LM_LQM
 value|"LQM"
 end_define
@@ -72,6 +93,13 @@ define|#
 directive|define
 name|LOG_LCP
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_LCP_BIT
+value|(1<< LOG_LCP)
 end_define
 
 begin_define
@@ -91,6 +119,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG_TCPIP_BIT
+value|(1<< LOG_TCPIP)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LM_TCPIP
 value|"TCP/IP"
 end_define
@@ -100,6 +135,13 @@ define|#
 directive|define
 name|LOG_HDLC
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_HDLC_BIT
+value|(1<< LOG_HDLC)
 end_define
 
 begin_define
@@ -119,6 +161,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG_ASYNC_BIT
+value|(1<< LOG_ASYNC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LM_ASYNC
 value|"Async"
 end_define
@@ -126,8 +175,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXLOGLEVEL
+name|LOG_LINK
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_LINK_BIT
+value|(1<< LOG_LINK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LM_LINK
+value|"Link"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_CONNECT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_CONNECT_BIT
+value|(1<< LOG_CONNECT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LM_CONNECT
+value|"Connect"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_CARRIER
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_CARRIER_BIT
+value|(1<< LOG_CARRIER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LM_CARRIER
+value|"Carrier"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXLOGLEVEL
+value|10
 end_define
 
 begin_decl_stmt
