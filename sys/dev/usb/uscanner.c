@@ -1063,6 +1063,16 @@ block|,
 name|USC_KEEP_OPEN
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_GT9300UF
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* UMAX */
 block|{
 block|{
