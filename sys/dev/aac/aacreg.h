@@ -924,6 +924,10 @@ value|3
 name|u_int32_t
 name|MiniPortRevision
 decl_stmt|;
+define|#
+directive|define
+name|AAC_INIT_STRUCT_MINIPORT_REVISION
+value|1
 name|u_int32_t
 name|FilesystemRevision
 decl_stmt|;
@@ -936,8 +940,7 @@ decl_stmt|;
 name|u_int32_t
 name|AdapterFibsPhysicalAddress
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|AdapterFibsVirtualAddress
 decl_stmt|;
 name|u_int32_t
@@ -952,6 +955,10 @@ decl_stmt|;
 name|u_int32_t
 name|PrintfBufferSize
 decl_stmt|;
+define|#
+directive|define
+name|AAC_PAGE_SIZE
+value|4096
 name|u_int32_t
 name|HostPhysMemPages
 decl_stmt|;
