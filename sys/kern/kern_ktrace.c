@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -3679,6 +3691,28 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_op
+argument_list|(
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|MAC_OP_VNODE_WRITE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|error
 operator|=
 name|VOP_WRITE
