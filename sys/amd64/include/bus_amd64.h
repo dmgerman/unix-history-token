@@ -251,6 +251,8 @@ comment|/*  * Get a new handle for a subregion of an already-mapped area of bus 
 end_comment
 
 begin_function_decl
+specifier|static
+name|__inline
 name|int
 name|bus_space_subregion
 parameter_list|(
@@ -272,6 +274,44 @@ name|nbshp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|bus_space_subregion
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|bus_size_t
+name|site
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|nbshp
+parameter_list|)
+block|{
+operator|*
+name|nbshp
+operator|=
+name|bsh
+operator|+
+name|offset
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Allocate a region of memory that is accessible to devices in bus space.  */
