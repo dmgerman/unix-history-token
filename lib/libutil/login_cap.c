@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.2 1997/01/07 13:29:21 davidn Exp $  */
+comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.3 1997/01/07 13:32:04 davidn Exp $  */
 end_comment
 
 begin_include
@@ -181,7 +181,12 @@ name|internal_stringsz
 condition|)
 name|p
 operator|=
+name|strcpy
+argument_list|(
 name|internal_string
+argument_list|,
+name|str
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -351,12 +356,16 @@ name|chars
 argument_list|)
 decl_stmt|;
 name|ptr
-operator|=
-name|ptr
-operator|+
+operator|+=
 name|count
-operator|+
-literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ptr
+condition|)
+operator|++
+name|ptr
 expr_stmt|;
 block|}
 if|if
@@ -812,7 +821,7 @@ decl_stmt|;
 if|if
 condition|(
 name|pwd
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
@@ -1119,9 +1128,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|ptr
-decl_stmt|,
-modifier|*
 name|str
 init|=
 name|login_getcapstr
@@ -1144,17 +1150,6 @@ condition|(
 name|str
 operator|==
 name|NULL
-operator|||
-operator|(
-name|ptr
-operator|=
-name|allocstr
-argument_list|(
-name|str
-argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 name|str
 operator|=
@@ -1162,6 +1157,12 @@ name|error
 expr_stmt|;
 else|else
 block|{
+name|char
+modifier|*
+name|ptr
+init|=
+name|str
+decl_stmt|;
 while|while
 condition|(
 operator|*

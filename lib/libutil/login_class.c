@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * High-level routines relating to use of the user capabilities database  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * High-level routines relating to use of the user capabilities database  *  *	$Id: login_class.c,v 1.1 1997/01/04 16:50:06 davidn Exp $  */
 end_comment
 
 begin_include
@@ -229,6 +229,13 @@ name|lr
 init|=
 name|resources
 decl_stmt|;
+if|if
+condition|(
+name|lc
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 name|lr
@@ -756,17 +763,32 @@ operator|==
 literal|'~'
 condition|)
 block|{
+name|int
+name|v
+init|=
+name|pch
+operator|&&
+operator|*
+operator|(
+name|p
+operator|+
+literal|1
+operator|)
+operator|!=
+literal|'/'
+decl_stmt|;
+comment|/* Avoid double // */
 name|memmove
 argument_list|(
 name|p
 operator|+
-literal|1
+name|hlen
+operator|+
+name|v
 argument_list|,
 name|p
 operator|+
-name|hlen
-operator|+
-name|pch
+literal|1
 argument_list|,
 name|l
 argument_list|)
@@ -785,7 +807,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pch
+name|v
 condition|)
 name|p
 index|[
@@ -798,7 +820,7 @@ name|p
 operator|+=
 name|hlen
 operator|+
-name|pch
+name|v
 expr_stmt|;
 block|}
 else|else
@@ -808,11 +830,11 @@ name|memmove
 argument_list|(
 name|p
 operator|+
-literal|1
+name|nlen
 argument_list|,
 name|p
 operator|+
-name|nlen
+literal|1
 argument_list|,
 name|l
 argument_list|)
@@ -1087,16 +1109,25 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Discard invalid entries */
 name|char
 modifier|*
 name|np
-init|=
+decl_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|np
+operator|=
 name|substvar
 argument_list|(
-name|set_env
-index|[
-literal|1
-index|]
+name|p
 argument_list|,
 name|pwd
 argument_list|,
@@ -1106,20 +1137,15 @@ name|pch
 argument_list|,
 name|nlen
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|np
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
 name|setenv
 argument_list|(
+operator|*
 name|set_env
-index|[
-literal|0
-index|]
 argument_list|,
 name|np
 argument_list|,
@@ -1253,9 +1279,9 @@ block|{
 if|if
 condition|(
 name|pwd
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|lc
 operator|=
@@ -1264,15 +1290,9 @@ argument_list|(
 name|pwd
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
 name|llc
 operator|=
 name|lc
@@ -1419,7 +1439,6 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* You can't be too paranoid */
 block|}
 comment|/*    * Setup the user's group permissions    */
 if|if
@@ -1429,7 +1448,6 @@ operator|&
 name|LOGIN_SETGROUP
 condition|)
 block|{
-comment|/* XXX is it really a good idea to let errors here go? */
 if|if
 condition|(
 name|setgid
@@ -1482,43 +1500,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*    * This needs to be done after all of the above.    */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|LOGIN_SETUSER
-operator|)
-operator|&&
-name|setuid
-argument_list|(
-name|uid
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"setuid %ld: %m"
-argument_list|,
-name|uid
-argument_list|)
-expr_stmt|;
-name|login_close
-argument_list|(
-name|llc
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-comment|/* Paranoia again */
 block|}
 comment|/*    * FreeBSD extension: here we (might) loop and do this twice.    * First, for the class we have been given, and next for    * any user overrides in ~/.login.conf the user's home directory.    */
 if|if
@@ -1650,6 +1631,43 @@ name|llc
 argument_list|)
 expr_stmt|;
 comment|/* Class we opened */
+comment|/*    * This needs to be done after all of the above.    * Do it last so we avoid getting killed and dropping core    */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|LOGIN_SETUSER
+operator|)
+operator|&&
+name|setuid
+argument_list|(
+name|uid
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setuid %ld: %m"
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
+name|login_close
+argument_list|(
+name|llc
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+comment|/* Paranoia again */
+block|}
 return|return
 literal|0
 return|;
