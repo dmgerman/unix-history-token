@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.h	4.2	82/02/01	*/
+comment|/*	raw_cb.h	4.3	82/02/02	*/
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/*  * Format of raw interface header appended by  * raw_input after call from protocol specific input routine.  */
+comment|/*  * Format of raw interface header prepended by  * raw_input after call from protocol specific  * input routine.  */
 end_comment
 
 begin_struct
