@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vplotf.c	4.2	83/05/16	*/
+comment|/*	vplotf.c	4.2	83/05/23	*/
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)\t%G%"
+literal|"@(#)\t5/16/83"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,13 +248,31 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|varian
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default is the varian */
+comment|/* 0 for versatec, 1 for varian. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|BYTES_PER_LINE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of bytes per raster line. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|PAGE_LINES
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of raster lines per page. */
 end_comment
 
 begin_decl_stmt
@@ -281,18 +299,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* output array size in bytes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|BytesPerLine
-init|=
-literal|264
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Bytes per raster line (physical) */
 end_comment
 
 begin_decl_stmt
@@ -332,7 +338,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* variables for used to print from font file */
+comment|/* variables used to print from font file */
 end_comment
 
 begin_decl_stmt
@@ -376,7 +382,7 @@ name|char
 modifier|*
 name|fontFile
 init|=
-literal|"/usr/lib/vfont/R.10"
+literal|"/usr/lib/vfont/R.8"
 decl_stmt|;
 end_decl_stmt
 
@@ -409,46 +415,6 @@ name|n
 operator|,
 name|again
 expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-name|strlen
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'W'
-condition|)
-block|{
-name|varian
-operator|=
-literal|0
-expr_stmt|;
-name|DevRange
-operator|=
-literal|2048
-expr_stmt|;
-name|DevRange8
-operator|=
-literal|2048
-operator|/
-literal|8
-expr_stmt|;
-name|BytesPerLine
-operator|=
-literal|880
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|--
@@ -476,6 +442,77 @@ literal|1
 index|]
 condition|)
 block|{
+case|case
+literal|'x'
+case|:
+name|BYTES_PER_LINE
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+operator|/
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|varian
+operator|=
+name|BYTES_PER_LINE
+operator|==
+literal|264
+condition|)
+block|{
+name|DevRange
+operator|=
+literal|1536
+expr_stmt|;
+name|DevRange8
+operator|=
+literal|1536
+operator|/
+literal|8
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DevRange
+operator|=
+literal|2048
+expr_stmt|;
+name|DevRange8
+operator|=
+literal|2048
+operator|/
+literal|8
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'y'
+case|:
+name|PAGE_LINES
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -631,7 +668,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|BytesPerLine
+name|BYTES_PER_LINE
 operator|-
 name|DevRange8
 expr_stmt|;
@@ -826,13 +863,7 @@ operator|/
 literal|200.0
 operator|)
 operator|/
-operator|(
-name|varian
-condition|?
-literal|8.5
-else|:
-literal|12.0
-operator|)
+name|PAGE_LINES
 argument_list|)
 expr_stmt|;
 if|if
