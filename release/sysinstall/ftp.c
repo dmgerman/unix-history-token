@@ -178,6 +178,8 @@ name|int
 name|i
 decl_stmt|,
 name|code
+decl_stmt|,
+name|af
 decl_stmt|;
 name|char
 modifier|*
@@ -429,6 +431,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|af
+operator|=
+name|variable_cmp
+argument_list|(
+name|VAR_IPV6_ENABLE
+argument_list|,
+literal|"YES"
+argument_list|)
+condition|?
+name|AF_INET
+else|:
+name|AF_UNSPEC
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Logging in to %s@%s.."
@@ -443,9 +458,11 @@ condition|(
 operator|(
 name|OpenConn
 operator|=
-name|ftpLogin
+name|ftpLoginAf
 argument_list|(
 name|hostname
+argument_list|,
+name|af
 argument_list|,
 name|login_name
 argument_list|,

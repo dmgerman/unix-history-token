@@ -4585,6 +4585,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* For now */
+name|variable_set2
+argument_list|(
+name|VAR_TRY_RTSOL
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* For now */
 name|cp
 operator|=
 name|getenv

@@ -328,6 +328,20 @@ name|varCheck
 block|}
 block|,
 block|{
+literal|"IPv6"
+block|,
+literal|"Attempt IPv6 configuration of interfaces"
+block|,
+name|OPT_IS_VAR
+block|,
+name|NULL
+block|,
+name|VAR_TRY_RTSOL
+block|,
+name|varCheck
+block|}
+block|,
+block|{
 literal|"FTP username"
 block|,
 literal|"Username and password to use instead of anonymous"
