@@ -724,6 +724,7 @@ case|case
 name|AAC_HWIF_STRONGARM
 case|:
 comment|/* XXX implement */
+break|break;
 block|}
 block|}
 end_function
