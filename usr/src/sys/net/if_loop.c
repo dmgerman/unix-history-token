@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.17	83/05/15	*/
+comment|/*	if_loop.c	4.18	83/05/27	*/
 end_comment
 
 begin_comment
@@ -106,6 +106,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOHOST
+value|1
+end_define
+
+begin_comment
+comment|/* can't be 0, that's broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOMTU
 value|(1024+512)
 end_define
@@ -164,6 +175,15 @@ name|if_net
 operator|=
 name|LONET
 expr_stmt|;
+name|ifp
+operator|->
+name|if_host
+index|[
+literal|0
+index|]
+operator|=
+name|LOHOST
+expr_stmt|;
 name|sin
 operator|=
 operator|(
@@ -192,7 +212,7 @@ name|ifp
 operator|->
 name|if_net
 argument_list|,
-literal|0
+name|LOHOST
 argument_list|)
 expr_stmt|;
 name|ifp
