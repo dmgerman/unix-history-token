@@ -1164,7 +1164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * ke->ke_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  * This should be called by all active processors.  */
+comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * ke->ke_uticks, p->p_rux.rux_sticks, p->p_rux.rux_iticks, and p->p_estcpu.  * This should be called by all active processors.  */
 end_comment
 
 begin_function
@@ -1245,7 +1245,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_uticks
+name|p_rux
+operator|.
+name|rux_uticks
 operator|++
 expr_stmt|;
 if|if
@@ -1292,7 +1294,9 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_iticks
+name|p_rux
+operator|.
+name|rux_iticks
 operator|++
 expr_stmt|;
 name|cp_time
@@ -1324,7 +1328,9 @@ operator|++
 expr_stmt|;
 name|p
 operator|->
-name|p_sticks
+name|p_rux
+operator|.
+name|rux_sticks
 operator|++
 expr_stmt|;
 if|if

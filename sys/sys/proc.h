@@ -1803,6 +1803,47 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rusage_ext
+block|{
+name|struct
+name|bintime
+name|rux_runtime
+decl_stmt|;
+comment|/* (cj) Real time. */
+name|u_int64_t
+name|rux_uticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in user mode. */
+name|u_int64_t
+name|rux_sticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in sys mode. */
+name|u_int64_t
+name|rux_iticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in intr mode. */
+name|u_int64_t
+name|rux_uu
+decl_stmt|;
+comment|/* (c) Previous user time in usec. */
+name|u_int64_t
+name|rux_su
+decl_stmt|;
+comment|/* (c) Previous sys time in usec. */
+name|u_int64_t
+name|rux_iu
+decl_stmt|;
+comment|/* (c) Previous intr time in usec. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The old fashionned process. May have multiple threads, KSEGRPs  * and KSEs. Starts off with a single embedded KSEGRP and THREAD.  */
 end_comment
 
@@ -1977,34 +2018,15 @@ name|p_realtimer
 decl_stmt|;
 comment|/* (c) Alarm timer. */
 name|struct
-name|bintime
-name|p_runtime
+name|rusage_ext
+name|p_rux
 decl_stmt|;
-comment|/* (j) Real time. */
-name|u_int64_t
-name|p_uu
+comment|/* (cj) Internal resource usage. */
+name|struct
+name|rusage_ext
+name|p_crux
 decl_stmt|;
-comment|/* (j) Previous user time in usec. */
-name|u_int64_t
-name|p_su
-decl_stmt|;
-comment|/* (j) Previous system time in usec. */
-name|u_int64_t
-name|p_iu
-decl_stmt|;
-comment|/* (j) Previous intr time in usec. */
-name|u_int64_t
-name|p_uticks
-decl_stmt|;
-comment|/* (j) Statclock hits in user mode. */
-name|u_int64_t
-name|p_sticks
-decl_stmt|;
-comment|/* (j) Statclock hits in system mode. */
-name|u_int64_t
-name|p_iticks
-decl_stmt|;
-comment|/* (j) Statclock hits in intr. */
+comment|/* (c) Internal child resource usage. */
 name|int
 name|p_profthreads
 decl_stmt|;
