@@ -1483,6 +1483,7 @@ end_function
 
 begin_function
 specifier|static
+name|unsigned
 name|short
 name|ipri_to_irq
 parameter_list|(
