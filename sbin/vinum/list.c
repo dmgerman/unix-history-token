@@ -5078,9 +5078,9 @@ name|info
 operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5146,9 +5146,9 @@ name|info
 operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5204,13 +5204,11 @@ name|rq
 operator|.
 name|info
 operator|.
-name|rqe
-operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5302,13 +5300,11 @@ name|rq
 operator|.
 name|info
 operator|.
-name|rqe
-operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5400,13 +5396,11 @@ name|rq
 operator|.
 name|info
 operator|.
-name|rqe
-operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5498,13 +5492,11 @@ name|rq
 operator|.
 name|info
 operator|.
-name|rqe
-operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5602,9 +5594,9 @@ name|info
 operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
@@ -5662,9 +5654,9 @@ name|info
 operator|.
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read "
 else|:
