@@ -188,25 +188,25 @@ literal|"applications"
 block|,
 literal|"User application software."
 block|,
-literal|"astro"
-block|,
-literal|"Applications related to astronomy."
-block|,
 literal|"archivers"
 block|,
 literal|"Utilities for archiving and unarchiving data."
+block|,
+literal|"astro"
+block|,
+literal|"Applications related to astronomy."
 block|,
 literal|"audio"
 block|,
 literal|"Audio utilities - most require a supported sound card."
 block|,
-literal|"biology"
-block|,
-literal|"Software related to biology."
-block|,
 literal|"benchmarks"
 block|,
 literal|"Utilities for measuring system performance."
+block|,
+literal|"biology"
+block|,
+literal|"Software related to biology."
 block|,
 literal|"cad"
 block|,
@@ -228,13 +228,13 @@ literal|"databases"
 block|,
 literal|"Database software."
 block|,
-literal|"devel"
-block|,
-literal|"Software development utilities and libraries."
-block|,
 literal|"deskutils"
 block|,
 literal|"Various Desktop utilities."
+block|,
+literal|"devel"
+block|,
+literal|"Software development utilities and libraries."
 block|,
 literal|"documentation"
 block|,
@@ -247,10 +247,6 @@ block|,
 literal|"elisp"
 block|,
 literal|"Things related to Emacs Lisp."
-block|,
-literal|"elisp"
-block|,
-literal|"Emacs lisp ports."
 block|,
 literal|"emulators"
 block|,
@@ -268,13 +264,17 @@ literal|"german"
 block|,
 literal|"Ported software for Germanic countries."
 block|,
+literal|"gnome"
+block|,
+literal|"Components of the Gnome Desktop environment."
+block|,
 literal|"graphics"
 block|,
 literal|"Graphics libraries and utilities."
 block|,
-literal|"gnome"
+literal|"ipv6"
 block|,
-literal|"Components of the Gnome Desktop environment."
+literal|"IPv6 related software."
 block|,
 literal|"irc"
 block|,
@@ -348,13 +348,13 @@ literal|"palm"
 block|,
 literal|"Software support for the 3Com Palm Pilot(tm) series."
 block|,
-literal|"pilot"
-block|,
-literal|"Software support for the 3Com Palm Pilot(tm) series."
-block|,
 literal|"perl5"
 block|,
 literal|"Utilities/modules for the PERL5 language."
+block|,
+literal|"pilot"
+block|,
+literal|"Software support for the 3Com Palm Pilot(tm) series."
 block|,
 literal|"plan9"
 block|,
@@ -392,10 +392,6 @@ literal|"sysutils"
 block|,
 literal|"Various system utilities."
 block|,
-literal|"textproc"
-block|,
-literal|"Text processing/search utilities."
-block|,
 literal|"tcl75"
 block|,
 literal|"TCL v7.5 and packages that depend on it."
@@ -408,13 +404,13 @@ literal|"tcl80"
 block|,
 literal|"TCL v8.0 and packages that depend on it."
 block|,
-literal|"tcl80"
-block|,
-literal|"TCL v8.0 and packages that depend on it."
-block|,
 literal|"tcl82"
 block|,
 literal|"TCL v8.2 and packages that depend on it."
+block|,
+literal|"textproc"
+block|,
+literal|"Text processing/search utilities."
 block|,
 literal|"tk41"
 block|,
