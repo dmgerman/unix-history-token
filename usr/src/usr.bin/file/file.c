@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.3 (Berkeley) 4.3"
+literal|"@(#)file.c	4.4 (Berkeley) 4.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,7 +459,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|file
 argument_list|,
@@ -498,29 +498,20 @@ goto|goto
 name|spcl
 goto|;
 case|case
+name|S_IFLNK
+case|:
+name|printf
+argument_list|(
+literal|"symbolic link\n"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
 name|S_IFDIR
 case|:
 name|printf
 argument_list|(
 literal|"directory\n"
-argument_list|)
-expr_stmt|;
-return|return;
-case|case
-name|S_IFMPC
-case|:
-name|printf
-argument_list|(
-literal|"char multiplexor\n"
-argument_list|)
-expr_stmt|;
-return|return;
-case|case
-name|S_IFMPB
-case|:
-name|printf
-argument_list|(
-literal|"block multiplexor\n"
 argument_list|)
 expr_stmt|;
 return|return;
