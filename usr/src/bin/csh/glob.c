@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.20 (Berkeley) %G%"
+literal|"@(#)glob.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3810,6 +3810,20 @@ condition|(
 name|rangec
 operator|==
 literal|'-'
+operator|&&
+operator|*
+operator|(
+name|pattern
+operator|-
+literal|2
+operator|)
+operator|!=
+literal|'['
+operator|&&
+operator|*
+name|pattern
+operator|!=
+literal|']'
 condition|)
 block|{
 name|match
@@ -3817,14 +3831,22 @@ operator|=
 operator|(
 name|stringc
 operator|<=
+operator|(
 operator|*
 name|pattern
+operator|&
+name|TRIM
+operator|)
 operator|&&
+operator|(
 operator|*
 operator|(
 name|pattern
 operator|-
 literal|2
+operator|)
+operator|&
+name|TRIM
 operator|)
 operator|<=
 name|stringc
