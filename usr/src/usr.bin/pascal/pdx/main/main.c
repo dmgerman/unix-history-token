@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.3 %G%"
+literal|"@(#)main.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,6 +537,10 @@ case|case
 literal|'r'
 case|:
 comment|/* run program before accepting commands */
+case|case
+literal|'i'
+case|:
+comment|/* assume input is a terminal */
 case|case
 literal|'b'
 case|:
