@@ -952,6 +952,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+case|case
+name|DEVT_NET
+case|:
+break|break;
 default|default:
 name|printf
 argument_list|(
