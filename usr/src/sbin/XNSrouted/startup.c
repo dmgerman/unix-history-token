@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.3 (Berkeley) %G%"
+literal|"@(#)startup.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,15 +153,23 @@ name|s
 decl_stmt|,
 name|n
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|struct
 name|ifconf
 name|ifc
+decl_stmt|;
+name|char
+name|buf
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifreq
+argument_list|)
+operator|*
+literal|20
+operator|)
+index|]
 decl_stmt|;
 name|struct
 name|ifreq
@@ -384,9 +392,13 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* already known to us? */
-comment|/*if (if_ifwithaddr(&ifs.int_addr)) 			continue;*/
-comment|/* argh, this'll have to change sometime */
+comment|/* We can have more than one point to point link 		   with the same local address. 		   It is not clear what this was guarding against 		   anyway. 		if (if_ifwithaddr(ifr->ifr_addr)) 			continue; 		   */
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifs
@@ -430,7 +442,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (get dstaddr)"
+literal|"ioctl (get dstaddr): %m"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -476,7 +488,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (get broadaddr)"
+literal|"ioctl (get broadaddr: %m"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -528,9 +540,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|syslog
 argument_list|(
-literal|"routed: out of memory\n"
+name|LOG_ERR
+argument_list|,
+literal|"XNSrouted: out of memory\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -591,11 +605,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"routed: ifinit: out of memory\n"
+literal|"XNSrouted: out of memory\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -671,6 +685,11 @@ expr_stmt|;
 name|close
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|60
 argument_list|)
 expr_stmt|;
 name|execv
