@@ -583,6 +583,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|NOI4B
+comment|/*    * This must come before ``tty'' so that the probe routine is    * able to identify it as a more specific type of terminal device.    */
 block|{
 name|i4b_Create
 block|,
@@ -604,7 +605,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|NONETGRAPH
-comment|/* This must come before ``udp''& ``tcp'' */
+comment|/*    * This must come before ``udp'' so that the probe routine is    * able to identify it as a more specific type of SOCK_DGRAM.    */
 block|{
 name|ether_Create
 block|,
@@ -618,7 +619,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|NOATM
-comment|/* and so must this */
+comment|/* Ditto for ATM devices */
 block|{
 name|atm_Create
 block|,
