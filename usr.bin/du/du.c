@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	8.4 (Berkeley) 4/1/94"
+literal|"@(#)du.c	8.5 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
