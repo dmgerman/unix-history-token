@@ -23,6 +23,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|cg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|fid
 struct_decl|;
 end_struct_decl
