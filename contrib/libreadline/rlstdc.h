@@ -117,8 +117,6 @@ name|__GNUC_MINOR__
 operator|<
 literal|8
 operator|)
-operator|||
-name|__STRICT_ANSI__
 end_if
 
 begin_define

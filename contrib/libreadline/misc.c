@@ -4,7 +4,7 @@ comment|/* misc.c -- miscellaneous bindable readline functions. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987-2002 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -867,6 +867,7 @@ condition|(
 name|_rl_saved_line_for_history
 condition|)
 block|{
+comment|/* Can't call with `1' because rl_undo_list might point to an undo 	 list from a history entry, as in rl_replace_from_history() below. */
 name|rl_replace_line
 argument_list|(
 name|_rl_saved_line_for_history
@@ -965,6 +966,49 @@ operator|)
 name|rl_undo_list
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|rl_line_buffer
+argument_list|,
+name|_rl_saved_line_for_history
+operator|->
+name|line
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|_rl_saved_line_for_history
+operator|->
+name|line
+argument_list|)
+expr_stmt|;
+name|_rl_saved_line_for_history
+operator|->
+name|line
+operator|=
+name|savestring
+argument_list|(
+name|rl_line_buffer
+argument_list|)
+expr_stmt|;
+name|_rl_saved_line_for_history
+operator|->
+name|data
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|rl_undo_list
+expr_stmt|;
+comment|/* XXX possible memleak */
+block|}
 return|return
 literal|0
 return|;
@@ -1043,6 +1087,10 @@ condition|(
 name|rl_editing_mode
 operator|==
 name|vi_mode
+operator|&&
+name|_rl_keymap
+operator|!=
+name|vi_insertion_keymap
 condition|)
 name|rl_point
 operator|=
@@ -1089,6 +1137,7 @@ name|flags
 decl_stmt|;
 comment|/* currently unused */
 block|{
+comment|/* Can't call with `1' because rl_undo_list might point to an undo list      from a history entry, just like we're setting up here. */
 name|rl_replace_line
 argument_list|(
 name|entry

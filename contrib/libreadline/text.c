@@ -4,7 +4,7 @@ comment|/* text.c -- text handling commands for readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987-2002 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -653,6 +653,10 @@ undef|#
 directive|undef
 name|_RL_FIX_POINT
 end_undef
+
+begin_comment
+comment|/* Replace the contents of the line buffer between START and END with    TEXT.  The operation is undoable.  To replace the entire line in an    undoable mode, use _rl_replace_text(text, 0, rl_end); */
+end_comment
 
 begin_function
 name|int
@@ -2847,6 +2851,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|rl_begin_undo_group
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2861,22 +2868,6 @@ name|i
 operator|++
 control|)
 block|{
-name|rl_begin_undo_group
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|rl_point
-operator|<
-name|rl_end
-condition|)
-name|rl_delete
-argument_list|(
-literal|1
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2908,10 +2899,23 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rl_point
+operator|<
+name|rl_end
+condition|)
+name|rl_delete
+argument_list|(
+literal|1
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
 name|rl_end_undo_group
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -3118,6 +3122,16 @@ block|{
 name|_rl_vi_done_inserting
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|_rl_vi_textmod_command
+argument_list|(
+name|_rl_vi_last_command
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* XXX */
 name|_rl_vi_reset_last
 argument_list|()
 expr_stmt|;
@@ -3287,6 +3301,13 @@ name|rl_point
 argument_list|)
 expr_stmt|;
 comment|/* Emacs puts point at the beginning of the sequence of spaces. */
+if|if
+condition|(
+name|rl_point
+operator|<
+name|rl_end
+condition|)
+block|{
 name|opoint
 operator|=
 name|rl_point
@@ -3302,6 +3323,7 @@ name|rl_point
 operator|=
 name|opoint
 expr_stmt|;
+block|}
 name|rl_end_undo_group
 argument_list|()
 expr_stmt|;

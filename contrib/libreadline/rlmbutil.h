@@ -82,6 +82,21 @@ name|defined
 argument_list|(
 name|HAVE_MBSRTOWCS
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_MBRTOWC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_MBRLEN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_WCWIDTH
+argument_list|)
 end_if
 
 begin_comment
@@ -99,6 +114,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If we don't want multibyte chars even on a system that supports them, let    the configuring user turn multibyte support off. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NO_MULTIBYTE_SUPPORT
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|HANDLE_MULTIBYTE
+end_undef
 
 begin_endif
 endif|#
@@ -472,6 +511,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MB_INVALIDCH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == (size_t)-1 || (x) == (size_t)-2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_NULLWCH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == 0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -535,6 +594,26 @@ parameter_list|,
 name|f
 parameter_list|)
 value|((i1) + (i2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_INVALIDCH
+parameter_list|(
+name|x
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_NULLWCH
+parameter_list|(
+name|x
+parameter_list|)
+value|(0)
 end_define
 
 begin_endif

@@ -356,25 +356,30 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
-name|rl_replace_line
+if|#
+directive|if
+literal|0
+block|rl_replace_line (entry->line, 1);   rl_undo_list = (UNDO_LIST *)entry->data;
+else|#
+directive|else
+name|_rl_replace_text
 argument_list|(
 name|entry
 operator|->
 name|line
 argument_list|,
 literal|0
+argument_list|,
+name|rl_end
 argument_list|)
 expr_stmt|;
-name|rl_undo_list
-operator|=
-operator|(
-name|UNDO_LIST
-operator|*
-operator|)
-name|entry
-operator|->
-name|data
+name|_rl_fix_point
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|_rl_saved_line_for_history
@@ -716,6 +721,11 @@ expr_stmt|;
 name|saved_mark
 operator|=
 name|rl_mark
+expr_stmt|;
+comment|/* Clear the undo list, since reading the search string should create its      own undo list, and the whole list will end up being freed when we      finish reading the search string. */
+name|rl_undo_list
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Use the line buffer to read the search string. */
 name|rl_line_buffer

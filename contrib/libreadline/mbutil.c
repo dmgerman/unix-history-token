@@ -4,7 +4,7 @@ comment|/* mbutil.c -- readline multibyte character utility functions */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2001 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 2001-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -384,31 +384,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
-name|size_t
-call|)
+name|MB_INVALIDCH
 argument_list|(
-name|tmp
-argument_list|)
-operator|==
 operator|(
 name|size_t
 operator|)
-operator|-
-literal|1
-operator|||
-call|(
-name|size_t
-call|)
-argument_list|(
 name|tmp
 argument_list|)
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
 condition|)
 block|{
 comment|/* invalid bytes. asume a byte represents a character */
@@ -436,15 +418,13 @@ block|}
 elseif|else
 if|if
 condition|(
+name|MB_NULLWCH
+argument_list|(
 name|tmp
-operator|==
-operator|(
-name|size_t
-operator|)
-literal|0
+argument_list|)
 condition|)
-comment|/* found '\0' char */
 break|break;
+comment|/* found wide '\0' */
 else|else
 block|{
 comment|/* valid bytes */
@@ -695,31 +675,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
-name|size_t
-call|)
+name|MB_INVALIDCH
 argument_list|(
-name|tmp
-argument_list|)
-operator|==
 operator|(
 name|size_t
 operator|)
-operator|-
-literal|1
-operator|||
-call|(
-name|size_t
-call|)
-argument_list|(
 name|tmp
 argument_list|)
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
 condition|)
 block|{
 comment|/* in this case, bytes are invalid or shorted to compose 	     multibyte char, so assume that the first byte represents 	     a single character anyway. */
@@ -741,13 +703,19 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Since we're assuming that this byte represents a single 	     non-zero-width character, don't forget about it. */
+name|prev
+operator|=
+name|point
+expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
+name|MB_NULLWCH
+argument_list|(
 name|tmp
-operator|==
-literal|0
+argument_list|)
 condition|)
 break|break;
 comment|/* Found '\0' char.  Can this happen? */
@@ -1165,31 +1133,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
-name|size_t
-call|)
+name|MB_INVALIDCH
 argument_list|(
-name|tmp
-argument_list|)
-operator|==
 operator|(
 name|size_t
 operator|)
-operator|-
-literal|1
-operator|||
-call|(
-name|size_t
-call|)
-argument_list|(
 name|tmp
 argument_list|)
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
 condition|)
 block|{
 comment|/* in this case, bytes are invalid or shorted to compose 	     multibyte char, so assume that the first byte represents 	     a single character anyway. */
@@ -1217,9 +1167,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|MB_NULLWCH
+argument_list|(
 name|tmp
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|pos
 operator|++

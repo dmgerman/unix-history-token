@@ -347,6 +347,12 @@ name|defined
 argument_list|(
 name|HAVE_STRPBRK
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_MULTIBYTE
+argument_list|)
 end_if
 
 begin_define
