@@ -263,11 +263,19 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|char
-name|__progname
+name|bootprog_name
 index|[]
-init|=
-literal|"FreeBSD/sparc64 loader"
+decl_stmt|,
+name|bootprog_rev
+index|[]
+decl_stmt|,
+name|bootprog_date
+index|[]
+decl_stmt|,
+name|bootprog_maker
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -2030,9 +2038,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s, Revision %s\n"
 argument_list|,
-name|__progname
+name|bootprog_name
+argument_list|,
+name|bootprog_rev
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(%s, %s)\n"
+argument_list|,
+name|bootprog_maker
+argument_list|,
+name|bootprog_date
 argument_list|)
 expr_stmt|;
 name|printf
