@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	3.1	%G%"
+literal|"@(#)vacation.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,11 @@ argument_list|)
 expr_stmt|;
 comment|/* never returns */
 block|}
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -788,6 +793,8 @@ argument_list|(
 literal|"/usr/lib/sendmail"
 argument_list|,
 literal|"sendmail"
+argument_list|,
+literal|"-n"
 argument_list|,
 name|user
 argument_list|,
