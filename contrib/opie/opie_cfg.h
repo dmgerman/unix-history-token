@@ -99,6 +99,12 @@ begin_comment
 comment|/* Adapted from the Autoconf hypertext info pages */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_if
 if|#
 directive|if
