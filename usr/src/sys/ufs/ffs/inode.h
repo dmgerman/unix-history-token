@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -60,7 +60,7 @@ modifier|*
 name|i_devvp
 decl_stmt|;
 comment|/* vnode for block I/O */
-name|u_short
+name|u_long
 name|i_flag
 decl_stmt|;
 comment|/* see below */
@@ -84,12 +84,6 @@ modifier|*
 name|i_dquot
 decl_stmt|;
 comment|/* quota structure controlling this file */
-name|struct
-name|text
-modifier|*
-name|i_text
-decl_stmt|;
-comment|/* text entry, if any (should be region) */
 name|long
 name|i_diroff
 decl_stmt|;
@@ -99,25 +93,14 @@ name|i_endoff
 decl_stmt|;
 comment|/* end of useful stuff in directory */
 name|long
-name|i_spare
-index|[
-literal|5
-index|]
+name|i_spare0
 decl_stmt|;
-union|union
-block|{
-name|daddr_t
-name|if_lastr
+name|long
+name|i_spare1
 decl_stmt|;
-comment|/* last read (read-ahead) */
-name|struct
-name|socket
-modifier|*
-name|is_socket
+name|long
+name|i_spare2
 decl_stmt|;
-block|}
-name|i_un
-union|;
 name|struct
 name|dinode
 name|i_din
@@ -246,20 +229,6 @@ define|#
 directive|define
 name|i_gen
 value|i_din.di_gen
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_lastr
-value|i_un.if_lastr
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_socket
-value|i_un.is_socket
 end_define
 
 begin_define
