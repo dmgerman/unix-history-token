@@ -4861,15 +4861,8 @@ operator|%
 literal|7
 operator|+
 literal|1
-block|)
-function|;
-end_function
-
-begin_comment
+expr_stmt|;
 comment|/* Write back Weekday */
-end_comment
-
-begin_for
 for|for
 control|(
 name|y
@@ -4905,13 +4898,7 @@ name|tm
 operator|-=
 name|m
 expr_stmt|;
-end_for
-
-begin_comment
 comment|/* Now we have the years in y and the day-of-the-year in tm */
-end_comment
-
-begin_for
 for|for
 control|(
 name|m
@@ -4959,15 +4946,9 @@ operator|-=
 name|ml
 expr_stmt|;
 block|}
-end_for
-
-begin_expr_stmt
 name|m
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|rtc_outb
 argument_list|(
 name|bin2bcd
@@ -4978,13 +4959,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Day     */
-end_comment
-
-begin_expr_stmt
 name|rtc_outb
 argument_list|(
 operator|(
@@ -4996,13 +4971,7 @@ operator||
 name|wd
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Month& Weekday  */
-end_comment
-
-begin_expr_stmt
 name|rtc_outb
 argument_list|(
 name|bin2bcd
@@ -5013,46 +4982,22 @@ literal|100
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Year    */
-end_comment
-
-begin_expr_stmt
 name|rtc_serialcom
 argument_list|(
 literal|0x02
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Time set& Counter hold command. */
-end_comment
-
-begin_expr_stmt
 name|rtc_serialcom
 argument_list|(
 literal|0x00
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Register hold command. */
-end_comment
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* Disable RTC updates and interrupts. */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_STATUSB
@@ -5062,13 +5007,7 @@ operator||
 name|RTCSB_24HR
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Calculate local time to put in RTC */
-end_comment
-
-begin_expr_stmt
 name|tm
 operator|-=
 name|tz_minuteswest
@@ -5083,9 +5022,6 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_SEC
@@ -5098,20 +5034,11 @@ literal|60
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tm
 operator|/=
 literal|60
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Seconds */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_MIN
@@ -5124,20 +5051,11 @@ literal|60
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tm
 operator|/=
 literal|60
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Minutes */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_HRS
@@ -5150,24 +5068,12 @@ literal|24
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tm
 operator|/=
 literal|24
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Hours   */
-end_comment
-
-begin_comment
 comment|/* We have now the days since 01-01-1970 in tm */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_WDAY
@@ -5181,13 +5087,7 @@ operator|%
 literal|7
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Weekday */
-end_comment
-
-begin_for
 for|for
 control|(
 name|y
@@ -5223,13 +5123,7 @@ name|tm
 operator|-=
 name|m
 expr_stmt|;
-end_for
-
-begin_comment
 comment|/* Now we have the years in y and the day-of-the-year in tm */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_YEAR
@@ -5242,19 +5136,10 @@ literal|100
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Year    */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_RTC_CENTURY
-end_ifdef
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_CENTURY
@@ -5267,18 +5152,9 @@ literal|100
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* ... and Century    */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_for
 for|for
 control|(
 name|m
@@ -5326,9 +5202,6 @@ operator|-=
 name|ml
 expr_stmt|;
 block|}
-end_for
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_MONTH
@@ -5341,13 +5214,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Month   */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_DAY
@@ -5360,17 +5227,8 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Write back Month Day */
-end_comment
-
-begin_comment
 comment|/* Reenable RTC updates and interrupts. */
-end_comment
-
-begin_expr_stmt
 name|writertc
 argument_list|(
 name|RTC_STATUSB
@@ -5378,29 +5236,20 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* PC98 */
-end_comment
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Start both clocks running.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|cpu_initclocks
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifndef|#
 directive|ifndef
@@ -6016,7 +5865,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
