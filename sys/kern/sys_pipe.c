@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id$  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.1 1996/01/28 23:38:26 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -728,6 +728,8 @@ decl_stmt|;
 block|{
 name|int
 name|npages
+decl_stmt|,
+name|error
 decl_stmt|;
 name|npages
 operator|=
@@ -752,9 +754,23 @@ argument_list|,
 name|npages
 argument_list|)
 expr_stmt|;
+name|cpipe
+operator|->
+name|pipe_buffer
+operator|.
+name|buffer
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|vm_map_min
+argument_list|(
+name|kernel_map
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Insert the object into the kernel map, and allocate kva for it. 	 * The map entry is, by default, pageable. 	 */
-if|if
-condition|(
+name|error
+operator|=
 name|vm_map_find
 argument_list|(
 name|kernel_map
@@ -788,12 +804,18 @@ name|VM_PROT_ALL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 name|KERN_SUCCESS
 condition|)
 name|panic
 argument_list|(
-literal|"pipeinit: cannot allocate pipe -- out of kvm"
+literal|"pipeinit: cannot allocate pipe -- out of kvm -- code = %d"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|cpipe
