@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996, 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.2.2.9 1996/10/06 16:41:58 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996, 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.2.2.10 1997/02/12 18:35:43 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2533,15 +2533,18 @@ name|REJBYTE
 value|0x030
 end_define
 
-begin_comment
-comment|/*  * Since the sequencer cannot read QOUTCNT, we use this memory location  * to make sure that we don't overflow the QOUTFIFO when doing SCB Paging.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|LASTPHASE
+value|0x031
+end_define
 
 begin_define
 define|#
 directive|define
-name|QOUTQCNT
-value|0x031
+name|P_BUSFREE
+value|0x01
 end_define
 
 begin_comment
@@ -2581,7 +2584,7 @@ value|0x034
 end_define
 
 begin_comment
-comment|/* We reserve 6bytes to store outgoing messages */
+comment|/* We reserve 8bytes to store outgoing messages */
 end_comment
 
 begin_define
@@ -2640,57 +2643,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|LASTPHASE
+name|MSG6
 value|0x03b
 end_define
 
 begin_define
 define|#
 directive|define
-name|P_BUSFREE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARG_1
+name|MSG7
 value|0x03c
-end_define
-
-begin_define
-define|#
-directive|define
-name|RETURN_1
-value|0x03c
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_MSG
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_SENSE
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_REJ
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PAGEDIN
-value|0x10
 end_define
 
 begin_define
@@ -3006,8 +2967,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|QFULLCNT
+name|ARG_1
 value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURN_1
+value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_MSG
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_SENSE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_REJ
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PAGEDIN
+value|0x10
 end_define
 
 begin_define
