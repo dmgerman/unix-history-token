@@ -127,22 +127,11 @@ directive|include
 file|<geom/geom_slice.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_geom.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|GEOM_GPT
+end_define
 
 begin_define
 define|#
