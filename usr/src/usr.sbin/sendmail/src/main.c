@@ -32,7 +32,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<log.h>
+file|<syslog.h>
 end_include
 
 begin_endif
@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	2.3	%G%"
+literal|"@(#)main.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 

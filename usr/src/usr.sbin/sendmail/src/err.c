@@ -20,7 +20,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<log.h>
+file|<syslog.h>
 end_include
 
 begin_endif
@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	2.2	%G%"
+literal|"@(#)err.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|LOG
-name|logmsg
+name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
