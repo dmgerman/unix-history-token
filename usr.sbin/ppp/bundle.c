@@ -34,7 +34,7 @@ file|<net/if_tun.h>
 end_include
 
 begin_comment
-comment|/* For TUNSIFMODE, TUNSLMODE& TUNSIFPID*/
+comment|/* For TUNS* ioctls */
 end_comment
 
 begin_include
@@ -2605,6 +2605,53 @@ name|n
 decl_stmt|,
 name|pri
 decl_stmt|;
+name|char
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
+if|if
+condition|(
+name|bundle
+operator|->
+name|dev
+operator|.
+name|header
+condition|)
+block|{
+name|data
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tun
+expr_stmt|;
+name|sz
+operator|=
+sizeof|sizeof
+name|tun
+expr_stmt|;
+block|}
+else|else
+block|{
+name|data
+operator|=
+name|tun
+operator|.
+name|data
+expr_stmt|;
+name|sz
+operator|=
+sizeof|sizeof
+name|tun
+operator|.
+name|data
+expr_stmt|;
+block|}
 comment|/* something to read from tun */
 name|n
 operator|=
@@ -2616,11 +2663,9 @@ name|dev
 operator|.
 name|fd
 argument_list|,
-operator|&
-name|tun
+name|data
 argument_list|,
-sizeof|sizeof
-name|tun
+name|sz
 argument_list|)
 expr_stmt|;
 if|if
@@ -2634,9 +2679,13 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"read from %s: %s\n"
+literal|"%s: read: %s\n"
 argument_list|,
-name|TUN_NAME
+name|bundle
+operator|->
+name|dev
+operator|.
+name|Name
 argument_list|,
 name|strerror
 argument_list|(
@@ -2646,10 +2695,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|bundle
+operator|->
+name|dev
+operator|.
+name|header
+condition|)
+block|{
 name|n
 operator|-=
-sizeof|sizeof
-name|tun
+name|sz
 operator|-
 sizeof|sizeof
 name|tun
@@ -2667,9 +2724,13 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"read from %s: Only %d bytes read ?\n"
+literal|"%s: read: Got only %d bytes of data !\n"
 argument_list|,
-name|TUN_NAME
+name|bundle
+operator|->
+name|dev
+operator|.
+name|Name
 argument_list|,
 name|n
 argument_list|)
@@ -2678,15 +2739,18 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
-name|tun_check_header
+name|ntohl
 argument_list|(
 name|tun
-argument_list|,
-name|AF_INET
+operator|.
+name|family
 argument_list|)
+operator|!=
+name|AF_INET
 condition|)
+comment|/* XXX: Should be maintaining drop/family counts ! */
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -2755,8 +2819,7 @@ condition|)
 block|{
 name|n
 operator|+=
-sizeof|sizeof
-name|tun
+name|sz
 operator|-
 sizeof|sizeof
 name|tun
@@ -2771,8 +2834,7 @@ name|dev
 operator|.
 name|fd
 argument_list|,
-operator|&
-name|tun
+name|data
 argument_list|,
 name|n
 argument_list|)
@@ -3214,6 +3276,11 @@ name|defined
 argument_list|(
 name|TUNSLMODE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TUNSIFHEAD
+argument_list|)
 name|int
 name|iff
 decl_stmt|;
@@ -3640,7 +3707,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|TUNSLMODE
-comment|/* Make sure we're POINTOPOINT */
+comment|/* Make sure we're not prepending sockaddrs */
 name|iff
 operator|=
 literal|0
@@ -3675,6 +3742,92 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TUNSIFHEAD
+comment|/* We want the address family please ! */
+name|iff
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ID0ioctl
+argument_list|(
+name|bundle
+operator|.
+name|dev
+operator|.
+name|fd
+argument_list|,
+name|TUNSIFHEAD
+argument_list|,
+operator|&
+name|iff
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"bundle_Create: ioctl(TUNSIFHEAD): %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bundle
+operator|.
+name|dev
+operator|.
+name|header
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|bundle
+operator|.
+name|dev
+operator|.
+name|header
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
+comment|/* Always present for OpenBSD */
+name|bundle
+operator|.
+name|dev
+operator|.
+name|header
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+comment|/*    * If TUNSIFHEAD isn't available and we're not OpenBSD, assume    * everything's AF_INET (hopefully the tun device won't pass us    * anything else !).    */
+name|bundle
+operator|.
+name|dev
+operator|.
+name|header
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if

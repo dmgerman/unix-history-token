@@ -237,6 +237,12 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* The /dev/XXXX descriptor */
+name|unsigned
+name|header
+range|:
+literal|1
+decl_stmt|;
+comment|/* Family header sent& received ? */
 block|}
 name|dev
 struct|;
