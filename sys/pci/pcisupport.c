@@ -6602,7 +6602,7 @@ literal|0x8009104d
 case|:
 return|return
 operator|(
-literal|"Sony CXD1847A/CXD1947A FireWire Host Controller"
+literal|"Sony CXD1947A FireWire Host Controller"
 operator|)
 return|;
 comment|/* SiS -- vendor 0x1039 */
