@@ -875,7 +875,7 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
-literal|"#define NDIS_MODNAME %s\n"
+literal|"#define NDIS_MODNAME %s\n\n"
 argument_list|,
 name|dname
 argument_list|)
