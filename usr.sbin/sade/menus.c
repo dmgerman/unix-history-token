@@ -1381,6 +1381,21 @@ name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
+literal|" Syscons, Ttys"
+block|,
+literal|"The console terminal type menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsTtys
+block|}
+block|,
+block|{
 literal|" Time Zone"
 block|,
 literal|"Set the system's time zone."
@@ -8807,6 +8822,21 @@ name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
+literal|"7 Ttys"
+block|,
+literal|"Choose console terminal type"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsTtys
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -9975,6 +10005,126 @@ block|,
 name|NULL
 block|,
 literal|"scrnmap=iso-8859-1_to_cp437"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsTtys
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Terminal Type"
+block|,
+literal|"For various console encodings corresponding terminal type\n"
+literal|"must be choosed in /etc/ttys.\n"
+literal|"WARNING: due to compatibility reasons, only entries started with\n"
+literal|"ttyv and with terminal type started with cons[0-9] can be changed\n"
+literal|"via this menu.\n"
+block|,
+literal|"Choose a terminal type"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"1 None"
+block|,
+literal|"Don't touch anything"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=NO"
+block|}
+block|,
+block|{
+literal|"2 US-ASCII or IBM437"
+block|,
+literal|"cons25"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=cons25"
+block|}
+block|,
+block|{
+literal|"3 ISO 8859-1"
+block|,
+literal|"cons25l1"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=cons25l1"
+block|}
+block|,
+block|{
+literal|"4 ISO 8859-2"
+block|,
+literal|"cons25l2"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=cons25l2"
+block|}
+block|,
+block|{
+literal|"5 KOI8-R"
+block|,
+literal|"cons25r"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=cons25r"
+block|}
+block|,
+block|{
+literal|"6 KOI8-U"
+block|,
+literal|"cons25u"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_CONSTERM
+literal|"=cons25u"
 block|}
 block|,
 block|{

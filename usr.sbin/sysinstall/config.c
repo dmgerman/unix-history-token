@@ -1853,6 +1853,9 @@ name|did_marker
 init|=
 literal|0
 decl_stmt|;
+name|configTtys
+argument_list|()
+expr_stmt|;
 name|write_header
 operator|=
 operator|!
