@@ -1865,6 +1865,9 @@ name|printf
 argument_list|(
 literal|"%*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pending_spaces
 argument_list|,
 literal|""
