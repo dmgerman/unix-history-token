@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.50 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.51 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.50 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.51 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2001,17 +2001,23 @@ name|hbuf
 argument_list|,
 literal|"%d,%d\r\n"
 argument_list|,
+name|ntohs
+argument_list|(
 name|fa
 operator|.
 name|sin
 operator|.
 name|sin_port
+argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|la
 operator|.
 name|sin
 operator|.
 name|sin_port
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* create local address */
