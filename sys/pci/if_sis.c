@@ -7073,6 +7073,14 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sis_stopped
+condition|)
+comment|/* Most likely shared interrupt */
+return|return;
 name|SIS_LOCK
 argument_list|(
 name|sc
@@ -7127,28 +7135,6 @@ block|}
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
-comment|/* Supress unwanted interrupts */
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-condition|)
-block|{
-name|sis_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 comment|/* Disable interrupts. */
 name|CSR_WRITE_4
 argument_list|(
@@ -7304,14 +7290,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|SIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

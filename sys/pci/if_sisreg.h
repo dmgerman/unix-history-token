@@ -1249,6 +1249,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIS_TXCFG_MPII03D
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* "Must be 1" */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIS_RXCFG_DMABURST
 value|0x00700000
 end_define
