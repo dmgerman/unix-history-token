@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -108,7 +114,7 @@ comment|/* 	 * We can not use the global 'restore' set until after we have 	 * a
 if|#
 directive|if
 literal|0
-block|error = __sys_sigprocmask(SIG_SETMASK,&set,&sav); 	if (error) { 		_thread_printf(0, "GIANT_LOCK: sig err %d\n", errno); 		abort(); 	}
+block|error = __sys_sigprocmask(SIG_SETMASK,&set,&sav); 	if (error) { 		_thread_printf(STDERR_FILENO, "GIANT_LOCK: sig err %d\n", 		    errno); 		abort(); 	}
 endif|#
 directive|endif
 name|error
@@ -130,7 +136,7 @@ condition|)
 block|{
 name|_thread_printf
 argument_list|(
-literal|0
+name|STDERR_FILENO
 argument_list|,
 literal|"GIANT_LOCK: %d\n"
 argument_list|,
@@ -186,7 +192,7 @@ condition|)
 block|{
 name|_thread_printf
 argument_list|(
-literal|0
+name|STDERR_FILENO
 argument_list|,
 literal|"GIANT_UNLOCK: %d\n"
 argument_list|,
@@ -201,7 +207,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Restore signals. 	 */
-block|error = __sys_sigprocmask(SIG_SETMASK,&set, NULL); 	if (error) { 		_thread_printf(0, "GIANT_UNLOCK: sig err %d\n", errno); 		abort(); 	}
+block|error = __sys_sigprocmask(SIG_SETMASK,&set, NULL); 	if (error) { 		_thread_printf(STDERR_FILENO, "GIANT_UNLOCK: sig err %d\n", 		    errno); 		abort(); 	}
 endif|#
 directive|endif
 block|}
