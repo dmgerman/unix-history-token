@@ -591,13 +591,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:kLns:ST:uWwD:C:"
+value|"0123456789aB:b:C:cD:d:f:h:kLnSs:T:uWw"
 else|#
 directive|else
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:Lns:ST:uWwD:C:"
+value|"0123456789aB:b:C:cD:d:f:h:LnSs:T:uWw"
 endif|#
 directive|endif
 while|while
@@ -704,12 +704,39 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+name|cachesize
+operator|=
+name|numarg
+argument_list|(
+literal|"cachesize"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 comment|/* Tape is cart. not 9-track */
 name|cartridge
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|dumpdates
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -750,33 +777,6 @@ comment|/* output file */
 name|tape
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'D'
-case|:
-name|dumpdates
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'C'
-case|:
-name|cachesize
-operator|=
-name|numarg
-argument_list|(
-literal|"cachesize"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|*
-literal|1024
-operator|*
-literal|1024
 expr_stmt|;
 break|break;
 case|case
@@ -825,6 +825,15 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+comment|/* exit after estimating # of tapes */
+name|just_estimate
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 comment|/* tape size, feet */
@@ -842,15 +851,6 @@ operator|*
 literal|12
 operator|*
 literal|10
-expr_stmt|;
-break|break;
-case|case
-literal|'S'
-case|:
-comment|/* exit after estimating # of tapes */
-name|just_estimate
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2891,9 +2891,9 @@ name|KERBEROS
 literal|"k"
 endif|#
 directive|endif
-literal|"nSu] [-B records] [-b blocksize] [-D dumpdates]\n"
-literal|"            [-d density] [-f file] [-h level] [-s feet]\n"
-literal|"            [-T date] [-C cachesizeMB] filesystem\n"
+literal|"LnSu] [-B records] [-b blocksize] [-C cachesize]\n"
+literal|"            [-D dumpdates] [-d density] [-f file] [-h level] [-s feet]\n"
+literal|"            [-T date] filesystem\n"
 literal|"       dump -W | -w\n"
 argument_list|)
 expr_stmt|;
