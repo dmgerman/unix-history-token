@@ -387,8 +387,6 @@ name|uap
 decl_stmt|;
 block|{
 comment|/* Not yet implemented */
-comment|/* mtx_lock(&Giant); */
-comment|/* mtx_unlock(&Giant); */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -447,8 +445,6 @@ name|uap
 decl_stmt|;
 block|{
 comment|/* Not yet implemented */
-comment|/* mtx_lock(&Giant); */
-comment|/* mtx_unlock(&Giant); */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -4302,15 +4298,6 @@ name|done
 goto|;
 block|}
 comment|/* 		 * Force device mappings to be shared. 		 */
-name|flags
-operator|&=
-operator|~
-operator|(
-name|MAP_PRIVATE
-operator||
-name|MAP_COPY
-operator|)
-expr_stmt|;
 name|flags
 operator||=
 name|MAP_SHARED
