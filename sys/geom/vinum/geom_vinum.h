@@ -28,6 +28,17 @@ end_comment
 
 begin_function_decl
 name|void
+name|gv_config_new_drive
+parameter_list|(
+name|struct
+name|gv_drive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gv_save_config_all
 parameter_list|(
 name|struct
