@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.10	82/01/17	*/
+comment|/*	ut.c	4.11	82/03/14	*/
 end_comment
 
 begin_include
@@ -502,9 +502,45 @@ endif|#
 directive|endif
 if|#
 directive|if
-literal|0
+name|notdef
 comment|/* 	 * It appears the controller won't interrupt unless the 	 * slave is off-line...this is as bad as the TS-11. 	 */
-block|((struct utdevice *) reg)->utcs1 = UT_IE|UT_NOP|UT_GO; 	DELAY(10000); 	((struct utdevice *) reg)->utcs1 = UT_CLEAR|UT_GO;
+operator|(
+operator|(
+expr|struct
+name|utdevice
+operator|*
+operator|)
+name|reg
+operator|)
+operator|->
+name|utcs1
+operator|=
+name|UT_IE
+operator||
+name|UT_NOP
+operator||
+name|UT_GO
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|utdevice
+operator|*
+operator|)
+name|reg
+operator|)
+operator|->
+name|utcs1
+operator|=
+name|UT_CLEAR
+operator||
+name|UT_GO
+expr_stmt|;
 else|#
 directive|else
 name|br
