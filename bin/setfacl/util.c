@@ -48,8 +48,10 @@ name|ptr
 decl_stmt|;
 name|ptr
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -63,13 +65,6 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"malloc() failed"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|ptr
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 return|return
