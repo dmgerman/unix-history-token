@@ -570,21 +570,6 @@ name|workhead
 name|b_dep
 decl_stmt|;
 comment|/* List of filesystem dependencies. */
-struct|struct
-name|chain_info
-block|{
-comment|/* buffer chaining */
-name|struct
-name|buf
-modifier|*
-name|parent
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-block|}
-name|b_chain
-struct|;
 block|}
 struct|;
 end_struct
@@ -635,12 +620,42 @@ name|BIO_ERROR
 value|0x00000001
 end_define
 
+begin_comment
+comment|/* I/O error occurred. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_ORDERED
 value|0x00000002
 end_define
+
+begin_comment
+comment|/* Must guarantee I/O ordering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_FLAG2
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Available for local hacks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_FLAG1
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Available for local hacks */
+end_comment
 
 begin_define
 define|#
@@ -755,12 +770,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_ERROR
+name|B_00000800
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* I/O error occurred. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -920,12 +935,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_ORDERED
+name|B_08000000
 value|0x08000000
 end_define
 
 begin_comment
-comment|/* Must guarantee I/O ordering */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -964,12 +979,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_AUTOCHAINDONE
+name|B_80000000
 value|0x80000000
 end_define
 
 begin_comment
-comment|/* Available flag */
+comment|/* Available flag. */
 end_comment
 
 begin_define

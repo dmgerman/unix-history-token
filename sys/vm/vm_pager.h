@@ -37,7 +37,7 @@ end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|buf
+name|bio
 struct_decl|;
 end_struct_decl
 
@@ -170,7 +170,7 @@ operator|(
 name|vm_object_t
 operator|,
 expr|struct
-name|buf
+name|bio
 operator|*
 operator|)
 argument_list|)
@@ -482,7 +482,7 @@ name|vm_object_t
 name|object
 operator|,
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|)
