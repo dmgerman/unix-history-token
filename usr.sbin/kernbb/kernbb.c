@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: kernbb.c,v 1.2 1995/04/28 04:58:19 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: kernbb.c,v 1.3 1995/10/22 19:45:28 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -454,15 +454,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|counts
-index|[
-name|i
-index|]
-condition|)
-continue|continue;
 for|for
 control|(
 name|i
@@ -479,6 +470,15 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|counts
+index|[
+name|i
+index|]
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
