@@ -608,25 +608,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|nosync
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"shutdown: incompatible switches -f and -n.\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|doreboot
 operator|&&
 name|dohalt
