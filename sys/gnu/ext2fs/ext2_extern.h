@@ -699,6 +699,13 @@ begin_comment
 comment|/* FFS needs a bwrite routine.  XXX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|gettime
+value|get_time
+end_define
+
 begin_endif
 endif|#
 directive|endif

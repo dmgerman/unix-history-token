@@ -5479,9 +5479,11 @@ operator|)
 literal|0
 return|;
 comment|/* 					 * see whether the last move did 					 * happen "recently", i.e. before 					 * less than half a second 					 */
+name|gettime
+argument_list|(
+operator|&
 name|now
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 name|timevalsub
 argument_list|(
