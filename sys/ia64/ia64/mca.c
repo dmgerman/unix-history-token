@@ -720,7 +720,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|SAL_INFO_TYPES
 condition|;
 name|i
