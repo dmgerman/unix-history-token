@@ -4551,6 +4551,23 @@ condition|(
 name|first
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|<
+literal|2
+condition|)
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"received too short len (%d< 2)"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* first time around, we have already read len, and two                bytes of the version string */
 name|krb5_data_alloc
 argument_list|(
