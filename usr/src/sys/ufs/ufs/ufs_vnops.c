@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.74 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.75 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3148,12 +3148,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* pointer into pathname argument */
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3186,13 +3180,19 @@ name|int
 name|rdonly
 decl_stmt|;
 comment|/* lookup read-only flag bit */
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+comment|/* DEBUG: check name ptr/len */
+name|int
+name|newhash
+decl_stmt|;
+comment|/* DEBUG: check name hash */
 name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|newhash
 decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|wantparent
@@ -3270,12 +3270,12 @@ comment|/* 	 * Search a new directory. 	 * 	 * The cn_hash value is for use by v
 ifdef|#
 directive|ifdef
 name|NAMEI_DIAGNOSTIC
+for|for
+control|(
 name|newhash
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
+operator|,
 name|cp
 operator|=
 name|cnp
@@ -3334,17 +3334,17 @@ argument_list|(
 literal|"relookup: bad len"
 argument_list|)
 expr_stmt|;
-block|{
-name|char
-name|c
-init|=
+if|if
+condition|(
 operator|*
 name|cp
-decl_stmt|;
-operator|*
-name|cp
-operator|=
-literal|'\0'
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"relookup: not last component"
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -3355,12 +3355,6 @@ operator|->
 name|cn_nameptr
 argument_list|)
 expr_stmt|;
-operator|*
-name|cp
-operator|=
-name|c
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Check for degenerate name (e.g. / or "") 	 * which is a way of talking about a directory, 	 * e.g. like "/." or ".". 	 */
@@ -3524,11 +3518,6 @@ operator|||
 name|error
 operator|!=
 name|ENOENT
-operator|||
-operator|*
-name|cp
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|bad
@@ -3557,7 +3546,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory inode in ndp->ni_dvp. 		 */
+comment|/* ASSERT(dvp == ndp->ni_startdir) */
 if|if
 condition|(
 name|cnp
@@ -3566,14 +3555,12 @@ name|cn_flags
 operator|&
 name|SAVESTART
 condition|)
-block|{
-comment|/* 			 * startdir == dvp, always 			 */
 name|VREF
 argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory inode in ndp->ni_dvp. 		 */
 return|return
 operator|(
 literal|0
@@ -3675,6 +3662,7 @@ name|bad2
 goto|;
 block|}
 block|}
+comment|/* ASSERT(dvp == ndp->ni_startdir) */
 if|if
 condition|(
 name|cnp
@@ -3683,14 +3671,11 @@ name|cn_flags
 operator|&
 name|SAVESTART
 condition|)
-block|{
-comment|/* ASSERT(dvp==ndp->ni_startdir) */
 name|VREF
 argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -4796,7 +4781,6 @@ argument_list|,
 name|fcnp
 argument_list|)
 expr_stmt|;
-comment|/* NEEDSWORK: startdir stuff */
 if|if
 condition|(
 name|fvp
