@@ -1848,6 +1848,7 @@ switch|switch
 condition|(
 operator|*
 name|ep
+operator|++
 condition|)
 block|{
 case|case
@@ -1944,6 +1945,10 @@ return|return
 name|error
 return|;
 block|}
+name|res
+operator|=
+name|ep
+expr_stmt|;
 name|tot
 operator|+=
 operator|(
