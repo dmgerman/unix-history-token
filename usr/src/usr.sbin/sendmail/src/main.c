@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.23	%G%"
+literal|"@(#)main.c	3.24	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,12 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|bool
+name|verifyonly
+init|=
+name|FALSE
+decl_stmt|;
+comment|/* only verify names */
 name|char
 name|pbuf
 index|[
@@ -1011,6 +1017,15 @@ case|:
 comment|/* don't let dot stop me */
 name|IgnrDot
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+comment|/* verify only */
+name|verifyonly
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1801,6 +1816,7 @@ name|EX_USAGE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ArpaMode
 operator|>
 name|ARPA_OLD
@@ -1808,6 +1824,9 @@ operator|&&
 name|ExitStat
 operator|!=
 name|EX_OK
+operator|)
+operator|||
+name|verifyonly
 condition|)
 name|finis
 argument_list|()
