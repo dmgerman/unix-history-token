@@ -24,6 +24,8 @@ block|,
 name|NEXUS_IVAR_NAME
 block|,
 name|NEXUS_IVAR_DEVICE_TYPE
+block|,
+name|NEXUS_IVAR_COMPATIBLE
 block|, }
 enum|;
 end_enum
@@ -75,6 +77,17 @@ argument_list|(
 argument|device_type
 argument_list|,
 argument|DEVICE_TYPE
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
+name|NEXUS_ACCESSOR
+argument_list|(
+argument|compatible
+argument_list|,
+argument|COMPATIBLE
 argument_list|,
 argument|char *
 argument_list|)
