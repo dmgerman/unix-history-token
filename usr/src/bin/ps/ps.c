@@ -475,7 +475,7 @@ block|{
 name|short
 name|l_ppid
 decl_stmt|;
-name|char
+name|u_char
 name|l_cpu
 decl_stmt|;
 name|int
@@ -1942,6 +1942,14 @@ name|SZOMB
 condition|)
 name|printf
 argument_list|(
+literal|" %.*s"
+argument_list|,
+name|twidth
+operator|-
+name|cmdstart
+operator|-
+literal|2
+argument_list|,
 literal|"<defunct>"
 argument_list|)
 expr_stmt|;
@@ -1958,6 +1966,14 @@ name|SWEXIT
 condition|)
 name|printf
 argument_list|(
+literal|" %.*s"
+argument_list|,
+name|twidth
+operator|-
+name|cmdstart
+operator|-
+literal|2
+argument_list|,
 literal|"<exiting>"
 argument_list|)
 expr_stmt|;
@@ -1974,7 +1990,15 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" swapper"
+literal|" %.*s"
+argument_list|,
+name|twidth
+operator|-
+name|cmdstart
+operator|-
+literal|2
+argument_list|,
+literal|"swapper"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1990,7 +2014,15 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|" pagedaemon"
+literal|" %.*s"
+argument_list|,
+name|twidth
+operator|-
+name|cmdstart
+operator|-
+literal|2
+argument_list|,
+literal|"pagedaemon"
 argument_list|)
 expr_stmt|;
 else|else
@@ -7345,7 +7377,7 @@ name|char
 modifier|*
 name|lhdr
 init|=
-literal|"      F  UID   PID  PPID CP PRI NI ADDR    SZ  RSS %*sSTAT TT  TIME"
+literal|"     F  UID   PID  PPID CP PRI NI ADDR    SZ  RSS %*sSTAT TT  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -7390,12 +7422,18 @@ name|lp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%7x %4d %5u %5u %2d %3d %2d %4x %5d %4d"
+literal|"%6x %4d %5u %5u %2d %3d %2d %4x %5d %4d"
 argument_list|,
+operator|(
 name|ap
 operator|->
 name|a_flag
+operator|&
+operator|~
+name|SPTECHG
+operator|)
 argument_list|,
+comment|/* XXX */
 name|ap
 operator|->
 name|a_uid
@@ -7411,8 +7449,14 @@ argument_list|,
 name|lp
 operator|->
 name|l_cpu
-operator|&
-literal|0377
+operator|>
+literal|99
+condition|?
+literal|99
+else|:
+name|lp
+operator|->
+name|l_cpu
 argument_list|,
 name|ap
 operator|->
@@ -7423,8 +7467,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_nice
-operator|-
-name|NZERO
 argument_list|,
 name|lp
 operator|->
