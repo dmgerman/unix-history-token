@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1379,11 +1379,6 @@ name|root_directory_record
 expr_stmt|;
 name|isomp
 operator|=
-operator|(
-expr|struct
-name|iso_mnt
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1393,6 +1388,18 @@ argument_list|,
 name|M_ISOFSMNT
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|isomp
+argument_list|,
+sizeof|sizeof
+expr|*
+name|isomp
 argument_list|)
 expr_stmt|;
 name|isomp
