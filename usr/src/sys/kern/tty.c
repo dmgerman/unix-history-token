@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.10	84/08/29	*/
+comment|/*	tty.c	6.11	84/09/10	*/
 end_comment
 
 begin_include
@@ -2148,6 +2148,25 @@ comment|/* 	 * Simulate typing of a character at the terminal. 	 */
 case|case
 name|TIOCSTI
 case|:
+if|if
+condition|(
+name|u
+operator|.
+name|u_uid
+operator|&&
+operator|(
+name|flag
+operator|&
+name|FREAD
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 if|if
 condition|(
 name|u

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.6	84/08/29	*/
+comment|/*	tty_pty.c	6.7	84/09/10	*/
 end_comment
 
 begin_comment
@@ -2743,7 +2743,7 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
-name|dev
+name|flag
 argument_list|)
 expr_stmt|;
 if|if
