@@ -2698,6 +2698,16 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+operator|.
+name|q_mtx
+argument_list|)
+expr_stmt|;
 name|NG_FREE_NODE
 argument_list|(
 name|node
