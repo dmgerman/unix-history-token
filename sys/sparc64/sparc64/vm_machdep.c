@@ -414,7 +414,7 @@ name|pcb
 operator|->
 name|pcb_cwp
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 name|pcb
 operator|->
