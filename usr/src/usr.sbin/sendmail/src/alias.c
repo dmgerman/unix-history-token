@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.32 (Berkeley) %G%"
+literal|"@(#)alias.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,6 @@ name|e_xfp
 operator|!=
 name|NULL
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|e
@@ -520,7 +519,12 @@ name|e_flags
 operator||=
 name|EF_SENDRECEIPT
 expr_stmt|;
-block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QREPORT
+expr_stmt|;
 block|}
 end_block
 
