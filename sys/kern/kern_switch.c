@@ -1041,6 +1041,11 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|running_thread
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1069,11 +1074,6 @@ name|struct
 name|pcpu
 modifier|*
 name|best_pcpu
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|running_thread
 decl_stmt|;
 name|struct
 name|thread
@@ -1329,6 +1329,10 @@ endif|#
 directive|endif
 else|#
 directive|else
+name|running_thread
+operator|=
+name|curthread
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|running_thread
