@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	8.1 (Berkeley) %G%"
+literal|"@(#)restore.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,9 +430,9 @@ operator|)
 return|;
 name|ep
 operator|=
-name|lookupino
+name|lookupname
 argument_list|(
-name|ino
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -441,6 +441,7 @@ name|ep
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ep
 operator|->
 name|e_flags
@@ -448,6 +449,26 @@ operator|&=
 operator|~
 name|NEW
 expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|REMOVED
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|e_type
+operator|!=
+name|NODE
+condition|)
+name|freeentry
+argument_list|(
+name|ep
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|descend
