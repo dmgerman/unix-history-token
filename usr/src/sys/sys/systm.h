@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -339,6 +339,27 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|hashinit
+name|__P
+argument_list|(
+operator|(
+name|int
+name|count
+operator|,
+name|int
+name|type
+operator|,
+name|u_long
+operator|*
+name|hashmask
 operator|)
 argument_list|)
 decl_stmt|;
