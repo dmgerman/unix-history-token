@@ -724,6 +724,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|toshiba
+argument_list|,
+literal|"ACPI Toshiba Extras"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Table of sysctl names and HCI functions to call. */
 end_comment
@@ -1397,6 +1407,11 @@ operator|.
 name|handler
 expr_stmt|;
 comment|/* Get the current value from the appropriate function. */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|handler
@@ -1417,11 +1432,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Send the current value to the user and return if no new value. */
 name|error
 operator|=
@@ -1449,11 +1462,9 @@ name|newptr
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Set the new value via the appropriate function. */
 name|error
 operator|=
@@ -1467,6 +1478,13 @@ name|HCI_SET
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|toshiba
 argument_list|)
 expr_stmt|;
 return|return
@@ -1496,6 +1514,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1584,6 +1607,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1707,6 +1735,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1789,6 +1822,11 @@ modifier|*
 name|backlight
 parameter_list|)
 block|{
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1850,6 +1888,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1958,6 +2001,11 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|ENXIO
@@ -2167,7 +2215,7 @@ operator|==
 name|HCI_NOT_SUPPORTED
 condition|)
 block|{
-comment|/* 		 * Sometimes system events are disabled without us requesting 		 * it.  This workaround attempts to re-enable them. 		 */
+comment|/* 		 * Sometimes system events are disabled without us requesting 		 * it.  This workaround attempts to re-enable them. 		 * 		 * XXX This call probably shouldn't be recursive.  Queueing 		 * a task via AcpiOsQueueForExecution() might be better. 		 */
 name|i
 operator|=
 literal|1
@@ -2234,6 +2282,11 @@ block|{
 name|UINT32
 name|arg
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|key
@@ -2468,6 +2521,11 @@ operator|==
 literal|0x80
 condition|)
 block|{
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|hci_call
@@ -2507,6 +2565,11 @@ name|key
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|toshiba
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|device_printf
