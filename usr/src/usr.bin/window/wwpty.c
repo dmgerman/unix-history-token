@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwpty.c	3.7 84/03/02"
+literal|"@(#)wwpty.c	3.8 84/04/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,10 @@ include|#
 directive|include
 file|"ww.h"
 end_include
+
+begin_comment
+comment|/*  * To satisfy Chris, we allocate pty's backwards, and if  * there are more than the ptyp's (i.e. the ptyq's)  * on the machine, we don't use the p's.  */
+end_comment
 
 begin_expr_stmt
 name|wwgetpty
@@ -55,6 +59,12 @@ decl_stmt|;
 name|int
 name|on
 init|=
+literal|1
+decl_stmt|;
+name|int
+name|count
+init|=
+operator|-
 literal|1
 decl_stmt|;
 define|#
@@ -89,14 +99,14 @@ for|for
 control|(
 name|c
 operator|=
-literal|'p'
+literal|'s'
 init|;
 name|c
-operator|<=
-literal|'s'
+operator|>=
+literal|'p'
 condition|;
 name|c
-operator|++
+operator|--
 control|)
 block|{
 name|w
@@ -139,19 +149,49 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+continue|continue;
+if|if
+condition|(
+name|count
+operator|<
+literal|0
+operator|&&
+operator|(
+name|count
+operator|=
+name|c
+operator|-
+literal|'p'
+operator|-
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+name|count
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|count
+operator|<
+literal|0
+condition|)
 break|break;
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|15
 init|;
 name|i
-operator|<
-literal|16
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 name|w
