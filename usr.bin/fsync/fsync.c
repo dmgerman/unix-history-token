@@ -69,6 +69,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -96,6 +97,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -104,6 +108,10 @@ literal|2
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+name|rval
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -137,10 +145,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"open %s"
 argument_list|,
 name|argv
@@ -149,6 +156,12 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|fsync
@@ -158,18 +171,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"fsync %s"
 argument_list|,
 name|argv
 index|[
-literal|1
+name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
@@ -178,13 +195,14 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|rval
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
