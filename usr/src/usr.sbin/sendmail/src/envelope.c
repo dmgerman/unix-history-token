@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.6 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,39 +1333,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|19
-condition|)
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s: openx%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|e
-operator|->
-name|e_xfp
-operator|==
-name|NULL
-condition|?
-literal|""
-else|:
-literal|" (no)"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|e

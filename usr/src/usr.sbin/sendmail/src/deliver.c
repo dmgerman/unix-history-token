@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.14 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1475,8 +1475,7 @@ block|{
 comment|/* catastrophic error */
 name|rcode
 operator|=
-operator|-
-literal|1
+name|EX_OSERR
 expr_stmt|;
 goto|goto
 name|give_up
@@ -1840,8 +1839,7 @@ argument_list|)
 expr_stmt|;
 name|rcode
 operator|=
-operator|-
-literal|1
+name|EX_CONFIG
 expr_stmt|;
 goto|goto
 name|give_up

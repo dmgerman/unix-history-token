@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.3 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.4 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.3 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.4 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,6 +1012,20 @@ operator|==
 name|NULL
 condition|)
 break|break;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|TopFrame
+argument_list|)
+operator|>
+literal|0
+condition|)
+break|break;
+name|QuickAbort
+operator|=
+name|TRUE
+expr_stmt|;
 name|setsender
 argument_list|(
 name|p

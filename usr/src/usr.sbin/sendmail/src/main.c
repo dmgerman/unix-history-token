@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.14 (Berkeley) %G%"
+literal|"@(#)main.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4180,6 +4180,50 @@ block|}
 union|;
 end_union
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BRK_TYPE
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBRK_TYPE
+value|void *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BRK_TYPE
+value|char *
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBRK_TYPE
+value|char *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|freeze
 argument_list|(
@@ -4204,17 +4248,16 @@ name|frz
 name|fhdr
 decl_stmt|;
 specifier|extern
+name|SBRK_TYPE
+name|sbrk
+parameter_list|()
+function_decl|;
+specifier|extern
 name|char
 name|edata
 decl_stmt|,
 name|end
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sbrk
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 name|Version
@@ -4460,11 +4503,6 @@ name|Version
 index|[]
 decl_stmt|;
 specifier|extern
-name|caddr_t
-name|brk
-parameter_list|()
-function_decl|;
-specifier|extern
 name|char
 modifier|*
 modifier|*
@@ -4475,6 +4513,11 @@ specifier|extern
 name|char
 modifier|*
 name|macvalue
+parameter_list|()
+function_decl|;
+specifier|extern
+name|BRK_TYPE
+name|brk
 parameter_list|()
 function_decl|;
 if|if

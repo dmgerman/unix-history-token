@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.2 (Berkeley) %G%"
+literal|"@(#)mci.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,23 +596,50 @@ name|mci_errno
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* try poking this to see if it is still usable */
-switch|switch
+if|if
 condition|(
 name|mci
 operator|->
 name|mci_state
+operator|==
+name|MCIS_OPEN
 condition|)
 block|{
-case|case
-name|MCIS_OPEN
-case|:
+comment|/* poke the connection to see if it's still alive */
 name|smtpnoop
 argument_list|(
 name|mci
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/* reset the stored state in the event of a timeout */
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_OPEN
+condition|)
+block|{
+name|mci
+operator|->
+name|mci_errno
+operator|=
+literal|0
+expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_OK
+expr_stmt|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_CLOSED
+expr_stmt|;
+block|}
 block|}
 return|return
 name|mci

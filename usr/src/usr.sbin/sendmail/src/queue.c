@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.9 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.10 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.9 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.10 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,11 +102,11 @@ directive|include
 file|<fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSTEM5
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXNAMLEN
+end_ifndef
 
 begin_include
 include|#

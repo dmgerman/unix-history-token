@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.7 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.8 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.7 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.8 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.7 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.8 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.7 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.8 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,34 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|10
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: alias %s => %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|a
+operator|->
+name|q_paddr
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|AliasLevel
 operator|++
 expr_stmt|;
@@ -1061,9 +1089,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open %s"
+literal|"initaliases: cannot open DBM database %s.{pag,dir}"
 argument_list|,
-name|buf
+name|aliasfile
 argument_list|)
 expr_stmt|;
 name|NoAlias
@@ -2639,7 +2667,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Warning: duplicate alias name %s"
+literal|"050 Warning: duplicate alias name %s"
 argument_list|,
 name|al
 operator|.
@@ -2716,7 +2744,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Warning: duplicate alias name %s"
+literal|"050 Warning: duplicate alias name %s"
 argument_list|,
 name|al
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.13 (Berkeley) %G%"
+literal|"@(#)conf.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,7 +255,7 @@ name|char
 name|Arpa_Usrerr
 index|[]
 init|=
-literal|"554"
+literal|"501"
 decl_stmt|;
 end_decl_stmt
 
@@ -1619,10 +1619,15 @@ name|defined
 argument_list|(
 name|mips
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
 end_if
 
 begin_comment
-comment|/* Ultrix or RISC/os */
+comment|/* Ultrix or OSF/1 or RISC/os */
 end_comment
 
 begin_define
@@ -1864,12 +1869,23 @@ name|SYSTEM5
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1935,6 +1951,27 @@ define|#
 directive|define
 name|FSHIFT
 value|5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FSHIFT
+value|10
 end_define
 
 begin_endif

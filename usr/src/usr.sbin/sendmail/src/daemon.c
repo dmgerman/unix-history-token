@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.4 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.5 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.4 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.5 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,7 +776,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EX_OSFILE
+name|EX_OSERR
 operator|)
 return|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	6.3 (Berkeley) %G%"
+literal|"@(#)macro.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,20 +207,20 @@ case|case
 name|CONDIF
 case|:
 comment|/* see if var set */
-if|if
-condition|(
-name|iflev
-operator|++
-operator|<=
-literal|0
-condition|)
-block|{
 name|c
 operator|=
 operator|*
 operator|++
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|skipping
+condition|)
+name|iflev
+operator|++
+expr_stmt|;
+else|else
 name|skipping
 operator|=
 name|macvalue
@@ -233,8 +233,6 @@ operator|==
 name|NULL
 expr_stmt|;
 continue|continue;
-block|}
-break|break;
 case|case
 name|CONDELSE
 case|:
@@ -243,7 +241,7 @@ if|if
 condition|(
 name|iflev
 operator|==
-literal|1
+literal|0
 condition|)
 name|skipping
 operator|=
@@ -257,19 +255,22 @@ case|:
 comment|/* stop skipping */
 if|if
 condition|(
-operator|--
 name|iflev
-operator|<=
+operator|==
 literal|0
 condition|)
-block|{
 name|skipping
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|skipping
+condition|)
+name|iflev
+operator|--
+expr_stmt|;
 continue|continue;
-block|}
-break|break;
 case|case
 literal|'\001'
 case|:

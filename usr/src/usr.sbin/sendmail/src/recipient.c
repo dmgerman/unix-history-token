@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.6 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2794,6 +2794,34 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|forwarding
+operator|&&
+name|LogLevel
+operator|>=
+literal|10
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: forward %s => %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|oldto
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|AliasLevel
 operator|++
 expr_stmt|;

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.4 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.5 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.4 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.5 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +712,34 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|10
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: expand %s => %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|AliasLevel
 operator|++
 expr_stmt|;
