@@ -71,7 +71,7 @@ name|isprt
 parameter_list|(
 name|c
 parameter_list|)
-value|isprint((unsigned char)(c))
+value|(isprint((unsigned char)(c)) || (c) == '\t')
 end_define
 
 begin_define
