@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: elf_freebsd.c,v 1.4 1998/10/11 03:53:35 dima Exp $ */
+comment|/* $Id: elf_freebsd.c,v 1.5 1998/10/14 09:53:25 peter Exp $ */
 end_comment
 
 begin_comment
@@ -98,6 +98,10 @@ modifier|*
 parameter_list|,
 name|vm_offset_t
 modifier|*
+parameter_list|,
+name|struct
+name|loaded_module
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -151,11 +155,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|vm_offset_t
-name|ssym
-decl_stmt|,
-name|esym
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -191,6 +190,17 @@ name|md_data
 operator|)
 expr_stmt|;
 comment|/* XXX ffp_save does not appear to be used in the kernel.. */
+name|bzero
+argument_list|(
+operator|&
+name|bootinfo_v1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bootinfo_v1
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|bi_load
@@ -200,6 +210,8 @@ name|bootinfo_v1
 argument_list|,
 operator|&
 name|ffp_save
+argument_list|,
+name|mp
 argument_list|)
 expr_stmt|;
 if|if
@@ -212,29 +224,6 @@ name|err
 operator|)
 return|;
 comment|/*      * Fill in the bootinfo for the kernel.      */
-name|bzero
-argument_list|(
-operator|&
-name|bootinfo_v1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bootinfo_v1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bootinfo_v1
-operator|.
-name|ssym
-operator|=
-name|ssym
-expr_stmt|;
-name|bootinfo_v1
-operator|.
-name|esym
-operator|=
-name|esym
-expr_stmt|;
 name|strncpy
 argument_list|(
 name|bootinfo_v1
