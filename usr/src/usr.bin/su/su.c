@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.10 (Berkeley) %G%"
+literal|"@(#)su.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,12 +625,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* if not asme or target's shell isn't standard, use it */
 if|if
 condition|(
-operator|!
 name|asme
-operator|||
+condition|)
+block|{
+comment|/* if asme and non-standard target shell, must be root */
+if|if
+condition|(
 operator|!
 name|chshell
 argument_list|(
@@ -638,7 +640,25 @@ name|pwd
 operator|->
 name|pw_shell
 argument_list|)
+operator|&&
+name|ruid
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"su: Permission denied.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|pwd
