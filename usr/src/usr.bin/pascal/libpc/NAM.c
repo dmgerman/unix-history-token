@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NAM.c 1.3 %G%"
+literal|"@(#)NAM.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|sptr
 operator|++

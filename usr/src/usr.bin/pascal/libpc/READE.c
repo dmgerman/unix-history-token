@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READE.c 1.6 %G%"
+literal|"@(#)READE.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|UNSYNC
 argument_list|(
@@ -122,7 +121,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -249,6 +247,9 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SQRT.c 1.3 %G%"
+literal|"@(#)SQRT.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,6 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 return|return
 name|sqrt

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FNIL.c 1.3 %G%"
+literal|"@(#)FNIL.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -78,7 +77,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(

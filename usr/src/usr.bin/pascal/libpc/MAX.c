@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)MAX.c 1.4 %G%"
+literal|"@(#)MAX.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,6 @@ argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(

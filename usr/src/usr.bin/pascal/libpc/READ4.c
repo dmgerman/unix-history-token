@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ4.c 1.8 %G%"
+literal|"@(#)READ4.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|UNSYNC
 argument_list|(
@@ -110,7 +109,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -128,7 +126,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -146,7 +143,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -164,7 +160,6 @@ operator|->
 name|pfname
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 return|return
 name|data

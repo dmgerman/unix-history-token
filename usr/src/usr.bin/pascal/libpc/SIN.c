@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SIN.c 1.1 %G%"
+literal|"@(#)SIN.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,6 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 return|return
 name|result

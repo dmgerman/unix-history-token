@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CTTOT.c 1.4 %G%"
+literal|"@(#)CTTOT.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,15 +174,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Constant set constructor  */
+comment|/*  * Constant set constructors.  *  * CTTOT is called from compiled Pascal.  It takes the list of ranges  * and single elements on the stack, varargs style.  *  * CTTOTA is called from the px interpreter.  It takes a pointer to the  * list of ranges and single elements.  *  * This was easier than changing the compiler to pass a pointer into  * its own partially-constructed stack, while working to make px portable.  */
 end_comment
+
+begin_function_decl
+name|long
+modifier|*
+name|CTTOTA
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|long
 modifier|*
 name|CTTOT
 parameter_list|(
-name|result0
+name|result
 parameter_list|,
 name|lwrbnd
 parameter_list|,
@@ -196,7 +204,7 @@ name|data
 parameter_list|)
 name|long
 modifier|*
-name|result0
+name|result
 decl_stmt|;
 comment|/* pointer to final set */
 name|long
@@ -220,21 +228,72 @@ name|data
 decl_stmt|;
 comment|/* paircnt plus singcnt sets of data */
 block|{
+return|return
+name|CTTOTA
+argument_list|(
+name|result
+argument_list|,
+name|lwrbnd
+argument_list|,
+name|uprbnd
+argument_list|,
+name|paircnt
+argument_list|,
+name|singcnt
+argument_list|,
+operator|&
+name|data
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+modifier|*
+name|CTTOTA
+parameter_list|(
+name|result
+parameter_list|,
+name|lwrbnd
+parameter_list|,
+name|uprbnd
+parameter_list|,
+name|paircnt
+parameter_list|,
+name|singcnt
+parameter_list|,
+name|dataptr
+parameter_list|)
 specifier|register
 name|long
 modifier|*
 name|result
-init|=
-name|result0
 decl_stmt|;
+comment|/* pointer to final set */
+name|long
+name|lwrbnd
+decl_stmt|;
+comment|/* lower bound of set */
+name|long
+name|uprbnd
+decl_stmt|;
+comment|/* upper - lower of set */
+name|long
+name|paircnt
+decl_stmt|;
+comment|/* number of pairs to construct */
+name|long
+name|singcnt
+decl_stmt|;
+comment|/* number of singles to construct */
 specifier|register
 name|long
 modifier|*
 name|dataptr
-init|=
-operator|&
-name|data
 decl_stmt|;
+comment|/* ->paircnt plus singcnt data values */
+block|{
 name|int
 name|lowerbnd
 init|=
@@ -361,7 +420,6 @@ operator|--
 name|dataptr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|lower
 operator|=
@@ -391,7 +449,6 @@ operator|--
 name|dataptr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -567,7 +624,6 @@ operator|--
 name|dataptr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|cp
 index|[
