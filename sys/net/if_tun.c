@@ -537,20 +537,6 @@ argument_list|,
 name|u
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|dev
-operator|)
-operator|->
-name|si_drv2
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
-expr_stmt|;
-comment|/* Mark it as make_dev()'d */
 block|}
 end_function
 
@@ -730,12 +716,12 @@ name|KASSERT
 argument_list|(
 name|dev
 operator|->
-name|si_drv2
-operator|!=
-name|NULL
+name|si_flags
+operator|&
+name|SI_NAMED
 argument_list|,
 operator|(
-literal|"Bad si_drv2 value"
+literal|"Missing make_dev"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -752,6 +738,12 @@ name|M_TUN
 argument_list|)
 expr_stmt|;
 block|}
+name|cdevsw_remove
+argument_list|(
+operator|&
+name|tun_cdevsw
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -900,13 +892,15 @@ name|ifp
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|dev
 operator|->
-name|si_drv2
-operator|==
-name|NULL
+name|si_flags
+operator|&
+name|SI_NAMED
+operator|)
 condition|)
-block|{
 name|dev
 operator|=
 name|make_dev
@@ -933,17 +927,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|si_drv2
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
-expr_stmt|;
-block|}
 name|MALLOC
 argument_list|(
 name|sc
