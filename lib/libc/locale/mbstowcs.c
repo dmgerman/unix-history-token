@@ -29,6 +29,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|size_t
 name|mbstowcs
@@ -62,7 +68,7 @@ name|initial
 expr_stmt|;
 return|return
 operator|(
-name|mbsrtowcs
+name|__mbsrtowcs
 argument_list|(
 name|pwcs
 argument_list|,
