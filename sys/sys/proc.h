@@ -123,12 +123,6 @@ begin_comment
 comment|/* Machine-dependent proc substruct. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
-end_include
-
 begin_comment
 comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (e)		locked by proctree_lock sx  * (c)		const until freeing  */
 end_comment
