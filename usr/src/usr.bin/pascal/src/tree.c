@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.4 %G%"
+literal|"@(#)tree.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,7 @@ comment|/*  * Tree builds the nodes in the  * parse tree. It is rarely called  *
 end_comment
 
 begin_comment
-comment|/*VARARGS*/
+comment|/*VARARGS1*/
 end_comment
 
 begin_function

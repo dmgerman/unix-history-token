@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.10 %G%"
+literal|"@(#)type.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,6 +309,9 @@ argument_list|)
 operator|->
 name|nl_flags
 operator||=
+operator|(
+name|char
+operator|)
 name|NMOD
 expr_stmt|;
 else|#
@@ -543,7 +546,22 @@ case|case
 name|T_TYID
 case|:
 name|r
-operator|++
+operator|=
+operator|(
+expr|struct
+name|tnode
+operator|*
+operator|)
+operator|(
+operator|&
+operator|(
+name|r
+operator|->
+name|tyid_node
+operator|.
+name|line_no
+operator|)
+operator|)
 expr_stmt|;
 case|case
 name|T_ID
