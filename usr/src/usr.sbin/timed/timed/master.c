@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.13 (Berkeley) %G%"
+literal|"@(#)master.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,16 +96,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|fi
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -201,15 +196,18 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MEASURE
-name|fi
-operator|=
-literal|"/usr/adm/timed.masterlog"
-expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
 name|fp
 operator|=
 name|fopen
 argument_list|(
-name|fi
+literal|"/usr/adm/timed.masterlog"
 argument_list|,
 literal|"w"
 argument_list|)
@@ -219,6 +217,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|syslog
@@ -1173,6 +1172,13 @@ comment|/* become slave */
 ifdef|#
 directive|ifdef
 name|MEASURE
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1181,6 +1187,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|longjmp

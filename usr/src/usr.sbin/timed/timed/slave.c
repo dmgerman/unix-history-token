@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.15 (Berkeley) %G%"
+literal|"@(#)slave.c	2.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,9 +173,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MEASURE
-name|int
-name|tempstat
-decl_stmt|;
 specifier|extern
 name|FILE
 modifier|*
@@ -278,6 +275,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|MEASURE
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
 name|fp
 operator|=
 name|fopen
@@ -292,6 +296,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|syslog
@@ -565,36 +570,18 @@ name|IGNORE
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|MEASURE
-name|tempstat
-operator|=
-name|status
-expr_stmt|;
-endif|#
-directive|endif
 name|setstatus
 argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MEASURE
-comment|/* 			 * Check to see if we just became master 			 */
+comment|/* 			 * Check to see if we just became master 			 * (file not open) 			 */
 if|if
 condition|(
-operator|(
-name|status
-operator|&
-name|MASTER
-operator|)
-operator|&&
-operator|!
-operator|(
-name|tempstat
-operator|&
-name|MASTER
-operator|)
+name|fp
+operator|==
+name|NULL
 condition|)
 block|{
 name|fp
@@ -2418,6 +2405,13 @@ comment|/* become slave */
 ifdef|#
 directive|ifdef
 name|MEASURE
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2426,6 +2420,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|longjmp
