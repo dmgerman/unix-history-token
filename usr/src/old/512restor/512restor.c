@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)512restor.c	4.1 (Berkeley) %G%"
+literal|"@(#)512restor.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,7 +361,7 @@ name|char
 name|tapename
 index|[]
 init|=
-literal|"/dev/rmt1"
+literal|"/dev/rmt8"
 decl_stmt|;
 end_decl_stmt
 
