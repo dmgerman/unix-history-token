@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.1 (Berkeley) %G%"
+literal|"@(#)screen.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +666,9 @@ name|know_dumb
 condition|)
 comment|/*  		 * He knows he has a dumb terminal, so don't tell him.  		 */
 return|return;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -740,8 +743,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|getenv
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Find out what kind of terminal this is. 	 */
 if|if
 condition|(
@@ -771,6 +778,9 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|termbuf
@@ -1382,6 +1392,9 @@ block|}
 else|else
 block|{
 comment|/*  			 * No "home" string, 			 * but we can use "move(0,0)". 			 */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|sp
@@ -1456,6 +1469,9 @@ block|}
 else|else
 block|{
 comment|/* 			 * No "lower-left" string,  			 * but we can use "move(0,last-line)". 			 */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|sp
