@@ -1727,7 +1727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == 0, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection.  If flags are given then we send  * a message back to the TCP which originated the * segment ti,  * and discard the mbuf containing it and any other attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  *  * NOTE: If m != NULL, then ti must point to *inside* the mbuf.  */
+comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == NULL, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection.  If flags are given then we send  * a message back to the TCP which originated the * segment ti,  * and discard the mbuf containing it and any other attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  *  * NOTE: If m != NULL, then ti must point to *inside* the mbuf.  */
 end_comment
 
 begin_function
@@ -1952,7 +1952,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m
@@ -2123,7 +2123,7 @@ name|m
 operator|->
 name|m_next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|m
 operator|->
@@ -2380,12 +2380,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2464,6 +2459,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|nth
 operator|->
@@ -2548,6 +2545,8 @@ operator|=
 name|in6_selecthlim
 argument_list|(
 name|tp
+operator|!=
+name|NULL
 condition|?
 name|tp
 operator|->
@@ -3555,12 +3554,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-operator|(
-expr|struct
-name|tcpcb
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -3631,6 +3625,8 @@ argument_list|(
 name|inpb
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 while|while
@@ -3860,7 +3856,7 @@ name|req
 operator|->
 name|oldptr
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|n
@@ -3904,7 +3900,7 @@ name|req
 operator|->
 name|newptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 name|EPERM
@@ -4041,7 +4037,7 @@ if|if
 condition|(
 name|inp_list
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOMEM
@@ -4073,6 +4069,8 @@ operator|=
 literal|0
 init|;
 name|inp
+operator|!=
+name|NULL
 operator|&&
 name|i
 operator|<
@@ -4330,6 +4328,8 @@ condition|(
 name|inp
 operator|->
 name|inp_socket
+operator|!=
+name|NULL
 condition|)
 name|sotoxsocket
 argument_list|(
@@ -5334,7 +5334,7 @@ name|PRC_HOSTDEAD
 condition|)
 name|ip
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -5357,6 +5357,8 @@ return|return;
 if|if
 condition|(
 name|ip
+operator|!=
+name|NULL
 condition|)
 block|{
 name|s
@@ -5494,6 +5496,8 @@ block|}
 if|if
 condition|(
 name|inp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
@@ -5811,6 +5815,8 @@ block|}
 if|if
 condition|(
 name|ip6
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -6361,6 +6367,8 @@ decl_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|tp
 operator|->
@@ -6534,6 +6542,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|maxmtu
