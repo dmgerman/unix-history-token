@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.8 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1028,12 +1028,16 @@ name|tTd
 argument_list|(
 literal|50
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"Dropping envelope\n"
+literal|"\n===== Dropping [dq]f%s =====\n\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1105,7 +1109,14 @@ name|queueup
 argument_list|(
 name|e
 argument_list|,
-name|FALSE
+name|bitset
+argument_list|(
+name|EF_KEEPQUEUE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)

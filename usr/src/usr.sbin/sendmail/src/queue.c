@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.12 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.13 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.12 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.13 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,7 +476,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"queueing %s\n"
+literal|"\n>>>>> queueing %s>>>>>\n"
 argument_list|,
 name|e
 operator|->
@@ -1651,6 +1651,27 @@ end_endif
 begin_comment
 comment|/* LOG */
 end_comment
+
+begin_if
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"<<<<< done queueing %s<<<<<\n\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_return
 return|return;
