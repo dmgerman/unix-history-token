@@ -481,6 +481,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fdunshare
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fdfree
 parameter_list|(
 name|struct
