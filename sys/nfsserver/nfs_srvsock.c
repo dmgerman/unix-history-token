@@ -257,8 +257,8 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|callout_handle
-name|nfsrv_timer_handle
+name|callout
+name|nfsrv_callout
 decl_stmt|;
 end_decl_stmt
 
@@ -3545,15 +3545,16 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|nfsrv_timer_handle
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|nfsrv_callout
+argument_list|,
+name|nfsrv_ticks
+argument_list|,
 name|nfsrv_timer
 argument_list|,
 name|NULL
-argument_list|,
-name|nfsrv_ticks
 argument_list|)
 expr_stmt|;
 block|}

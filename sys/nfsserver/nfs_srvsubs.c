@@ -1494,6 +1494,14 @@ name|nfsrv_initcache
 argument_list|()
 expr_stmt|;
 comment|/* Init the server request cache */
+name|callout_init
+argument_list|(
+operator|&
+name|nfsrv_callout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|nfsrv_timer
 argument_list|(
 literal|0
@@ -1543,17 +1551,10 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|untimeout
+name|callout_stop
 argument_list|(
-name|nfsrv_timer
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|nfsrv_timer_handle
+operator|&
+name|nfsrv_callout
 argument_list|)
 expr_stmt|;
 name|sysent
