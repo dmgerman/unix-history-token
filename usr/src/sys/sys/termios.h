@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -466,28 +466,6 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|IFLOW
-value|IXON
-end_define
-
-begin_comment
-comment|/* enable output flow control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ITANDEM
-value|IXOFF
-end_define
-
-begin_comment
-comment|/* enable input flow control */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXANY
 value|0x00000800
 end_define
@@ -547,13 +525,6 @@ end_define
 begin_comment
 comment|/* map NL to CR-NL (ala CRMOD) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ONLCRNL
-value|ONLCR
-end_define
 
 begin_define
 define|#
@@ -1140,17 +1111,6 @@ end_define
 
 begin_comment
 comment|/* drain output, flush input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCSADFLUSH
-value|TCSAFLUSH
-end_define
-
-begin_comment
-comment|/* XXX (was a typo, to be removed) */
 end_comment
 
 begin_comment
