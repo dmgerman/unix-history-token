@@ -1115,7 +1115,7 @@ expr_stmt|;
 comment|/* On no queue (QUEUE_NONE) */
 name|bp
 operator|->
-name|b_data
+name|b_saveaddr
 operator|=
 call|(
 name|caddr_t
@@ -1134,11 +1134,19 @@ name|swapbkva
 expr_stmt|;
 name|bp
 operator|->
+name|b_data
+operator|=
+name|bp
+operator|->
+name|b_saveaddr
+expr_stmt|;
+name|bp
+operator|->
 name|b_kvabase
 operator|=
 name|bp
 operator|->
-name|b_data
+name|b_saveaddr
 expr_stmt|;
 name|bp
 operator|->
