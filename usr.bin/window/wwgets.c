@@ -83,7 +83,7 @@ init|=
 name|buf
 decl_stmt|;
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
 name|char

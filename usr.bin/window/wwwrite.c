@@ -78,6 +78,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -95,12 +96,14 @@ block|{
 name|char
 name|hascursor
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|savep
 init|=
 name|p
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|q

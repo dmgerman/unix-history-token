@@ -123,6 +123,7 @@ decl_stmt|;
 name|char
 name|touched
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|p

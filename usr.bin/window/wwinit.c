@@ -1826,6 +1826,13 @@ operator|&
 name|wwnewtty
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGIO
+argument_list|,
+name|wwrint
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

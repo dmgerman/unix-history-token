@@ -449,7 +449,7 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|int

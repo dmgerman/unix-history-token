@@ -7,19 +7,29 @@ begin_comment
 comment|/*  * Macros and things to deal with control characters.  *  * Unctrl() is just like the standard function, except we don't want  * to include curses.  * Isctrl() returns true for all characters less than space and  * greater than or equal to delete.  * Isprt() is tab and all characters not isctrl().  It's used  * by wwwrite().  * Isunctrl() includes all characters that should be expanded  * using unctrl() by wwwrite() if ww_unctrl is set.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|_unctrl
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|_cmap
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -47,32 +57,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|_C
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|_P
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|_U
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
 name|isctrl
 parameter_list|(
 name|c
 parameter_list|)
-value|(_cmap[(unsigned char) (c)]& _C)
+value|iscntrl((unsigned char)(c))
 end_define
 
 begin_define
@@ -82,7 +71,7 @@ name|isprt
 parameter_list|(
 name|c
 parameter_list|)
-value|(_cmap[(unsigned char) (c)]& _P)
+value|isprint((unsigned char)(c))
 end_define
 
 begin_define
@@ -92,7 +81,7 @@ name|isunctrl
 parameter_list|(
 name|c
 parameter_list|)
-value|(_cmap[(unsigned char) (c)]& _U)
+value|(strchr("\b\t\n\r", (c)) == NULL&& isctrl(c))
 end_define
 
 end_unit
