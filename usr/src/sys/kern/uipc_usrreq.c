@@ -91,6 +91,11 @@ name|sockaddr
 name|sun_noname
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|sun_noname
+argument_list|)
+block|,
 name|AF_UNIX
 block|}
 decl_stmt|;
@@ -2106,6 +2111,9 @@ name|unp_addr
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;

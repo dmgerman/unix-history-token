@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3009,11 +3009,6 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
 name|compat_43
 argument_list|)
 expr_stmt|;
@@ -3130,11 +3125,6 @@ name|s
 argument_list|,
 operator|&
 name|msg
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
 argument_list|,
 operator|(
 name|caddr_t
@@ -3385,11 +3375,6 @@ operator|->
 name|msg
 operator|->
 name|msg_accrightslen
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
 argument_list|,
 comment|/* compat_43 */
 literal|1
@@ -3664,11 +3649,6 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3714,8 +3694,6 @@ argument|namelenp
 argument_list|,
 argument|rightslenp
 argument_list|,
-argument|controllenp
-argument_list|,
 argument|compat_43
 argument_list|)
 name|int
@@ -3733,8 +3711,6 @@ name|caddr_t
 name|namelenp
 decl_stmt|,
 name|rightslenp
-decl_stmt|,
-name|controllenp
 decl_stmt|;
 block|{
 specifier|register
@@ -4123,6 +4099,12 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|mp
+operator|->
+name|msg_namelen
+operator|=
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|namelenp
@@ -4219,6 +4201,12 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|mp
+operator|->
+name|msg_accrightslen
+operator|=
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|rightslenp
@@ -4322,28 +4310,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|controllenp
-condition|)
-operator|(
-name|void
-operator|)
-name|copyout
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|mp
+operator|->
+name|msg_controllen
+operator|=
 name|len
-argument_list|,
-name|controllenp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5818,12 +5789,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
-name|struct
-name|sockaddr
-modifier|*
-name|sa
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5904,8 +5869,19 @@ name|aname
 operator|=
 name|m
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|MT_SONAME
+condition|)
+block|{
+specifier|register
+name|struct
+name|sockaddr
+modifier|*
 name|sa
-operator|=
+init|=
 name|mtod
 argument_list|(
 name|m
@@ -5914,7 +5890,7 @@ expr|struct
 name|sockaddr
 operator|*
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -5927,10 +5903,6 @@ operator|!=
 name|BIG_ENDIAN
 if|if
 condition|(
-name|type
-operator|==
-name|MT_SONAME
-operator|&&
 name|sa
 operator|->
 name|sa_family
@@ -5959,6 +5931,7 @@ name|sa_len
 operator|=
 name|namelen
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
