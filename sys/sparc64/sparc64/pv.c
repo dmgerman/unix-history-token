@@ -955,6 +955,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * See pmap_page_exists_quick for operational explanation of  * pv_page_exists.  */
+end_comment
+
 begin_function
 name|int
 name|pv_page_exists
@@ -968,6 +972,11 @@ parameter_list|)
 block|{
 name|pv_entry_t
 name|pv
+decl_stmt|;
+name|int
+name|loops
+init|=
+literal|0
 decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -993,6 +1002,16 @@ name|TRUE
 operator|)
 return|;
 block|}
+name|loops
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|loops
+operator|>=
+literal|16
+condition|)
+break|break;
 block|}
 return|return
 operator|(

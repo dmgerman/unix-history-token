@@ -361,7 +361,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|boolean_t
-name|pmap_page_exists
+name|pmap_page_exists_quick
 name|__P
 argument_list|(
 operator|(

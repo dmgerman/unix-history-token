@@ -10005,12 +10005,12 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * this routine returns true if a physical page resides  * in the given pmap.  */
+comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
 
 begin_function
 name|boolean_t
-name|pmap_page_exists
+name|pmap_page_exists_quick
 parameter_list|(
 name|pmap
 parameter_list|,
@@ -10023,9 +10023,13 @@ name|vm_page_t
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|pv_entry_t
 name|pv
+decl_stmt|;
+name|int
+name|loops
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|s
@@ -10079,6 +10083,16 @@ return|return
 name|TRUE
 return|;
 block|}
+name|loops
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|loops
+operator|>=
+literal|16
+condition|)
+break|break;
 block|}
 name|splx
 argument_list|(
@@ -10701,7 +10715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_ts_referenced:  *  *	Return the count of reference bits for a page, clearing all of them.  */
+comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
 end_comment
 
 begin_function
