@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tr.c	5.2 (Berkeley) %G%"
+literal|"@(#)tr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,12 +897,6 @@ name|s1
 argument_list|)
 condition|)
 block|{
-name|ch
-operator|=
-name|s2
-operator|.
-name|lastch
-expr_stmt|;
 name|string1
 index|[
 name|s1
@@ -911,6 +905,10 @@ name|lastch
 index|]
 operator|=
 name|ch
+operator|=
+name|s2
+operator|.
+name|lastch
 expr_stmt|;
 name|string2
 index|[
@@ -939,12 +937,6 @@ name|s1
 argument_list|)
 condition|)
 block|{
-name|ch
-operator|=
-name|s2
-operator|.
-name|lastch
-expr_stmt|;
 name|string1
 index|[
 name|s1
@@ -953,6 +945,10 @@ name|lastch
 index|]
 operator|=
 name|ch
+operator|=
+name|s2
+operator|.
+name|lastch
 expr_stmt|;
 operator|(
 name|void
