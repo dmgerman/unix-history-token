@@ -959,7 +959,12 @@ if|if
 condition|(
 name|chdir
 argument_list|(
+operator|*
 name|p
+condition|?
+name|p
+else|:
+literal|"."
 argument_list|)
 operator|<
 literal|0
