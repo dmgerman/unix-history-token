@@ -682,6 +682,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"xe"
+block|,
+literal|"Xircom/Intel EtherExpress Pro100/16 ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"xl"
 block|,
 literal|"3COM 3c90x / 3c90xB PCI ethernet card"
