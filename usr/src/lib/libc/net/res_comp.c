@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.17 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,7 @@ name|dn
 operator|+
 name|n
 operator|+
-literal|1
+literal|2
 operator|>=
 name|eom
 condition|)
