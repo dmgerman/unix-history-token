@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
+file|<sys/endian.h>
 end_include
 
 begin_define
@@ -59,16 +59,6 @@ parameter_list|)
 value|((u_int16_t)(getb(buf,ofs)))
 end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -78,7 +68,7 @@ name|buf
 parameter_list|,
 name|ofs
 parameter_list|)
-value|(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs])))
+value|(le16toh(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs]))))
 end_define
 
 begin_define
@@ -90,7 +80,7 @@ name|buf
 parameter_list|,
 name|ofs
 parameter_list|)
-value|(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs])))
+value|(le32toh(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs]))))
 end_define
 
 begin_define
@@ -102,7 +92,7 @@ name|buf
 parameter_list|,
 name|ofs
 parameter_list|)
-value|(ntohs(getwle(buf,ofs)))
+value|(be16toh(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs]))))
 end_define
 
 begin_define
@@ -114,7 +104,7 @@ name|buf
 parameter_list|,
 name|ofs
 parameter_list|)
-value|(ntohl(getdle(buf,ofs)))
+value|(be32toh(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs]))))
 end_define
 
 begin_define
@@ -128,21 +118,8 @@ name|ofs
 parameter_list|,
 name|val
 parameter_list|)
-value|getwle(buf,ofs)=val
-end_define
-
-begin_define
-define|#
-directive|define
-name|setwbe
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|,
-name|val
-parameter_list|)
-value|getwle(buf,ofs)=htons(val)
+define|\
+value|(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs])))=htole16(val)
 end_define
 
 begin_define
@@ -156,85 +133,9 @@ name|ofs
 parameter_list|,
 name|val
 parameter_list|)
-value|getdle(buf,ofs)=val
+define|\
+value|(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs])))=htole32(val)
 end_define
-
-begin_define
-define|#
-directive|define
-name|setdbe
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|,
-name|val
-parameter_list|)
-value|getdle(buf,ofs)=htonl(val)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"Macros for Big-Endians are incomplete"
-end_error
-
-begin_define
-define|#
-directive|define
-name|getwle
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|)
-value|((u_int16_t)(getb(buf, ofs) | (getb(buf, ofs + 1)<< 8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|getdle
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|)
-value|((u_int32_t)(getb(buf, ofs) | \ 				    (getb(buf, ofs + 1)<< 8) | \ 				    (getb(buf, ofs + 2)<< 16) | \ 				    (getb(buf, ofs + 3)<< 24)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|getwbe
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|)
-value|(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs])))
-end_define
-
-begin_define
-define|#
-directive|define
-name|getdbe
-parameter_list|(
-name|buf
-parameter_list|,
-name|ofs
-parameter_list|)
-value|(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs])))
-end_define
-
-begin_comment
-comment|/* #define setwle(buf,ofs,val) getwle(buf,ofs)=val #define setdle(buf,ofs,val) getdle(buf,ofs)=val */
-end_comment
 
 begin_define
 define|#
@@ -247,7 +148,8 @@ name|ofs
 parameter_list|,
 name|val
 parameter_list|)
-value|getwle(buf,ofs)=val
+define|\
+value|(*((u_int16_t*)(&((u_int8_t*)(buf))[ofs])))=htobe16(val)
 end_define
 
 begin_define
@@ -261,17 +163,9 @@ name|ofs
 parameter_list|,
 name|val
 parameter_list|)
-value|getdle(buf,ofs)=val
+define|\
+value|(*((u_int32_t*)(&((u_int8_t*)(buf))[ofs])))=htobe32(val)
 end_define
-
-begin_comment
-comment|/* #define htoles(x)	((u_int16_t)(x)) #define letohs(x)	((u_int16_t)(x)) #define	htolel(x)	((u_int32_t)(x)) #define	letohl(x)	((u_int32_t)(x)) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
