@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	4.1	82/04/19	*/
+comment|/*	fs.h	4.2	82/06/14	*/
 end_comment
 
 begin_comment
@@ -1038,6 +1038,15 @@ name|struct
 name|fs
 modifier|*
 name|getfs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|fs
+modifier|*
+name|mountfs
 parameter_list|()
 function_decl|;
 end_function_decl
