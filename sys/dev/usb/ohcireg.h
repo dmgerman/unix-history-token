@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.14 2000/01/31 22:35:14 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.16 2000/03/29 01:46:27 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -834,6 +834,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|OHCI_PAGE_OFFSET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OHCI_PAGE_MASK
 parameter_list|(
 name|x
@@ -1153,14 +1163,6 @@ name|ohci_physaddr_t
 name|itd_bp0
 decl_stmt|;
 comment|/* Buffer Page 0 */
-define|#
-directive|define
-name|OHCI_ITD_OFFSET_MASK
-value|0x00000fff
-define|#
-directive|define
-name|OHCI_ITD_PAGE_MASK
-value|(~OHCI_ITD_OFFSET_MASK)
 name|ohci_physaddr_t
 name|itd_nextitd
 decl_stmt|;
@@ -1185,6 +1187,13 @@ define|#
 directive|define
 name|OHCI_ITD_PAGE_SELECT
 value|0x00001000
+define|#
+directive|define
+name|OHCI_ITD_MK_OFFS
+parameter_list|(
+name|len
+parameter_list|)
+value|(0xe000 | ((len)& 0x1fff))
 define|#
 directive|define
 name|OHCI_ITD_PSW_LENGTH

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.20 2000/02/22 11:30:55 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.21 2000/03/29 01:46:27 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -130,9 +130,35 @@ modifier|*
 name|nextitd
 decl_stmt|;
 comment|/* mirrors nexttd in ITD */
+name|struct
+name|ohci_soft_itd
+modifier|*
+name|dnext
+decl_stmt|;
+comment|/* next in done list */
 name|ohci_physaddr_t
 name|physaddr
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|ohci_soft_itd
+argument_list|)
+name|hnext
+expr_stmt|;
+name|usbd_xfer_handle
+name|xfer
+decl_stmt|;
+name|u_int16_t
+name|flags
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|char
+name|isdone
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|ohci_soft_itd_t
 typedef|;
@@ -254,6 +280,16 @@ index|[
 name|OHCI_HASH_SIZE
 index|]
 expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ohci_soft_itd
+argument_list|)
+name|sc_hash_itds
+index|[
+name|OHCI_HASH_SIZE
+index|]
+expr_stmt|;
 name|int
 name|sc_noport
 decl_stmt|;
@@ -288,8 +324,13 @@ comment|/* free xfers */
 name|usbd_xfer_handle
 name|sc_intrxfer
 decl_stmt|;
-name|ohci_physaddr_t
-name|sc_done
+name|ohci_soft_itd_t
+modifier|*
+name|sc_sidone
+decl_stmt|;
+name|ohci_soft_td_t
+modifier|*
+name|sc_sdone
 decl_stmt|;
 name|char
 name|sc_vendor
@@ -325,6 +366,9 @@ endif|#
 directive|endif
 name|device_ptr_t
 name|sc_child
+decl_stmt|;
+name|char
+name|sc_dying
 decl_stmt|;
 block|}
 name|ohci_softc_t
