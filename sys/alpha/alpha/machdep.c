@@ -6286,23 +6286,6 @@ name|uap
 operator|->
 name|sigcntxp
 expr_stmt|;
-if|if
-condition|(
-name|ALIGN
-argument_list|(
-name|scp
-argument_list|)
-operator|!=
-operator|(
-name|u_int64_t
-operator|)
-name|scp
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* 	 * Fetch the entire context structure at once for speed. 	 */
 if|if
 condition|(
@@ -6325,7 +6308,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFAULT
 operator|)
 return|;
 comment|/* 	 * XXX - Should we do this. What if we get a "handcrafted" 	 * but valid sigcontext that hasn't the magic number? 	 */
@@ -6610,23 +6593,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ALIGN
-argument_list|(
-name|ucp
-argument_list|)
-operator|!=
-operator|(
-name|u_int64_t
-operator|)
-name|ucp
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* 	 * Fetch the entire context structure at once for speed. 	 */
 if|if
 condition|(
@@ -6651,7 +6617,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFAULT
 operator|)
 return|;
 comment|/* 	 * Restore the user-supplied information 	 */
