@@ -1440,6 +1440,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|USBD_SHOW_DEVICE_CLASS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBD_SHOW_INTERFACE_CLASS
+value|0x2
+end_define
+
 begin_if
 if|#
 directive|if

@@ -1716,20 +1716,6 @@ argument_list|)
 expr_stmt|;
 name|USB_ATTACH_SETUP
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev_flags

@@ -367,8 +367,24 @@ begin_define
 define|#
 directive|define
 name|USB_ATTACH_SETUP
-value|printf("\n")
 end_define
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"\n%s: %s\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|devinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1071,8 +1087,24 @@ begin_define
 define|#
 directive|define
 name|USB_ATTACH_SETUP
-value|printf("\n")
 end_define
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"\n%s: %s\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|devinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1797,7 +1829,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|sc->sc_dev = self; \ 	device_set_desc_copy(self, devinfo)
+value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 		device_printf(self, "%s\n", devinfo); \ 	} while (0);
 end_define
 
 begin_define

@@ -924,34 +924,12 @@ name|uaa
 operator|->
 name|device
 argument_list|,
-literal|0
+name|USBD_SHOW_INTERFACE_CLASS
 argument_list|,
 name|devinfo
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_SETUP
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s, iclass %d/%d\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|devinfo
-argument_list|,
-name|id
-operator|->
-name|bInterfaceClass
-argument_list|,
-name|id
-operator|->
-name|bInterfaceSubClass
-argument_list|)
 expr_stmt|;
 comment|/* Find the two first bulk endpoints */
 for|for
