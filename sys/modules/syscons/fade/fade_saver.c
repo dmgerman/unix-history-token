@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: fade_saver.c,v 1.13 1998/09/15 18:16:39 sos Exp $  */
+comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: fade_saver.c,v 1.14 1998/09/17 19:40:30 sos Exp $  */
 end_comment
 
 begin_include
@@ -18,19 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lkm.h>
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -44,14 +38,6 @@ include|#
 directive|include
 file|<saver.h>
 end_include
-
-begin_expr_stmt
-name|MOD_MISC
-argument_list|(
-name|fade_saver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -303,13 +289,7 @@ specifier|static
 name|int
 name|fade_saver_load
 parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
+name|void
 parameter_list|)
 block|{
 switch|switch
@@ -354,13 +334,7 @@ specifier|static
 name|int
 name|fade_saver_unload
 parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
+name|void
 parameter_list|)
 block|{
 return|return
@@ -372,41 +346,13 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|fade_saver_mod
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|,
-name|int
-name|ver
-parameter_list|)
-block|{
-name|MOD_DISPATCH
+begin_expr_stmt
+name|SAVER_MODULE
 argument_list|(
 name|fade_saver
-argument_list|,
-name|lkmtp
-argument_list|,
-name|cmd
-argument_list|,
-name|ver
-argument_list|,
-name|fade_saver_load
-argument_list|,
-name|fade_saver_unload
-argument_list|,
-name|lkm_nullcmd
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 end_unit
 
