@@ -157,9 +157,12 @@ begin_comment
 comment|/* Define if you have the fparseln function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FPARSELN */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FPARSELN
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fts_open function.  */
@@ -838,13 +841,35 @@ begin_comment
 comment|/* #undef NO_INTERNAL_LS */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<=
+literal|500020
+end_if
+
 begin_comment
 comment|/* Define if using S/Key */
 end_comment
 
-begin_comment
-comment|/* #undef SKEY */
-end_comment
+begin_define
+define|#
+directive|define
+name|SKEY
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define this if compiling with SOCKS (the firewall traversal library).  * Also, you must define connect, getsockname, bind, accept, listen, and  * select to their R-versions.  */
@@ -937,6 +962,17 @@ end_comment
 begin_comment
 comment|/* #undef	write */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<arpa/ftp.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FTP_NAMES
+value|1
+end_define
 
 end_unit
 
