@@ -456,6 +456,19 @@ expr_stmt|;
 block|}
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|NETHER
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/* XXX -- Temporary fix before changing 10 ethernet drivers */
 end_comment
@@ -490,6 +503,11 @@ literal|14
 expr_stmt|;
 block|}
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	 * create a Link Level name for this device 	 */
