@@ -285,6 +285,11 @@ specifier|const
 name|char
 modifier|*
 name|desc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
 parameter_list|)
 block|{
 ifdef|#
@@ -326,6 +331,8 @@ argument_list|(
 name|m
 argument_list|,
 name|desc
+argument_list|,
+name|type
 argument_list|,
 name|MTX_RECURSE
 argument_list|)
@@ -2797,6 +2804,8 @@ name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+literal|"sound cdev"
 argument_list|)
 expr_stmt|;
 name|snd_mtxlock

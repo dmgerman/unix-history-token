@@ -1264,6 +1264,11 @@ specifier|const
 name|char
 modifier|*
 name|desc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
