@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.9	82/07/29	*/
+comment|/*	cmds.c	4.10	82/09/02	*/
 end_comment
 
 begin_include
@@ -3135,7 +3135,7 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|TIOCSBRK
 name|ioctl
 argument_list|(
 name|FD
