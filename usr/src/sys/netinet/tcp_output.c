@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	6.6	84/11/01	*/
+comment|/*	tcp_output.c	6.7	84/11/14	*/
 end_comment
 
 begin_include
@@ -242,6 +242,23 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
+name|win
+operator|=
+name|MIN
+argument_list|(
+name|tp
+operator|->
+name|snd_wnd
+argument_list|,
+name|tp
+operator|->
+name|snd_cwnd
+argument_list|)
+operator|+
+name|tp
+operator|->
+name|t_force
+expr_stmt|;
 name|len
 operator|=
 name|MIN
@@ -252,13 +269,7 @@ name|so_snd
 operator|.
 name|sb_cc
 argument_list|,
-name|tp
-operator|->
-name|snd_wnd
-operator|+
-name|tp
-operator|->
-name|t_force
+name|win
 argument_list|)
 operator|-
 name|off
@@ -294,16 +305,11 @@ expr_stmt|;
 comment|/* 		 * Don't send more than one segment if retransmitting. 		 */
 if|if
 condition|(
-name|SEQ_GT
-argument_list|(
 name|tp
 operator|->
-name|snd_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_max
-argument_list|)
+name|t_rxtshift
+operator|==
+literal|0
 condition|)
 name|sendalot
 operator|=
@@ -431,7 +437,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Calculate available window in i, and also amount 	 * of window known to peer (as advertised window less 	 * next expected input.)  If this is 35% or more of the 	 * maximum possible window, then want to send a segment to peer. 	 */
+comment|/* 	 * Calculate available window, and also amount 	 * of window known to peer (as advertised window less 	 * next expected input.)  If the difference is 35% or more of the 	 * maximum possible window, then want to send a window update to peer. 	 */
 name|win
 operator|=
 name|sbspace
