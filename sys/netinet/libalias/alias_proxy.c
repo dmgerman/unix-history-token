@@ -1830,6 +1830,7 @@ begin_function
 name|int
 name|PacketAliasProxyRule
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cmd

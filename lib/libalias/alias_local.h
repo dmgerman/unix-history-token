@@ -676,15 +676,12 @@ parameter_list|(
 name|struct
 name|ip
 modifier|*
-name|pip
 parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
 parameter_list|,
 name|int
-name|maxsize
 parameter_list|)
 function_decl|;
 end_function_decl
