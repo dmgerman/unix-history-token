@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.28 1998/06/09 04:35:20 imp Exp $"
+literal|"$Id: w.c,v 1.29 1998/11/09 01:19:30 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,10 @@ if|if
 condition|(
 name|strstr
 argument_list|(
-name|__progname
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"uptime"
 argument_list|)
