@@ -722,7 +722,7 @@ operator|<
 literal|500000
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_thread
 argument_list|,
 operator|(
 expr|struct
