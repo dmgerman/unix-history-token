@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lockf.h>
+file|<sys/limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/limits.h>
+file|<sys/lockf.h>
 end_include
 
 begin_include

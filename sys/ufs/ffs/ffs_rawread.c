@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -103,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
 end_include
 
 begin_include

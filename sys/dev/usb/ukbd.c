@@ -65,6 +65,12 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1067,12 +1073,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
 
 begin_define
 define|#

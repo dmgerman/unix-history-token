@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -548,12 +554,6 @@ end_function
 begin_comment
 comment|/* LOW-LEVEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
 
 begin_define
 define|#

@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
 end_include
 
 begin_include

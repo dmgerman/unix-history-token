@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -279,12 +285,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_llc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
 end_include
 
 begin_include

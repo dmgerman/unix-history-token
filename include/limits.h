@@ -595,7 +595,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/limits.h>
+file|<sys/limits.h>
 end_include
 
 begin_if

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msg.h>
 end_include
 
@@ -43,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/shm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
 end_include
 
 begin_include
