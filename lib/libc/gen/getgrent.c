@@ -4763,6 +4763,7 @@ name|rv
 operator|=
 name|_nsdispatch
 argument_list|(
+operator|&
 name|discard
 argument_list|,
 name|dtab
@@ -4792,6 +4793,7 @@ name|rv
 operator|=
 name|_nsdispatch
 argument_list|(
+operator|&
 name|discard
 argument_list|,
 name|dtab
@@ -4845,6 +4847,7 @@ name|rv
 operator|=
 name|_nsdispatch
 argument_list|(
+operator|&
 name|discard
 argument_list|,
 name|dtab
