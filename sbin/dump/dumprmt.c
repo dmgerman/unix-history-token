@@ -789,6 +789,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Connection to %s established.\n"
+argument_list|,
+name|rmtpeer
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|ntrec
