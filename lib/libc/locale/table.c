@@ -101,21 +101,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|_none_init
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|_RuneLocale
 name|_DefaultRuneLocale
