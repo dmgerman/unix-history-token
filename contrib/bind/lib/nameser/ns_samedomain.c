@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_samedomain.c,v 8.9 1999/10/15 21:06:51 vixie Exp $"
+literal|"$Id: ns_samedomain.c,v 8.9.6.2 2002/11/14 22:36:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,8 +489,6 @@ name|n
 operator|+
 sizeof|sizeof
 expr|"."
-operator|+
-literal|1
 operator|>
 name|dstsize
 condition|)
