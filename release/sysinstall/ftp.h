@@ -3,8 +3,21 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+enum|enum
+block|{
+name|init
+block|,
+name|isopen
+block|,
+name|xfer
+block|}
+name|state
+enum|;
 name|int
 name|fd_ctrl
+decl_stmt|;
+name|int
+name|fd_xfer
 decl_stmt|;
 name|int
 name|fd_debug
@@ -84,6 +97,12 @@ parameter_list|)
 value|{ (ftp)->passive = (bool); }
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STANDALONE_FTP
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -96,9 +115,10 @@ parameter_list|)
 value|{ (ftp)->fd_debug = (bool); }
 end_define
 
-begin_comment
-comment|/* void		FtpBinary(FTP_t, int); void		FtpPassive(FTP_t, int); void		FtpDebug(FTP_t, int); */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

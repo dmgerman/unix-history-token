@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.27 1995/05/21 18:24:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.28 1995/05/23 02:40:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -374,6 +374,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"ix"
+block|,
+literal|"Intel Etherexpress"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"le"
 block|,
 literal|"DEC EtherWorks 2 and 3"
@@ -592,7 +600,7 @@ name|Device
 modifier|*
 parameter_list|)
 parameter_list|,
-name|Boolean
+name|int
 function_decl|(
 modifier|*
 name|get
@@ -602,10 +610,22 @@ name|char
 modifier|*
 parameter_list|)
 parameter_list|,
-name|void
+name|Boolean
 function_decl|(
 modifier|*
 name|close
+function_decl|)
+parameter_list|(
+name|Device
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|shutdown
 function_decl|)
 parameter_list|(
 name|Device
@@ -680,6 +700,12 @@ operator|->
 name|close
 operator|=
 name|close
+expr_stmt|;
+name|newdev
+operator|->
+name|shutdown
+operator|=
+name|shutdown
 expr_stmt|;
 name|newdev
 operator|->
@@ -845,6 +871,8 @@ name|mediaInitUFS
 argument_list|,
 name|mediaGetUFS
 argument_list|,
+name|NULL
+argument_list|,
 name|deviceDiskFree
 argument_list|,
 name|d
@@ -962,7 +990,9 @@ name|mediaInitCDROM
 argument_list|,
 name|mediaGetCDROM
 argument_list|,
-name|mediaCloseCDROM
+name|NULL
+argument_list|,
+name|mediaShutdownCDROM
 argument_list|,
 name|NULL
 argument_list|)
@@ -1039,7 +1069,9 @@ name|mediaInitTape
 argument_list|,
 name|mediaGetTape
 argument_list|,
-name|mediaCloseTape
+name|NULL
+argument_list|,
+name|mediaShutdownTape
 argument_list|,
 name|NULL
 argument_list|)
@@ -1116,7 +1148,9 @@ name|mediaInitFloppy
 argument_list|,
 name|mediaGetFloppy
 argument_list|,
-name|mediaCloseFloppy
+name|NULL
+argument_list|,
+name|mediaShutdownFloppy
 argument_list|,
 name|NULL
 argument_list|)
@@ -1194,7 +1228,9 @@ name|mediaInitNetwork
 argument_list|,
 name|NULL
 argument_list|,
-name|mediaCloseNetwork
+name|NULL
+argument_list|,
+name|mediaShutdownNetwork
 argument_list|,
 name|NULL
 argument_list|)
@@ -1389,7 +1425,9 @@ name|mediaInitNetwork
 argument_list|,
 name|NULL
 argument_list|,
-name|mediaCloseNetwork
+name|NULL
+argument_list|,
+name|mediaShutdownNetwork
 argument_list|,
 name|NULL
 argument_list|)

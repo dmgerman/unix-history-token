@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.28 1995/05/23 18:06:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.29 1995/05/24 01:27:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -512,7 +512,7 @@ name|_device
 modifier|*
 parameter_list|)
 function_decl|;
-name|Boolean
+name|int
 function_decl|(
 modifier|*
 name|get
@@ -523,10 +523,24 @@ modifier|*
 name|fname
 parameter_list|)
 function_decl|;
-name|void
+name|Boolean
 function_decl|(
 modifier|*
 name|close
+function_decl|)
+parameter_list|(
+name|struct
+name|_device
+modifier|*
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|shutdown
 function_decl|)
 parameter_list|(
 name|struct
@@ -953,6 +967,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuSyscons
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System console configuration menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuInstall
 decl_stmt|;
 end_decl_stmt
@@ -1142,7 +1167,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|config_fstab
+name|configFstab
 parameter_list|(
 name|void
 parameter_list|)
@@ -1152,7 +1177,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|config_sysconfig
+name|configSysconfig
 parameter_list|(
 name|void
 parameter_list|)
@@ -1162,7 +1187,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|config_resolv
+name|configResolv
 parameter_list|(
 name|void
 parameter_list|)
@@ -1172,7 +1197,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|config_ports
+name|configPorts
 parameter_list|(
 name|char
 modifier|*
@@ -1184,7 +1209,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|config_packages
+name|configPackages
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configSaverTimeout
 parameter_list|(
 name|char
 modifier|*
@@ -1361,7 +1398,7 @@ modifier|*
 name|mediadev
 parameter_list|)
 parameter_list|,
-name|Boolean
+name|int
 function_decl|(
 modifier|*
 name|get
@@ -1372,10 +1409,24 @@ modifier|*
 name|distname
 parameter_list|)
 parameter_list|,
-name|void
+name|Boolean
 function_decl|(
 modifier|*
 name|close
+function_decl|)
+parameter_list|(
+name|Device
+modifier|*
+name|mediadev
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|shutDown
 function_decl|)
 parameter_list|(
 name|Device
@@ -2119,7 +2170,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseCDROM
+name|mediaShutdownCDROM
 parameter_list|(
 name|Device
 modifier|*
@@ -2131,7 +2182,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseDOS
+name|mediaShutdownDOS
 parameter_list|(
 name|Device
 modifier|*
@@ -2143,7 +2194,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseFTP
+name|mediaShutdownFTP
 parameter_list|(
 name|Device
 modifier|*
@@ -2155,7 +2206,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseFloppy
+name|mediaShutdownFloppy
 parameter_list|(
 name|Device
 modifier|*
@@ -2167,7 +2218,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseNetwork
+name|mediaShutdownNetwork
 parameter_list|(
 name|Device
 modifier|*
@@ -2179,7 +2230,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mediaCloseTape
+name|mediaShutdownTape
 parameter_list|(
 name|Device
 modifier|*
