@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	5.10 (Berkeley) %G%"
+literal|"@(#)fsdb.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -16035,6 +16041,8 @@ operator|&
 name|ip
 operator|->
 name|di_atime
+operator|.
+name|tv_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16048,6 +16056,8 @@ operator|&
 name|ip
 operator|->
 name|di_mtime
+operator|.
+name|tv_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16061,6 +16071,8 @@ operator|&
 name|ip
 operator|->
 name|di_ctime
+operator|.
+name|tv_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
