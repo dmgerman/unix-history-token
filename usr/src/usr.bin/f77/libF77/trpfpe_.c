@@ -4,7 +4,7 @@ comment|/* #define	OLD_BSD		if you're running< 4.2bsd */
 end_comment
 
 begin_comment
-comment|/* char	id_trpfpe[] = "@(#)trpfpe_.c	1.2";  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
+comment|/* char	id_trpfpe[] = "@(#)trpfpe_.c	1.3";  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
 end_comment
 
 begin_include
@@ -1864,15 +1864,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
-name|ap
-operator|->
-name|al_arg
-index|[
-name|ap
-operator|->
-name|al_numarg
-index|]
+name|sc
 operator|+
 sizeof|sizeof
 argument_list|(
