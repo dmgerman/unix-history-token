@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbhid.h,v 1.4 1999/04/22 01:57:01 augustss Exp $	*/
+comment|/*	$NetBSD: usbhid.h,v 1.8 2000/05/30 10:10:18 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -135,6 +135,7 @@ literal|1
 index|]
 struct|;
 block|}
+name|UPACKED
 name|usb_hid_descriptor_t
 typedef|;
 end_typedef
