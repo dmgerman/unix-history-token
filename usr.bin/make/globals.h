@@ -45,12 +45,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|IFile
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|Path
 struct_decl|;
 end_struct_decl
@@ -77,18 +71,6 @@ name|Path
 name|dirSearchPath
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|IFile
-name|curFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current makefile */
-end_comment
 
 begin_comment
 comment|/* The list of directories to search when looking for includes */

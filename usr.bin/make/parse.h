@@ -39,56 +39,6 @@ name|Lst
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/*  * Definitions for handling #include specifications  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-modifier|*
-name|str
-decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-block|}
-name|PTR
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|IFile
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* name of previous file */
-name|int
-name|lineno
-decl_stmt|;
-comment|/* saved line number */
-name|FILE
-modifier|*
-name|F
-decl_stmt|;
-comment|/* the open stream */
-name|PTR
-modifier|*
-name|p
-decl_stmt|;
-comment|/* the char pointer */
-block|}
-name|IFile
-typedef|;
-end_typedef
-
 begin_function_decl
 name|void
 name|Parse_Error
@@ -151,6 +101,7 @@ begin_function_decl
 name|void
 name|Parse_File
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -3355,6 +3355,9 @@ parameter_list|(
 name|char
 modifier|*
 name|line
+parameter_list|,
+name|int
+name|lineno
 parameter_list|)
 block|{
 name|struct
@@ -3374,18 +3377,9 @@ name|int
 name|level
 decl_stmt|;
 comment|/* Level at which to report errors. */
-name|int
-name|lineno
-decl_stmt|;
 name|level
 operator|=
 name|PARSE_FATAL
-expr_stmt|;
-name|lineno
-operator|=
-name|curFile
-operator|.
-name|lineno
 expr_stmt|;
 for|for
 control|(
