@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.14 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,13 +73,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<kvm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -91,7 +91,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kvm.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -103,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -137,22 +137,6 @@ block|{
 name|NULL
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -344,8 +328,10 @@ name|kd
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_open: %s"
 argument_list|,
 name|buf
@@ -363,8 +349,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_nlist: %s"
 argument_list|,
 name|kvm_geterr
@@ -384,8 +372,10 @@ name|n_type
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: msgbufp not found"
 argument_list|,
 name|nlistf
@@ -419,8 +409,10 @@ argument_list|,
 name|cur
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_read: %s"
 argument_list|,
 name|kvm_geterr
@@ -442,8 +434,10 @@ name|msg_magic
 operator|!=
 name|MSG_MAGIC
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"magic number incorrect"
 argument_list|)
 expr_stmt|;
@@ -607,11 +601,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|fputs
+name|printf
 argument_list|(
-name|buf
+literal|"%s"
 argument_list|,
-name|stdout
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -633,132 +627,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"dmesg: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
