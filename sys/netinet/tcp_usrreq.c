@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_usrreq.c	8.2 (Berkeley) 1/3/94  *	$Id: tcp_usrreq.c,v 1.26.2.2 1997/09/16 18:37:02 joerg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_usrreq.c	8.2 (Berkeley) 1/3/94  *	$Id: tcp_usrreq.c,v 1.26.2.3 1997/12/18 09:52:01 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1165,7 +1165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do a send by putting data in output queue and updating urgent  * marker if URG set.  Possibly send more data.  */
+comment|/*  * Do a send by putting data in output queue and updating urgent  * marker if URG set.  Possibly send more data.  Unlike the other  * pru_*() routines, the mbuf chains are our responsibility.  We  * must either enqueue them or free them.  The other pru_* routines  * generally are caller-frees.  */
 end_comment
 
 begin_function
@@ -1223,13 +1223,61 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|COMMON_START
+name|TCPDEBUG0
+expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * OOPS! we lost a race, the TCP session got reset after 		 * we checked SS_CANTSENDMORE, eg: while doing uiomove or a 		 * network interrupt in the non-splnet() section of sosend(). 		 */
+if|if
+condition|(
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|control
+condition|)
+name|m_freem
+argument_list|(
+name|control
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ECONNRESET
+expr_stmt|;
+comment|/* XXX EPIPE? */
+goto|goto
+name|out
+goto|;
+block|}
+name|tp
+operator|=
+name|intotcpcb
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|control
-operator|&&
+condition|)
+block|{
+comment|/* TCP doesn't do control messages (rights, creds, etc) */
+if|if
+condition|(
 name|control
 operator|->
 name|m_len
@@ -1240,7 +1288,6 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-comment|/* XXX shouldn't caller do this??? */
 if|if
 condition|(
 name|m
@@ -1257,6 +1304,13 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+name|m_freem
+argument_list|(
+name|control
+argument_list|)
+expr_stmt|;
+comment|/* empty control, just free it */
 block|}
 if|if
 condition|(
