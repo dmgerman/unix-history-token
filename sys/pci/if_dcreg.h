@@ -4331,7 +4331,7 @@ begin_define
 define|#
 directive|define
 name|DC_CFCS_MWI_ENB
-value|0x00000008
+value|0x00000010
 end_define
 
 begin_comment
@@ -4342,7 +4342,7 @@ begin_define
 define|#
 directive|define
 name|DC_CFCS_PARITYERR_ENB
-value|0x00000020
+value|0x00000040
 end_define
 
 begin_comment
@@ -4353,7 +4353,7 @@ begin_define
 define|#
 directive|define
 name|DC_CFCS_SYSERR_ENB
-value|0x00000080
+value|0x00000100
 end_define
 
 begin_comment
