@@ -563,12 +563,6 @@ literal|0
 expr_stmt|;
 name|td
 operator|->
-name|td_savecrit
-operator|=
-literal|0
-expr_stmt|;
-name|td
-operator|->
 name|td_kse
 operator|=
 name|NULL
