@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.69 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.70 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.69 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.70 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3060,9 +3060,18 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_ANSI_LIBRARY
+argument_list|)
 name|e
 operator|->
 name|e_msgsize
