@@ -22,17 +22,16 @@ name|lint
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char *rcsid = "$OpenBSD: strlcpy.c,v 1.4 1999/05/01 18:56:41 millert Exp $";
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|rcsid
+init|=
+literal|"$OpenBSD: strlcpy.c,v 1.4 1999/05/01 18:56:41 millert Exp $"
+init|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -43,27 +42,19 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -24,17 +24,15 @@ name|lint
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char sccsid[] = "@(#)strncmp.c	8.1 (Berkeley) 6/4/93";
-else|#
-directive|else
-end_else
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)strncmp.c	8.1 (Berkeley) 6/4/93"
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|__RCSID
@@ -49,36 +47,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
