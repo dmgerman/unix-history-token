@@ -210,7 +210,7 @@ name|my_win
 operator|.
 name|x_win
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|wclear
@@ -265,7 +265,7 @@ name|his_win
 operator|.
 name|x_win
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|wclear
