@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.38	82/12/19	*/
+comment|/*	tty.c	4.39	83/01/17	*/
 end_comment
 
 begin_include
@@ -3915,41 +3915,9 @@ name|c_cc
 operator|>=
 name|TTYHOG
 condition|)
-goto|goto
-name|endcase
-goto|;
-comment|/* 	 * Put data char in q for user and 	 * wakeup on seeing a line delimiter. 	 */
-if|if
-condition|(
-name|putc
-argument_list|(
-name|c
-argument_list|,
-operator|&
-name|tp
-operator|->
-name|t_rawq
-argument_list|)
-operator|>=
-literal|0
-condition|)
 block|{
 if|if
 condition|(
-name|tp
-operator|->
-name|t_rawq
-operator|.
-name|c_cc
-operator|+
-name|tp
-operator|->
-name|t_canq
-operator|.
-name|c_cc
-operator|==
-name|TTYHOG
-operator|&&
 name|tp
 operator|->
 name|t_line
@@ -3969,6 +3937,26 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+goto|goto
+name|endcase
+goto|;
+block|}
+comment|/* 	 * Put data char in q for user and 	 * wakeup on seeing a line delimiter. 	 */
+if|if
+condition|(
+name|putc
+argument_list|(
+name|c
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|ttbreakc
@@ -7328,11 +7316,21 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|vax
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|scanc
