@@ -53,13 +53,23 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__pselect
+argument_list|,
+name|pselect
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Emulate the POSIX 1003.1g-2000 `pselect' interface.  This is the  * same as the traditional BSD `select' function, except that it uses  * a timespec rather than a timeval, doesn't modify the timeout argument,  * and allows the user to specify a signal mask to apply during the select.  */
 end_comment
 
 begin_function
 name|int
-name|pselect
+name|__pselect
 parameter_list|(
 name|int
 name|count
