@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.8 1997/09/30 13:25:35 jlemon Exp $"
+literal|"$Id: mountd.c,v 1.11.2.9 1997/12/04 07:36:15 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4325,7 +4325,11 @@ argument|; 			    got_nondir =
 literal|1
 argument|; 			    if (ep == (struct exportlist *)NULL) { 				getexp_err(ep, tgrp); 				goto nextline; 			    }
 comment|/* 			     * Get the host or netgroup. 			     */
-argument|setnetgrent(cp); 			    netgrp = getnetgrent(&hst,&usr,&dom); 			    do { 				if (has_host) { 				    grp->gr_next = get_grp(); 				    grp = grp->gr_next; 				} 				if (netgrp) { 				    if (get_host(hst, grp, tgrp)) { 					syslog(LOG_ERR,
+argument|setnetgrent(cp); 			    netgrp = getnetgrent(&hst,&usr,&dom); 			    do { 				if (has_host) { 				    grp->gr_next = get_grp(); 				    grp = grp->gr_next; 				} 				if (netgrp) { 				    if (hst ==
+literal|0
+argument|) { 					syslog(LOG_ERR,
+literal|"Null hostname in netgroup %s, skipping"
+argument|, cp); 					grp->gr_type = GT_IGNORE; 				    } else if (get_host(hst, grp, tgrp)) { 					syslog(LOG_ERR,
 literal|"Bad host %s in netgroup %s, skipping"
 argument|, hst, cp); 					grp->gr_type = GT_IGNORE; 				    } 				} else if (get_host(cp, grp, tgrp)) { 				    syslog(LOG_ERR,
 literal|"Bad host %s, skipping"
