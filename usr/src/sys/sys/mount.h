@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -289,22 +295,27 @@ begin_comment
 comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  */
 end_comment
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|vnodelst
+argument_list|,
+name|vnode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|mount
 block|{
-name|struct
-name|mount
-modifier|*
-name|mnt_next
-decl_stmt|;
-comment|/* next in mount list */
-name|struct
-name|mount
-modifier|*
-name|mnt_prev
-decl_stmt|;
-comment|/* prev in mount list */
+name|TAILQ_ENTRY
+argument_list|(
+argument|mount
+argument_list|)
+name|mnt_list
+expr_stmt|;
+comment|/* mount list */
 name|struct
 name|vfsops
 modifier|*
@@ -318,9 +329,8 @@ name|mnt_vnodecovered
 decl_stmt|;
 comment|/* vnode we mounted on */
 name|struct
-name|vnode
-modifier|*
-name|mnt_mounth
+name|vnodelst
+name|mnt_vnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
 name|int
@@ -497,6 +507,17 @@ end_define
 
 begin_comment
 comment|/* quotas are enabled on filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_ROOTFS
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* identifies the root filesystem */
 end_comment
 
 begin_comment
@@ -1744,25 +1765,6 @@ comment|/*  * exported vnode operations  */
 end_comment
 
 begin_decl_stmt
-name|void
-name|vfs_remove
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-name|mp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* remove a vfs from mount list */
-end_comment
-
-begin_decl_stmt
 name|int
 name|vfs_lock
 name|__P
@@ -1820,17 +1822,20 @@ begin_comment
 comment|/* return vfs given fsid */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mount
-modifier|*
-name|rootfs
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	TAILQ_HEAD(mntlist
+operator|,
+extern|mount
+end_extern
+
+begin_expr_stmt
+unit|)
+name|mountlist
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* ptr to root mount structure */
+comment|/* mounted filesystem list */
 end_comment
 
 begin_decl_stmt
@@ -1844,7 +1849,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mount filesystem type table */
+comment|/* filesystem type table */
 end_comment
 
 begin_else
