@@ -476,7 +476,7 @@ name|char
 name|machine
 index|[]
 init|=
-literal|"ia64"
+name|MACHINE
 decl_stmt|;
 end_decl_stmt
 
@@ -695,12 +695,6 @@ name|int
 name|Maxmem
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|dumplo
 decl_stmt|;
 end_decl_stmt
 
