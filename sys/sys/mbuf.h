@@ -1309,7 +1309,7 @@ value|m_extadd((m), (caddr_t)(buf), (size), (free), (args), (flags), (type))
 end_define
 
 begin_comment
-comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from (m).  *   * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
+comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from (m).  *  * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
 end_comment
 
 begin_define
@@ -2196,10 +2196,6 @@ begin_comment
 comment|/* Packet tags for use with PACKET_ABI_COMPAT. */
 end_comment
 
-begin_comment
-comment|/* XXX excessive indentation for most of these (was: all). */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2457,10 +2453,6 @@ begin_comment
 comment|/* Packet tag routines. */
 end_comment
 
-begin_comment
-comment|/* XXX totally disordered declarations. */
-end_comment
-
 begin_function_decl
 name|struct
 name|m_tag
@@ -2571,10 +2563,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* XXX sigh, we had uninlined everything. */
-end_comment
 
 begin_comment
 comment|/*  * Initialize the list of tags associated with an mbuf.  */
@@ -2911,7 +2899,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * XXX gross style bugs in this function.  * Obtain next_hop information associated with the mbuf, if any.  * If a tag is present devalidate it also.  */
+comment|/*  * Obtain next_hop information associated with the mbuf, if any.  * If a tag is present devalidate it also.  */
 end_comment
 
 begin_expr_stmt
