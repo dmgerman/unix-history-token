@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.29 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +870,8 @@ condition|(
 name|retval
 operator|==
 literal|0
+operator|&&
+name|hostok
 condition|)
 name|authenticated
 operator|++
@@ -891,11 +893,25 @@ name|retval
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
+if|if
+condition|(
+operator|!
+name|hostok
+condition|)
+name|fatal
+argument_list|(
+name|f
+argument_list|,
+literal|"krlogind: Host address mismatch.\r\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 ifndef|#
 directive|ifndef
 name|OLD_LOGIN
+block|{
 if|if
 condition|(
 name|fromp
@@ -950,8 +966,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|do_rlogin
@@ -986,6 +1000,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
