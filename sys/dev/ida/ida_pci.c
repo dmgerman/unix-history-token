@@ -559,6 +559,15 @@ name|ida_v4_access
 block|}
 block|,
 block|{
+literal|0x4058
+block|,
+literal|"Compaq Smart Array 431 controller"
+block|,
+operator|&
+name|ida_v4_access
+block|}
+block|,
+block|{
 name|IDA_DEVICEID_DEC_SMART
 block|,
 literal|"DEC/Compaq Smart Array 4200 controller"
