@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.16 1996/04/28 20:53:56 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.17 1996/07/08 10:08:00 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -42,18 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -61,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -143,6 +137,31 @@ end_endif
 begin_comment
 comment|/*STANDALONE_FTP*/
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sigpipe_caught
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|catch_pipe
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|sigpipe_caught
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -290,6 +309,13 @@ argument_list|(
 name|s
 argument_list|)
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|catch_pipe
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -302,10 +328,27 @@ name|s
 argument_list|,
 name|i
 argument_list|)
+operator|||
+name|sigpipe_caught
 condition|)
+block|{
+if|if
+condition|(
+name|sigpipe_caught
+condition|)
+name|msgDebug
+argument_list|(
+literal|"sigpipe caught during write - connection invalid\n"
+argument_list|)
+expr_stmt|;
+name|sigpipe_caught
+operator|=
+name|FALSE
+expr_stmt|;
 return|return
 name|IO_ERROR
 return|;
+block|}
 return|return
 literal|0
 return|;
@@ -335,6 +378,13 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|catch_pipe
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -367,10 +417,27 @@ condition|(
 name|j
 operator|!=
 literal|1
+operator|||
+name|sigpipe_caught
 condition|)
+block|{
+if|if
+condition|(
+name|sigpipe_caught
+condition|)
+name|msgDebug
+argument_list|(
+literal|"sigpipe caught during read - connection invalid\n"
+argument_list|)
+expr_stmt|;
+name|sigpipe_caught
+operator|=
+name|FALSE
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|buf
