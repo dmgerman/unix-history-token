@@ -1327,14 +1327,14 @@ condition|)
 name|bcopy
 argument_list|(
 operator|&
-name|hc_entry
-operator|->
-name|ip6
-argument_list|,
-operator|&
 name|inc
 operator|->
 name|inc6_faddr
+argument_list|,
+operator|&
+name|hc_entry
+operator|->
+name|ip6
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1694,12 +1694,12 @@ expr_stmt|;
 comment|/* start over again */
 name|bcopy
 argument_list|(
-name|tao
-argument_list|,
 operator|&
 name|hc_entry
 operator|->
 name|rmx_tao
+argument_list|,
+name|tao
 argument_list|,
 sizeof|sizeof
 argument_list|(
