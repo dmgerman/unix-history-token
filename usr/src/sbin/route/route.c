@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.33 (Berkeley) %G%"
+literal|"@(#)route.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2668,6 +2668,22 @@ name|RTF_REJECT
 expr_stmt|;
 break|break;
 case|case
+name|K_PROTO1
+case|:
+name|flags
+operator||=
+name|RTF_PROTO1
+expr_stmt|;
+break|break;
+case|case
+name|K_PROTO2
+case|:
+name|flags
+operator||=
+name|RTF_PROTO2
+expr_stmt|;
+break|break;
+case|case
 name|K_CLONING
 case|:
 name|flags
@@ -5149,7 +5165,7 @@ name|char
 name|routeflags
 index|[]
 init|=
-literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\011CLONING\012XRESOLVE"
+literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\011CLONING\012XRESOLVE\013LLINFO\017PROTO2\020PROTO1"
 decl_stmt|;
 end_decl_stmt
 
