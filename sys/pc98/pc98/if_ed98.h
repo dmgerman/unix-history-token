@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) KATO Takenori, 1996.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) KATO Takenori, 1996.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * PC-9801 specific definitions for National Semiconductor DP8390 NIC  */
+comment|/*  * PC-9801 specific definitions for National Semiconductor DP8390 NIC.  */
 end_comment
 
 begin_ifndef
@@ -127,7 +127,7 @@ value|sc->edreg.asic_offset
 end_define
 
 begin_comment
-comment|/*  * Remote DMA data register; for reading or writing to the NIC mem  *	via programmed I/O (offset from ASIC base)  */
+comment|/*  * Remote DMA data register; for reading or writing to the NIC mem  * via programmed I/O (offset from ASIC base).  */
 end_comment
 
 begin_ifdef
@@ -155,7 +155,7 @@ value|sc->edreg.data
 end_define
 
 begin_comment
-comment|/*  * Reset register; reading from this register causes a board reset  */
+comment|/*  * Reset register; reading from this register causes a board reset.  */
 end_comment
 
 begin_ifdef
@@ -183,7 +183,7 @@ value|sc->edreg.reset
 end_define
 
 begin_comment
-comment|/*  * Card type  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX)  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}  * 0x60  Allied Telesis SIC-98  * 0x80  NEC PC-9801-108  * 0x90  IO-DATA LA-98  * 0xa0  Contec C-NET(98)  * 0xb0  Contec C-NET(98)E/L  */
+comment|/*  * Card types.  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T.  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T.  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A.  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A.  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX).  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}.  * 0x60  Allied Telesis SIC-98.  * 0x80  NEC PC-9801-108.  * 0x90  IO-DATA LA-98.  * 0xa0  Contec C-NET(98).  * 0xb0  Contec C-NET(98)E/L.  */
 end_comment
 
 begin_define
@@ -298,7 +298,7 @@ value|((x& 0xf0000)>> 16)
 end_define
 
 begin_comment
-comment|/*  * Page 0 register offsets  */
+comment|/*  * Page 0 register offsets.  */
 end_comment
 
 begin_undef
@@ -653,7 +653,7 @@ value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
-comment|/*  * Page 1 register offsets  */
+comment|/*  * Page 1 register offsets.  */
 end_comment
 
 begin_undef
@@ -865,7 +865,7 @@ value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
-comment|/*  * Page 2 register offsets  */
+comment|/*  * Page 2 register offsets.  */
 end_comment
 
 begin_undef
@@ -1112,7 +1112,7 @@ directive|define
 name|LPCT_1d0_ON
 parameter_list|()
 define|\
-value|{ \ 	outb(0x2a8e, 0x84); \ 	outw(0x4a8e, 0x1d0); \ 	outw(0x5a8e, 0x0310); \ }
+value|{							\ 	outb(0x2a8e, 0x84);		\ 	outw(0x4a8e, 0x1d0);	\ 	outw(0x5a8e, 0x0310);	\ }
 end_define
 
 begin_define
@@ -1121,7 +1121,7 @@ directive|define
 name|LPCT_1d0_OFF
 parameter_list|()
 define|\
-value|{ \ 	outb(0x2a8e, 0xa4); \ 	outw(0x4a8e, 0xd0); \ 	outw(0x5a8e, 0x0300); \ }
+value|{							\ 	outb(0x2a8e, 0xa4);		\ 	outw(0x4a8e, 0xd0);		\ 	outw(0x5a8e, 0x0300);	\ }
 end_define
 
 begin_comment
@@ -1136,11 +1136,11 @@ value|0xaaed
 end_define
 
 begin_comment
-comment|/* 0xaaed reset register  */
+comment|/* 0xaaed reset register.  */
 end_comment
 
 begin_comment
-comment|/* 0xaaef i/o address set */
+comment|/* 0xaaef i/o address set. */
 end_comment
 
 begin_define
@@ -1162,7 +1162,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* MAPPING register0 Low  */
+comment|/* MAPPING register0 Low.  */
 end_comment
 
 begin_define
@@ -1173,7 +1173,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* MAPPING register1 Low  */
+comment|/* MAPPING register1 Low.  */
 end_comment
 
 begin_define
@@ -1184,7 +1184,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* MAPPING register2 Low  */
+comment|/* MAPPING register2 Low.  */
 end_comment
 
 begin_define
@@ -1195,7 +1195,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* MAPPING register3 Low  */
+comment|/* MAPPING register3 Low.  */
 end_comment
 
 begin_define
@@ -1206,7 +1206,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* MAPPING register0 Hi   */
+comment|/* MAPPING register0 Hi.   */
 end_comment
 
 begin_define
@@ -1217,7 +1217,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* MAPPING register1 Hi   */
+comment|/* MAPPING register1 Hi.   */
 end_comment
 
 begin_define
@@ -1228,7 +1228,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* MAPPING register2 Hi   */
+comment|/* MAPPING register2 Hi.   */
 end_comment
 
 begin_define
@@ -1239,7 +1239,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* MAPPING register3 Hi   */
+comment|/* MAPPING register3 Hi.   */
 end_comment
 
 begin_define
@@ -1250,7 +1250,7 @@ value|(0x400 +  1)
 end_define
 
 begin_comment
-comment|/* window register        */
+comment|/* Window register.        */
 end_comment
 
 begin_define
@@ -1261,7 +1261,7 @@ value|(0x400 +  3)
 end_define
 
 begin_comment
-comment|/* init level register    */
+comment|/* Init level register.    */
 end_comment
 
 begin_define
@@ -1272,7 +1272,7 @@ value|(0x400 +  5)
 end_define
 
 begin_comment
-comment|/* init request register  */
+comment|/* Init request register.  */
 end_comment
 
 begin_define
@@ -1283,7 +1283,7 @@ value|(0x400 +  7)
 end_define
 
 begin_comment
-comment|/* init mask register     */
+comment|/* Init mask register.     */
 end_comment
 
 begin_define
@@ -1294,7 +1294,7 @@ value|(0x400 +  9)
 end_define
 
 begin_comment
-comment|/* init status register   */
+comment|/* Init status register.   */
 end_comment
 
 begin_define
@@ -1305,7 +1305,7 @@ value|(0x400 +  9)
 end_define
 
 begin_comment
-comment|/* init clear register    */
+comment|/* Init clear register.    */
 end_comment
 
 begin_define
@@ -1400,7 +1400,7 @@ comment|/*  * C-NET(98)E/L  */
 end_comment
 
 begin_comment
-comment|/*  * NIC Initial Register(on board JP1)  */
+comment|/*  * NIC Initial Register(on board JP1).  */
 end_comment
 
 begin_define
@@ -1432,7 +1432,7 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* offset to nic i/o regs */
+comment|/* Offset to nic i/o regs. */
 end_comment
 
 begin_define
@@ -1443,7 +1443,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* page offset for NIC access to mem */
+comment|/* Page offset for NIC access to mem. */
 end_comment
 
 begin_comment
@@ -1458,11 +1458,11 @@ value|16
 end_define
 
 begin_comment
-comment|/* # of i/o addresses used */
+comment|/* # of i/o addresses used. */
 end_comment
 
 begin_comment
-comment|/*  *    Interrupt Configuration Register (offset from ASIC base)  */
+comment|/*  *    Interrupt Configuration Register (offset from ASIC base).  */
 end_comment
 
 begin_define
@@ -1480,7 +1480,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Interrupt request 3 select */
+comment|/* Interrupt request 3 select.  */
 end_comment
 
 begin_define
@@ -1491,7 +1491,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Interrupt request 5 select */
+comment|/* Interrupt request 5 select.  */
 end_comment
 
 begin_define
@@ -1502,7 +1502,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Interrupt request 6 select */
+comment|/* Interrupt request 6 select.  */
 end_comment
 
 begin_define
@@ -1513,11 +1513,11 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Interrupt request 12 select */
+comment|/* Interrupt request 12 select. */
 end_comment
 
 begin_comment
-comment|/*  *    Interrupt Mask Register (offset from ASIC base)  */
+comment|/*  *    Interrupt Mask Register (offset from ASIC base).  */
 end_comment
 
 begin_define
@@ -1528,7 +1528,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*  *    Interrupt Status Register (offset from ASIC base)  */
+comment|/*  *    Interrupt Status Register (offset from ASIC base).  */
 end_comment
 
 begin_define
@@ -2231,7 +2231,7 @@ literal|0
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
-literal|2
+literal|4
 expr_stmt|;
 name|ED_PC_MISC
 operator|=
