@@ -837,6 +837,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|struct
 name|ksem
 modifier|*
@@ -896,6 +897,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sem_create
 parameter_list|(
@@ -2191,6 +2193,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sem_perm
 parameter_list|(
@@ -2322,6 +2325,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sem_free
 parameter_list|(
@@ -2469,6 +2473,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|int
 name|sem_hasopen
 parameter_list|(
@@ -2518,6 +2523,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sem_leave
 parameter_list|(
@@ -2626,6 +2632,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sem_enter
 parameter_list|(
@@ -3036,6 +3043,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kern_sem_close
 parameter_list|(
@@ -3196,6 +3204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kern_sem_post
 parameter_list|(
@@ -3467,6 +3476,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kern_sem_wait
 parameter_list|(
@@ -3981,6 +3991,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sem_exithook
 parameter_list|(
