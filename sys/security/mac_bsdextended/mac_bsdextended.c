@@ -316,38 +316,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This tunable spits out information about what is going on which  * would be more suited for a log file.  Eventually  * this will go away as we do not currently use it.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mac_bsdextended_debugging
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_security_mac_bsdextended
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|debugging
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|mac_bsdextended_debugging
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable debugging on failure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * This is just used for logging purposes as eventually we would like  * to log much more then failed requests.  */
 end_comment
 
@@ -404,7 +372,7 @@ argument_list|,
 operator|&
 name|mac_bsdextended_firstmatch_enabled
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Disable/enable match first rule functionality"
 argument_list|)
