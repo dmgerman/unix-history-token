@@ -9,6 +9,12 @@ directive|include
 file|<i386/isa/snd/sound.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -156,7 +162,7 @@ name|nxreset
 block|,
 name|nxdevtotty
 block|,
-name|sndselect
+name|sndpoll
 block|,
 name|sndmmap
 block|,
@@ -1007,7 +1013,7 @@ condition|)
 return|return ;
 name|printf
 argument_list|(
-literal|"%s%d at 0x%x irq %d drq %d mem 0x%x flags 0x%x en %d confl %d\n"
+literal|"%s%d at 0x%x irq %d drq %d mem %p flags 0x%x en %d confl %d\n"
 argument_list|,
 name|d
 operator|->
@@ -1462,9 +1468,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"open: missing for unit %d\n"
+literal|"open: bad unit %d, perhaps you want unit %d ?\n"
 argument_list|,
 name|unit
+argument_list|,
+name|unit
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3013,7 +3023,7 @@ name|AIOSYNC
 case|:
 name|printf
 argument_list|(
-literal|"AIOSYNC chan 0x%03x pos %d unimplemented\n"
+literal|"AIOSYNC chan 0x%03lx pos %ld unimplemented\n"
 argument_list|,
 operator|(
 operator|(
@@ -3209,9 +3219,12 @@ break|break ;
 case|case
 name|SNDCTL_DSP_RESET
 case|:
+name|DDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"dsp reset\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dsp_wrabort
@@ -3228,9 +3241,12 @@ break|break ;
 case|case
 name|SNDCTL_DSP_SYNC
 case|:
+name|DDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"dsp sync\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|splx
@@ -3646,14 +3662,21 @@ condition|(
 name|bytes
 operator|<
 literal|7
-operator|||
+condition|)
+name|bytes
+operator|=
+literal|7
+expr_stmt|;
+if|if
+condition|(
 name|bytes
 operator|>
 literal|15
 condition|)
-return|return
-name|EINVAL
-return|;
+name|bytes
+operator|=
+literal|15
+expr_stmt|;
 name|d
 operator|->
 name|play_blocksize
@@ -3962,13 +3985,13 @@ end_function
 
 begin_function
 name|int
-name|sndselect
+name|sndpoll
 parameter_list|(
 name|dev_t
 name|i_dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -3976,6 +3999,14 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|lim
+decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|dev
 decl_stmt|,
@@ -4014,11 +4045,11 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndselect dev 0x%04x rw 0x%08x\n"
+literal|"sndpoll dev 0x%04x rw 0x%08x\n"
 argument_list|,
 name|i_dev
 argument_list|,
-name|rw
+name|events
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4038,7 +4069,21 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+operator|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLOUT
+operator||
+name|POLLRDNORM
+operator||
+name|POLLWRNORM
+operator|)
+operator|)
+operator||
+name|POLLHUP
 operator|)
 return|;
 block|}
@@ -4046,54 +4091,74 @@ if|if
 condition|(
 name|d
 operator|->
-name|select
+name|poll
 operator|==
 name|NULL
 condition|)
+comment|/* is this correct hear? */
 return|return
-literal|1
+operator|(
+operator|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLOUT
+operator||
+name|POLLRDNORM
+operator||
+name|POLLWRNORM
+operator|)
+operator|)
+operator||
+name|POLLHUP
+operator|)
 return|;
-comment|/* always success ? */
 elseif|else
 if|if
 condition|(
 name|d
 operator|->
-name|select
+name|poll
 operator|!=
-name|sndselect
+name|sndpoll
 condition|)
 return|return
 name|d
 operator|->
-name|select
+name|poll
 argument_list|(
 name|i_dev
 argument_list|,
-name|rw
+name|events
 argument_list|,
 name|p
 argument_list|)
 return|;
-else|else
-block|{
 comment|/* handle it here with the generic code */
-name|int
-name|lim
-decl_stmt|;
-comment|/* 	 * if the user selected a block size, then we want to use the 	 * device as a block device, and select will return ready when 	 * we have a full block. 	 * In all other cases, select will return when 1 byte is ready. 	 */
+comment|/*      * if the user selected a block size, then we want to use the      * device as a block device, and select will return ready when      * we have a full block.      * In all other cases, select will return when 1 byte is ready.      */
 name|lim
 operator|=
 literal|1
 expr_stmt|;
-switch|switch
+name|flags
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* XXX fix the test here for half duplex devices */
+if|if
 condition|(
-name|rw
+name|events
+operator|&
+operator|(
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
 condition|)
 block|{
-case|case
-name|FWRITE
-case|:
 if|if
 condition|(
 name|d
@@ -4107,18 +4172,6 @@ operator|=
 name|d
 operator|->
 name|play_blocksize
-expr_stmt|;
-comment|/* XXX fix the test here for half duplex devices */
-if|if
-condition|(
-literal|1
-comment|/* write is compatible with current mode */
-condition|)
-block|{
-name|flags
-operator|=
-name|spltty
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4160,24 +4213,30 @@ name|wsel
 operator|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
+else|else
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
 expr_stmt|;
 block|}
-return|return
-name|c
-operator|<
-name|lim
-condition|?
-literal|0
-else|:
-literal|1
-return|;
-case|case
-name|FREAD
-case|:
+comment|/* XXX fix the test here */
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|d
@@ -4191,18 +4250,6 @@ operator|=
 name|d
 operator|->
 name|rec_blocksize
-expr_stmt|;
-comment|/* XXX fix the test here */
-if|if
-condition|(
-literal|1
-comment|/* read is compatible with current mode */
-condition|)
-block|{
-name|flags
-operator|=
-name|spltty
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4254,17 +4301,22 @@ name|rsel
 operator|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
+else|else
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 expr_stmt|;
-block|}
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndselect on read: %d>= %d flags 0x%08x\n"
+literal|"sndpoll on read: %d>= %d flags 0x%08lx\n"
 argument_list|,
 name|c
 argument_list|,
@@ -4276,35 +4328,15 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|c
-operator|<
-name|lim
-condition|?
-literal|0
-else|:
-literal|1
-return|;
-case|case
-literal|0
-case|:
-name|DDB
+block|}
+name|splx
 argument_list|(
-name|printf
-argument_list|(
-literal|"select on exceptions, unimplemented\n"
-argument_list|)
+name|flags
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|revents
 return|;
-block|}
-block|}
-return|return
-name|ENXIO
-return|;
-comment|/* notreached */
 block|}
 end_function
 
@@ -4378,7 +4410,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndmmap d 0x%08x dev 0x%04x ofs 0x%08x nprot 0x%08x\n"
+literal|"sndmmap d %p dev 0x%04x ofs 0x%08x nprot 0x%08x\n"
 argument_list|,
 name|d
 argument_list|,

@@ -303,9 +303,9 @@ name|d_ioctl_t
 modifier|*
 name|ioctl
 decl_stmt|;
-name|d_select_t
+name|d_poll_t
 modifier|*
-name|select
+name|poll
 decl_stmt|;
 name|irq_proc_t
 modifier|*
@@ -1570,8 +1570,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|d_select_t
-name|sndselect
+name|d_poll_t
+name|sndpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -1829,6 +1829,17 @@ end_comment
 begin_comment
 comment|/* almost all modern cards do not have this set of registers,      * so it is better to make this the default behaviour      */
 end_comment
+
+begin_comment
+comment|/*  * the following flags are for PnP cards only and are undocumented  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DV_PNP_SBCODEC
+value|0x1
+end_define
 
 begin_endif
 endif|#

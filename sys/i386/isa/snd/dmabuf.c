@@ -709,7 +709,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"cannot start wr-dma flags 0x%08x dma_dl %d rl %d\n"
+literal|"cannot start wr-dma flags 0x%08lx dma_dl %d rl %d\n"
 argument_list|,
 name|d
 operator|->
@@ -799,11 +799,13 @@ name|bufsize
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|buf
 operator|->
 name|uio_resid
+operator|)
 condition|)
 block|{
 name|l
@@ -1885,7 +1887,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"cannot start rd-dma flags 0x%08x dma_dl %d fl %d\n"
+literal|"cannot start rd-dma flags 0x%08lx dma_dl %d fl %d\n"
 argument_list|,
 name|d
 operator|->
@@ -3140,10 +3142,6 @@ parameter_list|)
 block|{
 name|int
 name|ret
-decl_stmt|,
-name|res
-decl_stmt|,
-name|res1
 decl_stmt|;
 name|int
 name|count
@@ -3154,7 +3152,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"snd_flush d->flags 0x%08x\n"
+literal|"snd_flush d->flags 0x%08lx\n"
 argument_list|,
 name|d
 operator|->
@@ -3245,7 +3243,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"timeout flushing dma1, cnt 0x%x flags 0x%08x\n"
+literal|"timeout flushing dma1, cnt 0x%x flags 0x%08lx\n"
 argument_list|,
 name|isa_dmastatus1
 argument_list|(

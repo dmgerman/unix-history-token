@@ -221,7 +221,7 @@ comment|/* use generic sndwrite */
 block|,
 name|sb_dsp_ioctl
 block|,
-name|sndselect
+name|sndpoll
 block|,
 name|sbintr
 block|,
@@ -258,6 +258,27 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|pcm_info
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcm_info
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -892,7 +913,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"got sbintr for unit %d, flags 0x%08x\n"
+literal|"got sbintr for unit %d, flags 0x%08lx\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1023,7 +1044,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sbintr, flags 0x%08x reason %d\n"
+literal|"sbintr, flags 0x%08lx reason %d\n"
 argument_list|,
 name|d
 operator|->
@@ -1113,9 +1134,6 @@ name|int
 name|reason
 parameter_list|)
 block|{
-name|u_long
-name|s
-decl_stmt|;
 name|int
 name|rd
 init|=
@@ -1354,7 +1372,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sb_init: play %d rec %d dma1 %d dma2 %d\n"
+literal|"sb_init: play %ld rec %ld dma1 %d dma2 %d\n"
 argument_list|,
 name|d
 operator|->
@@ -3036,24 +3054,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|(
-name|speed
-operator|>
-literal|22050
-operator|)
-operator|&&
-name|d
-operator|->
-name|bd_flags
-operator|&
-name|BD_F_MIDIBUSY
-condition|)
-name|speed
-operator|=
-literal|22050
-expr_stmt|;
-if|if
-condition|(
 name|d
 operator|->
 name|flags
@@ -3064,7 +3064,7 @@ name|speed
 operator|*=
 literal|2
 expr_stmt|;
-comment|/*      * Now the speed should be valid. Compute the value to be      * programmed into the board.      */
+comment|/*      * Now the speed should be valid. Compute the value to be      * programmed into the board.      *      * XXX check this code...      */
 if|if
 condition|(
 name|speed
@@ -3268,9 +3268,6 @@ name|int
 name|mask
 parameter_list|)
 block|{
-name|u_char
-name|outmask
-decl_stmt|;
 name|u_char
 name|recdev
 decl_stmt|;

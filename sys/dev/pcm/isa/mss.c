@@ -286,8 +286,8 @@ comment|/* mss_write */
 block|,
 name|mss_ioctl
 block|,
-name|sndselect
-comment|/* mss_select */
+name|sndpoll
+comment|/* mss_poll */
 block|,
 name|mss_intr
 block|,
@@ -342,6 +342,27 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|pcm_info
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcm_info
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -5628,16 +5649,61 @@ operator|=
 operator|&
 name|tmp_d
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
+name|d
+operator|.
+name|flags
+operator|&
+name|DV_PNP_SBCODEC
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CS423x use sb-compatible codec\n"
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|id_iobase
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|tmp_d
+operator|=
+name|sb_op_desc
+expr_stmt|;
+name|tmp_d
+operator|.
+name|alt_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
 literal|0
-comment|/* sb-compatible codec */
-block|dev->id_iobase = d.port[2] ;     tmp_d = sb_op_desc ;     tmp_d.alt_base = d.port[0] - 4;     d.drq[1] = 4 ;
+index|]
+operator|-
+literal|4
+expr_stmt|;
+name|d
+operator|.
+name|drq
+index|[
+literal|1
+index|]
+operator|=
+literal|4
+expr_stmt|;
 comment|/* disable, it is not used ... */
-block|d.drq[0] = 0 ;
-comment|/* remap ... */
-else|#
-directive|else
+block|}
+else|else
+block|{
 comment|/* mss-compatible codec */
 name|dev
 operator|->
@@ -5690,8 +5756,7 @@ name|audio_fmt
 operator||=
 name|AFMT_FULLDUPLEX
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|write_pnp_parms
 argument_list|(
 operator|&
@@ -5750,23 +5815,6 @@ index|[
 literal|1
 index|]
 operator|)
-expr_stmt|;
-name|pcm_info
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|=
-name|tmp_d
-expr_stmt|;
-comment|/* during the probe... */
-name|snddev_last_probed
-operator|->
-name|probe
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|pcmattach
 argument_list|(
@@ -5940,12 +5988,6 @@ comment|/* patched copy of the basic snddev_info */
 name|int
 name|p
 decl_stmt|;
-name|int
-name|sb_mode
-init|=
-literal|0
-decl_stmt|;
-comment|/* XXX still not work in SB mode */
 name|read_pnp_parms
 argument_list|(
 operator|&
@@ -6038,7 +6080,11 @@ name|tmp_d
 expr_stmt|;
 name|tmp_d
 operator|=
-name|sb_mode
+name|d
+operator|.
+name|flags
+operator|&
+name|DV_PNP_SBCODEC
 condition|?
 name|sb_op_desc
 else|:
@@ -6133,11 +6179,20 @@ expr_stmt|;
 comment|/* enable interrupts */
 if|if
 condition|(
-name|sb_mode
+name|d
+operator|.
+name|flags
+operator|&
+name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/* sb-compatible codec */
 comment|/* 	 * the 931 is not a real SB, it has important pieces of 	 * hardware controlled by both the WSS and the SB port... 	 */
+name|printf
+argument_list|(
+literal|"--- opti931 in sb mode ---\n"
+argument_list|)
+expr_stmt|;
 name|opti_write
 argument_list|(
 name|p
@@ -6207,15 +6262,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* MCIR6: wss enable, sb disable */
-if|#
-directive|if
-literal|0
-comment|/* not working yet... */
-block|opti_write(p, 5, 0x0
-comment|/* codec in single mode */
-block|); 	dev->id_flags = 0 ;
-else|#
-directive|else
 name|opti_write
 argument_list|(
 name|p
@@ -6239,8 +6285,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-endif|#
-directive|endif
 name|tmp_d
 operator|.
 name|audio_fmt
