@@ -1260,9 +1260,9 @@ name|cg
 operator|->
 name|cg_irotor
 operator|<
-name|newcg
+name|fs
 operator|->
-name|cg_niblk
+name|fs_ipg
 condition|)
 name|newcg
 operator|->
