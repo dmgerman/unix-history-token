@@ -621,13 +621,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CIOCGSSESSION
-value|_IOWR('c', 105, struct session_op)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CIOCASYMFEAT
 value|_IOR('c', 105, u_int32_t)
 end_define

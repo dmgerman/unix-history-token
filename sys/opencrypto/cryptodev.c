@@ -635,9 +635,6 @@ block|{
 case|case
 name|CIOCGSESSION
 case|:
-case|case
-name|CIOCGSSESSION
-case|:
 name|sop
 operator|=
 operator|(
@@ -1115,16 +1112,7 @@ operator|&
 name|cria
 operator|)
 argument_list|,
-operator|(
-name|cmd
-operator|==
-name|CIOCGSESSION
-condition|?
 literal|1
-else|:
-operator|-
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
