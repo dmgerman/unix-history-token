@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)lfs_alloc.c 1.11 %G%"
+literal|"@(#)lfs_alloc.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4887,7 +4887,7 @@ name|m_dev
 argument_list|,
 name|SBLOCK
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 expr_stmt|;
 name|fs
