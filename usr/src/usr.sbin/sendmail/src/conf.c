@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.49 (Berkeley) %G%"
+literal|"@(#)conf.c	6.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4661,6 +4661,22 @@ if|if
 condition|(
 name|bitset
 argument_list|(
+name|LOCK_UN
+argument_list|,
+name|type
+argument_list|)
+condition|)
+name|lfd
+operator|.
+name|l_type
+operator|=
+name|F_UNLCK
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
 name|LOCK_EX
 argument_list|,
 name|type
@@ -4750,9 +4766,11 @@ operator|)
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot lockf(%s)"
+literal|"cannot lockf(%s, %o)"
 argument_list|,
 name|filename
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 else|#
@@ -4787,9 +4805,11 @@ name|EWOULDBLOCK
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot flock(%s)"
+literal|"cannot flock(%s, %o)"
 argument_list|,
 name|filename
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 endif|#
