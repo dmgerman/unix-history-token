@@ -575,11 +575,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|init_param
+name|init_param1
 name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|init_param2
+name|__P
+argument_list|(
+operator|(
+name|int
+name|physpages
 operator|)
 argument_list|)
 decl_stmt|;

@@ -346,21 +346,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"maxusers not specified; %d assumed\n"
-argument_list|,
-name|up
-operator|->
-name|u_default
-argument_list|)
-expr_stmt|;
-name|maxusers
-operator|=
-name|up
-operator|->
-name|u_default
-expr_stmt|;
+comment|/* printf("maxusers not specified; will auto-size\n"); */
+comment|/* maxusers = 0; */
 block|}
 elseif|else
 if|if
