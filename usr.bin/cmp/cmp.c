@@ -116,6 +116,8 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|xflag
+decl_stmt|,
+name|zflag
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +189,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-lsx"
+literal|"-lsxz"
 argument_list|)
 operator|)
 operator|!=
@@ -216,6 +218,10 @@ name|sflag
 operator|=
 literal|1
 expr_stmt|;
+name|zflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'x'
@@ -226,6 +232,15 @@ operator|=
 literal|1
 expr_stmt|;
 name|xflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+comment|/* compare size first */
+name|zflag
 operator|=
 literal|1
 expr_stmt|;
@@ -268,7 +283,7 @@ name|errx
 argument_list|(
 name|ERR_EXIT
 argument_list|,
-literal|"only one of -l and -s may be specified"
+literal|"specifying -s with -l or -x is not permitted"
 argument_list|)
 expr_stmt|;
 if|if
@@ -601,7 +616,43 @@ argument_list|,
 name|skip2
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|zflag
+operator|&&
+name|sb1
+operator|.
+name|st_size
+operator|!=
+name|sb2
+operator|.
+name|st_size
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|sflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s %s differ: size\n"
+argument_list|,
+name|file1
+argument_list|,
+name|file2
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|DIFF_EXIT
+argument_list|)
+expr_stmt|;
+block|}
 name|c_regular
 argument_list|(
 name|fd1
@@ -646,7 +697,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cmp [-l | -s] file1 file2 [skip1 [skip2]]\n"
+literal|"usage: cmp [-l | -s | -x] [-z] file1 file2 [skip1 [skip2]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
