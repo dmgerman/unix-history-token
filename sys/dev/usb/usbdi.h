@@ -1786,23 +1786,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|usbd_device_set_desc
-name|__P
-argument_list|(
-operator|(
-name|device_t
-name|device
-operator|,
-name|char
-operator|*
-name|devinfo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bus_print_child_t
 name|usbd_print_child
 decl_stmt|;

@@ -408,7 +408,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|sc->sc_dev = self; \ 	usbd_device_set_desc(self, devinfo)
+value|sc->sc_dev = self; \ 	device_set_desc_copy(self, devinfo);
 end_define
 
 begin_define

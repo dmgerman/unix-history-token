@@ -5252,32 +5252,6 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/* Set the description of the device including a malloc and copy. */
-end_comment
-
-begin_function
-name|void
-name|usbd_device_set_desc
-parameter_list|(
-name|device_t
-name|device
-parameter_list|,
-name|char
-modifier|*
-name|devinfo
-parameter_list|)
-block|{
-name|device_set_desc_copy
-argument_list|(
-name|device
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
