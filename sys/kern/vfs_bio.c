@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.177 1998/09/25 17:34:49 peter Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.178 1998/09/26 00:12:35 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -2960,6 +2960,9 @@ name|pmap_qenter
 argument_list|(
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -7698,6 +7701,9 @@ name|vm_offset_t
 operator|)
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -8316,6 +8322,9 @@ name|caddr_t
 operator|)
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -9015,6 +9024,9 @@ name|pmap_qenter
 argument_list|(
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -9586,6 +9598,9 @@ name|pmap_qenter
 argument_list|(
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -10283,6 +10298,9 @@ name|pmap_qenter
 argument_list|(
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -10811,6 +10829,9 @@ name|from
 operator|-
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data
@@ -10982,6 +11003,9 @@ name|from
 operator|-
 name|trunc_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|bp
 operator|->
 name|b_data

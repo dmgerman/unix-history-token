@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.37 1998/05/04 17:12:47 dyson Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.38 1998/08/24 08:39:38 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1440,6 +1440,9 @@ name|attach_va
 operator|=
 name|round_page
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|p
 operator|->
 name|p_vmspace
@@ -2687,10 +2690,7 @@ name|OBJT_SWAP
 argument_list|,
 literal|0
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
 name|size
-argument_list|)
 argument_list|,
 name|VM_PROT_DEFAULT
 argument_list|,
