@@ -1,22 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -24,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.4 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBC_SCCS and not lint */
+comment|/* not lint */
 end_comment
 
 begin_comment
