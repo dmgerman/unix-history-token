@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  * 	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Holger Veit  *	and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)ioctl_pcvt.h, 3.20, Last Edit-Date: [Fri Apr  7 10:17:13 1995]  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 2000 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  * 	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Holger Veit  *	and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	some new PCVT_xxx (and CONF_xxx) values  *	-hm	version definitions moved to begin of file  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	accept KERNEL or _KERNEL  *	-hm	changed _IOCTL_PCVT_H_ to _MACHINE_PCVT_IOCTL_H_ (bde)  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:04:14 2000]  *  * $FreeBSD$  *   *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|PCVTIDNAME
-value|"pcvt-b24"
+value|"pcvt"
 end_define
 
 begin_comment
@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|PCVTIDMINOR
-value|20
+value|60
 end_define
 
 begin_comment
@@ -994,62 +994,6 @@ end_define
 
 begin_comment
 comment|/* remove all key assignments */
-end_comment
-
-begin_comment
-comment|/* mouse emulator definitions */
-end_comment
-
-begin_struct
-struct|struct
-name|mousedefs
-block|{
-name|int
-name|leftbutton
-decl_stmt|;
-comment|/* (PC) scan code for "left button" key */
-name|int
-name|middlebutton
-decl_stmt|;
-comment|/* (PC) scan code for "mid button" key */
-name|int
-name|rightbutton
-decl_stmt|;
-comment|/* (PC) scan code for "right button" key */
-name|int
-name|stickybuttons
-decl_stmt|;
-comment|/* if true, the buttons are "sticky" */
-name|int
-name|acceltime
-decl_stmt|;
-comment|/* timeout in microseconds to start pointer */
-comment|/* movement acceleration */
-comment|/* defaults to: scan(F1), scan(F2), scan(F3), false, 500000 */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|KBDMOUSEGET
-value|_IOR('K', 25, struct mousedefs)
-end_define
-
-begin_comment
-comment|/* read defs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KBDMOUSESET
-value|_IOW('K', 26, struct mousedefs)
-end_define
-
-begin_comment
-comment|/* set defs */
 end_comment
 
 begin_comment
@@ -2223,31 +2167,6 @@ name|pcvtinfo
 block|{
 comment|/* compile time option values */
 name|u_int
-name|opsys
-decl_stmt|;
-comment|/* PCVT_xxx(x)BSD */
-define|#
-directive|define
-name|CONF_UNKNOWNOPSYS
-value|0
-define|#
-directive|define
-name|CONF_386BSD
-value|1
-comment|/* unsupported */
-define|#
-directive|define
-name|CONF_NETBSD
-value|2
-define|#
-directive|define
-name|CONF_FREEBSD
-value|3
-name|u_int
-name|opsysrel
-decl_stmt|;
-comment|/* Release */
-name|u_int
 name|nscreens
 decl_stmt|;
 comment|/* PCVT_NSCREENS */
@@ -2306,87 +2225,40 @@ name|CONF_24LINESDEF
 value|0x00000020
 define|#
 directive|define
-name|CONF_EMU_MOUSE
+name|CONF_SHOWKEYS
 value|0x00000040
 define|#
 directive|define
-name|CONF_SHOWKEYS
+name|CONF_NULLCHARS
 value|0x00000080
 define|#
 directive|define
-name|CONF_KEYBDID
+name|CONF_SETCOLOR
 value|0x00000100
 define|#
 directive|define
-name|CONF_SIGWINCH
+name|CONF_132GENERIC
 value|0x00000200
 define|#
 directive|define
-name|CONF_NULLCHARS
+name|CONF_XSERVER
 value|0x00000400
 define|#
 directive|define
-name|CONF_BACKUP_FONTS
+name|CONF_INHIBIT_NUMLOCK
 value|0x00000800
 define|#
 directive|define
-name|CONF_SW0CNOUTP
-value|0x00001000
-comment|/* was FORCE8BIT */
-comment|/* 0x00002000 was NEEDPG */
-define|#
-directive|define
-name|CONF_SETCOLOR
-value|0x00004000
-define|#
-directive|define
-name|CONF_132GENERIC
-value|0x00008000
-define|#
-directive|define
-name|CONF_PALFLICKER
-value|0x00010000
-define|#
-directive|define
-name|CONF_WAITRETRACE
-value|0x00020000
-define|#
-directive|define
-name|CONF_XSERVER
-value|0x00040000
-define|#
-directive|define
-name|CONF_USL_VT_COMPAT
-value|0x00080000
-define|#
-directive|define
-name|CONF_PORTIO_DELAY
-value|0x00100000
-comment|/* was FAKE_SYSCONS10 */
-define|#
-directive|define
-name|CONF_INHIBIT_NUMLOCK
-value|0x00200000
-define|#
-directive|define
 name|CONF_META_ESC
-value|0x00400000
-define|#
-directive|define
-name|CONF_NOFASTSCROLL
-value|0x00800000
+value|0x00001000
 define|#
 directive|define
 name|CONF_SLOW_INTERRUPT
-value|0x01000000
-define|#
-directive|define
-name|CONF_KBD_FIFO
-value|0x02000000
+value|0x00002000
 define|#
 directive|define
 name|CONF_NO_LED_UPDATE
-value|0x04000000
+value|0x00004000
 block|}
 struct|;
 end_struct
@@ -2403,44 +2275,7 @@ comment|/* set number of columns (80/132)*/
 end_comment
 
 begin_comment
-comment|/*  * only useful if compiled with ``XSERVER'' defined, but always here:  * WARNING: DO NOT CHANGE THESE DEFINITIONS, the X server relies on  * it since it's defining its own values and doesn't know nothing about  * this header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_MODE_ON
-value|_IO('t', 121)
-end_define
-
-begin_comment
-comment|/* turn off pcvt, grant IOPL for X */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_MODE_OFF
-value|_IO('t', 122)
-end_define
-
-begin_comment
-comment|/* back to pcvt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_BELL
-value|_IOW('t', 123, int[2])
-end_define
-
-begin_comment
-comment|/* set bell behaviour */
-end_comment
-
-begin_comment
-comment|/*  * start of USL VT compatibility stuff  * these definitions must match those ones used by syscons  *  * Note that some of the ioctl command definitions below break the Berkeley  * style. They accept a parameter of type "int" (instead of Berkeley style  * "int *") in order to pass a single integer to the ioctl. These macros  * below are marked with a dummy "int" comment. Dont blame anyone else  * than USL for that braindeadness. It is done here to be a bit source-  * level compatible to SysV. (N.B., within the ioctl, the argument is  * dereferenced by "int *" anyway. The translation is done by the upper-  * level ioctl stuff.)  */
+comment|/*  * start of USL VT compatibility stuff (in case XSERVER defined)  * these definitions must match those ones used by syscons  *  * Note that some of the ioctl command definitions below break the Berkeley  * style. They accept a parameter of type "int" (instead of Berkeley style  * "int *") in order to pass a single integer to the ioctl. These macros  * below are marked with a dummy "int" comment. Dont blame anyone else  * than USL for that braindeadness. It is done here to be a bit source-  * level compatible to SysV. (N.B., within the ioctl, the argument is  * dereferenced by "int *" anyway. The translation is done by the upper-  * level ioctl stuff.)  */
 end_comment
 
 begin_comment
