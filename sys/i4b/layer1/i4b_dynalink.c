@@ -164,11 +164,9 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/pnp.h>
-end_include
+begin_comment
+comment|/* #include<i386/isa/pnp.h> */
+end_comment
 
 begin_elif
 elif|#
