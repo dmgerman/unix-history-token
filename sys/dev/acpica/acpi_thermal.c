@@ -131,6 +131,10 @@ name|TZ_NOTIFY_TEMPERATURE
 value|0x80
 end_define
 
+begin_comment
+comment|/* Temperature changed. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -138,12 +142,31 @@ name|TZ_NOTIFY_LEVELS
 value|0x81
 end_define
 
+begin_comment
+comment|/* Cooling levels changed. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TZ_NOTIFY_DEVICES
 value|0x82
 end_define
+
+begin_comment
+comment|/* Device lists changed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TZ_NOTIFY_CRITICAL
+value|0xcc
+end_define
+
+begin_comment
+comment|/* Fake notify that _CRT/_HOT reached. */
+end_comment
 
 begin_comment
 comment|/* Check for temperature changes every 10 seconds by default */
@@ -165,6 +188,17 @@ define|#
 directive|define
 name|TZ_VALIDCHECKS
 value|3
+end_define
+
+begin_comment
+comment|/* Notify the user we will be shutting down in one more poll cycle. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TZ_NOTIFYCOUNT
+value|(TZ_VALIDCHECKS - 1)
 end_define
 
 begin_comment
@@ -2374,7 +2408,7 @@ name|newactive
 expr_stmt|;
 block|}
 comment|/* XXX (de)activate any passive cooling that may be required. */
-comment|/*      * If the temperature is at _HOT or _CRT, increment our event count.      * If it has occurred enough times, shutdown the system.  This is      * needed because some systems will report an invalid high temperature      * for one poll cycle.  It is suspected this is due to the embedded      * controller timing out.  A typical value is 138C for one cycle on      * a system that is otherwise 65C.      */
+comment|/*      * If the temperature is at _HOT or _CRT, increment our event count.      * If it has occurred enough times, shutdown the system.  This is      * needed because some systems will report an invalid high temperature      * for one poll cycle.  It is suspected this is due to the embedded      * controller timing out.  A typical value is 138C for one cycle on      * a system that is otherwise 65C.      *      * If we're almost at that threshold, notify the user through devd(8).      */
 if|if
 condition|(
 operator|(
@@ -2390,9 +2424,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sc
+operator|->
+name|tz_validchecks
+operator|++
+expr_stmt|;
 if|if
 condition|(
-operator|++
 name|sc
 operator|->
 name|tz_validchecks
@@ -2422,6 +2460,26 @@ name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|tz_validchecks
+operator|==
+name|TZ_NOTIFYCOUNT
+condition|)
+name|acpi_UserNotify
+argument_list|(
+literal|"Thermal"
+argument_list|,
+name|sc
+operator|->
+name|tz_handle
+argument_list|,
+name|TZ_NOTIFY_CRITICAL
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
