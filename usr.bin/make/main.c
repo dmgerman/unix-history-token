@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.30 1999/03/01 06:01:05 imp Exp $"
+literal|"$Id: main.c,v 1.31 1999/07/31 20:40:23 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,16 @@ comment|/* -e flag */
 end_comment
 
 begin_decl_stmt
+name|Lst
+name|envFirstVars
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* (-E) vars to override from env */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|Boolean
 name|jobsRunning
@@ -656,13 +666,13 @@ name|REMOTE
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:L:PSV:d:ef:ij:km:nqrstv"
+value|"BD:E:I:L:PSV:d:ef:ij:km:nqrstv"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:PSV:d:ef:ij:km:nqrstv"
+value|"BD:E:I:PSV:d:ef:ij:km:nqrstv"
 endif|#
 directive|endif
 name|rearg
@@ -1123,6 +1133,73 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+literal|'E'
+case|:
+name|p
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+name|Punt
+argument_list|(
+literal|"make: cannot allocate memory."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Lst_AtEnd
+argument_list|(
+name|envFirstVars
+argument_list|,
+operator|(
+name|ClientData
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+literal|"-E"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+name|optarg
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'e'
 case|:
@@ -2302,6 +2379,13 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 name|makefiles
+operator|=
+name|Lst_Init
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|envFirstVars
 operator|=
 name|Lst_Init
 argument_list|(
@@ -4669,7 +4753,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: make [-Beiknqrstv] [-D variable] [-d flags] [-f makefile]"
+literal|"usage: make [-Beiknqrstv] [-D variable] [-d flags] [-E variable] [-f makefile]"
 argument_list|,
 literal|"            [-I directory] [-j max_jobs] [-m directory] [-V variable]"
 argument_list|,
