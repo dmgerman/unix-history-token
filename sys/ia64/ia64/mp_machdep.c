@@ -565,9 +565,32 @@ name|lkp
 parameter_list|)
 block|{
 return|return
-literal|0
+literal|1
 return|;
 comment|/* XXX needed? */
+block|}
+end_function
+
+begin_function
+name|void
+name|s_unlock
+parameter_list|(
+name|struct
+name|simplelock
+modifier|*
+name|lkp
+parameter_list|)
+block|{
+name|ia64_st_rel_32
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lock_data
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
