@@ -11044,6 +11044,9 @@ operator|&
 name|si
 operator|->
 name|usd_desc
+argument_list|,
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 if|if
