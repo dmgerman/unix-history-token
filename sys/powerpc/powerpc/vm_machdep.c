@@ -1525,12 +1525,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|rel_mplock();
-endif|#
-directive|endif
 name|pmap_zero_page
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -1539,12 +1533,6 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|get_mplock();
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
