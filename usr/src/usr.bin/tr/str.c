@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.1 (Berkeley) %G%"
+literal|"@(#)str.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,17 +229,11 @@ operator|*
 name|s
 operator|->
 name|str
-operator|++
 condition|)
 block|{
 case|case
 literal|'\0'
 case|:
-operator|--
-name|s
-operator|->
-name|str
-expr_stmt|;
 name|s
 operator|->
 name|state
@@ -284,6 +278,11 @@ operator|)
 return|;
 comment|/* FALLTHROUGH */
 default|default:
+operator|++
+name|s
+operator|->
+name|str
+expr_stmt|;
 name|s
 operator|->
 name|lastch
@@ -466,6 +465,7 @@ decl_stmt|;
 switch|switch
 condition|(
 operator|*
+operator|++
 name|s
 operator|->
 name|str
