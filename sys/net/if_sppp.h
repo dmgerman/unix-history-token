@@ -459,6 +459,14 @@ name|int
 name|enable_vj
 decl_stmt|;
 comment|/* VJ header compression enabled */
+name|time_t
+name|pp_last_recv
+decl_stmt|;
+comment|/* time last packet has been received */
+name|time_t
+name|pp_last_sent
+decl_stmt|;
+comment|/* time last packet has been sent */
 name|struct
 name|callout_handle
 name|ch

@@ -3613,6 +3613,10 @@ name|ifp
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|do_account
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|debug
@@ -4000,6 +4004,9 @@ operator|&
 name|ipintrq
 expr_stmt|;
 block|}
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -4059,6 +4066,9 @@ operator|&
 name|ip6intrq
 expr_stmt|;
 block|}
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|PPP_VJ_COMP
@@ -4237,6 +4247,9 @@ operator|&
 name|ipxintrq
 expr_stmt|;
 block|}
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -4267,6 +4280,9 @@ operator|&
 name|nsintrq
 expr_stmt|;
 block|}
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -4381,6 +4397,9 @@ operator|=
 operator|&
 name|ipintrq
 expr_stmt|;
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -4399,6 +4418,9 @@ name|inq
 operator|=
 operator|&
 name|ip6intrq
+expr_stmt|;
+name|do_account
+operator|++
 expr_stmt|;
 break|break;
 endif|#
@@ -4419,6 +4441,9 @@ operator|=
 operator|&
 name|ipxintrq
 expr_stmt|;
+name|do_account
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -4437,6 +4462,9 @@ name|inq
 operator|=
 operator|&
 name|nsintrq
+expr_stmt|;
+name|do_account
+operator|++
 expr_stmt|;
 break|break;
 endif|#
@@ -4536,6 +4564,17 @@ goto|goto
 name|drop
 goto|;
 block|}
+if|if
+condition|(
+name|do_account
+condition|)
+comment|/* 		 * Do only account for network packets, not for control 		 * packets.  This is used by some subsystems to detect 		 * idle lines. 		 */
+name|sp
+operator|->
+name|pp_last_recv
+operator|=
+name|time_second
+expr_stmt|;
 block|}
 end_function
 
@@ -5297,7 +5336,7 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active.  Also adjust output byte count. 	 * The packet length includes header, FCS and 1 flag, 	 * according to RFC 1333. 	 */
+comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 if|if
 condition|(
 operator|!
@@ -5328,6 +5367,13 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* 	 * Unlike in sppp_input(), we can always bump the timestamp 	 * here since sppp_output() is only called on behalf of 	 * network-layer traffic; control-layer traffic is handled 	 * by sppp_cp_send(). 	 */
+name|sp
+operator|->
+name|pp_last_sent
+operator|=
+name|time_second
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5557,6 +5603,16 @@ operator|->
 name|enable_vj
 operator|=
 literal|1
+expr_stmt|;
+name|sp
+operator|->
+name|pp_last_recv
+operator|=
+name|sp
+operator|->
+name|pp_last_sent
+operator|=
+name|time_second
 expr_stmt|;
 name|sl_compress_init
 argument_list|(
