@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2010,6 +2010,8 @@ init|;
 name|swp
 operator|->
 name|sw_dev
+operator|!=
+name|NODEV
 condition|;
 name|swp
 operator|++
@@ -2770,6 +2772,8 @@ init|;
 name|swp
 operator|->
 name|sw_dev
+operator|!=
+name|NODEV
 condition|;
 name|swp
 operator|++
@@ -2836,7 +2840,7 @@ name|swp
 operator|->
 name|sw_dev
 operator|==
-literal|0
+name|NODEV
 condition|)
 return|return;
 comment|/* 	 * If argdev and dumpdev were the same as the old primary swap 	 * device, move them to the new primary swap device. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -181,8 +181,8 @@ init|;
 name|swp
 operator|->
 name|sw_dev
-operator|>
-literal|0
+operator|!=
+name|NODEV
 condition|;
 name|swp
 operator|++
@@ -190,19 +190,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|swp
 operator|->
 name|sw_dev
-operator|<
-literal|0
-operator|||
-name|swp
-operator|->
-name|sw_dev
-operator|>
+operator|>=
 name|nblkdev
 condition|)
 break|break;
+comment|/* XXX */
 if|if
 condition|(
 name|bdevsw
@@ -583,6 +581,8 @@ init|;
 name|swp
 operator|->
 name|sw_dev
+operator|!=
+name|NODEV
 condition|;
 name|swp
 operator|++
@@ -649,7 +649,7 @@ name|swp
 operator|->
 name|sw_dev
 operator|==
-literal|0
+name|NODEV
 condition|)
 return|return;
 comment|/* 	 * If dumpdev was the same as the old primary swap 	 * device, move it to the new primary swap device. 	 */
