@@ -9096,11 +9096,15 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|cmd
 operator|-
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|)
 return|;
