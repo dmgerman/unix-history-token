@@ -32,11 +32,33 @@ begin_comment
 comment|/* BSDI can't handle them either.  */
 end_comment
 
+begin_comment
+comment|/* FreeBSD cannot handle %fs or %gs.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|NUM_REGS
 end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NUM_REGS
+value|14
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -44,6 +66,11 @@ directive|define
 name|NUM_REGS
 value|10
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* On 386 bsd, sigtramp is above the user stack and immediately below    the user area. Using constants here allows for cross debugging.    These are tested for BSDI but should work on 386BSD.  */
