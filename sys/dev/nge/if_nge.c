@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_vlan.h"
+file|"vlan.h"
 end_include
 
 begin_include
