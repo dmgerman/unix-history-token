@@ -3493,7 +3493,7 @@ block|}
 endif|#
 directive|endif
 return|return
-literal|1
+literal|0x10
 return|;
 comment|/* 				 * Detected 				 */
 block|}
