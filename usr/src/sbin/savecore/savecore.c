@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.34 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1578,6 +1578,10 @@ operator|!=
 name|dumpmag
 condition|)
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
