@@ -812,6 +812,71 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * GNU C version 2.96 adds explicit branch prediction so that  * the CPU back-end can hint the processor and also so that  * code blocks can be reordered such that the predicted path  * sees a more linear flow, thus improving cache behavior, etc.  *  * The following two macros provide us with a way to utilize this  * compiler feature.  Use __predict_true() if you expect the expression  * to evaluate to true, and __predict_false() if you expect the  * expression to evaluate to false.  *  * A few notes about usage:  *  *	* Generally, __predict_false() error condition checks (unless  *	  you have some _strong_ reason to do otherwise, in which case  *	  document it), and/or __predict_true() `no-error' condition  *	  checks, assuming you want to optimize for the no-error case.  *  *	* Other than that, if you don't know the likelihood of a test  *	  succeeding from empirical or other `hard' evidence, don't  *	  make predictions.  *  *	* These are meant to be used in places that are run `a lot'.  *	  It is wasteful to make predictions in code that is run  *	  seldomly (e.g. at subsystem initialization time) as the  *	  basic block reordering that this affects can often generate  *	  larger code.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC_PREREQ__
+argument_list|(
+literal|2
+operator|,
+literal|96
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__predict_true
+parameter_list|(
+name|exp
+parameter_list|)
+value|__builtin_expect((exp), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__predict_false
+parameter_list|(
+name|exp
+parameter_list|)
+value|__builtin_expect((exp), 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__predict_true
+parameter_list|(
+name|exp
+parameter_list|)
+value|(exp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__predict_false
+parameter_list|(
+name|exp
+parameter_list|)
+value|(exp)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * We define this here since<stddef.h>,<sys/queue.h>, and<sys/types.h>  * require it.  */
 end_comment
 
