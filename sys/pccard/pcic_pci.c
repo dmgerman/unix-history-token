@@ -1806,7 +1806,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
-comment|/* 	 * The 68xx datasheets make it hard to know what the right thing 	 * to do here is.  We do what we know, which is nothing, and 	 * hope for the best. 	 */
+comment|/* 	 * The 68xx datasheets make it hard to know what the right thing 	 * to do here is.  We do what we know, which is nothing, and 	 * hope for the best. 	 * 	 * XXX NEWCARD may have some useful code here. 	 */
 comment|/* XXX */
 return|return
 operator|(
