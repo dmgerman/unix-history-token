@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -140,10 +140,10 @@ name|public
 name|void
 name|jump_back
 parameter_list|(
-name|n
+name|linenum
 parameter_list|)
-name|int
-name|n
+name|LINENUM
+name|linenum
 decl_stmt|;
 block|{
 name|POSITION
@@ -157,7 +157,7 @@ name|pos
 operator|=
 name|find_pos
 argument_list|(
-name|n
+name|linenum
 argument_list|)
 expr_stmt|;
 if|if
@@ -194,7 +194,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|n
+name|linenum
 operator|<=
 literal|1
 operator|&&
@@ -224,13 +224,13 @@ else|else
 block|{
 name|parg
 operator|.
-name|p_int
+name|p_linenum
 operator|=
-name|n
+name|linenum
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Cannot seek to line number %d"
+literal|"Cannot seek to line number %n"
 argument_list|,
 operator|&
 name|parg

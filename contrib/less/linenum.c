@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -19,16 +19,16 @@ end_comment
 
 begin_struct
 struct|struct
-name|linenum
+name|linenum_info
 block|{
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|next
 decl_stmt|;
 comment|/* Link to next in the list */
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|prev
 decl_stmt|;
@@ -41,7 +41,7 @@ name|POSITION
 name|gap
 decl_stmt|;
 comment|/* Gap between prev and next */
-name|int
+name|LINENUM
 name|line
 decl_stmt|;
 comment|/* Line number */
@@ -91,7 +91,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|linenum
+name|linenum_info
 name|anchor
 decl_stmt|;
 end_decl_stmt
@@ -103,7 +103,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|freelist
 decl_stmt|;
@@ -116,7 +116,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|linenum
+name|linenum_info
 name|pool
 index|[
 name|NPOOL
@@ -131,7 +131,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|spare
 decl_stmt|;
@@ -174,7 +174,7 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
@@ -280,7 +280,7 @@ name|p
 parameter_list|)
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
@@ -329,12 +329,12 @@ name|public
 name|void
 name|add_lnum
 parameter_list|(
-name|lno
+name|linenum
 parameter_list|,
 name|pos
 parameter_list|)
-name|int
-name|lno
+name|LINENUM
+name|linenum
 decl_stmt|;
 name|POSITION
 name|pos
@@ -342,25 +342,25 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|new
 decl_stmt|;
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|nextp
 decl_stmt|;
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|prevp
 decl_stmt|;
@@ -400,7 +400,7 @@ name|p
 operator|->
 name|line
 operator|==
-name|lno
+name|linenum
 condition|)
 comment|/* We already have this one. */
 return|return;
@@ -468,7 +468,7 @@ name|new
 operator|->
 name|line
 operator|=
-name|lno
+name|linenum
 expr_stmt|;
 name|nextp
 operator|->
@@ -710,7 +710,7 @@ end_comment
 
 begin_function
 name|public
-name|int
+name|LINENUM
 name|find_linenum
 parameter_list|(
 name|pos
@@ -721,13 +721,13 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|int
-name|lno
+name|LINENUM
+name|linenum
 decl_stmt|;
 name|POSITION
 name|cpos
@@ -871,7 +871,7 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|lno
+name|linenum
 operator|=
 name|p
 operator|->
@@ -887,7 +887,7 @@ name|cpos
 operator|<
 name|pos
 condition|;
-name|lno
+name|linenum
 operator|++
 control|)
 block|{
@@ -931,7 +931,7 @@ expr_stmt|;
 comment|/* 		 * We might as well cache it. 		 */
 name|add_lnum
 argument_list|(
-name|lno
+name|linenum
 argument_list|,
 name|cpos
 argument_list|)
@@ -943,7 +943,7 @@ name|cpos
 operator|>
 name|pos
 condition|)
-name|lno
+name|linenum
 operator|--
 expr_stmt|;
 block|}
@@ -970,7 +970,7 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|lno
+name|linenum
 operator|=
 name|p
 operator|->
@@ -986,7 +986,7 @@ name|cpos
 operator|>
 name|pos
 condition|;
-name|lno
+name|linenum
 operator|--
 control|)
 block|{
@@ -1030,7 +1030,7 @@ expr_stmt|;
 comment|/* 		 * We might as well cache it. 		 */
 name|add_lnum
 argument_list|(
-name|lno
+name|linenum
 argument_list|,
 name|cpos
 argument_list|)
@@ -1038,7 +1038,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|lno
+name|linenum
 operator|)
 return|;
 block|}
@@ -1053,27 +1053,27 @@ name|public
 name|POSITION
 name|find_pos
 parameter_list|(
-name|lno
+name|linenum
 parameter_list|)
-name|int
-name|lno
+name|LINENUM
+name|linenum
 decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|linenum
+name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
 name|POSITION
 name|cpos
 decl_stmt|;
-name|int
-name|clno
+name|LINENUM
+name|clinenum
 decl_stmt|;
 if|if
 condition|(
-name|lno
+name|linenum
 operator|<=
 literal|1
 condition|)
@@ -1102,7 +1102,7 @@ name|p
 operator|->
 name|line
 operator|<
-name|lno
+name|linenum
 condition|;
 name|p
 operator|=
@@ -1117,7 +1117,7 @@ name|p
 operator|->
 name|line
 operator|==
-name|lno
+name|linenum
 condition|)
 comment|/* Found it exactly. */
 return|return
@@ -1134,7 +1134,7 @@ operator|==
 operator|&
 name|anchor
 operator|||
-name|lno
+name|linenum
 operator|-
 name|p
 operator|->
@@ -1146,7 +1146,7 @@ name|p
 operator|->
 name|line
 operator|-
-name|lno
+name|linenum
 condition|)
 block|{
 comment|/* 		 * Go forward. 		 */
@@ -1172,7 +1172,7 @@ operator|)
 return|;
 for|for
 control|(
-name|clno
+name|clinenum
 operator|=
 name|p
 operator|->
@@ -1184,11 +1184,11 @@ name|p
 operator|->
 name|pos
 init|;
-name|clno
+name|clinenum
 operator|<
-name|lno
+name|linenum
 condition|;
-name|clno
+name|clinenum
 operator|++
 control|)
 block|{
@@ -1242,7 +1242,7 @@ operator|)
 return|;
 for|for
 control|(
-name|clno
+name|clinenum
 operator|=
 name|p
 operator|->
@@ -1254,11 +1254,11 @@ name|p
 operator|->
 name|pos
 init|;
-name|clno
+name|clinenum
 operator|>
-name|lno
+name|linenum
 condition|;
-name|clno
+name|clinenum
 operator|--
 control|)
 block|{
@@ -1296,7 +1296,7 @@ block|}
 comment|/* 	 * We might as well cache it. 	 */
 name|add_lnum
 argument_list|(
-name|clno
+name|clinenum
 argument_list|,
 name|cpos
 argument_list|)
@@ -1315,7 +1315,7 @@ end_comment
 
 begin_function
 name|public
-name|int
+name|LINENUM
 name|currline
 parameter_list|(
 name|where
@@ -1330,8 +1330,8 @@ decl_stmt|;
 name|POSITION
 name|len
 decl_stmt|;
-name|int
-name|lnum
+name|LINENUM
+name|linenum
 decl_stmt|;
 name|pos
 operator|=
@@ -1377,7 +1377,7 @@ name|pos
 operator|=
 name|len
 expr_stmt|;
-name|lnum
+name|linenum
 operator|=
 name|find_linenum
 argument_list|(
@@ -1390,12 +1390,12 @@ name|pos
 operator|==
 name|len
 condition|)
-name|lnum
+name|linenum
 operator|--
 expr_stmt|;
 return|return
 operator|(
-name|lnum
+name|linenum
 operator|)
 return|;
 block|}

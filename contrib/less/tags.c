@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_include
@@ -229,7 +229,7 @@ modifier|*
 name|tag_file
 decl_stmt|;
 comment|/* Source file containing the tag */
-name|int
+name|LINENUM
 name|tag_linenum
 decl_stmt|;
 comment|/* Appropriate line number in source file */
@@ -360,7 +360,7 @@ name|char
 modifier|*
 name|file
 decl_stmt|;
-name|int
+name|LINENUM
 name|linenum
 decl_stmt|;
 name|char
@@ -768,6 +768,12 @@ block|{
 name|char
 modifier|*
 name|tagfile
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 while|while
 condition|(
@@ -806,6 +812,12 @@ block|{
 name|char
 modifier|*
 name|tagfile
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 while|while
 condition|(
@@ -892,8 +904,7 @@ specifier|register
 name|int
 name|taglen
 decl_stmt|;
-specifier|register
-name|int
+name|LINENUM
 name|taglinenum
 decl_stmt|;
 name|char
@@ -926,7 +937,7 @@ name|tp
 decl_stmt|;
 name|p
 operator|=
-name|unquote_file
+name|shell_unquote
 argument_list|(
 name|tags
 argument_list|)
@@ -1089,6 +1100,10 @@ condition|)
 comment|/* Pattern is missing! */
 continue|continue;
 comment|/* 		 * First see if it is a line number.  		 */
+name|tagendline
+operator|=
+literal|0
+expr_stmt|;
 name|taglinenum
 operator|=
 name|getnum
@@ -1287,7 +1302,7 @@ name|pos
 decl_stmt|,
 name|linepos
 decl_stmt|;
-name|int
+name|LINENUM
 name|linenum
 decl_stmt|;
 name|int
@@ -1554,6 +1569,10 @@ name|flag
 decl_stmt|;
 name|char
 modifier|*
+name|qtag
+decl_stmt|;
+name|char
+modifier|*
 name|cmd
 init|=
 name|lgetenv
@@ -1619,12 +1638,22 @@ name|TAG_NOTYPE
 return|;
 block|}
 comment|/* Get our data from global(1). */
-name|tag
+name|qtag
 operator|=
-name|esc_metachars
+name|shell_quote
 argument_list|(
 name|tag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|qtag
+operator|==
+name|NULL
+condition|)
+name|qtag
+operator|=
+name|tag
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1636,12 +1665,18 @@ name|cmd
 argument_list|,
 name|flag
 argument_list|,
-name|tag
+name|qtag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|qtag
+operator|!=
+name|tag
+condition|)
 name|free
 argument_list|(
-name|tag
+name|qtag
 argument_list|)
 expr_stmt|;
 name|fp
@@ -1795,6 +1830,9 @@ name|name
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|LINENUM
+operator|)
 name|atoi
 argument_list|(
 name|line
