@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -32,12 +32,6 @@ end_if
 begin_comment
 comment|/*  * Digital Q-BUS to NI Adapter  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -196,6 +190,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"../vax/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vax/cpu.h"
 end_include
 
@@ -287,6 +287,17 @@ name|NTOT
 value|(NXMT + NRCV)
 end_define
 
+begin_define
+define|#
+directive|define
+name|QETIMEOUT
+value|2
+end_define
+
+begin_comment
+comment|/* transmit timeout, must be> 1 */
+end_comment
+
 begin_comment
 comment|/*  * This constant should really be 60 because the qna adds 4 bytes of crc.  * However when set to 60 our packets are ignored by deuna's , 3coms are  * okay ??????????????????????????????????????????  */
 end_comment
@@ -299,7 +310,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * is_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
+comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * qe_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
 end_comment
 
 begin_struct
@@ -308,18 +319,18 @@ name|qe_softc
 block|{
 name|struct
 name|arpcom
-name|is_ac
+name|qe_ac
 decl_stmt|;
 comment|/* Ethernet common part 	*/
 define|#
 directive|define
-name|is_if
-value|is_ac.ac_if
+name|qe_if
+value|qe_ac.ac_if
 comment|/* network-visible interface 	*/
 define|#
 directive|define
-name|is_addr
-value|is_ac.ac_enaddr
+name|qe_addr
+value|qe_ac.ac_enaddr
 comment|/* hardware Ethernet address 	*/
 name|struct
 name|ifubinfo
@@ -431,10 +442,6 @@ name|nxmit
 decl_stmt|;
 comment|/* Transmits in progress	*/
 name|int
-name|timeout
-decl_stmt|;
-comment|/* watchdog			*/
-name|int
 name|qe_restarts
 decl_stmt|;
 comment|/* timeouts			*/
@@ -465,15 +472,6 @@ name|time
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern timeout(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 name|int
 name|qeprobe
@@ -485,7 +483,7 @@ decl_stmt|,
 name|qeintr
 argument_list|()
 decl_stmt|,
-name|qewatch
+name|qetimeout
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -502,9 +500,6 @@ name|qeioctl
 argument_list|()
 decl_stmt|,
 name|qereset
-argument_list|()
-decl_stmt|,
-name|qewatch
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -571,18 +566,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* address mask		*/
-end_comment
-
-begin_decl_stmt
-name|int
-name|qewatchrun
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* watchdog running	*/
 end_comment
 
 begin_comment
@@ -1070,6 +1053,11 @@ return|return
 literal|0
 return|;
 comment|/* didn't interrupt	*/
+name|br
+operator|=
+literal|0x15
+expr_stmt|;
+comment|/* q-bus doesn't get level */
 return|return
 operator|(
 sizeof|sizeof
@@ -1126,7 +1114,7 @@ init|=
 operator|&
 name|sc
 operator|->
-name|is_if
+name|qe_if
 decl_stmt|;
 specifier|register
 name|struct
@@ -1199,7 +1187,7 @@ index|]
 operator|=
 name|sc
 operator|->
-name|is_addr
+name|qe_addr
 index|[
 name|i
 index|]
@@ -1212,6 +1200,22 @@ name|i
 index|]
 operator|&
 literal|0xff
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"qe%d: hardware address %s\n"
+argument_list|,
+name|ui
+operator|->
+name|ui_unit
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|is
+operator|->
+name|is_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Save the vector for initialization at reset time. 	 */
 name|sc
@@ -1245,6 +1249,12 @@ operator|->
 name|if_reset
 operator|=
 name|qereset
+expr_stmt|;
+name|ifp
+operator|->
+name|if_watchdog
+operator|=
+name|qetimeout
 expr_stmt|;
 name|sc
 operator|->
@@ -1333,7 +1343,7 @@ index|[
 name|unit
 index|]
 operator|.
-name|is_if
+name|qe_if
 operator|.
 name|if_flags
 operator|&=
@@ -1414,7 +1424,7 @@ init|=
 operator|&
 name|sc
 operator|->
-name|is_if
+name|qe_if
 decl_stmt|;
 specifier|register
 name|i
@@ -1594,7 +1604,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_flags
 operator|&=
@@ -2014,26 +2024,18 @@ end_comment
 begin_macro
 name|qestart
 argument_list|(
-argument|dev
+argument|unit
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|dev_t
-name|dev
+name|int
+name|unit
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|unit
-init|=
-name|QEUNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|uba_device
 modifier|*
@@ -2188,7 +2190,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_snd
 argument_list|,
@@ -2343,36 +2345,14 @@ operator|->
 name|nxmit
 operator|++
 expr_stmt|;
-comment|/* 		 * If the watchdog time isn't running kick it. 		 */
 name|sc
 operator|->
-name|timeout
+name|qe_if
+operator|.
+name|if_timer
 operator|=
-literal|1
+name|QETIMEOUT
 expr_stmt|;
-if|if
-condition|(
-name|qewatchrun
-operator|==
-literal|0
-condition|)
-block|{
-name|qewatchrun
-operator|++
-expr_stmt|;
-name|timeout
-argument_list|(
-name|qewatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|QE_TIMEO
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * See if the xmit list is invalid. 		 */
 if|if
 condition|(
@@ -2761,7 +2741,9 @@ literal|0
 condition|)
 name|sc
 operator|->
-name|timeout
+name|qe_if
+operator|.
+name|if_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -2774,14 +2756,14 @@ block|{
 comment|/* 			 * Do some statistics. 			 */
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_opackets
 operator|++
 expr_stmt|;
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_collisions
 operator|+=
@@ -2801,7 +2783,7 @@ name|QE_ERROR
 condition|)
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_oerrors
 operator|++
@@ -3061,7 +3043,7 @@ literal|60
 expr_stmt|;
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_ipackets
 operator|++
@@ -3085,7 +3067,7 @@ literal|0
 condition|)
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_ierrors
 operator|++
@@ -3360,7 +3342,7 @@ argument_list|(
 operator|&
 name|is
 operator|->
-name|is_ac
+name|qe_ac
 argument_list|,
 name|m
 argument_list|,
@@ -3818,7 +3800,7 @@ name|caddr_t
 operator|)
 name|is
 operator|->
-name|is_addr
+name|qe_addr
 argument_list|,
 operator|(
 name|caddr_t
@@ -3831,7 +3813,7 @@ sizeof|sizeof
 argument_list|(
 name|is
 operator|->
-name|is_addr
+name|qe_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4107,7 +4089,7 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|is_addr
+name|qe_addr
 operator|)
 expr_stmt|;
 else|else
@@ -4303,7 +4285,7 @@ index|]
 operator|=
 name|sc
 operator|->
-name|is_addr
+name|qe_addr
 index|[
 name|i
 index|]
@@ -4323,7 +4305,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is_if
+name|qe_if
 operator|.
 name|if_flags
 operator|&
@@ -4791,7 +4773,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|is_if
+name|qe_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -4896,7 +4878,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|is_ac
+name|qe_ac
 argument_list|,
 name|m
 argument_list|)
@@ -4962,13 +4944,21 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Watchdog timer routine. There is a condition in the hardware that  * causes the board to lock up under heavy load. This routine detects  * the hang up and restarts the device.  */
+comment|/*  * Watchdog timeout routine. There is a condition in the hardware that  * causes the board to lock up under heavy load. This routine detects  * the hang up and restarts the device.  */
 end_comment
 
 begin_macro
-name|qewatch
-argument_list|()
+name|qetimeout
+argument_list|(
+argument|unit
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4978,60 +4968,21 @@ name|qe_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|int
-name|inprogress
-init|=
-literal|0
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NQE
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|sc
 operator|=
 operator|&
 name|qe_softc
 index|[
-name|i
+name|unit
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|timeout
-condition|)
-if|if
-condition|(
-operator|++
-name|sc
-operator|->
-name|timeout
-operator|>
-literal|3
-condition|)
-block|{
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"qerestart: restarted qe%d %d\n"
+literal|"qe%d: transmit timeout, restarted %d\n"
 argument_list|,
-name|i
+name|unit
 argument_list|,
 operator|++
 name|sc
@@ -5043,38 +4994,6 @@ name|qerestart
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|inprogress
-operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|inprogress
-condition|)
-block|{
-name|timeout
-argument_list|(
-name|qewatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|QE_TIMEO
-argument_list|)
-expr_stmt|;
-name|qewatchrun
-operator|++
-expr_stmt|;
-block|}
-else|else
-name|qewatchrun
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_block
@@ -5107,7 +5026,7 @@ init|=
 operator|&
 name|sc
 operator|->
-name|is_if
+name|qe_if
 decl_stmt|;
 specifier|register
 name|struct
@@ -5133,12 +5052,6 @@ operator|->
 name|qe_csr
 operator|=
 name|QE_RESET
-expr_stmt|;
-name|sc
-operator|->
-name|timeout
-operator|=
-literal|0
 expr_stmt|;
 name|qesetup
 argument_list|(
