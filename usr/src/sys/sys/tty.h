@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -69,6 +69,7 @@ name|struct
 name|clist
 name|t_rawq
 decl_stmt|;
+comment|/* queues */
 name|struct
 name|clist
 name|t_canq
@@ -77,7 +78,6 @@ name|struct
 name|clist
 name|t_outq
 decl_stmt|;
-comment|/* device */
 name|int
 function_decl|(
 modifier|*
@@ -141,11 +141,11 @@ name|char
 name|t_line
 decl_stmt|;
 comment|/* glue */
-name|char
+name|short
 name|t_col
 decl_stmt|;
 comment|/* tty */
-name|char
+name|short
 name|t_rocount
 decl_stmt|,
 name|t_rocol
@@ -215,6 +215,10 @@ decl_stmt|;
 name|long
 name|t_outcc
 decl_stmt|;
+name|short
+name|t_gen
+decl_stmt|;
+comment|/* generation number */
 block|}
 struct|;
 end_struct
@@ -660,7 +664,7 @@ comment|/* Parity error */
 end_comment
 
 begin_comment
-comment|/*  * Macros  */
+comment|/*  * Is tp controlling terminal for p  */
 end_comment
 
 begin_define
@@ -674,6 +678,10 @@ name|tp
 parameter_list|)
 value|((p)->p_session == (tp)->t_session&& \ 			 (p)->p_flag&SCTTY)
 end_define
+
+begin_comment
+comment|/*  * Is p in background of tp  */
+end_comment
 
 begin_define
 define|#
