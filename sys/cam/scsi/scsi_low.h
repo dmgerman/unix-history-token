@@ -1242,12 +1242,7 @@ name|u_int8_t
 name|sd_support
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 name|li_inq
 struct|;
 comment|/* modeq buffer */
@@ -1284,12 +1279,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 name|sms_cmp
 struct|;
 block|}

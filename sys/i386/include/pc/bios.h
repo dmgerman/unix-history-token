@@ -204,12 +204,7 @@ name|pmdataseg
 decl_stmt|;
 comment|/* protected-mode data segment */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -957,12 +952,7 @@ name|u_int8_t
 name|ph_checksum
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -977,12 +967,7 @@ name|u_int16_t
 name|irqs
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1017,12 +1002,7 @@ name|u_int8_t
 name|pe_res3
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1042,12 +1022,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1080,12 +1055,7 @@ name|u_int32_t
 name|type
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

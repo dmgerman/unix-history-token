@@ -139,12 +139,7 @@ name|ciss_device_address
 name|address
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -226,12 +221,7 @@ name|CISS_CDB_BUFFER_SIZE
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -247,12 +237,7 @@ name|u_int32_t
 name|error_info_length
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -383,12 +368,7 @@ name|error_info
 decl_stmt|;
 block|}
 name|common_info
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -409,12 +389,7 @@ name|offense_value
 decl_stmt|;
 block|}
 name|invalid_command
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 block|}
 name|additional_error_info
@@ -426,12 +401,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -460,12 +430,7 @@ literal|1
 decl_stmt|;
 comment|/* address points to another s/g chain */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -493,12 +458,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -536,12 +496,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -570,12 +525,7 @@ name|u_int8_t
 name|control
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -720,12 +670,7 @@ literal|8
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -825,12 +770,7 @@ name|u_int8_t
 name|control
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1078,12 +1018,7 @@ name|u_int8_t
 name|enclosure_bay_number
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1101,12 +1036,7 @@ name|u_int16_t
 name|box
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1118,12 +1048,7 @@ name|u_int16_t
 name|slot
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1144,12 +1069,7 @@ name|u_int8_t
 name|spare_state
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1173,12 +1093,7 @@ name|u_int8_t
 name|big_error_drive
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1208,12 +1123,7 @@ name|u_int64_t
 name|big_lba
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1225,12 +1135,7 @@ name|u_int16_t
 name|logical_drive
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1317,12 +1222,7 @@ name|device
 decl_stmt|;
 comment|/* XXX pads to 512 bytes */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1434,12 +1334,7 @@ name|u_int32_t
 name|heartbeat
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1607,12 +1502,7 @@ name|u_int8_t
 name|res2
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1674,12 +1564,7 @@ block|u_int32_t	logical_drive_identifier;     char	logical_drive_label[64];
 endif|#
 directive|endif
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1881,12 +1766,7 @@ name|u_int8_t
 name|drive_rebuilding
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2013,12 +1893,7 @@ literal|8
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2189,12 +2064,7 @@ name|u_int8_t
 name|bay
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2239,12 +2109,7 @@ literal|248
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2274,12 +2139,7 @@ literal|510
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

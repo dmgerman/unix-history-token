@@ -708,10 +708,8 @@ name|length
 decl_stmt|;
 block|}
 name|TWE_SG_Entry
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -759,10 +757,8 @@ name|response_queue_pointer
 decl_stmt|;
 block|}
 name|TWE_Command_INITCONNECTION
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -816,10 +812,8 @@ index|]
 decl_stmt|;
 block|}
 name|TWE_Command_IO
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -882,10 +876,8 @@ name|aport
 decl_stmt|;
 block|}
 name|TWE_Command_HOTSWAP
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -947,10 +939,8 @@ name|persistence
 decl_stmt|;
 block|}
 name|TWE_Command_SETATAFEATURE
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -996,10 +986,8 @@ decl_stmt|;
 comment|/* set low byte to target request's ID */
 block|}
 name|TWE_Command_CHECKSTATUS
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1050,10 +1038,8 @@ index|]
 decl_stmt|;
 block|}
 name|TWE_Command_PARAM
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1129,10 +1115,8 @@ decl_stmt|;
 comment|/* for RAID10 rebuild of logical subunit */
 block|}
 name|TWE_Command_REBUILDUNIT
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1200,10 +1184,8 @@ index|]
 decl_stmt|;
 block|}
 name|TWE_Command_ATA
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -1269,10 +1251,8 @@ decl_stmt|;
 comment|/* block count, parameter count, message credits */
 block|}
 name|TWE_Command_Generic
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_comment
@@ -2218,10 +2198,8 @@ decl_stmt|;
 comment|/* actual drive size if configuration == 0x0f, otherwise less DCB size */
 block|}
 name|TWE_Unit_Descriptor
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2250,10 +2228,8 @@ index|]
 decl_stmt|;
 block|}
 name|TWE_Mirror_Descriptor
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2330,10 +2306,8 @@ decl_stmt|;
 comment|/* subunit descriptors, in RAID10 mode is [mirunit][subunit] */
 block|}
 name|TWE_Array_Descriptor
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -2357,10 +2331,8 @@ index|]
 decl_stmt|;
 block|}
 name|TWE_Param
-name|__attribute__
-typedef|((
-name|packed
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 end_unit

@@ -288,12 +288,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -452,12 +447,7 @@ name|u_int32_t
 name|transaction_context
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -692,12 +682,7 @@ name|u_int32_t
 name|donecount
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -849,12 +834,7 @@ name|u_int64_t
 name|preserved_mfa
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -899,12 +879,7 @@ name|u_int32_t
 name|status_word_high_addr
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -952,12 +927,7 @@ name|u_int32_t
 name|reply_buf_length
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1092,12 +1062,7 @@ name|u_int8_t
 name|sync_byte
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1155,12 +1120,7 @@ literal|2
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1292,12 +1252,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1376,12 +1331,7 @@ name|u_int64_t
 name|messenger_info
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1430,12 +1380,7 @@ name|i2o_sgl
 name|sgl
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1600,12 +1545,7 @@ name|u_int32_t
 name|event_capabilities
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1649,12 +1589,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1703,12 +1638,7 @@ literal|2
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1837,12 +1767,7 @@ name|u_int16_t
 name|pad
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1864,12 +1789,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1900,12 +1820,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1956,12 +1871,7 @@ literal|256
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1991,12 +1901,7 @@ name|u_int32_t
 name|state
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2044,12 +1949,7 @@ name|u_int8_t
 name|claim_type
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2091,12 +1991,7 @@ name|u_int32_t
 name|event_mask
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2144,12 +2039,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2198,12 +2088,7 @@ literal|2
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2261,12 +2146,7 @@ name|i2o_sgl
 name|sgl
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2314,12 +2194,7 @@ name|u_int8_t
 name|reserved
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

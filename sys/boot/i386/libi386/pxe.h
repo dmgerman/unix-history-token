@@ -8,14 +8,14 @@ comment|/*  * The typedefs and structures declared in this file  * clearly viola
 end_comment
 
 begin_comment
-comment|/* It seems that intel didn't think about ABI,  * either that or 16bit ABI != 32bit ABI (which seems reasonable)  * I have to thank Intel for the hair loss I incurred trying to figure  * out why PXE was mis-reading structures I was passing it (at least  * from my point of view)  *  * Solution: use gcc's '__attribute__ ((packed))' to correctly align  * structures passed into PXE  * Question: does this really work for PXE's expected ABI?  */
+comment|/* It seems that intel didn't think about ABI,  * either that or 16bit ABI != 32bit ABI (which seems reasonable)  * I have to thank Intel for the hair loss I incurred trying to figure  * out why PXE was mis-reading structures I was passing it (at least  * from my point of view)  *  * Solution: use gcc's '__packed' to correctly align  * structures passed into PXE  * Question: does this really work for PXE's expected ABI?  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PACKED
-value|__attribute__ ((packed))
+value|__packed
 end_define
 
 begin_define

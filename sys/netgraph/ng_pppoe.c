@@ -3450,12 +3450,7 @@ name|uniq
 name|data
 decl_stmt|;
 block|}
-name|__attribute
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 name|uniqtag
 struct|;
 comment|/*  	 * kick the state machine into starting up 	 */
@@ -3882,12 +3877,7 @@ name|uniq
 name|data
 decl_stmt|;
 block|}
-name|__attribute
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 name|uniqtag
 struct|;
 name|negp

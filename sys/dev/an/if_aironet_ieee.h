@@ -2250,12 +2250,7 @@ name|an_gaplen
 decl_stmt|;
 comment|/* 0x32 */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

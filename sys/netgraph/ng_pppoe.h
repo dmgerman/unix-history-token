@@ -620,12 +620,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -660,12 +655,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -682,12 +672,7 @@ name|pppoe_hdr
 name|ph
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

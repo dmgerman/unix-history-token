@@ -25,42 +25,22 @@ name|v_sig
 index|[
 literal|4
 index|]
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* VESA */
 name|u_int16_t
 name|v_version
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* ver in BCD */
 name|u_int32_t
 name|v_oemstr
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* OEM string */
 name|u_int32_t
 name|v_flags
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* flags */
 define|#
@@ -77,63 +57,33 @@ name|V_SNOW
 value|(1<<2)
 name|u_int32_t
 name|v_modetable
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* modes */
 name|u_int16_t
 name|v_memsize
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* in 64K */
 comment|/* 2.0 */
 name|u_int16_t
 name|v_revision
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* software rev */
 name|u_int32_t
 name|v_venderstr
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* vender */
 name|u_int32_t
 name|v_prodstr
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* product name */
 name|u_int32_t
 name|v_revstr
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* product rev */
 block|}

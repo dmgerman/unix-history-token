@@ -940,12 +940,7 @@ name|sub_hdr_byte3
 decl_stmt|;
 comment|/* 	u_char 	vendor_specific_byte0; 	u_char 	vendor_specific_byte1; 	u_char 	vendor_specific_byte2; 	u_char 	vendor_specific_byte3; */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

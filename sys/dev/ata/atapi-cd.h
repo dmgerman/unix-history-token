@@ -1332,12 +1332,7 @@ name|u_int8_t
 name|vendor_specific_byte3
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

@@ -958,12 +958,7 @@ comment|/* filemark */
 comment|/* cmd information */
 name|u_int32_t
 name|cmd_info
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 name|u_int8_t
 name|sense_length
@@ -972,12 +967,7 @@ comment|/* additional sense len (n-7) */
 comment|/* additional cmd spec info */
 name|u_int32_t
 name|cmd_specific_info
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 name|u_int8_t
 name|asc

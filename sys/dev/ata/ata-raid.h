@@ -462,12 +462,7 @@ literal|8
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -577,12 +572,7 @@ name|device
 decl_stmt|;
 name|u_int64_t
 name|magic_0
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 name|u_int32_t
 name|disk_offset
@@ -678,12 +668,7 @@ name|sectors
 decl_stmt|;
 name|int64_t
 name|magic_1
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 struct|struct
 block|{
@@ -702,12 +687,7 @@ name|device
 decl_stmt|;
 name|u_int64_t
 name|magic_0
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 block|}
 name|disk
@@ -728,12 +708,7 @@ name|u_int32_t
 name|checksum
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

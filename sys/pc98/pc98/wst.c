@@ -642,12 +642,7 @@ decl_stmt|;
 comment|/* Filemark */
 name|u_int
 name|info
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* Cmd specific info */
 name|u_char

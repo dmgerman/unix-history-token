@@ -95,10 +95,7 @@ literal|16
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
+name|__packed
 name|NWDELETED_INFO
 typedef|;
 end_typedef

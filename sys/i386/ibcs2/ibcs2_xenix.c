@@ -445,12 +445,7 @@ block|{
 name|unsigned
 name|long
 name|time
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 name|unsigned
 name|short
