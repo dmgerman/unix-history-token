@@ -518,6 +518,24 @@ name|ofw_tba
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Note: timer quality for CPU's is set low to try and prevent them from  * being chosen as the primary timecounter.  The CPU counters are not  * synchronized among the CPU's so in MP machines this causes problems  * when calculating the time.  With this value the CPU's should only be  * chosen as the primary timecounter as a last resort.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UP_TICK_QUALITY
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_TICK_QUALITY
+value|-100
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -867,6 +885,29 @@ name|tc_name
 operator|=
 literal|"tick"
 expr_stmt|;
+name|tick_tc
+operator|.
+name|tc_quality
+operator|=
+name|UP_TICK_QUALITY
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * We do not know if each CPU's tick counter is synchronized. 	 */
+if|if
+condition|(
+name|cpu_mp_probe
+argument_list|()
+condition|)
+name|tick_tc
+operator|.
+name|tc_quality
+operator|=
+name|MP_TICK_QUALITY
+expr_stmt|;
+endif|#
+directive|endif
 name|tc_init
 argument_list|(
 operator|&
