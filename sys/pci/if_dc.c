@@ -12832,8 +12832,15 @@ operator|->
 name|dc_flags
 operator|&
 name|DC_TX_COALESCE
+operator|&&
+name|m_head
+operator|->
+name|m_next
+operator|!=
+name|NULL
 condition|)
 block|{
+comment|/* only coalesce if have>1 mbufs */
 if|if
 condition|(
 name|dc_coal
