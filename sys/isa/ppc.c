@@ -7387,6 +7387,10 @@ name|rid_extraio
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
