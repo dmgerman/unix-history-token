@@ -296,14 +296,29 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Initialize driver modules */
+if|if
+condition|(
+operator|!
+name|Restarting
+condition|)
 name|moduleInitialize
 argument_list|()
 expr_stmt|;
 comment|/* Initialize PC-card */
+if|if
+condition|(
+operator|!
+name|Restarting
+condition|)
 name|pccardInitialize
 argument_list|()
 expr_stmt|;
 comment|/* Initialize USB */
+if|if
+condition|(
+operator|!
+name|Restarting
+condition|)
 name|usbInitialize
 argument_list|()
 expr_stmt|;
