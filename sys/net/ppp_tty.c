@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.29 1997/12/06 13:24:37 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.30 1998/02/13 12:46:15 phk Exp $ */
 end_comment
 
 begin_include
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_comment

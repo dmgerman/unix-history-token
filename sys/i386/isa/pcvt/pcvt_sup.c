@@ -31,6 +31,12 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void

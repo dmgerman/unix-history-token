@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.27 1997/09/14 03:19:05 peter Exp $  */
+comment|/*  * $Id: asc.c,v 1.28 1998/01/24 02:54:15 eivind Exp $  */
 end_comment
 
 begin_include
@@ -166,6 +166,12 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
 
 begin_include
 include|#

@@ -84,6 +84,12 @@ begin_comment
 comment|/* DEVFS */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
 begin_if
 if|#
 directive|if
