@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c 4.4 %G%"
+literal|"@(#)glob.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
