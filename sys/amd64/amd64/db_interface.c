@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.19 1996/05/03 21:00:51 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.20 1996/08/27 19:45:56 pst Exp $  */
 end_comment
 
 begin_comment
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -48,16 +54,6 @@ include|#
 directive|include
 file|<machine/segments.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cons.h>
-end_include
-
-begin_comment
-comment|/* XXX: import cons_unavail */
-end_comment
 
 begin_include
 include|#
@@ -91,10 +87,18 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
-name|db_active
+name|jmp_buf
+modifier|*
+name|db_nofault
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|jmp_buf
+name|db_jmpbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -122,35 +126,21 @@ name|ddb_regs
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|kdbprinttrap
-name|__P
-argument_list|(
-operator|(
-name|int
-name|type
-operator|,
-name|int
-name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Received keyboard interrupt sequence.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|rss
+parameter_list|()
+value|({u_short ss; __asm __volatile("movl %%ss,%0" : "=r" (ss)); ss;})
+end_define
 
 begin_endif
-unit|void kdb_kbd_trap(regs) 	struct i386_saved_state *regs; { 	if (db_active == 0&& (boothowto& RB_KDB)) { 	    db_printf("\n\nkernel: keyboard interrupt\n"); 	    kdb_trap(-1, 0, regs); 	} }
 endif|#
 directive|endif
 end_endif
@@ -158,16 +148,6 @@ end_endif
 begin_comment
 comment|/*  *  kdb_trap - field a TRACE or BPT trap  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|jmp_buf
-modifier|*
-name|db_nofault
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -191,23 +171,22 @@ modifier|*
 name|regs
 decl_stmt|;
 block|{
-if|#
-directive|if
-literal|0
-block|if ((boothowto&RB_KDB) == 0) 	    return(0);
-endif|#
-directive|endif
-comment|/* 	 * XXX try to do nothing if the console is in graphics mode. 	 * Handle trace traps (and hardware breakpoints...) by ignoring 	 * them except for forgetting about them.  Return 0 for other 	 * traps to say that we haven't done anything.  The trap handler 	 * will usually panic.  We should handle breakpoint traps for 	 * our breakpoints by disarming our breakpoints and fixing up 	 * %eip. 	 */
-if|if
-condition|(
-name|cons_unavail
-operator|&&
+name|int
+name|ddb_mode
+init|=
 operator|!
 operator|(
 name|boothowto
 operator|&
 name|RB_GDB
 operator|)
+decl_stmt|;
+comment|/* 	 * XXX try to do nothing if the console is in graphics mode. 	 * Handle trace traps (and hardware breakpoints...) by ignoring 	 * them except for forgetting about them.  Return 0 for other 	 * traps to say that we haven't done anything.  The trap handler 	 * will usually panic.  We should handle breakpoint traps for 	 * our breakpoints by disarming our breakpoints and fixing up 	 * %eip. 	 */
+if|if
+condition|(
+name|cons_unavail
+operator|&&
+name|ddb_mode
 condition|)
 block|{
 if|if
@@ -251,8 +230,10 @@ case|:
 comment|/* debug exception */
 break|break;
 default|default:
-name|kdbprinttrap
+name|db_printf
 argument_list|(
+literal|"kernel: type %d trap, code=%x\n"
+argument_list|,
 name|type
 argument_list|,
 name|code
@@ -283,12 +264,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  Should switch to kdb`s own stack here. */
+comment|/* 	 * XXX We really should switch to a local stack here. 	 */
 name|ddb_regs
 operator|=
 operator|*
 name|regs
 expr_stmt|;
+comment|/* 	 * Kernel mode - esp and ss not saved, so dummy them up 	 */
 if|if
 condition|(
 name|ISPL
@@ -301,7 +283,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * Kernel mode - esp and ss not saved 	     */
 name|ddb_regs
 operator|.
 name|tf_esp
@@ -314,17 +295,6 @@ name|regs
 operator|->
 name|tf_esp
 expr_stmt|;
-comment|/* kernel stack pointer */
-ifdef|#
-directive|ifdef
-name|__GNUC__
-define|#
-directive|define
-name|rss
-parameter_list|()
-value|({u_short ss; __asm __volatile("movl %%ss,%0" : "=r" (ss)); ss;})
-endif|#
-directive|endif
 name|ddb_regs
 operator|.
 name|tf_ss
@@ -333,9 +303,6 @@ name|rss
 argument_list|()
 expr_stmt|;
 block|}
-name|db_active
-operator|++
-expr_stmt|;
 name|cnpollc
 argument_list|(
 name|TRUE
@@ -343,10 +310,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|boothowto
-operator|&
-name|RB_GDB
+name|ddb_mode
 condition|)
+name|db_trap
+argument_list|(
+name|type
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+else|else
 name|gdb_handle_exception
 argument_list|(
 operator|&
@@ -357,22 +330,11 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-else|else
-name|db_trap
-argument_list|(
-name|type
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
 name|cnpollc
 argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|db_active
-operator|--
-expr_stmt|;
 name|regs
 operator|->
 name|tf_eip
@@ -421,6 +383,7 @@ name|ddb_regs
 operator|.
 name|tf_ebx
 expr_stmt|;
+comment|/* 	 * If in user mode, the saved ESP and SS were valid, restore them 	 */
 if|if
 condition|(
 name|ISPL
@@ -431,7 +394,6 @@ name|tf_cs
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * user mode - saved esp and ss valid 	     */
 name|regs
 operator|->
 name|tf_esp
@@ -440,7 +402,6 @@ name|ddb_regs
 operator|.
 name|tf_esp
 expr_stmt|;
-comment|/* user stack pointer */
 name|regs
 operator|->
 name|tf_ss
@@ -451,7 +412,6 @@ name|tf_ss
 operator|&
 literal|0xffff
 expr_stmt|;
-comment|/* user stack segment */
 block|}
 name|regs
 operator|->
@@ -507,12 +467,6 @@ name|tf_ds
 operator|&
 literal|0xffff
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|regs->tf_fs     = ddb_regs.tf_fs& 0xffff; 	regs->tf_gs     = ddb_regs.tf_gs& 0xffff;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -522,56 +476,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print trap reason.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|kdbprinttrap
-parameter_list|(
-name|type
-parameter_list|,
-name|code
-parameter_list|)
-name|int
-name|type
-decl_stmt|,
-name|code
-decl_stmt|;
-block|{
-name|db_printf
-argument_list|(
-literal|"kernel: "
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"type %d"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|" trap, code=%x\n"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Read bytes from kernel address space for debugger.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|jmp_buf
-name|db_jmpbuf
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -754,6 +660,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* data crosses a page boundary */
 if|if
 condition|(
 name|trunc_page
@@ -764,7 +671,6 @@ operator|!=
 name|addr1
 condition|)
 block|{
-comment|/* data crosses a page boundary */
 name|ptep1
 operator|=
 name|pmap_pte
@@ -835,13 +741,11 @@ if|if
 condition|(
 name|ptep1
 condition|)
-block|{
 operator|*
 name|ptep1
 operator|=
 name|oldmap1
 expr_stmt|;
-block|}
 name|pmap_update
 argument_list|()
 expr_stmt|;
@@ -850,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX move this to machdep.c and allow it to be called iff any debugger is  * installed.  */
+comment|/*  * XXX  * Move this to machdep.c and allow it to be called if any debugger is  * installed.  */
 end_comment
 
 begin_function
@@ -870,11 +774,11 @@ specifier|volatile
 name|u_char
 name|in_Debugger
 decl_stmt|;
-comment|/* 	 * XXX do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
+comment|/* 	 * XXX 	 * Do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
 condition|(
 name|cons_unavail
-operator|&
+operator|&&
 operator|!
 operator|(
 name|boothowto
