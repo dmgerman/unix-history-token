@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.13 1998/12/13 01:39:32 dillon Exp $"
+literal|"$Id: pw_util.c,v 1.14 1999/06/26 07:16:38 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,15 +377,6 @@ argument_list|(
 name|SIGCONT
 argument_list|,
 name|pw_cont
-argument_list|)
-expr_stmt|;
-comment|/* Create with exact permissions. */
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
