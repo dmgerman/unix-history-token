@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.0.2.21.2.2 1997/11/12 10:45:51 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.0.2.21.2.3 1998/04/08 13:43:29 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,23 @@ include|#
 directive|include
 file|<net/netisr.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
