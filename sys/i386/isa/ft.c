@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.7 1994/08/02 07:39:22 davidg Exp $  *  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  *  * $Id: ft.c,v 1.7 1994/08/02 07:39:22 davidg Exp $  */
+comment|/*  *  Copyright (c) 1993 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.8 1994/08/13 03:50:00 wollman Exp $  *  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  *  * $Id: ft.c,v 1.8 1994/08/13 03:50:00 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1884,6 +1884,9 @@ literal|0
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -1948,6 +1951,9 @@ literal|2
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -2532,6 +2538,9 @@ goto|;
 block|}
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -2669,6 +2678,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -3090,6 +3102,9 @@ literal|0
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -3654,6 +3669,9 @@ literal|9
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -4677,6 +4695,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -5377,6 +5398,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6062,6 +6086,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6675,6 +6702,9 @@ name|ticks
 condition|)
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6766,6 +6796,9 @@ name|ticks
 condition|)
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -7107,6 +7140,9 @@ condition|)
 block|{
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|state_timeout
 argument_list|,
 operator|(
@@ -9904,6 +9940,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -10234,6 +10273,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|ft_timeout
 argument_list|,
 operator|(
