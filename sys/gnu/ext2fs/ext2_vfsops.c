@@ -3650,6 +3650,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|#
+directive|if
+name|QUOTA
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

@@ -269,6 +269,14 @@ decl_stmt|;
 name|daddr_t
 name|bno
 decl_stmt|;
+if|#
+directive|if
+name|QUOTA
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 operator|*
 name|bnp
 operator|=
