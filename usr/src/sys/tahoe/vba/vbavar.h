@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbavar.h	1.2	86/01/12	*/
+comment|/*	vbavar.h	1.3	86/01/20	*/
 end_comment
 
 begin_comment
-comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the Versabus adapters.  *  * Each Versabus has a vba_hd structure.  * Each Versabus controller which is not a device has a vba_ctlr structure.  * Each Versabus device has a vba_device structure.  */
+comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the VERSAbus adapters.  *  * Each VERSAbus has a vba_hd structure.  * Each VERSAbus controller which is not a device has a vba_ctlr structure.  * Each VERSAbus device has a vba_device structure.  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced vba_drive structures.  * This structure is the one which is queued in Versabus resource wait,  * and saves the information about Versabus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
+comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced vba_drive structures.  * This structure is the one which is queued in VERSAbus resource wait,  * and saves the information about VERSAbus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
 end_comment
 
 begin_struct
@@ -80,7 +80,7 @@ comment|/* communication to dgo() */
 name|int
 name|um_vbinfo
 decl_stmt|;
-comment|/* save Versabus registers, etc */
+comment|/* save VERSAbus registers, etc */
 name|struct
 name|buf
 name|um_tab
@@ -91,7 +91,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Per ``device'' structure.  * (A controller has devices or uses and releases buffered data paths).  * (Everything else is a ``device''.)  *  * If a controller has many drives attached, then there will  * be several vba_device structures associated with a single vba_ctlr  * structure.  *  * This structure contains all the information necessary to run  * a Versabus device.  It also contains information  * for slaves of Versabus controllers as to which device on the slave  * this is.  A flags field here can also be given in the system specification  * and is used to tell which vcx lines are hard wired or other device  * specific parameters.  */
+comment|/*  * Per ``device'' structure.  * (A controller has devices or uses and releases buffered data paths).  * (Everything else is a ``device''.)  *  * If a controller has many drives attached, then there will  * be several vba_device structures associated with a single vba_ctlr  * structure.  *  * This structure contains all the information necessary to run  * a VERSAbus device.  It also contains information  * for slaves of VERSAbus controllers as to which device on the slave  * this is.  A flags field here can also be given in the system specification  * and is used to tell which tty lines are hard wired or other device  * specific parameters.  */
 end_comment
 
 begin_struct
@@ -136,7 +136,7 @@ name|short
 name|ui_dk
 decl_stmt|;
 comment|/* if init 1 set to number for iostat */
-name|short
+name|long
 name|ui_flags
 decl_stmt|;
 comment|/* parameter from system specification */
@@ -179,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Per-driver structure.  *  * Each Versabus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  * These are used at boot time by the configuration program.  */
+comment|/*  * Per-driver structure.  *  * Each VERSAbus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  * These are used at boot time by the configuration program.  */
 end_comment
 
 begin_struct
@@ -308,7 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Versabus device address space is mapped by VMEMmap  * into virtual address umem[][].  */
+comment|/*  * VERSAbus device address space is mapped by VMEMmap  * into virtual address vmem[][].  */
 end_comment
 
 begin_decl_stmt
