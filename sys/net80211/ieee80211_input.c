@@ -904,11 +904,6 @@ name|out
 goto|;
 block|}
 comment|/* copy to listener after decrypt */
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
 if|if
 condition|(
 name|ic
@@ -924,8 +919,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|=
 name|ieee80211_decap
@@ -1325,11 +1318,6 @@ name|rssi
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
 if|if
 condition|(
 name|ic
@@ -1345,8 +1333,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 call|(
 modifier|*
 name|ic
@@ -1412,11 +1398,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
 if|if
 condition|(
 name|ic
@@ -1432,8 +1413,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
