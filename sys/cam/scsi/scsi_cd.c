@@ -6041,17 +6041,13 @@ argument_list|,
 comment|/* lba */
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|/
-operator|(
 name|softc
 operator|->
 name|params
 operator|.
 name|blksize
-operator|/
-name|DEV_BSIZE
-operator|)
 argument_list|,
 name|bp
 operator|->

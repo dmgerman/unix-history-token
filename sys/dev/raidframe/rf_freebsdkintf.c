@@ -5543,7 +5543,15 @@ name|blocknum
 operator|=
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
+operator|=
+name|bp
+operator|->
+name|bio_offset
+operator|>>
+name|raidPtr
+operator|->
+name|logBytesPerSector
 expr_stmt|;
 name|rf_printf
 argument_list|(
@@ -5556,7 +5564,7 @@ name|long
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
 argument_list|,
 operator|(
 name|long
@@ -5592,7 +5600,7 @@ operator|->
 name|bio_resid
 argument_list|)
 expr_stmt|;
-comment|/* *THIS* is where we adjust what block we're going to...  		 * but DO NOT TOUCH bp->bio_blkno!!! */
+comment|/* *THIS* is where we adjust what block we're going to...  		 * but DO NOT TOUCH bp->bio_pblkno!!! */
 name|raid_addr
 operator|=
 name|blocknum
@@ -6158,14 +6166,14 @@ name|rf_printf
 argument_list|(
 literal|0
 argument_list|,
-literal|"dispatch: bp->bio_blkno = %ld\n"
+literal|"dispatch: bp->bio_pblkno = %ld\n"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
 argument_list|)
 expr_stmt|;
 block|}
@@ -6274,21 +6282,6 @@ comment|/* XXX */
 block|if ((raidbp->rf_buf.bio_cmd& BIO_READ) == 0) { 			raidbp->rf_buf.b_vp->v_numoutput++; 		}
 endif|#
 directive|endif
-name|raidbp
-operator|->
-name|rf_buf
-operator|.
-name|b_iooffset
-operator|=
-name|dbtob
-argument_list|(
-name|raidbp
-operator|->
-name|rf_buf
-operator|.
-name|b_blkno
-argument_list|)
-expr_stmt|;
 operator|(
 operator|*
 name|devsw
@@ -6902,12 +6895,6 @@ name|buf
 expr_stmt|;
 name|bp
 operator|->
-name|bio_blkno
-operator|=
-name|startSect
-expr_stmt|;
-name|bp
-operator|->
 name|bio_resid
 operator|=
 name|bp
@@ -6915,6 +6902,14 @@ operator|->
 name|bio_bcount
 expr_stmt|;
 comment|/* XXX is this right!?!?!! */
+name|bp
+operator|->
+name|bio_offset
+operator|=
+name|startSect
+operator|<<
+name|logBytesPerSector
+expr_stmt|;
 if|if
 condition|(
 name|bp

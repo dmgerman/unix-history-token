@@ -307,16 +307,9 @@ name|sc
 operator|->
 name|ofwd_instance
 argument_list|,
-call|(
-name|u_quad_t
-call|)
-argument_list|(
 name|bp
 operator|->
-name|bio_blkno
-operator|*
-name|OFWD_BLOCKSIZE
-argument_list|)
+name|bio_offset
 argument_list|)
 expr_stmt|;
 if|if
