@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	6.1	83/07/29	*/
+comment|/*	fs.h	6.2	84/09/28	*/
 end_comment
 
 begin_comment
@@ -936,6 +936,34 @@ parameter_list|)
 comment|/* calculates (blks * fs->fs_frag) */
 define|\
 value|((blks)<< (fs)->fs_fragshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragnum
+parameter_list|(
+name|fs
+parameter_list|,
+name|fsb
+parameter_list|)
+comment|/* calculates (fsb % fs->fs_frag) */
+define|\
+value|((fsb)& ((fs)->fs_frag - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|blknum
+parameter_list|(
+name|fs
+parameter_list|,
+name|fsb
+parameter_list|)
+comment|/* calculates rounddown(fsb, fs->fs_frag) */
+define|\
+value|((fsb)&~ ((fs)->fs_frag - 1))
 end_define
 
 begin_comment
