@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.9 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.10 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -1939,9 +1939,7 @@ literal|1
 expr_stmt|;
 name|error
 operator|=
-name|u
-operator|.
-name|u_error
+literal|0
 expr_stmt|;
 if|if
 condition|(
