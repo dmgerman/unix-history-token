@@ -1059,12 +1059,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cpy_cnt
-condition|)
-name|terminate
-argument_list|(
+operator|<
 literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"count cannot be negative"
 argument_list|)
 expr_stmt|;
 block|}
