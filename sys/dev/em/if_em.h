@@ -202,6 +202,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_bdg.h"
 end_include
 
@@ -606,6 +612,13 @@ name|EM_RXBUFFER_16384
 value|16384
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_MAX_SCATTER
+value|64
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -679,6 +692,65 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|em_q
+block|{
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+name|int
+name|nsegs
+decl_stmt|;
+comment|/* # of segments/descriptors */
+name|bus_dma_segment_t
+name|segs
+index|[
+name|EM_MAX_SCATTER
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Bus dma allocation structure used by  * em_dma_malloc and em_dma_free.  */
+end_comment
+
+begin_struct
+struct|struct
+name|em_dma_alloc
+block|{
+name|u_int32_t
+name|dma_paddr
+decl_stmt|;
+name|caddr_t
+name|dma_vaddr
+decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|dma_map
+decl_stmt|;
+name|bus_dma_segment_t
+name|dma_seg
+decl_stmt|;
+name|bus_size_t
+name|dma_size
+decl_stmt|;
+name|int
+name|dma_nseg
 decl_stmt|;
 block|}
 struct|;
@@ -805,6 +877,11 @@ name|active_checksum_context
 decl_stmt|;
 comment|/*          * Transmit definitions          *          * We have an array of num_tx_desc descriptors (handled          * by the controller) paired with an array of tx_buffers          * (at tx_buffer_area).          * The index of the next available descriptor is next_avail_tx_desc.          * The number of remaining tx_desc is num_tx_desc_avail.          */
 name|struct
+name|em_dma_alloc
+name|txdma
+decl_stmt|;
+comment|/* bus_dma glue for tx desc */
+name|struct
 name|em_tx_desc
 modifier|*
 name|tx_desc_base
@@ -830,7 +907,16 @@ name|em_buffer
 modifier|*
 name|tx_buffer_area
 decl_stmt|;
+name|bus_dma_tag_t
+name|txtag
+decl_stmt|;
+comment|/* dma tag for tx */
 comment|/*  	 * Receive definitions          *          * we have an array of num_rx_desc rx_desc (handled by the          * controller), and paired with an array of rx_buffers          * (at rx_buffer_area).          * The next pair to check on receive is at offset next_rx_desc_to_check          */
+name|struct
+name|em_dma_alloc
+name|rxdma
+decl_stmt|;
+comment|/* bus_dma glue for rx desc */
 name|struct
 name|em_rx_desc
 modifier|*
@@ -849,6 +935,9 @@ name|struct
 name|em_buffer
 modifier|*
 name|rx_buffer_area
+decl_stmt|;
+name|bus_dma_tag_t
+name|rxtag
 decl_stmt|;
 comment|/* Jumbo frame */
 name|struct
@@ -884,6 +973,14 @@ decl_stmt|;
 name|unsigned
 name|long
 name|no_tx_desc_avail2
+decl_stmt|;
+name|unsigned
+name|long
+name|no_tx_map_avail
+decl_stmt|;
+name|unsigned
+name|long
+name|no_tx_dma_setup
 decl_stmt|;
 name|u_int64_t
 name|tx_fifo_reset
