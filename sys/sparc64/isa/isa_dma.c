@@ -165,6 +165,22 @@ end_function
 
 begin_function
 name|int
+name|isa_dmatc
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|isa_dmastop
 parameter_list|(
 name|int

@@ -99,130 +99,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_comment
-comment|/* **  Register definitions for DMA controller 1 (channels 0..3): */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_CHN
-parameter_list|(
-name|c
-parameter_list|)
-value|(IO_DMA1 + 1*(2*(c)))
-end_define
-
-begin_comment
-comment|/* addr reg for channel c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_SMSK
-value|(IO_DMA1 + 1*10)
-end_define
-
-begin_comment
-comment|/* single mask register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_MODE
-value|(IO_DMA1 + 1*11)
-end_define
-
-begin_comment
-comment|/* mode register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_FFC
-value|(IO_DMA1 + 1*12)
-end_define
-
-begin_comment
-comment|/* clear first/last FF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_RESET
-value|(IO_DMA1 + 1*13)
-end_define
-
-begin_comment
-comment|/* reset */
-end_comment
-
-begin_comment
-comment|/* **  Register definitions for DMA controller 2 (channels 4..7): */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_CHN
-parameter_list|(
-name|c
-parameter_list|)
-value|(IO_DMA2 + 2*(2*(c)))
-end_define
-
-begin_comment
-comment|/* addr reg for channel c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_SMSK
-value|(IO_DMA2 + 2*10)
-end_define
-
-begin_comment
-comment|/* single mask register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_MODE
-value|(IO_DMA2 + 2*11)
-end_define
-
-begin_comment
-comment|/* mode register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_FFC
-value|(IO_DMA2 + 2*12)
-end_define
-
-begin_comment
-comment|/* clear first/last FF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_RESET
-value|(IO_DMA2 + 2*13)
-end_define
-
-begin_comment
-comment|/* reset */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|bus_dma_tag_t
@@ -1967,6 +1843,60 @@ expr_stmt|;
 return|return
 operator|(
 name|cnt
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reached terminal count yet ?  */
+end_comment
+
+begin_function
+name|int
+name|isa_dmatc
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+block|{
+if|if
+condition|(
+name|chan
+operator|<
+literal|4
+condition|)
+return|return
+operator|(
+name|inb
+argument_list|(
+name|DMA1_STATUS
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+name|chan
+operator|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|inb
+argument_list|(
+name|DMA2_STATUS
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+operator|)
 operator|)
 return|;
 block|}
