@@ -1260,7 +1260,7 @@ name|int
 name|mode
 parameter_list|)
 block|{
-comment|/*      * if we detect that the device isn't a real SATA device we limit       * the transfer mode to UDMA5/ATA100.      * this works around the problems some devices has with the       * Marvell SATA->PATA converters and UDMA6/ATA133.      */
+comment|/*      * if we detect that the device isn't a real SATA device we limit       * the transfer mode to UDMA5/ATA100.      * this works around the problems some devices has with the       * Marvell 88SX8030 SATA->PATA converters and UDMA6/ATA133.      */
 if|if
 condition|(
 name|atadev
@@ -9005,13 +9005,6 @@ name|flags
 operator||=
 name|ATA_USE_16BIT
 expr_stmt|;
-name|ctlr
-operator|->
-name|dmainit
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|ata_generic_hw
 argument_list|(
 name|ch
@@ -14973,15 +14966,9 @@ name|flags
 operator||=
 name|ATA_NO_SLAVE
 expr_stmt|;
-name|ctlr
-operator|->
-name|dmainit
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ctlr
 operator|->
 name|chip
@@ -14989,6 +14976,11 @@ operator|->
 name|cfg2
 operator|&
 name|SIIBUG
+operator|)
+operator|&&
+name|ch
+operator|->
+name|dma
 condition|)
 name|ch
 operator|->

@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|MAXWSPCSZ
-value|256
+value|PAGE_SIZE
 end_define
 
 begin_define
