@@ -9306,6 +9306,20 @@ literal|"keymap=uk.iso"
 block|}
 block|,
 block|{
+literal|" U.S. CapsLock->Ctrl"
+block|,
+literal|"United States standard with Caps Lock acting as left Control"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.pc-ctrl"
+block|}
+block|,
+block|{
 literal|" U.S. Dvorak"
 block|,
 literal|"United States Dvorak keymap"
@@ -9320,6 +9334,48 @@ literal|"keymap=us.dvorak"
 block|}
 block|,
 block|{
+literal|" U.S. Dvorak (left)"
+block|,
+literal|"United States left handed Dvorak keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.dvorakl"
+block|}
+block|,
+block|{
+literal|" U.S. Dvorak (right)"
+block|,
+literal|"United States right handed Dvorak keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.dvorakr"
+block|}
+block|,
+block|{
+literal|" U.S. Emacs"
+block|,
+literal|"United States standard optimized for EMACS use"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.emacs"
+block|}
+block|,
+block|{
 literal|" U.S. ISO"
 block|,
 literal|"United States ISO keymap"
@@ -9331,6 +9387,20 @@ block|,
 name|NULL
 block|,
 literal|"keymap=us.iso"
+block|}
+block|,
+block|{
+literal|" U.S. UNIX"
+block|,
+literal|"United States traditional UNIX-workstation keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.unix"
 block|}
 block|,
 block|{
