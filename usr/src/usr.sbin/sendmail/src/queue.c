@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.48 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.49 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.48 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.49 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4626,7 +4626,7 @@ name|e
 operator|->
 name|e_dtime
 operator|)
-operator|>
+operator|<
 name|MinQueueAge
 condition|)
 block|{
