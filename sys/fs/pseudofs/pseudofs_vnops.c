@@ -1172,7 +1172,7 @@ decl_stmt|;
 name|PFS_TRACE
 argument_list|(
 operator|(
-name|pd
+name|pn
 operator|->
 name|pn_name
 operator|)
