@@ -301,8 +301,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIIF_NOISOLATE
+name|MIIF_INITDONE
 value|0x0001
+end_define
+
+begin_comment
+comment|/* has been initialized (mii_data) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_NOISOLATE
+value|0x0002
 end_define
 
 begin_comment
@@ -312,13 +323,108 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIIF_DOINGAUTO
-value|0x0002
+name|MIIF_NOLOOP
+value|0x0004
 end_define
 
 begin_comment
-comment|/* doing autonegotiation */
+comment|/* no loopback capability */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_DOINGAUTO
+value|0x0008
+end_define
+
+begin_comment
+comment|/* doing autonegotiation (mii_softc) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_AUTOTSLEEP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* use tsleep(), not callout() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_HAVEFIBER
+value|0x0020
+end_define
+
+begin_comment
+comment|/* from parent: has fiber interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_HAVE_GTCR
+value|0x0040
+end_define
+
+begin_comment
+comment|/* has 100base-T2/1000base-T CR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_IS_1000X
+value|0x0080
+end_define
+
+begin_comment
+comment|/* is a 1000BASE-X device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_DOPAUSE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* advertise PAUSE capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_IS_HPNA
+value|0x0200
+end_define
+
+begin_comment
+comment|/* is a HomePNA device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_FORCEANEG
+value|0x0400
+end_define
+
+begin_comment
+comment|/* is a HomePNA device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_INHERIT_MASK
+value|(MIIF_NOISOLATE|MIIF_NOLOOP|MIIF_AUTOTSLEEP)
+end_define
 
 begin_comment
 comment|/*  * Used to attach a PHY to a parent.  */

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.12 2003/05/13 21:21:33 ps Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.13 2003/07/22 02:12:55 ps Exp   */
 end_comment
 
 begin_comment
@@ -907,6 +907,20 @@ define|#
 directive|define
 name|MII_STR_MARVELL_E1000
 value|"Marvell Semiconductor 88E1000* gigabit PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_MARVELL_E1011
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_MARVELL_E1011
+value|"Marvell Semiconductor 88E1011 Gigabit PHY"
 end_define
 
 end_unit
