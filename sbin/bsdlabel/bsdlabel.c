@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.18 1998/08/17 07:43:54 dfr Exp $"
+literal|"$Id: disklabel.c,v 1.19 1998/08/17 21:13:57 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2657,11 +2657,6 @@ name|int
 name|f
 decl_stmt|;
 block|{
-name|struct
-name|disklabel
-modifier|*
-name|lp
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2700,6 +2695,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__
+name|struct
+name|disklabel
+modifier|*
+name|lp
+decl_stmt|;
 name|char
 modifier|*
 name|tmpbuf
