@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.3 (Berkeley) %G%  *  * from: $Header: kgdb_stub.c,v 1.11 92/06/17 05:22:07 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.4 (Berkeley) %G%  *  * from: $Header: kgdb_stub.c,v 1.13 92/11/26 03:04:55 torek Exp $  */
 end_comment
 
 begin_comment
@@ -12,31 +12,6 @@ ifdef|#
 directive|ifdef
 name|KGDB
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_comment
-comment|/* from LBL version: */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: kgdb_stub.c,v 1.11 92/06/17 05:22:07 torek Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -54,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ctlreg.h>
 end_include
 
 begin_include
@@ -77,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/remote-sl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/trap.h>
 end_include
 
@@ -89,19 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sparc/sparc/ctlreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sparc/sparc/kgdb_proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/remote-sl.h>
 end_include
 
 begin_ifndef
