@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.16 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.17 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.16 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.17 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -580,6 +580,15 @@ goto|;
 case|case
 name|HOST_NOT_FOUND
 case|:
+ifdef|#
+directive|ifdef
+name|BROKEN_RES_SEARCH
+comment|/* Ultrix resolver returns failure w/ h_errno=0 */
+case|case
+literal|0
+case|:
+endif|#
+directive|endif
 comment|/* the host just doesn't exist */
 operator|*
 name|rcode
