@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,13 +73,6 @@ name|interval
 decl_stmt|,
 name|omask
 decl_stmt|;
-specifier|extern
-function_decl|(
-modifier|*
-name|sigtstpdfl
-function_decl|)
-parameter_list|()
-function_decl|;
 name|omask
 operator|=
 name|sigblock
@@ -806,6 +799,13 @@ block|{
 name|int
 name|oldmask
 decl_stmt|;
+specifier|extern
+function_decl|(
+modifier|*
+name|sigtstpdfl
+function_decl|)
+parameter_list|()
+function_decl|;
 name|alarm
 argument_list|(
 literal|0
