@@ -33,6 +33,18 @@ directive|include
 file|<sys/selinfo.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_comment
 comment|/*  * Clists are character lists, which is a variable length linked list  * of cblocks, with a count of the number of characters in the list.  */
 end_comment
@@ -267,13 +279,20 @@ name|int
 name|t_gen
 decl_stmt|;
 comment|/* Generation number. */
-name|SLIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|tty
 argument_list|)
 name|t_list
 expr_stmt|;
 comment|/* Global chain of ttys for pstat(8) */
+name|struct
+name|mtx
+name|t_mtx
+decl_stmt|;
+name|int
+name|t_refcnt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1660,18 +1679,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ttyfree
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ttyinfo
 parameter_list|(
 name|struct
@@ -1760,6 +1767,30 @@ parameter_list|(
 name|dev_t
 name|device
 parameter_list|,
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ttyref
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ttyrel
+parameter_list|(
 name|struct
 name|tty
 modifier|*
