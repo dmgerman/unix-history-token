@@ -1004,6 +1004,27 @@ expr_stmt|;
 comment|/* Put starting info for this line in the cache. */
 if|if
 condition|(
+name|offset_in_line
+operator|>=
+name|len
+condition|)
+block|{
+name|smp
+operator|->
+name|c_sboff
+operator|=
+name|offset_in_line
+expr_stmt|;
+name|smp
+operator|->
+name|c_scoff
+operator|=
+literal|255
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|scno
 operator|!=
 name|skip_cols
