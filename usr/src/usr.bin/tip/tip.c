@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.3 (Berkeley) %G%"
+literal|"@(#)tip.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,24 +394,12 @@ condition|)
 goto|goto
 name|notnumber
 goto|;
-for|for
-control|(
-name|p
-operator|=
-name|system
-init|;
-operator|*
-name|p
-condition|;
-name|p
-operator|++
-control|)
 if|if
 condition|(
 name|isalpha
 argument_list|(
 operator|*
-name|p
+name|system
 argument_list|)
 condition|)
 goto|goto
