@@ -990,7 +990,7 @@ expr_stmt|;
 comment|/* Get vnode for root device*/
 if|if
 condition|(
-name|error
+name|err
 operator|=
 name|bdevvp
 argument_list|(
@@ -1008,7 +1008,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|err
 operator|)
 return|;
 block|}
