@@ -169,7 +169,7 @@ name|rtentry
 modifier|*
 parameter_list|,
 name|struct
-name|sockaddr
+name|rt_addrinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -562,9 +562,9 @@ modifier|*
 name|rt
 parameter_list|,
 name|struct
-name|sockaddr
+name|rt_addrinfo
 modifier|*
-name|sa
+name|info
 parameter_list|)
 block|{
 if|if

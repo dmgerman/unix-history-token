@@ -149,7 +149,7 @@ value|((struct sockaddr_dl *)s)
 end_define
 
 begin_comment
-comment|/*  * atm_rtrequest: handle ATM rt request (in support of generic code)  *   inputs: "req" = request code  *           "rt" = route entry  *           "sa" = sockaddr  */
+comment|/*  * atm_rtrequest: handle ATM rt request (in support of generic code)  *   inputs: "req" = request code  *           "rt" = route entry  *           "info" = rt_addrinfo  */
 end_comment
 
 begin_function
@@ -160,7 +160,7 @@ name|req
 parameter_list|,
 name|rt
 parameter_list|,
-name|sa
+name|info
 parameter_list|)
 name|int
 name|req
@@ -172,9 +172,9 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
-name|sockaddr
+name|rt_addrinfo
 modifier|*
-name|sa
+name|info
 decl_stmt|;
 block|{
 specifier|register

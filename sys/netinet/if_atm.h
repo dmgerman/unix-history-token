@@ -52,7 +52,7 @@ name|rtentry
 operator|*
 operator|,
 expr|struct
-name|sockaddr
+name|rt_addrinfo
 operator|*
 operator|)
 argument_list|)
