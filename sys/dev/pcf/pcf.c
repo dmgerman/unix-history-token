@@ -164,6 +164,16 @@ literal|0
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|PCFDEBUG
+name|printf
+argument_list|(
+literal|"pcf: timeout!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|IIC_ETIMEOUT
@@ -400,6 +410,16 @@ name|error
 operator|=
 name|IIC_ENOACK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCFDEBUG
+name|printf
+argument_list|(
+literal|"pcf: no ack on repeated_start!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|error
 goto|;
@@ -483,11 +503,23 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|PCFDEBUG
+name|printf
+argument_list|(
+literal|"pcf: busy!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|IIC_EBUSBSY
 operator|)
 return|;
+block|}
 comment|/* set slave address to PCF. Last bit (LSB) must be set correctly 	 * according to transfer direction */
 name|pcf_set_S0
 argument_list|(
@@ -546,6 +578,16 @@ name|error
 operator|=
 name|IIC_ENOACK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCFDEBUG
+name|printf
+argument_list|(
+literal|"pcf: no ack on start!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|error
 goto|;
@@ -579,23 +621,12 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|device_t
-name|dev
-init|=
-operator|(
-name|device_t
-operator|)
-name|arg
-decl_stmt|;
 name|struct
 name|pcf_softc
 modifier|*
 name|sc
 init|=
-name|DEVTOSOFTC
-argument_list|(
-name|dev
-argument_list|)
+name|arg
 decl_stmt|;
 name|char
 name|data
@@ -623,11 +654,9 @@ operator|&
 name|PIN
 condition|)
 block|{
-name|device_printf
+name|printf
 argument_list|(
-name|dev
-argument_list|,
-literal|"spurious interrupt, status=0x%x\n"
+literal|"pcf: spurious interrupt, status=0x%x\n"
 argument_list|,
 name|status
 operator|&
@@ -644,11 +673,9 @@ name|status
 operator|&
 name|LAB
 condition|)
-name|device_printf
+name|printf
 argument_list|(
-name|dev
-argument_list|,
-literal|"bus arbitration lost!\n"
+literal|"pcf: bus arbitration lost!\n"
 argument_list|)
 expr_stmt|;
 if|if
