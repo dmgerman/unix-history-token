@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)macdefs.h	1.1	(Berkeley)	%G%  */
+comment|/*	@(#)macdefs.h	1.2	(Berkeley)	%G%	*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|pdp11
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -18,6 +32,28 @@ end_define
 begin_comment
 comment|/* pdp-11 womp next char  */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|makecc
+parameter_list|(
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|lastcon = i ? (val<<8)|lastcon : val
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
