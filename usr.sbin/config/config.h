@@ -640,6 +640,12 @@ name|maxusers
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|loadaddress
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
