@@ -453,7 +453,7 @@ end_function_decl
 begin_function_decl
 name|Static
 name|int
-name|csr_read_1
+name|cue_csr_read_1
 parameter_list|(
 name|struct
 name|cue_softc
@@ -467,7 +467,7 @@ end_function_decl
 begin_function_decl
 name|Static
 name|int
-name|csr_write_1
+name|cue_csr_write_1
 parameter_list|(
 name|struct
 name|cue_softc
@@ -483,7 +483,7 @@ end_function_decl
 begin_function_decl
 name|Static
 name|int
-name|csr_read_2
+name|cue_csr_read_2
 parameter_list|(
 name|struct
 name|cue_softc
@@ -503,7 +503,7 @@ end_ifdef
 begin_function_decl
 name|Static
 name|int
-name|csr_write_2
+name|cue_csr_write_2
 parameter_list|(
 name|struct
 name|cue_softc
@@ -674,7 +674,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|csr_write_1(sc, reg, csr_read_1(sc, reg) | (x))
+value|cue_csr_write_1(sc, reg, cue_csr_read_1(sc, reg) | (x))
 end_define
 
 begin_define
@@ -689,13 +689,13 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|csr_write_1(sc, reg, csr_read_1(sc, reg)& ~(x))
+value|cue_csr_write_1(sc, reg, cue_csr_read_1(sc, reg)& ~(x))
 end_define
 
 begin_function
 name|Static
 name|int
-name|csr_read_1
+name|cue_csr_read_1
 parameter_list|(
 name|struct
 name|cue_softc
@@ -816,7 +816,7 @@ end_function
 begin_function
 name|Static
 name|int
-name|csr_read_2
+name|cue_csr_read_2
 parameter_list|(
 name|struct
 name|cue_softc
@@ -937,7 +937,7 @@ end_function
 begin_function
 name|Static
 name|int
-name|csr_write_1
+name|cue_csr_write_1
 parameter_list|(
 name|struct
 name|cue_softc
@@ -1063,7 +1063,7 @@ end_ifdef
 begin_function
 name|Static
 name|int
-name|csr_write_2
+name|cue_csr_write_2
 parameter_list|(
 name|struct
 name|cue_softc
@@ -3788,7 +3788,7 @@ name|ifp
 operator|->
 name|if_collisions
 operator|+=
-name|csr_read_2
+name|cue_csr_read_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3799,7 +3799,7 @@ name|ifp
 operator|->
 name|if_collisions
 operator|+=
-name|csr_read_2
+name|cue_csr_read_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3810,7 +3810,7 @@ name|ifp
 operator|->
 name|if_collisions
 operator|+=
-name|csr_read_2
+name|cue_csr_read_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3819,7 +3819,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|csr_read_2
+name|cue_csr_read_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4263,7 +4263,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -4282,7 +4282,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Enable RX logic. */
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -4386,7 +4386,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the number of RX and TX buffers that we want 	 * to reserve inside the ASIC. 	 */
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -4395,7 +4395,7 @@ argument_list|,
 name|CUE_RX_FRAMES
 argument_list|)
 expr_stmt|;
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -4405,7 +4405,7 @@ name|CUE_TX_FRAMES
 argument_list|)
 expr_stmt|;
 comment|/* Set advanced operation modes. */
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -4418,7 +4418,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 1 wait state */
 comment|/* Program the LED operation. */
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
@@ -5030,7 +5030,7 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-name|csr_write_1
+name|cue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
