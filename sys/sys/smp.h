@@ -1205,6 +1205,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|io_apic_get_id
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ext_int_setup
 name|__P
 argument_list|(
