@@ -159,6 +159,10 @@ name|VINUMDEBUG
 name|kw_debug
 block|,
 comment|/* go into debugger */
+name|kw_stripe
+block|,
+name|kw_mirror
+block|,
 endif|#
 directive|endif
 name|kw_info

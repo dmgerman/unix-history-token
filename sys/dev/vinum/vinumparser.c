@@ -373,6 +373,16 @@ argument_list|(
 name|debug
 argument_list|)
 block|,
+name|keypair
+argument_list|(
+name|stripe
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+name|mirror
+argument_list|)
+block|,
 endif|#
 directive|endif
 endif|#
