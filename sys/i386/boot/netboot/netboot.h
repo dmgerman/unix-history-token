@@ -590,6 +590,21 @@ name|BOOTP_VENDOR_LEN
 value|256
 end_define
 
+begin_comment
+comment|/* Extended vendor field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTP_MIN_LEN
+value|300
+end_define
+
+begin_comment
+comment|/* Minimum size of bootp udp packet */
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -3500,8 +3500,16 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|bootp_t
+name|iphdr
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
+operator|+
+name|BOOTP_MIN_LEN
 operator|)
 operator|)
 operator|&&
