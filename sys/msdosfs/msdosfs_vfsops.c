@@ -100,7 +100,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -4379,10 +4379,12 @@ comment|/* update fats here */
 block|}
 block|}
 comment|/* 	 * Write back each (modified) denode. 	 */
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|mntvnode_slock
+name|mntvnode_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|loop
@@ -4501,10 +4503,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|mntvnode_slock
+name|mntvnode_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|error
@@ -4527,10 +4531,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|mntvnode_slock
+name|mntvnode_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -4579,17 +4585,21 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|mntvnode_slock
+name|mntvnode_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|mntvnode_slock
+name|mntvnode_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush filesystem control info. 	 */

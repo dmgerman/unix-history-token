@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/extattr.h>
 end_include
 
@@ -383,12 +389,7 @@ name|vrecycle
 argument_list|(
 name|vp
 argument_list|,
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)

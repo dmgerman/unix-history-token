@@ -1310,15 +1310,10 @@ name|lock
 name|h_lock
 decl_stmt|;
 comment|/* Must be first, for std vops */
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
 name|struct
-name|simplelock
+name|mtx
 name|h_interlock
 decl_stmt|;
-endif|#
-directive|endif
 name|LIST_ENTRY
 argument_list|(
 argument|hpfsnode

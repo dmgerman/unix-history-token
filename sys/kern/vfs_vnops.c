@@ -3951,7 +3951,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
@@ -3959,6 +3959,8 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -3977,7 +3979,7 @@ argument_list|,
 name|kn_selnext
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|vp
@@ -3985,6 +3987,8 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4022,7 +4026,7 @@ name|kn_fp
 operator|->
 name|f_data
 decl_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
@@ -4030,6 +4034,8 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE
@@ -4050,7 +4056,7 @@ argument_list|,
 name|kn_selnext
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|vp
@@ -4058,6 +4064,8 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

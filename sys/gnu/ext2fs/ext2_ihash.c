@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -116,24 +116,13 @@ parameter_list|)
 value|(&ihashtbl[(minor(device) + (inum))& ihash])
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
-name|simplelock
-name|ufs_ihash_slock
+name|mtx
+name|ufs_ihash_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Initialize inode hash table.  */
@@ -156,10 +145,14 @@ operator|&
 name|ihash
 argument_list|)
 expr_stmt|;
-name|simple_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+literal|"ufs ihash"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -191,10 +184,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -235,10 +230,12 @@ operator|->
 name|i_dev
 condition|)
 break|break;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -302,10 +299,12 @@ name|vp
 decl_stmt|;
 name|loop
 label|:
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -364,10 +363,12 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -393,10 +394,12 @@ operator|)
 return|;
 block|}
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -458,10 +461,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|ipp
@@ -492,10 +497,12 @@ name|i_flag
 operator||=
 name|IN_HASHED
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -517,10 +524,12 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -568,10 +577,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ufs_ihash_slock
+name|ufs_ihash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

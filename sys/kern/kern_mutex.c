@@ -4858,6 +4858,19 @@ directive|endif
 literal|"callout"
 block|,
 comment|/* 	 * leaf locks 	 */
+ifdef|#
+directive|ifdef
+name|__i386__
+literal|"ap boot"
+block|,
+literal|"imen"
+block|,
+endif|#
+directive|endif
+literal|"com"
+block|,
+literal|"smp rendezvous"
+block|,
 name|NULL
 block|}
 decl_stmt|;

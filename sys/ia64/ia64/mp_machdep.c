@@ -484,105 +484,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Implementation of simplelocks */
-end_comment
-
-begin_function
-name|void
-name|s_lock_init
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-name|lkp
-operator|->
-name|lock_data
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|s_lock
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|s_lock_try
-argument_list|(
-name|lkp
-argument_list|)
-condition|)
-return|return;
-comment|/* 		 * Spin until clear. 		 */
-while|while
-condition|(
-name|lkp
-operator|->
-name|lock_data
-condition|)
-empty_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|int
-name|s_lock_try
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-return|return
-literal|1
-return|;
-comment|/* XXX needed? */
-block|}
-end_function
-
-begin_function
-name|void
-name|s_unlock
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-name|ia64_st_rel_32
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lock_data
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Other stuff */
 end_comment
 
@@ -594,7 +495,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|smp_rv_lock
+name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -609,7 +510,7 @@ block|{
 name|mtx_init
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
 argument_list|,
 literal|"smp_rendezvous"
 argument_list|,
@@ -2397,12 +2298,11 @@ comment|/* obtain rendezvous lock */
 name|mtx_enter
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
 argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-comment|/* XXX sleep here? NOWAIT flag? */
 comment|/* set static function pointers */
 name|smp_rv_setup_func
 operator|=
@@ -2448,7 +2348,7 @@ comment|/* release lock */
 name|mtx_exit
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
 argument_list|,
 name|MTX_SPIN
 argument_list|)

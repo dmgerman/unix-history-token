@@ -334,9 +334,9 @@ name|resource_head
 name|rm_list
 decl_stmt|;
 name|struct
-name|simplelock
+name|mtx
 modifier|*
-name|rm_slock
+name|rm_mtx
 decl_stmt|;
 comment|/* mutex used to protect rm_list */
 name|TAILQ_ENTRY

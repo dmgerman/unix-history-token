@@ -1066,166 +1066,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Implementation of simplelocks */
-end_comment
-
-begin_comment
-comment|/*  * Atomically swap the value of *p with val. Return the old value of *p.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|atomic_xchg
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|p
-parameter_list|,
-name|u_int
-name|val
-parameter_list|)
-block|{
-name|u_int32_t
-name|oldval
-decl_stmt|,
-name|temp
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 		"1:\tldl_l %0,%3\n\t"
-comment|/* load current value */
-asm|"mov %4,%1\n\t"
-comment|/* value to store */
-asm|"stl_c %1,%2\n\t"
-comment|/* attempt to store */
-asm|"beq %1,2f\n\t"
-comment|/* if the store failed, spin */
-asm|"br 3f\n"
-comment|/* it worked, exit */
-asm|"2:\tbr 1b\n"
-comment|/* *p not updated, loop */
-asm|"3:\n"
-comment|/* it worked */
-asm|: "=&r"(oldval), "=r"(temp), "=m" (*p) 		: "m"(*p), "r"(val) 		: "memory");
-return|return
-name|oldval
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|s_lock_init
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-name|lkp
-operator|->
-name|lock_data
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|s_lock
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|s_lock_try
-argument_list|(
-name|lkp
-argument_list|)
-condition|)
-return|return;
-comment|/* 		 * Spin until clear. 		 */
-while|while
-condition|(
-name|lkp
-operator|->
-name|lock_data
-condition|)
-empty_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|int
-name|s_lock_try
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-name|u_int32_t
-name|oldval
-decl_stmt|,
-name|temp
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 		"1:\tldl_l %0,%3\n\t"
-comment|/* load current value */
-asm|"blbs %0,2f\n"
-comment|/* if set, give up now */
-asm|"mov 1,%1\n\t"
-comment|/* value to store */
-asm|"stl_c %1,%2\n\t"
-comment|/* attempt to store */
-asm|"beq %1,3f\n\t"
-comment|/* if the store failed, spin */
-asm|"2:"
-comment|/* exit */
-asm|".section .text2,\"ax\"\n"
-comment|/* improve branch prediction */
-asm|"3:\tbr 1b\n"
-comment|/* *p not updated, loop */
-asm|".previous\n" 		: "=&r"(oldval), "=r"(temp), "=m" (lkp->lock_data) 		: "m"(lkp->lock_data) 		: "memory");
-if|if
-condition|(
-operator|!
-name|oldval
-condition|)
-block|{
-comment|/* 		 * It was clear, return success. 		 */
-name|alpha_mb
-argument_list|()
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Other stuff */
 end_comment
 
@@ -1236,8 +1076,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|simplelock
-name|smp_rv_lock
+name|mtx
+name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1247,8 +1087,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|panic_lock
+name|mtx
+name|panic_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,16 +1100,24 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
+argument_list|,
+literal|"smp rendezvous"
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|panic_lock
+name|panic_mtx
+argument_list|,
+literal|"panic"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -3300,26 +3148,15 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-comment|/* disable interrupts on this CPU, save interrupt status */
-name|s
-operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
 comment|/* obtain rendezvous lock */
-name|s_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-comment|/* XXX sleep here? NOWAIT flag? */
 comment|/* set static function pointers */
 name|smp_rv_setup_func
 operator|=
@@ -3362,16 +3199,12 @@ name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
 comment|/* release lock */
-name|s_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|smp_rv_lock
-argument_list|)
-expr_stmt|;
-comment|/* restore interrupt flag */
-name|restore_intr
-argument_list|(
-name|s
+name|smp_rv_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/hpfs/hpfs.h>
 end_include
 
@@ -109,24 +115,13 @@ parameter_list|)
 value|(&hpfs_hphashtbl[(minor(dev) + (lsn))& hpfs_hphash])
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
-name|simplelock
-name|hpfs_hphash_slock
+name|mtx
+name|hpfs_hphash_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -172,10 +167,14 @@ operator|&
 name|hpfs_hphash
 argument_list|)
 expr_stmt|;
-name|simple_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+literal|"hpfs hphash"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -196,6 +195,12 @@ name|lockdestroy
 argument_list|(
 operator|&
 name|hpfs_hphash_lock
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|hpfs_hphash_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -227,10 +232,12 @@ name|hpfsnode
 modifier|*
 name|hp
 decl_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -256,10 +263,12 @@ operator|->
 name|h_dev
 condition|)
 break|break;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -277,7 +286,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	simple_lock(&hpfs_hphash_slock); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			LOCKMGR(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	simple_unlock(&hpfs_hphash_slock); 	return (hp); }
+unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	mtx_enter(&hpfs_hphash_mtx, MTX_DEF); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			LOCKMGR(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	mtx_exit(&hpfs_hphash_mtx, MTX_DEF); 	return (hp); }
 endif|#
 directive|endif
 end_endif
@@ -318,10 +327,12 @@ name|vp
 decl_stmt|;
 name|loop
 label|:
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -394,10 +405,12 @@ operator|)
 return|;
 block|}
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -429,10 +442,12 @@ name|hphashhead
 modifier|*
 name|hpp
 decl_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|hpp
@@ -463,10 +478,12 @@ argument_list|,
 name|h_hash
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -488,10 +505,12 @@ modifier|*
 name|hp
 decl_stmt|;
 block|{
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -539,10 +558,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

@@ -42,20 +42,14 @@ begin_define
 define|#
 directive|define
 name|IMASK_LOCK
-define|\
-value|pushl	$_imen_lock ;
-comment|/* address of lock */
-value|\ 	call	_s_lock ;
-comment|/* MP-safe */
-value|\ 	addl	$4, %esp
+value|MTX_ENTER(_imen_mtx, MTX_SPIN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMASK_UNLOCK
-define|\
-value|movl	$0, _imen_lock
+value|MTX_EXIT(_imen_mtx, MTX_SPIN)
 end_define
 
 begin_else
@@ -146,7 +140,7 @@ define|#
 directive|define
 name|COM_LOCK
 parameter_list|()
-value|s_lock(&com_lock)
+value|mtx_enter(&com_mtx, MTX_SPIN)
 end_define
 
 begin_define
@@ -154,7 +148,7 @@ define|#
 directive|define
 name|COM_UNLOCK
 parameter_list|()
-value|s_unlock(&com_lock)
+value|mtx_exit(&com_mtx, MTX_SPIN)
 end_define
 
 begin_else
@@ -218,250 +212,40 @@ comment|/* SMP */
 end_comment
 
 begin_comment
-comment|/*  * Simple spin lock.  * It is an error to hold one of these locks while a process is sleeping.  */
-end_comment
-
-begin_struct
-struct|struct
-name|simplelock
-block|{
-specifier|volatile
-name|int
-name|lock_data
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* functions in simplelock.s */
-end_comment
-
-begin_decl_stmt
-name|void
-name|s_lock_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|s_lock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|s_lock_try
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ss_lock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ss_unlock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|s_lock_np
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|s_unlock_np
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inline simplelock functions */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|s_unlock
-parameter_list|(
-name|struct
-name|simplelock
-modifier|*
-name|lkp
-parameter_list|)
-block|{
-name|lkp
-operator|->
-name|lock_data
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* global data in mp_machdep.c */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|imen_lock
+name|mtx
+name|imen_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|com_lock
+name|mtx
+name|com_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|mcount_lock
+name|mtx
+name|mcount_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|panic_lock
+name|mtx
+name|panic_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SIMPLELOCK_DEBUG
-argument_list|)
-operator|&&
-name|MAXCPU
-operator|>
-literal|1
-end_if
-
-begin_comment
-comment|/*  * This set of defines turns on the real functions in i386/isa/apic_ipl.s.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|simple_lock_init
-parameter_list|(
-name|alp
-parameter_list|)
-value|s_lock_init(alp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_lock
-parameter_list|(
-name|alp
-parameter_list|)
-value|s_lock(alp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_lock_try
-parameter_list|(
-name|alp
-parameter_list|)
-value|s_lock_try(alp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_unlock
-parameter_list|(
-name|alp
-parameter_list|)
-value|s_unlock(alp)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !SIMPLELOCK_DEBUG&& MAXCPU> 1 */
-end_comment
 
 begin_endif
 endif|#

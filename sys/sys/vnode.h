@@ -175,7 +175,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list simple lock.  * v_mntvnodes is locked by the global mntvnodes simple lock.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list mutex.  * v_mntvnodes is locked by the global mntvnodes mutex.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  */
 end_comment
 
 begin_struct
@@ -377,7 +377,7 @@ comment|/* .. capability identifier */
 struct|struct
 block|{
 name|struct
-name|simplelock
+name|mtx
 name|vpi_lock
 decl_stmt|;
 comment|/* lock to protect below */
@@ -1544,8 +1544,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|mntvnode_slock
+name|mtx
+name|mntvnode_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -2581,7 +2581,7 @@ operator|*
 name|vp
 operator|,
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 name|inter_lkp
 operator|,

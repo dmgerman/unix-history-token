@@ -909,8 +909,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|ap_boot_lock
+name|mtx
+name|ap_boot_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,6 +1361,20 @@ begin_comment
 comment|/*  * Local data and functions.  */
 end_comment
 
+begin_comment
+comment|/* Set to 1 once we're ready to let the APs out of the pen. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|aps_ready
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1567,8 +1581,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|imen_lock
+name|mtx
+name|imen_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1578,8 +1592,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|mcount_lock
+name|mtx
+name|mcount_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1595,8 +1609,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|com_lock
+name|mtx
+name|com_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1616,8 +1630,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|simplelock
-name|smp_rv_lock
+name|mtx
+name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1627,8 +1641,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|simplelock
-name|panic_lock
+name|mtx
+name|panic_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,46 +1654,61 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|s_lock_init
+comment|/* 	 * XXX The mcount mutex probably needs to be statically initialized, 	 * since it will be used even in the function calls that get us to this 	 * point. 	 */
+name|mtx_init
 argument_list|(
 operator|&
-name|mcount_lock
+name|mcount_mtx
+argument_list|,
+literal|"mcount"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|imen_lock
+name|smp_rv_mtx
+argument_list|,
+literal|"smp rendezvous"
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|smp_rv_lock
-argument_list|)
-expr_stmt|;
-name|s_lock_init
-argument_list|(
-operator|&
-name|panic_lock
+name|panic_mtx
+argument_list|,
+literal|"panic"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_COMLOCK
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|com_lock
+name|com_mtx
+argument_list|,
+literal|"com"
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_COMLOCK */
-name|s_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|ap_boot_lock
+name|ap_boot_mtx
+argument_list|,
+literal|"ap boot"
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2843,13 +2872,6 @@ comment|/* APIC_IO */
 comment|/* initialize all SMP locks */
 name|init_locks
 argument_list|()
-expr_stmt|;
-comment|/* obtain the ap_boot_lock */
-name|s_lock
-argument_list|(
-operator|&
-name|ap_boot_lock
-argument_list|)
 expr_stmt|;
 comment|/* start each Application Processor */
 name|start_all_aps
@@ -9612,11 +9634,21 @@ block|{
 name|u_int
 name|apic_id
 decl_stmt|;
+comment|/* spin until all the AP's are ready */
+while|while
+condition|(
+operator|!
+name|aps_ready
+condition|)
+comment|/* spin */
+empty_stmt|;
 comment|/* lock against other AP's that are waking up */
-name|s_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|ap_boot_lock
+name|ap_boot_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* BSP may have changed PTD while we're waiting for the lock */
@@ -9781,10 +9813,12 @@ expr_stmt|;
 comment|/* historic */
 block|}
 comment|/* let other AP's wake up now */
-name|s_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|ap_boot_lock
+name|ap_boot_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* wait until all the AP's are up */
@@ -11791,17 +11825,15 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_int
-name|efl
-decl_stmt|;
 comment|/* obtain rendezvous lock */
-name|s_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-comment|/* XXX sleep here? NOWAIT flag? */
 comment|/* set static function pointers */
 name|smp_rv_setup_func
 operator|=
@@ -11833,21 +11865,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* disable interrupts on this CPU, save interrupt status */
-name|efl
-operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|write_eflags
-argument_list|(
-name|efl
-operator|&
-operator|~
-name|PSL_I
-argument_list|)
-expr_stmt|;
-comment|/* signal other processors, which will enter the IPI with interrupts off */
+comment|/* 	 * signal other processors, which will enter the IPI with interrupts off 	 */
 name|all_but_self_ipi
 argument_list|(
 name|XRENDEZVOUS_OFFSET
@@ -11857,17 +11875,13 @@ comment|/* call executor function */
 name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
-comment|/* restore interrupt flag */
-name|write_eflags
-argument_list|(
-name|efl
-argument_list|)
-expr_stmt|;
 comment|/* release lock */
-name|s_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|smp_rv_lock
+name|smp_rv_mtx
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -11880,10 +11894,12 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-name|s_unlock
+name|atomic_store_rel_int
 argument_list|(
 operator|&
-name|ap_boot_lock
+name|aps_ready
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

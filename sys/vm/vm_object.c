@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -150,24 +156,13 @@ name|vm_object_list
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
-name|simplelock
-name|vm_object_list_lock
+name|mtx
+name|vm_object_list_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -495,10 +490,14 @@ operator|&
 name|vm_object_list
 argument_list|)
 expr_stmt|;
-name|simple_lock_init
+name|mtx_init
 argument_list|(
 operator|&
-name|vm_object_list_lock
+name|vm_object_list_mtx
+argument_list|,
+literal|"vm object_list"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|vm_object_count
@@ -1434,10 +1433,12 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the object from the global object list. 	 */
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|vm_object_list_lock
+name|vm_object_list_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1450,10 +1451,12 @@ argument_list|,
 name|object_list
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|vm_object_list_lock
+name|vm_object_list_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|wakeup

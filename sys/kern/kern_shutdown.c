@@ -2061,10 +2061,12 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* Only 1 CPU can panic at a time */
-name|s_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|panic_lock
+name|panic_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#

@@ -1295,8 +1295,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_imen_lock
-value|imen_lock
+name|_imen_mtx
+value|imen_mtx
 end_define
 
 begin_define
@@ -1638,20 +1638,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_s_lock
-value|s_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|_s_unlock
-value|s_unlock
-end_define
-
-begin_define
-define|#
-directive|define
 name|_sched_ithd
 value|sched_ithd
 end_define
@@ -1731,20 +1717,6 @@ define|#
 directive|define
 name|_spending
 value|spending
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ss_lock
-value|ss_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ss_unlock
-value|ss_unlock
 end_define
 
 begin_define

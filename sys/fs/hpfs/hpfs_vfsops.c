@@ -3248,12 +3248,16 @@ name|v_flag
 operator||=
 name|VROOT
 expr_stmt|;
-name|simple_lock_init
+name|mtx_init
 argument_list|(
 operator|&
 name|hp
 operator|->
 name|h_interlock
+argument_list|,
+literal|"hpfsnode interlock"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|lockinit

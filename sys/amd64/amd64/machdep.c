@@ -8369,6 +8369,22 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * Interrupts can happen very early, so initialize imen_mtx here, rather 	 * than in init_locks(). 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+literal|"imen"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Giant is used early for at least debugger traps and unexpected traps. 	 */
 name|mtx_init
 argument_list|(
