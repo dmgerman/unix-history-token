@@ -1660,6 +1660,7 @@ name|scp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX: intentional fall-through ? */
 case|case
 name|SIOCADDMULTI
 case|:
@@ -1764,9 +1765,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|result
-decl_stmt|;
 name|u_int16_t
 name|rx_bytes
 decl_stmt|,
@@ -1797,11 +1795,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Bytes received on this interrupt */
-name|result
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Set true if the interrupt is for us */
 if|if
 condition|(
 name|scp
@@ -1843,11 +1836,6 @@ operator|!=
 literal|0xff
 condition|)
 block|{
-name|result
-operator|=
-literal|1
-expr_stmt|;
-comment|/* This device did generate an int */
 name|esr
 operator|=
 name|XE_INB
@@ -5165,8 +5153,6 @@ decl_stmt|,
 name|pad
 decl_stmt|,
 name|free
-decl_stmt|,
-name|ok
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -5264,12 +5250,6 @@ name|XE_INW
 argument_list|(
 name|XE_TSO
 argument_list|)
-expr_stmt|;
-name|ok
-operator|=
-name|free
-operator|&
-literal|0x8000
 expr_stmt|;
 name|free
 operator|&=
