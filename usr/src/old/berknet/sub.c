@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c	4.4	(Berkeley)	%G%"
+literal|"@(#)sub.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,15 +395,6 @@ if|if
 condition|(
 name|status
 operator|.
-name|mpasswd
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|||
-name|status
-operator|.
 name|login
 index|[
 literal|0
@@ -416,6 +407,13 @@ operator|.
 name|force
 condition|)
 block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|wf
 operator|=
 name|fopen
@@ -430,22 +428,6 @@ condition|(
 name|wf
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|status
-operator|.
-name|login
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|||
-name|status
-operator|.
-name|force
 condition|)
 block|{
 name|fprintf
@@ -547,6 +529,12 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|wf
 argument_list|)
 expr_stmt|;
 block|}
@@ -664,13 +652,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-name|fclose
-argument_list|(
-name|wf
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
