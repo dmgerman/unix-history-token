@@ -2484,6 +2484,13 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_VLANTAG
+expr_stmt|;
 block|}
 else|else
 block|{
