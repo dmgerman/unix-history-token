@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.7 (Berkeley) %G%"
+literal|"@(#)w.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,7 +352,7 @@ name|DIV60
 parameter_list|(
 name|t
 parameter_list|)
-value|((t+30)/60)
+value|((t + 30) / 60)
 end_define
 
 begin_comment
@@ -1901,10 +1901,7 @@ block|{
 comment|/* print CPU time for all processes& children */
 name|prttime
 argument_list|(
-name|DIV60
-argument_list|(
 name|jobtime
-argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
@@ -1912,10 +1909,7 @@ expr_stmt|;
 comment|/* print cpu time for interesting process */
 name|prttime
 argument_list|(
-name|DIV60
-argument_list|(
 name|proctime
-argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
