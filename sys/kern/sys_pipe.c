@@ -845,6 +845,7 @@ name|pipe_state
 operator||=
 name|PIPE_DIRECTOK
 expr_stmt|;
+comment|/* 	 * Warning: once we've gotten past allocation of the fd for the 	 * read-side, we can only drop the read side via fdrop() in order 	 * to avoid races against processes which manage to dup() the read 	 * side while we are blocked trying to allocate the write side. 	 */
 name|error
 operator|=
 name|falloc
@@ -1039,6 +1040,11 @@ name|rf
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+comment|/* rpipe has been closed by fdrop() */
+name|rpipe
+operator|=
+name|NULL
 expr_stmt|;
 name|free2
 label|:
