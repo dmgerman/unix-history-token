@@ -242,7 +242,7 @@ name|MSR_KGSBASE
 argument_list|,
 name|pcb
 operator|->
-name|pcb_fsbase
+name|pcb_gsbase
 argument_list|)
 expr_stmt|;
 break|break;
