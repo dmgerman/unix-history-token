@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.135 1998/07/14 11:34:22 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.136 1998/07/28 18:59:49 bde Exp $  */
 end_comment
 
 begin_include
@@ -2627,8 +2627,6 @@ name|sd
 decl_stmt|;
 name|u_int32_t
 name|unit
-decl_stmt|,
-name|secsize
 decl_stmt|;
 name|sdstrats
 operator|++
@@ -2682,155 +2680,9 @@ operator|&
 name|sd_switch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Odd number of bytes or negative offset 	 */
+comment|/* 	 * Do bounds checking, adjust transfer, and set b_pbklno. 	 */
 if|if
 condition|(
-name|bp
-operator|->
-name|b_blkno
-operator|<
-literal|0
-condition|)
-block|{
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sd_strategy: Negative block number: 0x%x\n"
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-name|secsize
-operator|=
-name|sd
-operator|->
-name|params
-operator|.
-name|secsiz
-expr_stmt|;
-comment|/* make sure the blkno is scalable */
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_blkno
-operator|%
-operator|(
-name|secsize
-operator|/
-name|DEV_BSIZE
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sd_strategy: Block number is not multiple of sector size (2): 0x%x\n"
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* make sure that the transfer size is a multiple of the sector size */
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_bcount
-operator|%
-name|secsize
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sd_strategy: Invalid b_bcount %ld at block number: 0x%lx\n"
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-operator|(
-name|long
-operator|)
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* 	 * Do bounds checking, adjust transfer, set b_cylin and b_pbklno. 	 */
-block|{
-name|int
-name|status
-decl_stmt|;
-name|int
-name|sec_blk_ratio
-init|=
-name|secsize
-operator|/
-name|DEV_BSIZE
-decl_stmt|;
-name|int
-name|b_blkno
-init|=
-name|bp
-operator|->
-name|b_blkno
-decl_stmt|;
-comment|/* Replace blkno and count with scaled values. */
-name|bp
-operator|->
-name|b_blkno
-operator|/=
-name|sec_blk_ratio
-expr_stmt|;
-name|bp
-operator|->
-name|b_bcount
-operator|/=
-name|sec_blk_ratio
-expr_stmt|;
-comment|/* enforce limits and map to physical block number */
-name|status
-operator|=
 name|dscheck
 argument_list|(
 name|bp
@@ -2839,30 +2691,6 @@ name|sd
 operator|->
 name|dk_slices
 argument_list|)
-expr_stmt|;
-comment|/* 		 * Restore blkno and unscale the values set by dscheck(), 		 * except for b_pblkno. 		 */
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|b_blkno
-expr_stmt|;
-name|bp
-operator|->
-name|b_bcount
-operator|*=
-name|sec_blk_ratio
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
-operator|*=
-name|sec_blk_ratio
-expr_stmt|;
-comment|/* see if the mapping failed */
-if|if
-condition|(
-name|status
 operator|<=
 literal|0
 condition|)
@@ -2870,7 +2698,6 @@ goto|goto
 name|done
 goto|;
 comment|/* XXX check b_resid */
-block|}
 name|opri
 operator|=
 name|SPLSD
