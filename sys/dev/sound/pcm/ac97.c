@@ -1286,6 +1286,24 @@ block|}
 end_function
 
 begin_function
+name|u_int16_t
+name|ac97_getcaps
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+block|{
+return|return
+name|codec
+operator|->
+name|caps
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ac97_setrecsrc
