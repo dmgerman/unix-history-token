@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.13	81/02/16	*/
+comment|/*	machdep.c	4.14	81/02/25	*/
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.13) 81/02/16 20:50:04 \n"
+literal|"VM/UNIX (Berkeley Version 4.14) 81/02/25 14:48:03 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1979,6 +1979,252 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mc780
+index|[]
+init|=
+block|{
+literal|"cp read"
+block|,
+literal|"ctrl str par"
+block|,
+literal|"cp tbuf par"
+block|,
+literal|"cp cache par"
+block|,
+literal|"cp rdtimo"
+block|,
+literal|"cp rds"
+block|,
+literal|"ucode lost"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"ib tbuf par"
+block|,
+literal|0
+block|,
+literal|"ib rds"
+block|,
+literal|"ib rd timo"
+block|,
+literal|0
+block|,
+literal|"ib cache par"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|mc780frame
+block|{
+name|int
+name|mc7_bcnt
+decl_stmt|;
+name|int
+name|mc7_summary
+decl_stmt|;
+name|int
+name|mc7_cpues
+decl_stmt|;
+name|int
+name|mc7_upc
+decl_stmt|;
+name|int
+name|mc7_vaviba
+decl_stmt|;
+name|int
+name|mc7_dreg
+decl_stmt|;
+name|int
+name|mc7_tber0
+decl_stmt|;
+name|int
+name|mc7_tber1
+decl_stmt|;
+name|int
+name|mc7_timo
+decl_stmt|;
+name|int
+name|mc7_parity
+decl_stmt|;
+name|int
+name|mc7_sbier
+decl_stmt|;
+name|int
+name|mc7_pc
+decl_stmt|;
+name|int
+name|mc7_psl
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|machinecheck
+argument_list|(
+name|mcf
+argument_list|)
+specifier|register
+expr|struct
+name|mc780frame
+operator|*
+name|mcf
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|type
+init|=
+name|mcf
+operator|->
+name|mc7_summary
+decl_stmt|;
+specifier|register
+name|int
+name|sbifs
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"machine check %x: %s%s\n"
+argument_list|,
+name|type
+argument_list|,
+name|mc780
+index|[
+name|type
+operator|&
+literal|0xf
+index|]
+argument_list|,
+operator|(
+name|type
+operator|&
+literal|0xf0
+operator|)
+condition|?
+literal|" abort"
+else|:
+literal|" fault"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tcpues %x upc %x va/viba %x dreg %x tber %x %x\n"
+argument_list|,
+name|mcf
+operator|->
+name|mc7_cpues
+argument_list|,
+name|mcf
+operator|->
+name|mc7_upc
+argument_list|,
+name|mcf
+operator|->
+name|mc7_vaviba
+argument_list|,
+name|mcf
+operator|->
+name|mc7_dreg
+argument_list|,
+name|mcf
+operator|->
+name|mc7_tber0
+argument_list|,
+name|mcf
+operator|->
+name|mc7_tber1
+argument_list|)
+expr_stmt|;
+name|sbifs
+operator|=
+name|mfpr
+argument_list|(
+name|SBIFS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ttimo %x parity %x sbier %x pc %x psl %x sbifs %x\n"
+argument_list|,
+name|mcf
+operator|->
+name|mc7_timo
+operator|*
+literal|4
+argument_list|,
+name|mcf
+operator|->
+name|mc7_parity
+argument_list|,
+name|mcf
+operator|->
+name|mc7_sbier
+argument_list|,
+name|mcf
+operator|->
+name|mc7_pc
+argument_list|,
+name|mcf
+operator|->
+name|mc7_psl
+argument_list|,
+name|sbifs
+argument_list|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|SBIFS
+argument_list|,
+name|sbifs
+operator|&
+operator|~
+literal|0x2000000
+argument_list|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|SBIER
+argument_list|,
+name|mfpr
+argument_list|(
+name|SBIER
+argument_list|)
+operator||
+literal|0x70c0
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"mchk"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
