@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	2.2 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	2.3 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|TRINC
-value|512
+value|1024
 end_define
 
 begin_comment
@@ -285,7 +285,7 @@ begin_define
 define|#
 directive|define
 name|MAXTREE
-value|(30 * TABLE_MULTIPLIER)
+value|(40 * TABLE_MULTIPLIER)
 end_define
 
 begin_comment
