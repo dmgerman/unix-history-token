@@ -4720,7 +4720,7 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				ip = NULL ;				\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
 comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
 name|proto
 operator|=
@@ -5940,8 +5940,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
-operator|(
 name|f
 operator|->
 name|fw_tcpf
@@ -5949,16 +5947,6 @@ operator|!=
 name|f
 operator|->
 name|fw_tcpnf
-operator|)
-operator|||
-operator|(
-name|f
-operator|->
-name|fw_ipflg
-operator|&
-name|IP_FW_IF_TCPEST
-operator|)
-operator|)
 operator|&&
 operator|!
 name|tcpflg_match
@@ -6135,6 +6123,10 @@ label|:
 if|if
 condition|(
 name|fw_verbose
+operator|&&
+name|ip
+operator|!=
+name|NULL
 condition|)
 name|ipfw_report
 argument_list|(
@@ -6750,18 +6742,13 @@ operator|*
 name|m
 condition|)
 block|{
-name|m_freem
-argument_list|(
-operator|*
-name|m
-argument_list|)
-expr_stmt|;
-operator|*
-name|m
-operator|=
-name|NULL
-expr_stmt|;
+return|return
+operator|(
+literal|0x40000
+operator|)
+return|;
 block|}
+else|else
 return|return
 operator|(
 literal|0

@@ -334,9 +334,9 @@ name|fs
 decl_stmt|;
 comment|/* parent flow set */
 name|int
-name|blh_pos
+name|heap_pos
 decl_stmt|;
-comment|/* position in backlogged_heap */
+comment|/* position (index) of struct in heap */
 name|dn_key
 name|sched_time
 decl_stmt|;
@@ -584,11 +584,6 @@ name|dn_heap
 name|not_eligible_heap
 decl_stmt|;
 comment|/* top extract- key Start time */
-name|struct
-name|dn_heap
-name|backlogged_heap
-decl_stmt|;
-comment|/* random extract - key Start time */
 name|struct
 name|dn_heap
 name|idle_heap

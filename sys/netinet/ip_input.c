@@ -1975,6 +1975,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|&
+literal|0x40000
+condition|)
+block|{
+comment|/* XXX new interface-denied */
+if|if
+condition|(
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+if|if
+condition|(
 name|m
 operator|==
 name|NULL
