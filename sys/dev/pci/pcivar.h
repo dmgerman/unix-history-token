@@ -900,14 +900,14 @@ define|#
 directive|define
 name|PCIB_ACCESSOR
 parameter_list|(
-name|A
+name|var
 parameter_list|,
-name|B
+name|ivar
 parameter_list|,
-name|T
+name|type
 parameter_list|)
-define|\ 									 \
-value|static __inline T pcib_get_ ## A(device_t dev)				 \ {									 \     uintptr_t v;							 \     BUS_READ_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B,&v);	 \     return (T) v;							 \ }									 \ 									 \ static __inline void pcib_set_ ## A(device_t dev, T t)			 \ {									 \     uintptr_t v = (uintptr_t) t;					 \     BUS_WRITE_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B, v);	 \ }
+define|\
+value|__BUS_ACCESSOR(pcib, var, PCIB, ivar, type)
 end_define
 
 begin_macro
