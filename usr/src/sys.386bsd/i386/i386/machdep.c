@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)machdep.c	7.4 (Berkeley) 6/3/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00002  * --------------------         -----   ----------------------  *  * 15 Aug 92    William Jolitz		Large memory bug  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)machdep.c	7.4 (Berkeley) 6/3/91  *  * PATCHES MAGIC		LEVEL	PATCH THAT GOT US HERE  * --------------------		-----	----------------------  * CURRENT PATCH LEVEL:		2	00003  * --------------------		-----	----------------------  *  * 15 Aug 92    William Jolitz          Large memory bug  * 15 Aug 92	Terry Lambert		Fixed CMOS RAM size bug  */
 end_comment
 
 begin_decl_stmt
@@ -157,6 +157,28 @@ include|#
 directive|include
 file|"i386/isa/rtc.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|EXPECT_BASEMEM
+value|640
+end_define
+
+begin_comment
+comment|/* The expected base memory*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INFORM_WAIT
+value|1
+end_define
+
+begin_comment
+comment|/* Set to pause berfore crash in weird cases*/
+end_comment
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
@@ -537,7 +559,7 @@ operator|)
 operator|/
 name|CLSIZE
 expr_stmt|;
-comment|/*          * 15 Aug 92    William Jolitz          bufpages fix for too large          */
+comment|/* 	 * 15 Aug 92	William Jolitz		bufpages fix for too large 	 */
 name|bufpages
 operator|=
 name|min
@@ -3513,6 +3535,14 @@ name|r_idt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pagesinbase
+decl_stmt|,
+name|pagesinext
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|proc0
 operator|.
@@ -4425,50 +4455,62 @@ comment|/*printf("bios base %d ext %d ", biosbasemem, biosextmem);*/
 end_comment
 
 begin_comment
-comment|/* if either bad, just assume base memory */
+comment|/* 	 * 15 Aug 92	Terry Lambert		The real fix for the CMOS bug 	 */
 end_comment
 
 begin_if
 if|if
 condition|(
 name|biosbasemem
-operator|==
-literal|0xffff
-operator|||
-name|biosextmem
-operator|==
-literal|0xffff
+operator|!=
+name|EXPECT_BASEMEM
 condition|)
 block|{
-name|maxmem
-operator|=
-name|min
+name|printf
 argument_list|(
-name|maxmem
+literal|"Warning: Base memory %dK, assuming %dK\n"
 argument_list|,
-literal|640
-operator|/
-literal|4
+name|biosbasemem
+argument_list|,
+name|EXPECT_BASEMEM
 argument_list|)
 expr_stmt|;
+name|biosbasemem
+operator|=
+name|EXPECT_BASEMEM
+expr_stmt|;
+comment|/* assume base*/
 block|}
-elseif|else
+end_if
+
+begin_if
 if|if
 condition|(
 name|biosextmem
 operator|>
-literal|0
-operator|&&
-name|biosbasemem
-operator|==
-literal|640
+literal|65536
 condition|)
 block|{
-name|int
-name|pagesinbase
-decl_stmt|,
-name|pagesinext
-decl_stmt|;
+name|printf
+argument_list|(
+literal|"Warning: Extended memory %dK(>64M), assuming 0K\n"
+argument_list|,
+name|biosextmem
+argument_list|)
+expr_stmt|;
+name|biosextmem
+operator|=
+literal|0
+expr_stmt|;
+comment|/* assume none*/
+block|}
+end_if
+
+begin_comment
+comment|/* 	 * Go into normal calculation; Note that we try to run in 640K, and 	 * that invalid CMOS values of non 0xffff are no longer a cause of 	 * ptdi problems.  I have found a gutted kernel can run in 640K. 	 */
+end_comment
+
+begin_expr_stmt
 name|pagesinbase
 operator|=
 literal|640
@@ -4479,13 +4521,22 @@ name|first
 operator|/
 name|NBPG
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pagesinext
 operator|=
 name|biosextmem
 operator|/
 literal|4
 expr_stmt|;
-comment|/* use greater of either base or extended memory. do this 		 * until I reinstitue discontiguous allocation of vm_page 		 * array. 		 */
+end_expr_stmt
+
+begin_comment
+comment|/* use greater of either base or extended memory. do this 	 * until I reinstitue discontiguous allocation of vm_page 	 * array. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|pagesinbase
@@ -4514,8 +4565,11 @@ literal|0x100000
 expr_stmt|;
 comment|/* skip hole */
 block|}
-block|}
 end_if
+
+begin_comment
+comment|/* This used to explode, since Maxmem used to be 0 for bas CMOS*/
+end_comment
 
 begin_expr_stmt
 name|maxmem
@@ -4554,12 +4608,29 @@ literal|2048
 operator|/
 literal|4
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Too little RAM memory. Warning, running in degraded mode.\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INFORM_WAIT
+comment|/* 		 * People with less than 2 Meg have to hit return; this way 		 * we see the messages and can tell them why they blow up later. 		 * If they get working well enough to recompile, they can unset 		 * the flag; otherwise, it's a toy and they have to lump it. 		 */
+name|getchar
+argument_list|()
+expr_stmt|;
+comment|/* kernel getchar in /sys/i386/isa/pccons.c*/
+endif|#
+directive|endif
+comment|/* !INFORM_WAIT*/
+block|}
 end_if
+
+begin_comment
+comment|/* 	 * End of CMOS bux fix 	 */
+end_comment
 
 begin_comment
 comment|/* call pmap initialization to make new kernel address space */
