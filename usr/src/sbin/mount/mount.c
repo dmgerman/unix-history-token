@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.22 (Berkeley) %G%"
+literal|"@(#)mount.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,9 +455,6 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|mntonname
-decl_stmt|,
-modifier|*
 modifier|*
 name|vfslist
 decl_stmt|,
@@ -871,47 +868,31 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fs
+name|rval
 operator|=
-name|getfsfile
+name|mountfs
 argument_list|(
 name|mntbuf
 operator|->
-name|f_mntonname
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
+name|f_fstypename
 argument_list|,
-literal|"can't find fstab entry for %s."
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/* If it's an update, ignore the fstab file options. */
-name|fs
+name|mntbuf
 operator|->
-name|fs_mntops
-operator|=
-name|NULL
-expr_stmt|;
-name|mntonname
-operator|=
+name|f_mntfromname
+argument_list|,
 name|mntbuf
 operator|->
 name|f_mntonname
+argument_list|,
+name|init_flags
+argument_list|,
+name|options
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 if|if
 condition|(
 operator|(
@@ -967,13 +948,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|mntonname
-operator|=
-name|fs
-operator|->
-name|fs_file
-expr_stmt|;
-block|}
 name|rval
 operator|=
 name|mountfs
@@ -986,7 +960,9 @@ name|fs
 operator|->
 name|fs_spec
 argument_list|,
-name|mntonname
+name|fs
+operator|->
+name|fs_file
 argument_list|,
 name|init_flags
 argument_list|,
