@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.30 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.31 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.30 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.31 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,7 +2291,7 @@ operator|->
 name|d_name
 argument_list|)
 operator|!=
-literal|9
+literal|10
 condition|)
 block|{
 if|if
@@ -4158,13 +4158,13 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|")\n--QID-- --Size-- -Priority- ---Q-Time--- -----------Sender/Recipient-----------\n"
+literal|")\n--Q-ID-- --Size-- -Priority- ---Q-Time--- -----------Sender/Recipient-----------\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|")\n--QID-- --Size-- -----Q-Time----- ------------Sender/Recipient------------\n"
+literal|")\n--Q-ID-- --Size-- -----Q-Time----- ------------Sender/Recipient------------\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4473,7 +4473,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t     (---%.34s---)"
+literal|"\n\t\t\t\t      (---%.34s---)"
 argument_list|,
 operator|&
 name|buf
@@ -4493,7 +4493,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t\t %.38s"
+literal|"\n\t\t\t\t\t  %.38s"
 argument_list|,
 operator|&
 name|buf
@@ -4505,7 +4505,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t  %.45s"
+literal|"\n\t\t\t\t   %.45s"
 argument_list|,
 operator|&
 name|buf
@@ -4632,6 +4632,9 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|char
+name|c0
+decl_stmt|;
 specifier|static
 name|char
 name|c1
@@ -4643,6 +4646,14 @@ name|char
 name|c2
 init|=
 literal|'A'
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
 decl_stmt|;
 specifier|static
 name|char
@@ -4686,6 +4697,27 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|c0
+operator|=
+literal|'A'
+operator|+
+name|tm
+operator|->
+name|tm_hour
+expr_stmt|;
 name|c1
 operator|=
 literal|'A'
@@ -4704,7 +4736,9 @@ name|sprintf
 argument_list|(
 name|qf
 argument_list|,
-literal|"qfAA%05d"
+literal|"qf%cAA%05d"
+argument_list|,
+name|c0
 argument_list|,
 name|pid
 argument_list|)
@@ -4742,14 +4776,14 @@ expr_stmt|;
 block|}
 name|qf
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 name|c1
 expr_stmt|;
 name|qf
 index|[
-literal|3
+literal|4
 index|]
 operator|=
 operator|++
