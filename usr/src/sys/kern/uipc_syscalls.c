@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.43	83/03/04	*/
+comment|/*	uipc_syscalls.c	4.44	83/03/19	*/
 end_comment
 
 begin_include
@@ -3151,11 +3151,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get socket address.  */
+comment|/*  * Get socket name.  */
 end_comment
 
 begin_macro
-name|ssocketaddr
+name|getsockname
 argument_list|()
 end_macro
 
@@ -3168,10 +3168,12 @@ block|{
 name|int
 name|fdes
 decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
+name|caddr_t
 name|asa
+decl_stmt|;
+name|int
+modifier|*
+name|alen
 decl_stmt|;
 block|}
 modifier|*
@@ -3202,6 +3204,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|fp
 operator|=
@@ -3236,6 +3241,38 @@ name|ENOTSOCK
 expr_stmt|;
 return|return;
 block|}
+name|u
+operator|.
+name|u_error
+operator|=
+name|copyin
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|uap
+operator|->
+name|alen
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|len
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|so
 operator|=
 name|fp
@@ -3284,6 +3321,20 @@ condition|)
 goto|goto
 name|bad
 goto|;
+if|if
+condition|(
+name|len
+operator|>
+name|m
+operator|->
+name|m_len
+condition|)
+name|len
+operator|=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
 name|u
 operator|.
 name|u_error
@@ -3304,10 +3355,43 @@ name|uap
 operator|->
 name|asa
 argument_list|,
+operator|(
+name|u_int
+operator|)
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+goto|goto
+name|bad
+goto|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|len
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|uap
+operator|->
+name|alen
+argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockaddr
+name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
