@@ -6630,7 +6630,7 @@ condition|(
 name|m
 operator|->
 name|m_type
-operator|==
+operator|!=
 name|MT_CONTROL
 condition|)
 continue|continue;
