@@ -831,7 +831,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|disklabel
 modifier|*
