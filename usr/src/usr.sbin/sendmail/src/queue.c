@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.61
+literal|3.62
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.61
+literal|3.62
 operator|%
 name|G
 operator|%
@@ -1416,9 +1416,38 @@ condition|)
 block|{
 comment|/* this may be some random person sending hir msgs */
 comment|/* syserr("orderq: cannot open %s", cbuf); */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|41
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"orderq: cannot open %s (%d)\n"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|wn
+operator|--
 expr_stmt|;
 continue|continue;
 block|}
@@ -1506,6 +1535,12 @@ name|closedir
 argument_list|(
 name|f
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|wn
+operator|++
 expr_stmt|;
 end_expr_stmt
 
@@ -1671,8 +1706,6 @@ begin_return
 return|return
 operator|(
 name|wn
-operator|+
-literal|1
 operator|)
 return|;
 end_return
