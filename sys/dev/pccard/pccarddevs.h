@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.59 2003/07/19 05:32:07 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.60 2003/07/19 05:49:17 imp Exp   */
 end_comment
 
 begin_comment
@@ -2519,6 +2519,27 @@ define|#
 directive|define
 name|PCMCIA_STR_IODATA2_WNB11PCM
 value|"I-O DATA WN-B11/PCM"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_IODATA2_WCF12
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_IODATA2_WCF12
+value|0x0673
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_IODATA2_WCF12
+value|"Wireless CF Card"
 end_define
 
 begin_comment
