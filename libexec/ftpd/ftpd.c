@@ -9366,6 +9366,10 @@ name|data_err
 goto|;
 block|}
 block|}
+name|transflag
+operator|=
+literal|0
+expr_stmt|;
 name|reply
 argument_list|(
 literal|226
