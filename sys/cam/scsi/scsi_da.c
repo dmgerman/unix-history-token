@@ -4338,6 +4338,14 @@ name|si_drv1
 operator|=
 name|periph
 expr_stmt|;
+name|softc
+operator|->
+name|dev
+operator|->
+name|si_iosize_max
+operator|=
+name|DFLTPHYS
+expr_stmt|;
 comment|/* 	 * Add async callbacks for bus reset and 	 * bus device reset calls.  I don't bother 	 * checking if this fails as, in most cases, 	 * the system will function just fine without 	 * them and the only alternative would be to 	 * not attach the device on failure. 	 */
 name|xpt_setup_ccb
 argument_list|(
