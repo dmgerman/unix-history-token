@@ -5273,7 +5273,7 @@ name|kbdc
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * KEYBOARD ERROR 		 * Keyboard reset may fail either because the keyboard 		 * doen't exist, or because the keyboard doesn't pass 		 * the self-test, or the keyboard controller on the 		 * motherboard and the keyboard somehow fail to shake hands. 		 * It is just possible, particularly in the last case, 		 * that the keyoard controller may be left in a hung state. 		 * test_controller() and test_kbd_port() appear to bring 		 * the keyboard controller back (I don't know why and how, 		 * though.) 		 */
+comment|/* 		 * KEYBOARD ERROR 		 * Keyboard reset may fail either because the keyboard 		 * doen't exist, or because the keyboard doesn't pass 		 * the self-test, or the keyboard controller on the 		 * motherboard and the keyboard somehow fail to shake hands. 		 * It is just possible, particularly in the last case, 		 * that the keyboard controller may be left in a hung state. 		 * test_controller() and test_kbd_port() appear to bring 		 * the keyboard controller back (I don't know why and how, 		 * though.) 		 */
 name|empty_both_buffers
 argument_list|(
 name|kbdc
