@@ -5456,7 +5456,7 @@ name|icb
 operator|=
 name|GETICB
 argument_list|(
-name|long_ad
+name|short_ad
 argument_list|,
 name|fentry
 argument_list|,
