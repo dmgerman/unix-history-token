@@ -21,17 +21,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -40,6 +29,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -779,16 +782,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|tar_options
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 elseif|else
 if|if
 condition|(
@@ -801,31 +804,29 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|cpio_options
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * assume pax as the default 	 */
 name|argv0
 operator|=
 name|NM_PAX
 expr_stmt|;
-return|return
-operator|(
 name|pax_options
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1882,7 +1883,7 @@ index|[
 name|argc
 index|]
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|ARCHIVE
 case|:
@@ -4055,7 +4056,7 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|ARCHIVE
 case|:
