@@ -1626,7 +1626,7 @@ block|}
 end_function
 
 begin_function
-name|__dead
+specifier|volatile
 name|void
 name|usage
 parameter_list|()
