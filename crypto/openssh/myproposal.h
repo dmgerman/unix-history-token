@@ -43,7 +43,6 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|myproposal

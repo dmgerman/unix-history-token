@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: compat.c,v 1.13 2000/05/08 17:42:24 markus Exp $"
+literal|"$Id: compat.c,v 1.14 2000/05/22 18:42:01 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -263,13 +263,7 @@ block|{
 name|char
 modifier|*
 name|s
-init|=
-name|xstrdup
-argument_list|(
-name|spec
-argument_list|)
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -278,6 +272,22 @@ name|ret
 init|=
 name|SSH_PROTO_UNKNOWN
 decl_stmt|;
+if|if
+condition|(
+name|spec
+operator|==
+name|NULL
+condition|)
+return|return
+name|ret
+return|;
+name|s
+operator|=
+name|xstrdup
+argument_list|(
+name|spec
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 operator|(

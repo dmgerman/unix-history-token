@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: servconf.c,v 1.40 2000/05/08 17:12:15 markus Exp $"
+literal|"$Id: servconf.c,v 1.41 2000/05/22 18:42:01 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3046,6 +3046,20 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|cp
+condition|)
+name|fatal
+argument_list|(
+literal|"%s line %d: Missing argument."
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|ciphers_valid
 argument_list|(
 name|cp
@@ -3101,6 +3115,20 @@ argument_list|(
 name|NULL
 argument_list|,
 name|WHITESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|fatal
+argument_list|(
+literal|"%s line %d: Missing argument."
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
 name|value

@@ -698,7 +698,11 @@ argument_list|(
 name|readset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read packets from the client unless we have too much buffered 	 * stdin or channel data. 	 */
+name|FD_ZERO
+argument_list|(
+name|writeset
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|compat20
@@ -720,6 +724,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Read packets from the client unless we have too much 		 * buffered stdin or channel data. 		 */
 if|if
 condition|(
 name|buffer_len
@@ -728,7 +733,7 @@ operator|&
 name|stdin_buffer
 argument_list|)
 operator|<
-literal|4096
+name|buffer_high
 operator|&&
 name|channel_not_very_much_buffered_data
 argument_list|()
@@ -740,13 +745,9 @@ argument_list|,
 name|readset
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * If there is not too much data already buffered going to the 	 * client, try to get some more data from the program. 	 */
+comment|/* 		 * If there is not too much data already buffered going to 		 * the client, try to get some more data from the program. 		 */
 if|if
 condition|(
-operator|!
-name|compat20
-operator|&&
 name|packet_not_very_much_data_to_write
 argument_list|()
 condition|)
@@ -776,11 +777,30 @@ name|readset
 argument_list|)
 expr_stmt|;
 block|}
-name|FD_ZERO
+comment|/* 		 * If we have buffered data, try to write some of that data 		 * to the program. 		 */
+if|if
+condition|(
+name|fdin
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|buffer_len
 argument_list|(
+operator|&
+name|stdin_buffer
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|FD_SET
+argument_list|(
+name|fdin
+argument_list|,
 name|writeset
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Set masks for channel descriptors. */
 name|channel_prepare_select
 argument_list|(
@@ -798,32 +818,6 @@ condition|)
 name|FD_SET
 argument_list|(
 name|connection_out
-argument_list|,
-name|writeset
-argument_list|)
-expr_stmt|;
-comment|/* If we have buffered data, try to write some of that data to the 	   program. */
-if|if
-condition|(
-operator|!
-name|compat20
-operator|&&
-name|fdin
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|buffer_len
-argument_list|(
-operator|&
-name|stdin_buffer
-argument_list|)
-operator|>
-literal|0
-condition|)
-name|FD_SET
-argument_list|(
-name|fdin
 argument_list|,
 name|writeset
 argument_list|)
@@ -1024,26 +1018,23 @@ name|fatal_cleanup
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 		 * There is a kernel bug on Solaris that causes select to 		 * sometimes wake up even though there is no data available. 		 */
+elseif|else
 if|if
 condition|(
 name|len
 operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
 operator|&&
 name|errno
-operator|==
+operator|!=
 name|EAGAIN
-condition|)
-name|len
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
 condition|)
 block|{
 name|verbose
@@ -1060,6 +1051,9 @@ name|fatal_cleanup
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
 comment|/* Buffer any received data. */
 name|packet_process_incoming
 argument_list|(
@@ -1068,6 +1062,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1105,13 +1100,35 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|<
+literal|0
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|)
+condition|)
+block|{
+comment|/* do nothing */
+block|}
+elseif|else
+if|if
+condition|(
+name|len
 operator|<=
 literal|0
 condition|)
+block|{
 name|fdout_eof
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 name|buffer_append
@@ -1161,14 +1178,37 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|<
+literal|0
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|)
+condition|)
+block|{
+comment|/* do nothing */
+block|}
+elseif|else
+if|if
+condition|(
+name|len
 operator|<=
 literal|0
 condition|)
+block|{
 name|fderr_eof
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
+block|{
 name|buffer_append
 argument_list|(
 operator|&
@@ -1179,6 +1219,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1237,6 +1278,26 @@ name|stdin_buffer
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|)
+condition|)
+block|{
+comment|/* do nothing */
+block|}
+elseif|else
 if|if
 condition|(
 name|len
@@ -1458,6 +1519,11 @@ name|int
 name|fderr_arg
 parameter_list|)
 block|{
+name|fd_set
+name|readset
+decl_stmt|,
+name|writeset
+decl_stmt|;
 name|int
 name|wait_status
 decl_stmt|;
@@ -1520,6 +1586,30 @@ expr_stmt|;
 name|fderr
 operator|=
 name|fderr_arg
+expr_stmt|;
+comment|/* nonblocking IO */
+name|set_nonblock
+argument_list|(
+name|fdin
+argument_list|)
+expr_stmt|;
+name|set_nonblock
+argument_list|(
+name|fdout
+argument_list|)
+expr_stmt|;
+comment|/* we don't have stderr for interactive terminal sessions, see below */
+if|if
+condition|(
+name|fderr
+operator|!=
+operator|-
+literal|1
+condition|)
+name|set_nonblock
+argument_list|(
+name|fderr
+argument_list|)
 expr_stmt|;
 name|connection_in
 operator|=
@@ -1643,11 +1733,6 @@ init|;
 condition|;
 control|)
 block|{
-name|fd_set
-name|readset
-decl_stmt|,
-name|writeset
-decl_stmt|;
 comment|/* Process buffered packets from the client. */
 name|process_buffered_input_packets
 argument_list|()
@@ -2618,6 +2703,19 @@ expr_stmt|;
 name|packet_done
 argument_list|()
 expr_stmt|;
+name|debug
+argument_list|(
+literal|"open direct-tcpip: from %s port %d to %s port %d"
+argument_list|,
+name|originator
+argument_list|,
+name|originator_port
+argument_list|,
+name|target
+argument_list|,
+name|target_port
+argument_list|)
+expr_stmt|;
 comment|/* XXX check permission */
 name|sock
 operator|=
@@ -2875,11 +2973,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|debug
-argument_list|(
-literal|"open direct-tcpip"
-argument_list|)
-expr_stmt|;
 name|id
 operator|=
 name|input_direct_tcpip

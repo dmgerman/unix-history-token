@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cipher.c,v 1.26 2000/04/14 10:30:30 markus Exp $"
+literal|"$Id: cipher.c,v 1.27 2000/05/22 18:42:00 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -705,6 +705,10 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|names
+operator|==
+name|NULL
+operator|||
 name|strcmp
 argument_list|(
 name|names
@@ -816,6 +820,16 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i

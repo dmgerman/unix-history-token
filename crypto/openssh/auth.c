@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.6 2000/04/26 21:28:31 markus Exp $"
+literal|"$OpenBSD: auth.c,v 1.7 2000/05/17 21:37:24 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -161,6 +161,10 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
+name|char
+modifier|*
+name|shell
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -173,14 +177,32 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* 	 * Get the shell from the password data.  An empty shell field is 	 * legal, and means /bin/sh. 	 */
+name|shell
+operator|=
+operator|(
+name|pw
+operator|->
+name|pw_shell
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|)
+condition|?
+name|_PATH_BSHELL
+else|:
+name|pw
+operator|->
+name|pw_shell
+expr_stmt|;
 comment|/* deny if shell does not exists or is not executable */
 if|if
 condition|(
 name|stat
 argument_list|(
-name|pw
-operator|->
-name|pw_shell
+name|shell
 argument_list|,
 operator|&
 name|st
