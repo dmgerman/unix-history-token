@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isa_device.h>
+file|<machine/uc_device.h>
 end_include
 
 begin_if
@@ -52,7 +52,7 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|isa_device
+name|uc_device
 modifier|*
 name|id
 decl_stmt|;
@@ -285,7 +285,7 @@ name|id
 operator|=
 operator|(
 expr|struct
-name|isa_device
+name|uc_device
 operator|*
 operator|)
 operator|(
@@ -304,7 +304,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|)
 expr_stmt|;
@@ -329,7 +329,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"di %s%d\n"
+literal|"disable %s%d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -345,7 +345,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"en %s%d\n"
+literal|"enable %s%d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -367,7 +367,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"po %s%d %#x\n"
+literal|"port %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -394,7 +394,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"ir %s%d %d\n"
+literal|"irq %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -426,7 +426,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"dr %s%d %d\n"
+literal|"drq %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -453,7 +453,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"iom %s%d %#x\n"
+literal|"iomem %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -480,7 +480,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"ios %s%d %d\n"
+literal|"iosize %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -498,7 +498,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"f %s%d %#x\n"
+literal|"flags %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -517,7 +517,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|+
 literal|8
@@ -546,7 +546,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"q\n"
+literal|"quit\n"
 argument_list|)
 expr_stmt|;
 name|fclose

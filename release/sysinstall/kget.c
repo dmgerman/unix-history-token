@@ -45,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_device.h>
+file|<machine/uc_device.h>
 end_include
 
 begin_function
@@ -89,7 +89,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|isa_device
+name|uc_device
 modifier|*
 name|id
 decl_stmt|;
@@ -237,7 +237,7 @@ name|id
 operator|=
 operator|(
 expr|struct
-name|isa_device
+name|uc_device
 operator|*
 operator|)
 operator|(
@@ -256,7 +256,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|)
 expr_stmt|;
@@ -488,7 +488,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|+
 literal|8
