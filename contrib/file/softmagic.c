@@ -48,7 +48,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: softmagic.c,v 1.51 2002/07/03 18:26:38 christos Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.52 2003/02/08 18:33:53 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2642,6 +2642,7 @@ name|REGEX
 condition|)
 block|{
 comment|/* 	       * offset is interpreted as last line to search, 	       * (starting at 1), not as bytes-from start-of-file 	       */
+name|unsigned
 name|char
 modifier|*
 name|last
@@ -2652,6 +2653,10 @@ name|p
 operator|->
 name|buf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 expr_stmt|;
 for|for
@@ -2662,6 +2667,11 @@ operator|&&
 operator|(
 name|s
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|strchr
 argument_list|(
 name|s

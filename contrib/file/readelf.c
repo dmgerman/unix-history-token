@@ -61,7 +61,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: readelf.c,v 1.22 2002/07/03 18:26:38 christos Exp $"
+literal|"@(#)$Id: readelf.c,v 1.23 2003/02/08 18:33:53 christos Exp $"
 argument_list|)
 end_macro
 
@@ -567,6 +567,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ph_align
+value|(class == ELFCLASS32		\ 			 ? (ph32.p_align ? getu32(swap, ph32.p_align) : 4) \ 			 : (ph64.p_align ? getu64(swap, ph64.p_align) : 4))
+end_define
+
+begin_define
+define|#
+directive|define
 name|nh_size
 value|(class == ELFCLASS32		\ 			 ? sizeof *nh32			\ 			 : sizeof *nh64)
 end_define
@@ -791,6 +798,9 @@ name|offset
 decl_stmt|,
 name|nameoffset
 decl_stmt|;
+name|off_t
+name|savedoffset
+decl_stmt|;
 if|if
 condition|(
 name|lseek
@@ -841,6 +851,34 @@ condition|)
 name|error
 argument_list|(
 literal|"read failed (%s).\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|savedoffset
+operator|=
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"lseek failed (%s).\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -908,7 +946,10 @@ name|fd
 argument_list|,
 name|nbuf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,14 +1048,34 @@ operator|(
 operator|(
 name|offset
 operator|+
-literal|3
+name|ph_align
+operator|-
+literal|1
 operator|)
 operator|/
-literal|4
+name|ph_align
 operator|)
 operator|*
-literal|4
+name|ph_align
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|nh_namesz
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|nh_descsz
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 					 * We're out of note headers. 					 */
+break|break;
+block|}
 if|if
 condition|(
 name|offset
@@ -1315,6 +1376,34 @@ expr_stmt|;
 comment|/* Content of note is always 0 */
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+name|savedoffset
+operator|+
+name|offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"lseek failed (%s).\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
