@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ep.c,v 1.5 1993/12/20 09:05:55 mycroft Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ep.c,v 1.2 1994/01/10 19:13:47 ats Exp $  */
 end_comment
 
 begin_comment
@@ -255,19 +255,9 @@ name|ep_softc
 block|{
 name|struct
 name|arpcom
-name|ep_ac
+name|arpcom
 decl_stmt|;
 comment|/* Ethernet common part	        */
-define|#
-directive|define
-name|ep_if
-value|ep_ac.ac_if
-comment|/* network-visible interface    */
-define|#
-directive|define
-name|ep_addr
-value|ep_ac.ac_enaddr
-comment|/* hardware Ethernet address    */
 name|short
 name|ep_io_addr
 decl_stmt|;
@@ -720,7 +710,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|u_short
 name|i
@@ -889,7 +881,9 @@ name|bcopy
 argument_list|(
 name|sc
 operator|->
-name|ep_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 name|LLADDR
 argument_list|(
@@ -1100,7 +1094,9 @@ operator|)
 operator|&
 name|sc
 operator|->
-name|ep_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 operator|*
@@ -1153,7 +1149,9 @@ name|ether_sprintf
 argument_list|(
 name|sc
 operator|->
-name|ep_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1223,7 +1221,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|int
 name|s
@@ -1322,7 +1322,9 @@ name|i
 argument_list|,
 name|sc
 operator|->
-name|ep_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -1658,7 +1660,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&
@@ -1678,7 +1682,9 @@ name|m
 operator|=
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_snd
 operator|.
@@ -1768,7 +1774,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator||=
@@ -1786,7 +1794,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_snd
 argument_list|,
@@ -2193,7 +2203,9 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_opackets
 expr_stmt|;
@@ -2258,7 +2270,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2342,7 +2356,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&=
@@ -2354,7 +2370,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|)
 expr_stmt|;
 block|}
@@ -2468,7 +2486,9 @@ condition|)
 operator|++
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_collisions
 expr_stmt|;
@@ -2542,7 +2562,9 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_oerrors
 expr_stmt|;
@@ -2643,7 +2665,9 @@ block|{
 operator|++
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ierrors
 expr_stmt|;
@@ -3294,7 +3318,9 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 expr_stmt|;
 name|outw
 argument_list|(
@@ -3320,7 +3346,9 @@ empty_stmt|;
 operator|++
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ipackets
 expr_stmt|;
@@ -3340,7 +3368,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|ep_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|eh
 argument_list|,
@@ -3575,7 +3605,7 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|ep_ac
+name|arpcom
 operator|.
 name|ac_enaddr
 operator|)
@@ -3605,13 +3635,15 @@ name|caddr_t
 operator|)
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
-name|ep_ac
+name|arpcom
 operator|.
 name|ac_enaddr
 argument_list|)
@@ -3846,7 +3878,7 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|ep_ac
+name|arpcom
 operator|.
 name|ac_if
 operator|.
