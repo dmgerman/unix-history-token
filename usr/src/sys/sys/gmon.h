@@ -239,6 +239,9 @@ decl_stmt|;
 name|u_long
 name|textsize
 decl_stmt|;
+name|u_long
+name|hashfraction
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -295,7 +298,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* profiling enabling variable */
+comment|/* int: profiling enabling variable */
 end_comment
 
 begin_define
@@ -306,7 +309,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* profile tick count buffer */
+comment|/* struct: profile tick count buffer */
 end_comment
 
 begin_define
@@ -317,7 +320,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* from location hash bucket */
+comment|/* struct: from location hash bucket */
 end_comment
 
 begin_define
@@ -328,7 +331,18 @@ value|3
 end_define
 
 begin_comment
-comment|/* destination/count structure */
+comment|/* struct: destination/count structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPROF_GMONPARAM
+value|4
+end_define
+
+begin_comment
+comment|/* struct: profiling parameters (see above) */
 end_comment
 
 begin_endif
