@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -482,6 +488,10 @@ name|chuser
 init|=
 literal|"nobody"
 decl_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+comment|/* syslog in localtime */
 name|openlog
 argument_list|(
 literal|"tftpd"
