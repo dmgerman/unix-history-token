@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.2 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,13 +279,21 @@ block|{
 literal|"_dk_ndrive"
 block|}
 block|,
+define|#
+directive|define
+name|X_XSTATS
+value|20
+block|{
+literal|"_xstats"
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|vax
 define|#
 directive|define
 name|X_MBDINIT
-value|20
+value|21
 block|{
 literal|"_mbdinit"
 block|}
@@ -293,7 +301,7 @@ block|,
 define|#
 directive|define
 name|X_UBDINIT
-value|21
+value|22
 block|{
 literal|"_ubdinit"
 block|}
@@ -2372,6 +2380,62 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* SHOULD BE AVAILABLE IN<sys/text.h> */
+end_comment
+
+begin_comment
+comment|/*  * Statistics  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstats
+block|{
+name|u_long
+name|alloc
+decl_stmt|;
+comment|/* calls to xalloc */
+name|u_long
+name|alloc_inuse
+decl_stmt|;
+comment|/*	found in use/sticky */
+name|u_long
+name|alloc_cachehit
+decl_stmt|;
+comment|/*	found in cache */
+name|u_long
+name|alloc_cacheflush
+decl_stmt|;
+comment|/*	flushed cached text */
+name|u_long
+name|alloc_unused
+decl_stmt|;
+comment|/*	flushed unused cached text */
+name|u_long
+name|free
+decl_stmt|;
+comment|/* calls to xfree */
+name|u_long
+name|free_inuse
+decl_stmt|;
+comment|/*	still in use/sticky */
+name|u_long
+name|free_cache
+decl_stmt|;
+comment|/*	placed in cache */
+name|u_long
+name|free_cacheswap
+decl_stmt|;
+comment|/*	swapped out to place in cache */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* END SHOULD BE AVAILABLE... */
+end_comment
+
 begin_macro
 name|dosum
 argument_list|()
@@ -2382,6 +2446,10 @@ block|{
 name|struct
 name|nchstats
 name|nchstats
+decl_stmt|;
+name|struct
+name|xstats
+name|xstats
 decl_stmt|;
 name|long
 name|nchtotal
@@ -2837,6 +2905,101 @@ argument_list|,
 name|nchstats
 operator|.
 name|ncs_long
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|mf
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_XSTATS
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|mf
+argument_list|,
+operator|&
+name|xstats
+argument_list|,
+sizeof|sizeof
+name|xstats
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d total calls to xalloc (cache hits %d%%)\n"
+argument_list|,
+name|xstats
+operator|.
+name|alloc
+argument_list|,
+name|xstats
+operator|.
+name|alloc_cachehit
+operator|*
+literal|100
+operator|/
+name|nz
+argument_list|(
+name|xstats
+operator|.
+name|alloc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9s sticky %d flushed %d unused %d\n"
+argument_list|,
+literal|""
+argument_list|,
+name|xstats
+operator|.
+name|alloc_inuse
+argument_list|,
+name|xstats
+operator|.
+name|alloc_cacheflush
+argument_list|,
+name|xstats
+operator|.
+name|alloc_unused
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d total calls to xfree"
+argument_list|,
+name|xstats
+operator|.
+name|free
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (sticky %d cached %d swapped %d)\n"
+argument_list|,
+name|xstats
+operator|.
+name|free_inuse
+argument_list|,
+name|xstats
+operator|.
+name|free_cache
+argument_list|,
+name|xstats
+operator|.
+name|free_cacheswap
 argument_list|)
 expr_stmt|;
 block|}
