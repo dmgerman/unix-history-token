@@ -177,7 +177,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adf:o:s:t:u:"
+literal|"ab:df:o:s:t:u:"
 argument_list|)
 expr_stmt|;
 if|if

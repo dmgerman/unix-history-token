@@ -39,6 +39,10 @@ struct|struct
 name|md_ioctl
 block|{
 name|unsigned
+name|md_version
+decl_stmt|;
+comment|/* Structure layout version */
+name|unsigned
 name|md_unit
 decl_stmt|;
 comment|/* unit number */
@@ -48,25 +52,39 @@ name|md_type
 decl_stmt|;
 comment|/* type of disk */
 name|char
+modifier|*
 name|md_file
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
 decl_stmt|;
 comment|/* pathname of file to mount */
 name|unsigned
 name|md_size
 decl_stmt|;
-comment|/* (returned) size of disk */
+comment|/* size of disk in DEV_BSIZE units */
 name|unsigned
 name|md_options
 decl_stmt|;
 comment|/* options */
+name|u_int64_t
+name|md_base
+decl_stmt|;
+comment|/* base address */
+name|int
+name|pad
+index|[
+literal|100
+index|]
+decl_stmt|;
+comment|/* padding for future ideas */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MDIOVERSION
+value|1
+end_define
 
 begin_comment
 comment|/*  * Before you can use a unit, it must be configured with MDIOCSET.  * The configuration persists across opens and closes of the device;  * an MDIOCCLR must be used to reset a configuration.  An attempt to  * MDIOCSET an already active unit will return EBUSY.  */
