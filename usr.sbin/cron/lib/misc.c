@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 1.3 1995/05/30 03:47:11 rgrimes Exp $"
+literal|"$Id: misc.c,v 1.3.6.1 1997/09/16 07:02:32 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2335,18 +2335,37 @@ specifier|static
 name|char
 name|ret
 index|[
-literal|30
+literal|32
 index|]
 decl_stmt|;
 comment|/* zone name might be>3 chars */
+if|if
+condition|(
+name|tm
+operator|->
+name|tm_year
+operator|>=
+literal|100
+condition|)
+name|tm
+operator|->
+name|tm_year
+operator|+=
+literal|1900
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ret
 argument_list|,
-literal|"%s, %2d %s %2d %02d:%02d:%02d %s"
+sizeof|sizeof
+argument_list|(
+name|ret
+argument_list|)
+argument_list|,
+literal|"%s, %2d %s %d %02d:%02d:%02d %s"
 argument_list|,
 name|DowNames
 index|[
