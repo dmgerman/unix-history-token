@@ -4154,6 +4154,17 @@ begin_comment
 comment|/* allocate structure if lookup fails */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NODELAY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* cannot do background work */
+end_comment
+
 begin_comment
 comment|/*  * Structures and routines associated with pagedep caching.  */
 end_comment
@@ -4725,6 +4736,14 @@ operator|>
 name|max_softdeps
 operator|&&
 name|firsttry
+operator|&&
+operator|(
+name|flags
+operator|&
+name|NODELAY
+operator|)
+operator|==
+literal|0
 operator|&&
 name|request_cleanup
 argument_list|(
@@ -5605,6 +5624,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|inodedep_lookup
 argument_list|(
 name|ip
@@ -5614,12 +5634,13 @@ argument_list|,
 name|newinum
 argument_list|,
 name|DEPALLOC
+operator||
+name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
 argument_list|)
-operator|!=
-literal|0
+operator|)
 condition|)
 name|panic
 argument_list|(
@@ -6154,9 +6175,6 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|inodedep_lookup
 argument_list|(
 name|ip
@@ -6168,6 +6186,8 @@ operator|->
 name|i_number
 argument_list|,
 name|DEPALLOC
+operator||
+name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -19663,6 +19683,16 @@ operator|/
 literal|10
 condition|)
 block|{
+if|if
+condition|(
+name|islocked
+condition|)
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|process_worklist_item
 argument_list|(
 name|NULL
@@ -19681,9 +19711,19 @@ name|stat_worklist_push
 operator|+=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|islocked
+condition|)
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
