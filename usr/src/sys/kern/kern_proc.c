@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.48	82/11/13	*/
+comment|/*	kern_proc.c	4.49	82/12/05	*/
 end_comment
 
 begin_include
@@ -3229,10 +3229,14 @@ name|i
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* why was this like this? */
+name|struct
+name|file
+modifier|*
+name|f
+decl_stmt|;
+name|int
+name|p
+decl_stmt|;
 name|f
 operator|=
 name|u
@@ -3251,42 +3255,14 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|closef
-argument_list|(
-name|f
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|closef
-argument_list|(
-name|u
-operator|.
-name|u_ofile
-index|[
-name|i
-index|]
-argument_list|,
-literal|1
-argument_list|,
+name|p
+operator|=
 name|u
 operator|.
 name|u_pofile
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
-name|i
-index|]
-operator|=
-name|NULL
 expr_stmt|;
 name|u
 operator|.
@@ -3297,8 +3273,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
+name|closef
+argument_list|(
+name|f
+argument_list|,
+literal|1
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 name|ilock
 argument_list|(
@@ -3515,6 +3498,17 @@ operator|->
 name|p_xstat
 operator|=
 name|rv
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"exit: m_getclr"
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
