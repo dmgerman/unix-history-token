@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.3 (Berkeley) %G%"
+literal|"@(#)trees.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1999,7 +1999,7 @@ argument|)return(TYPL+TYMATCH); 		if( mt12& MDBI ) return( TYPL+LVAL+TYMATCH ); 
 literal|0
 argument|) break; 		else if( mt1& MPTR ) return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	uerror(
 literal|"operands of %s have incompatible types"
-argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 	case UNDEF: 		return(
+argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return(
 literal|0
 argument|);
 comment|/* type is void */
