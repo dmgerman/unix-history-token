@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)predicates.c 1.1 %G%"
+literal|"@(#)predicates.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|"symtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"btypes.h"
 end_include
 
 begin_include
@@ -331,6 +337,31 @@ return|return
 name|TRUE
 return|;
 block|}
+if|if
+condition|(
+name|t1
+operator|->
+name|type
+operator|==
+name|t_char
+operator|&&
+name|t1
+operator|->
+name|class
+operator|==
+name|ARRAY
+operator|&&
+name|t2
+operator|->
+name|class
+operator|==
+name|ARRAY
+condition|)
+block|{
+return|return
+name|TRUE
+return|;
+block|}
 block|}
 comment|/*  * A kludge here for "nil".  Should be handled better.  * Opens a pandora's box for integer/pointer compatibility.  */
 if|if
@@ -471,6 +502,12 @@ operator|->
 name|class
 operator|==
 name|FILET
+operator|||
+name|t
+operator|->
+name|class
+operator|==
+name|SET
 condition|)
 block|{
 return|return

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c 1.1 %G%"
+literal|"@(#)print.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,19 +497,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|dread
-argument_list|(
-name|sp
-argument_list|,
-name|addr
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|sp
-operator|+=
-name|len
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s = "
@@ -519,6 +506,25 @@ operator|->
 name|symbol
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rpush
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"*** expression too large ***"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|s
@@ -549,6 +555,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

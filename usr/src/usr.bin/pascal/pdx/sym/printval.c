@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printval.c 1.1 %G%"
+literal|"@(#)printval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +160,9 @@ name|len
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"'%s'"
+literal|"'%.*s'"
+argument_list|,
+name|len
 argument_list|,
 name|sp
 argument_list|)
