@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.19 84/04/06"
+literal|"@(#)lcmd1.c	3.20 84/04/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,23 +649,31 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|l_label
 argument_list|(
-name|v
+argument|v
 argument_list|,
-name|a
+argument|a
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|value
-operator|*
+modifier|*
 name|v
-operator|,
-operator|*
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|value
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1009,23 +1017,31 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|l_write
 argument_list|(
-name|v
+argument|v
 argument_list|,
-name|a
+argument|a
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|value
-operator|*
+modifier|*
 name|v
-operator|,
-operator|*
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|value
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1160,23 +1176,31 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|l_close
 argument_list|(
-name|v
+argument|v
 argument_list|,
-name|a
+argument|a
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|value
-operator|*
+modifier|*
 name|v
-operator|,
-operator|*
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|value
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
