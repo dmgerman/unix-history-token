@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.26 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1760,6 +1760,7 @@ name|cp1
 operator|+
 name|dlen
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|file
@@ -1773,6 +1774,11 @@ operator|+
 name|dlen
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|file
