@@ -1780,8 +1780,10 @@ init|;
 name|entryp
 operator|!=
 operator|&
-name|vmspace
-operator|.
+name|kp
+operator|->
+name|ki_vmspace
+operator|->
 name|vm_map
 operator|.
 name|header
