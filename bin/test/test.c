@@ -93,6 +93,30 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHELL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|main
+value|testcmd
+end_define
+
+begin_include
+include|#
+directive|include
+file|"bltin/bltin.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* test(1) accepts the following grammar: 	oexpr	::= aexpr | aexpr "-o" oexpr ; 	aexpr	::= nexpr | nexpr "-a" aexpr ; 	nexpr	::= primary | "!" primary 	primary	::= unary-operator operand 		| operand binary-operator operand 		| operand 		| "(" oexpr ")" 		; 	unary-operator ::= "-r"|"-w"|"-x"|"-f"|"-d"|"-c"|"-b"|"-p"| 		"-u"|"-g"|"-k"|"-s"|"-t"|"-z"|"-n"|"-o"|"-O"|"-G"|"-L"|"-S";  	binary-operator ::= "="|"!="|"-eq"|"-ne"|"-ge"|"-gt"|"-le"|"-lt"| 			"-nt"|"-ot"|"-ef"; 	operand ::=<any legal UNIX file name> */
 end_comment
