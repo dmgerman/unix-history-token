@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -115,6 +115,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -230,8 +231,6 @@ modifier|*
 name|nump
 decl_stmt|;
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -277,6 +276,10 @@ decl_stmt|,
 name|num
 decl_stmt|,
 name|off
+decl_stmt|;
+name|struct
+name|vop_strategy_args
+name|vop_strategy_a
 decl_stmt|;
 name|ip
 operator|=
@@ -700,6 +703,8 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|,
+name|numlevels
+decl_stmt|,
 name|off
 decl_stmt|,
 name|sh
@@ -723,8 +728,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|nump
+condition|)
 operator|*
 name|nump
+operator|=
+literal|0
+expr_stmt|;
+name|numlevels
 operator|=
 literal|0
 expr_stmt|;
@@ -860,8 +873,7 @@ operator|)
 expr_stmt|;
 comment|/*  	 * At each iteration, off is the offset into the bap array which is 	 * an array of disk addresses at the current level of indirection. 	 * The logical block number and the offset in that block are stored 	 * into the argument array. 	 */
 operator|++
-operator|*
-name|nump
+name|numlevels
 expr_stmt|;
 name|ap
 operator|->
@@ -922,8 +934,7 @@ name|fs
 argument_list|)
 expr_stmt|;
 operator|++
-operator|*
-name|nump
+name|numlevels
 expr_stmt|;
 name|ap
 operator|->
@@ -950,6 +961,15 @@ operator|*
 name|sh
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nump
+condition|)
+operator|*
+name|nump
+operator|=
+name|numlevels
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -988,8 +1008,6 @@ modifier|*
 name|bpp
 decl_stmt|;
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
