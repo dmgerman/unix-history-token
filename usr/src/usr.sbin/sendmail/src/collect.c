@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.3 (Berkeley) %G%"
+literal|"@(#)collect.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -967,6 +967,12 @@ name|e_flags
 operator|&=
 operator|~
 name|EF_FATALERRS
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
 expr_stmt|;
 comment|/* and don't try to deliver the partial message either */
 name|finis
