@@ -74,12 +74,10 @@ begin_comment
 comment|/*  * See if the local daemon has an invitation for us.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|check_local
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|CTL_RESPONSE
 name|response
@@ -259,28 +257,28 @@ literal|"Unable to connect with initiator"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look for an invitation on 'machine'  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|look_for_invite
-argument_list|(
-argument|rp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rp
+parameter_list|)
 name|CTL_RESPONSE
 modifier|*
 name|rp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|in_addr
@@ -337,7 +335,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -104,25 +104,16 @@ name|remote_id
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|re_invite
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|jmp_buf
 name|invitebuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|invite_remote
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|nfd
@@ -380,16 +371,25 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine called on interupt to re-invite the callee  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|void
 name|re_invite
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|message
 argument_list|(
@@ -493,12 +493,10 @@ begin_comment
 comment|/*  * Transmit the invitation and process the response  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|announce_invite
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|CTL_RESPONSE
 name|response
@@ -576,18 +574,16 @@ operator|.
 name|id_num
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tell the daemon to remove your invitation  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|send_delete
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|msg
 operator|.
@@ -707,7 +703,7 @@ literal|"send_delete (local)"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
