@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.8 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,8 @@ operator|)
 name|sbrk
 argument_list|(
 name|s_textsize
+operator|/
+name|HASHFRACTION
 argument_list|)
 expr_stmt|;
 if|if
@@ -452,6 +454,9 @@ decl_stmt|;
 name|int
 name|fromindex
 decl_stmt|;
+name|int
+name|endfrom
+decl_stmt|;
 name|char
 modifier|*
 name|frompc
@@ -512,6 +517,20 @@ argument_list|,
 name|ssiz
 argument_list|)
 expr_stmt|;
+name|endfrom
+operator|=
+name|s_textsize
+operator|/
+operator|(
+name|HASHFRACTION
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|froms
+argument_list|)
+operator|)
+expr_stmt|;
 for|for
 control|(
 name|fromindex
@@ -520,9 +539,7 @@ literal|0
 init|;
 name|fromindex
 operator|<
-name|s_textsize
-operator|>>
-literal|1
+name|endfrom
 condition|;
 name|fromindex
 operator|++
@@ -546,8 +563,14 @@ name|s_lowpc
 operator|+
 operator|(
 name|fromindex
-operator|<<
-literal|1
+operator|*
+name|HASHFRACTION
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|froms
+argument_list|)
 operator|)
 expr_stmt|;
 for|for
@@ -811,26 +834,20 @@ name|froms
 index|[
 operator|(
 operator|(
-operator|(
 name|long
 operator|)
 name|frompcindex
 operator|)
-operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|froms
-argument_list|)
-operator|-
-literal|1
-operator|)
 operator|/
+operator|(
+name|HASHFRACTION
+operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
 name|froms
 argument_list|)
+operator|)
 index|]
 expr_stmt|;
 name|toindex
