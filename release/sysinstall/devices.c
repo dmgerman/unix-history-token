@@ -442,6 +442,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"an"
+block|,
+literal|"Aironet 4500/4800 802.11 wireless adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"aue"
 block|,
 literal|"ADMtek USB ethernet adapter"
@@ -626,6 +634,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"ray"
+block|,
+literal|"Raytheon Raylink 802.11 wireless adaptor"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"rl"
 block|,
 literal|"RealTek 8129/8139 PCI ethernet card"
@@ -738,6 +754,14 @@ block|,
 literal|"wb"
 block|,
 literal|"Winbond W89C840F PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"wi"
+block|,
+literal|"Lucent WaveLAN/IEEE 802.11 wireless adapter"
 block|}
 block|,
 block|{
