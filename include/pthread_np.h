@@ -137,6 +137,7 @@ argument_list|(
 operator|(
 name|pthread_t
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
