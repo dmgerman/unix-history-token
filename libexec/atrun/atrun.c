@@ -235,7 +235,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atrun.c,v 1.5 1995/08/10 04:06:53 ache Exp $"
+literal|"$Id: atrun.c,v 1.5 1995/08/21 12:34:17 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -516,6 +516,48 @@ literal|"r"
 argument_list|)
 decl_stmt|;
 name|PRIV_END
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|pentry
+operator|->
+name|pw_expire
+operator|&&
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|pentry
+operator|->
+name|pw_expire
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Userid %lu is expired - aborting job %s"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|uid
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|stream
