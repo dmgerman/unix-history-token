@@ -8144,7 +8144,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"device timeout\n"
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|wi_init
