@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.30 1997/12/07 04:09:15 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.31 1997/12/13 02:37:32 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -694,7 +694,23 @@ name|LogPrintf
 argument_list|(
 name|LogTCPIP
 argument_list|,
-literal|"OsSetRoute: Dst = %s\n"
+literal|"OsSetRoute failure:\n"
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogTCPIP
+argument_list|,
+literal|"OsSetRoute:  Cmd = %s\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogTCPIP
+argument_list|,
+literal|"OsSetRoute:  Dst = %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -774,9 +790,14 @@ name|LogPrintf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s route failed: %s\n"
+literal|"%s route failed: %s: errno: %s\n"
 argument_list|,
 name|cmdstr
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|dst
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -793,9 +814,14 @@ name|LogPrintf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s route failed: %s\n"
+literal|"%s route failed: %s: %s\n"
 argument_list|,
 name|cmdstr
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|dst
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -1437,25 +1463,40 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|RTF_WASCLONED
 block|{
 name|RTF_WASCLONED
 block|,
 literal|'W'
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RTF_PRCLONING
 block|{
 name|RTF_PRCLONING
 block|,
 literal|'c'
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RTF_PROTO3
 block|{
 name|RTF_PROTO3
 block|,
 literal|'3'
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RTF_BROADCAST
 block|{
 name|RTF_BROADCAST
 block|,
@@ -1472,6 +1513,24 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RTF_WASCLONED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RTF_WASCLONED
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2477,6 +2536,8 @@ name|sa_none
 decl_stmt|;
 name|int
 name|needed
+decl_stmt|,
+name|pass
 decl_stmt|;
 name|char
 modifier|*
@@ -2655,6 +2716,33 @@ name|needed
 expr_stmt|;
 for|for
 control|(
+name|pass
+operator|=
+literal|0
+init|;
+name|pass
+operator|<
+literal|2
+condition|;
+name|pass
+operator|++
+control|)
+block|{
+comment|/*      * We do 2 passes.  The first deletes all cloned routes.  The second      * deletes all non-cloned routes.  This is necessary to avoid      * potential errors from trying to delete route X after route Y where      * route X was cloned from route Y (which is no longer there).      */
+if|if
+condition|(
+name|RTF_WASCLONED
+operator|==
+literal|0
+operator|&&
+name|pass
+operator|==
+literal|0
+condition|)
+comment|/* So we can't tell ! */
+continue|continue;
+for|for
+control|(
 name|cp
 operator|=
 name|sp
@@ -2696,8 +2784,8 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"DeleteIfRoutes: addrs: %x, Netif: %d (%s), flags: %x,"
-literal|" dst: %s ?\n"
+literal|"DeleteIfRoutes: addrs: %x, Netif: %d (%s),"
+literal|" flags: %x, dst: %s ?\n"
 argument_list|,
 name|rtm
 operator|->
@@ -2817,23 +2905,45 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|pass
+operator|==
+literal|0
+operator|&&
+operator|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_WASCLONED
+operator|)
+operator|)
+operator|||
+operator|(
+name|pass
+operator|==
+literal|1
+operator|&&
+operator|!
+operator|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_WASCLONED
+operator|)
+operator|)
+condition|)
+block|{
 name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"DeleteIfRoutes: Remove it\n"
-argument_list|)
-expr_stmt|;
-name|LogPrintf
-argument_list|(
-name|LogDEBUG
+literal|"DeleteIfRoutes: Remove it (pass %d)\n"
 argument_list|,
-literal|"DeleteIfRoutes: Dst: %s\n"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|sa_dst
-argument_list|)
+name|pass
 argument_list|)
 expr_stmt|;
 name|OsSetRoute
@@ -2853,6 +2963,17 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
+literal|"DeleteIfRoutes: Skip it (pass %d)\n"
+argument_list|,
+name|pass
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"DeleteIfRoutes: Can't remove routes of %d family !\n"
 argument_list|,
 name|sa
@@ -2860,6 +2981,7 @@ operator|->
 name|sa_family
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|free
