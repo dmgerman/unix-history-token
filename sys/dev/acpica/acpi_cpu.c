@@ -1033,81 +1033,457 @@ argument_list|)
 expr_stmt|;
 name|DEBUG_PRINT
 argument_list|(
-argument|TRACE_IO
+name|TRACE_IO
 argument_list|,
-argument|(
+operator|(
 literal|"acpi_cpu%d: throttling with P_BLK at 0x%x/%d%s\n"
-argument|,  				   device_get_unit(sc->cpu_dev), p_blk, p_blk_length, 				   sc->cpu_p_blk ?
+operator|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|cpu_dev
+argument_list|)
+operator|,
+name|p_blk
+operator|,
+name|p_blk_length
+operator|,
+name|sc
+operator|->
+name|cpu_p_blk
+condition|?
 literal|""
-argument|:
+else|:
 literal|" (shadowed)"
-argument|); 	}     }     return_VALUE(
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|return_VALUE
+argument_list|(
 literal|0
-argument|); }
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Call this *after* all CPUs have been attached.  *  * Takes the ACPI lock to avoid fighting anyone over the SMI command  * port.  Could probably lock less code.  */
-argument|static void acpi_cpu_init_throttling(void *arg) {      ACPI_LOCK;
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|acpi_cpu_init_throttling
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|ACPI_LOCK
+expr_stmt|;
 comment|/* get set of CPU devices */
-argument|devclass_get_devices(acpi_cpu_devclass,&cpu_devices,&cpu_ndevices);
-comment|/* initialise throttling states */
-argument|cpu_max_state = CPU_MAX_SPEED;     cpu_performance_state = cpu_max_state;     cpu_economy_state = cpu_performance_state /
-literal|2
-argument|;     if (cpu_economy_state ==
-literal|0
-argument|)
-comment|/* 0 is 'reserved' */
-argument|cpu_economy_state++;
-comment|/* register performance profile change handler */
-argument|EVENTHANDLER_REGISTER(powerprofile_change, acpi_cpu_powerprofile, NULL,
-literal|0
-argument|);
-comment|/* if ACPI 2.0+, signal platform that we are taking over throttling */
-argument|if (cpu_pstate_cnt !=
-literal|0
-argument|) {
-comment|/* XXX should be a generic interface for this */
-argument|AcpiOsOut8(cpu_smi_cmd, cpu_pstate_cnt);     }      ACPI_UNLOCK;
-comment|/* set initial speed */
-argument|acpi_cpu_powerprofile(NULL);          printf(
-literal|"acpi_cpu: CPU throttling enabled, %d steps from 100%% to %d.%d%%\n"
-argument|,  	   CPU_MAX_SPEED, CPU_SPEED_PRINTABLE(
-literal|1
-argument|)); }
-comment|/*  * Set CPUs to the new state.  *  * Must be called with the ACPI lock held.  */
-argument|static void acpi_cpu_set_speed(u_int32_t speed) {     struct acpi_cpu_softc	*sc;     int				i;     u_int32_t			p_cnt
+name|devclass_get_devices
+argument_list|(
+name|acpi_cpu_devclass
 argument_list|,
-argument|clk_val;      ACPI_ASSERTLOCK;
-comment|/* iterate over processors */
-argument|for (i =
+operator|&
+name|cpu_devices
+argument_list|,
+operator|&
+name|cpu_ndevices
+argument_list|)
+expr_stmt|;
+comment|/* initialise throttling states */
+name|cpu_max_state
+operator|=
+name|CPU_MAX_SPEED
+expr_stmt|;
+name|cpu_performance_state
+operator|=
+name|cpu_max_state
+expr_stmt|;
+name|cpu_economy_state
+operator|=
+name|cpu_performance_state
+operator|/
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|cpu_economy_state
+operator|==
 literal|0
-argument|; i< cpu_ndevices; i++) { 	sc = device_get_softc(cpu_devices[i]); 	if (sc->cpu_p_blk == NULL) 	    continue;
-comment|/* get the current P_CNT value and disable throttling */
-argument|p_cnt = CPU_GET_P_CNT(sc); 	p_cnt&= ~CPU_P_CNT_THT_EN; 	CPU_SET_P_CNT(sc, p_cnt);
-comment|/* if we're at maximum speed, that's all */
-argument|if (speed< CPU_MAX_SPEED) {
-comment|/* mask the old CLK_VAL off and or-in the new value */
-argument|clk_val = CPU_MAX_SPEED<< cpu_duty_offset; 	    p_cnt&= ~clk_val; 	    p_cnt |= (speed<< cpu_duty_offset);
-comment|/* write the new P_CNT value and then enable throttling */
-argument|CPU_SET_P_CNT(sc, p_cnt); 	    p_cnt |= CPU_P_CNT_THT_EN; 	    CPU_SET_P_CNT(sc, p_cnt); 	} 	device_printf(sc->cpu_dev,
-literal|"set speed to %d.%d%%\n"
-argument|, CPU_SPEED_PRINTABLE(speed));     }     cpu_current_state = speed; }
-comment|/*  * Power profile change hook.  *  * Uses the ACPI lock to avoid reentrancy.  */
-argument|static void acpi_cpu_powerprofile(void *arg) {     u_int32_t	new;      ACPI_LOCK;          new = (powerprofile_get_state() == POWERPROFILE_PERFORMANCE) ? cpu_performance_state : cpu_economy_state;     if (cpu_current_state != new) 	acpi_cpu_set_speed(new);      ACPI_UNLOCK; }
-comment|/*  * Handle changes in the performance/ecomony CPU settings.  *  * Does not need the ACPI lock (although setting *argp should  * probably be atomic).  */
-argument|static int acpi_cpu_speed_sysctl(SYSCTL_HANDLER_ARGS) {     u_int32_t	*argp;     u_int32_t	arg;     int		error;      argp = (u_int32_t *)oidp->oid_arg1;     arg = *argp;     error = sysctl_handle_int(oidp,&arg,
+condition|)
+comment|/* 0 is 'reserved' */
+name|cpu_economy_state
+operator|++
+expr_stmt|;
+comment|/* register performance profile change handler */
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|powerprofile_change
+argument_list|,
+name|acpi_cpu_powerprofile
+argument_list|,
+name|NULL
+argument_list|,
 literal|0
-argument|, req);
-comment|/* error or no new value */
-argument|if ((error !=
+argument_list|)
+expr_stmt|;
+comment|/* if ACPI 2.0+, signal platform that we are taking over throttling */
+if|if
+condition|(
+name|cpu_pstate_cnt
+operator|!=
 literal|0
-argument|) || (req->newptr == NULL)) 	return(error);
-comment|/* range check */
-argument|if ((arg<
+condition|)
+block|{
+comment|/* XXX should be a generic interface for this */
+name|AcpiOsOut8
+argument_list|(
+name|cpu_smi_cmd
+argument_list|,
+name|cpu_pstate_cnt
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_UNLOCK
+expr_stmt|;
+comment|/* set initial speed */
+name|acpi_cpu_powerprofile
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"acpi_cpu: CPU throttling enabled, %d steps from 100%% to %d.%d%%\n"
+argument_list|,
+name|CPU_MAX_SPEED
+argument_list|,
+name|CPU_SPEED_PRINTABLE
+argument_list|(
 literal|1
-argument|) || (arg>= cpu_max_state)) 	return(EINVAL);
-comment|/* set new value and possibly switch */
-argument|*argp = arg;     acpi_cpu_powerprofile(NULL);      return(
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set CPUs to the new state.  *  * Must be called with the ACPI lock held.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|acpi_cpu_set_speed
+parameter_list|(
+name|u_int32_t
+name|speed
+parameter_list|)
+block|{
+name|struct
+name|acpi_cpu_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int32_t
+name|p_cnt
+decl_stmt|,
+name|clk_val
+decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
+comment|/* iterate over processors */
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|); }
+init|;
+name|i
+operator|<
+name|cpu_ndevices
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|cpu_devices
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_p_blk
+operator|==
+name|NULL
+condition|)
+continue|continue;
+comment|/* get the current P_CNT value and disable throttling */
+name|p_cnt
+operator|=
+name|CPU_GET_P_CNT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|p_cnt
+operator|&=
+operator|~
+name|CPU_P_CNT_THT_EN
+expr_stmt|;
+name|CPU_SET_P_CNT
+argument_list|(
+name|sc
+argument_list|,
+name|p_cnt
+argument_list|)
+expr_stmt|;
+comment|/* if we're at maximum speed, that's all */
+if|if
+condition|(
+name|speed
+operator|<
+name|CPU_MAX_SPEED
+condition|)
+block|{
+comment|/* mask the old CLK_VAL off and or-in the new value */
+name|clk_val
+operator|=
+name|CPU_MAX_SPEED
+operator|<<
+name|cpu_duty_offset
+expr_stmt|;
+name|p_cnt
+operator|&=
+operator|~
+name|clk_val
+expr_stmt|;
+name|p_cnt
+operator||=
+operator|(
+name|speed
+operator|<<
+name|cpu_duty_offset
+operator|)
+expr_stmt|;
+comment|/* write the new P_CNT value and then enable throttling */
+name|CPU_SET_P_CNT
+argument_list|(
+name|sc
+argument_list|,
+name|p_cnt
+argument_list|)
+expr_stmt|;
+name|p_cnt
+operator||=
+name|CPU_P_CNT_THT_EN
+expr_stmt|;
+name|CPU_SET_P_CNT
+argument_list|(
+name|sc
+argument_list|,
+name|p_cnt
+argument_list|)
+expr_stmt|;
+block|}
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|cpu_dev
+argument_list|,
+literal|"set speed to %d.%d%%\n"
+argument_list|,
+name|CPU_SPEED_PRINTABLE
+argument_list|(
+name|speed
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|cpu_current_state
+operator|=
+name|speed
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Power profile change hook.  *  * Uses the ACPI lock to avoid reentrancy.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|acpi_cpu_powerprofile
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|u_int32_t
+name|new
+decl_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
+name|new
+operator|=
+operator|(
+name|powerprofile_get_state
+argument_list|()
+operator|==
+name|POWERPROFILE_PERFORMANCE
+operator|)
+condition|?
+name|cpu_performance_state
+else|:
+name|cpu_economy_state
+expr_stmt|;
+if|if
+condition|(
+name|cpu_current_state
+operator|!=
+name|new
+condition|)
+name|acpi_cpu_set_speed
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
+name|ACPI_UNLOCK
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Handle changes in the performance/ecomony CPU settings.  *  * Does not need the ACPI lock (although setting *argp should  * probably be atomic).  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|acpi_cpu_speed_sysctl
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|u_int32_t
+modifier|*
+name|argp
+decl_stmt|;
+name|u_int32_t
+name|arg
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|argp
+operator|=
+operator|(
+name|u_int32_t
+operator|*
+operator|)
+name|oidp
+operator|->
+name|oid_arg1
+expr_stmt|;
+name|arg
+operator|=
+operator|*
+name|argp
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|arg
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* error or no new value */
+if|if
+condition|(
+operator|(
+name|error
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* range check */
+if|if
+condition|(
+operator|(
+name|arg
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|arg
+operator|>
+name|cpu_max_state
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* set new value and possibly switch */
+operator|*
+name|argp
+operator|=
+name|arg
+expr_stmt|;
+name|acpi_cpu_powerprofile
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_function
 
 end_unit
