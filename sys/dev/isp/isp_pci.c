@@ -1181,6 +1181,8 @@ decl_stmt|,
 name|m2
 decl_stmt|,
 name|isp_debug
+decl_stmt|,
+name|role
 decl_stmt|;
 name|u_int32_t
 name|data
@@ -1223,7 +1225,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
+comment|/* 	 * Figure out if we're supposed to skip this one. 	 * If we are, we actually go to ISP_ROLE_NONE. 	 */
 name|unit
 operator|=
 name|device_get_unit
@@ -1257,14 +1259,67 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"not configuring\n"
+literal|"device is disabled\n"
 argument_list|)
 expr_stmt|;
+comment|/* but return 0 so the !$)$)*!$*) unit isn't reused */
 return|return
 operator|(
-name|ENODEV
+literal|0
 operator|)
 return|;
+block|}
+block|}
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+name|role
+operator|=
+name|ISP_ROLE_INITIATOR
+operator||
+name|ISP_ROLE_TARGET
+expr_stmt|;
+else|#
+directive|else
+name|role
+operator|=
+name|ISP_DEFAULT_ROLES
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|getenv_int
+argument_list|(
+literal|"isp_none"
+argument_list|,
+operator|&
+name|bitmap
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|bitmap
+operator|&
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"setting to ISP_ROLE_NONE\n"
+argument_list|)
+expr_stmt|;
+name|role
+operator|=
+name|ISP_ROLE_NONE
+expr_stmt|;
 block|}
 block|}
 name|pcs
@@ -2062,7 +2117,7 @@ name|isp
 operator|->
 name|isp_role
 operator|=
-name|ISP_DEFAULT_ROLES
+name|role
 expr_stmt|;
 comment|/* 	 * Try and find firmware for this device. 	 */
 if|if
@@ -2713,11 +2768,6 @@ expr_stmt|;
 name|locksetup
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
 if|if
 condition|(
 name|bus_setup_intr
@@ -2862,18 +2912,15 @@ if|if
 condition|(
 name|isp
 operator|->
+name|isp_role
+operator|!=
+name|ISP_ROLE_NONE
+operator|&&
+name|isp
+operator|->
 name|isp_state
 operator|!=
 name|ISP_INITSTATE
-condition|)
-block|{
-comment|/* If we're a Fibre Channel Card, we allow deferred attach */
-if|if
-condition|(
-name|IS_SCSI
-argument_list|(
-name|isp
-argument_list|)
 condition|)
 block|{
 name|isp_uninit
@@ -2889,7 +2936,6 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 block|}
 name|isp_attach
 argument_list|(
@@ -2900,18 +2946,15 @@ if|if
 condition|(
 name|isp
 operator|->
+name|isp_role
+operator|!=
+name|ISP_ROLE_NONE
+operator|&&
+name|isp
+operator|->
 name|isp_state
 operator|!=
 name|ISP_RUNSTATE
-condition|)
-block|{
-comment|/* If we're a Fibre Channel Card, we allow deferred attach */
-if|if
-condition|(
-name|IS_SCSI
-argument_list|(
-name|isp
-argument_list|)
 condition|)
 block|{
 name|isp_uninit
@@ -2927,7 +2970,6 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 block|}
 comment|/* 	 * XXXX: Here is where we might unload the f/w module 	 * XXXX: (or decrease the reference count to it). 	 */
 name|ISP_UNLOCK
