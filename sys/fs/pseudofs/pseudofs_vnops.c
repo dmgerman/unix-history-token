@@ -984,7 +984,7 @@ argument_list|(
 name|ENOTTY
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is necessary because either process' privileges may 	 * have changed since the open() call. 	 */
+comment|/* 	 * This is necessary because process' privileges may 	 * have changed since the open() call. 	 */
 if|if
 condition|(
 operator|!
