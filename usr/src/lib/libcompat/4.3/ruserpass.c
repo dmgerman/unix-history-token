@@ -129,6 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|utmp
 modifier|*
@@ -1411,19 +1412,21 @@ unit|}
 comment|/* rest is nbs.c stolen from berknet */
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_decl_stmt
+unit|static
+name|char
+modifier|*
 name|deblknot
 argument_list|()
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|deblkclr
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|nbs8decrypt
