@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftp.h	4.1	82/08/16	*/
+comment|/*	tftp.h	4.2	83/06/11	*/
 end_comment
 
 begin_comment
@@ -16,28 +16,6 @@ end_define
 
 begin_comment
 comment|/* data segment size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-value|5
-end_define
-
-begin_comment
-comment|/* retransmits every 5 seconds */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTIMEOUT
-value|(5*TIMEOUT)
-end_define
-
-begin_comment
-comment|/* abort if no success by then */
 end_comment
 
 begin_comment
