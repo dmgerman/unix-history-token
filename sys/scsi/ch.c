@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   */
-end_comment
-
-begin_comment
-comment|/*  * HISTORY  *   *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *   */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * HISTORY  * $Log: scsi_tape.h,v $  * Revision 1.2  1993/01/26  18:39:08  julian  * add the 'write protected' bit in the device status struct.  *  * Revision 1.1  1992/09/26  22:10:21  julian  * Initial revision  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *   */
+comment|/*  * HISTORY  * $Log:	scsi_tape.h,v $  *   * julian - added some special stuff for some OLD scsi tapes (CIPHER  *          ST150S)  *  * Revision 1.1.1.1  1993/06/12  14:57:27  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  *   * Revision 1.2  1993/01/26  18:39:08  julian  * add the 'write protected' bit in the device status struct.  *  * Revision 1.1  1992/09/26  22:10:21  julian  * Initial revision  *  */
 end_comment
 
 begin_comment
@@ -460,6 +460,88 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* A special for the CIPHER ST150S(old drive) */
+end_comment
+
+begin_struct
+struct|struct
+name|blk_desc_cipher
+block|{
+name|u_char
+name|density
+decl_stmt|;
+name|u_char
+name|nblocks
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_char
+name|reserved
+decl_stmt|;
+name|u_char
+name|blklen
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_char
+name|sec
+range|:
+literal|1
+decl_stmt|;
+comment|/* soft error count */
+name|u_char
+name|aui
+range|:
+literal|1
+decl_stmt|;
+comment|/* autoload inhibit */
+name|u_char
+label|:
+literal|6
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/********************************************************************** 			from the scsi2 spec                 Value Tracks Density(bpi) Code Type  Reference     Note                 0x1     9       800       NRZI  R    X3.22-1983    2                 0x2     9      1600       PE    R    X3.39-1986    2                 0x3     9      6250       GCR   R    X3.54-1986    2                 0x5    4/9     8000       GCR   C    X3.136-1986   1                 0x6     9      3200       PE    R    X3.157-1987   2                 0x7     4      6400       IMFM  C    X3.116-1986   1                 0x8     4      8000       GCR   CS   X3.158-1986   1                 0x9    18     37871       GCR   C    X3B5/87-099   2                 0xA    22      6667       MFM   C    X3B5/86-199   1                 0xB     4      1600       PE    C    X3.56-1986    1                 0xC    24     12690       GCR   C    HI-TC1        1,5                 0xD    24     25380       GCR   C    HI-TC2        1,5                 0xF    15     10000       GCR   C    QIC-120       1,5                 0x10   18     10000       GCR   C    QIC-150       1,5                 0x11   26     16000       GCR   C    QIC-320(525?) 1,5                 0x12   30     51667       RLL   C    QIC-1350      1,5                 0x13    1     61000       DDS   CS    X3B5/88-185A 4                 0x14    1     43245       RLL   CS    X3.202-1991  4                 0x15    1     45434       RLL   CS    ECMA TC17    4                 0x16   48     10000       MFM   C     X3.193-1990  1                 0x17   48     42500       MFM   C     X3B5/91-174  1                  where Code means:                 NRZI Non Return to Zero, change on ones                 GCR  Group Code Recording                 PE   Phase Encoded                 IMFM Inverted Modified Frequency Modulation                 MFM  Modified Frequency Modulation                 DDS  Dat Data Storage                 RLL  Run Length Encoding                  where Type means:                 R    Real-to-Real                 C    Cartridge                 CS   cassette                  where Notes means:                 1    Serial Recorded                 2    Parallel Recorded                 3    Old format know as QIC-11                 4    Helical Scan                 5    Not ANSI standard, rather industry standard.  ********************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HALFINCH_800
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|HALFINCH_1600
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|HALFINCH_6250
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|QIC_24
+value|0x05
+end_define
+
+begin_comment
+comment|/* may be bad, works for CIPHER ST150S XXX */
+end_comment
 
 begin_define
 define|#
