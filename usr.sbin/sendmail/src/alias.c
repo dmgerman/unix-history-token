@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.17 (Berkeley) 10/15/93"
+literal|"@(#)alias.c	8.19 (Berkeley) 10/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,8 +955,10 @@ name|int
 name|isopen
 decl_stmt|;
 block|{
-name|int
-name|atcnt
+name|bool
+name|attimeout
+init|=
+name|FALSE
 decl_stmt|;
 name|time_t
 name|mtime
@@ -1006,22 +1008,18 @@ operator|->
 name|map_mflags
 argument_list|)
 condition|)
-return|return;
+return|return
+name|isopen
+return|;
 name|map
 operator|->
 name|map_mflags
 operator||=
 name|MF_ALIASWAIT
 expr_stmt|;
-name|atcnt
-operator|=
-name|SafeAlias
-operator|*
-literal|2
-expr_stmt|;
 if|if
 condition|(
-name|atcnt
+name|SafeAlias
 operator|>
 literal|0
 condition|)
@@ -1030,14 +1028,23 @@ specifier|auto
 name|int
 name|st
 decl_stmt|;
+name|time_t
+name|toolong
+init|=
+name|curtime
+argument_list|()
+operator|+
+name|SafeAlias
+decl_stmt|;
+name|unsigned
+name|int
+name|sleeptime
+init|=
+literal|2
+decl_stmt|;
 while|while
 condition|(
 name|isopen
-operator|&&
-name|atcnt
-operator|--
-operator|>=
-literal|0
 operator|&&
 name|map
 operator|->
@@ -1058,6 +1065,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|curtime
+argument_list|()
+operator|>
+name|toolong
+condition|)
+block|{
+comment|/* we timed out */
+name|attimeout
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
 comment|/* 			**  Close and re-open the alias database in case 			**  the one is mv'ed instead of cp'ed in. 			*/
 if|if
 condition|(
@@ -1070,7 +1092,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"aliaswait: sleeping\n"
+literal|"aliaswait: sleeping for %d seconds\n"
+argument_list|,
+name|sleeptime
 argument_list|)
 expr_stmt|;
 name|map
@@ -1084,8 +1108,22 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
-literal|30
+name|sleeptime
 argument_list|)
+expr_stmt|;
+name|sleeptime
+operator|*=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|sleeptime
+operator|>
+literal|60
+condition|)
+name|sleeptime
+operator|=
+literal|60
 expr_stmt|;
 name|isopen
 operator|=
@@ -1235,9 +1273,7 @@ name|st_mtime
 operator|<
 name|mtime
 operator|||
-name|atcnt
-operator|<
-literal|0
+name|attimeout
 condition|)
 block|{
 comment|/* database is out of date */
@@ -1583,9 +1619,15 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|af
+argument_list|,
+literal|"rebuildaliases1"
+argument_list|,
+name|map
+operator|->
+name|map_file
 argument_list|)
 expr_stmt|;
 name|errno
@@ -1710,9 +1752,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* close the file, thus releasing locks */
-name|fclose
+name|xfclose
 argument_list|(
 name|af
+argument_list|,
+literal|"rebuildaliases2"
+argument_list|,
+name|map
+operator|->
+name|map_file
 argument_list|)
 expr_stmt|;
 comment|/* add distinguished entries and close the database */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.36 (Berkeley) 10/23/93"
+literal|"@(#)deliver.c	8.37 (Berkeley) 10/29/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -2160,6 +2160,8 @@ name|NULL
 argument_list|,
 literal|"queued"
 argument_list|,
+name|NULL
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -2727,6 +2729,8 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
+name|ctladdr
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -2764,6 +2768,8 @@ argument_list|,
 name|m
 argument_list|,
 name|NULL
+argument_list|,
+name|ctladdr
 argument_list|,
 name|e
 argument_list|)
@@ -2840,16 +2846,22 @@ operator|==
 name|FileMailer
 condition|)
 block|{
+name|ADDRESS
+modifier|*
+name|caddr
+init|=
+name|getctladdr
+argument_list|(
+name|to
+argument_list|)
+decl_stmt|;
 name|rcode
 operator|=
 name|mailfile
 argument_list|(
 name|user
 argument_list|,
-name|getctladdr
-argument_list|(
-name|to
-argument_list|)
+name|caddr
 argument_list|,
 name|e
 argument_list|)
@@ -2861,6 +2873,8 @@ argument_list|,
 name|m
 argument_list|,
 name|NULL
+argument_list|,
+name|caddr
 argument_list|,
 name|e
 argument_list|)
@@ -5321,6 +5335,8 @@ name|m
 argument_list|,
 name|mci
 argument_list|,
+name|ctladdr
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -5555,6 +5571,8 @@ argument_list|,
 name|m
 argument_list|,
 name|mci
+argument_list|,
+name|ctladdr
 argument_list|,
 name|e
 argument_list|)
@@ -6058,7 +6076,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer info for this mailer. **		mci -- the mailer connection info -- can be NULL if the **			response is given before the connection is made. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer info for this mailer. **		mci -- the mailer connection info -- can be NULL if the **			response is given before the connection is made. **		ctladdr -- the controlling address for the recipient **			address(es). **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
 end_comment
 
 begin_macro
@@ -6069,6 +6087,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|mci
+argument_list|,
+argument|ctladdr
 argument_list|,
 argument|e
 argument_list|)
@@ -6093,6 +6113,13 @@ specifier|register
 name|MCI
 modifier|*
 name|mci
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
 decl_stmt|;
 end_decl_stmt
 
@@ -6538,6 +6565,8 @@ index|[
 literal|4
 index|]
 argument_list|,
+name|ctladdr
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -6608,7 +6637,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
+comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
 end_comment
 
 begin_macro
@@ -6619,6 +6648,8 @@ argument_list|,
 argument|mci
 argument_list|,
 argument|stat
+argument_list|,
+argument|ctladdr
 argument_list|,
 argument|e
 argument_list|)
@@ -6647,6 +6678,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
@@ -6659,20 +6697,98 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOG
+specifier|register
+name|char
+modifier|*
+name|bp
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|512
 index|]
 decl_stmt|;
+name|bp
+operator|=
+name|buf
+expr_stmt|;
+if|if
+condition|(
+name|ctladdr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|bp
+argument_list|,
+literal|", ctladdr="
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|bp
+argument_list|,
+name|ctladdr
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QGOODUID
+argument_list|,
+name|ctladdr
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
+name|bp
 argument_list|,
-literal|"delay=%s"
+literal|" (%d/%d)"
+argument_list|,
+name|ctladdr
+operator|->
+name|q_uid
+argument_list|,
+name|ctladdr
+operator|->
+name|q_gid
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|", delay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
@@ -6687,6 +6803,13 @@ name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -6697,9 +6820,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcat
+name|strcpy
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|", mailer="
 argument_list|)
@@ -6709,11 +6832,18 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|m
 operator|->
 name|m_name
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6742,9 +6872,9 @@ directive|endif
 operator|(
 name|void
 operator|)
-name|strcat
+name|strcpy
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|", relay="
 argument_list|)
@@ -6754,7 +6884,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|mci
 operator|->
@@ -6769,7 +6899,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|" ("
 argument_list|)
@@ -6779,7 +6909,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -6793,7 +6923,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|")"
 argument_list|)
@@ -6831,9 +6961,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcat
+name|strcpy
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|", relay="
 argument_list|)
@@ -6843,7 +6973,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|p
 argument_list|)
@@ -6854,7 +6984,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: to=%s, %s, stat=%s"
+literal|"%s: to=%s%s, stat=%s"
 argument_list|,
 name|e
 operator|->

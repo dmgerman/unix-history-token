@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.12 (Berkeley) 10/21/93"
+literal|"@(#)err.c	8.14 (Berkeley) 10/29/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,6 +954,9 @@ name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
+name|Errors
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|msgcode
@@ -969,11 +972,7 @@ operator||=
 name|EF_PM_NOTIFY
 expr_stmt|;
 block|}
-else|else
-block|{
-name|Errors
-operator|++
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|msgcode
@@ -989,6 +988,8 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+comment|/* mark long-term fatal errors */
 name|CurEnv
 operator|->
 name|e_flags

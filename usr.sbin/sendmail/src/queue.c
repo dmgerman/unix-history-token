@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.24 (Berkeley) 10/23/93 (with queueing)"
+literal|"@(#)queue.c	8.27 (Berkeley) 10/29/93 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.24 (Berkeley) 10/23/93 (without queueing)"
+literal|"@(#)queue.c	8.27 (Berkeley) 10/29/93 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1147,6 +1147,8 @@ name|NULL
 argument_list|,
 literal|"queued"
 argument_list|,
+name|NULL
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1548,15 +1550,16 @@ begin_comment
 comment|/* 	**  Clean up. 	*/
 end_comment
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
 name|fflush
 argument_list|(
 name|tfp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+operator|<
+literal|0
+operator|||
 name|fsync
 argument_list|(
 name|fileno
@@ -1564,12 +1567,9 @@ argument_list|(
 name|tfp
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|ferror
 argument_list|(
 name|tfp
@@ -3563,6 +3563,8 @@ operator|=
 name|id
 expr_stmt|;
 name|GrabTo
+operator|=
+name|UseErrorsTo
 operator|=
 name|FALSE
 expr_stmt|;

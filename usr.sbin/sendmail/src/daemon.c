@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.19 (Berkeley) 10/23/93 (with daemon mode)"
+literal|"@(#)daemon.c	8.21 (Berkeley) 10/31/93 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.19 (Berkeley) 10/23/93 (without daemon mode)"
+literal|"@(#)daemon.c	8.21 (Berkeley) 10/31/93 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3775,6 +3775,12 @@ modifier|*
 name|s
 decl_stmt|;
 name|char
+modifier|*
+name|timeoutmsg
+init|=
+literal|"Recipient domain nameserver timed out"
+decl_stmt|;
+name|char
 name|hbuf
 index|[
 name|MAXNAME
@@ -3863,6 +3869,28 @@ operator|->
 name|s_namecanon
 operator|.
 name|nc_stat
+expr_stmt|;
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+operator|&&
+operator|*
+name|statp
+operator|==
+name|EX_TEMPFAIL
+condition|)
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|timeoutmsg
+argument_list|)
 expr_stmt|;
 return|return
 name|s
@@ -4036,15 +4064,9 @@ condition|(
 name|UseNameServer
 condition|)
 block|{
-name|char
-modifier|*
-name|msg
-init|=
-literal|"Recipient domain nameserver timed out"
-decl_stmt|;
 name|message
 argument_list|(
-name|msg
+name|timeoutmsg
 argument_list|)
 expr_stmt|;
 if|if
@@ -4061,7 +4083,7 @@ name|e_message
 operator|=
 name|newstr
 argument_list|(
-name|msg
+name|timeoutmsg
 argument_list|)
 expr_stmt|;
 block|}
@@ -4434,7 +4456,7 @@ if|if
 condition|(
 name|sap
 operator|->
-name|sun
+name|sunix
 operator|.
 name|sun_path
 index|[
@@ -4451,7 +4473,7 @@ literal|"[UNIX: %.64s]"
 argument_list|,
 name|sap
 operator|->
-name|sun
+name|sunix
 operator|.
 name|sun_path
 argument_list|)

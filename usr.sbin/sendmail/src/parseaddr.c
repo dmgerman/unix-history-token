@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.14 (Berkeley) 10/22/93"
+literal|"@(#)parseaddr.c	8.17 (Berkeley) 10/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,16 +488,29 @@ name|delimptr
 operator|!=
 name|NULL
 condition|)
+block|{
 name|savedelim
 operator|=
 operator|*
 name|delimptr
 expr_stmt|;
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+name|delimptr
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
 comment|/* for testing.... */
-block|if (strcmp(addr, "INvalidADDR") == 0) 	{ 		usrerr("553 INvalid ADDRess"); 		if (delimptr != NULL) 			*delimptr = savedelim; 		return TRUE; 	}
+block|if (strcmp(addr, "INvalidADDR") == 0) 	{ 		usrerr("553 INvalid ADDRess"); 		goto addrfailure; 	}
 endif|#
 directive|endif
 for|for
@@ -527,6 +540,18 @@ break|break;
 block|}
 if|if
 condition|(
+operator|*
+name|addr
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+operator|&&
 name|delimptr
 operator|!=
 name|NULL
@@ -536,16 +561,10 @@ name|delimptr
 operator|=
 name|savedelim
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|addr
-operator|==
-literal|'\0'
-condition|)
 return|return
 name|FALSE
 return|;
+block|}
 name|setstat
 argument_list|(
 name|EX_USAGE
@@ -555,6 +574,23 @@ name|usrerr
 argument_list|(
 literal|"553 Address contained invalid control characters"
 argument_list|)
+expr_stmt|;
+name|addrfailure
+label|:
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+operator|&&
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
+operator|=
+name|savedelim
 expr_stmt|;
 return|return
 name|TRUE
@@ -1202,7 +1238,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"653 Unbalanced '\"' (fixed)"
+literal|"653 Unbalanced '\"'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1220,7 +1256,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"653 Unbalanced '(' (fixed)"
+literal|"653 Unbalanced '('"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1242,7 +1278,7 @@ literal|'>'
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"653 Unbalanced '<' (fixed)"
+literal|"653 Unbalanced '<'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1395,7 +1431,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"653 Unbalanced ')' (fixed)"
+literal|"653 Unbalanced ')'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1446,7 +1482,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"653 Unbalanced '>' (fixed)"
+literal|"653 Unbalanced '>'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -4381,6 +4417,29 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|24
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"buildaddr, flags=%o, tv="
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|printav
+argument_list|(
+name|tv
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|a

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.13 (Berkeley) 10/15/93"
+literal|"@(#)readcf.c	8.14 (Berkeley) 10/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -4054,13 +4054,18 @@ condition|)
 name|SafeAlias
 operator|=
 literal|5
+operator|*
+literal|60
 expr_stmt|;
+comment|/* five minutes */
 else|else
 name|SafeAlias
 operator|=
-name|atoi
+name|convtime
 argument_list|(
 name|val
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 break|break;

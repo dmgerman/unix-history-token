@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.13 (Berkeley) 10/23/93"
+literal|"@(#)envelope.c	8.17 (Berkeley) 10/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -1428,7 +1428,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|static
 name|char
 name|cbuf
 index|[
@@ -1436,7 +1435,6 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* holds hop count */
-specifier|static
 name|char
 name|pbuf
 index|[
@@ -1499,7 +1497,6 @@ name|OpMode
 operator|==
 name|MD_DAEMON
 operator|&&
-operator|!
 name|bitset
 argument_list|(
 name|EF_QUEUERUN
@@ -1540,7 +1537,10 @@ name|define
 argument_list|(
 literal|'p'
 argument_list|,
+name|newstr
+argument_list|(
 name|pbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1564,7 +1564,10 @@ name|define
 argument_list|(
 literal|'c'
 argument_list|,
+name|newstr
+argument_list|(
 name|cbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1682,7 +1685,6 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
-specifier|static
 name|char
 name|tbuf
 index|[
@@ -1690,7 +1692,6 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* holds "current" time */
-specifier|static
 name|char
 name|dbuf
 index|[
@@ -1768,7 +1769,10 @@ name|define
 argument_list|(
 literal|'t'
 argument_list|,
+name|newstr
+argument_list|(
 name|tbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1811,7 +1815,10 @@ name|define
 argument_list|(
 literal|'d'
 argument_list|,
+name|newstr
+argument_list|(
 name|dbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -2259,6 +2266,14 @@ literal|'\0'
 else|:
 literal|' '
 expr_stmt|;
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+operator|=
+name|QBADADDR
+expr_stmt|;
 if|if
 condition|(
 name|from
@@ -2286,6 +2301,41 @@ name|e
 argument_list|)
 operator|==
 name|NULL
+operator|||
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+argument_list|)
+operator|||
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|ProgMailer
+operator|||
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|FileMailer
+operator|||
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|InclMailer
 condition|)
 block|{
 comment|/* log garbage addresses for traceback */
@@ -2372,7 +2422,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"from=%s unparseable, received from %s"
+literal|"setsender: %s: invalid or unparseable, received from %s"
 argument_list|,
 name|from
 argument_list|,
@@ -2389,10 +2439,34 @@ name|from
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+argument_list|)
+condition|)
+block|{
+comment|/* it was a bogus mailer in the from addr */
+name|usrerr
+argument_list|(
+literal|"553 Invalid sender address"
+argument_list|)
+expr_stmt|;
+block|}
 name|SuprErrs
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|from
@@ -2427,14 +2501,63 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|nbuf
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|SuprErrs
 operator|=
 name|TRUE
+expr_stmt|;
+name|expand
+argument_list|(
+literal|"\201n"
+argument_list|,
+name|nbuf
+argument_list|,
+operator|&
+name|nbuf
+index|[
+sizeof|sizeof
+name|nbuf
+index|]
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|parseaddr
 argument_list|(
+name|from
+operator|=
+name|newstr
+argument_list|(
+name|nbuf
+argument_list|)
+argument_list|,
+operator|&
+name|e
+operator|->
+name|e_from
+argument_list|,
+name|RF_COPYALL
+argument_list|,
+literal|' '
+argument_list|,
+name|NULL
+argument_list|,
+name|e
+argument_list|)
+operator|==
+name|NULL
+operator|&&
+name|parseaddr
+argument_list|(
+name|from
+operator|=
 literal|"postmaster"
 argument_list|,
 operator|&

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.5 (Berkeley) 10/15/93"
+literal|"@(#)collect.c	8.6 (Berkeley) 10/27/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,9 +884,8 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fsync
 argument_list|(
 name|fileno
@@ -894,15 +893,30 @@ argument_list|(
 name|tf
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
+operator|<
+literal|0
+operator|||
 name|fclose
 argument_list|(
 name|tf
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"cannot sync message data to disk (%s)"
+argument_list|,
+name|e
+operator|->
+name|e_df
+argument_list|)
 expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* An EOF when running SMTP is an error */
 if|if
 condition|(

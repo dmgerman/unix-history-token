@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.14 (Berkeley) 10/23/93"
+literal|"@(#)util.c	8.15 (Berkeley) 10/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -4170,6 +4170,9 @@ operator|&
 name|S_IFMT
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|S_IFSOCK
 case|case
 name|S_IFSOCK
 case|:
@@ -4373,6 +4376,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|S_IFCHR
 case|:
