@@ -496,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIG_ATOMIC_T_IN_SIGNAL_H
-value|0
+value|1
 end_define
 
 begin_comment
@@ -585,14 +585,14 @@ begin_define
 define|#
 directive|define
 name|STAT_STATFS2_BSIZE
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|STAT_STATFS2_FSIZE
-value|1
+value|0
 end_define
 
 begin_define
