@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.7 (Berkeley) %G%"
+literal|"@(#)spec.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +677,7 @@ case|:
 block|{
 name|mode_t
 modifier|*
-name|set
+name|m
 decl_stmt|,
 modifier|*
 name|setmode
@@ -687,7 +687,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|set
+name|m
 operator|=
 name|setmode
 argument_list|(
@@ -718,7 +718,7 @@ name|st_mode
 operator|=
 name|getmode
 argument_list|(
-name|set
+name|m
 argument_list|,
 literal|0
 argument_list|)
