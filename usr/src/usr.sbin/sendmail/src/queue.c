@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.24 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.25 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.24 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.25 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3766,6 +3766,28 @@ name|nf
 argument_list|)
 expr_stmt|;
 comment|/* kernel bug */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOSPC
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"queuename: Cannot create \"%s\" in \"%s\""
+argument_list|,
+name|nf
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 operator|(

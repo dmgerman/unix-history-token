@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.11 (Berkeley) %G%"
+literal|"@(#)headers.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ name|q
 expr_stmt|;
 block|}
 else|else
-name|syserr
+name|usrerr
 argument_list|(
 literal|"chompheader: syntax error, line \"%s\""
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.5 (Berkeley) %G%"
+literal|"@(#)collect.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,9 +649,18 @@ operator|==
 name|MD_SMTP
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
 if|if
 condition|(
 name|RealHostName
+operator|!=
+name|NULL
+operator|&&
+name|LogLevel
+operator|>
+literal|0
 condition|)
 name|syslog
 argument_list|(
@@ -668,6 +677,8 @@ argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usrerr
 argument_list|(
 literal|"collect: unexpected close, from=%s"

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.9 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -612,21 +612,6 @@ block|}
 name|printf
 argument_list|(
 literal|"Original message will be saved in dead.letter.\r\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|stdout
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|syserr
-argument_list|(
-literal|"savemail: stdout: write err"
 argument_list|)
 expr_stmt|;
 name|state

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.24 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.25 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.24 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.25 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1748,9 +1748,18 @@ case|case
 name|CMDDBGWIZ
 case|:
 comment|/* become a wizard */
+ifdef|#
+directive|ifdef
+name|LOG
 if|if
 condition|(
 name|RealHostName
+operator|!=
+name|NULL
+operator|&&
+name|LogLevel
+operator|>
+literal|0
 condition|)
 name|syslog
 argument_list|(
@@ -1772,6 +1781,8 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* FALL THROUGH */
 endif|#
 directive|endif

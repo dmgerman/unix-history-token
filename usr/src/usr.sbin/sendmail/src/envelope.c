@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.16 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,15 +2034,26 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|1
+condition|)
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"cannot prescan from (%s)"
 argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usrerr
 argument_list|(
 literal|"cannot prescan from (%s)"

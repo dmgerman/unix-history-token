@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1389,10 +1389,14 @@ case|:
 ifndef|#
 directive|ifndef
 name|DAEMON
-name|syserr
+name|usrerr
 argument_list|(
 literal|"Daemon mode not implemented"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 break|break;
 endif|#
@@ -1404,10 +1408,14 @@ case|:
 ifndef|#
 directive|ifndef
 name|SMTP
-name|syserr
+name|usrerr
 argument_list|(
 literal|"I don't speak SMTP"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 break|break;
 endif|#
@@ -1443,7 +1451,7 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
-name|syserr
+name|usrerr
 argument_list|(
 literal|"Invalid operation mode %c"
 argument_list|,
@@ -1452,6 +1460,10 @@ index|[
 literal|2
 index|]
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 break|break;
 block|}
@@ -1567,10 +1579,14 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"No \"from\" person"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 name|av
 operator|--
@@ -1585,10 +1601,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"More than one \"from\" person"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 break|break;
 block|}
@@ -1633,10 +1653,14 @@ literal|'-'
 operator|)
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"Bad -F flag"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 name|av
 operator|--
@@ -1686,12 +1710,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"Bad hop count (%s)"
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 name|av
 operator|--
@@ -1765,10 +1793,14 @@ expr_stmt|;
 else|#
 directive|else
 else|QUEUE
-name|syserr
+name|usrerr
 argument_list|(
 literal|"I don't know about queues"
 argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
 expr_stmt|;
 endif|#
 directive|endif
@@ -3504,7 +3536,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot freeze"
+literal|"Cannot freeze %s"
+argument_list|,
+name|freezefile
 argument_list|)
 expr_stmt|;
 name|errno
@@ -3630,7 +3664,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot freeze"
+literal|"Cannot freeze %s"
+argument_list|,
+name|freezefile
 argument_list|)
 expr_stmt|;
 block|}
