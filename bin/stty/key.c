@@ -1446,7 +1446,9 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|0
+name|ip
+operator|->
+name|fd
 argument_list|,
 name|TIOCSETD
 argument_list|,
