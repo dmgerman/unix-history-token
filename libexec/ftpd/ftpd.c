@@ -3494,8 +3494,6 @@ block|{
 name|int
 name|addrsize
 decl_stmt|,
-name|error
-decl_stmt|,
 name|gothost
 decl_stmt|;
 name|void
@@ -7933,10 +7931,6 @@ name|fout
 decl_stmt|,
 modifier|*
 name|din
-decl_stmt|;
-name|struct
-name|stat
-name|st
 decl_stmt|;
 name|int
 function_decl|(
