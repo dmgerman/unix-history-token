@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.33	82/03/19	*/
+comment|/*	ip_input.c	1.34	82/03/23	*/
 end_comment
 
 begin_include
@@ -1468,15 +1468,15 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
 name|q
 operator|=
 name|q
 operator|->
 name|ipf_next
-operator|)
+expr_stmt|;
+while|while
+condition|(
+name|q
 operator|!=
 operator|(
 expr|struct
@@ -1485,16 +1485,28 @@ operator|*
 operator|)
 name|fp
 condition|)
-name|m_cat
-argument_list|(
-name|m
-argument_list|,
+block|{
+name|t
+operator|=
 name|dtom
 argument_list|(
 name|q
 argument_list|)
+expr_stmt|;
+name|q
+operator|=
+name|q
+operator|->
+name|ipf_next
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|t
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Create header for new ip packet by 	 * modifying header of first packet; 	 * dequeue and discard fragment reassembly header. 	 * Make header visible. 	 */
 name|ip
 operator|=
