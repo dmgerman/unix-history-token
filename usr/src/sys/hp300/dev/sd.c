@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4364,6 +4364,15 @@ operator|<
 name|SDRETRY
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|sddebug
+operator|&
+name|SDB_ERROR
+condition|)
 name|printf
 argument_list|(
 literal|"sd%d: retry #%d\n"
@@ -4378,6 +4387,8 @@ operator|.
 name|b_errcnt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sdstart
 argument_list|(
 name|unit
