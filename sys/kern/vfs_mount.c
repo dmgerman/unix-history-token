@@ -843,7 +843,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n>>> "
+literal|"\nmountroot> "
 argument_list|)
 expr_stmt|;
 name|gets
