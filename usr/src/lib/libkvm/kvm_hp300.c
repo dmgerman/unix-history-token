@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.20 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3331,31 +3331,6 @@ block|{
 name|seterr
 argument_list|(
 literal|"zombie process"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-comment|/* 	 * Reading from swap is too complicated right now. 	 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|SLOAD
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|seterr
-argument_list|(
-literal|"can't read from swap yet"
 argument_list|)
 expr_stmt|;
 return|return
