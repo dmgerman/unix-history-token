@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.1 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.1 92/07/10 07:13:43 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.2 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.5 92/11/19 04:33:03 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -29,9 +29,9 @@ name|dk_next
 decl_stmt|;
 comment|/* list of disks; not yet used */
 name|int
-name|dk_wpms
+name|dk_bps
 decl_stmt|;
-comment|/* xfer rate */
+comment|/* xfer rate: bytes per second */
 name|int
 name|dk_bopenmask
 decl_stmt|;
@@ -173,8 +173,6 @@ name|dev_t
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|void
 argument_list|(
 argument|*d_start
@@ -203,6 +201,8 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
