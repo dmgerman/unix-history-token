@@ -21,12 +21,6 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -39,9 +33,29 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cleanup_push
+argument_list|,
+name|pthread_cleanup_push
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cleanup_pop
+argument_list|,
+name|pthread_cleanup_pop
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
-name|pthread_cleanup_push
+name|_pthread_cleanup_push
 parameter_list|(
 name|void
 function_decl|(
@@ -126,7 +140,7 @@ end_function
 
 begin_function
 name|void
-name|pthread_cleanup_pop
+name|_pthread_cleanup_pop
 parameter_list|(
 name|int
 name|execute
@@ -189,11 +203,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

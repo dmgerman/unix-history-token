@@ -33,12 +33,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -94,6 +88,16 @@ name|long_version
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_set_name_np
+argument_list|,
+name|pthread_set_name_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -1146,7 +1150,7 @@ end_comment
 
 begin_function
 name|void
-name|pthread_set_name_np
+name|_pthread_set_name_np
 parameter_list|(
 name|pthread_t
 name|thread
@@ -1201,11 +1205,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -6,38 +6,35 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|<pthread.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|<pthread_np.h>
 end_include
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_single_np
+argument_list|,
+name|pthread_single_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
-name|pthread_single_np
+name|_pthread_single_np
 parameter_list|()
 block|{
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
-name|_thread_single
-operator|=
-name|_get_curthread
+name|pthread_suspend_all_np
 argument_list|()
 expr_stmt|;
+comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 0; 	 */
 return|return
 operator|(
 literal|0
@@ -45,11 +42,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -33,12 +33,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -235,6 +229,56 @@ name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutex_init
+argument_list|,
+name|pthread_mutex_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutex_destroy
+argument_list|,
+name|pthread_mutex_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutex_trylock
+argument_list|,
+name|pthread_mutex_trylock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutex_lock
+argument_list|,
+name|pthread_mutex_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutex_unlock
+argument_list|,
+name|pthread_mutex_unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Reinitialize a mutex to defaults. */
 end_comment
@@ -417,7 +461,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutex_init
+name|_pthread_mutex_init
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -782,7 +826,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -969,7 +1013,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutex_trylock
+name|_pthread_mutex_trylock
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -1447,7 +1491,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -2210,7 +2254,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -2650,23 +2694,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
-if|if
-condition|(
-operator|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-operator|)
-condition|)
-block|{
+comment|/* Make the new owner runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -2679,21 +2707,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
-expr_stmt|;
-block|}
 comment|/* 					 * Add the mutex to the threads list of 					 * owned mutexes: 					 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -3015,23 +3028,7 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
-comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
-if|if
-condition|(
-operator|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-operator|)
-condition|)
-block|{
+comment|/* 					 * Make the new owner runnable: 					 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -3044,21 +3041,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
-expr_stmt|;
-block|}
 block|}
 block|}
 break|break;
@@ -3405,23 +3387,7 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
-comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
-if|if
-condition|(
-operator|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-operator|)
-condition|)
-block|{
+comment|/* 					 * Make the new owner runnable: 					 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -3434,21 +3400,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
-expr_stmt|;
-block|}
 block|}
 block|}
 break|break;
@@ -4540,11 +4491,6 @@ name|PTHREAD_FLAGS_IN_MUTEXQ
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

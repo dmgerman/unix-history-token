@@ -39,12 +39,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -64,6 +58,16 @@ name|FLAGS_IN_SCHEDQ
 define|\
 value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
 end_define
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_exit
+argument_list|,
+name|pthread_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -378,7 +382,7 @@ end_function
 
 begin_function
 name|void
-name|pthread_exit
+name|_pthread_exit
 parameter_list|(
 name|void
 modifier|*
@@ -620,27 +624,6 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|suspended
-condition|)
-block|{
-case|case
-name|SUSP_JOIN
-case|:
-comment|/* 			 * The joining thread is suspended.  Change the 			 * suspension state to make the thread runnable when it 			 * is resumed: 			 */
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NO
-expr_stmt|;
-break|break;
-case|case
-name|SUSP_NO
-case|:
 comment|/* Make the joining thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
@@ -649,14 +632,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-name|PANIC
-argument_list|(
-literal|"Unreachable code reached"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set the return value for the joining thread: */
 name|pthread
 operator|->
@@ -742,11 +717,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -289,7 +289,7 @@ argument_list|,
 name|dle
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
+comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
 if|if
 condition|(
 name|pthread
@@ -370,7 +370,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
+comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
 if|if
 condition|(
 name|pthread

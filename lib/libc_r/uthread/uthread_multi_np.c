@@ -6,36 +6,34 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|<pthread.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|<pthread_np.h>
 end_include
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_multi_np
+argument_list|,
+name|pthread_multi_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
-name|pthread_multi_np
+name|_pthread_multi_np
 parameter_list|()
 block|{
 comment|/* Return to multi-threaded scheduling mode: */
-name|_thread_single
-operator|=
-name|NULL
+comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 1; 	 */
+name|pthread_resume_all_np
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -44,11 +42,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

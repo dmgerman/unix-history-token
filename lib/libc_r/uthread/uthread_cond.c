@@ -21,12 +21,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -79,6 +73,66 @@ name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_init
+argument_list|,
+name|pthread_cond_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_destroy
+argument_list|,
+name|pthread_cond_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_wait
+argument_list|,
+name|pthread_cond_wait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_timedwait
+argument_list|,
+name|pthread_cond_timedwait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_signal
+argument_list|,
+name|pthread_cond_signal
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cond_broadcast
+argument_list|,
+name|pthread_cond_broadcast
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Reinitialize a condition variable to defaults. */
@@ -209,7 +263,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_init
+name|_pthread_cond_init
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -403,7 +457,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -469,7 +523,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_wait
+name|_pthread_cond_wait
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -987,7 +1041,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_timedwait
+name|_pthread_cond_timedwait
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -1559,7 +1613,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_signal
+name|_pthread_cond_signal
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -1662,28 +1716,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Unless the thread is currently suspended, 				 * allow it to run.  If the thread is suspended, 				 * make a note that the thread isn't in a wait 				 * queue any more. 				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-condition|)
+comment|/* 				 * Wake up the signaled thread: 				 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
-expr_stmt|;
-else|else
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
 expr_stmt|;
 block|}
 comment|/* Check for no more waiters: */
@@ -1749,7 +1788,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_broadcast
+name|_pthread_cond_broadcast
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -1853,28 +1892,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Unless the thread is currently suspended, 				 * allow it to run.  If the thread is suspended, 				 * make a note that the thread isn't in a wait 				 * queue any more. 				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-condition|)
+comment|/* 				 * Wake up the signaled thread: 				 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
-expr_stmt|;
-else|else
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
 expr_stmt|;
 block|}
 comment|/* There are no more waiting threads: */
@@ -2276,11 +2300,6 @@ name|cond
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

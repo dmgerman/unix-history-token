@@ -33,9 +33,49 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_cancel
+argument_list|,
+name|pthread_cancel
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_setcancelstate
+argument_list|,
+name|pthread_setcancelstate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_setcanceltype
+argument_list|,
+name|pthread_setcanceltype
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_testcancel
+argument_list|,
+name|pthread_testcancel
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_cancel
+name|_pthread_cancel
 parameter_list|(
 name|pthread_t
 name|pthread
@@ -238,7 +278,7 @@ break|break;
 case|case
 name|PS_JOIN
 case|:
-comment|/* 				 * Disconnect the thread from the joinee and 				 * detach: 				 */
+comment|/* 				 * Disconnect the thread from the joinee: 				 */
 if|if
 condition|(
 name|pthread
@@ -286,50 +326,6 @@ break|break;
 case|case
 name|PS_SUSPENDED
 case|:
-if|if
-condition|(
-name|pthread
-operator|->
-name|suspended
-operator|==
-name|SUSP_NO
-operator|||
-name|pthread
-operator|->
-name|suspended
-operator|==
-name|SUSP_YES
-operator|||
-name|pthread
-operator|->
-name|suspended
-operator|==
-name|SUSP_JOIN
-operator|||
-name|pthread
-operator|->
-name|suspended
-operator|==
-name|SUSP_NOWAIT
-condition|)
-block|{
-comment|/* 					 * This thread isn't in any scheduling 					 * queues; just change it's state: 					 */
-name|pthread
-operator|->
-name|cancelflags
-operator||=
-name|PTHREAD_CANCELLING
-expr_stmt|;
-name|PTHREAD_SET_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* FALLTHROUGH */
 case|case
 name|PS_MUTEX_WAIT
 case|:
@@ -404,7 +400,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_setcancelstate
+name|_pthread_setcancelstate
 parameter_list|(
 name|int
 name|state
@@ -523,7 +519,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_setcanceltype
+name|_pthread_setcanceltype
 parameter_list|(
 name|int
 name|type
@@ -630,7 +626,7 @@ end_function
 
 begin_function
 name|void
-name|pthread_testcancel
+name|_pthread_testcancel
 parameter_list|(
 name|void
 parameter_list|)

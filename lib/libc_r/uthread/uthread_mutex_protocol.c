@@ -21,12 +21,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -39,9 +33,29 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutexattr_getprotocol
+argument_list|,
+name|pthread_mutexattr_getprotocol
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_mutexattr_setprotocol
+argument_list|,
+name|pthread_mutexattr_setprotocol
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_mutexattr_getprotocol
+name|_pthread_mutexattr_getprotocol
 parameter_list|(
 name|pthread_mutexattr_t
 modifier|*
@@ -97,7 +111,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_mutexattr_setprotocol
+name|_pthread_mutexattr_setprotocol
 parameter_list|(
 name|pthread_mutexattr_t
 modifier|*
@@ -171,11 +185,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

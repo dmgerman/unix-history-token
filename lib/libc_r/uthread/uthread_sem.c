@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -50,9 +44,99 @@ define|\
 value|if ((*(sem))->magic != SEM_MAGIC) {	\ 		errno = EINVAL;			\ 		retval = -1;			\ 		goto RETURN;			\ 	}
 end_define
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_init
+argument_list|,
+name|sem_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_destroy
+argument_list|,
+name|sem_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_open
+argument_list|,
+name|sem_open
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_close
+argument_list|,
+name|sem_close
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_unlink
+argument_list|,
+name|sem_unlink
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_wait
+argument_list|,
+name|sem_wait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_trywait
+argument_list|,
+name|sem_trywait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_post
+argument_list|,
+name|sem_post
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_sem_getvalue
+argument_list|,
+name|sem_getvalue
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|sem_init
+name|_sem_init
 parameter_list|(
 name|sem_t
 modifier|*
@@ -277,7 +361,7 @@ end_function
 
 begin_function
 name|int
-name|sem_destroy
+name|_sem_destroy
 parameter_list|(
 name|sem_t
 modifier|*
@@ -403,7 +487,7 @@ end_function
 begin_function
 name|sem_t
 modifier|*
-name|sem_open
+name|_sem_open
 parameter_list|(
 specifier|const
 name|char
@@ -428,7 +512,7 @@ end_function
 
 begin_function
 name|int
-name|sem_close
+name|_sem_close
 parameter_list|(
 name|sem_t
 modifier|*
@@ -448,7 +532,7 @@ end_function
 
 begin_function
 name|int
-name|sem_unlink
+name|_sem_unlink
 parameter_list|(
 specifier|const
 name|char
@@ -469,7 +553,7 @@ end_function
 
 begin_function
 name|int
-name|sem_wait
+name|_sem_wait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -582,7 +666,7 @@ end_function
 
 begin_function
 name|int
-name|sem_trywait
+name|_sem_trywait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -666,7 +750,7 @@ end_function
 
 begin_function
 name|int
-name|sem_post
+name|_sem_post
 parameter_list|(
 name|sem_t
 modifier|*
@@ -754,7 +838,7 @@ end_function
 
 begin_function
 name|int
-name|sem_getvalue
+name|_sem_getvalue
 parameter_list|(
 name|sem_t
 modifier|*
@@ -819,11 +903,6 @@ name|retval
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -57,12 +57,6 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -126,7 +120,7 @@ decl_stmt|;
 name|int
 name|pfd_index
 decl_stmt|,
-name|got_one
+name|got_events
 init|=
 literal|0
 decl_stmt|,
@@ -692,7 +686,31 @@ operator|++
 control|)
 block|{
 comment|/* 			 * Check the results of the poll and clear 			 * this file descriptor from the fdset if 			 * the requested event wasn't ready. 			 */
-name|got_one
+comment|/* 			 * First check for invalid descriptor. 			 * If found, set errno and return -1. 			 */
+if|if
+condition|(
+name|data
+operator|.
+name|fds
+index|[
+name|i
+index|]
+operator|.
+name|revents
+operator|&
+name|POLLNVAL
+condition|)
+block|{
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|got_events
 operator|=
 literal|0
 expr_stmt|;
@@ -747,9 +765,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|got_one
-operator|=
-literal|1
+name|got_events
+operator|++
 expr_stmt|;
 else|else
 name|FD_CLR
@@ -821,9 +838,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|got_one
-operator|=
-literal|1
+name|got_events
+operator|++
 expr_stmt|;
 else|else
 name|FD_CLR
@@ -881,17 +897,10 @@ operator|(
 name|POLLRDBAND
 operator||
 name|POLLPRI
-operator||
-name|POLLHUP
-operator||
-name|POLLERR
-operator||
-name|POLLNVAL
 operator|)
 condition|)
-name|got_one
-operator|=
-literal|1
+name|got_events
+operator|++
 expr_stmt|;
 else|else
 name|FD_CLR
@@ -912,10 +921,13 @@ block|}
 block|}
 if|if
 condition|(
-name|got_one
+name|got_events
+operator|!=
+literal|0
 condition|)
 name|numfds
-operator|++
+operator|+=
+name|got_events
 expr_stmt|;
 block|}
 name|ret
@@ -985,11 +997,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

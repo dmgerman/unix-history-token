@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -86,6 +80,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
 comment|/* 		 * Check if the existing signal action structure contents are 		 * to be returned:  		 */
 if|if
 condition|(
@@ -219,7 +222,7 @@ name|sa_flags
 operator|=
 name|SA_SIGINFO
 operator||
-name|SA_ONSTACK
+name|SA_RESTART
 expr_stmt|;
 comment|/* 			 * Check if the signal handler is being set to 			 * the default or ignore handlers: 			 */
 if|if
@@ -300,11 +303,6 @@ name|sigaction
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -3,12 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 1998 Alex Nash  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,9 +27,49 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_rwlockattr_destroy
+argument_list|,
+name|pthread_rwlockattr_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_rwlockattr_getpshared
+argument_list|,
+name|pthread_rwlockattr_getpshared
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_rwlockattr_init
+argument_list|,
+name|pthread_rwlockattr_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_rwlockattr_setpshared
+argument_list|,
+name|pthread_rwlockattr_setpshared
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_rwlockattr_destroy
+name|_pthread_rwlockattr_destroy
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
@@ -87,7 +121,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_rwlockattr_getpshared
+name|_pthread_rwlockattr_getpshared
 parameter_list|(
 specifier|const
 name|pthread_rwlockattr_t
@@ -119,7 +153,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_rwlockattr_init
+name|_pthread_rwlockattr_init
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
@@ -186,7 +220,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_rwlockattr_setpshared
+name|_pthread_rwlockattr_setpshared
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
@@ -224,15 +258,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _THREAD_SAFE */
-end_comment
 
 end_unit
 

@@ -21,12 +21,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -39,9 +33,19 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_attr_init
+argument_list|,
+name|pthread_attr_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_attr_init
+name|_pthread_attr_init
 parameter_list|(
 name|pthread_attr_t
 modifier|*
@@ -115,11 +119,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

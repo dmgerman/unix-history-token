@@ -27,12 +27,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -148,6 +142,15 @@ decl_stmt|;
 name|int
 name|saved_errno
 decl_stmt|;
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
 comment|/* Check if the file descriptor is out of range: */
 if|if
 condition|(
@@ -2849,11 +2852,6 @@ name|pthread
 parameter_list|)
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

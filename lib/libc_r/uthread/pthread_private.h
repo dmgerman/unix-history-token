@@ -596,7 +596,7 @@ name|thrd
 parameter_list|,
 name|newstate
 parameter_list|)
-value|do {				\ 	if (_thread_kern_new_state != 0)				\ 		PANIC("Recursive PTHREAD_NEW_STATE");			\ 	_thread_kern_new_state = 1;					\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_PRIOQ_REMOVE(thrd);			\ 			PTHREAD_WAITQ_INSERT(thrd);			\ 		} else if (newstate == PS_RUNNING) { 			\ 			PTHREAD_WAITQ_REMOVE(thrd);			\ 			PTHREAD_PRIOQ_INSERT_TAIL(thrd);		\ 		}							\ 	}								\ 	_thread_kern_new_state = 0;					\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
+value|do {				\ 	if (_thread_kern_new_state != 0)				\ 		PANIC("Recursive PTHREAD_NEW_STATE");			\ 	_thread_kern_new_state = 1;					\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_PRIOQ_REMOVE(thrd);			\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 			PTHREAD_WAITQ_INSERT(thrd);			\ 		} else if (newstate == PS_RUNNING) { 			\ 			PTHREAD_WAITQ_REMOVE(thrd);			\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 			PTHREAD_PRIOQ_INSERT_TAIL(thrd);		\ 		}							\ 	}								\ 	_thread_kern_new_state = 0;					\ } while (0)
 end_define
 
 begin_else
@@ -1124,35 +1124,6 @@ directive|define
 name|PTHREAD_CREATE_SUSPENDED
 value|1
 end_define
-
-begin_comment
-comment|/*  * Additional state for a thread suspended with pthread_suspend_np().  */
-end_comment
-
-begin_enum
-enum|enum
-name|pthread_susp
-block|{
-name|SUSP_NO
-block|,
-comment|/* Not suspended. */
-name|SUSP_YES
-block|,
-comment|/* Suspended. */
-name|SUSP_JOIN
-block|,
-comment|/* Suspended, joining. */
-name|SUSP_NOWAIT
-block|,
-comment|/* Suspended, was in a mutex or condition queue. */
-name|SUSP_MUTEX_WAIT
-block|,
-comment|/* Suspended, still in a mutex queue. */
-name|SUSP_COND_WAIT
-comment|/* Suspended, still in a condition queue. */
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * Miscellaneous definitions.  */
@@ -1696,31 +1667,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Normally thread contexts are stored as jmp_bufs via _setjmp()/_longjmp(),  * but they may also be sigjmp_buf and ucontext_t.  When a thread is  * interrupted by a signal, it's context is saved as a ucontext_t.  An  * application is also free to use [_]longjmp()/[_]siglongjmp() to jump  * between contexts within the same thread.  Future support will also  * include setcontext()/getcontext().  *  * Define an enumerated type that can identify the 4 different context  * types.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTX_JB_NOSIG
-block|,
-comment|/* context is jmp_buf without saved sigset */
-name|CTX_JB
-block|,
-comment|/* context is jmp_buf (with saved sigset) */
-name|CTX_SJB
-block|,
-comment|/* context is sigjmp_buf (with saved sigset) */
-name|CTX_UC
-comment|/* context is ucontext_t (with saved sigset) */
-block|}
-name|thread_context_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * There are 2 basic contexts that a frame may contain at any  * one time:  *  *   o ctx - The context that the thread should return to after normal  *     completion of the signal handler.  *   o sig_jb - The context just before the signal handler is invoked.  *     Attempts at abnormal returns from user supplied signal handlers  *     will return back to the signal context to perform any necessary  *     cleanup.  */
+comment|/*  * The frame that is added to the top of a threads stack when setting up  * up the thread to run a signal handler.  */
 end_comment
 
 begin_struct
@@ -1732,14 +1679,11 @@ name|struct
 name|pthread_state_data
 name|saved_state
 decl_stmt|;
-comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 * For signal frame 0, these point to the context storage area 	 * within the pthread structure.  When handling signals (frame> 0), 	 * these point to a context storage area that is allocated off the 	 * threads stack. 	 */
+comment|/* 	 * Threads return context; we use only jmp_buf's for now. 	 */
 union|union
 block|{
 name|jmp_buf
 name|jb
-decl_stmt|;
-name|sigjmp_buf
-name|sigjb
 decl_stmt|;
 name|ucontext_t
 name|uc
@@ -1747,12 +1691,6 @@ decl_stmt|;
 block|}
 name|ctx
 union|;
-name|thread_context_t
-name|ctxtype
-decl_stmt|;
-name|int
-name|longjmp_val
-decl_stmt|;
 name|int
 name|signo
 decl_stmt|;
@@ -1837,14 +1775,11 @@ name|struct
 name|pthread_attr
 name|attr
 decl_stmt|;
-comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 */
+comment|/* 	 * Threads return context; we use only jmp_buf's for now. 	 */
 union|union
 block|{
 name|jmp_buf
 name|jb
-decl_stmt|;
-name|sigjmp_buf
-name|sigjb
 decl_stmt|;
 name|ucontext_t
 name|uc
@@ -1852,12 +1787,6 @@ decl_stmt|;
 block|}
 name|ctx
 union|;
-name|thread_context_t
-name|ctxtype
-decl_stmt|;
-name|int
-name|longjmp_val
-decl_stmt|;
 comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
 name|struct
 name|pthread_signal_frame
@@ -1879,10 +1808,6 @@ name|PTHREAD_CANCEL_NEEDED
 value|0x0010
 name|int
 name|cancelflags
-decl_stmt|;
-name|enum
-name|pthread_susp
-name|suspended
 decl_stmt|;
 name|thread_continuation_t
 name|continuation
@@ -1930,7 +1855,7 @@ comment|/* 	 * Error variable used instead of errno. The function __error() 	 * 
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * THe joiner is the thread that is joining to this thread.  The 	 * join status keeps track of a join operation to another thread. 	 */
+comment|/* 	 * The joiner is the thread that is joining to this thread.  The 	 * join status keeps track of a join operation to another thread. 	 */
 name|struct
 name|pthread
 modifier|*
@@ -2037,8 +1962,13 @@ value|0x0100
 comment|/* in mutex queue using sqe link */
 define|#
 directive|define
-name|PTHREAD_FLAGS_TRACE
+name|PTHREAD_FLAGS_SUSPENDED
 value|0x0200
+comment|/* thread is suspended */
+define|#
+directive|define
+name|PTHREAD_FLAGS_TRACE
+value|0x0400
 comment|/* for debugging purposes */
 define|#
 directive|define
@@ -2218,39 +2148,6 @@ name|GLOBAL_PTHREAD_PRIVATE
 init|=
 operator|&
 name|_thread_kern_thread
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Ptr to the thread running in single-threaded mode or NULL if  * running multi-threaded (default POSIX behaviour).  */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|pthread
-modifier|*
-specifier|volatile
-name|_thread_single
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -3062,18 +2959,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The signal stack. */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|sigaltstack
-name|_thread_sigstack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Thread switch hook. */
 end_comment
 
@@ -3564,6 +3449,204 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|_pthread_getspecific
+parameter_list|(
+name|pthread_key_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_key_create
+parameter_list|(
+name|pthread_key_t
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_key_delete
+parameter_list|(
+name|pthread_key_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_destroy
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_init
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|,
+specifier|const
+name|pthread_mutexattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_lock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_trylock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_unlock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_once
+parameter_list|(
+name|pthread_once_t
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_setspecific
+parameter_list|(
+name|pthread_key_t
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_init
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|,
+specifier|const
+name|pthread_condattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_destroy
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_wait
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|,
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_timedwait
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|,
+name|pthread_mutex_t
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_signal
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_cond_broadcast
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_waitq_insert
 parameter_list|(
 name|pthread_t
@@ -4019,6 +4102,42 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* #include<aio.h> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_AIO_H_
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|__sys_aio_suspend
+argument_list|(
+specifier|const
+expr|struct
+name|aiocb
+operator|*
+specifier|const
+index|[]
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+expr|struct
+name|timespec
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #include<sys/event.h> */
@@ -4565,42 +4684,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #include<aio.h> */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SYS_AIO_H_
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|__sys_aio_suspend
-argument_list|(
-specifier|const
-expr|struct
-name|aiocb
-operator|*
-specifier|const
-index|[]
-argument_list|,
-name|int
-argument_list|,
-specifier|const
-expr|struct
-name|timespec
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* #include<dirent.h> */
 end_comment
 
@@ -4746,41 +4829,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sys_sigaltstack
-parameter_list|(
-specifier|const
-name|struct
-name|sigaltstack
-modifier|*
-parameter_list|,
-name|struct
-name|sigaltstack
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigblock
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigpending
-parameter_list|(
-name|sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|__sys_sigprocmask
 parameter_list|(
 name|int
@@ -4797,50 +4845,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sys_sigsetmask
+name|__sys_sigreturn
 parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigsuspend
-parameter_list|(
-specifier|const
-name|sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* #include<time.h> */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_TIME_H_
-end_ifdef
-
-begin_function_decl
-name|int
-name|__sys_nanosleep
-parameter_list|(
-specifier|const
-name|struct
-name|timespec
-modifier|*
-parameter_list|,
-name|struct
-name|timespec
+name|ucontext_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4982,46 +4989,6 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pid_t
-name|__sys_rfork
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_select
-parameter_list|(
-name|int
-parameter_list|,
-name|fd_set
-modifier|*
-parameter_list|,
-name|fd_set
-modifier|*
-parameter_list|,
-name|fd_set
-modifier|*
-parameter_list|,
-name|struct
-name|timeval
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pid_t
-name|__sys_vfork
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

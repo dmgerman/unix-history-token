@@ -27,12 +27,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -105,9 +99,9 @@ name|act
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
-operator||
 name|SA_SIGINFO
+operator||
+name|SA_RESTART
 expr_stmt|;
 comment|/* Ensure the signal handler cannot be interrupted by other signals: */
 name|sigfillset
@@ -516,11 +510,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

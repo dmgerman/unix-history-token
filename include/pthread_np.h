@@ -79,6 +79,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|pthread_resume_all_np
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|pthread_resume_np
 name|__P
@@ -93,6 +105,18 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|pthread_single_np
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pthread_suspend_all_np
 name|__P
 argument_list|(
 operator|(

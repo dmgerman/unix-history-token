@@ -27,12 +27,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -60,9 +54,49 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_key_create
+argument_list|,
+name|pthread_key_create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_key_delete
+argument_list|,
+name|pthread_key_delete
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_getspecific
+argument_list|,
+name|pthread_getspecific
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_setspecific
+argument_list|,
+name|pthread_setspecific
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_key_create
+name|_pthread_key_create
 parameter_list|(
 name|pthread_key_t
 modifier|*
@@ -197,7 +231,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_key_delete
+name|_pthread_key_delete
 parameter_list|(
 name|pthread_key_t
 name|key
@@ -554,7 +588,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_setspecific
+name|_pthread_setspecific
 parameter_list|(
 name|pthread_key_t
 name|key
@@ -696,7 +730,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|pthread_getspecific
+name|_pthread_getspecific
 parameter_list|(
 name|pthread_key_t
 name|key
@@ -779,11 +813,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

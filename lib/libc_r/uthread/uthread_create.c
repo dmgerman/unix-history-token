@@ -57,12 +57,6 @@ directive|include
 file|<sys/mman.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -154,17 +148,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_thread_ctxtype_offset
-init|=
-name|OFF
-argument_list|(
-name|ctxtype
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|_thread_ctx_offset
 init|=
 name|OFF
@@ -196,41 +179,19 @@ name|PS_DEAD
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|_thread_CTX_JB_NOSIG_value
-init|=
-name|CTX_JB_NOSIG
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_JB_value
-init|=
-name|CTX_JB
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_SJB_value
-init|=
-name|CTX_SJB
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_UC_value
-init|=
-name|CTX_UC
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_create
+argument_list|,
+name|pthread_create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
-name|pthread_create
+name|_pthread_create
 parameter_list|(
 name|pthread_t
 modifier|*
@@ -696,13 +657,6 @@ name|double
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the rest of the frame: */
-name|new_thread
-operator|->
-name|ctxtype
-operator|=
-name|CTX_JB_NOSIG
-expr_stmt|;
 comment|/* Copy the thread attributes: */
 name|memcpy
 argument_list|(
@@ -899,12 +853,20 @@ name|suspend
 operator|==
 name|PTHREAD_CREATE_SUSPENDED
 condition|)
+block|{
+name|new_thread
+operator|->
+name|flags
+operator||=
+name|PTHREAD_FLAGS_SUSPENDED
+expr_stmt|;
 name|new_thread
 operator|->
 name|state
 operator|=
 name|PS_SUSPENDED
 expr_stmt|;
+block|}
 else|else
 block|{
 name|new_thread
@@ -1065,11 +1027,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
