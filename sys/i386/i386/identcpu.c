@@ -2486,6 +2486,7 @@ comment|/* CMPEXCH8 instruction */
 literal|"\012APIC"
 comment|/* SMP local APIC */
 literal|"\013oldMTRR"
+comment|/* Previous implementation of MTRR */
 literal|"\014SEP"
 comment|/* Fast System Call */
 literal|"\015MTRR"
@@ -2519,9 +2520,10 @@ literal|"\033SSE2"
 comment|/* Streaming SIMD Extensions #2 */
 literal|"\034SS"
 comment|/* Self snoop */
-literal|"\035<b28>"
-literal|"\036ACC"
-comment|/* Auto Clock Correction (TCC/ACPI) */
+literal|"\035HTT"
+comment|/* Hyperthreading (see EBX bit 16-23) */
+literal|"\036TM"
+comment|/* Thermal Monintor clock slowdown */
 literal|"\037IA64"
 comment|/* CPU can execute IA64 instructions */
 literal|"\040<b31>"
