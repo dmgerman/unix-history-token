@@ -6020,7 +6020,9 @@ name|physical
 operator|->
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 operator|.
 name|rolling
 operator|&&
@@ -6063,7 +6065,9 @@ name|physical
 operator|->
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 operator|.
 name|OctetsPerSecond
 operator|*
@@ -6075,7 +6079,9 @@ name|physical
 operator|->
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 operator|.
 name|OctetsPerSecond
 argument_list|)
@@ -6103,7 +6109,9 @@ name|mp
 operator|.
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 expr_stmt|;
 name|secs
 operator|=

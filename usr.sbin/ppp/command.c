@@ -18261,7 +18261,9 @@ name|physical
 operator|->
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 expr_stmt|;
 block|}
 elseif|else

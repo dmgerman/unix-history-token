@@ -60,11 +60,28 @@ name|int
 name|len
 decl_stmt|;
 comment|/* full size of parent struct */
+struct|struct
+block|{
+name|unsigned
+name|gather
+range|:
+literal|1
+decl_stmt|;
+comment|/* Gather statistics ourself ? */
 name|struct
 name|pppThroughput
-name|throughput
+name|total
 decl_stmt|;
 comment|/* Link throughput statistics */
+name|struct
+name|pppThroughput
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* MP link throughput statistics */
+block|}
+name|stats
+struct|;
 name|struct
 name|mqueue
 name|Queue
@@ -133,34 +150,6 @@ name|link
 parameter_list|)
 value|((link)->Queue + LINK_QUEUES(link) - 1)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|link_AddInOctets
-parameter_list|(
-name|struct
-name|link
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|link_AddOutOctets
-parameter_list|(
-name|struct
-name|link
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
