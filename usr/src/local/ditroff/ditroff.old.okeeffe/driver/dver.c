@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dver.c	1.6	83/07/09  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
+comment|/* dver.c	1.7	83/07/29  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
 end_comment
 
 begin_comment
@@ -175,7 +175,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.6	83/07/09"
+literal|"dver.c	1.7	83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,24 +474,20 @@ begin_comment
 comment|/* current vertical position (down positive) */
 end_comment
 
-begin_decl_stmt
-name|int
-name|horig
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	linethickness;
+end_extern
 
 begin_comment
-comment|/* h origin of current block (just a marker) */
+comment|/* thickness (in pixels) of any drawn objects */
 end_comment
 
-begin_decl_stmt
-name|int
-name|vorig
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	linmod;
+end_extern
 
 begin_comment
-comment|/* v origin of current block (just a marker) */
+comment|/* line style (a bit mask - dotted, etc.) of objects */
 end_comment
 
 begin_decl_stmt
@@ -3353,10 +3349,10 @@ name|int
 name|svpos
 decl_stmt|;
 name|int
-name|shorig
+name|sstyle
 decl_stmt|;
 name|int
-name|svorig
+name|sthick
 decl_stmt|;
 block|}
 struct|;
@@ -3407,15 +3403,15 @@ name|font
 expr_stmt|;
 name|statep
 operator|->
-name|shorig
+name|sstyle
 operator|=
-name|horig
+name|linmod
 expr_stmt|;
 name|statep
 operator|->
-name|svorig
+name|sthick
 operator|=
-name|vorig
+name|linethickness
 expr_stmt|;
 name|statep
 operator|->
@@ -3428,20 +3424,6 @@ operator|->
 name|svpos
 operator|=
 name|vpos
-expr_stmt|;
-name|horig
-operator|=
-name|hpos
-expr_stmt|;
-name|vorig
-operator|=
-name|vpos
-expr_stmt|;
-name|hpos
-operator|=
-name|vpos
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3458,12 +3440,6 @@ name|FATAL
 argument_list|,
 literal|"{ nested too deep"
 argument_list|)
-expr_stmt|;
-name|hpos
-operator|=
-name|vpos
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_block
@@ -3517,17 +3493,17 @@ name|statep
 operator|->
 name|svpos
 expr_stmt|;
-name|horig
+name|linmod
 operator|=
 name|statep
 operator|->
-name|shorig
+name|sstyle
 expr_stmt|;
-name|vorig
+name|linethickness
 operator|=
 name|statep
 operator|->
-name|svorig
+name|sthick
 expr_stmt|;
 block|}
 end_block
