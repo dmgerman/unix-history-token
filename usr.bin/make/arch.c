@@ -437,7 +437,7 @@ literal|'$'
 condition|)
 block|{
 comment|/* 	     * Variable spec, so call the Var module to parse the puppy 	     * so we can safely advance beyond it... 	     */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|Boolean
@@ -605,7 +605,7 @@ literal|'$'
 condition|)
 block|{
 comment|/* 		 * Variable spec, so call the Var module to parse the puppy 		 * so we can safely advance beyond it... 		 */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|Boolean

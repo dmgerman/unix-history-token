@@ -190,7 +190,7 @@ block|{
 name|Buffer
 name|buf
 decl_stmt|;
-name|int
+name|size_t
 name|varlen
 decl_stmt|;
 for|for
@@ -849,7 +849,7 @@ name|arg
 init|=
 name|argp
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Var_Set

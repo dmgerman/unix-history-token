@@ -254,7 +254,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
 name|VarPattern
@@ -1442,7 +1442,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -1670,7 +1670,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -1858,7 +1858,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -2030,7 +2030,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -2125,7 +2125,7 @@ name|int
 modifier|*
 name|flags
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|length
 parameter_list|,
@@ -2146,7 +2146,7 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|junk
 decl_stmt|;
 if|if
@@ -2285,7 +2285,7 @@ name|char
 modifier|*
 name|cp2
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -2807,7 +2807,7 @@ parameter_list|,
 name|Boolean
 name|err
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|lengthPtr
 parameter_list|,
@@ -3122,7 +3122,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|int
+name|size_t
 name|rlen
 decl_stmt|;
 name|Boolean
@@ -3266,7 +3266,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -3432,7 +3432,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -3910,7 +3910,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -4410,7 +4410,7 @@ name|char
 modifier|*
 name|cp2
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -4678,7 +4678,7 @@ name|char
 modifier|*
 name|cp2
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -5366,7 +5366,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -5603,7 +5603,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -6354,7 +6354,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -6539,7 +6539,7 @@ modifier|*
 name|val
 decl_stmt|;
 comment|/* Value to substitute for a variable */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 comment|/* Length of the variable invocation */
@@ -7057,7 +7057,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -7244,7 +7244,7 @@ operator|->
 name|val
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL

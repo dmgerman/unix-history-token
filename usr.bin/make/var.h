@@ -120,7 +120,7 @@ modifier|*
 name|lhs
 decl_stmt|;
 comment|/* String to match */
-name|int
+name|size_t
 name|leftLen
 decl_stmt|;
 comment|/* Length of string */
@@ -129,7 +129,7 @@ modifier|*
 name|rhs
 decl_stmt|;
 comment|/* Replacement string (w/&'s removed) */
-name|int
+name|size_t
 name|rightLen
 decl_stmt|;
 comment|/* Length of replacement */

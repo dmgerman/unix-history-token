@@ -2025,7 +2025,7 @@ literal|'$'
 condition|)
 block|{
 comment|/* 		 * Must be a dynamic source (would have been expanded 		 * otherwise), so call the Var module to parse the puppy 		 * so we can safely advance beyond it...There should be 		 * no errors in this, as they would have been discovered 		 * in the initial Var_Subst and we wouldn't be here. 		 */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|Boolean
@@ -5729,7 +5729,8 @@ name|int
 name|c
 decl_stmt|,
 name|lastc
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|lineLength
 init|=
 literal|0
@@ -6020,7 +6021,7 @@ modifier|*
 name|ep
 decl_stmt|;
 comment|/* to strip trailing blanks */
-name|int
+name|size_t
 name|lineLength
 decl_stmt|;
 comment|/* Length of result */

@@ -3678,8 +3678,11 @@ name|char
 operator|*
 name|cp
 block|;
-name|int
-name|cc
+name|size_t
+name|blen
+block|;
+name|ssize_t
+name|rcnt
 block|;
 operator|*
 name|error
@@ -3856,7 +3859,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|cc
+name|rcnt
 operator|=
 name|read
 argument_list|(
@@ -3875,15 +3878,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cc
-operator|>
-literal|0
+name|rcnt
+operator|!=
+operator|-
+literal|1
 condition|)
 name|Buf_AddBytes
 argument_list|(
 name|buf
 argument_list|,
-name|cc
+operator|(
+name|size_t
+operator|)
+name|rcnt
 argument_list|,
 operator|(
 name|Byte
@@ -3895,12 +3902,12 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|cc
+name|rcnt
 operator|>
 literal|0
 operator|||
 operator|(
-name|cc
+name|rcnt
 operator|==
 operator|-
 literal|1
@@ -3946,7 +3953,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|cc
+name|rcnt
 operator|==
 operator|-
 literal|1
@@ -3967,7 +3974,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|&
-name|cc
+name|blen
 argument_list|)
 expr_stmt|;
 name|Buf_Destroy
@@ -3989,7 +3996,7 @@ expr_stmt|;
 comment|/* 	 * Null-terminate the result, convert newlines to spaces and 	 * install it in the variable. 	 */
 name|res
 index|[
-name|cc
+name|blen
 index|]
 operator|=
 literal|'\0'
@@ -3999,7 +4006,7 @@ operator|=
 operator|&
 name|res
 index|[
-name|cc
+name|blen
 index|]
 operator|-
 literal|1

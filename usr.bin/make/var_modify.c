@@ -826,7 +826,7 @@ modifier|*
 name|patternp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|wordLen
 decl_stmt|;
 comment|/* Length of word */

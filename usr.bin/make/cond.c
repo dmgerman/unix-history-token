@@ -540,7 +540,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|argLen
 decl_stmt|;
 name|Buffer
@@ -666,7 +666,7 @@ name|char
 modifier|*
 name|cp2
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -1540,7 +1540,7 @@ name|char
 modifier|*
 name|op
 decl_stmt|;
-name|int
+name|size_t
 name|varSpecLen
 decl_stmt|;
 name|Boolean
@@ -2018,7 +2018,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -2133,7 +2133,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|*
 operator|)
 name|NULL
@@ -2271,7 +2271,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|Boolean
@@ -2797,7 +2797,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		     * Use Var_Parse to parse the spec in parens and return 		     * True if the resulting string is empty. 		     */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|Boolean
