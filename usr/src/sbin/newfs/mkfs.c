@@ -5,12 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.10 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs special size [ nsect ntrak bsize fsize cpg ]  */
+comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]  */
 end_comment
 
 begin_comment
@@ -397,7 +397,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps ]\n"
+literal|"usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2146,6 +2146,58 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Compute number of inode blocks per cylinder group. 	 * Start with one inode per NBPI bytes; adjust as necessary. 	 */
+name|inos
+operator|=
+name|MAX
+argument_list|(
+name|NBPI
+argument_list|,
+name|sblock
+operator|.
+name|fs_fsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|9
+condition|)
+block|{
+name|i
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|9
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: bogus nbpi reset to %d\n"
+argument_list|,
+name|argv
+index|[
+literal|9
+index|]
+argument_list|,
+name|inos
+argument_list|)
+expr_stmt|;
+else|else
+name|inos
+operator|=
+name|i
+expr_stmt|;
+block|}
 name|i
 operator|=
 name|sblock
@@ -2176,14 +2228,7 @@ name|sblock
 operator|.
 name|fs_fsize
 operator|/
-name|MAX
-argument_list|(
-name|NBPI
-argument_list|,
-name|sblock
-operator|.
-name|fs_fsize
-argument_list|)
+name|inos
 operator|/
 name|INOPB
 argument_list|(
