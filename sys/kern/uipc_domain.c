@@ -666,8 +666,8 @@ name|INVARIANTS
 if|if
 condition|(
 name|domain_init_status
-operator|==
-literal|0
+operator|<
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -704,8 +704,8 @@ directive|else
 if|if
 condition|(
 name|domain_init_status
-operator|!=
-literal|0
+operator|>=
+literal|2
 condition|)
 name|printf
 argument_list|(
