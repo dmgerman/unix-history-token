@@ -465,9 +465,16 @@ name|VINUM_STARTCONFIG
 case|:
 return|return
 name|start_config
-argument_list|()
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+argument_list|)
 return|;
-comment|/* just lock it */
+comment|/* just lock it.  Parameter is 'force' */
 comment|/* 	     * Move the individual parts of the config to user space. 	     * 	     * Specify the index of the object in the first word of data, 	     * and return the object there 	     */
 case|case
 name|VINUM_DRIVECONFIG
