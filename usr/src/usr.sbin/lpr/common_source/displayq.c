@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.10 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,16 +199,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* column on screen */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sendtorem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we sending to a remote? */
 end_comment
 
 begin_decl_stmt
@@ -452,151 +442,20 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out whether the local machine is the same as the remote  	 * machine entry (if it exists).  If not, then ignore the local 	 * queue information. 	 */
 if|if
 condition|(
-name|RM
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|char
-name|name
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
-comment|/* get the standard network name of the local host */
-name|gethostname
-argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|name
-index|[
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
+name|cp
 operator|=
-literal|'\0'
-expr_stmt|;
-name|hp
-operator|=
-name|gethostbyname
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
-name|NULL
+name|checkremote
+argument_list|()
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"unable to get network name for local machine %s\n"
+literal|"Warning: %s\n"
 argument_list|,
-name|name
+name|cp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|localcheck_done
-goto|;
-block|}
-else|else
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
-name|hp
-operator|->
-name|h_name
-argument_list|)
-expr_stmt|;
-comment|/* get the network standard name of RM */
-name|hp
-operator|=
-name|gethostbyname
-argument_list|(
-name|RM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"unable to get hostname for remote machine %s\n"
-argument_list|,
-name|RM
-argument_list|)
-expr_stmt|;
-goto|goto
-name|localcheck_done
-goto|;
-block|}
-comment|/* if printer is not on local machine, ignore LP */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-name|hp
-operator|->
-name|h_name
-argument_list|)
-condition|)
-block|{
-operator|*
-name|LP
-operator|=
-literal|'\0'
-expr_stmt|;
-operator|++
-name|sendtorem
-expr_stmt|;
-block|}
-block|}
-name|localcheck_done
-label|:
 comment|/* 	 * Print out local queue 	 * Find all the control files in the spooling directory 	 */
 if|if
 condition|(
