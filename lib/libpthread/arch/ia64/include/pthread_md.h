@@ -50,8 +50,7 @@ name|THR_SETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
-define|\
-value|do {								\ 		if ((ucp)->uc_mcontext.mc_flags& _MC_FLAGS_ASYNC_CONTEXT) \ 			_ia64_break_setcontext(ucp);			\ 		else							\ 			_ia64_restore_context(&(ucp)->uc_mcontext, 0,	\ 			    NULL);					\ 	} while (0)
+value|PANIC("THR_SETCONTEXT() now in use!\n")
 end_define
 
 begin_define
@@ -625,9 +624,9 @@ begin_function_decl
 name|void
 name|_ia64_break_setcontext
 parameter_list|(
-name|ucontext_t
+name|mcontext_t
 modifier|*
-name|ucp
+name|mc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -877,12 +876,7 @@ expr_stmt|;
 block|}
 name|_ia64_break_setcontext
 argument_list|(
-operator|&
-name|tcb
-operator|->
-name|tcb_tmbx
-operator|.
-name|tm_context
+name|mc
 argument_list|)
 expr_stmt|;
 block|}
