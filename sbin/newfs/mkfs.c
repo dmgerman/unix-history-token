@@ -1491,14 +1491,12 @@ if|if
 condition|(
 name|Uflag
 condition|)
-block|{
 name|sblock
 operator|.
 name|fs_flags
 operator||=
 name|FS_DOSOFTDEP
 expr_stmt|;
-block|}
 comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 */
 if|if
 condition|(
