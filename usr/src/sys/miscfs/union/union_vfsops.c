@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/filedesc.h>
 end_include
 
 begin_include
@@ -273,6 +279,11 @@ condition|)
 block|{
 name|vrele
 argument_list|(
+name|lowerrootvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
 name|upperrootvp
 argument_list|)
 expr_stmt|;
@@ -340,6 +351,20 @@ name|p_cred
 operator|->
 name|p_ruid
 expr_stmt|;
+name|um
+operator|->
+name|um_cmode
+operator|=
+name|UN_DIRMODE
+operator|&
+operator|~
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_cmask
+expr_stmt|;
+comment|/* 	 * Depending on what you think the MNT_LOCAL flag might mean, 	 * you may want the&& to be || on the conditional below. 	 * At the moment it has been defined that the filesystem is 	 * only local if it is all local, ie the MNT_LOCAL flag implies 	 * that the entire namespace is local.  If you think the MNT_LOCAL 	 * flag implies that some of the files might be stored locally 	 * then you will want to change the conditional. 	 */
 if|if
 condition|(
 operator|(
@@ -776,7 +801,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

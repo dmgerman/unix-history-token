@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -36,28 +36,13 @@ modifier|*
 name|um_cred
 decl_stmt|;
 comment|/* Credentials of user calling mount */
+name|int
+name|um_cmode
+decl_stmt|;
+comment|/* cmask from mount process */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* begin XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VT_UNION
-value|VT_LOFS
-end_define
-
-begin_comment
-comment|/*#define MOUNT_UNION 15*/
-end_comment
-
-begin_comment
-comment|/* end XXX */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -140,6 +125,10 @@ modifier|*
 name|un_path
 decl_stmt|;
 comment|/* saved component name */
+name|int
+name|un_open
+decl_stmt|;
+comment|/* # of opens on lowervp */
 name|int
 name|un_flags
 decl_stmt|;
@@ -234,6 +223,34 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|union_mkshadow
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_mount
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|componentname
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|union_vn_create
 name|__P
 argument_list|(
@@ -246,8 +263,6 @@ operator|,
 expr|struct
 name|union_node
 operator|*
-operator|,
-name|int
 operator|,
 expr|struct
 name|proc
