@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_gb.c 1.1 90/07/09$  *  *	@(#)ite_gb.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_gb.c 1.18 91/01/21$  *  *	@(#)ite_gb.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -133,9 +133,9 @@ literal|0
 condition|)
 block|{
 name|struct
-name|grfinfo
+name|grf_softc
 modifier|*
-name|gi
+name|gp
 init|=
 operator|&
 name|grf_softc
@@ -144,30 +144,22 @@ name|ip
 operator|-
 name|ite_softc
 index|]
-operator|.
-name|g_display
 decl_stmt|;
 name|ip
 operator|->
 name|regbase
 operator|=
-name|IOV
-argument_list|(
-name|gi
+name|gp
 operator|->
-name|gd_regaddr
-argument_list|)
+name|g_regkva
 expr_stmt|;
 name|ip
 operator|->
 name|fbbase
 operator|=
-name|IOV
-argument_list|(
-name|gi
+name|gp
 operator|->
-name|gd_fbaddr
-argument_list|)
+name|g_fbkva
 expr_stmt|;
 block|}
 name|REGBASE
