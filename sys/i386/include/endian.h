@@ -206,8 +206,10 @@ argument_list|)
 asm|__asm ("bswap %0" : "=r" (__x) : "0" (__x));
 else|#
 directive|else
-asm|__asm ("xchgb %h1, %b1\n\trorl $16, %1\n\txchgb %h1, %b1"
-block|:
+asm|__asm ("xchgb %h1, %b1\n\t"
+literal|"rorl $16, %1\n\t"
+literal|"xchgb %h1, %b1"
+operator|:
 literal|"=q"
 operator|(
 name|__x
