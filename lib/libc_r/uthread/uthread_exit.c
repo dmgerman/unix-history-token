@@ -427,6 +427,36 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Free thread-specific poll_data structure, if allocated */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|poll_data
+operator|.
+name|fds
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|_thread_run
+operator|->
+name|poll_data
+operator|.
+name|fds
+argument_list|)
+expr_stmt|;
+name|_thread_run
+operator|->
+name|poll_data
+operator|.
+name|fds
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
 name|_thread_kern_sig_defer
 argument_list|()
