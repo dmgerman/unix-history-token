@@ -1938,7 +1938,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%dKb/sec"
+literal|"%dKB/sec"
 argument_list|,
 name|t
 operator|->
@@ -1961,7 +1961,7 @@ name|buf_size
 condition|)
 name|printf
 argument_list|(
-literal|", %dKb cache"
+literal|", %dKB cache"
 argument_list|,
 name|t
 operator|->
