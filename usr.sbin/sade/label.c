@@ -4548,46 +4548,15 @@ name|flags
 operator|&
 name|CHUNK_IS_ROOT
 operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
+operator|&&
 operator|(
-name|label_chunk_info
-index|[
-name|here
-index|]
-operator|.
-name|c
-operator|->
-name|flags
-operator|&
-name|CHUNK_BSD_COMPAT
-operator|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"This region cannot be used for your root partition as the\n"
-literal|"FreeBSD boot code cannot deal with a root partition created\n"
-literal|"in that location.  Please choose another location or smaller\n"
-literal|"size for your root partition and try again!"
-argument_list|)
-expr_stmt|;
-name|clear_wins
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
 name|size
 operator|<
 operator|(
 name|ROOT_MIN_SIZE
 operator|*
 name|ONE_MEG
+operator|)
 operator|)
 condition|)
 block|{
@@ -4600,7 +4569,6 @@ argument_list|,
 name|ROOT_MIN_SIZE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|tmp
 operator|=
