@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -3641,10 +3635,12 @@ name|_ftp_cmd
 argument_list|(
 name|conn
 argument_list|,
-literal|"REST %ju"
+literal|"REST %llu"
 argument_list|,
 operator|(
-name|uintmax_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|offset
 argument_list|)
