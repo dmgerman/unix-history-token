@@ -454,6 +454,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOOMANY
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -464,6 +470,11 @@ end_define
 begin_comment
 comment|/* don't start more than TOOMANY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -814,7 +825,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|1
+literal|0
 operator|||
 operator|*
 name|p
@@ -2538,6 +2549,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|toomany
+operator|>
+literal|0
+operator|&&
 name|sep
 operator|->
 name|se_count
@@ -3637,6 +3652,15 @@ name|pid_t
 name|pid
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sep
+operator|->
+name|se_maxchild
+operator|<=
+literal|0
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|SANITY_CHECK
@@ -3676,15 +3700,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|sep
-operator|->
-name|se_maxchild
-operator|==
-literal|0
-condition|)
-return|return;
 name|sep
 operator|->
 name|se_pids
@@ -4210,10 +4225,14 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 operator|&&
 name|new
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 condition|)
 block|{
 name|new
@@ -4316,6 +4335,8 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 operator|&&
 name|sep
 operator|->
@@ -8743,6 +8764,8 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 condition|)
 block|{
 name|sep
