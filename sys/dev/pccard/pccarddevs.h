@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.5 2000/08/24 07:01:12 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.6 2000/11/25 03:42:06 peter Exp   */
 end_comment
 
 begin_comment
@@ -270,6 +270,17 @@ end_define
 
 begin_comment
 comment|/* Compaq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_KINGSTON
+value|0x0186
+end_define
+
+begin_comment
+comment|/* Kingston */
 end_comment
 
 begin_define
@@ -906,6 +917,31 @@ define|#
 directive|define
 name|PCCARD_STR_MOTOROLA_PM100C
 value|"Motorola Personal Messenger 100C CDPD Modem"
+end_define
+
+begin_comment
+comment|/* Kingston Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_KINGSTON_KNE2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_KINGSTON_KNE2
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_KINGSTON_KNE2
+value|"Kingston KNE-PC2 Ethernet"
 end_define
 
 begin_comment

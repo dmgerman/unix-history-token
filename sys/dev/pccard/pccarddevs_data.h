@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.5 2000/08/24 07:01:12 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.6 2000/11/25 03:42:06 peter Exp   */
 end_comment
 
 begin_comment
@@ -427,6 +427,27 @@ operator|,
 literal|"Motorola Corporation"
 operator|,
 literal|"Motorola Personal Messenger 100C CDPD Modem"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_KINGSTON
+operator|,
+name|PCCARD_PRODUCT_KINGSTON_KNE2
+operator|,
+name|PCCARD_CIS_KINGSTON_KNE2
+operator|,
+literal|0
+operator|,
+literal|"Kingston"
+operator|,
+literal|"Kingston KNE-PC2 Ethernet"
 block|}
 end_block
 
@@ -2924,6 +2945,27 @@ operator|,
 name|PCCARD_CIS_INVALID
 operator|,
 literal|"Compaq"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+name|PCCARD_VENDOR_KINGSTON
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Kingston"
 operator|,
 name|NULL
 operator|,
