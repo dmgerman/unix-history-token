@@ -120,6 +120,10 @@ name|ipq_src
 decl_stmt|,
 name|ipq_dst
 decl_stmt|;
+name|u_char
+name|ipq_nfrags
+decl_stmt|;
+comment|/* # frags in this packet */
 name|u_int32_t
 name|ipq_div_info
 decl_stmt|;
