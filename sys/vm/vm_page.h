@@ -835,6 +835,17 @@ begin_comment
 comment|/* No PV management for page */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_MARKER
+value|0x1000
+end_define
+
+begin_comment
+comment|/* special queue marker page */
+end_comment
+
 begin_comment
 comment|/*  * Misc constants.  */
 end_comment
@@ -1335,6 +1346,18 @@ name|__P
 argument_list|(
 operator|(
 specifier|register
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vm_page_try_to_cache
+name|__P
+argument_list|(
+operator|(
 name|vm_page_t
 operator|)
 argument_list|)

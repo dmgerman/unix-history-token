@@ -2276,6 +2276,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|buf_dirty_count_severe
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|bremfree
 name|__P

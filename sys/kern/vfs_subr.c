@@ -6328,6 +6328,23 @@ operator|&
 name|VXLOCK
 condition|)
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_vxproc
+operator|==
+name|curproc
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"VXLOCK interlock avoided\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|vp
 operator|->
 name|v_flag
@@ -6363,6 +6380,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 block|}
 name|vp
 operator|->
@@ -7397,6 +7415,12 @@ name|v_flag
 operator||=
 name|VXLOCK
 expr_stmt|;
+name|vp
+operator|->
+name|v_vxproc
+operator|=
+name|curproc
+expr_stmt|;
 comment|/* 	 * Even if the count is zero, the VOP_INACTIVE routine may still 	 * have the object locked while it cleans it out. The VOP_LOCK 	 * ensures that the VOP_INACTIVE routine is done with its work. 	 * For active vnodes, it ensures that no other activity can 	 * occur while the underlying object is being cleaned out. 	 */
 name|VOP_LOCK
 argument_list|(
@@ -7671,6 +7695,12 @@ name|v_flag
 operator|&=
 operator|~
 name|VXLOCK
+expr_stmt|;
+name|vp
+operator|->
+name|v_vxproc
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(

@@ -81,6 +81,12 @@ directive|include
 file|<sys/lock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4305,13 +4311,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * For write success, clear the modify and dirty  			 * status, then finish the I/O ( which decrements the  			 * busy count and possibly wakes waiter's up ). 			 */
-name|vm_page_protect
-argument_list|(
-name|m
-argument_list|,
-name|VM_PROT_READ
-argument_list|)
-expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
 name|m
@@ -4325,6 +4324,25 @@ expr_stmt|;
 name|vm_page_io_finish
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vm_page_count_severe
+argument_list|()
+operator|||
+operator|!
+name|vm_page_try_to_cache
+argument_list|(
+name|m
+argument_list|)
+condition|)
+name|vm_page_protect
+argument_list|(
+name|m
+argument_list|,
+name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -3048,6 +3054,20 @@ operator|=
 name|lbn
 operator|+
 literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vm_page_count_severe
+argument_list|()
+condition|)
+block|{
+comment|/* 		 * We are low on memory, get it going NOW 		 */
+name|bawrite
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 block|}
 else|else
