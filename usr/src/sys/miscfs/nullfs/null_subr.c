@@ -348,6 +348,10 @@ directive|ifdef
 name|NULLFS_DIAGNOSTIC
 end_ifdef
 
+begin_comment
+comment|/*  * NEEDSWORK:  The ability to set lowervp to null here  * implies that one can never count on lowervp staying null  * (even if vp is locked).  This seems quite bad.  Think  * about these things.  */
+end_comment
+
 begin_function
 name|void
 name|null_node_flushmp
@@ -656,10 +660,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the target vnode.  */
+end_comment
+
 begin_function
-specifier|static
 name|int
-name|null_node_alias
+name|null_node_create
 parameter_list|(
 name|mp
 parameter_list|,
@@ -849,104 +856,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the target vnode.  */
-end_comment
-
-begin_macro
-name|make_null_node
-argument_list|(
-argument|mp
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|error
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|aliasvp
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|targetvp
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"make_null_node(mp = %x, vp = %x\n"
-argument_list|,
-name|mp
-argument_list|,
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * (targetvp) is locked at this point. 	 */
-name|targetvp
-operator|=
-operator|*
-name|vpp
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-if|if
-condition|(
-name|targetvp
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"make_null_node: null vp"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Try to find an existing reference to the target vnodes. 	 */
-return|return
-operator|(
-name|null_node_alias
-argument_list|(
-name|mp
-argument_list|,
-name|targetvp
-argument_list|,
-name|vpp
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -997,6 +906,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Should never happen */
 name|int
 name|i
 decl_stmt|;
@@ -1011,9 +921,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 for|for
 control|(
 name|p
@@ -1060,12 +967,10 @@ argument_list|(
 literal|"null_checkvp"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|printf
 argument_list|(
-literal|"aliasvp %x/%d -> %x/%d [%s, %d]\n"
+literal|"nullvp %x/%d -> %x/%d [%s, %d]\n"
 argument_list|,
 name|a
 operator|->
@@ -1084,15 +989,8 @@ argument_list|,
 name|a
 operator|->
 name|null_lowervp
-condition|?
-name|a
-operator|->
-name|null_lowervp
 operator|->
 name|v_usecount
-else|:
-operator|-
-literal|42
 argument_list|,
 name|fil
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.2 (Berkeley) 6/18/92  *  * $Id: null_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.3 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
-comment|/*  * Null layer Filesystem  */
+comment|/*  * Null Layer  * (See null_vnops.c for a description of what this does.)  */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ file|<lofs/lofs.h>
 end_include
 
 begin_comment
-comment|/*  * Mount loopback copy of existing name space  */
+comment|/*  * Mount null layer  */
 end_comment
 
 begin_macro
@@ -132,6 +132,9 @@ name|args
 decl_stmt|;
 name|struct
 name|vnode
+modifier|*
+name|lowerrootvp
+decl_stmt|,
 modifier|*
 name|vp
 decl_stmt|;
@@ -241,7 +244,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Sanity check on target vnode 	 */
-name|vp
+name|lowerrootvp
 operator|=
 name|ndp
 operator|->
@@ -254,7 +257,7 @@ name|printf
 argument_list|(
 literal|"vp = %x, check for VDIR...\n"
 argument_list|,
-name|vp
+name|lowerrootvp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -272,9 +275,10 @@ name|ni_dvp
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * NEEDSWORK: Is this really bad, or just not 	 * the way it's been? 	 */
 if|if
 condition|(
-name|vp
+name|lowerrootvp
 operator|->
 name|v_type
 operator|!=
@@ -283,7 +287,7 @@ condition|)
 block|{
 name|vput
 argument_list|(
-name|vp
+name|lowerrootvp
 argument_list|)
 expr_stmt|;
 return|return
@@ -330,7 +334,7 @@ name|amp
 operator|->
 name|nullm_vfs
 operator|=
-name|vp
+name|lowerrootvp
 operator|->
 name|v_mount
 expr_stmt|;
@@ -340,6 +344,8 @@ operator|=
 name|make_null_node
 argument_list|(
 name|mp
+argument_list|,
+name|lowerrootvp
 argument_list|,
 operator|&
 name|vp
@@ -359,7 +365,7 @@ condition|)
 block|{
 name|vrele
 argument_list|(
-name|vp
+name|lowerrootvp
 argument_list|)
 expr_stmt|;
 name|free
@@ -581,7 +587,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Free reference to looped FS  */
+comment|/*  * Free reference to null layer  */
 end_comment
 
 begin_macro
@@ -1236,6 +1242,7 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* 	 * NEEDSWORK: Assumes no data cached at null layer. 	 * Is this true? 	 */
 return|return
 operator|(
 literal|0
