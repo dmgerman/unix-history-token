@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Serial Line interface  *  * Rick Adams  * Center for Seismic Studi
 end_comment
 
 begin_comment
-comment|/* $Header: if_sl.c,v 1.7 89/05/31 02:24:52 van Exp $ */
+comment|/* $Header: /usr/src/sys/net/RCS/if_sl.c,v 1.1 91/08/30 11:14:57 william Exp Locker: william $ */
 end_comment
 
 begin_comment
@@ -970,7 +970,9 @@ name|data
 operator|=
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 expr_stmt|;
 break|break;
 case|case
@@ -978,8 +980,8 @@ name|SLIOCSFLAGS
 case|:
 define|#
 directive|define
-name|SC_MASK
-value|0xffff
+name|LLC_MASK
+value|(IFF_LLC0|IFF_LLC1|IFF_LLC2)
 name|s
 operator|=
 name|splimp
@@ -987,15 +989,19 @@ argument_list|()
 expr_stmt|;
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|=
 operator|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|&
 operator|~
-name|SC_MASK
+name|LLC_MASK
 operator|)
 operator||
 operator|(
@@ -1008,7 +1014,7 @@ operator|)
 name|data
 operator|)
 operator|&
-name|SC_MASK
+name|LLC_MASK
 operator|)
 expr_stmt|;
 name|splx
@@ -1271,7 +1277,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|&
 name|SC_COMPRESS
 condition|)
@@ -1311,7 +1319,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|&
 name|SC_NOICMP
 operator|&&
@@ -2192,14 +2202,6 @@ comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|ABT_ESC
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|SC_ABORT
-condition|)
 block|{
 comment|/* if we see an abort after "idle" time, count it */
 if|if
@@ -2424,7 +2426,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|&
 name|SC_COMPRESS
 condition|)
@@ -2467,7 +2471,9 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator|&
 name|SC_AUTOCOMP
 operator|)
@@ -2514,7 +2520,9 @@ name|error
 goto|;
 name|sc
 operator|->
-name|sc_flags
+name|sc_if
+operator|.
+name|if_flags
 operator||=
 name|SC_COMPRESS
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	7.7 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	7.8 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_comment
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|SC_COMPRESS
-value|0x0002
+value|IFF_LLC0
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|SC_NOICMP
-value|0x0004
+value|IFF_LLC1
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|SC_AUTOCOMP
-value|0x0008
+value|IFF_LLC2
 end_define
 
 begin_comment
