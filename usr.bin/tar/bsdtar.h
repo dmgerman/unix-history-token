@@ -284,6 +284,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|exclude_from_file
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pathname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|excluded
 parameter_list|(

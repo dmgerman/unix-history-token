@@ -386,6 +386,16 @@ name|OPTION_EXCLUDE
 block|}
 block|,
 block|{
+literal|"exclude-from"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'X'
+block|}
+block|,
+block|{
 literal|"extract"
 block|,
 name|no_argument
@@ -1497,6 +1507,18 @@ operator|->
 name|option_interactive
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+comment|/* GNU tar */
+name|exclude_from_file
+argument_list|(
+name|bsdtar
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
