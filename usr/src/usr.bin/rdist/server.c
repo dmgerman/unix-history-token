@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.6 (Berkeley) %G%"
+literal|"@(#)server.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5615,7 +5615,7 @@ operator|||
 operator|(
 name|mode
 operator|&
-literal|06000
+literal|07000
 operator|)
 operator|&&
 name|chmod
