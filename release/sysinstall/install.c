@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.78 1995/11/09 02:31:57 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.79 1995/11/11 11:44:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1798,196 +1798,160 @@ argument_list|(
 literal|"Would you like to link to the ports tree on your CDROM?\n\n"
 literal|"This will require that you have your FreeBSD CD in the CDROM\n"
 literal|"drive to use the ports collection, but at a substantial savings\n"
-literal|"in disk space (NOTE:  This may take as long as 15 or 20 minutes\n 			  "
-argument|depending on the speed of your CDROM drive
+literal|"in disk space (NOTE:  This may take as long as 15 or 20 minutes\n"
+literal|"depending on the speed of your CDROM drive)."
 argument_list|)
-operator|.
-literal|")) 		configPorts(NULL); 	}  	dialog_clear(); 	if (!msgYesNo("
-name|The
-name|FreeBSD
-name|package
-name|collection
-name|is
-name|a
-name|collection
-name|of
-name|over
-literal|300
-name|ready
-operator|-
-name|to
-operator|-
-name|run
-operator|\
-name|n
-literal|" 		      "
-name|applications
-operator|,
-name|from
-name|text
-name|editors
-name|to
-name|games
-name|to
-name|WEB
-name|servers
-operator|.
-name|Would
-name|you
-name|like
-operator|\
-name|n
-literal|" 		      "
-name|to
-name|browse
-name|the
-name|collection
-name|now
+condition|)
+name|configPorts
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
+literal|"applications, from text editors to games to WEB servers.  Would you like\n"
+literal|"to browse the collection now?"
+argument_list|)
+condition|)
+name|configPackages
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
+block|}
+comment|/* Final menu of last resort */
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to go to the general configuration menu for any last\n"
+literal|"configuration options (some of which you may have already configured)?"
+argument_list|)
+condition|)
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuConfigure
+argument_list|)
+expr_stmt|;
+comment|/* Write out any changes .. */
+name|configResolv
+argument_list|()
+expr_stmt|;
+name|configSysconfig
+argument_list|()
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+name|i
+operator|==
+name|RET_FAIL
 condition|?
-literal|")) 	    configPackages(NULL);  	/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */ 	     }      /* Final menu of last resort */     dialog_clear();     if (!msgYesNo("
-name|Would
-name|you
-name|like
-name|to
-name|go
-name|to
-name|the
-name|general
-name|configuration
-name|menu
-for|for any last\n" 		  "configuration options
-control|(
-name|some
-name|of
-name|which
-name|you
-name|may
-name|have
-name|already
-name|configured
-control|)
-operator|?
-literal|")) 	dmenuOpenSimple(&MenuConfigure);      /* Write out any changes .. */     configResolv();     configSysconfig();      variable_set2(SYSTEM_STATE, i == RET_FAIL ? "
-name|error
-operator|-
-name|install
-literal|" : "
-name|full
-operator|-
-name|install
-literal|");      /* Don't print this if we're express or novice installing */     if (strcmp(str, "
-name|express
-literal|")&& strcmp(str, "
-name|novice
-literal|")) { 	if (Dists || i == RET_FAIL) { 	    dialog_clear(); 	    msgConfirm("
-name|Installation
-name|completed
-name|with
-name|some
-name|errors
-operator|.
-name|You
-name|may
-name|wish
-name|to
-operator|\
-name|n
-literal|" 		       "
-name|scroll
-name|through
-name|the
-name|debugging
-name|messages
-name|on
-name|VTY1
-name|with
-name|the
-operator|\
-name|n
-literal|" 		       "
-name|scroll
-operator|-
-name|lock
-name|feature
-operator|.
-expr|"); 	} 	else { 	    dialog_clear(); 	    msgConfirm("
-name|Installation
-name|completed
-name|successfully
-operator|.
-expr|\
-name|n
-operator|\
-name|n
-literal|" 		       "
-name|If
-name|you
-name|have
-name|any
-name|network
-name|devices
-name|you
-name|have
-name|not
-name|yet
-name|configured
-operator|,
-operator|\
-name|n
-literal|" 		       "
-name|see
-name|the
-name|Interfaces
-name|configuration
-name|item
-name|on
-name|the
-name|Configuration
-name|menu
-operator|.
-expr|"); 	}     }     else if (!strcmp(str, "
-name|novice
-literal|")) { 	if (Dists || i == RET_FAIL) { 	    dialog_clear(); 	    msgConfirm("
-name|Installation
-name|completed
-name|with
-name|some
-name|errors
-operator|.
-name|You
-name|may
-name|wish
-name|to
-operator|\
-name|n
-literal|" 		       "
-name|scroll
-name|through
-name|the
-name|debugging
-name|messages
-name|on
-name|VTY1
-name|with
-name|the
-operator|\
-name|n
-literal|" 		       "
-name|scroll
-operator|-
-name|lock
-name|feature
-operator|.
-name|You
-name|can
-name|also
-name|chose
-operator|\
-literal|"No\" at the next\n"
+literal|"error-install"
+else|:
+literal|"full-install"
+argument_list|)
+expr_stmt|;
+comment|/* Don't print this if we're express or novice installing */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"express"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"novice"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Dists
+operator|||
+name|i
+operator|==
+name|RET_FAIL
+condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Installation completed with some errors.  You may wish to\n"
+literal|"scroll through the debugging messages on VTY1 with the\n"
+literal|"scroll-lock feature."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Installation completed successfully.\n\n"
+literal|"If you have any network devices you have not yet configured,\n"
+literal|"see the Interfaces configuration item on the Configuration menu."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"novice"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Dists
+operator|||
+name|i
+operator|==
+name|RET_FAIL
+condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Installation completed with some errors.  You may wish to\n"
+literal|"scroll through the debugging messages on VTY1 with the\n"
+literal|"scroll-lock feature.  You can also chose \"No\" at the next\n"
 literal|"prompt and go back into the installation menus to try and retry\n"
 literal|"whichever operations have failed."
-block|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2006,23 +1970,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_return
 return|return
 name|i
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  int
+begin_function
+name|int
 name|installFixup
-argument_list|(
-argument|char *str
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
 block|{
 name|Device
 modifier|*
@@ -2342,7 +2303,7 @@ return|return
 name|RET_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Go newfs and/or mount all the filesystems we've been asked to */
