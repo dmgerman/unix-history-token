@@ -7184,6 +7184,45 @@ operator|=
 name|SK_RBOFF_0
 expr_stmt|;
 block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"type = %s\n"
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|sk_type
+operator|==
+name|SK_GENESIS
+operator|)
+condition|?
+literal|"GENESIS"
+else|:
+literal|"YUKON"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"SK_EPROM0 = 0x%02x\n"
+argument_list|,
+name|skrs
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"SRAM size = 0x%06x\n"
+argument_list|,
+name|sc
+operator|->
+name|sk_ramsize
+argument_list|)
+expr_stmt|;
 comment|/* Read and save physical media type */
 switch|switch
 condition|(
@@ -7504,6 +7543,36 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* read CHIPVER 0xb1. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"chip ver  0x%02x\n"
+argument_list|,
+name|sk_win_read_1
+argument_list|(
+name|sc
+argument_list|,
+name|SK_CHIPVER
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* read CONFIG 0x73. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"chip conf 0x%02x\n"
+argument_list|,
+name|sk_win_read_1
+argument_list|(
+name|sc
+argument_list|,
+name|SK_CONFIG
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sk_devs
