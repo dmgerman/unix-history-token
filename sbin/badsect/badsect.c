@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -469,7 +471,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cannot find dev 0%o corresponding to %s\n"
+literal|"Cannot find dev 0%lo corresponding to %s\n"
 argument_list|,
 name|stbuf
 operator|.
@@ -628,7 +630,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sector %d cannot be represented as a dev_t\n"
+literal|"sector %ld cannot be represented as a dev_t\n"
 argument_list|,
 name|number
 argument_list|)
@@ -734,7 +736,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block %d out of range of file system\n"
+literal|"block %ld out of range of file system\n"
 argument_list|,
 name|blkno
 argument_list|)
@@ -788,7 +790,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block %d in non-data area: cannot attach\n"
+literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
 name|blkno
 argument_list|)
@@ -822,7 +824,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block %d in non-data area: cannot attach\n"
+literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
 name|blkno
 argument_list|)
@@ -915,7 +917,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"Warning: sector %d is in use\n"
+literal|"Warning: sector %ld is in use\n"
 argument_list|,
 name|blkno
 argument_list|)
