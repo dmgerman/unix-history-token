@@ -805,35 +805,82 @@ operator|>
 literal|0
 condition|)
 block|{
-asm|__asm__("cld\n" 		"1:\tlodsb\n\t" 		"xlatb\n\t" 		"stosb\n\t" 		"loop 1b\n\t": 		:"b"(table), "c"(n), "D"(buff), "S"(buff) 		:"bx", "cx", "di", "si", "ax");
-block|}
+asm|__asm __volatile(
+literal|"cld\n"
+literal|"1:\tlodsb\n\t"
+literal|"xlatb\n\t"
+literal|"stosb\n\t"
+literal|"loop 1b\n\t"
+operator|:
+literal|"=b"
+operator|(
+name|table
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|n
+operator|)
+operator|,
+literal|"=D"
+operator|(
+name|buff
+operator|)
+operator|,
+literal|"=S"
+operator|(
+name|buff
+operator|)
+operator|:
+literal|"0"
+operator|(
+name|table
+operator|)
+operator|,
+literal|"1"
+operator|(
+name|n
+operator|)
+operator|,
+literal|"2"
+operator|(
+name|buff
+operator|)
+operator|,
+literal|"3"
+operator|(
+name|buff
+operator|)
+operator|:
+literal|"ax"
+operator|,
+literal|"memory"
+block|)
+empty_stmt|;
 block|}
 end_function
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|audio_write
-parameter_list|(
-name|int
-name|dev
-parameter_list|,
-name|struct
-name|fileinfo
-modifier|*
-name|file
-parameter_list|,
-name|snd_rw_buf
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|count
-parameter_list|)
+argument_list|(
+argument|int dev
+argument_list|,
+argument|struct fileinfo * file
+argument_list|,
+argument|snd_rw_buf * buf
+argument_list|,
+argument|int count
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|c
@@ -1260,7 +1307,7 @@ return|return
 name|count
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
