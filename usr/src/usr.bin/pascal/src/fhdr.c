@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c	5.2 (Berkeley) %G%"
+literal|"@(#)fhdr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -773,7 +773,7 @@ operator|(
 name|int
 operator|)
 operator|-
-name|leven
+name|roundup
 argument_list|(
 name|roundup
 argument_list|(
@@ -802,6 +802,11 @@ name|type
 argument_list|)
 argument_list|)
 argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1548,9 +1553,14 @@ argument_list|)
 expr_stmt|;
 name|o
 operator|-=
-name|even
+name|roundup
 argument_list|(
 name|w
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2072,7 +2082,7 @@ name|OBJ
 name|w
 operator|=
 operator|-
-name|even
+name|roundup
 argument_list|(
 name|lwidth
 argument_list|(
@@ -2080,6 +2090,11 @@ name|p
 operator|->
 name|chain
 argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 expr_stmt|;
 ifndef|#

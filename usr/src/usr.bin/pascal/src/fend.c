@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c	5.1 (Berkeley) %G%"
+literal|"@(#)fend.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2526,7 +2526,7 @@ name|PTR_DCL
 operator|)
 name|var
 argument_list|,
-name|leven
+name|roundup
 argument_list|(
 operator|-
 name|sizes
@@ -2535,6 +2535,11 @@ name|cbn
 index|]
 operator|.
 name|om_max
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 argument_list|,
 literal|2

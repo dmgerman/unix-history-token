@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c	5.2 (Berkeley) %G%"
+literal|"@(#)call.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"align.h"
 end_include
 
 begin_ifdef
@@ -346,15 +352,20 @@ literal|2
 argument_list|,
 name|O_PUSH
 argument_list|,
-name|leven
-argument_list|(
 operator|-
+name|roundup
+argument_list|(
 name|lwidth
 argument_list|(
 name|p
 operator|->
 name|type
 argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2104,7 +2115,7 @@ literal|2
 argument_list|,
 name|O_FRTN
 argument_list|,
-name|even
+name|roundup
 argument_list|(
 name|width
 argument_list|(
@@ -2112,6 +2123,11 @@ name|p
 operator|->
 name|type
 argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_STACK
 argument_list|)
 argument_list|)
 expr_stmt|;

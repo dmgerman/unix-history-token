@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c	5.1 (Berkeley) %G%"
+literal|"@(#)stkrval.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"align.h"
 end_include
 
 begin_ifdef
@@ -1220,11 +1226,16 @@ literal|2
 argument_list|,
 name|O_LVCON
 argument_list|,
-name|even
+name|roundup
 argument_list|(
 name|c
 operator|+
 literal|1
+argument_list|,
+operator|(
+name|long
+operator|)
+name|A_SHORT
 argument_list|)
 argument_list|)
 expr_stmt|;
