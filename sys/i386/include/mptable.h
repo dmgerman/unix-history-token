@@ -977,20 +977,6 @@ name|current_postcode
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/** XXX FIXME: what system files declare these??? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|region_descriptor
-name|r_gdt
-decl_stmt|,
-name|r_idt
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|bsp_apic_ready

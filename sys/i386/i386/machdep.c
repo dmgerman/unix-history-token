@@ -5920,16 +5920,6 @@ begin_comment
 comment|/* local descriptor table */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_comment
-comment|/* table descriptors - used to load tables by microp */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|region_descriptor
@@ -5939,10 +5929,9 @@ name|r_idt
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* table descriptors */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -8563,18 +8552,6 @@ name|off
 decl_stmt|,
 name|x
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SMP
-comment|/* table descriptors - used to load tables by microp */
-name|struct
-name|region_descriptor
-name|r_gdt
-decl_stmt|,
-name|r_idt
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|pcpu
 modifier|*
