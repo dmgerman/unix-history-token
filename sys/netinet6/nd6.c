@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/fddi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -151,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_fddi.h>
 end_include
 
 begin_include
