@@ -746,6 +746,14 @@ name|hostname
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|epsvall
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -756,14 +764,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|ftpuser
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|epsvall
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
