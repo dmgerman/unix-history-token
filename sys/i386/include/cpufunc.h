@@ -19,32 +19,13 @@ directive|define
 name|_MACHINE_CPUFUNC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_struct_decl
 struct_decl|struct
 name|region_descriptor
 struct_decl|;
 end_struct_decl
 
-begin_function
-name|__BEGIN_DECLS
+begin_define
 define|#
 directive|define
 name|readb
@@ -52,6 +33,9 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int8_t *) (va))
+end_define
+
+begin_define
 define|#
 directive|define
 name|readw
@@ -59,6 +43,9 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int16_t *) (va))
+end_define
+
+begin_define
 define|#
 directive|define
 name|readl
@@ -66,6 +53,9 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int32_t *) (va))
+end_define
+
+begin_define
 define|#
 directive|define
 name|writeb
@@ -75,6 +65,9 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int8_t *) (va) = (d))
+end_define
+
+begin_define
 define|#
 directive|define
 name|writew
@@ -84,6 +77,9 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int16_t *) (va) = (d))
+end_define
+
+begin_define
 define|#
 directive|define
 name|writel
@@ -93,9 +89,15 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int32_t *) (va) = (d))
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__GNUC__
+end_ifdef
+
+begin_function
 specifier|static
 name|__inline
 name|void
@@ -1193,10 +1195,6 @@ asm|__asm __volatile("movl %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
-begin_comment
-comment|/* void lidt(struct region_descriptor *addr); */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
@@ -1213,10 +1211,6 @@ asm|__asm __volatile("lidt (%0)" : : "r" (addr));
 block|}
 end_function
 
-begin_comment
-comment|/* void lldt(u_short sel); */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
@@ -1230,10 +1224,6 @@ block|{
 asm|__asm __volatile("lldt %0" : : "r" (sel));
 block|}
 end_function
-
-begin_comment
-comment|/* void ltr(u_short sel); */
-end_comment
 
 begin_function
 specifier|static
@@ -1615,29 +1605,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_invlpg
-parameter_list|(
-name|u_int
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cpu_invlpg_range
-parameter_list|(
-name|u_int
-name|start
-parameter_list|,
-name|u_int
-name|end
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|disable_intr
 parameter_list|(
 name|void
@@ -1769,19 +1736,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|invlpg_range
-parameter_list|(
-name|u_int
-name|start
-parameter_list|,
-name|u_int
-name|end
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|invltlb
 parameter_list|(
 name|void
@@ -1848,12 +1802,6 @@ name|sel
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|region_descriptor
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|void
@@ -2301,10 +2249,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_endif
 endif|#
