@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.77	83/05/18	*/
+comment|/*	machdep.c	4.78	83/05/21	*/
 end_comment
 
 begin_include
@@ -236,65 +236,6 @@ name|icode
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUSH
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|mcode
-index|[]
-init|=
-block|{
-literal|0x9f19af9f
-block|,
-comment|/* pushab [&"mush",0]; pushab */
-literal|0x02dd09af
-block|,
-comment|/* "/etc/mush"; pushl $2 */
-literal|0xbc5c5ed0
-block|,
-comment|/* movl sp,ap; chmk */
-literal|0x2f01bc0b
-block|,
-comment|/* $exec; chmk $exit; "/ */
-literal|0x2f637465
-block|,
-comment|/* etc/ */
-literal|0x6873756d
-block|,
-comment|/* mush" */
-literal|0x00000000
-block|,
-comment|/* \0\0\0";  0 */
-literal|0x00000014
-block|,
-comment|/* [&"mush", */
-literal|0x00000000
-block|,
-comment|/* 0] */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|szmcode
-init|=
-sizeof|sizeof
-argument_list|(
-name|mcode
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
