@@ -642,28 +642,22 @@ name|NDF_ONLY_PNBUF
 value|(~NDF_NO_FREE_PNBUF)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|void
 name|NDFREE
-parameter_list|(
-name|ndp
-parameter_list|,
-name|flags
-parameter_list|)
-value|do {						\ 	struct nameidata *_ndp = (ndp);					\ 	unsigned int _flags = (flags);					\ 									\ 	if (!(_flags& NDF_NO_FREE_PNBUF)&&				\ 	    (_ndp->ni_cnd.cn_flags& HASBUF)) {				\ 		zfree(namei_zone, _ndp->ni_cnd.cn_pnbuf);		\ 		_ndp->ni_cnd.cn_flags&= ~HASBUF;			\ 	}								\ 	if (!(_flags& NDF_NO_DVP_UNLOCK)&&				\ 	    (_ndp->ni_cnd.cn_flags& LOCKPARENT)&&			\ 	    _ndp->ni_dvp != _ndp->ni_vp)				\ 		VOP_UNLOCK(_ndp->ni_dvp, 0, _ndp->ni_cnd.cn_proc);	\ 	if (!(_flags& NDF_NO_DVP_RELE)&&				\ 	    (_ndp->ni_cnd.cn_flags& (LOCKPARENT|WANTPARENT))) {	\ 		vrele(_ndp->ni_dvp);					\ 		_ndp->ni_dvp = NULL;					\ 	}								\ 	if (!(_flags& NDF_NO_VP_UNLOCK)&&				\ 	    (_ndp->ni_cnd.cn_flags& LOCKLEAF)&& _ndp->ni_vp)		\ 		VOP_UNLOCK(_ndp->ni_vp, 0, _ndp->ni_cnd.cn_proc);	\ 	if (!(_flags& NDF_NO_VP_RELE)&&				\ 	    _ndp->ni_vp) {						\ 		vrele(_ndp->ni_vp);					\ 		_ndp->ni_vp = NULL;					\ 	}								\ 	if (!(_flags& NDF_NO_STARTDIR_RELE)&&				\ 	    (_ndp->ni_cnd.cn_flags& SAVESTART)) {			\ 		vrele(_ndp->ni_startdir);				\ 		_ndp->ni_startdir = NULL;				\ 	}								\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nameidata
+operator|*
+operator|,
+specifier|const
+name|uint
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
