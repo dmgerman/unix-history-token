@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.4 83/07/22"
+literal|"@(#)cmd2.c	1.5 83/07/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,112 +108,113 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[1-9]   Select window [1-9] and exit command mode\r\n"
+literal|"[1-9]   Select window [1-9] and exit command mode.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%[1-9]  Select window [1-9]\r\n"
+literal|"%%[1-9]  Select window [1-9].\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"c[1-9]  Close window [1-9]\r\n"
+literal|"c[1-9]  Close window [1-9].\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"C       Close all empty windows\r\n"
+literal|"C       Close all empty windows.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Z       Close all windows\r\n"
+literal|"Z       Close all windows.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Q       Show all windows in sequence\r\n"
+literal|"Q       Show all windows in sequence.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"R       Force refresh after every newline in current window\r\n"
+literal|"R       Force refresh after every newline (current window only).\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"r       Don't refresh every line\r\n"
+literal|"r       Don't refresh every line.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"w       Open a new window\r\n"
+literal|"w       Open a new window.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"s       Print IO statistics\r\n"
+literal|"^U      Scroll up.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"t       Print resource usage of this program\r\n"
+literal|"^D      Scroll down.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"T       Print resource usage of children\r\n"
+literal|"[hjkl]  Move cursor [left, down, up, right].\r\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	wwprintf(w, "s       Print IO statistics.\r\n"); 	wwprintf(w, "t       Print resource usage of this program.\r\n"); 	wwprintf(w, "T       Print resource usage of children.\r\n"); 	*/
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"escape  Exit command mode.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"escape  Exit command mode\r\n"
+literal|"^L      Redraw screen.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^L      Redraw screen\r\n"
+literal|"^Z      Suspend.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^Z      Suspend\r\n"
-argument_list|)
-expr_stmt|;
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|".       Quit\r\n"
+literal|".       Quit.\r\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -694,7 +695,7 @@ begin_block
 block|{
 name|wwputs
 argument_list|(
-literal|"Really quit? "
+literal|"Really quit [yn]? "
 argument_list|,
 name|cmdwin
 argument_list|)
