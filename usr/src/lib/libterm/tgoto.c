@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tgoto.c	5.2 (Berkeley) %G%"
+literal|"@(#)tgoto.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ name|CTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|('c'& 037)
+value|((c)& 037)
 end_define
 
 begin_define
@@ -342,7 +342,7 @@ name|which
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 operator|||
 comment|/* which == '\t' || */
