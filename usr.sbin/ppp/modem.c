@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.14 1996/03/08 12:34:40 ache Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.15 1996/03/09 08:18:39 ache Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -847,55 +847,23 @@ operator|-
 name|uptime
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TermMode
+condition|)
+block|{
 name|CloseModem
 argument_list|()
 expr_stmt|;
 name|LcpDown
 argument_list|()
 expr_stmt|;
+block|}
 name|connect_time
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|TermMode
-condition|)
-block|{
-name|modem
-operator|=
-name|OpenModem
-argument_list|(
-name|mode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|modem
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"failed to open modem.\n"
-argument_list|)
-expr_stmt|;
-name|modem
-operator|=
-literal|0
-expr_stmt|;
-name|TtyCommandMode
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|TtyTermMode
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 end_function
 
