@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.6 1995/07/21 16:30:37 bde Exp $"
+literal|"@(#)$Id: iitty.c,v 1.7 1995/07/21 20:52:21 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.6 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.6  1995/07/21  16:30:37  bde  * Obtained from:	partly from an ancient patch of mine via 1.1.5  *  * Temporarily nuke TS_WOPEN.  It was only used for the obscure MDMBUF  * flow control option in the kernel and for informational purposes  * in `pstat -t'.  The latter worked properly only for ptys.  In  * general there may be multiple processes sleeping in open() and  * multiple processes that successfully opened the tty by opening it  * in O_NONBLOCK mode or during a window when CLOCAL was set.  tty.c  * doesn't have enough information to maintain the flag but always  * cleared it in ttyopen().  *  * TS_WOPEN should be restored someday just so that `pstat -t' can  * display it (MDMBUF is already fixed).  Fixing it requires counting  * of processes sleeping in open() in too many serial drivers.  *  * Revision 1.5  1995/03/28  07:54:43  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.4  1995/02/28  00:20:30  pst  * Incorporate bde's code-review comments.  *  * (a) bring back ttselect, now that we have xxxdevtotty() it isn't dangerous.  * (b) remove all of the wrappers that have been replaced by ttselect  * (c) fix formatting in syscons.c and definition in syscons.h  * (d) add cxdevtotty  *  * NOT DONE:  * (e) make pcvt work... it was already broken...when someone fixes pcvt to  * 	link properly, just rename get_pccons to xxxdevtotty and we're done  *  * Revision 1.3  1995/02/25  20:08:52  pst  * (a) remove the pointer to each driver's tty structure array from cdevsw  * (b) add a function callback vector to tty drivers that will return a pointer  *     to a valid tty structure based upon a dev_t  * (c) make syscons structures the same size whether or not APM is enabled so  *     utilities don't crash if NAPM changes (and make the damn kernel compile!)  * (d) rewrite /dev/snp ioctl interface so that it is device driver and i386  *     independant  *  * Revision 1.2  1995/02/15  06:28:28  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.7 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.7  1995/07/21  20:52:21  bde  * Obtained from:	partly from ancient patches by ache and me via 1.1.5  *  * Nuke `symbolic sleep message strings'.  Use unique literal messages so that  * `ps l' shows unambiguously where processes are sleeping.  *  * Revision 1.6  1995/07/21  16:30:37  bde  * Obtained from:	partly from an ancient patch of mine via 1.1.5  *  * Temporarily nuke TS_WOPEN.  It was only used for the obscure MDMBUF  * flow control option in the kernel and for informational purposes  * in `pstat -t'.  The latter worked properly only for ptys.  In  * general there may be multiple processes sleeping in open() and  * multiple processes that successfully opened the tty by opening it  * in O_NONBLOCK mode or during a window when CLOCAL was set.  tty.c  * doesn't have enough information to maintain the flag but always  * cleared it in ttyopen().  *  * TS_WOPEN should be restored someday just so that `pstat -t' can  * display it (MDMBUF is already fixed).  Fixing it requires counting  * of processes sleeping in open() in too many serial drivers.  *  * Revision 1.5  1995/03/28  07:54:43  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.4  1995/02/28  00:20:30  pst  * Incorporate bde's code-review comments.  *  * (a) bring back ttselect, now that we have xxxdevtotty() it isn't dangerous.  * (b) remove all of the wrappers that have been replaced by ttselect  * (c) fix formatting in syscons.c and definition in syscons.h  * (d) add cxdevtotty  *  * NOT DONE:  * (e) make pcvt work... it was already broken...when someone fixes pcvt to  * 	link properly, just rename get_pccons to xxxdevtotty and we're done  *  * Revision 1.3  1995/02/25  20:08:52  pst  * (a) remove the pointer to each driver's tty structure array from cdevsw  * (b) add a function callback vector to tty drivers that will return a pointer  *     to a valid tty structure based upon a dev_t  * (c) make syscons structures the same size whether or not APM is enabled so  *     utilities don't crash if NAPM changes (and make the damn kernel compile!)  * (d) rewrite /dev/snp ioctl interface so that it is device driver and i386  *     independant  *  * Revision 1.2  1995/02/15  06:28:28  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -902,56 +902,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|tp
-operator|->
-name|t_outq
-operator|.
-name|c_cc
-operator|<=
-name|tp
-operator|->
-name|t_lowat
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ASLEEP
-condition|)
-block|{
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_ASLEEP
-expr_stmt|;
-name|wakeup
+name|ttwwakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|tp
-operator|->
-name|t_outq
 argument_list|)
 expr_stmt|;
-block|}
-name|selwakeup
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_wsel
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|tp

@@ -3366,6 +3366,17 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* FreeBSD 2.x and BSDI */
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* FreeBSD some time after 2.0.5 */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|RB_LEN
@@ -3414,6 +3425,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Enable TXMPTY interrupt, 	 * to catch the case when the second buffer is empty. 	 */

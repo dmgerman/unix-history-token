@@ -3523,6 +3523,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* FreeBSD some time after 2.0.5 */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|rbp
@@ -3568,6 +3579,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|out
 label|:
 name|splx

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.8 1995/07/05 12:15:52 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.9 1995/07/21 22:51:31 bde Exp $  */
 end_comment
 
 begin_include
@@ -565,26 +565,6 @@ parameter_list|(
 name|tp
 parameter_list|)
 value|((void *)&(tp)->t_rawq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSA_OCOMPLETE
-parameter_list|(
-name|tp
-parameter_list|)
-value|((void *)&(tp)->t_outq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSA_OLOWAT
-parameter_list|(
-name|tp
-parameter_list|)
-value|((void *)&(tp)->t_outq)
 end_define
 
 begin_define
@@ -9613,62 +9593,11 @@ comment|/* fake interrupt to start output */
 block|enable_intr();
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* XXX TK2.0 */
-block|if (tp->t_state& (TS_SO_OCOMPLETE | TS_SO_OLOWAT) || tp->t_wsel) 		ttwwakeup(tp);
-else|#
-directive|else
-if|if
-condition|(
-name|tp
-operator|->
-name|t_outq
-operator|.
-name|c_cc
-operator|<=
-name|tp
-operator|->
-name|t_lowat
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ASLEEP
-condition|)
-block|{
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_ASLEEP
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|TSA_OLOWAT
+name|ttwwakeup
 argument_list|(
 name|tp
 argument_list|)
-argument_list|)
 expr_stmt|;
-block|}
-name|selwakeup
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_wsel
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
