@@ -94,6 +94,28 @@ begin_comment
 comment|/*  * The assembly is volatilized to demark potential before-and-after side  * effects if an interrupt or SMP collision were to occur.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>
+literal|9
+operator|)
+end_if
+
+begin_comment
+comment|/* egcs 1.1.2+ version */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -110,6 +132,37 @@ parameter_list|)
 define|\
 value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 :  "0" (*p), "ir" (V)); 	\ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* gcc<= 2.8 version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_ASM
+parameter_list|(
+name|NAME
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|OP
+parameter_list|,
+name|V
+parameter_list|)
+define|\
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : "ir" (V));		 	\ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -137,6 +190,10 @@ operator|>
 literal|9
 operator|)
 end_if
+
+begin_comment
+comment|/* egcs 1.1.2+ version */
+end_comment
 
 begin_macro
 name|ATOMIC_ASM
@@ -351,197 +408,217 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|atomic_set_char
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_char*)(P) |= (V))
-end_define
+begin_comment
+comment|/* gcc<= 2.8 version */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|atomic_clear_char
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_char*)(P)&= ~(V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|set
+argument_list|,
+argument|char
+argument_list|,
+literal|"orb %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_add_char
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_char*)(P) += (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|clear
+argument_list|,
+argument|char
+argument_list|,
+literal|"andb %1,%0"
+argument_list|,
+argument|~v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_subtract_char
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_char*)(P) -= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|add
+argument_list|,
+argument|char
+argument_list|,
+literal|"addb %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_set_short
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_short*)(P) |= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|subtract
+argument_list|,
+argument|char
+argument_list|,
+literal|"subb %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_clear_short
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_short*)(P)&= ~(V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|set
+argument_list|,
+argument|short
+argument_list|,
+literal|"orw %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_add_short
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_short*)(P) += (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|clear
+argument_list|,
+argument|short
+argument_list|,
+literal|"andw %1,%0"
+argument_list|,
+argument|~v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_subtract_short
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_short*)(P) -= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|add
+argument_list|,
+argument|short
+argument_list|,
+literal|"addw %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_set_int
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_int*)(P) |= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|subtract
+argument_list|,
+argument|short
+argument_list|,
+literal|"subw %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_clear_int
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_int*)(P)&= ~(V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|set
+argument_list|,
+argument|int
+argument_list|,
+literal|"orl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_add_int
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_int*)(P) += (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|clear
+argument_list|,
+argument|int
+argument_list|,
+literal|"andl %1,%0"
+argument_list|,
+argument|~v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_subtract_int
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_int*)(P) -= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|add
+argument_list|,
+argument|int
+argument_list|,
+literal|"addl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_set_long
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_long*)(P) |= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|subtract
+argument_list|,
+argument|int
+argument_list|,
+literal|"subl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_clear_long
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_long*)(P)&= ~(V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|set
+argument_list|,
+argument|long
+argument_list|,
+literal|"orl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_add_long
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_long*)(P) += (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|clear
+argument_list|,
+argument|long
+argument_list|,
+literal|"andl %1,%0"
+argument_list|,
+argument|~v
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|atomic_subtract_long
-parameter_list|(
-name|P
-parameter_list|,
-name|V
-parameter_list|)
-value|(*(u_long*)(P) -= (V))
-end_define
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|add
+argument_list|,
+argument|long
+argument_list|,
+literal|"addl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
+
+begin_macro
+name|ATOMIC_ASM
+argument_list|(
+argument|subtract
+argument_list|,
+argument|long
+argument_list|,
+literal|"subl %1,%0"
+argument_list|,
+argument|v
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
