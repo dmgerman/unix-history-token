@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -70,6 +82,18 @@ file|<vm/vm_zone.h>
 end_include
 
 begin_comment
+comment|/* prevent concurrant creation races */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|phys_pager_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* list of device pager objects */
 end_comment
 
@@ -81,12 +105,15 @@ name|phys_pager_object_list
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* protect access to phys_pager_object_list */
+end_comment
+
 begin_decl_stmt
 specifier|static
-name|int
-name|phys_pager_alloc_lock
-decl_stmt|,
-name|phys_pager_alloc_lock_want
+name|struct
+name|mtx
+name|phys_pager_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +129,24 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|phys_pager_object_list
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|phys_pager_sx
+argument_list|,
+literal|"phys_pager create"
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|phys_pager_mtx
+argument_list|,
+literal|"phys_pager list"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -156,33 +201,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Lock to prevent object creation race condition. 		 */
-while|while
-condition|(
-name|phys_pager_alloc_lock
-condition|)
-block|{
-name|phys_pager_alloc_lock_want
-operator|++
-expr_stmt|;
-name|tsleep
+name|sx_xlock
 argument_list|(
 operator|&
-name|phys_pager_alloc_lock
-argument_list|,
-name|PVM
-argument_list|,
-literal|"ppall"
-argument_list|,
-literal|0
+name|phys_pager_sx
 argument_list|)
-expr_stmt|;
-name|phys_pager_alloc_lock_want
-operator|--
-expr_stmt|;
-block|}
-name|phys_pager_alloc_lock
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 		 * Look up pager, creating as necessary. 		 */
 name|object
@@ -223,6 +246,12 @@ name|handle
 operator|=
 name|handle
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|phys_pager_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -231,6 +260,12 @@ argument_list|,
 name|object
 argument_list|,
 name|pager_object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|phys_pager_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -267,18 +302,10 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-name|phys_pager_alloc_lock
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|phys_pager_alloc_lock_want
-condition|)
-name|wakeup
+name|sx_xunlock
 argument_list|(
 operator|&
-name|phys_pager_alloc_lock
+name|phys_pager_sx
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,6 +351,13 @@ name|handle
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|phys_pager_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -334,6 +368,13 @@ argument_list|,
 name|pager_object_list
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|phys_pager_mtx
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

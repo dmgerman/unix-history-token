@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -298,17 +304,6 @@ comment|/* maximum VOP I/O allowed		*/
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
-name|sw_alloc_interlock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* swap pager allocation interlock	*/
-end_comment
-
-begin_decl_stmt
 name|struct
 name|blist
 modifier|*
@@ -427,6 +422,30 @@ parameter_list|)
 define|\
 value|(&swap_pager_object_list[((int)(intptr_t)handle>> 4)& (NOBJLISTS-1)])
 end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|sw_alloc_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* prevent concurrant creation */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|sw_alloc_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* protect list manipulation */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -956,6 +975,24 @@ operator|&
 name|swap_pager_un_object_list
 argument_list|)
 expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sw_alloc_sx
+argument_list|,
+literal|"swap_pager create"
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|,
+literal|"swap_pager list"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Device Stripe, in PAGE_SIZE'd blocks 	 */
 name|dmmax
 operator|=
@@ -1197,32 +1234,11 @@ name|handle
 condition|)
 block|{
 comment|/* 		 * Reference existing named region or allocate new one.  There 		 * should not be a race here against swp_pager_meta_build() 		 * as called from vm_page_remove() in regards to the lookup 		 * of the handle. 		 */
-while|while
-condition|(
-name|sw_alloc_interlock
-condition|)
-block|{
-name|sw_alloc_interlock
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|tsleep
+name|sx_xlock
 argument_list|(
 operator|&
-name|sw_alloc_interlock
-argument_list|,
-name|PVM
-argument_list|,
-literal|"swpalc"
-argument_list|,
-literal|0
+name|sw_alloc_sx
 argument_list|)
-expr_stmt|;
-block|}
-name|sw_alloc_interlock
-operator|=
-literal|1
 expr_stmt|;
 name|object
 operator|=
@@ -1283,21 +1299,11 @@ name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sw_alloc_interlock
-operator|<
-literal|0
-condition|)
-name|wakeup
+name|sx_xunlock
 argument_list|(
 operator|&
-name|sw_alloc_interlock
+name|sw_alloc_sx
 argument_list|)
-expr_stmt|;
-name|sw_alloc_interlock
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -1355,6 +1361,12 @@ name|int
 name|s
 decl_stmt|;
 comment|/* 	 * Remove from list right away so lookups will fail if we block for 	 * pageout completion. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -1392,6 +1404,12 @@ name|pager_object_list
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 name|vm_object_pip_wait
 argument_list|(
 name|object
@@ -1808,6 +1826,12 @@ condition|(
 name|destroysource
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|srcobject
@@ -1845,6 +1869,12 @@ name|pager_object_list
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * transfer source to destination. 	 */
 for|for
@@ -4713,6 +4743,12 @@ name|swp_bcount
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -4750,6 +4786,12 @@ name|pager_object_list
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sw_alloc_mtx
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Locate hash entry.  If not found create, but if we aren't adding 	 * anything just return.  If we run out of space in the map we wait 	 * and, since the hash table may have changed, retry. 	 */
 name|retry

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -179,6 +185,30 @@ name|dev_pager_object_list
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* protect against object creation */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|dev_pager_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* protect list manipulation */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|dev_pager_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|vm_zone_t
@@ -221,15 +251,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|dev_pager_alloc_lock
-decl_stmt|,
-name|dev_pager_alloc_lock_want
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pagerops
 name|devicepagerops
@@ -262,6 +283,24 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|dev_pager_object_list
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|dev_pager_sx
+argument_list|,
+literal|"dev_pager create"
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|dev_pager_mtx
+argument_list|,
+literal|"dev_pager list"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|fakepg_zone
@@ -441,33 +480,11 @@ name|NULL
 operator|)
 return|;
 comment|/* 	 * Lock to prevent object creation race condition. 	 */
-while|while
-condition|(
-name|dev_pager_alloc_lock
-condition|)
-block|{
-name|dev_pager_alloc_lock_want
-operator|++
-expr_stmt|;
-name|tsleep
+name|sx_xlock
 argument_list|(
 operator|&
-name|dev_pager_alloc_lock
-argument_list|,
-name|PVM
-argument_list|,
-literal|"dvpall"
-argument_list|,
-literal|0
+name|dev_pager_sx
 argument_list|)
-expr_stmt|;
-name|dev_pager_alloc_lock_want
-operator|--
-expr_stmt|;
-block|}
-name|dev_pager_alloc_lock
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 	 * Look up pager, creating as necessary. 	 */
 name|object
@@ -520,6 +537,12 @@ operator|.
 name|devp_pglist
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dev_pager_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -528,6 +551,12 @@ argument_list|,
 name|object
 argument_list|,
 name|pager_object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dev_pager_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,18 +593,10 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-name|dev_pager_alloc_lock
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|dev_pager_alloc_lock_want
-condition|)
-name|wakeup
+name|sx_xunlock
 argument_list|(
 operator|&
-name|dev_pager_alloc_lock
+name|dev_pager_sx
 argument_list|)
 expr_stmt|;
 return|return
@@ -600,6 +621,12 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dev_pager_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -608,6 +635,12 @@ argument_list|,
 name|object
 argument_list|,
 name|pager_object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dev_pager_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free up our fake pages. 	 */
