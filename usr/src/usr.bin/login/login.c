@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.16 82/04/03"
+literal|"@(#)login.c	4.17 82/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,6 +551,17 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|rpassword
+index|[
+name|NMAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|name
 index|[
 name|NMAX
 operator|+
@@ -2068,11 +2079,27 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-name|inigrp
+name|strncpy
 argument_list|(
+name|name
+argument_list|,
 name|utmp
 operator|.
 name|ut_name
+argument_list|,
+name|NMAX
+argument_list|)
+expr_stmt|;
+name|name
+index|[
+name|NMAX
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|inigrp
+argument_list|(
+name|name
 argument_list|,
 name|pwd
 operator|->
