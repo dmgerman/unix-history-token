@@ -20541,6 +20541,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|kdb_active
+operator|&&
 name|sio_inited
 operator|==
 literal|2
