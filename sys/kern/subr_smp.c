@@ -184,7 +184,7 @@ name|smp_active
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of Auxillary Processors (APs) that were successfully started"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -217,7 +217,7 @@ name|smp_disabled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"SMP has been disabled from the loader"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -261,7 +261,7 @@ name|smp_cpus
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of CPUs online"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -295,7 +295,7 @@ name|forward_signal_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Forwarding of a signal to a process on a different CPU"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -329,7 +329,7 @@ name|forward_roundrobin_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Forwarding of roundrobin to all other CPUs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
