@@ -183,32 +183,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-name|void
-name|m_freem
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-while|while
-condition|(
-name|m
-condition|)
-block|{
-name|m
-operator|=
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * Lesser-used path for M_PREPEND:  * allocate new mbuf to prepend to chain,  * copy junk along.  */
 end_comment
