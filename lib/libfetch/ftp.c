@@ -4514,15 +4514,17 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+operator|!
+operator|(
 name|flags
 operator|&&
-operator|!
 name|strchr
 argument_list|(
 name|flags
 argument_list|,
 literal|'d'
 argument_list|)
+operator|)
 operator|&&
 operator|(
 name|purl
@@ -4733,15 +4735,17 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+operator|!
+operator|(
 name|flags
 operator|&&
-operator|!
 name|strchr
 argument_list|(
 name|flags
 argument_list|,
 literal|'d'
 argument_list|)
+operator|)
 operator|&&
 operator|(
 name|purl
@@ -4898,15 +4902,17 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+operator|!
+operator|(
 name|flags
 operator|&&
-operator|!
 name|strchr
 argument_list|(
 name|flags
 argument_list|,
 literal|'d'
 argument_list|)
+operator|)
 operator|&&
 operator|(
 name|purl
