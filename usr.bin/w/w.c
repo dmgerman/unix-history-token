@@ -378,6 +378,16 @@ comment|/* use AM/PM time */
 end_comment
 
 begin_decl_stmt
+name|int
+name|use_comma
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use comma as floats separator */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
@@ -661,6 +671,18 @@ name|T_FMT_AMPM
 argument_list|)
 operator|!=
 literal|'\0'
+operator|)
+expr_stmt|;
+name|use_comma
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|RADIXCHAR
+argument_list|)
+operator|!=
+literal|','
 operator|)
 expr_stmt|;
 comment|/* Are we w(1) or uptime(1)? */
@@ -2676,12 +2698,29 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|use_comma
+operator|&&
+name|i
+operator|>
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %.2f"
+literal|","
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %.2f"
 argument_list|,
 name|avenrun
 index|[
@@ -2689,6 +2728,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
