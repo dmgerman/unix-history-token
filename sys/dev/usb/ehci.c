@@ -12707,7 +12707,7 @@ argument_list|,
 name|psqh
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Step 4: Execute callback. 	 */
+comment|/* 	 * Step 5: Execute callback. 	 */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
