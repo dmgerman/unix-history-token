@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1038,6 +1038,11 @@ name|sendalot
 operator|=
 literal|1
 expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|TH_FIN
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1229,10 +1234,23 @@ name|m_next
 operator|==
 literal|0
 condition|)
-name|len
-operator|=
-literal|0
+block|{
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 endif|#
 directive|endif
