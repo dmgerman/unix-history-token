@@ -890,6 +890,7 @@ operator|=
 name|mfs
 condition|?
 literal|"NF:T:a:b:c:d:e:f:i:m:o:s:"
+else|:
 literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
 expr_stmt|;
 while|while
