@@ -5853,7 +5853,7 @@ begin_define
 define|#
 directive|define
 name|BGE_HCC_TX_MAX_COAL_BDS_INT
-value|0x3C34
+value|0x3C24
 end_define
 
 begin_comment
