@@ -7345,16 +7345,6 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
-name|struct
-name|ispsoftc
-modifier|*
-name|isp
-init|=
-name|XS_ISP
-argument_list|(
-name|ccb
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 operator|(
