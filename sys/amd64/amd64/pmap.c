@@ -1567,6 +1567,8 @@ operator||=
 name|PG_RW
 operator||
 name|PG_V
+operator||
+name|PG_G
 expr_stmt|;
 block|}
 comment|/* Now map the page tables at their location within PTmap */
@@ -1670,6 +1672,8 @@ operator||
 name|PG_V
 operator||
 name|PG_PS
+operator||
+name|PG_G
 expr_stmt|;
 block|}
 comment|/* And connect up the PD to the PDP */
@@ -1779,6 +1783,8 @@ operator||
 name|PG_V
 operator||
 name|PG_PS
+operator||
+name|PG_G
 expr_stmt|;
 block|}
 comment|/* And the direct map space's PDP */
