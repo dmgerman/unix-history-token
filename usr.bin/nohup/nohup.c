@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: nohup.c,v 1.3 1999/05/22 06:57:22 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,9 @@ name|dofile
 parameter_list|()
 block|{
 name|int
+name|append
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 name|char
@@ -301,6 +304,16 @@ value|"nohup.out"
 name|p
 operator|=
 name|FILENAME
+expr_stmt|;
+name|append
+operator|=
+operator|!
+name|access
+argument_list|(
+name|p
+argument_list|,
+name|F_OK
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -366,6 +379,16 @@ argument_list|(
 name|path
 argument_list|,
 name|FILENAME
+argument_list|)
+expr_stmt|;
+name|append
+operator|=
+operator|!
+name|access
+argument_list|(
+name|path
+argument_list|,
+name|F_OK
 argument_list|)
 expr_stmt|;
 if|if
@@ -438,6 +461,23 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|append
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"appending output to existing %s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
