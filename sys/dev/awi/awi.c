@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -360,6 +366,12 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
 
 begin_endif
 endif|#
@@ -4547,7 +4559,7 @@ init|;
 condition|;
 control|)
 block|{
-name|_IF_DEQUEUE
+name|IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -4570,14 +4582,35 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_DRAIN
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|IF_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
 operator|->
 name|if_snd
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+break|break;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -4906,7 +4939,7 @@ name|sc
 operator|->
 name|sc_txnext
 expr_stmt|;
-name|_IF_DEQUEUE
+name|IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -4943,7 +4976,7 @@ name|ntxd
 argument_list|)
 condition|)
 block|{
-name|_IF_PREPEND
+name|IF_PREPEND
 argument_list|(
 operator|&
 name|sc
@@ -11567,7 +11600,7 @@ name|u_int8_t
 operator|*
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -11847,7 +11880,7 @@ name|u_int8_t
 operator|*
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -12550,7 +12583,7 @@ name|u_int8_t
 operator|*
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
