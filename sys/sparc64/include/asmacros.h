@@ -22,8 +22,15 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Normal and alternate %g7 point to per-cpu data.  */
+comment|/*  * Normal and alternate %g6 point to the pcb of the current process.  Normal,& alternate and interrupt %g7 point to per-cpu data.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_REG
+value|%g6
+end_define
 
 begin_define
 define|#
@@ -33,7 +40,7 @@ value|%g7
 end_define
 
 begin_comment
-comment|/*  * Alternate %g5 points to a per-cpu stack for temporarily saving alternate  * globals, alternate %g6 points to the pcb of the current process.  */
+comment|/*  * Alternate %g5 points to a per-cpu panic stack, which is used as a last  * resort, and for temporarily saving alternate globals.  */
 end_comment
 
 begin_define
@@ -41,31 +48,6 @@ define|#
 directive|define
 name|ASP_REG
 value|%g5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCB_REG
-value|%g6
-end_define
-
-begin_comment
-comment|/*  * Interrupt %g6 points to a per-cpu interrupt queue, %g7 points to the  * interrupt vector table.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IQ_REG
-value|%g6
-end_define
-
-begin_define
-define|#
-directive|define
-name|IV_REG
-value|%g7
 end_define
 
 begin_comment
@@ -77,6 +59,50 @@ define|#
 directive|define
 name|TSB_REG
 value|%g7
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_comment
+comment|/*  * Atomically decrement an integer in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC_INT
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|)
+define|\
+value|lduw	[r1], r2 ; \ 9:	sub	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%xcc, 9b ; \ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically increment an integer in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC_INT
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|)
+define|\
+value|lduw	[r1], r2 ; \ 9:	add	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%xcc, 9b ; \ 	 mov	r3, r2
 end_define
 
 begin_define
@@ -122,6 +148,46 @@ define|\
 value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	panic ; \ 	 nop
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KASSERT
+parameter_list|(
+name|r1
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|brnz	r1, 8f ; \ 	 nop ; \ 	PANIC(msg, r1) ; \ 8:
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KASSERT
+parameter_list|(
+name|r1
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -135,10 +201,73 @@ define|\
 value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	printf ; \ 	 nop
 end_define
 
+begin_comment
+comment|/*  * If the kernel can be located above 4G, setx needs to be used to load  * symbol values, otherwise set is sufficient.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HIGH_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|sym
+parameter_list|,
+name|tmp
+parameter_list|,
+name|dst
+parameter_list|)
+define|\
+value|setx	sym, tmp, dst
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|sym
+parameter_list|,
+name|tmp
+parameter_list|,
+name|dst
+parameter_list|)
+define|\
+value|set	sym, dst
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_define
 define|#
@@ -178,56 +307,6 @@ parameter_list|)
 define|\
 value|.size	name, . - name
 end_define
-
-begin_comment
-comment|/*  * If the kernel can be located above 4G, setx needs to be used to load  * symbol values, otherwise set is sufficient.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HIGH_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SET
-parameter_list|(
-name|sym
-parameter_list|,
-name|tmp
-parameter_list|,
-name|dst
-parameter_list|)
-define|\
-value|setx sym, tmp, dst
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SET
-parameter_list|(
-name|sym
-parameter_list|,
-name|tmp
-parameter_list|,
-name|dst
-parameter_list|)
-define|\
-value|set sym, dst
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
