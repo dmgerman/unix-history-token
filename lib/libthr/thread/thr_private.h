@@ -121,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -140,6 +146,12 @@ begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTHREADS_INVARIANTS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -147,8 +159,37 @@ name|PANIC
 parameter_list|(
 name|string
 parameter_list|)
-value|_thread_exit(__FILE__,__LINE__,string)
+value|_thread_exit(__FILE__, __LINE__, (string))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _PTHREADS_INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PANIC
+parameter_list|(
+name|string
+parameter_list|)
+define|\
+value|do {								     \ 		_thread_printf(STDOUT_FILENO, (string));		     \ 		_thread_printf(STDOUT_FILENO,				     \ 		    "\nAbnormal termination, file: %s, line: %d\n",	     \ 		    __FILE__, __LINE__);				     \ 		abort();						     \ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_PTHREADS_INVARIANTS */
+end_comment
 
 begin_comment
 comment|/* Output debug messages like this: */

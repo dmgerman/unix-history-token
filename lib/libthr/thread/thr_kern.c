@@ -161,6 +161,18 @@ argument_list|,
 name|SIGTHR
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_PTHREADS_INVARIANTS
+name|SIGDELSET
+argument_list|(
+name|set
+argument_list|,
+name|SIGABRT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* If we have already blocked signals, just up the refcount */
 if|if
 condition|(

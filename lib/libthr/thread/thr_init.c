@@ -1218,6 +1218,18 @@ name|SIGTHR
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|_PTHREADS_INVARIANTS
+name|SIGADDSET
+argument_list|(
+name|_thread_suspend_sigset
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the kernel clockrate: */
 name|mib
 index|[
