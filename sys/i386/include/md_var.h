@@ -201,14 +201,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uint16_t
-modifier|*
-name|elan_mmcr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|kstack
 index|[]
