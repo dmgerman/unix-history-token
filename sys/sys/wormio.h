@@ -213,6 +213,64 @@ name|WORMIOCFINISHTRACK
 value|_IO('W', 23)
 end_define
 
+begin_struct
+struct|struct
+name|wormio_session_info
+block|{
+name|u_short
+name|lead_in
+decl_stmt|;
+name|u_short
+name|lead_out
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WORMIOCREADSESSIONINFO
+value|_IOR('W', 31, struct wormio_session_info)
+end_define
+
+begin_struct
+struct|struct
+name|wormio_write_session
+block|{
+name|int
+name|toc_type
+decl_stmt|;
+name|int
+name|onp
+decl_stmt|;
+name|int
+name|lofp
+decl_stmt|;
+name|int
+name|length
+decl_stmt|;
+name|char
+name|catalog
+index|[
+literal|13
+index|]
+decl_stmt|;
+name|u_char
+modifier|*
+name|track_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WORMIOCWRITESESSION
+value|_IOW('W', 32, struct wormio_write_session)
+end_define
+
 begin_comment
 comment|/* Errors/warnings */
 end_comment
