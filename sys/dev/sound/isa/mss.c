@@ -25,12 +25,6 @@ directive|include
 file|<dev/sound/chip.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gusc.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -1866,14 +1860,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NGUSC
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/*  * XXX This might be better off in the gusc driver.  */
 end_comment
@@ -2201,15 +2187,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NGUSC> 0 */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2426,11 +2403,6 @@ literal|0xC
 argument_list|)
 expr_stmt|;
 comment|/* enable int and dma */
-if|#
-directive|if
-name|NGUSC
-operator|>
-literal|0
 if|if
 condition|(
 name|mss
@@ -2448,8 +2420,6 @@ argument_list|,
 name|alt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -7685,11 +7655,6 @@ literal|"xxx too many loops\n"
 argument|);
 argument_list|)
 block|}
-if|#
-directive|if
-name|NGUSC
-operator|>
-literal|0
 specifier|static
 name|int
 name|guspcm_probe
@@ -8075,9 +8040,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NGUSC> 0 */
 specifier|static
 name|int
 name|mssmix_init
