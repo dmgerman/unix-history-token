@@ -813,7 +813,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\n"
+literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\tclean\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -826,6 +826,10 @@ argument_list|,
 name|afs
 operator|.
 name|fs_ronly
+argument_list|,
+name|afs
+operator|.
+name|fs_clean
 argument_list|)
 expr_stmt|;
 if|if
