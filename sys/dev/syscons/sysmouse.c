@@ -245,14 +245,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"smopen: dev:%d,%d, vty:%d\n"
+literal|"smopen: dev:%s, vty:%d\n"
 operator|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|minor
+name|devtoname
 argument_list|(
 name|dev
 argument_list|)

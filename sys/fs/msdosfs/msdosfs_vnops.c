@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/buf.h>
 end_include
 
@@ -7900,16 +7906,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"on dev (%d, %d)\n"
+literal|"on dev %s\n"
 argument_list|,
-name|major
-argument_list|(
-name|dep
-operator|->
-name|de_dev
-argument_list|)
-argument_list|,
-name|minor
+name|devtoname
 argument_list|(
 name|dep
 operator|->

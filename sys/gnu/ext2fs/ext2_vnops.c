@@ -6350,7 +6350,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\tino %lu, on dev %s (%d, %d)"
+literal|"\tino %lu, on dev %s"
 argument_list|,
 operator|(
 name|u_long
@@ -6360,20 +6360,6 @@ operator|->
 name|i_number
 argument_list|,
 name|devtoname
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-argument_list|,
-name|major
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-argument_list|,
-name|minor
 argument_list|(
 name|ip
 operator|->

@@ -2785,14 +2785,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"scopen: dev:%d,%d, unit:%d, vty:%d\n"
+literal|"scopen: dev:%s, unit:%d, vty:%d\n"
 operator|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|minor
+name|devtoname
 argument_list|(
 name|dev
 argument_list|)
