@@ -5895,7 +5895,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Promise"
+literal|"Promise PDC20246"
 block|}
 block|,
 block|{
@@ -5909,7 +5909,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Promise"
+literal|"Promise PDC20262"
 block|}
 block|,
 block|{
@@ -5923,7 +5923,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Promise"
+literal|"Promise PDC20263"
 block|}
 block|,
 block|{
@@ -5937,7 +5937,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise"
+literal|"Promise PDC20265"
 block|}
 block|,
 block|{
@@ -5951,7 +5951,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise"
+literal|"Promise PDC20267"
 block|}
 block|,
 block|{
@@ -5965,7 +5965,7 @@ name|PRTX4
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20268"
 block|}
 block|,
 block|{
@@ -5975,11 +5975,11 @@ literal|0
 block|,
 name|PRTX
 block|,
-name|PRTX4
+literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20268R"
 block|}
 block|,
 block|{
@@ -5993,7 +5993,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20269"
 block|}
 block|,
 block|{
@@ -6007,7 +6007,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20271"
 block|}
 block|,
 block|{
@@ -6021,7 +6021,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20275"
 block|}
 block|,
 block|{
@@ -6035,7 +6035,7 @@ name|PRSX6K
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20276"
 block|}
 block|,
 block|{
@@ -6049,40 +6049,13 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise TX2"
+literal|"Promise PDC20277"
 block|}
 block|,
 if|#
 directive|if
-name|notyet
-block|{
-name|ATA_PDC20376
-block|,
 literal|0
-block|,
-name|PRCH
-block|,
-literal|0x00
-block|,
-name|ATA_UDMA6
-block|,
-literal|"Promise SATA"
-block|}
-block|,
-block|{
-name|ATA_PDC20621
-block|,
-literal|0
-block|,
-name|PRCH
-block|,
-literal|0x00
-block|,
-name|ATA_UDMA6
-block|,
-literal|"Promise SX4000"
-block|}
-block|,
+block|{ ATA_PDC20376,  0, PRCH,  0x00,	ATA_SDMA6, "Promise PDC20376" },      { ATA_PDC20621,  0, PRCH,  0x00,	ATA_SDMA6, "Promise SX4000" },
 endif|#
 directive|endif
 block|{
@@ -6318,7 +6291,7 @@ literal|0
 expr_stmt|;
 name|desc
 operator|=
-literal|"Promise TX2"
+literal|"Promise PDC20268"
 expr_stmt|;
 block|}
 block|}
@@ -11058,7 +11031,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"VIA 82C586b"
+literal|"VIA 82C586B"
 block|}
 block|,
 block|{
@@ -11086,7 +11059,7 @@ name|VIACLK
 block|,
 name|ATA_UDMA4
 block|,
-literal|"VIA 82C596b"
+literal|"VIA 82C596B"
 block|}
 block|,
 block|{
@@ -11114,7 +11087,7 @@ name|VIABUG
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 82C686b"
+literal|"VIA 82C686B"
 block|}
 block|,
 block|{
@@ -11128,7 +11101,7 @@ name|VIACLK
 block|,
 name|ATA_UDMA4
 block|,
-literal|"VIA 82C686a"
+literal|"VIA 82C686A"
 block|}
 block|,
 block|{
@@ -11184,7 +11157,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 8233c"
+literal|"VIA 8233C"
 block|}
 block|,
 block|{
@@ -11198,7 +11171,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 8233a"
+literal|"VIA 8233A"
 block|}
 block|,
 block|{
@@ -12311,18 +12284,23 @@ condition|)
 block|{
 if|if
 condition|(
-name|ata_find_dev
+name|pci_get_devid
 argument_list|(
 name|dev
-argument_list|,
+argument_list|)
+operator|==
 name|index
 operator|->
 name|chiptype
-argument_list|,
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
 name|index
 operator|->
 name|chiprev
-argument_list|)
 condition|)
 return|return
 name|index
