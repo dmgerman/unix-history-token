@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|MODULESDIR
-value|"/stand/modules"
+value|"/modules"
 end_define
 
 begin_define
