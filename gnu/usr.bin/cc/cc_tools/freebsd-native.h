@@ -14,6 +14,17 @@ name|FREEBSD_NATIVE
 value|1
 end_define
 
+begin_comment
+comment|/* Fake out gcc/config/freebsd<version>.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBSD_MAJOR
+value|5
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -113,15 +124,12 @@ name|STANDARD_EXEC_PREFIX
 value|PREFIX"/libexec/"
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|MD_EXEC_PREFIX
-end_undef
-
-begin_comment
-comment|/* We don't want one. */
-end_comment
+value|PREFIX"/libexec/"
+end_define
 
 begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
@@ -173,20 +181,6 @@ name|LIBGCC_SPEC
 value|"%{!pg: -lgcc} %{pg: -lgcc_p}"
 end_define
 
-begin_define
-define|#
-directive|define
-name|LIBSTDCXX_PROFILE
-value|"-lstdc++_p"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MATH_LIBRARY_PROFILE
-value|"-lm_p"
-end_define
-
 begin_comment
 comment|/* FreeBSD is 4.4BSD derived */
 end_comment
@@ -195,6 +189,93 @@ begin_define
 define|#
 directive|define
 name|bsd4_4
+end_define
+
+begin_comment
+comment|/* Dike out [stupid, IMHO] libiberty functions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|xmalloc_set_program_name
+parameter_list|(
+name|dummy
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xmalloc
+value|malloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|xcalloc
+value|calloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|xrealloc
+value|realloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|xstrdup
+value|strdup
+end_define
+
+begin_define
+define|#
+directive|define
+name|xstrerror
+value|strerror
+end_define
+
+begin_comment
+comment|/* And now they want to replace ctype.h.... grr... [stupid, IMHO] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|xxxISDIGIT
+value|isdigit
+end_define
+
+begin_define
+define|#
+directive|define
+name|xxxISGRAPH
+value|isgraph
+end_define
+
+begin_define
+define|#
+directive|define
+name|xxxISLOWER
+value|islower
+end_define
+
+begin_define
+define|#
+directive|define
+name|xxxISSPACE
+value|isspace
+end_define
+
+begin_define
+define|#
+directive|define
+name|xxxTOUPPER
+value|toupper
 end_define
 
 end_unit
