@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	1.4	87/06/06	*/
+comment|/*	Locore.c	1.5	87/06/06	*/
 end_comment
 
 begin_include
@@ -655,20 +655,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|cp
-operator|=
-name|calloc
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|cfreemem
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|dumpflag
 operator|=
 literal|0
