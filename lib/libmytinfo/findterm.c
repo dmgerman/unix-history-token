@@ -207,6 +207,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+name|i
+operator|>
+literal|0
+operator|&&
 name|isspace
 argument_list|(
 operator|*
