@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.17 %G%"
+literal|"@(#)df.c	4.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -597,6 +603,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
 name|bread
 argument_list|(
 name|SBLOCK
@@ -610,7 +618,20 @@ name|sblock
 argument_list|,
 name|SBSIZE
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fi
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"%-12.12s"
@@ -885,6 +906,14 @@ operator|!=
 name|cnt
 condition|)
 block|{
+comment|/* probably a dismounted disk if errno == EIO */
+if|if
+condition|(
+name|errno
+operator|!=
+name|EIO
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\nread error bno = %ld\n"
@@ -901,12 +930,18 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
