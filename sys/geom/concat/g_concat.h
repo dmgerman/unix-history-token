@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|G_CONCAT_VERSION
-value|0
+value|1
 end_define
 
 begin_ifdef
@@ -71,7 +71,7 @@ name|lvl
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (g_concat_debug>= (lvl)) {					\ 		printf("GEOM_CONCAT[%u]: ", lvl);			\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\ } while (0)
+value|do {				\ 	if (g_concat_debug>= (lvl)) {					\ 		printf("GEOM_CONCAT");					\ 		if (g_concat_debug> 0)					\ 			printf("[%u]", lvl);				\ 		printf(": ");						\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -118,6 +118,11 @@ name|u_int
 name|sc_type
 decl_stmt|;
 comment|/* provider type */
+name|struct
+name|g_geom
+modifier|*
+name|sc_geom
+decl_stmt|;
 name|struct
 name|g_provider
 modifier|*
