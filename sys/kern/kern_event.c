@@ -6218,8 +6218,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 operator|(
