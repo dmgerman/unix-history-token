@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000,2001 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000,2001 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -287,7 +287,7 @@ name|ar_softc
 modifier|*
 name|ar_table
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1738,6 +1738,7 @@ parameter_list|)
 block|{
 name|struct
 name|highpoint_raid_conf
+modifier|*
 name|info
 decl_stmt|;
 name|struct
@@ -1747,7 +1748,41 @@ name|raid
 decl_stmt|;
 name|int
 name|array
+decl_stmt|,
+name|error
+init|=
+literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|info
+operator|=
+operator|(
+expr|struct
+name|highpoint_raid_conf
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|highpoint_raid_conf
+argument_list|)
+argument_list|,
+name|M_AR
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+operator|)
+condition|)
+return|return
+name|error
+return|;
 if|if
 condition|(
 name|ar_read
@@ -1762,7 +1797,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|info
 argument_list|)
 condition|)
@@ -1776,15 +1810,15 @@ argument_list|(
 literal|"HighPoint read conf failed\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|highpoint_out
+goto|;
 block|}
 comment|/* check if this is a HighPoint RAID struct */
 if|if
 condition|(
 name|info
-operator|.
+operator|->
 name|magic
 operator|!=
 name|HPT_MAGIC_OK
@@ -1799,9 +1833,9 @@ argument_list|(
 literal|"HighPoint check1 failed\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|highpoint_out
+goto|;
 block|}
 comment|/* now convert HighPoint config info into our generic form */
 for|for
@@ -1866,9 +1900,9 @@ argument_list|(
 literal|"ar: failed to allocate raid config storage\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|highpoint_out
+goto|;
 block|}
 block|}
 name|raid
@@ -1881,7 +1915,7 @@ expr_stmt|;
 switch|switch
 condition|(
 name|info
-operator|.
+operator|->
 name|type
 condition|)
 block|{
@@ -1892,7 +1926,7 @@ comment|/* check the order byte to determine what this really is */
 switch|switch
 condition|(
 name|info
-operator|.
+operator|->
 name|order
 operator|&
 operator|(
@@ -1922,7 +1956,7 @@ operator|->
 name|magic_0
 operator|!=
 name|info
-operator|.
+operator|->
 name|magic_0
 condition|)
 continue|continue;
@@ -1931,7 +1965,7 @@ operator|->
 name|magic_0
 operator|=
 name|info
-operator|.
+operator|->
 name|magic_0
 expr_stmt|;
 name|raid
@@ -1951,7 +1985,7 @@ operator|=
 literal|1
 operator|<<
 name|info
-operator|.
+operator|->
 name|raid0_shift
 expr_stmt|;
 name|raid
@@ -1959,7 +1993,7 @@ operator|->
 name|subdisk
 index|[
 name|info
-operator|.
+operator|->
 name|disk_number
 index|]
 operator|=
@@ -1984,7 +2018,7 @@ operator|)
 operator|==
 operator|(
 name|info
-operator|.
+operator|->
 name|raid_disks
 operator|*
 literal|2
@@ -2015,7 +2049,7 @@ operator|->
 name|magic_1
 operator|!=
 name|info
-operator|.
+operator|->
 name|magic_0
 condition|)
 continue|continue;
@@ -2024,7 +2058,7 @@ operator|->
 name|magic_1
 operator|=
 name|info
-operator|.
+operator|->
 name|magic_0
 expr_stmt|;
 name|raid
@@ -2042,7 +2076,7 @@ operator|->
 name|mirrordisk
 index|[
 name|info
-operator|.
+operator|->
 name|disk_number
 index|]
 operator|=
@@ -2067,7 +2101,7 @@ operator|)
 operator|==
 operator|(
 name|info
-operator|.
+operator|->
 name|raid_disks
 operator|*
 literal|2
@@ -2092,7 +2126,7 @@ operator|->
 name|magic_0
 operator|!=
 name|info
-operator|.
+operator|->
 name|magic_0
 condition|)
 continue|continue;
@@ -2101,7 +2135,7 @@ operator|->
 name|magic_0
 operator|=
 name|info
-operator|.
+operator|->
 name|magic_0
 expr_stmt|;
 name|raid
@@ -2117,7 +2151,7 @@ operator|=
 literal|1
 operator|<<
 name|info
-operator|.
+operator|->
 name|raid0_shift
 expr_stmt|;
 name|raid
@@ -2125,7 +2159,7 @@ operator|->
 name|subdisk
 index|[
 name|info
-operator|.
+operator|->
 name|disk_number
 index|]
 operator|=
@@ -2143,7 +2177,7 @@ operator|->
 name|num_subdisks
 operator|==
 name|info
-operator|.
+operator|->
 name|raid_disks
 condition|)
 name|raid
@@ -2170,7 +2204,7 @@ operator|->
 name|magic_0
 operator|!=
 name|info
-operator|.
+operator|->
 name|magic_0
 condition|)
 continue|continue;
@@ -2179,7 +2213,7 @@ operator|->
 name|magic_0
 operator|=
 name|info
-operator|.
+operator|->
 name|magic_0
 expr_stmt|;
 name|raid
@@ -2191,7 +2225,7 @@ expr_stmt|;
 if|if
 condition|(
 name|info
-operator|.
+operator|->
 name|disk_number
 operator|==
 literal|0
@@ -2224,7 +2258,7 @@ block|}
 if|if
 condition|(
 name|info
-operator|.
+operator|->
 name|disk_number
 operator|!=
 literal|0
@@ -2268,7 +2302,7 @@ operator|)
 operator|==
 operator|(
 name|info
-operator|.
+operator|->
 name|raid_disks
 operator|*
 literal|2
@@ -2295,7 +2329,7 @@ operator|->
 name|magic_0
 operator|!=
 name|info
-operator|.
+operator|->
 name|magic_0
 condition|)
 continue|continue;
@@ -2304,7 +2338,7 @@ operator|->
 name|magic_0
 operator|=
 name|info
-operator|.
+operator|->
 name|magic_0
 expr_stmt|;
 name|raid
@@ -2318,7 +2352,7 @@ operator|->
 name|subdisk
 index|[
 name|info
-operator|.
+operator|->
 name|disk_number
 index|]
 operator|=
@@ -2336,7 +2370,7 @@ operator|->
 name|num_subdisks
 operator|==
 name|info
-operator|.
+operator|->
 name|raid_disks
 condition|)
 name|raid
@@ -2352,7 +2386,7 @@ argument_list|(
 literal|"HighPoint unknown RAID type 0x%02x\n"
 argument_list|,
 name|info
-operator|.
+operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -2391,7 +2425,7 @@ name|cylinders
 operator|=
 operator|(
 name|info
-operator|.
+operator|->
 name|total_secs
 operator|-
 literal|9
@@ -2408,7 +2442,7 @@ operator|->
 name|total_secs
 operator|=
 name|info
-operator|.
+operator|->
 name|total_secs
 operator|-
 operator|(
@@ -2437,12 +2471,22 @@ name|raid
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|error
+operator|=
 literal|0
-return|;
+expr_stmt|;
 block|}
+name|highpoint_out
+label|:
+name|free
+argument_list|(
+name|info
+argument_list|,
+name|M_AR
+argument_list|)
+expr_stmt|;
 return|return
-literal|1
+name|error
 return|;
 block|}
 end_function
@@ -2470,6 +2514,7 @@ parameter_list|)
 block|{
 name|struct
 name|promise_raid_conf
+modifier|*
 name|info
 decl_stmt|;
 name|struct
@@ -2494,7 +2539,41 @@ decl_stmt|,
 name|disk_number
 decl_stmt|,
 name|array
+decl_stmt|,
+name|error
+init|=
+literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|info
+operator|=
+operator|(
+expr|struct
+name|promise_raid_conf
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|promise_raid_conf
+argument_list|)
+argument_list|,
+name|M_AR
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+operator|)
+condition|)
+return|return
+name|error
+return|;
 name|lba
 operator|=
 operator|(
@@ -2543,7 +2622,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|info
 argument_list|)
 condition|)
@@ -2557,9 +2635,9 @@ argument_list|(
 literal|"Promise read conf failed\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 comment|/* check if this is a Promise RAID struct */
 if|if
@@ -2567,7 +2645,7 @@ condition|(
 name|strncmp
 argument_list|(
 name|info
-operator|.
+operator|->
 name|promise_id
 argument_list|,
 name|PR_MAGIC
@@ -2588,9 +2666,9 @@ argument_list|(
 literal|"Promise check1 failed\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 comment|/* check if the checksum is OK */
 for|for
@@ -2605,7 +2683,6 @@ operator|(
 name|int32_t
 operator|*
 operator|)
-operator|&
 name|info
 operator|,
 name|count
@@ -2642,16 +2719,16 @@ argument_list|(
 literal|"Promise check2 failed\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 comment|/* now convert Promise config info into our generic form */
 if|if
 condition|(
 operator|(
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|flags
@@ -2663,7 +2740,7 @@ operator|(
 operator|(
 operator|(
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|status
@@ -2684,9 +2761,9 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 name|magic
 operator|=
@@ -2701,7 +2778,7 @@ literal|16
 operator|)
 operator||
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|array_number
@@ -2711,7 +2788,7 @@ expr_stmt|;
 name|array
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|array_number
@@ -2735,9 +2812,9 @@ index|]
 operator|->
 name|magic_0
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 else|else
 block|{
@@ -2775,9 +2852,9 @@ argument_list|(
 literal|"ar: failed to allocate raid config storage\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 else|else
 name|bzero
@@ -2811,7 +2888,7 @@ expr_stmt|;
 switch|switch
 condition|(
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|type
@@ -2833,7 +2910,7 @@ operator|=
 literal|1
 operator|<<
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|raid0_shift
@@ -2865,21 +2942,21 @@ argument_list|(
 literal|"Promise unknown RAID type 0x%02x\n"
 argument_list|,
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|type
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+goto|goto
+name|promise_out
+goto|;
 block|}
 comment|/* find out where this disk is in the defined array */
 name|disk_number
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|disk_number
@@ -2889,7 +2966,7 @@ condition|(
 name|disk_number
 operator|<
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|raid0_disks
@@ -2940,7 +3017,7 @@ operator|=
 literal|1
 operator|<<
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|raid0_shift
@@ -2956,7 +3033,7 @@ index|[
 name|disk_number
 operator|-
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|raid0_disks
@@ -2982,7 +3059,7 @@ operator|->
 name|num_mirrordisks
 operator|==
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|total_disks
@@ -3005,7 +3082,7 @@ operator|->
 name|heads
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|heads
@@ -3017,7 +3094,7 @@ operator|->
 name|sectors
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|sectors
@@ -3027,7 +3104,7 @@ operator|->
 name|cylinders
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|cylinders
@@ -3039,7 +3116,7 @@ operator|->
 name|total_secs
 operator|=
 name|info
-operator|.
+operator|->
 name|raid
 operator|.
 name|total_secs
@@ -3062,8 +3139,21 @@ name|raid
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|error
+operator|=
 literal|0
+expr_stmt|;
+name|promise_out
+label|:
+name|free
+argument_list|(
+name|info
+argument_list|,
+name|M_AR
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
