@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.20 1998/12/14 06:32:56 dillon Exp $ */
+comment|/*	$Id: if_tx.c,v 1.22 1999/03/14 08:30:23 semenu Exp $ */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"pci.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_bdg.h"
 end_include
 
 begin_if
@@ -434,6 +440,23 @@ include|#
 directive|include
 file|<pci/if_txvar.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BRIDGE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/bridge.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4438,6 +4461,109 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
+endif|#
+directive|endif
+comment|/* NBPFILTER */
+ifdef|#
+directive|ifdef
+name|BRIDGE
+if|if
+condition|(
+name|do_bridge
+condition|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|bdg_ifp
+decl_stmt|;
+name|bdg_ifp
+operator|=
+name|bridge_in
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|==
+name|BDG_DROP
+condition|)
+block|{
+if|if
+condition|(
+name|m
+condition|)
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+comment|/* and drop */
+block|}
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+condition|)
+name|bdg_forward
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|bdg_ifp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_BCAST
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_MCAST
+condition|)
+block|{
+if|if
+condition|(
+name|m
+condition|)
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+comment|/* and drop */
+block|}
+comment|/* all others accepted locally */
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+ifdef|#
+directive|ifdef
+name|BRIDGE
+comment|/* 		 * This deserves explanation 		 * If the bridge is _on_, then the following check 		 * must not be done because occasionally the bridge 		 * gets packets that are local but have the ethernet 		 * address of one of the other interfaces. 		 * 		 * But if the bridge is off, then we have to drop 		 * stuff that came in just via bpfilter. 		 */
+if|if
+condition|(
+operator|!
+name|do_bridge
+condition|)
+endif|#
+directive|endif
 comment|/* Accept only our packets, broadcasts and multicasts */
 if|if
 condition|(
