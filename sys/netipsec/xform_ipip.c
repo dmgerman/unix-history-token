@@ -2158,11 +2158,6 @@ operator|.
 name|ipips_hdrops
 operator|++
 expr_stmt|;
-operator|*
-name|mp
-operator|=
-name|NULL
-expr_stmt|;
 name|error
 operator|=
 name|ENOBUFS
@@ -2539,7 +2534,7 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
-operator|,
+expr_stmt|;
 operator|*
 name|mp
 operator|=

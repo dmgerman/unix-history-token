@@ -1951,11 +1951,19 @@ if|if
 condition|(
 name|mp
 condition|)
+block|{
+comment|/* XXX: Should never happen! */
 name|m_freem
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* ipip_output() already freed it */
 goto|goto
 name|bad
 goto|;
