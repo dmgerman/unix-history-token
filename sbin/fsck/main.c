@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) 1/23/94"
+literal|"@(#)main.c	8.6 (Berkeley) 5/14/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -126,6 +144,12 @@ include|#
 directive|include
 file|"fsck.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|returntosingle
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -188,6 +212,24 @@ name|auxdata
 operator|,
 name|int
 name|child
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+name|argv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -357,9 +399,11 @@ operator|&
 operator|~
 literal|07777
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"bad mode to -m: %o\n"
+name|EEXIT
+argument_list|,
+literal|"bad mode to -m: %o"
 argument_list|,
 name|lfmode
 argument_list|)
@@ -401,9 +445,11 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|errexit
+name|errx
 argument_list|(
-literal|"%c option?\n"
+name|EEXIT
+argument_list|,
+literal|"%c option?"
 argument_list|,
 name|ch
 argument_list|)
@@ -521,6 +567,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|argtoi
 parameter_list|(
@@ -583,9 +630,11 @@ operator|||
 operator|*
 name|cp
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"-%c flag requires a %s\n"
+name|EEXIT
+argument_list|,
+literal|"-%c flag requires a %s"
 argument_list|,
 name|flag
 argument_list|,
@@ -605,6 +654,7 @@ comment|/*  * Determine whether a filesystem should be checked.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|docheck
 parameter_list|(
@@ -676,6 +726,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|checkfilesys
 parameter_list|(
@@ -710,7 +761,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|n_ffree
 decl_stmt|,
 name|n_bfree
@@ -727,6 +778,8 @@ name|zlnp
 decl_stmt|;
 name|int
 name|cylno
+decl_stmt|,
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -759,16 +812,17 @@ argument_list|(
 literal|"starting\n"
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|setup
 argument_list|(
 name|filesys
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
+case|case
+literal|0
+case|:
 if|if
 condition|(
 name|preen
@@ -778,6 +832,11 @@ argument_list|(
 literal|"CAN'T CHECK FILE SYSTEM."
 argument_list|)
 expr_stmt|;
+comment|/* fall through */
+case|case
+operator|-
+literal|1
+case|:
 return|return
 operator|(
 literal|0
@@ -1344,9 +1403,56 @@ name|SBSIZE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|hotroot
+condition|)
+block|{
 name|ckfini
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|struct
+name|statfs
+name|stfs_buf
+decl_stmt|;
+comment|/* 		 * Check to see if root is mounted read-write. 		 */
+if|if
+condition|(
+name|statfs
+argument_list|(
+literal|"/"
+argument_list|,
+operator|&
+name|stfs_buf
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|flags
+operator|=
+name|stfs_buf
+operator|.
+name|f_flags
+expr_stmt|;
+else|else
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|ckfini
+argument_list|(
+name|flags
+operator|&
+name|MNT_RDONLY
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|blockmap
@@ -1401,37 +1507,13 @@ name|hotroot
 condition|)
 block|{
 name|struct
-name|statfs
-name|stfs_buf
-decl_stmt|;
-comment|/* 		 * We modified the root.  Do a mount update on 		 * it, unless it is read-write, so we can continue. 		 */
-if|if
-condition|(
-name|statfs
-argument_list|(
-literal|"/"
-argument_list|,
-operator|&
-name|stfs_buf
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|long
-name|flags
-init|=
-name|stfs_buf
-operator|.
-name|f_flags
-decl_stmt|;
-name|struct
 name|ufs_args
 name|args
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* 		 * We modified the root.  Do a mount update on 		 * it, unless it is read-write, so we can continue. 		 */
 if|if
 condition|(
 name|flags
@@ -1471,7 +1553,7 @@ name|ret
 operator|=
 name|mount
 argument_list|(
-name|MOUNT_UFS
+literal|"ufs"
 argument_list|,
 literal|"/"
 argument_list|,
@@ -1492,7 +1574,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(

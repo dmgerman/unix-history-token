@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1b.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)pass1b.c	8.4 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,19 +65,27 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_function_decl
-name|int
-name|pass1bcheck
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
 name|dups
 modifier|*
 name|duphead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pass1bcheck
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inodesc
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -105,14 +113,12 @@ decl_stmt|;
 name|ino_t
 name|inumber
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -231,6 +237,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pass1bcheck
 parameter_list|(
@@ -256,7 +263,7 @@ name|res
 init|=
 name|KEEPON
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 init|=
 name|idesc

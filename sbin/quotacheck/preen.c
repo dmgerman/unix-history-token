@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)preen.c	8.5 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
 end_include
 
 begin_include
@@ -170,6 +164,20 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|int
+name|nrun
+decl_stmt|,
+name|ndisks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|hotroot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|addpart
@@ -193,49 +201,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|startdisk
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|disk
-operator|*
-name|dk
-operator|,
-name|int
-argument_list|(
-operator|*
-name|checkit
-argument_list|)
-argument_list|()
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|disk
 modifier|*
 name|finddisk
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|unrawname
 name|__P
 argument_list|(
 operator|(
@@ -264,16 +233,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|nrun
-decl_stmt|,
-name|ndisks
+name|startdisk
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|disk
+operator|*
+name|dk
+operator|,
+name|int
+argument_list|(
+operator|*
+name|checkit
+argument_list|)
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|char
+operator|*
+argument_list|,
+name|long
+argument_list|,
+name|int
+argument_list|)
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
-name|hotroot
+modifier|*
+name|unrawname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -291,26 +295,48 @@ name|chkit
 argument_list|)
 name|int
 name|preen
-decl_stmt|,
-name|maxrun
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-argument_list|(
-operator|*
-name|docheck
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|chkit
-argument_list|)
-argument_list|()
+name|maxrun
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|docheck
+function_decl|)
+parameter_list|(
+name|struct
+name|fstab
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|chkit
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_block
 block|{
@@ -427,8 +453,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
 name|preen
+operator|==
+literal|0
 operator|||
 operator|(
 name|passno
@@ -443,6 +470,9 @@ literal|1
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|name
 operator|=
 name|blockcheck
@@ -451,12 +481,14 @@ name|fsp
 operator|->
 name|fs_spec
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|sumstatus
 operator|=
 call|(
@@ -474,10 +506,9 @@ name|auxdata
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sumstatus
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1060,6 +1091,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|struct
 name|disk
 modifier|*
@@ -1094,14 +1126,18 @@ literal|0
 decl_stmt|;
 for|for
 control|(
-name|p
+name|len
 operator|=
-name|name
-operator|+
 name|strlen
 argument_list|(
 name|name
 argument_list|)
+operator|,
+name|p
+operator|=
+name|name
+operator|+
+name|len
 operator|-
 literal|1
 init|;
@@ -1131,19 +1167,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|p
-operator|<
-name|name
-condition|)
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|dk
@@ -1327,6 +1350,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|addpart
 parameter_list|(
@@ -1574,6 +1598,7 @@ block|}
 end_block
 
 begin_decl_stmt
+specifier|static
 name|int
 name|startdisk
 argument_list|(
@@ -1594,7 +1619,17 @@ function_decl|(
 modifier|*
 name|checkit
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1684,11 +1719,11 @@ name|char
 modifier|*
 name|blockcheck
 parameter_list|(
-name|name
+name|origname
 parameter_list|)
 name|char
 modifier|*
-name|name
+name|origname
 decl_stmt|;
 block|{
 name|struct
@@ -1700,6 +1735,9 @@ decl_stmt|,
 name|stchar
 decl_stmt|;
 name|char
+modifier|*
+name|newname
+decl_stmt|,
 modifier|*
 name|raw
 decl_stmt|;
@@ -1744,17 +1782,21 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|origname
 operator|)
 return|;
 block|}
+name|newname
+operator|=
+name|origname
+expr_stmt|;
 name|retry
 label|:
 if|if
 condition|(
 name|stat
 argument_list|(
-name|name
+name|newname
 argument_list|,
 operator|&
 name|stblock
@@ -1765,19 +1807,19 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"Can't stat %s\n"
 argument_list|,
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|origname
 operator|)
 return|;
 block|}
@@ -1811,7 +1853,7 @@ name|raw
 operator|=
 name|rawname
 argument_list|(
-name|name
+name|newname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1841,7 +1883,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
@@ -1875,7 +1917,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
@@ -1897,11 +1939,11 @@ operator|!
 name|retried
 condition|)
 block|{
-name|name
+name|newname
 operator|=
 name|unrawname
 argument_list|(
-name|name
+name|origname
 argument_list|)
 expr_stmt|;
 name|retried
@@ -1932,7 +1974,7 @@ name|l
 operator|=
 name|strlen
 argument_list|(
-name|name
+name|origname
 argument_list|)
 operator|-
 literal|1
@@ -1943,7 +1985,7 @@ name|l
 operator|>
 literal|0
 operator|&&
-name|name
+name|origname
 index|[
 name|l
 index|]
@@ -1951,7 +1993,7 @@ operator|==
 literal|'/'
 condition|)
 comment|/* remove trailing slash */
-name|name
+name|origname
 index|[
 name|l
 index|]
@@ -1966,7 +2008,7 @@ name|fsinfo
 operator|=
 name|getfsfile
 argument_list|(
-name|name
+name|origname
 argument_list|)
 operator|)
 condition|)
@@ -1975,7 +2017,7 @@ name|printf
 argument_list|(
 literal|"Can't resolve %s to character special device"
 argument_list|,
-name|name
+name|origname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1984,7 +2026,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|name
+name|newname
 operator|=
 name|fsinfo
 operator|->
@@ -1997,22 +2039,17 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|printf
-argument_list|(
-literal|"Warning: Can't find blockdevice corresponding to name %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Not a block or character device, just return name and 	 * let the user decide whether to use it. 	 */
 return|return
 operator|(
-name|name
+name|origname
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|unrawname
@@ -2037,7 +2074,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -2127,6 +2164,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|rawname
@@ -2154,7 +2192,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,

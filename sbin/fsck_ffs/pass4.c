@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass4.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)pass4.c	8.4 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -70,13 +70,6 @@ include|#
 directive|include
 file|"fsck.h"
 end_include
-
-begin_function_decl
-name|int
-name|pass4check
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -105,14 +98,12 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -320,8 +311,10 @@ name|USTATE
 case|:
 break|break;
 default|default:
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d FOR INODE I=%d"
 argument_list|,
 name|statemap
@@ -363,7 +356,7 @@ name|res
 init|=
 name|KEEPON
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 init|=
 name|idesc

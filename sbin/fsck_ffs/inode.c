@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.5 (Berkeley) 2/8/95"
+literal|"@(#)inode.c	8.8 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -106,7 +112,6 @@ operator|(
 expr|struct
 name|inodesc
 operator|*
-name|idesc
 operator|,
 name|long
 name|ilevel
@@ -138,15 +143,13 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|ap
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|long
+name|ret
+decl_stmt|,
 name|n
 decl_stmt|,
 name|ndb
@@ -698,17 +701,14 @@ name|quad_t
 name|isize
 decl_stmt|;
 block|{
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|ap
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|aplim
 decl_stmt|;
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -1206,7 +1206,7 @@ name|blk
 parameter_list|,
 name|cnt
 parameter_list|)
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 name|int
@@ -1406,7 +1406,7 @@ name|ino_t
 name|inumber
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|iblk
 decl_stmt|;
 if|if
@@ -1419,9 +1419,11 @@ name|inumber
 operator|>
 name|maxino
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"bad inode number %d to ginode\n"
+name|EEXIT
+argument_list|,
+literal|"bad inode number %d to ginode"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1573,7 +1575,7 @@ block|{
 name|long
 name|size
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dblk
 decl_stmt|;
 specifier|static
@@ -1593,9 +1595,11 @@ name|inumber
 operator|>
 name|maxino
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"bad inode number %d to nextinode\n"
+name|EEXIT
+argument_list|,
+literal|"bad inode number %d to nextinode"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1802,9 +1806,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"Cannot allocate space for inode buffer\n"
+name|EEXIT
+argument_list|,
+literal|"Cannot allocate space for inode buffer"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1937,7 +1943,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2023,31 +2029,23 @@ name|blks
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|dp
-operator|->
-name|di_db
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|inp
 operator|->
 name|i_blks
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|dp
+operator|->
+name|di_db
 index|[
 literal|0
 index|]
@@ -2106,8 +2104,10 @@ name|inpsort
 operator|==
 name|NULL
 condition|)
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"cannot increase directory list"
 argument_list|)
 expr_stmt|;
@@ -2180,9 +2180,11 @@ name|inp
 operator|)
 return|;
 block|}
-name|errexit
+name|errx
 argument_list|(
-literal|"cannot find inode %d\n"
+name|EEXIT
+argument_list|,
+literal|"cannot find inode %d"
 argument_list|,
 name|inumber
 argument_list|)
@@ -2461,15 +2463,15 @@ operator|(
 name|KEEPON
 operator|)
 return|;
-name|bcopy
+name|memmove
 argument_list|(
-name|dirp
-operator|->
-name|d_name
-argument_list|,
 name|idesc
 operator|->
 name|id_name
+argument_list|,
+name|dirp
+operator|->
+name|d_name
 argument_list|,
 operator|(
 name|size_t
@@ -2716,8 +2718,6 @@ operator|&
 name|dp
 operator|->
 name|di_mtime
-operator|.
-name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2757,7 +2757,7 @@ name|char
 modifier|*
 name|type
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 block|{
@@ -2815,8 +2815,10 @@ name|DCLEAR
 case|:
 return|return;
 default|default:
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d TO BLKERR"
 argument_list|,
 name|statemap
@@ -3019,8 +3021,6 @@ operator|&
 name|dp
 operator|->
 name|di_atime
-operator|.
-name|tv_sec
 argument_list|)
 expr_stmt|;
 name|dp
@@ -3105,14 +3105,12 @@ name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

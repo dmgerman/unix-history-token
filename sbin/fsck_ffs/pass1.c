@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)pass1.c	8.6 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -85,14 +91,14 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|badblk
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|dupblk
 decl_stmt|;
 end_decl_stmt
@@ -110,7 +116,6 @@ operator|,
 expr|struct
 name|inodesc
 operator|*
-name|idesc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -221,14 +226,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Find all allocated blocks. 	 */
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -321,6 +324,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|checkinode
 parameter_list|(
@@ -385,20 +389,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dp
 operator|->
 name|di_db
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|zino
 operator|.
 name|di_db
@@ -407,24 +403,16 @@ name|NDADDR
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dp
 operator|->
 name|di_ib
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|zino
 operator|.
 name|di_ib
@@ -433,7 +421,7 @@ name|NIADDR
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 operator|||
@@ -509,6 +497,7 @@ operator|<
 name|dp
 operator|->
 name|di_size
+comment|/* || 	    (mode == IFDIR&& dp->di_size> MAXDIRSIZE) */
 condition|)
 block|{
 if|if
@@ -690,8 +679,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"cannot read symlink"
 argument_list|)
 expr_stmt|;
@@ -733,16 +724,13 @@ argument_list|(
 name|inumber
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|symbuf
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|dp
 operator|->
 name|di_shortlink
+argument_list|,
+name|symbuf
 argument_list|,
 operator|(
 name|long
@@ -792,7 +780,7 @@ name|di_size
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1017,9 +1005,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1341,7 +1329,7 @@ name|anyout
 decl_stmt|,
 name|nfrags
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 init|=
 name|idesc
@@ -1424,9 +1412,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -1540,9 +1528,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -1588,9 +1576,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
