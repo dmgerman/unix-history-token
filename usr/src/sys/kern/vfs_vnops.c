@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.33	83/02/16	*/
+comment|/*	vfs_vnops.c	4.33	83/02/20	*/
 end_comment
 
 begin_include
@@ -261,6 +261,7 @@ operator|==
 name|IWRITE
 condition|)
 block|{
+comment|/* 		 * Disallow write attempts on read-only 		 * file systems; unless the file is a block 		 * or character device resident on the 		 * file system. 		 */
 if|if
 condition|(
 name|ip
@@ -308,6 +309,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
 if|if
 condition|(
 name|ip
@@ -316,7 +318,6 @@ name|i_flag
 operator|&
 name|ITEXT
 condition|)
-comment|/* try to free text */
 name|xrele
 argument_list|(
 name|ip
@@ -344,6 +345,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * If you're the super-user, 	 * you always get access. 	 */
 if|if
 condition|(
 name|u
@@ -357,6 +359,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Access check is based on only 	 * one of owner, group, public. 	 * If not owner, then check group. 	 * If not a member of the group, then 	 * check public access. 	 */
 if|if
 condition|(
 name|u
@@ -372,6 +375,19 @@ name|m
 operator|>>=
 literal|3
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_gid
+operator|==
+name|ip
+operator|->
+name|i_gid
+condition|)
+goto|goto
+name|found
+goto|;
 for|for
 control|(
 name|gp
