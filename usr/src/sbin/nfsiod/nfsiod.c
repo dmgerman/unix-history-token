@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsiod.c	8.3 (Berkeley) %G%"
+literal|"@(#)nfsiod.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfsv2.h>
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/rpcv2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfsproto.h>
 end_include
 
 begin_include
