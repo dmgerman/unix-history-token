@@ -67,8 +67,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PSTATE_MM_SIZE
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PSTATE_MM_MASK
-value|((1<<PSTATE_MM_SHIFT)|(1<<(PSTATE_MM_SHIFT+1)))
+value|(((1<<PSTATE_MM_SIZE)-1)<<PSTATE_MM_SHIFT)
 end_define
 
 begin_define
@@ -169,12 +176,9 @@ name|PSTATE_SECURE
 parameter_list|(
 name|pstate
 parameter_list|)
-value|(1)
+define|\
+value|(((pstate)& ~(PSTATE_AM|PSTATE_MM_MASK)) == (PSTATE_IE|PSTATE_PEF))
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_endif
 endif|#
