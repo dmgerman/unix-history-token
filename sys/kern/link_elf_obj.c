@@ -549,6 +549,24 @@ directive|ifdef
 name|DDB
 end_ifdef
 
+begin_function_decl
+specifier|static
+name|void
+name|r_debug_state
+parameter_list|(
+name|struct
+name|r_debug
+modifier|*
+name|dummy_one
+parameter_list|,
+name|struct
+name|link_map
+modifier|*
+name|dummy_two
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * A list of loaded modules for GDB to use for loading symbols.  */
 end_comment
@@ -567,7 +585,7 @@ name|GDB_STATE
 parameter_list|(
 name|s
 parameter_list|)
-value|r_debug.r_state = s; r_debug_state();
+value|r_debug.r_state = s; r_debug_state(NULL, NULL);
 end_define
 
 begin_comment
@@ -578,7 +596,17 @@ begin_function
 name|void
 name|r_debug_state
 parameter_list|(
-name|void
+name|struct
+name|r_debug
+modifier|*
+name|dummy_one
+name|__unused
+parameter_list|,
+name|struct
+name|link_map
+modifier|*
+name|dummy_two
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -934,7 +962,11 @@ operator|=
 name|RT_CONSISTENT
 expr_stmt|;
 name|r_debug_state
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* say hello to gdb! */
 endif|#

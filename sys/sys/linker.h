@@ -753,27 +753,6 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|r_debug_state
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|KLD_DEBUG
 end_ifdef
 
