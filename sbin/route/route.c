@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.6 1996/02/13 17:30:34 wollman Exp $"
+literal|"$Id: route.c,v 1.7 1996/02/17 21:13:32 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6084,7 +6084,8 @@ name|char
 name|metricnames
 index|[]
 init|=
-literal|"\011pksent\010rttvar\7rtt\6ssthresh\5sendpipe\4recvpipe\3expire\2hopcount\1mtu"
+literal|"\011pksent\010rttvar\7rtt\6ssthresh\5sendpipe\4recvpipe\3expire\2hopcount"
+literal|"\1mtu"
 decl_stmt|;
 end_decl_stmt
 
@@ -6093,7 +6094,10 @@ name|char
 name|routeflags
 index|[]
 init|=
-literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\011CLONING\012XRESOLVE\013LLINFO\014STATIC\017PROTO2\020PROTO1"
+literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT"
+literal|"\011CLONING\012XRESOLVE\013LLINFO\014STATIC\015BLACKHOLE\016b016"
+literal|"\017PROTO2\020PROTO1\021PRCLONING\022WASCLONED\023PROTO3\024CHAINDELETE"
+literal|"\025PINNED\026LOCAL\027BROADCAST\030MULTICAST"
 decl_stmt|;
 end_decl_stmt
 
@@ -6102,7 +6106,9 @@ name|char
 name|ifnetflags
 index|[]
 init|=
-literal|"\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5PTP\6NOTRAILERS\7RUNNING\010NOARP\011PPROMISC\012ALLMULTI\013OACTIVE\014SIMPLEX\015LINK0\016LINK1\017LINK2\020MULTICAST"
+literal|"\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5PTP\6b6\7RUNNING\010NOARP"
+literal|"\011PPROMISC\012ALLMULTI\013OACTIVE\014SIMPLEX\015LINK0\016LINK1"
+literal|"\017LINK2\020MULTICAST"
 decl_stmt|;
 end_decl_stmt
 
