@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.64 (Berkeley) %G%"
+literal|"@(#)headers.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -636,8 +636,8 @@ ifdef|#
 directive|ifdef
 name|MAYBENEXTRELEASE
 comment|/* XXX UNTESTED XXX UNTESTED XXX UNTESTED XXX */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|USERDB
 else|else
 block|{
@@ -5297,8 +5297,8 @@ name|flags
 operator||=
 name|RF_SENDERADDR
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|USERDB
 elseif|else
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.64 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3018,8 +3018,8 @@ name|SuprErrs
 operator|=
 name|FALSE
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|USERDB
 if|if
 condition|(
