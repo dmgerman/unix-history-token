@@ -3313,7 +3313,7 @@ operator|->
 name|rt_refcnt
 operator|--
 expr_stmt|;
-comment|/* 	 * Validation for the entry. 	 * XXX: we can't use rt->rt_ifp to check for the interface, since 	 *      it might be the loopback interface if the entry is for our 	 *      own address on a non-loopback interface. Instead, we should 	 *      use rt->rt_ifa->ifa_ifp, which would specify the REAL interface. 	 */
+comment|/* 	 * Validation for the entry. 	 * Note that the check for rt_llinfo is necessary because a cloned 	 * route from a parent route that has the L flag (e.g. the default 	 * route to a p2p interface) may have the flag, too, while the 	 * destination is not actually a neighbor. 	 * XXX: we can't use rt->rt_ifp to check for the interface, since 	 *      it might be the loopback interface if the entry is for our 	 *      own address on a non-loopback interface. Instead, we should 	 *      use rt->rt_ifa->ifa_ifp, which would specify the REAL 	 *      interface. 	 */
 if|if
 condition|(
 operator|(
@@ -3341,6 +3341,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_LINK
+operator|||
+name|rt
+operator|->
+name|rt_llinfo
+operator|==
+name|NULL
 operator|||
 operator|(
 name|ifp
@@ -3385,7 +3391,7 @@ comment|/* xxx more logs... kazu */
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -3586,6 +3592,8 @@ literal|0
 argument_list|,
 name|ifp
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
