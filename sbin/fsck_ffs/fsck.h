@@ -1050,6 +1050,16 @@ comment|/* determine if background check is possible */
 end_comment
 
 begin_decl_stmt
+name|int
+name|bkgrdsumadj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* whether the kernel have ability to adjust superblock summary */
+end_comment
+
+begin_decl_stmt
 name|char
 name|usedsoftdep
 decl_stmt|;
