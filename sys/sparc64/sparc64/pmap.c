@@ -2742,9 +2742,12 @@ if|if
 condition|(
 name|addr
 operator|<
-literal|0xf0000000
+name|VM_MIN_PROM_ADDRESS
+operator|||
+name|addr
+operator|>
+name|VM_MAX_PROM_ADDRESS
 condition|)
-comment|/* XXX */
 continue|continue;
 name|result
 operator|=
