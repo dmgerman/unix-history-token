@@ -1853,7 +1853,6 @@ operator|==
 name|DN_TO_BDG_FWD
 condition|)
 block|{
-comment|/* 		     * same as ether_input, make eh be a pointer into the mbuf 		     */
 name|m
 operator|=
 name|bdg_forward_ptr
