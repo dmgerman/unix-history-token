@@ -145,6 +145,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -176,6 +182,8 @@ decl_stmt|,
 name|dflag
 decl_stmt|,
 name|eflag
+decl_stmt|,
+name|hflag
 decl_stmt|,
 name|Nflag
 decl_stmt|,
@@ -294,9 +302,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdeNnox] variable[=value] ..."
+literal|"usage: sysctl [-bdehNnox] variable[=value] ..."
 argument_list|,
-literal|"       sysctl [-bdeNnox] -a"
+literal|"       sysctl [-bdehNnox] -a"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -323,6 +331,13 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_NUMERIC
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|setbuf
 argument_list|(
 name|stdout
@@ -348,7 +363,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabdeNnowxX"
+literal|"AabdehNnowxX"
 argument_list|)
 operator|)
 operator|!=
@@ -400,6 +415,14 @@ case|case
 literal|'e'
 case|:
 name|eflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|hflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1373,6 +1396,10 @@ return|;
 block|}
 name|printf
 argument_list|(
+name|hflag
+condition|?
+literal|"{ hz = %'d, tick = %'d, profhz = %'d, stathz = %'d }"
+else|:
 literal|"{ hz = %d, tick = %d, profhz = %d, stathz = %d }"
 argument_list|,
 name|ci
@@ -1457,6 +1484,10 @@ return|;
 block|}
 name|printf
 argument_list|(
+name|hflag
+condition|?
+literal|"{ %'.2f %'.2f %'.2f }"
+else|:
 literal|"{ %.2f %.2f %.2f }"
 argument_list|,
 operator|(
@@ -1586,6 +1617,10 @@ return|;
 block|}
 name|printf
 argument_list|(
+name|hflag
+condition|?
+literal|"{ sec = %'ld, usec = %'ld } "
+else|:
 literal|"{ sec = %ld, usec = %ld } "
 argument_list|,
 name|tv
@@ -2813,6 +2848,13 @@ name|int
 argument_list|)
 condition|)
 block|{
+name|fputs
+argument_list|(
+name|val
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -2822,9 +2864,11 @@ literal|'U'
 condition|)
 name|printf
 argument_list|(
-literal|"%s%u"
-argument_list|,
-name|val
+name|hflag
+condition|?
+literal|"%'u"
+else|:
+literal|"%u"
 argument_list|,
 operator|*
 operator|(
@@ -2838,9 +2882,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s%d"
-argument_list|,
-name|val
+name|hflag
+condition|?
+literal|"%'d"
+else|:
+literal|"%d"
 argument_list|,
 operator|*
 operator|(
@@ -2908,6 +2954,13 @@ name|long
 argument_list|)
 condition|)
 block|{
+name|fputs
+argument_list|(
+name|val
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -2917,9 +2970,11 @@ literal|'U'
 condition|)
 name|printf
 argument_list|(
-literal|"%s%lu"
-argument_list|,
-name|val
+name|hflag
+condition|?
+literal|"%'lu"
+else|:
+literal|"%lu"
 argument_list|,
 operator|*
 operator|(
@@ -2933,9 +2988,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s%ld"
-argument_list|,
-name|val
+name|hflag
+condition|?
+literal|"%'ld"
+else|:
+literal|"%ld"
 argument_list|,
 operator|*
 operator|(
