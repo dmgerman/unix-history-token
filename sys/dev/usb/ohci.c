@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.23 1999/01/07 02:06:05 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ohci.c,v 1.8 1999/01/10 18:42:51 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -959,7 +959,7 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|*(unsigned int *) ((sc)->sc_iobase + (r)) = x
+value|*(u_int32_t *) ((sc)->sc_iobase + (r)) = x
 end_define
 
 begin_define
@@ -971,7 +971,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|(*(unsigned int *) ((sc)->sc_iobase + (r)))
+value|(*(u_int32_t *) ((sc)->sc_iobase + (r)))
 end_define
 
 begin_define
@@ -983,7 +983,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|(*(unsigned short *) ((sc)->sc_iobase + (r)))
+value|(*(u_int16_t *) ((sc)->sc_iobase + (r)))
 end_define
 
 begin_endif
@@ -3105,6 +3105,8 @@ name|p
 decl_stmt|;
 name|u_int32_t
 name|intrs
+init|=
+literal|0
 decl_stmt|,
 name|eintrs
 decl_stmt|;
@@ -3160,6 +3162,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_hcca
+operator|->
+name|hcca_done_head
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|done
+operator|&
+operator|~
+name|OHCI_DONE_INTRS
+condition|)
 name|intrs
 operator|=
 name|OHCI_WDH
@@ -3310,14 +3327,6 @@ operator|&
 operator|~
 name|OHCI_DONE_INTRS
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_hcca
-operator|->
-name|hcca_done_head
-operator|=
-literal|0
 expr_stmt|;
 name|intrs
 operator|&=
@@ -3557,6 +3566,8 @@ block|{
 name|ohci_soft_td_t
 modifier|*
 name|std
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|sdone
@@ -3673,11 +3684,15 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"ohci_process_done: std=%p reqh=%p\n"
+literal|"ohci_process_done: std=%p reqh=%p hcpriv=%p\n"
 operator|,
 name|std
 operator|,
 name|reqh
+operator|,
+name|reqh
+operator|->
+name|hcpriv
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4486,6 +4501,12 @@ name|reqh
 operator|=
 name|reqh
 expr_stmt|;
+name|reqh
+operator|->
+name|hcpriv
+operator|=
+name|xfer
+expr_stmt|;
 name|ohci_hash_add_td
 argument_list|(
 name|sc
@@ -4971,7 +4992,7 @@ name|sc_eintrs
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|15
 argument_list|,
 operator|(
 literal|"ohci_waitintr: 0x%04x\n"
@@ -6535,7 +6556,7 @@ operator|->
 name|ed_flags
 argument_list|)
 argument_list|,
-literal|"\20\14OUT\15IN\16LOWSPEED\17SKIP\18ISO"
+literal|"\20\14OUT\15IN\16LOWSPEED\17SKIP\20ISO"
 argument_list|,
 operator|(
 name|u_long
@@ -10611,11 +10632,6 @@ operator|~
 name|OHCI_ED_SKIP
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -10656,6 +10672,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* moved splx(s) because of indefinite printing of TD's */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|USBD_IN_PROGRESS
