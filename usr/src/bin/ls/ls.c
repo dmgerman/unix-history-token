@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.39 (Berkeley) %G%"
+literal|"@(#)ls.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2181,6 +2181,15 @@ name|lstat
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * don't exit -- this could be an NFS mount that has 			 * gone away.  Flush stdout so the messages line up. 			 */
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2200,18 +2209,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
 continue|continue;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|stats
 index|[
