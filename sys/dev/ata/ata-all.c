@@ -6926,7 +6926,7 @@ name|ATA_CYL_LSB
 argument_list|,
 operator|(
 name|lba
-operator|<<
+operator|>>
 literal|32
 operator|)
 operator|&
