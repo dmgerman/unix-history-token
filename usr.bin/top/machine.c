@@ -2624,7 +2624,7 @@ operator|->
 name|remaining
 operator|--
 expr_stmt|;
-comment|/* get the process's user struct and set cputime */
+comment|/* get the process's command name */
 if|if
 condition|(
 operator|(
@@ -2733,14 +2733,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* This does not produce the correct results */
-block|cputime = PP(pp, p_uticks) + PP(pp, p_sticks) + PP(pp, p_iticks);
-endif|#
-directive|endif
-comment|/* This does not count interrupts */
+comment|/*      * Convert the process's runtime from microseconds to seconds.  This      * time includes the interrupt time although that is not wanted here.      * ps(1) is similarly sloppy.      */
 name|cputime
 operator|=
 operator|(
@@ -2750,13 +2743,11 @@ name|pp
 argument_list|,
 name|p_runtime
 argument_list|)
-operator|/
-literal|1000
 operator|+
-literal|500
+literal|500000
 operator|)
 operator|/
-literal|1000
+literal|1000000
 expr_stmt|;
 comment|/* calculate the base for cpu percentages */
 name|pct
@@ -3295,7 +3286,7 @@ define|#
 directive|define
 name|ORDERKEY_CPTICKS
 define|\
-value|if ((result = PP(p2, p_runtime) - PP(p1, p_runtime)) == 0)
+value|if ((result = PP(p2, p_runtime)> PP(p1, p_runtime) ? 1 : \                 PP(p2, p_runtime)< PP(p1, p_runtime) ? -1 : 0) == 0)
 end_define
 
 begin_define
