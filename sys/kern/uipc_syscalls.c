@@ -8571,7 +8571,7 @@ name|sf
 operator|->
 name|kva
 argument_list|,
-name|PAGE_SIZE
+name|NULL
 argument_list|)
 expr_stmt|;
 goto|goto
