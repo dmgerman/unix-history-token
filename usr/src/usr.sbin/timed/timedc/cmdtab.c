@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	2.6 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,28 +33,6 @@ include|#
 directive|include
 file|"timedc.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|clockdiff
-argument_list|()
-decl_stmt|,
-name|help
-argument_list|()
-decl_stmt|,
-name|msite
-argument_list|()
-decl_stmt|,
-name|quit
-argument_list|()
-decl_stmt|,
-name|testing
-argument_list|()
-decl_stmt|,
-name|tracing
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char

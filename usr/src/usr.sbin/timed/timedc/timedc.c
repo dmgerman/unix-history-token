@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985, 1993 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.10 (Berkeley) %G%"
+literal|"@(#)timedc.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,10 +52,31 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_empty
+empty|#ident "$Revision: 1.6 $"
+end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"timedc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_include
@@ -79,12 +100,35 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
 begin_decl_stmt
 name|int
-name|top
+name|trace
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fd
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -125,36 +169,33 @@ name|toplevel
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|priv_resources
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|struct
 name|cmd
 modifier|*
 name|getcmd
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -315,19 +356,18 @@ name|stdin
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|top
-operator|=
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|toplevel
 argument_list|)
-operator|==
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|top
 condition|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -336,90 +376,6 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|intr
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|cmdscanner
-argument_list|(
-name|top
-argument_list|)
-expr_stmt|;
-name|top
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|intr
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|fromatty
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|toplevel
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Command parser.  */
-end_comment
-
-begin_macro
-name|cmdscanner
-argument_list|(
-argument|top
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|top
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|cmd
-modifier|*
-name|c
-decl_stmt|;
-specifier|extern
-name|int
-name|help
-parameter_list|()
-function_decl|;
-if|if
-condition|(
-operator|!
-name|top
-condition|)
-name|putchar
-argument_list|(
-literal|'\n'
 argument_list|)
 expr_stmt|;
 for|for
@@ -479,6 +435,16 @@ break|break;
 name|makeargv
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|margv
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|c
 operator|=
 name|getcmd
@@ -553,17 +519,44 @@ name|margv
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|intr
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|!
+name|fromatty
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|toplevel
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
+specifier|static
 name|struct
 name|cmd
 modifier|*
@@ -571,7 +564,6 @@ name|getcmd
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|name
@@ -750,12 +742,10 @@ begin_comment
 comment|/*  * Slice a string up into argc/argv.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makeargv
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -853,7 +843,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -866,30 +856,22 @@ begin_comment
 comment|/*  * Help command.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|help
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1187,6 +1169,9 @@ name|printf
 argument_list|(
 literal|"%-*s\t%s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|HELPINDENT
 argument_list|,
 name|c
@@ -1200,7 +1185,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

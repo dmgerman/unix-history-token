@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)timedc.h	2.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)timedc.h	5.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,20 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/uio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -42,13 +47,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -70,20 +87,6 @@ define|#
 directive|define
 name|OFF
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSGS
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRIALS
-value|5
 end_define
 
 begin_define
@@ -128,7 +131,7 @@ modifier|*
 name|c_help
 decl_stmt|;
 comment|/* help message */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|c_handler
@@ -143,6 +146,12 @@ comment|/* privileged command */
 block|}
 struct|;
 end_struct
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 end_unit
 
