@@ -1163,16 +1163,6 @@ operator|)
 return|;
 block|}
 block|}
-name|dev
-operator|->
-name|si_bsize_phys
-operator|=
-name|sc
-operator|->
-name|data
-operator|.
-name|blksize
-expr_stmt|;
 name|sc
 operator|->
 name|data
@@ -1540,7 +1530,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|bioq_first
+name|bioq_takefirst
 argument_list|(
 operator|&
 name|sc
@@ -1558,18 +1548,6 @@ literal|0
 condition|)
 block|{
 comment|/* block found to process, dequeue */
-name|bioq_remove
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|data
-operator|.
-name|head
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|data
