@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: sha2.c,v 1.6 2001/03/12 11:31:04 itojun Exp $	*/
+comment|/*	$KAME: sha2.c,v 1.8 2001/11/08 01:07:52 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2567,7 +2567,7 @@ expr_stmt|;
 if|if
 condition|(
 name|usedspace
-operator|<
+operator|<=
 name|SHA256_SHORT_BLOCK_LENGTH
 condition|)
 block|{
@@ -4601,7 +4601,7 @@ expr_stmt|;
 if|if
 condition|(
 name|usedspace
-operator|<
+operator|<=
 name|SHA512_SHORT_BLOCK_LENGTH
 condition|)
 block|{
