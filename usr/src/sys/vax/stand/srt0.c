@@ -1,15 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#	srt0.c	4.2	%G%
-end_empty
+begin_comment
+comment|/*	srt0.c	4.3	%G%	*/
+end_comment
 
-begin_empty
-empty|# Startup code for standalone system
-end_empty
-
-begin_empty
-empty|# Non-relocating version -- for programs which are loaded by boot
-end_empty
+begin_comment
+comment|/*  * Startup code for standalone system  * Non-relocating version -- for programs which are loaded by boot  */
+end_comment
 
 begin_expr_stmt
 operator|.
@@ -21,6 +17,11 @@ name|_main
 operator|.
 name|globl
 name|__rtt
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 operator|.
 name|set
 name|PHYSUBA
@@ -29,6 +30,8 @@ literal|0x20006000
 operator|#
 name|uba
 literal|0
+endif|#
+directive|endif
 operator|.
 name|set
 name|HIGH
@@ -55,6 +58,11 @@ operator|-
 literal|0x2000
 operator|,
 name|sp
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 name|movl
 name|$1
 decl_stmt|,
@@ -88,6 +96,8 @@ decl|# 	continue
 decl_stmt|;
 name|jeql
 name|ubic
+endif|#
+directive|endif
 name|movab
 name|_edata
 decl_stmt|,
