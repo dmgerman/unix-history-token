@@ -572,6 +572,69 @@ name|u_short
 name|id
 decl_stmt|;
 comment|/* query identification number */
+ifdef|#
+directive|ifdef
+name|BIT_ZERO_ON_LEFT
+comment|/* Bit zero on left:  Gould and similar architectures */
+comment|/* fields in third byte */
+name|u_char
+name|qr
+range|:
+literal|1
+decl_stmt|;
+comment|/* response flag */
+name|u_char
+name|opcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* purpose of message */
+name|u_char
+name|aa
+range|:
+literal|1
+decl_stmt|;
+comment|/* authoritive answer */
+name|u_char
+name|tc
+range|:
+literal|1
+decl_stmt|;
+comment|/* truncated message */
+name|u_char
+name|rd
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion desired */
+comment|/* fields in forth byte */
+name|u_char
+name|ra
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion available */
+name|u_char
+name|pr
+range|:
+literal|1
+decl_stmt|;
+comment|/* primary server required (non standard) */
+name|u_char
+name|unused
+range|:
+literal|2
+decl_stmt|;
+comment|/* unused bits */
+name|u_char
+name|rcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* response code */
+else|#
+directive|else
+comment|/* Bit zero on right:  VAX, PDP-11, etc */
 comment|/* fields in third byte */
 name|u_char
 name|rd
@@ -628,6 +691,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* recursion available */
+endif|#
+directive|endif
 comment|/* remaining bytes */
 name|u_short
 name|qdcount
