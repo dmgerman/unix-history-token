@@ -327,6 +327,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -360,6 +366,11 @@ literal|"acD:O:qR:T:UW:"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|camcontrol_opts
@@ -367,6 +378,9 @@ name|option_table
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"tur"
 block|,
@@ -411,6 +425,9 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"rescan"
 block|,
@@ -427,6 +444,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"cmd"
 block|,
@@ -523,6 +543,9 @@ block|,
 literal|"qwy"
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"help"
 block|,
@@ -607,6 +630,12 @@ name|subopt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -760,6 +789,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -840,6 +878,12 @@ name|scan
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -1094,6 +1138,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function
 name|camcontrol_optret
 name|getoption
@@ -1216,6 +1269,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -4176,6 +4235,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_comment
 comment|/*  * Parse out a bus, or a bus, target and lun in the following  * format:  * bus  * bus:target  * bus:target:lun  *  * Returns the number of parsed components, or 0.  */
 end_comment
@@ -5240,6 +5308,12 @@ return|;
 block|}
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -6498,6 +6572,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -6509,6 +6592,12 @@ unit|void reassignblocks(struct cam_device *device, u_int32_t *blocks, int num_b
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 name|void
@@ -13304,6 +13393,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function
 name|void
 name|usage
@@ -13321,6 +13419,9 @@ else|:
 name|stderr
 argument_list|,
 literal|"usage:  camcontrol<command>  [device id][generic args][command args]\n"
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 literal|"        camcontrol devlist    [-v]\n"
 literal|"        camcontrol periphlist [dev_id][-n dev_name] [-u unit]\n"
 literal|"        camcontrol tur        [dev_id][generic args]\n"
@@ -13328,8 +13429,14 @@ literal|"        camcontrol inquiry    [dev_id][generic args] [-D] [-S] [-R]\n"
 literal|"        camcontrol start      [dev_id][generic args]\n"
 literal|"        camcontrol stop       [dev_id][generic args]\n"
 literal|"        camcontrol eject      [dev_id][generic args]\n"
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 literal|"        camcontrol rescan<bus[:target:lun]>\n"
 literal|"        camcontrol reset<bus[:target:lun]>\n"
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 literal|"        camcontrol defects    [dev_id][generic args]<-f format> [-P][-G]\n"
 literal|"        camcontrol modepage   [dev_id][generic args]<-m page | -l>\n"
 literal|"                              [-P pagectl][-e | -b][-d]\n"
@@ -13342,6 +13449,9 @@ literal|"                              [-D<enable|disable>][-O offset][-q]\n"
 literal|"                              [-R syncrate][-v][-T<enable|disable>]\n"
 literal|"                              [-U][-W bus_width]\n"
 literal|"        camcontrol format     [dev_id][generic args][-q][-w][-y]\n"
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 literal|"        camcontrol help\n"
 argument_list|)
 expr_stmt|;
@@ -13351,6 +13461,9 @@ operator|!
 name|verbose
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 name|fprintf
 argument_list|(
 name|stdout
@@ -13429,6 +13542,9 @@ literal|"-w                don't send immediate format command\n"
 literal|"-y                don't ask any questions\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|}
 end_function
 
@@ -13695,6 +13811,9 @@ name|devopen
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 if|if
 condition|(
 operator|(
@@ -13868,6 +13987,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 comment|/* 	 * Start getopt processing at argv[2/3], since we've already 	 * accepted argv[1..2] as the command name, and as a possible 	 * device name. 	 */
 name|optind
 operator|=
@@ -14051,6 +14173,9 @@ default|default:
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 comment|/* 	 * For most commands we'll want to open the passthrough device 	 * associated with the specified device.  In the case of the rescan 	 * commands, we don't use a passthrough device at all, just the 	 * transport layer device. 	 */
 if|if
 condition|(
@@ -14166,6 +14291,9 @@ name|cam_errbuf
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 comment|/* 	 * Reset optind to 2, and reset getopt, so these routines can parse 	 * the arguments again. 	 */
 name|optind
 operator|=
@@ -14182,6 +14310,9 @@ operator|&
 name|CAM_ARG_OPT_MASK
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_DEVLIST
 case|:
@@ -14263,6 +14394,9 @@ name|timeout
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_RESCAN
 case|:
@@ -14293,6 +14427,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_READ_DEFECTS
 case|:
@@ -14428,6 +14565,9 @@ name|timeout
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_USAGE
 case|:
