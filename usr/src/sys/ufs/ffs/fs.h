@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.11	%G%	*/
+comment|/*	fs.h	1.12	%G%	*/
 end_comment
 
 begin_comment
@@ -478,6 +478,13 @@ name|MAXFRAG
 index|]
 decl_stmt|;
 comment|/* counts of available frags */
+name|long
+name|cg_btot
+index|[
+name|MAXCPG
+index|]
+decl_stmt|;
+comment|/* block totals per cylinder */
 name|short
 name|cg_b
 index|[
@@ -581,7 +588,7 @@ value|(fsbtodb(fs, cgbase(c,fs)) + (fs)->fs_sblkno)
 end_define
 
 begin_comment
-comment|/*  * cylinder group to disk block at very beginning  */
+comment|/*  * file system addresses of cylinder group data structures  */
 end_comment
 
 begin_define
@@ -597,7 +604,7 @@ value|((daddr_t)((fs)->fs_fpg * (c)))
 end_define
 
 begin_comment
-comment|/*  * convert cylinder group to index of its cg block  */
+comment|/* base addr */
 end_comment
 
 begin_define
@@ -613,7 +620,7 @@ value|(cgbase(c,fs) + (fs)->fs_cblkno)
 end_define
 
 begin_comment
-comment|/*  * give address of first inode block in cylinder group  */
+comment|/* cg block */
 end_comment
 
 begin_define
@@ -629,7 +636,7 @@ value|(cgbase(c,fs) + (fs)->fs_iblkno)
 end_define
 
 begin_comment
-comment|/*  * give address of first data block in cylinder group  */
+comment|/* inode blk */
 end_comment
 
 begin_define
@@ -645,8 +652,24 @@ value|(cgbase(c,fs) + (fs)->fs_dblkno)
 end_define
 
 begin_comment
-comment|/*  * turn inode number into cylinder group number  */
+comment|/* 1st data */
 end_comment
+
+begin_comment
+comment|/*  * macros for handling inode numbers  *     inode number to file system block offset  *     inode number to cylinder group number  *     inode number to file system block address  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|itoo
+parameter_list|(
+name|x
+parameter_list|,
+name|fs
+parameter_list|)
+value|((x) % INOPB(fs))
+end_define
 
 begin_define
 define|#
@@ -659,10 +682,6 @@ name|fs
 parameter_list|)
 value|((x) / (fs)->fs_ipg)
 end_define
-
-begin_comment
-comment|/*  * turn inode number into file system block address  */
-end_comment
 
 begin_define
 define|#
@@ -678,23 +697,7 @@ value|((daddr_t)(cgimin(itog(x,fs),fs) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (fs
 end_define
 
 begin_comment
-comment|/*  * turn inode number into file system block offset  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|itoo
-parameter_list|(
-name|x
-parameter_list|,
-name|fs
-parameter_list|)
-value|((x) % INOPB(fs))
-end_define
-
-begin_comment
-comment|/*  * give cylinder group number for a file system block  */
+comment|/*  * give cylinder group number for a file system block  * give cylinder group block number for a file system block  */
 end_comment
 
 begin_define
@@ -708,10 +711,6 @@ name|fs
 parameter_list|)
 value|((d) / (fs)->fs_fpg)
 end_define
-
-begin_comment
-comment|/*  * give cylinder group block number for a file system block  */
-end_comment
 
 begin_define
 define|#
