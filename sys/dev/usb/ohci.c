@@ -9183,23 +9183,22 @@ name|sbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"TD(%p) at %08lx: %s delay=%d ec=%d cc=%d\ncbp=0x%08lx "
 literal|"nexttd=0x%08lx be=0x%08lx\n"
-operator|,
+argument_list|,
 name|std
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
 name|std
 operator|->
 name|physaddr
-operator|,
+argument_list|,
 name|sbuf
-operator|,
+argument_list|,
 name|OHCI_TD_GET_DI
 argument_list|(
 name|le32toh
@@ -9211,7 +9210,7 @@ operator|.
 name|td_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_TD_GET_EC
 argument_list|(
 name|le32toh
@@ -9223,7 +9222,7 @@ operator|.
 name|td_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_TD_GET_CC
 argument_list|(
 name|le32toh
@@ -9235,7 +9234,7 @@ operator|.
 name|td_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9247,7 +9246,7 @@ name|td
 operator|.
 name|td_cbp
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9259,7 +9258,7 @@ name|td
 operator|.
 name|td_nexttd
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9271,7 +9270,6 @@ name|td
 operator|.
 name|td_be
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9289,21 +9287,20 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"ITD(%p) at %08lx: sf=%d di=%d fc=%d cc=%d\n"
 literal|"bp0=0x%08lx next=0x%08lx be=0x%08lx\n"
-operator|,
+argument_list|,
 name|sitd
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
 name|sitd
 operator|->
 name|physaddr
-operator|,
+argument_list|,
 name|OHCI_ITD_GET_SF
 argument_list|(
 name|le32toh
@@ -9315,7 +9312,7 @@ operator|.
 name|itd_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_ITD_GET_DI
 argument_list|(
 name|le32toh
@@ -9327,7 +9324,7 @@ operator|.
 name|itd_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_ITD_GET_FC
 argument_list|(
 name|le32toh
@@ -9339,7 +9336,7 @@ operator|.
 name|itd_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_ITD_GET_CC
 argument_list|(
 name|le32toh
@@ -9351,7 +9348,7 @@ operator|.
 name|itd_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9363,7 +9360,7 @@ name|itd
 operator|.
 name|itd_bp0
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9375,7 +9372,7 @@ name|itd
 operator|.
 name|itd_nextitd
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9387,7 +9384,6 @@ name|itd
 operator|.
 name|itd_be
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -9403,13 +9399,12 @@ condition|;
 name|i
 operator|++
 control|)
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"offs[%d]=0x%04x "
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 operator|(
 name|u_int
 operator|)
@@ -9424,14 +9419,11 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9533,21 +9525,20 @@ name|sbuf2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"ED(%p) at 0x%08lx: addr=%d endpt=%d maxp=%d flags=%s\ntailp=0x%08lx "
 literal|"headflags=%s headp=0x%08lx nexted=0x%08lx\n"
-operator|,
+argument_list|,
 name|sed
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
 name|sed
 operator|->
 name|physaddr
-operator|,
+argument_list|,
 name|OHCI_ED_GET_FA
 argument_list|(
 name|le32toh
@@ -9559,7 +9550,7 @@ operator|.
 name|ed_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_ED_GET_EN
 argument_list|(
 name|le32toh
@@ -9571,7 +9562,7 @@ operator|.
 name|ed_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|OHCI_ED_GET_MAXP
 argument_list|(
 name|le32toh
@@ -9583,9 +9574,9 @@ operator|.
 name|ed_flags
 argument_list|)
 argument_list|)
-operator|,
+argument_list|,
 name|sbuf
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9597,9 +9588,9 @@ name|ed
 operator|.
 name|ed_tailp
 argument_list|)
-operator|,
+argument_list|,
 name|sbuf2
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9611,7 +9602,7 @@ name|ed
 operator|.
 name|ed_headp
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
@@ -9623,7 +9614,6 @@ name|ed
 operator|.
 name|ed_nexted
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10372,6 +10362,19 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|USB_DEBUG
+name|usbd_dump_pipe
+argument_list|(
+operator|&
+name|opipe
+operator|->
+name|pipe
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|OHCI_DEBUG
 name|ohci_dump_ed
 argument_list|(
@@ -10635,6 +10638,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Hardware finishes in 1ms */
+comment|/* XXX should have some communication with softintr() to know 	   when it's done */
 name|usb_delay_ms
 argument_list|(
 name|opipe
@@ -10645,10 +10649,9 @@ name|device
 operator|->
 name|bus
 argument_list|,
-literal|50
+literal|250
 argument_list|)
 expr_stmt|;
-comment|/* XXX software finish */
 comment|/*  	 * Step 3: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * beyond the xfer we're trying to abort.  So as we're scanning 	 * the TDs of this xfer we check if the hardware points to 	 * any of them. 	 */
 name|s
 operator|=
