@@ -402,9 +402,10 @@ name|out
 decl_stmt|;
 block|{
 comment|/* Try to keep the out-of-order bugs at bay (protocol_pipe for cvs_output        with has "Index: foo" and such; stdout and/or stderr for diff's        output).  I think the only reason that this used to not be such        a problem is that the time spent on the fork() and exec() of diff        slowed us down enough to let the "Index:" make it through first.         The real fix, of course, will be to have the diff library do all        its output through callbacks (which CVS will supply as cvs_output        and cvs_outerr).  */
-name|sleep
+comment|/* sleep (1); */
+name|usleep
 argument_list|(
-literal|1
+literal|10000
 argument_list|)
 expr_stmt|;
 if|if
@@ -473,9 +474,10 @@ name|out
 decl_stmt|;
 block|{
 comment|/* Try to keep the out-of-order bugs at bay (protocol_pipe for cvs_output        with has "Index: foo" and such; stdout and/or stderr for diff's        output).  I think the only reason that this used to not be such        a problem is that the time spent on the fork() and exec() of diff        slowed us down enough to let the "Index:" make it through first.         The real fix, of course, will be to have the diff library do all        its output through callbacks (which CVS will supply as cvs_output        and cvs_outerr).  */
-name|sleep
+comment|/* sleep (1); */
+name|usleep
 argument_list|(
-literal|1
+literal|10000
 argument_list|)
 expr_stmt|;
 if|if
