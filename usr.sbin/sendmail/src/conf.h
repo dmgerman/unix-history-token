@@ -2028,17 +2028,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  386BSD / FreeBSD 1.0E / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
+comment|/* **  386BSD / FreeBSD 1.0E / NetBSD (all architectures, all versions) ** **  Were 4.3BSD clone, closer to 4.4BSD **  Now real 4.4BSD. ** **	See also BSD defines. */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__FreeBSD__
@@ -2072,12 +2067,6 @@ begin_comment
 comment|/* has the setsid(2) POSIX syscall */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2089,10 +2078,12 @@ begin_comment
 comment|/* has uname(2) syscall */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
 
 begin_include
 include|#
