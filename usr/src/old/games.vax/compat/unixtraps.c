@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unixtraps.c	4.3 84/05/05"
+literal|"@(#)unixtraps.c	4.4 88/09/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,13 @@ end_define
 begin_function_decl
 name|off_t
 name|olseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|longrev
 parameter_list|()
 function_decl|;
 end_function_decl

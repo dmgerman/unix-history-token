@@ -13,7 +13,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	io.c	4.1	82/05/11	"
+literal|"	io.c	4.2	88/09/22	"
 decl_stmt|;
 end_decl_stmt
 
@@ -2566,7 +2566,7 @@ operator|+
 literal|1
 argument_list|)
 operator|)
-operator|<
+operator|==
 literal|0
 condition|)
 name|bug
@@ -2828,7 +2828,7 @@ operator|+
 literal|1
 argument_list|)
 operator|)
-operator|<
+operator|==
 literal|0
 condition|)
 name|bug
