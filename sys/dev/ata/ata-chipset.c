@@ -12751,96 +12751,6 @@ block|}
 block|,
 comment|/* south */
 block|{
-name|ATA_SIS755
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 755"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS752
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 752"
-block|}
-block|,
-comment|/* unknown */
-block|{
-name|ATA_SIS751
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 751"
-block|}
-block|,
-comment|/* unknown */
-block|{
-name|ATA_SIS750
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 750"
-block|}
-block|,
-comment|/* unknown */
-block|{
-name|ATA_SIS748
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 748"
-block|}
-block|,
-comment|/* unknown */
-block|{
-name|ATA_SIS746
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 746"
-block|}
-block|,
-comment|/* ext south */
-block|{
 name|ATA_SIS745
 block|,
 literal|0x00
@@ -12855,21 +12765,6 @@ literal|"SiS 745"
 block|}
 block|,
 comment|/* 1chip */
-block|{
-name|ATA_SIS740
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA5
-block|,
-literal|"SiS 740"
-block|}
-block|,
-comment|/* ext south */
 block|{
 name|ATA_SIS735
 block|,
@@ -12915,156 +12810,6 @@ literal|"SiS 730"
 block|}
 block|,
 comment|/* 1chip */
-block|{
-name|ATA_SIS661
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 661"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS658
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 658"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS655
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 655"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS652
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 652"
-block|}
-block|,
-comment|/* unknown */
-block|{
-name|ATA_SIS651
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 651"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS650
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 650"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS648
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 648"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS646
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 645DX"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS645
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA6
-block|,
-literal|"SiS 645"
-block|}
-block|,
-comment|/* ext south */
-block|{
-name|ATA_SIS640
-block|,
-literal|0x00
-block|,
-name|SIS_SOUTH
-block|,
-literal|0
-block|,
-name|ATA_UDMA4
-block|,
-literal|"SiS 640"
-block|}
-block|,
-comment|/* ext south */
 block|{
 name|ATA_SIS635
 block|,
@@ -13203,7 +12948,7 @@ literal|0x00
 block|,
 name|SIS33
 block|,
-literal|0
+literal|1
 block|,
 name|ATA_WDMA2
 block|,
@@ -13258,9 +13003,7 @@ if|if
 condition|(
 name|idx
 operator|->
-name|cfg1
-operator|==
-name|SIS_SOUTH
+name|cfg2
 condition|)
 block|{
 name|pci_write_config
@@ -13303,11 +13046,17 @@ name|cfg1
 operator|=
 name|SIS133NEW
 expr_stmt|;
+name|idx
+operator|->
+name|max_dma
+operator|=
+name|ATA_UDMA6
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"SiS 96X %s controller"
+literal|"SiS 962/963 %s controller"
 argument_list|,
 name|ata_mode2str
 argument_list|(
@@ -13369,25 +13118,33 @@ name|dev
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|idx
 operator|->
 name|cfg1
 operator|=
 name|SIS133OLD
 expr_stmt|;
-else|else
-block|{
 name|idx
 operator|->
 name|max_dma
 operator|=
-name|ATA_UDMA5
+name|ATA_UDMA6
 expr_stmt|;
+block|}
+else|else
+block|{
 name|idx
 operator|->
 name|cfg1
 operator|=
 name|SIS100NEW
+expr_stmt|;
+name|idx
+operator|->
+name|max_dma
+operator|=
+name|ATA_UDMA5
 expr_stmt|;
 block|}
 name|sprintf
