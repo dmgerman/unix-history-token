@@ -51,14 +51,14 @@ begin_define
 define|#
 directive|define
 name|PMAP_HASH_NUM_ENTRIES
-value|512
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMAP_HASH_SIZE_SHIFT
-value|3
+value|4
 end_define
 
 begin_define
@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_HASH_SHIFT2
-value|14
+value|21
 end_define
 
 begin_define
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_HASH_MASK2
-value|0x180
+value|0x080
 end_define
 
 begin_define
@@ -120,6 +120,8 @@ typedef|typedef
 struct|struct
 name|pmap_hash
 block|{
+struct|struct
+block|{
 name|u_int
 name|low
 decl_stmt|;
@@ -128,6 +130,12 @@ name|u_int
 name|high
 decl_stmt|;
 comment|/* The TLB high register value. */
+block|}
+name|pmh_pte
+index|[
+literal|2
+index|]
+struct|;
 block|}
 typedef|*
 name|pmap_hash_t
