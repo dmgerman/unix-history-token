@@ -109,6 +109,12 @@ directive|include
 file|<geom/geom_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_stats.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1067,13 +1073,13 @@ condition|(
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nop
 operator|==
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nend
 condition|)
 block|{
@@ -1093,7 +1099,7 @@ operator|&
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|wentidle
 argument_list|)
 expr_stmt|;
@@ -1103,7 +1109,7 @@ operator|&
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|it
 argument_list|,
 operator|&
@@ -1115,13 +1121,13 @@ condition|(
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nop
 operator|==
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nend
 condition|)
 block|{
@@ -1141,7 +1147,7 @@ operator|&
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|wentidle
 argument_list|)
 expr_stmt|;
@@ -1151,7 +1157,7 @@ operator|&
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|it
 argument_list|,
 operator|&
@@ -1164,14 +1170,14 @@ block|}
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nop
 operator|++
 expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nop
 operator|++
 expr_stmt|;
@@ -1423,7 +1429,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|wentidle
 operator|=
 name|t1
@@ -1431,7 +1437,7 @@ expr_stmt|;
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|wentidle
 operator|=
 name|t1
@@ -1460,7 +1466,7 @@ operator|&
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1478,7 +1484,7 @@ operator|&
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1493,7 +1499,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1508,7 +1514,7 @@ expr_stmt|;
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1523,7 +1529,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1535,7 +1541,7 @@ expr_stmt|;
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1554,7 +1560,7 @@ block|{
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1566,7 +1572,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1587,7 +1593,7 @@ block|{
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1599,7 +1605,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|ops
 index|[
 name|idx
@@ -1614,7 +1620,7 @@ block|}
 name|pp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nend
 operator|++
 expr_stmt|;
@@ -1622,7 +1628,7 @@ comment|/* In reverse order of g_io_request() */
 name|cp
 operator|->
 name|stat
-operator|.
+operator|->
 name|nend
 operator|++
 expr_stmt|;

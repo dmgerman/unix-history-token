@@ -87,6 +87,12 @@ directive|include
 file|<geom/geom_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_stats.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -486,6 +492,9 @@ name|topology_lock
 argument_list|,
 literal|"GEOM topology"
 argument_list|)
+expr_stmt|;
+name|g_stat_init
+argument_list|()
 expr_stmt|;
 name|g_io_init
 argument_list|()
