@@ -4089,6 +4089,25 @@ operator|!=
 name|ifa
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_flags
+operator|&
+operator|(
+name|IFF_POINTOPOINT
+operator||
+name|IFF_LOOPBACK
+operator|)
+operator|)
+condition|)
 name|printf
 argument_list|(
 literal|"rtinit: wrong ifa (%p) was (%p)\n"
@@ -4125,7 +4144,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove the referenve to the it's ifaddr. 			 */
+comment|/* 			 * Remove the reference to its ifaddr. 			 */
 name|IFAFREE
 argument_list|(
 name|rt
