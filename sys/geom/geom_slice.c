@@ -891,6 +891,16 @@ comment|/* XXX: EWHAT ? */
 return|return;
 block|}
 comment|/* 		 * Check if we collide with any hot spaces, and call the 		 * method once if so. 		 */
+name|t
+operator|=
+name|bp
+operator|->
+name|bio_offset
+operator|+
+name|gsl
+operator|->
+name|offset
+expr_stmt|;
 for|for
 control|(
 name|m_index
@@ -919,9 +929,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|bp
-operator|->
-name|bio_offset
+name|t
 operator|>=
 name|gmp
 operator|->
@@ -934,9 +942,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|bp
-operator|->
-name|bio_offset
+name|t
 operator|+
 name|bp
 operator|->
