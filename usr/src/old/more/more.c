@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.27 (Berkeley) %G%"
+literal|"@(#)more.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -3185,50 +3191,6 @@ literal|'G'
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|strlen
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|s
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|++
-condition|)
-empty_stmt|;
-return|return
-operator|(
-name|p
-operator|-
-name|s
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_block
 
 begin_comment
 comment|/* See whether the last component of the path name "path" is equal to the ** string "string" */
@@ -6941,6 +6903,11 @@ name|struct
 name|winsize
 name|win
 decl_stmt|;
+name|char
+modifier|*
+name|tgoto
+parameter_list|()
+function_decl|;
 name|retry
 label|:
 if|if
