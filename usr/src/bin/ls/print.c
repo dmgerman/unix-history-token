@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.8 (Berkeley) %G%"
+literal|"@(#)print.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +420,13 @@ block|}
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|TAB
+value|8
+end_define
+
 begin_macro
 name|printcol
 argument_list|(
@@ -450,39 +457,24 @@ name|termwidth
 decl_stmt|;
 specifier|register
 name|int
+name|base
+decl_stmt|,
 name|chcnt
-decl_stmt|;
-comment|/* total row character count printed */
-specifier|register
-name|int
+decl_stmt|,
+name|cnt
+decl_stmt|,
 name|col
 decl_stmt|,
-name|row
-decl_stmt|;
-comment|/* row/column counters */
-specifier|register
-name|int
 name|colwidth
 decl_stmt|;
-comment|/* width of a printing column */
-name|int
-name|base
-decl_stmt|;
-comment|/* subscript for leftmost column */
 name|int
 name|endcol
-decl_stmt|;
-comment|/* last column for this entry */
-name|int
+decl_stmt|,
 name|numcols
-decl_stmt|;
-comment|/* total number of columns */
-name|int
+decl_stmt|,
 name|numrows
-decl_stmt|;
-comment|/* total number of rows */
-name|int
-name|cnt
+decl_stmt|,
+name|row
 decl_stmt|;
 name|colwidth
 operator|=
@@ -520,8 +512,19 @@ operator|+=
 literal|1
 expr_stmt|;
 name|colwidth
-operator|+=
-literal|2
+operator|=
+operator|(
+name|colwidth
+operator|+
+name|TAB
+operator|)
+operator|&
+operator|~
+operator|(
+name|TAB
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|numcols
 operator|=
@@ -544,10 +547,6 @@ condition|)
 operator|++
 name|numrows
 expr_stmt|;
-define|#
-directive|define
-name|TAB
-value|8
 for|for
 control|(
 name|row
@@ -641,24 +640,6 @@ operator|=
 name|cnt
 expr_stmt|;
 block|}
-for|for
-control|(
-init|;
-name|chcnt
-operator|<
-name|endcol
-condition|;
-operator|++
-name|chcnt
-control|)
-operator|(
-name|void
-operator|)
-name|putchar
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
 name|endcol
 operator|+=
 name|colwidth
