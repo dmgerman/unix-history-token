@@ -195,7 +195,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|if (fwrite(buf, sizeof(char), n, stdout) != (size_t)n)	\ 			warnx("fwrite error at %d", n);
+value|if (fwrite(buf, sizeof(char), n, stdout) != n)	\ 			warnx("fwrite error at %d", n);
 end_define
 
 begin_comment
