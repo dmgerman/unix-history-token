@@ -1094,6 +1094,11 @@ literal|"Not all file systems were properly mounted.  Upgrade operation\n"
 literal|"aborted."
 argument_list|)
 expr_stmt|;
+name|variable_unset
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+expr_stmt|;
 return|return
 name|RET_FAIL
 return|;
@@ -1112,6 +1117,11 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to chroot to /mnt - something is wrong with the\n"
 literal|"root partition or the way it's mounted if this doesn't work."
+argument_list|)
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|DISK_PARTITIONED
 argument_list|)
 expr_stmt|;
 return|return
@@ -1182,29 +1192,18 @@ argument_list|(
 literal|"Preserving /etc directory.."
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* cp returns a bogus status, so we can't check the status meaningfully.  Bleah. */
+operator|(
+name|void
+operator|)
 name|vsystem
 argument_list|(
 literal|"cp -pr /etc/* %s"
 argument_list|,
 name|saved_etc
 argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to back up /etc directory to %s!  Upgrade operation\n"
-literal|"aborted."
-argument_list|,
-name|saved_etc
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
-block|}
-block|}
+block|)
+block|{ 	}
 if|if
 condition|(
 name|file_readable
