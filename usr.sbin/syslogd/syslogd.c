@@ -1024,6 +1024,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|LocalDomain
@@ -5201,6 +5202,27 @@ name|wmsg
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|nul
+index|[]
+init|=
+literal|""
+decl_stmt|,
+name|space
+index|[]
+init|=
+literal|" "
+decl_stmt|,
+name|lf
+index|[]
+init|=
+literal|"\n"
+decl_stmt|,
+name|crlf
+index|[]
+init|=
+literal|"\r\n"
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -5264,7 +5286,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|""
+name|nul
 expr_stmt|;
 name|v
 operator|->
@@ -5299,7 +5321,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|" "
+name|space
 expr_stmt|;
 name|v
 operator|->
@@ -5532,7 +5554,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|""
+name|nul
 expr_stmt|;
 name|v
 operator|->
@@ -5570,7 +5592,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|" "
+name|space
 expr_stmt|;
 name|v
 operator|->
@@ -5764,6 +5786,10 @@ name|f
 operator|->
 name|f_prevpri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|0
@@ -5775,6 +5801,10 @@ name|f
 operator|->
 name|f_prevhost
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|5
@@ -5801,6 +5831,10 @@ name|f
 operator|->
 name|f_prevpri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|0
@@ -5808,6 +5842,10 @@ index|]
 operator|.
 name|iov_base
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|5
@@ -6025,7 +6063,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\n"
+name|lf
 expr_stmt|;
 name|v
 operator|->
@@ -6122,7 +6160,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\n"
+name|lf
 expr_stmt|;
 name|v
 operator|->
@@ -6321,7 +6359,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\r\n"
+name|crlf
 expr_stmt|;
 name|v
 operator|->
@@ -6384,7 +6422,7 @@ name|v
 operator|->
 name|iov_base
 operator|=
-literal|"\r\n"
+name|crlf
 expr_stmt|;
 name|v
 operator|->
