@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	map.h	4.6	81/05/12	*/
+comment|/*	map.h	4.7	81/11/08	*/
 end_comment
 
 begin_comment
@@ -86,24 +86,13 @@ name|kernelmap
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BBNNET
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|map
 modifier|*
-name|netmap
+name|mbmap
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
