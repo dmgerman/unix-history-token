@@ -1615,7 +1615,7 @@ block|,
 comment|/* help file */
 block|{
 block|{
-literal|"Select"
+literal|" Select "
 block|}
 block|,
 block|{
