@@ -38,19 +38,27 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_expr_stmt
+name|include
+operator|<
+name|sys
+operator|/
+name|cdefs
+operator|.
+name|h
+operator|>
 name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
 
 begin_include
 include|#
@@ -110,6 +118,12 @@ begin_include
 include|#
 directive|include
 file|<readpassphrase.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function
