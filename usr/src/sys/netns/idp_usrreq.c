@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idp_usrreq.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -909,15 +909,11 @@ name|nsp
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
+operator|)
+return|;
 switch|switch
 condition|(
 name|req
@@ -932,15 +928,11 @@ name|value
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
+operator|)
+return|;
 name|m
 operator|=
 name|m_get
@@ -950,6 +942,17 @@ argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 switch|switch
 condition|(
 name|name
@@ -1223,7 +1226,6 @@ operator|*
 name|value
 argument_list|)
 expr_stmt|;
-break|break;
 endif|#
 directive|endif
 endif|NSIP
@@ -1243,8 +1245,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|release
-label|:
 return|return
 operator|(
 name|error
