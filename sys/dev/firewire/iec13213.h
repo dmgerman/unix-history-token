@@ -795,6 +795,70 @@ value|0x31333934
 name|u_int32_t
 name|bus_name
 decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int32_t
+name|irmc
+range|:
+literal|1
+decl_stmt|;
+comment|/* iso. resource manager capable */
+name|cmc
+label|:
+literal|1
+operator|,
+comment|/* cycle master capable */
+name|isc
+operator|:
+literal|1
+operator|,
+comment|/* iso. operation support */
+name|bmc
+operator|:
+literal|1
+operator|,
+comment|/* bus manager capable */
+name|pmc
+operator|:
+literal|1
+operator|,
+comment|/* power manager capable */
+operator|:
+literal|3
+operator|,
+name|cyc_clk_acc
+operator|:
+literal|8
+operator|,
+comment|/* 0<= ppm<= 100 */
+name|max_rec
+operator|:
+literal|4
+operator|,
+comment|/* (2<< max_rec) bytes */
+operator|:
+literal|2
+operator|,
+name|max_rom
+operator|:
+literal|2
+operator|,
+name|generation
+operator|:
+literal|4
+operator|,
+operator|:
+literal|1
+operator|,
+name|link_spd
+operator|:
+literal|3
+expr_stmt|;
+else|#
+directive|else
 name|u_int32_t
 name|link_spd
 range|:
@@ -807,18 +871,6 @@ name|generation
 range|:
 literal|4
 decl_stmt|,
-define|#
-directive|define
-name|MAXROM_4
-value|0
-define|#
-directive|define
-name|MAXROM_64
-value|1
-define|#
-directive|define
-name|MAXROM_1024
-value|2
 name|max_rom
 range|:
 literal|2
@@ -864,6 +916,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* iso. resource manager capable */
+endif|#
+directive|endif
 name|struct
 name|fw_eui64
 name|eui64
@@ -871,6 +925,31 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* max_rom */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXROM_4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXROM_64
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXROM_1024
+value|2
+end_define
 
 begin_define
 define|#
