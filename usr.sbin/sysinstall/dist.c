@@ -1326,6 +1326,8 @@ argument_list|()
 expr_stmt|;
 return|return
 name|i
+operator||
+name|DITEM_REDRAW
 return|;
 block|}
 end_function
