@@ -1766,7 +1766,7 @@ operator|->
 name|b_runningbufspace
 expr_stmt|;
 comment|/* do the input */
-name|VOP_STRATEGY
+name|VOP_SPECSTRATEGY
 argument_list|(
 name|bp
 operator|->
@@ -3209,7 +3209,7 @@ operator|+=
 name|count
 expr_stmt|;
 comment|/* do the input */
-name|VOP_STRATEGY
+name|VOP_SPECSTRATEGY
 argument_list|(
 name|bp
 operator|->
