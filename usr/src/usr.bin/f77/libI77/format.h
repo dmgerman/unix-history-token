@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_format[] = "@(#)format.h	1.5";  *  * format parser definitions  */
+comment|/* char id_format[] = "@(#)format.h	1.6";  *  * format parser definitions  */
 end_comment
 
 begin_struct
@@ -21,7 +21,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*	do NOT change this defines or add new ones without  *	changing the value of the follow define for OP_TYPE_TAB  */
+comment|/*	do NOT change this defines or add new ones without  *	changing the value of the following define for OP_TYPE_TAB.  *	change format.h both in the compiler and libI77 simultaneously.  */
 end_comment
 
 begin_define
