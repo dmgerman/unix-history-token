@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.7	(Berkeley)	83/03/27"
+literal|"@(#)utilities.c	3.8	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,32 +481,24 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|command
-operator|==
-literal|'x'
-condition|)
-block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-name|perror
-argument_list|(
-literal|"newnode"
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"Cannot make node %s\n"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 block|}
 name|vprintf
 argument_list|(
