@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.10 (Berkeley) %G%"
+literal|"@(#)map.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,25 @@ operator|.
 name|dsize
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lockfile
+argument_list|(
+name|dbm_dirfno
+argument_list|(
+name|map
+operator|->
+name|map_db
+argument_list|)
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|LOCK_SH
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|dbm_fetch
@@ -363,6 +382,25 @@ operator|->
 name|map_db
 argument_list|,
 name|key
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lockfile
+argument_list|(
+name|dbm_dirfno
+argument_list|(
+name|map
+operator|->
+name|map_db
+argument_list|)
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|LOCK_UN
 argument_list|)
 expr_stmt|;
 if|if
