@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 name|char
+specifier|const
 name|copyright
 index|[]
 init|=
@@ -33,9 +34,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)wall.c	5.14 (Berkeley) 3/2/91";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "from: @(#)wall.c	5.14 (Berkeley) 3/2/91";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -43,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwall.c,v 1.1.1.1 1994/08/28 15:11:02 csgr Exp $"
+literal|"$Id: rwall.c,v 1.2 1995/05/30 06:33:30 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -111,7 +126,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -139,11 +166,38 @@ name|mbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|makemsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -183,25 +237,9 @@ operator|>
 literal|3
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s hostname [file]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|wallhost
 operator|=
 name|argv
@@ -239,14 +277,16 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Couldn't establish connection with server. 		 * Print error message and die. 		 */
-name|clnt_pcreateerror
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|clnt_spcreateerror
 argument_list|(
 name|wallhost
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -275,16 +315,18 @@ name|RPC_SUCCESS
 condition|)
 block|{
 comment|/* 		 * An error occurred while calling the server. 		 * Print error message and die. 		 */
-name|clnt_perror
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|clnt_sperror
 argument_list|(
 name|cl
 argument_list|,
 name|wallhost
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -296,28 +338,38 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|makemsg
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-argument|fname
+name|stderr
+argument_list|,
+literal|"usage: rwall hostname [file]\n"
 argument_list|)
-end_macro
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function
+name|void
+name|makemsg
+parameter_list|(
+name|fname
+parameter_list|)
 name|char
 modifier|*
 name|fname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
-name|int
-name|ch
-decl_stmt|,
-name|cnt
-decl_stmt|;
 name|struct
 name|tm
 modifier|*
@@ -347,9 +399,6 @@ name|fd
 decl_stmt|;
 name|char
 modifier|*
-name|p
-decl_stmt|,
-modifier|*
 name|whom
 decl_stmt|,
 name|hostname
@@ -366,19 +415,6 @@ name|tmpname
 index|[
 literal|15
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
 decl_stmt|;
 operator|(
 name|void
@@ -397,7 +433,7 @@ name|strcat
 argument_list|(
 name|tmpname
 argument_list|,
-literal|"/wall.XXXXXX"
+literal|"wall.XXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
@@ -424,23 +460,13 @@ literal|"r+"
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"wall: can't open temporary file.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't open temporary file"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -568,25 +594,15 @@ name|stdin
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"wall: can't read %s.\n"
+literal|"can't read %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|fgets
@@ -623,23 +639,13 @@ operator|&
 name|sbuf
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"wall: can't stat temporary file.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't stat temporary file"
 argument_list|)
 expr_stmt|;
-block|}
 name|mbufsize
 operator|=
 name|sbuf
@@ -661,23 +667,13 @@ name|mbufsize
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"wall: out of memory.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fread
@@ -697,23 +693,13 @@ argument_list|)
 operator|!=
 name|mbufsize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"wall: can't read temporary file.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't read temporary file"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -723,7 +709,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
