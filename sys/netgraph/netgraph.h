@@ -2231,7 +2231,7 @@ parameter_list|,
 name|rethook
 parameter_list|)
 define|\
-value|do {								\ 		hook_p hook;						\ 		LIST_FOREACH(hook,&((node)->nd_hooks), hk_hooks) {	\ 			if ((fn)(hook, arg) == 0) {			\ 				(rethook) = hook;			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+value|do {								\ 		hook_p _hook;						\ 		(rethook) = NULL;					\ 		LIST_FOREACH(_hook,&((node)->nd_hooks), hk_hooks) {	\ 			if ((fn)(_hook, arg) == 0) {			\ 				(rethook) = _hook;			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
 begin_ifdef
@@ -3830,7 +3830,7 @@ name|_NGI_CLR_HOOK
 parameter_list|(
 name|i
 parameter_list|)
-value|do {						\ 		hook_p hook = _NGI_HOOK(i);				\ 		if (hook) {						\ 			_NG_HOOK_UNREF(hook);				\ 			_NGI_HOOK(i) = NULL;				\ 		}							\ 	} while (0)
+value|do {						\ 		hook_p _hook = _NGI_HOOK(i);				\ 		if (_hook) {						\ 			_NG_HOOK_UNREF(_hook);				\ 			_NGI_HOOK(i) = NULL;				\ 		}							\ 	} while (0)
 end_define
 
 begin_define
@@ -3852,7 +3852,7 @@ name|_NGI_CLR_NODE
 parameter_list|(
 name|i
 parameter_list|)
-value|do {						\ 		node_p node = _NGI_NODE(i);				\ 		if (node) {						\ 			_NG_NODE_UNREF(node);				\ 			_NGI_NODE(i) = NULL;				\ 		}							\ 	} while (0)
+value|do {						\ 		node_p _node = _NGI_NODE(i);				\ 		if (_node) {						\ 			_NG_NODE_UNREF(_node);				\ 			_NGI_NODE(i) = NULL;				\ 		}							\ 	} while (0)
 end_define
 
 begin_ifdef
@@ -4948,7 +4948,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), NULL))) {		\ 			NG_FWD_ITEM_HOOK(error, item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), NULL))) {		\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -4969,7 +4969,7 @@ parameter_list|,
 name|meta
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), (meta)))) {		\ 			NG_FWD_ITEM_HOOK(error, item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), (meta)))) {		\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -5025,7 +5025,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_hook((here), (item),		\ 					(hook), (retaddr))) == 0) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_hook((here), (_item),		\ 					(hook), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -5044,7 +5044,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_path((here), (item),		\ 					(path), (retaddr))) == 0) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_path((here), (_item),		\ 					(path), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -5063,7 +5063,7 @@ parameter_list|,
 name|retaddr
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_ID((here), (item),		\ 					(ID), (retaddr))) == 0) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_ID((here), (_item),		\ 					(ID), (retaddr))) == 0) {	\ 			SAVE_LINE(_item);				\ 			(error) = ng_snd_item((_item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -5107,7 +5107,7 @@ parameter_list|,
 name|resp
 parameter_list|)
 define|\
-value|do {								\ 		if (resp) {						\ 			ng_ID_t dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = NULL;			\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					dest, NULL )) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 1);	\ 			} else {					\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = NULL;			\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					_dest, NULL )) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 1);	\ 			} else {					\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
