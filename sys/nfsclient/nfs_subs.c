@@ -4550,55 +4550,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check to see if major data structures haven't bloated. 	 */
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfssvc_sock
-argument_list|)
-operator|>
-name|NFS_SVCALLOC
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"struct nfssvc_sock bloated (> %dbytes)\n"
-argument_list|,
-name|NFS_SVCALLOC
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Try reducing NFS_UIDHASHSIZ\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfsuid
-argument_list|)
-operator|>
-name|NFS_UIDALLOC
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"struct nfsuid bloated (> %dbytes)\n"
-argument_list|,
-name|NFS_UIDALLOC
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Try unionizing the nu_nickname and nu_flag fields\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|nfs_mount_type
 operator|=
 name|vfsp
