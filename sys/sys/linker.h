@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997-2000 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<machine/elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kobj.h>
 end_include
 
 begin_ifdef
@@ -119,77 +125,6 @@ end_typedef
 
 begin_struct
 struct|struct
-name|linker_file_ops
-block|{
-comment|/*      * Lookup a symbol in the file's symbol table.  If the symbol is      * not found then return ENOENT, otherwise zero.  If the symbol      * found is a common symbol, return with *address set to zero and      * *size set to the size of the common space required.  Otherwise      * set *address the value of the symbol.      */
-name|int
-function_decl|(
-modifier|*
-name|lookup_symbol
-function_decl|)
-parameter_list|(
-name|linker_file_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|c_linker_sym_t
-modifier|*
-name|sym
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|symbol_values
-function_decl|)
-parameter_list|(
-name|linker_file_t
-parameter_list|,
-name|c_linker_sym_t
-parameter_list|,
-name|linker_symval_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|search_symbol
-function_decl|)
-parameter_list|(
-name|linker_file_t
-parameter_list|,
-name|caddr_t
-name|value
-parameter_list|,
-name|c_linker_sym_t
-modifier|*
-name|sym
-parameter_list|,
-name|long
-modifier|*
-name|diffp
-parameter_list|)
-function_decl|;
-comment|/*      * Unload a file, releasing dependancies and freeing storage.      */
-name|void
-function_decl|(
-modifier|*
-name|unload
-function_decl|)
-parameter_list|(
-name|linker_file_t
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|common_symbol
 block|{
 name|STAILQ_ENTRY
@@ -213,6 +148,8 @@ begin_struct
 struct|struct
 name|linker_file
 block|{
+name|KOBJ_FIELDS
+expr_stmt|;
 name|int
 name|refs
 decl_stmt|;
@@ -278,16 +215,6 @@ argument_list|)
 name|modules
 expr_stmt|;
 comment|/* modules in this file */
-name|void
-modifier|*
-name|priv
-decl_stmt|;
-comment|/* implementation data */
-name|struct
-name|linker_file_ops
-modifier|*
-name|ops
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -318,33 +245,10 @@ end_typedef
 
 begin_struct
 struct|struct
-name|linker_class_ops
-block|{
-comment|/*       * Load a file, returning the new linker_file_t in *result.  If      * the class does not recognise the file type, zero should be      * returned, without modifying *result.  If the file is      * recognised, the file should be loaded, *result set to the new      * file and zero returned.  If some other error is detected an      * appropriate errno should be returned.      */
-name|int
-function_decl|(
-modifier|*
-name|load_file
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|linker_file_t
-modifier|*
-name|result
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|linker_class
 block|{
+name|KOBJ_CLASS_FIELDS
+expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|linker_class
@@ -352,22 +256,6 @@ argument_list|)
 name|link
 expr_stmt|;
 comment|/* list of all file classes */
-specifier|const
-name|char
-modifier|*
-name|desc
-decl_stmt|;
-comment|/* description (e.g. "a.out") */
-name|void
-modifier|*
-name|priv
-decl_stmt|;
-comment|/* implementation data */
-name|struct
-name|linker_class_ops
-modifier|*
-name|ops
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -402,19 +290,8 @@ begin_function_decl
 name|int
 name|linker_add_class
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|desc
-parameter_list|,
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|struct
-name|linker_class_ops
-modifier|*
-name|ops
+name|linker_class_t
+name|cls
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -482,14 +359,8 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|struct
-name|linker_file_ops
-modifier|*
-name|ops
+name|linker_class_t
+name|cls
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -885,6 +756,27 @@ name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|r_debug_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
