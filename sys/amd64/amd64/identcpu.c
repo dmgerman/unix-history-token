@@ -376,6 +376,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -427,6 +446,11 @@ literal|"Intel Pentium 4"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -622,12 +646,12 @@ index|]
 decl_stmt|,
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|brand
 decl_stmt|;
+endif|#
+directive|endif
 name|cpu_class
 operator|=
 name|i386_cpus
