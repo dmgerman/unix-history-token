@@ -1407,7 +1407,7 @@ name|CPU_MAX_SPEED
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|E2BIG
 operator|)
 return|;
 comment|/* Return a list of valid settings for this driver. */

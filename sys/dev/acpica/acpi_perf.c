@@ -1838,7 +1838,7 @@ name|px_max_avail
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|E2BIG
 operator|)
 return|;
 comment|/* Return a list of settings that are currently valid. */
