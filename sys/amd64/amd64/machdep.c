@@ -6593,7 +6593,7 @@ literal|4
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * hw.maxmem is a size in bytes; we also allow k, m, and g suffixes 	 * for the appropriate modifiers.  This overrides MAXMEM. 	 */
+comment|/* 	 * hw.physmem is a size in bytes; we also allow k, m, and g suffixes 	 * for the appropriate modifiers.  This overrides MAXMEM. 	 */
 if|if
 condition|(
 operator|(
