@@ -851,6 +851,9 @@ literal|"%-*s idle "
 argument_list|,
 name|maxlen
 operator|-
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|w
