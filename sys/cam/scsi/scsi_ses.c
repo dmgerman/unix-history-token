@@ -3463,6 +3463,17 @@ decl_stmt|;
 if|if
 condition|(
 name|buflen
+operator|==
+literal|0
+condition|)
+name|buflen
+operator|=
+literal|256
+expr_stmt|;
+comment|/* per SPC-2 */
+if|if
+condition|(
+name|buflen
 operator|<
 literal|8
 operator|+
