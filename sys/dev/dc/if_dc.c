@@ -12044,9 +12044,14 @@ name|DC_IS_XIRCOM
 argument_list|(
 name|sc
 argument_list|)
+operator|||
+name|DC_IS_CONEXANT
+argument_list|(
+name|sc
+argument_list|)
 condition|)
 block|{
-comment|/* 			 * XXX: Why does my Xircom taunt me so? 			 * For some reason it likes setting the CARRLOST flag 			 * even when the carrier is there. wtf?!? */
+comment|/* 			 * XXX: Why does my Xircom taunt me so? 			 * For some reason it likes setting the CARRLOST flag 			 * even when the carrier is there. wtf?!? 			 * Who knows, but Conexant chips have the 			 * same problem. Maybe they took lessons 			 * from Xircom. 			 */
 if|if
 condition|(
 comment|/*sc->dc_type == DC_TYPE_21143&&*/
