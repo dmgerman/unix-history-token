@@ -426,7 +426,8 @@ name|status
 argument_list|)
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 elseif|else
 if|if
