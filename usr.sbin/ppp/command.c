@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.41 1997/05/08 01:26:31 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.42 1997/05/09 23:34:56 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -90,7 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"auth.h"
+file|"systems.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chat.h"
 end_include
 
 begin_include
@@ -1132,6 +1138,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|execvp
 argument_list|(
 name|argv
@@ -1144,6 +1153,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|execl
 argument_list|(
 name|shell
@@ -2941,9 +2953,7 @@ operator|&&
 name|prompt
 condition|)
 name|Prompt
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4442,9 +4452,31 @@ if|if
 condition|(
 name|argc
 operator|>
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"set ifaddr: too many arguments (%d> 4)\n"
+argument_list|,
+name|argc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ParseAddr
 argument_list|(
 name|argc
@@ -4467,7 +4499,14 @@ name|DefMyAddress
 operator|.
 name|width
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|--
@@ -4476,6 +4515,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ParseAddr
 argument_list|(
 name|argc
@@ -4498,7 +4539,14 @@ name|DefHisAddress
 operator|.
 name|width
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|--
@@ -4523,6 +4571,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ParseAddr
 argument_list|(
 name|argc
@@ -4545,7 +4595,14 @@ name|DefTriggerAddress
 operator|.
 name|width
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -4622,6 +4679,8 @@ name|dstsystem
 operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|OsSetIpaddress
 argument_list|(
 name|DefMyAddress
@@ -4634,7 +4693,14 @@ name|ipaddr
 argument_list|,
 name|ifnetmask
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 return|return
 operator|(

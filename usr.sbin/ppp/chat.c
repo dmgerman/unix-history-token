@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.22 1997/03/13 12:45:28 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.23 1997/05/07 23:01:23 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chat.h"
 end_include
 
 begin_include
@@ -1048,13 +1054,11 @@ decl_stmt|,
 name|nfds
 decl_stmt|,
 name|nb
-decl_stmt|,
-name|msg
 decl_stmt|;
 name|char
 name|buff
 index|[
-literal|200
+name|IBSIZE
 index|]
 decl_stmt|;
 ifdef|#
@@ -1129,6 +1133,8 @@ block|{
 name|str
 index|[
 name|IBSIZE
+operator|-
+literal|1
 index|]
 operator|=
 literal|0
@@ -1154,10 +1160,6 @@ expr_stmt|;
 name|s
 operator|=
 name|str
-expr_stmt|;
-name|msg
-operator|=
-name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -1497,6 +1499,8 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|read
 argument_list|(
 name|modem
@@ -1506,7 +1510,26 @@ name|ch
 argument_list|,
 literal|1
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"read error"
+argument_list|)
 expr_stmt|;
+operator|*
+name|inp
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+operator|(
+name|NOMATCH
+operator|)
+return|;
+block|}
 name|connect_log
 argument_list|(
 operator|&
@@ -1698,16 +1721,6 @@ block|}
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SIGALRM
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1805,6 +1818,8 @@ name|cp
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|snprintf
 argument_list|(
 name|tmp
@@ -1818,7 +1833,22 @@ name|command
 argument_list|,
 name|cp
 argument_list|)
+operator|>=
+sizeof|sizeof
+name|tmp
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT_BIT
+argument_list|,
+literal|"Too long string to ExecStr: \"%s\"\n"
+argument_list|,
+name|command
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -1834,11 +1864,30 @@ name|vector
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pipe
 argument_list|(
 name|fids
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT_BIT
+argument_list|,
+literal|"Unable to create pipe in ExecStr: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|pid
 operator|=
 name|fork
@@ -1897,6 +1946,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|fids
@@ -1906,7 +1957,24 @@ index|]
 argument_list|,
 literal|1
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT_BIT
+argument_list|,
+literal|"dup2(fids[1], 1) in ExecStr: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|close
 argument_list|(
 name|fids
@@ -1924,13 +1992,32 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|nb
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT_BIT
+argument_list|,
+literal|"dup2(nb, 0) in ExecStr: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|LogPrintf
 argument_list|(
 name|LOG_CHAT_BIT
@@ -2119,8 +2206,6 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|nb
-decl_stmt|,
 name|on
 decl_stmt|;
 name|char
@@ -2326,8 +2411,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|nb
-operator|=
 name|write
 argument_list|(
 name|modem
