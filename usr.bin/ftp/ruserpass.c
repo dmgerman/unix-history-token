@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: ruserpass.c,v 1.5 1997/06/25 08:56:45 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ruserpass.c,v 1.5 1997/06/25 08:56:45 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,11 +1031,19 @@ operator|)
 operator|!=
 name|EOF
 operator|&&
+operator|(
+operator|!
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|||
 operator|!
 name|isspace
 argument_list|(
 name|c
 argument_list|)
+operator|)
 condition|;
 operator|++
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: domacro.c,v 1.2 1997/06/25 08:56:37 msmith Exp $ */
+comment|/*	$Id: domacro.c,v 1.3 1997/06/27 09:30:09 ache Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: domacro.c,v 1.2 1997/06/25 08:56:37 msmith Exp $"
+literal|"$Id: domacro.c,v 1.3 1997/06/27 09:30:09 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,12 +263,14 @@ condition|)
 block|{
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|cp1
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp1
 argument_list|)
