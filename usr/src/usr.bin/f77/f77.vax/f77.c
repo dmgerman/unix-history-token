@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)f77.c	5.6 (Berkeley) %G%"
+literal|"@(#)f77.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3776,16 +3776,6 @@ decl_stmt|;
 name|int
 name|waitpid
 decl_stmt|;
-if|if
-condition|(
-name|sdbflag
-condition|)
-operator|*
-name|v
-operator|++
-operator|=
-literal|"-lg"
-expr_stmt|;
 if|if
 condition|(
 name|profileflag

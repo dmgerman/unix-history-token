@@ -3426,9 +3426,7 @@ endif|#
 directive|endif
 argument|}  rmf(asmpass2); }    doload(v0, v) register char *v0[]
 argument_list|,
-argument|*v[]; { char **p; int waitpid;  if(sdbflag) 	*v++ =
-literal|"-lg"
-argument|; if (profileflag) 	{ 	for(p = p_liblist ; *p ; *v++ = *p++) 		; 	} else	{ 	for(p = liblist ; *p ; *v++ = *p++) 		; 	}  *v++ =
+argument|*v[]; { char **p; int waitpid;  if (profileflag) 	{ 	for(p = p_liblist ; *p ; *v++ = *p++) 		; 	} else	{ 	for(p = liblist ; *p ; *v++ = *p++) 		; 	}  *v++ =
 literal|"-o"
 argument|; *v++ = aoutname; *v = NULL;  if(verbose) 	fprintf(diagfile,
 literal|"LOAD."

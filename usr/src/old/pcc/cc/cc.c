@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.19 %G%"
+literal|"@(#)cc.c 4.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1717,20 +1717,6 @@ index|[
 name|i
 operator|++
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|gflag
-operator|||
-name|Gflag
-condition|)
-name|av
-index|[
-name|na
-operator|++
-index|]
-operator|=
-literal|"-lg"
 expr_stmt|;
 if|if
 condition|(
