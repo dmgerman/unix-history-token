@@ -133,6 +133,12 @@ directive|include
 file|<netatm/atm_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1450,6 +1456,32 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Zero fill constructor for our uma_zone's.  */
+end_comment
+
+begin_function
+name|void
+name|atm_uma_ctor
+parameter_list|(
+name|void
+modifier|*
+name|mem
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+block|{
+name|bzero
+argument_list|(
+name|mem
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -1276,6 +1276,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|atm_uma_ctor
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|atm_timeout
 parameter_list|(
 name|struct
