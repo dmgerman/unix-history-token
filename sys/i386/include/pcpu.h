@@ -110,9 +110,6 @@ name|u_int
 name|gd_cpuid
 decl_stmt|;
 name|u_int
-name|gd_cpu_lockid
-decl_stmt|;
-name|u_int
 name|gd_other_cpus
 decl_stmt|;
 name|u_int
