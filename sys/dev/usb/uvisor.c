@@ -778,7 +778,7 @@ block|,
 name|USB_PRODUCT_SONY_CLIE_40
 block|}
 block|,
-name|PALM4
+literal|0
 block|}
 block|,
 block|{
