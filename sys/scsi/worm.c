@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.28 1996/07/14 10:46:56 joerg Exp $  */
+comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.29 1996/09/08 10:44:18 phk Exp $  */
 end_comment
 
 begin_comment
@@ -773,6 +773,20 @@ name|hp4020i_finalize_disk
 block|}
 block|,
 block|{
+literal|"PHILIPS"
+block|,
+literal|"CDD2000"
+block|,
+name|hp4020i_prepare_disk
+block|,
+name|hp4020i_prepare_track
+block|,
+name|hp4020i_finalize_track
+block|,
+name|hp4020i_finalize_disk
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
@@ -832,20 +846,20 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|worm
-operator|->
-name|blk_size
-operator|==
-literal|0
-condition|)
-comment|/* XXX */
+comment|/* 	 * CD-R devices can assume various sizes, depending on the 	 * intended purpose of the track.  Hence, READ CAPACITY 	 * doesn't give us any good results.  Make a more educated 	 * guess instead. 	 */
 name|worm
 operator|->
 name|blk_size
 operator|=
+operator|(
+name|worm
+operator|->
+name|audio
+condition|?
+literal|2352
+else|:
 literal|2048
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -919,39 +933,6 @@ operator|&
 name|worm
 operator|->
 name|buf_queue
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"- see worm(4) for usage warnings"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|worm_size
-argument_list|(
-name|sc_link
-argument_list|,
-name|SCSI_NOSLEEP
-operator||
-name|SCSI_NOMASK
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"- can't get capacity."
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"with %ld blocks."
-argument_list|,
-name|worm
-operator|->
-name|n_blks
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2223,16 +2204,6 @@ operator|&
 name|WORMFL_DISK_PREPED
 operator|)
 operator|==
-literal|0
-operator|||
-operator|(
-name|worm
-operator|->
-name|worm_flags
-operator|&
-name|WORMFL_WRITTEN
-operator|)
-operator|!=
 literal|0
 condition|)
 name|error
