@@ -49,11 +49,13 @@ name|ifmedia
 modifier|*
 name|ifm
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|card_type
 decl_stmt|;
 comment|/* Card model name */
+specifier|const
 name|char
 modifier|*
 name|vendor
