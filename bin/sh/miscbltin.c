@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1532,7 +1538,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|quad_t
+name|rlim_t
 name|val
 init|=
 literal|0
@@ -1715,9 +1721,6 @@ else|else
 block|{
 name|val
 operator|=
-operator|(
-name|quad_t
-operator|)
 literal|0
 expr_stmt|;
 while|while
@@ -1758,9 +1761,6 @@ if|if
 condition|(
 name|val
 operator|<
-operator|(
-name|quad_t
-operator|)
 literal|0
 condition|)
 break|break;
@@ -1931,10 +1931,10 @@ name|factor
 expr_stmt|;
 name|out1fmt
 argument_list|(
-literal|"%qd\n"
+literal|"%jd\n"
 argument_list|,
 operator|(
-name|quad_t
+name|intmax_t
 operator|)
 name|val
 argument_list|)
@@ -2071,10 +2071,10 @@ name|factor
 expr_stmt|;
 name|out1fmt
 argument_list|(
-literal|"%qd\n"
+literal|"%jd\n"
 argument_list|,
 operator|(
-name|quad_t
+name|intmax_t
 operator|)
 name|val
 argument_list|)
