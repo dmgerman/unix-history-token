@@ -949,7 +949,7 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_LISTIO_MAX
 expr_stmt|;
-goto|goto break;
+break|break;
 case|case
 name|_SC_AIO_MAX
 case|:
@@ -967,7 +967,7 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_MAX
 expr_stmt|;
-goto|goto break;
+break|break;
 case|case
 name|_SC_AIO_PRIO_DELTA_MAX
 case|:
@@ -985,7 +985,7 @@ index|]
 operator|=
 name|CTL_P1003_1B_AIO_PRIO_DELTA_MAX
 expr_stmt|;
-goto|goto break;
+break|break;
 case|case
 name|_SC_DELAYTIMER_MAX
 case|:
