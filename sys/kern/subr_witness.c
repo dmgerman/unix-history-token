@@ -3991,7 +3991,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|int
@@ -4270,7 +4270,7 @@ return|return;
 block|}
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|CTR4
@@ -4351,7 +4351,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

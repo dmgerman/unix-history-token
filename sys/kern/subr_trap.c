@@ -390,7 +390,7 @@ name|prticks
 decl_stmt|,
 name|sticks
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|int
@@ -460,7 +460,7 @@ expr_stmt|;
 comment|/* XXX: Quiet warning. */
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 while|while
@@ -480,7 +480,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
@@ -755,7 +755,7 @@ endif|#
 directive|endif
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 block|}
@@ -767,7 +767,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We need to keep interrupts disabled so that if any further AST's 	 * come in, the interrupt they come in on will be delayed until we 	 * finish returning to userland.  We assume that the return to userland 	 * will perform the equivalent of cpu_critical_exit(). 	 */
+comment|/* 	 * We need to keep interrupts disabled so that if any further AST's 	 * come in, the interrupt they come in on will be delayed until we 	 * finish returning to userland.  We assume that the return to userland 	 * will perform the equivalent of intr_restore(). 	 */
 block|}
 end_function
 
