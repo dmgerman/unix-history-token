@@ -1173,6 +1173,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|so
 operator|=
 name|fp
@@ -1202,6 +1205,9 @@ name|soclose
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
