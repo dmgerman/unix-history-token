@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.19.2.9 1999/03/29 22:07:12 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.19.2.10 1999/05/27 17:44:51 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -706,6 +706,59 @@ argument_list|(
 expr|struct
 name|bpf_insn
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|bpf_insn
+name|dhcp_bpf_tr_filter
+index|[]
+init|=
+block|{
+comment|/* accept all token ring packets due to variable length header */
+comment|/* if we want to get clever, insert the program here */
+comment|/* If we passed all the tests, ask for the whole packet. */
+name|BPF_STMT
+argument_list|(
+name|BPF_RET
+operator|+
+name|BPF_K
+argument_list|,
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
+argument_list|)
+block|,
+comment|/* Otherwise, drop it. */
+name|BPF_STMT
+argument_list|(
+name|BPF_RET
+operator|+
+name|BPF_K
+argument_list|,
+literal|0
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dhcp_bpf_tr_filter_len
+init|=
+operator|(
+sizeof|sizeof
+name|dhcp_bpf_tr_filter
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bpf_insn
+argument_list|)
+operator|)
 decl_stmt|;
 end_decl_stmt
 

@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: memory.c,v 1.35.2.3 1998/11/24 22:32:43 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: memory.c,v 1.35.2.4 1999/05/27 17:47:43 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2574,14 +2574,6 @@ operator|=
 name|lease
 operator|->
 name|starts
-expr_stmt|;
-name|comp
-operator|->
-name|timestamp
-operator|=
-name|lease
-operator|->
-name|timestamp
 expr_stmt|;
 if|if
 condition|(
