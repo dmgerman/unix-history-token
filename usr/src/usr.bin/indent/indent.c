@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.11 (Berkeley) %G%"
+literal|"@(#)indent.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"indent_globs.h"
 end_include
 
@@ -62,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|"indent_codes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -654,26 +654,12 @@ name|input
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* check for open error */
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: can't open %s\n"
-argument_list|,
-name|argv
-index|[
-name|i
-index|]
+name|in_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 continue|continue;
 block|}
 elseif|else
@@ -734,26 +720,12 @@ name|output
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* check for create error */
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: can't create %s\n"
-argument_list|,
-name|argv
-index|[
-name|i
-index|]
+name|out_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 continue|continue;
 block|}
 name|fprintf
@@ -1135,7 +1107,6 @@ name|p
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|col
@@ -2660,8 +2631,6 @@ case|case
 name|binary_op
 case|:
 comment|/* any binary operation */
-name|do_binary
-label|:
 if|if
 condition|(
 name|ps
@@ -5110,8 +5079,6 @@ case|case
 name|comment
 case|:
 comment|/* we have gotten a /*  this is a biggie */
-name|proc_comment
-label|:
 if|if
 condition|(
 name|flushed_nl
@@ -5173,10 +5140,6 @@ block|}
 comment|/* end of main while (1) loop */
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/*  * copy input file to backup file if in_name is /blah/blah/blah/file, then  * backup file will be ".Bfile" then make the backup file the input and  * original input file the output  */
@@ -5272,22 +5235,11 @@ name|bakchn
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: can't create backup file \"%s\"\n"
-argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|n
@@ -5318,44 +5270,22 @@ argument_list|)
 operator|!=
 name|n
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: error writing backup file \"%s\"\n"
-argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|n
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: error reading input file \"%s\"\n"
-argument_list|,
 name|in_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|bakchn
@@ -5382,20 +5312,11 @@ name|input
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: can't re-open backup file\n"
+name|bakfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* now the original input file will be the output */
 name|output
 operator|=
@@ -5413,18 +5334,60 @@ operator|==
 literal|0
 condition|)
 block|{
+name|unlink
+argument_list|(
+name|bakfile
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+name|in_name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_macro
+name|err
+argument_list|(
+argument|msg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"indent: can't create %s\n"
+literal|"indent: %s: %s\n"
 argument_list|,
-name|in_name
-argument_list|)
-expr_stmt|;
-name|unlink
+name|msg
+argument_list|,
+name|strerror
 argument_list|(
-name|bakfile
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5432,7 +5395,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
