@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.14	82/01/19	*/
+comment|/*	ioctl.h	4.15	82/01/24	*/
 end_comment
 
 begin_comment
@@ -421,12 +421,26 @@ begin_comment
 comment|/* set params w/o flushing buffers */
 end_comment
 
-begin_comment
-comment|/* 13 was EXCL */
-end_comment
+begin_define
+define|#
+directive|define
+name|TIOCEXCL
+value|(('t'<<8)|13)
+end_define
 
 begin_comment
-comment|/* 14 was NEXCL */
+comment|/* set exclusive use of tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCNXCL
+value|(('t'<<8)|14)
+end_define
+
+begin_comment
+comment|/* reset exclusive use of tty */
 end_comment
 
 begin_define
