@@ -1150,7 +1150,7 @@ argument_list|(
 name|pointer
 argument_list|)
 expr_stmt|;
-comment|/* The following will terminate at least when we get back 		 * to the original 'pointer' location (since we force 		 * things to be equal). 		 */
+comment|/* 		 * The following will terminate at least when we get back 		 * to the original 'pointer' location (since we force 		 * things to be equal). 		 */
 while|while
 condition|(
 operator|(
@@ -1512,11 +1512,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|IsStartFieldPointer
+argument_list|(
 name|p
-operator|->
-name|field
-operator|&
-name|ATTR_MASK
+argument_list|)
 condition|)
 block|{
 comment|/* New field? */
@@ -1681,11 +1680,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|IsStartFieldPointer
+argument_list|(
 name|p
-operator|->
-name|field
-operator|&
-name|ATTR_MASK
+argument_list|)
 condition|)
 block|{
 comment|/* New field? */
@@ -1728,9 +1726,10 @@ expr_stmt|;
 block|}
 name|fieldattr
 operator|=
+name|FieldAttributesPointer
+argument_list|(
 name|p
-operator|->
-name|field
+argument_list|)
 expr_stmt|;
 comment|/* Get attributes */
 name|DoAttribute

@@ -29,7 +29,7 @@ name|TermAttributes
 parameter_list|(
 name|x
 parameter_list|)
-value|(TermIsStartField(x)? Terminal[x].field&0xff : \ 				    Terminal[WhereTermAttrByte(x)].field&0xff)
+value|(TermIsStartField(x)? Terminal[x].data&0xff : \ 				    Terminal[WhereTermAttrByte(x)].data&0xff)
 end_define
 
 begin_define
@@ -39,7 +39,7 @@ name|TermIsStartField
 parameter_list|(
 name|x
 parameter_list|)
-value|(Terminal[x].field&ATTR_MASK)
+value|(Terminal[x].data&ATTR_MASK)
 end_define
 
 begin_define
@@ -51,7 +51,7 @@ name|p
 parameter_list|,
 name|a
 parameter_list|)
-value|(Terminal[p].field = (a)|ATTR_MASK)
+value|(Terminal[p].data = (a)|ATTR_MASK)
 end_define
 
 begin_define
@@ -61,7 +61,7 @@ name|TermDeleteField
 parameter_list|(
 name|p
 parameter_list|)
-value|(Terminal[p].field = 0)
+value|(Terminal[p].data = 0)
 end_define
 
 begin_define
