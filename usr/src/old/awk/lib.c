@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.6 (Berkeley) %G%"
+literal|"@(#)lib.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* lex input file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|lexprog
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* points to program argument if it exists */
 end_comment
 
 begin_decl_stmt
@@ -490,6 +502,9 @@ condition|(
 name|yyin
 operator|==
 name|stdin
+operator|&&
+operator|!
+name|lexprog
 condition|)
 name|error
 argument_list|(
