@@ -1958,42 +1958,15 @@ name|FLOATING_POINT
 case|case
 literal|'e'
 case|:
-comment|/* anomalous precision */
 case|case
 literal|'E'
 case|:
-name|prec
-operator|=
-operator|(
-name|prec
-operator|==
-operator|-
-literal|1
-operator|)
-condition|?
-name|DEFPREC
-operator|+
-literal|1
-else|:
-name|prec
-operator|+
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|'f'
 case|:
-comment|/* always print trailing zeroes */
-if|if
-condition|(
-name|prec
-operator|!=
-literal|0
-condition|)
-name|flags
-operator||=
-name|ALT
-expr_stmt|;
+goto|goto
+name|fp_begin
+goto|;
 case|case
 literal|'g'
 case|:
@@ -2004,6 +1977,18 @@ if|if
 condition|(
 name|prec
 operator|==
+literal|0
+condition|)
+name|prec
+operator|=
+literal|1
+expr_stmt|;
+name|fp_begin
+label|:
+if|if
+condition|(
+name|prec
+operator|==
 operator|-
 literal|1
 condition|)
@@ -2011,8 +1996,25 @@ name|prec
 operator|=
 name|DEFPREC
 expr_stmt|;
-name|fp_begin
-label|:
+if|if
+condition|(
+name|flags
+operator|&
+name|LONGDBL
+condition|)
+name|_double
+operator|=
+operator|(
+name|double
+operator|)
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|long double
+argument_list|)
+expr_stmt|;
+else|else
 name|_double
 operator|=
 name|va_arg
@@ -2940,7 +2942,7 @@ condition|(
 name|prec
 operator|==
 literal|0
-operator|||
+operator|&&
 operator|(
 name|flags
 operator|&
@@ -3339,12 +3341,28 @@ name|mode
 operator|=
 literal|3
 expr_stmt|;
+comment|/* ndigits after the decimal point */
 else|else
 block|{
+comment|/* 		 * To obtain ndigits after the decimal point for the 'e'  		 * and 'E' formats, round to ndigits + 1 significant  		 * figures. 		 */
+if|if
+condition|(
+name|ch
+operator|==
+literal|'e'
+operator|||
+name|ch
+operator|==
+literal|'E'
+condition|)
+name|ndigits
+operator|++
+expr_stmt|;
 name|mode
 operator|=
 literal|2
 expr_stmt|;
+comment|/* ndigits significant digits */
 block|}
 if|if
 condition|(
@@ -3391,12 +3409,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ch
+operator|!=
+literal|'g'
+operator|&&
+name|ch
+operator|!=
+literal|'G'
+operator|)
+operator|||
 name|flags
 operator|&
 name|ALT
 condition|)
 block|{
-comment|/* Print trailing zeros */
+comment|/* print trailing zeros */
 name|bp
 operator|=
 name|digits
