@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ring.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"externs.h"
 end_include
 
@@ -4930,8 +4936,6 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Connection closed by foreign host.\n"
 argument_list|,
 literal|1

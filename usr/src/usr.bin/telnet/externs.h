@@ -127,35 +127,12 @@ decl_stmt|,
 comment|/* Who are we connected to? */
 modifier|*
 name|prompt
-decl_stmt|,
-comment|/* Prompt for command. */
-modifier|*
-name|nfrontp
-decl_stmt|,
-modifier|*
-name|nbackp
-decl_stmt|,
-name|netobuf
-index|[
-literal|2
-operator|*
-name|BUFSIZ
-index|]
-decl_stmt|,
-name|ttyobuf
-index|[
-literal|2
-operator|*
-name|BUFSIZ
-index|]
-decl_stmt|,
-modifier|*
-name|tfrontp
-decl_stmt|,
-modifier|*
-name|tbackp
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Prompt for command. */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -224,6 +201,23 @@ decl_stmt|,
 name|termLiteralNextChar
 decl_stmt|,
 name|termQuitChar
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Ring buffer structures which are shared */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Ring
+name|netoring
+decl_stmt|,
+name|netiring
+decl_stmt|,
+name|ttyoring
+decl_stmt|,
+name|ttyiring
 decl_stmt|;
 end_decl_stmt
 

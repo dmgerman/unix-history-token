@@ -72,14 +72,14 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|min
+name|MIN
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|min
+name|MIN
 parameter_list|(
 name|a
 parameter_list|,
@@ -94,7 +94,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(min) */
+comment|/* !defined(MIN) */
 end_comment
 
 begin_define
@@ -108,7 +108,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((((int)(a))-((int)(b))>= 0)? (a)-(b): (((a)-(b))+(d)->size))
+value|((((int)(a))-((int)(b))>= 0)? \ 					(a)-(b): (((a)-(b))+(d)->size))
 end_define
 
 begin_define
@@ -171,6 +171,96 @@ end_define
 begin_comment
 comment|/* Buffer state transition routines */
 end_comment
+
+begin_macro
+name|ring_init
+argument_list|(
+argument|ring
+argument_list|,
+argument|buffer
+argument_list|,
+argument|count
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|Ring
+modifier|*
+name|ring
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ring
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+expr|*
+name|ring
+argument_list|)
+expr_stmt|;
+name|ring
+operator|->
+name|size
+operator|=
+name|count
+expr_stmt|;
+name|ring
+operator|->
+name|add
+operator|=
+name|ring
+operator|->
+name|send
+operator|=
+name|ring
+operator|->
+name|ack
+operator|=
+name|ring
+operator|->
+name|bottom
+operator|=
+name|buffer
+expr_stmt|;
+name|ring
+operator|->
+name|top
+operator|=
+name|ring
+operator|->
+name|bottom
+operator|+
+name|ring
+operator|->
+name|size
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Add characters from current segment to ring buffer.  */
@@ -635,7 +725,7 @@ condition|)
 block|{
 name|i
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|count
 argument_list|,
@@ -711,7 +801,7 @@ condition|)
 block|{
 name|i
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|count
 argument_list|,
@@ -749,6 +839,57 @@ name|i
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
+comment|/* Mark routines */
+end_comment
+
+begin_comment
+comment|/* XXX do something here */
+end_comment
+
+begin_function
+name|void
+name|ring_mark
+parameter_list|(
+name|ring
+parameter_list|)
+name|Ring
+modifier|*
+name|ring
+decl_stmt|;
+block|{ }
+end_function
+
+begin_function
+name|int
+name|ring_at_mark
+parameter_list|(
+name|ring
+parameter_list|)
+name|Ring
+modifier|*
+name|ring
+decl_stmt|;
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ring_clear_mark
+parameter_list|(
+name|ring
+parameter_list|)
+name|Ring
+modifier|*
+name|ring
+decl_stmt|;
+block|{ }
 end_function
 
 end_unit

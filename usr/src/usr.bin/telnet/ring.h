@@ -60,6 +60,29 @@ argument_list|)
 end_if
 
 begin_comment
+comment|/* Initialization routine */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ring_init
+parameter_list|(
+name|Ring
+modifier|*
+name|ring
+parameter_list|,
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Data movement routines */
 end_comment
 

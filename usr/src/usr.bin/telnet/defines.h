@@ -24,13 +24,11 @@ define|#
 directive|define
 name|ExitString
 parameter_list|(
-name|f
-parameter_list|,
 name|s
 parameter_list|,
 name|r
 parameter_list|)
-value|{ fprintf(f, s); exit(r); }
+value|{ fprintf(stderr, s); exit(r); }
 end_define
 
 begin_define
@@ -66,7 +64,7 @@ name|NETADD
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *nfrontp++ = c; }
+value|{ *netoring.send = c; ring_added(&netoring, 1); }
 end_define
 
 begin_define
@@ -84,25 +82,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|NETLOC
-parameter_list|()
-value|(nfrontp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETMAX
-parameter_list|()
-value|(netobuf+sizeof netobuf-1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NETBYTES
 parameter_list|()
-value|(nfrontp-nbackp)
+value|(ring_unsent_count(&netoring))
 end_define
 
 begin_define
@@ -110,7 +92,7 @@ define|#
 directive|define
 name|NETROOM
 parameter_list|()
-value|(NETMAX()-NETLOC()+1)
+value|(ring_empty_count(&netoring))
 end_define
 
 begin_define
@@ -120,31 +102,7 @@ name|TTYADD
 parameter_list|(
 name|c
 parameter_list|)
-value|{ if (!(SYNCHing||flushout)) { *tfrontp++ = c; } }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYLOC
-parameter_list|()
-value|(tfrontp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYMAX
-parameter_list|()
-value|(ttyobuf+sizeof ttyobuf-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYMIN
-parameter_list|()
-value|(netobuf)
+value|if (!(SYNCHing||flushout)) { \ 				*ttyoring.send = c; \ 				ring_added(&ttyoring, 1); \ 			}
 end_define
 
 begin_define
@@ -152,7 +110,7 @@ define|#
 directive|define
 name|TTYBYTES
 parameter_list|()
-value|(tfrontp-tbackp)
+value|(ring_unsent_count(&ttyoring))
 end_define
 
 begin_define
@@ -160,7 +118,7 @@ define|#
 directive|define
 name|TTYROOM
 parameter_list|()
-value|(TTYMAX()-TTYLOC()+1)
+value|(ring_empty_count(&ttyoring))
 end_define
 
 begin_comment
