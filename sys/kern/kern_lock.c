@@ -194,17 +194,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|bzero
-argument_list|(
-name|lkp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lock
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|simple_lock_init
 argument_list|(
 operator|&
@@ -223,21 +212,39 @@ name|LK_EXTFLG_MASK
 expr_stmt|;
 name|lkp
 operator|->
+name|lk_sharecount
+operator|=
+literal|0
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_waitcount
+operator|=
+literal|0
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_exclusivecount
+operator|=
+literal|0
+expr_stmt|;
+name|lkp
+operator|->
 name|lk_prio
 operator|=
 name|prio
 expr_stmt|;
 name|lkp
 operator|->
-name|lk_timo
-operator|=
-name|timo
-expr_stmt|;
-name|lkp
-operator|->
 name|lk_wmesg
 operator|=
 name|wmesg
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_timo
+operator|=
+name|timo
 expr_stmt|;
 name|lkp
 operator|->
@@ -396,11 +403,13 @@ name|flags
 operator|&
 name|LK_INTERLOCK
 condition|)
+block|{
 name|simple_unlock
 argument_list|(
 name|interlkp
 argument_list|)
 expr_stmt|;
+block|}
 name|extflags
 operator|=
 operator|(
@@ -1501,22 +1510,17 @@ begin_comment
 comment|/*  * Print out information about state of a lock. Used by VOP_PRINT  * routines to display ststus about contained locks.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lockmgr_printinfo
-argument_list|(
-argument|lkp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lkp
+parameter_list|)
 name|struct
 name|lock
 modifier|*
 name|lkp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1581,14 +1585,14 @@ name|lk_waitcount
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|DEBUG
+name|SIMPLELOCK_DEBUG
 argument_list|)
 operator|&&
 name|NCPUS
@@ -1622,19 +1626,9 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|ctldebug
-name|debug2
-init|=
-block|{
-literal|"lockpausetime"
-block|,
-operator|&
-name|lockpausetime
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* struct ctldebug debug2 = { "lockpausetime",&lockpausetime }; */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1738,11 +1732,12 @@ operator|==
 literal|1
 condition|)
 block|{
-name|BACKTRACE
+name|Debugger
 argument_list|(
-name|curproc
+literal|"simple_lock"
 argument_list|)
 expr_stmt|;
+comment|/*BACKTRACE(curproc); */
 block|}
 elseif|else
 if|if
@@ -1941,11 +1936,12 @@ operator|==
 literal|1
 condition|)
 block|{
-name|BACKTRACE
+name|Debugger
 argument_list|(
-name|curproc
+literal|"simple_unlock"
 argument_list|)
 expr_stmt|;
+comment|/* BACKTRACE(curproc); */
 block|}
 elseif|else
 if|if
@@ -2011,7 +2007,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEBUG&& NCPUS == 1 */
+comment|/* SIMPLELOCK_DEBUG&& NCPUS == 1 */
 end_comment
 
 end_unit

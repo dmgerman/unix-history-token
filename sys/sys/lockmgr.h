@@ -411,7 +411,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SIMPLELOCK_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -531,7 +531,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !DEBUG */
+comment|/* !SIMPLELOCK_DEBUG */
 end_comment
 
 begin_if
@@ -602,7 +602,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !DEBUG */
+comment|/* !SIMPLELOCK_DEBUG */
 end_comment
 
 begin_endif
