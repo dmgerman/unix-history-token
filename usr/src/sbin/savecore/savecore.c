@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.19 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,7 +690,7 @@ name|Perror
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: %m\n"
 argument_list|,
 name|dirname
 argument_list|)
@@ -1528,7 +1528,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't fdopen dumpfd"
+literal|"Can't fdopen dumpfd\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1947,7 +1947,7 @@ name|Perror
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: %m\n"
 argument_list|,
 name|dirname
 argument_list|)
@@ -2204,6 +2204,9 @@ decl_stmt|,
 name|ofd
 decl_stmt|,
 name|bounds
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|char
 modifier|*
@@ -2463,7 +2466,9 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"WARNING: vmcore may be incomplete\n"
+literal|"WARNING: EOF on dump device; %s\n"
+argument_list|,
+literal|"vmcore may be incomplete"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2471,14 +2476,19 @@ name|Perror
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"read: %m"
+literal|"read from dumpdev: %m"
 argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|Write
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|write
 argument_list|(
 name|ofd
 argument_list|,
@@ -2486,7 +2496,47 @@ name|cp
 argument_list|,
 name|n
 argument_list|)
+operator|)
+operator|<
+name|n
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
+name|Perror
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"write: %m"
+argument_list|,
+literal|"write"
+argument_list|)
 expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"short write: wrote %d of %d\n"
+argument_list|,
+name|ret
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"WARNING: vmcore may be incomplete\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|dumpsize
 operator|-=
 name|n
@@ -2859,8 +2909,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|n
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|n
+operator|=
 name|write
 argument_list|(
 name|fd
@@ -2869,10 +2925,17 @@ name|buf
 argument_list|,
 name|size
 argument_list|)
+operator|)
 operator|<
 name|size
 condition|)
 block|{
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
 name|Perror
 argument_list|(
 name|LOG_ERR
@@ -2880,6 +2943,18 @@ argument_list|,
 literal|"write: %m"
 argument_list|,
 literal|"write"
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"short write: wrote %d of %d\n"
+argument_list|,
+name|n
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 name|exit
