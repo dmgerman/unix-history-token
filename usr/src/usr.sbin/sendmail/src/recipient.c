@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -584,7 +584,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -758,7 +760,9 @@ name|bool
 name|safefile
 parameter_list|()
 function_decl|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|a
 operator|->
@@ -1981,7 +1985,9 @@ name|char
 modifier|*
 name|oldto
 init|=
-name|To
+name|CurEnv
+operator|->
+name|e_to
 decl_stmt|;
 name|fp
 operator|=
@@ -2116,7 +2122,9 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|oldto
 expr_stmt|;

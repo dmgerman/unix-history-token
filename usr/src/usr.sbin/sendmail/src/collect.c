@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -31,16 +31,6 @@ end_expr_stmt
 
 begin_comment
 comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
-end_comment
-
-begin_decl_stmt
-name|long
-name|MsgSize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of message in bytes */
 end_comment
 
 begin_macro
@@ -469,7 +459,9 @@ argument_list|,
 name|InChannel
 argument_list|)
 expr_stmt|;
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 operator|+=
 name|strlen
 argument_list|(
@@ -655,7 +647,9 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 operator|++
 expr_stmt|;
 block|}
@@ -670,7 +664,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 operator|+=
 name|i
 expr_stmt|;
@@ -778,9 +774,13 @@ name|QueueRun
 condition|)
 block|{
 comment|/* adjust total priority by message priority */
-name|MsgPriority
+name|CurEnv
+operator|->
+name|e_msgpriority
 operator|=
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 expr_stmt|;
 name|p
 operator|=
@@ -795,7 +795,9 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|MsgPriority
+name|CurEnv
+operator|->
+name|e_msgpriority
 operator|-=
 name|priencode
 argument_list|(
@@ -840,7 +842,9 @@ name|NULL
 condition|)
 name|xfrom
 operator|=
-name|OrigFrom
+name|CurEnv
+operator|->
+name|e_origfrom
 expr_stmt|;
 if|if
 condition|(
@@ -902,7 +906,9 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|OrigFrom
+name|CurEnv
+operator|->
+name|e_origfrom
 expr_stmt|;
 name|p
 operator|=
@@ -1014,7 +1020,9 @@ for|for
 control|(
 name|h
 operator|=
-name|Header
+name|CurEnv
+operator|->
+name|e_header
 init|;
 name|h
 operator|!=
@@ -1755,7 +1763,9 @@ case|case
 name|HAN_RRECEIPT
 case|:
 comment|/* give return receipt */
-name|RetReceipt
+name|CurEnv
+operator|->
+name|e_retreceipt
 operator|=
 name|TRUE
 expr_stmt|;

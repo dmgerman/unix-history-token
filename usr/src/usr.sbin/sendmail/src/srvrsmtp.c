@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -367,7 +367,9 @@ init|;
 condition|;
 control|)
 block|{
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -793,7 +795,9 @@ name|HoldErrs
 operator|=
 name|FALSE
 expr_stmt|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -975,12 +979,14 @@ case|:
 comment|/* show queues */
 name|printf
 argument_list|(
-literal|"SendQueue="
+literal|"Send Queue="
 argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 argument_list|,
 name|TRUE
 argument_list|)

@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -102,7 +102,9 @@ expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
 condition|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 operator|==
@@ -116,7 +118,9 @@ argument_list|(
 literal|"root"
 argument_list|,
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 literal|0
 argument_list|)
@@ -138,7 +142,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -339,7 +345,9 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_mailer
 operator|==
@@ -348,7 +356,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_home
 operator|!=
@@ -356,7 +366,9 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_home
 expr_stmt|;
@@ -368,7 +380,9 @@ name|pw
 operator|=
 name|getpwnam
 argument_list|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_user
 argument_list|)
@@ -394,7 +408,9 @@ name|syserr
 argument_list|(
 literal|"Can't return mail to %s"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|)
@@ -465,7 +481,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|buf
 expr_stmt|;
@@ -616,7 +634,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 operator|(
 name|char
@@ -661,7 +681,9 @@ argument_list|(
 name|buf
 argument_list|,
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 operator|-
 literal|1
@@ -735,16 +757,20 @@ name|char
 operator|*
 operator|)
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 sizeof|sizeof
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* if From was queued up, put in on SendQueue */
+comment|/* if CurEnv->e_from was queued up, put in on CurEnv->e_sendqueue */
 end_comment
 
 begin_if
@@ -754,22 +780,32 @@ name|bitset
 argument_list|(
 name|QQUEUEUP
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_flags
 argument_list|)
 condition|)
 block|{
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_next
 operator|=
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 expr_stmt|;
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 operator|=
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 expr_stmt|;
 block|}
 end_if
@@ -786,7 +822,9 @@ name|syserr
 argument_list|(
 literal|"Can't return mail to %s"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|)
@@ -1078,7 +1116,9 @@ name|fp
 argument_list|,
 literal|"To: %s\n"
 argument_list|,
-name|To
+name|CurEnv
+operator|->
+name|e_to
 argument_list|)
 expr_stmt|;
 name|fprintf

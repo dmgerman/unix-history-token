@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.12
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.12
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -215,7 +215,9 @@ name|f
 argument_list|,
 literal|"S%s\n"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|)
@@ -237,7 +239,9 @@ name|f
 argument_list|,
 literal|"P%ld\n"
 argument_list|,
-name|MsgPriority
+name|CurEnv
+operator|->
+name|e_msgpriority
 argument_list|)
 expr_stmt|;
 comment|/* output macro definitions */
@@ -303,7 +307,9 @@ for|for
 control|(
 name|q
 operator|=
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 init|;
 name|q
 operator|!=
@@ -370,7 +376,9 @@ for|for
 control|(
 name|h
 operator|=
-name|Header
+name|CurEnv
+operator|->
+name|e_header
 init|;
 name|h
 operator|!=
@@ -1522,7 +1530,9 @@ directive|endif
 endif|DEBUG
 if|if
 condition|(
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|&&
 name|CurTime
 operator|>
@@ -1662,13 +1672,9 @@ name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
-literal|"Running %s (from %s)"
+literal|"Running %s"
 argument_list|,
 name|cf
-argument_list|,
-name|From
-operator|.
-name|q_paddr
 argument_list|)
 expr_stmt|;
 while|while
@@ -1751,6 +1757,23 @@ case|case
 literal|'S'
 case|:
 comment|/* sender */
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Sender: %s"
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 name|setsender
 argument_list|(
 name|newstr
@@ -1842,11 +1865,15 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|MsgPriority
+name|CurEnv
+operator|->
+name|e_msgpriority
 argument_list|)
 expr_stmt|;
 comment|/* make sure that big things get sent eventually */
-name|MsgPriority
+name|CurEnv
+operator|->
+name|e_msgpriority
 operator|-=
 name|WKTIMEFACT
 expr_stmt|;
@@ -1941,7 +1968,9 @@ literal|"Cannot send mail for three days"
 argument_list|)
 expr_stmt|;
 comment|/* arrange to remove files from queue */
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|=
 name|FALSE
 expr_stmt|;

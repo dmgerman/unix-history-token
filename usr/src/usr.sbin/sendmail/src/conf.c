@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -1000,7 +1000,9 @@ name|q_mailer
 operator|!=
 name|LocalMailer
 operator|&&
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 operator|>
 literal|100000
 condition|)
@@ -1039,7 +1041,9 @@ name|s
 operator|!=
 name|NULL
 operator|&&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_mailer
 operator|!=

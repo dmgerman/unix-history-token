@@ -33,7 +33,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -234,11 +234,15 @@ name|LOG_ERR
 argument_list|,
 literal|"%s->%s: %s"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-name|To
+name|CurEnv
+operator|->
+name|e_to
 argument_list|,
 operator|&
 name|errbuf
@@ -396,7 +400,9 @@ name|fmtmsg
 argument_list|(
 name|errbuf
 argument_list|,
-name|To
+name|CurEnv
+operator|->
+name|e_to
 argument_list|,
 name|num
 argument_list|,

@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.73
+literal|3.74
 operator|%
 name|G
 operator|%
@@ -91,6 +91,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* sender's full name */
+end_comment
+
+begin_decl_stmt
+name|ENVELOPE
+name|MainEnvelope
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the envelope around the basic letter */
 end_comment
 
 begin_ifdef
@@ -311,6 +321,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|CurEnv
+operator|=
+operator|&
+name|MainEnvelope
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -402,7 +417,9 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
-name|OldStyle
+name|CurEnv
+operator|->
+name|e_oldstyle
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1084,7 +1101,9 @@ case|case
 literal|'o'
 case|:
 comment|/* take new-style headers (with commas) */
-name|OldStyle
+name|CurEnv
+operator|->
+name|e_oldstyle
 operator|=
 name|FALSE
 expr_stmt|;
@@ -1380,7 +1399,9 @@ name|syserr
 argument_list|(
 literal|"Infinite forwarding loop (%s->%s)"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|,
@@ -1422,7 +1443,9 @@ name|DontSend
 operator|=
 name|FALSE
 expr_stmt|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -1472,7 +1495,9 @@ name|Stat
 operator|.
 name|stat_nf
 index|[
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_mailer
 operator|->
@@ -1484,7 +1509,9 @@ name|Stat
 operator|.
 name|stat_bf
 index|[
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_mailer
 operator|->
@@ -1493,7 +1520,9 @@ index|]
 operator|+=
 name|kbytes
 argument_list|(
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Arrange that the person who is sending the mail 	**  will not be expanded (unless explicitly requested). 	*/
@@ -1508,7 +1537,9 @@ name|printf
 argument_list|(
 literal|"From person = \"%s\"\n"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|)
@@ -1516,7 +1547,9 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_flags
 operator||=
@@ -1527,16 +1560,22 @@ condition|(
 operator|!
 name|MeToo
 condition|)
-operator|(
-name|void
-operator|)
 name|recipient
 argument_list|(
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
+argument_list|,
+operator|&
+name|CurEnv
+operator|->
+name|e_sendqueue
 argument_list|)
 expr_stmt|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -1547,7 +1586,9 @@ name|verifyonly
 argument_list|)
 expr_stmt|;
 comment|/* 	** All done. 	*/
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;
@@ -1632,7 +1673,9 @@ name|NULL
 condition|)
 name|realname
 operator|=
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 expr_stmt|;
@@ -1740,7 +1783,9 @@ argument_list|(
 name|from
 argument_list|,
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 literal|1
 argument_list|)
@@ -1763,7 +1808,9 @@ argument_list|(
 name|from
 argument_list|,
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 argument_list|,
 literal|1
 argument_list|)
@@ -1778,14 +1825,18 @@ name|SuprErrs
 operator|=
 name|FALSE
 expr_stmt|;
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_uid
 operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_gid
 operator|=
@@ -1795,7 +1846,9 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|V6
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_home
 operator|=
@@ -1809,7 +1862,9 @@ directive|endif
 endif|V6
 if|if
 condition|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_uid
 operator|!=
@@ -1818,13 +1873,17 @@ condition|)
 block|{
 name|DefUid
 operator|=
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_uid
 expr_stmt|;
 name|DefGid
 operator|=
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_gid
 expr_stmt|;
@@ -1832,13 +1891,17 @@ block|}
 comment|/* 	**  Set up the $r and $s macros to show who it came from. 	*/
 if|if
 condition|(
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_host
 operator|!=
 name|NULL
 operator|&&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_host
 index|[
@@ -1852,7 +1915,9 @@ name|define
 argument_list|(
 literal|'s'
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_host
 argument_list|)
@@ -1942,11 +2007,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d SendReceipt %d FatalErrors %d\n"
+literal|"\n====finis: stat %d sendreceipt %d FatalErrors %d\n"
 argument_list|,
 name|ExitStat
 argument_list|,
-name|SendReceipt
+name|CurEnv
+operator|->
+name|e_sendreceipt
 argument_list|,
 name|FatalErrors
 argument_list|)
@@ -1957,7 +2024,9 @@ endif|DEBUG
 comment|/* send back return receipts as requested */
 if|if
 condition|(
-name|SendReceipt
+name|CurEnv
+operator|->
+name|e_sendreceipt
 operator|&&
 name|ExitStat
 operator|==
@@ -1994,7 +2063,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 condition|)
 block|{
 ifdef|#

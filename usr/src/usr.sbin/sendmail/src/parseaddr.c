@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -88,7 +88,9 @@ name|buildaddr
 parameter_list|()
 function_decl|;
 comment|/* 	**  Initialize and prescan address. 	*/
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|addr
 expr_stmt|;

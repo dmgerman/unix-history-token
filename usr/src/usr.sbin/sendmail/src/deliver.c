@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.78
+literal|3.79
 operator|%
 name|G
 operator|%
@@ -369,7 +369,9 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|=
 name|TRUE
 expr_stmt|;
@@ -805,7 +807,9 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|=
 name|TRUE
 expr_stmt|;
@@ -852,7 +856,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|tobuf
 expr_stmt|;
@@ -986,7 +992,9 @@ name|to
 operator|->
 name|q_user
 expr_stmt|;
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|to
 operator|->
@@ -1110,7 +1118,9 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1194,10 +1204,12 @@ index|]
 operator|+=
 name|kbytes
 argument_list|(
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 argument_list|)
 expr_stmt|;
-comment|/* 		**  See if this user name is "special". 		**	If the user name has a slash in it, assume that this 		**	is a file -- send it off without further ado. 		**	Note that this means that editfcn's will not 		**	be applied to the message.  Also note that 		**	this type of addresses is not processed along 		**	with the others, so we fudge on the To person. 		*/
+comment|/* 		**  See if this user name is "special". 		**	If the user name has a slash in it, assume that this 		**	is a file -- send it off without further ado. 		**	Note that this means that editfcn's will not 		**	be applied to the message.  Also note that 		**	this type of addresses is not processed along 		**	with the others, so we fudge on the CurEnv->e_to person. 		*/
 if|if
 condition|(
 name|m
@@ -1403,7 +1415,9 @@ comment|/* print out messages as full list */
 end_comment
 
 begin_expr_stmt
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|tobuf
 expr_stmt|;
@@ -1514,7 +1528,9 @@ condition|)
 name|ctladdr
 operator|=
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 expr_stmt|;
 end_if
 
@@ -1585,7 +1601,9 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
-name|QueueUp
+name|CurEnv
+operator|->
+name|e_queueup
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1936,7 +1954,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|RetReceipt
+name|CurEnv
+operator|->
+name|e_retreceipt
 operator|&&
 name|bitset
 argument_list|(
@@ -1952,7 +1972,9 @@ operator|==
 name|EX_OK
 condition|)
 block|{
-name|SendReceipt
+name|CurEnv
+operator|->
+name|e_sendreceipt
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1962,7 +1984,9 @@ name|Xscript
 argument_list|,
 literal|"%s... successfully delivered\n"
 argument_list|,
-name|To
+name|CurEnv
+operator|->
+name|e_to
 argument_list|)
 expr_stmt|;
 comment|/* do we want to send back more info? */
@@ -3170,13 +3194,19 @@ name|LOG_INFO
 argument_list|,
 literal|"%s->%s: %ld: %s"
 argument_list|,
-name|From
+name|CurEnv
+operator|->
+name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-name|To
+name|CurEnv
+operator|->
+name|e_to
 argument_list|,
-name|MsgSize
+name|CurEnv
+operator|->
+name|e_msgsize
 argument_list|,
 name|statmsg
 argument_list|)
@@ -3593,7 +3623,9 @@ for|for
 control|(
 name|h
 operator|=
-name|Header
+name|CurEnv
+operator|->
+name|e_header
 init|;
 name|h
 operator|!=
@@ -3615,7 +3647,9 @@ name|char
 modifier|*
 name|origfrom
 init|=
-name|OrigFrom
+name|CurEnv
+operator|->
+name|e_origfrom
 decl_stmt|;
 name|bool
 name|nooutput
@@ -3851,7 +3885,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|OldStyle
+name|CurEnv
+operator|->
+name|e_oldstyle
 operator|||
 operator|!
 name|isspace
@@ -5025,7 +5061,9 @@ condition|)
 name|ctladdr
 operator|=
 operator|&
-name|From
+name|CurEnv
+operator|->
+name|e_from
 expr_stmt|;
 if|if
 condition|(
@@ -5325,12 +5363,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nSendQueue:\n"
+literal|"\nSend Queue:\n"
 argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 argument_list|,
 name|TRUE
 argument_list|)
@@ -5343,7 +5383,9 @@ for|for
 control|(
 name|q
 operator|=
-name|SendQueue
+name|CurEnv
+operator|->
+name|e_sendqueue
 init|;
 name|q
 operator|!=
@@ -5361,7 +5403,9 @@ condition|(
 name|verifyonly
 condition|)
 block|{
-name|To
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|q
 operator|->

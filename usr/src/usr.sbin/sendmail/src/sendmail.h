@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.66		%G%"
+literal|"@(#)sendmail.h	3.67		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,9 @@ end_decl_stmt
 begin_comment
 comment|/* the message number for Arpanet info */
 end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Address structure. **	Addresses are stored internally in this structure. ** **	Each address is on two chains and in one tree. **		The q_next chain is used to link together addresses **		  for one mailer (and is rooted in a mailer). **		The q_chain chain is used to maintain a list of **		  addresses originating from one call to sendto, and **		  is used primarily for printing messages. **		The q_alias, q_sibling, and q_child tree maintains **		  a complete tree of the aliases.  q_alias points to **		  the parent -- obviously, there can be several, and **		  so this points to "one" of them.  Ditto for q_sibling. */
@@ -349,6 +352,9 @@ end_define
 begin_comment
 comment|/* only on the list for verification */
 end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
@@ -638,6 +644,9 @@ begin_comment
 comment|/* ptr to program mailer */
 end_comment
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/* **  Header structure. **	This structure is used internally to store header items. */
 end_comment
@@ -681,18 +690,6 @@ name|header
 name|HDR
 typedef|;
 end_typedef
-
-begin_decl_stmt
-name|EXTERN
-name|HDR
-modifier|*
-name|Header
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head of header list */
-end_comment
 
 begin_comment
 comment|/* **  Header information structure. **	Defined in conf.c, this struct declares the header fields **	that have some magic meaning. */
@@ -820,6 +817,100 @@ begin_comment
 comment|/* this field contains addresses */
 end_comment
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Envelope structure. **	This structure defines the message itself.  There is usually **	only one of these -- for the message that we originally read **	and which is our primary interest -- but other envelopes can **	be generated during processing.  For example, error messages **	will have their own envelope. */
+end_comment
+
+begin_struct
+struct|struct
+name|envelope
+block|{
+name|HDR
+modifier|*
+name|e_header
+decl_stmt|;
+comment|/* head of header list */
+name|long
+name|e_msgpriority
+decl_stmt|;
+comment|/* adjusted priority of this message */
+name|bool
+name|e_queueup
+decl_stmt|;
+comment|/* queue this message for future xmission */
+name|bool
+name|e_oldstyle
+decl_stmt|;
+comment|/* spaces (not commas) delimit addresses */
+name|bool
+name|e_retreceipt
+decl_stmt|;
+comment|/* give a return receipt if delivery occurs */
+name|bool
+name|e_sendreceipt
+decl_stmt|;
+comment|/* actually send a receipt back */
+name|char
+modifier|*
+name|e_origfrom
+decl_stmt|;
+comment|/* the From: line read from the message */
+name|char
+modifier|*
+name|e_to
+decl_stmt|;
+comment|/* the target person */
+name|ADDRESS
+name|e_from
+decl_stmt|;
+comment|/* the person it is from */
+name|ADDRESS
+modifier|*
+name|e_sendqueue
+decl_stmt|;
+comment|/* list of message recipients */
+name|long
+name|e_msgsize
+decl_stmt|;
+comment|/* size of the message in bytes */
+name|int
+function_decl|(
+modifier|*
+name|e_putfunc
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* function used to put the message */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|envelope
+name|ENVELOPE
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|ENVELOPE
+modifier|*
+name|CurEnv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* envelope currently being processed */
+end_comment
+
+begin_escape
+end_escape
+
 begin_comment
 comment|/* **  Work queue. */
 end_comment
@@ -868,7 +959,7 @@ comment|/* queue of things to be done */
 end_comment
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	MsgPriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. */
 end_comment
 
 begin_define
@@ -935,16 +1026,8 @@ begin_comment
 comment|/* bytes each time unit is worth */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|long
-name|MsgPriority
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* adjusted priority of this message */
-end_comment
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Rewrite rules. */
@@ -1095,6 +1178,9 @@ end_define
 begin_comment
 comment|/* conditional fi */
 end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Symbol table definitions */
@@ -1277,6 +1363,9 @@ begin_comment
 comment|/* enter if not there */
 end_comment
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/* **  Statistics structure. */
 end_comment
@@ -1344,6 +1433,9 @@ end_function_decl
 begin_comment
 comment|/* for _bf, _bt */
 end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Global variables. */
@@ -1528,17 +1620,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|QueueUp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue this message for future xmission */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|QueueRun
 decl_stmt|;
 end_decl_stmt
@@ -1583,45 +1664,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|OldStyle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spaces (not commas) delimit addresses */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|NoConnect
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* don't connect to non-local mailers */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|RetReceipt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* give a return receipt if delivery occurs */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|SendReceipt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* actually send a receipt back */
 end_comment
 
 begin_decl_stmt
@@ -1819,30 +1867,6 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|OrigFrom
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the From: line read from the message */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|To
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the target person */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
 name|HostName
 decl_stmt|;
 end_decl_stmt
@@ -1933,40 +1957,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of queue directory */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|ADDRESS
-name|From
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the person it is from */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|ADDRESS
-modifier|*
-name|SendQueue
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of message recipients */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|long
-name|MsgSize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of the message in bytes */
 end_comment
 
 begin_decl_stmt
