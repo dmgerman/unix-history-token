@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
@@ -578,7 +578,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -588,11 +587,19 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|fifoinfo
 modifier|*
 name|fip
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|ap
+operator|->
+name|a_p
 decl_stmt|;
 name|struct
 name|socket
@@ -918,6 +925,10 @@ block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -941,9 +952,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1034,6 +1051,10 @@ block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -1057,9 +1078,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1086,9 +1113,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_p
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1125,7 +1150,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1135,7 +1159,6 @@ name|ap
 operator|->
 name|a_uio
 decl_stmt|;
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1148,6 +1171,15 @@ operator|->
 name|v_fifoinfo
 operator|->
 name|fi_readsock
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|uio
+operator|->
+name|uio_procp
 decl_stmt|;
 name|int
 name|error
@@ -1210,6 +1242,10 @@ argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -1251,11 +1287,17 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear EOF indication after first such return. 	 */
@@ -1336,6 +1378,17 @@ name|v_fifoinfo
 operator|->
 name|fi_writesock
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|ap
+operator|->
+name|a_uio
+operator|->
+name|uio_procp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1378,6 +1431,10 @@ argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -1409,11 +1466,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1701,70 +1764,6 @@ name|a_runp
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * At the moment we do not do any locking.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
-name|fifo_lock
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
-name|fifo_unlock
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 return|return
 operator|(
 literal|0

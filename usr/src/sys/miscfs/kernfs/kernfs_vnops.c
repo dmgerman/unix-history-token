@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -869,6 +869,15 @@ operator|->
 name|cn_nameptr
 decl_stmt|;
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
+name|struct
 name|kern_target
 modifier|*
 name|kt
@@ -973,7 +982,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (cnp->cn_namelen == 4&& bcmp(pname, "root", 4) == 0) { 		*vpp = rootdir; 		VREF(rootdir); 		VOP_LOCK(rootdir); 		return (0); 	}
+block|if (cnp->cn_namelen == 4&& bcmp(pname, "root", 4) == 0) { 		*vpp = rootdir; 		VREF(rootdir); 		vn_lock(rootdir, LK_EXCLUSIVE | LK_RETRY, p) 		return (0); 	}
 endif|#
 directive|endif
 for|for
@@ -1109,7 +1118,9 @@ name|vget
 argument_list|(
 name|fvp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -2930,14 +2941,14 @@ begin_define
 define|#
 directive|define
 name|kernfs_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kernfs_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
@@ -2959,7 +2970,8 @@ begin_define
 define|#
 directive|define
 name|kernfs_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
