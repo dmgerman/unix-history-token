@@ -1614,18 +1614,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PREEMPTION
-argument_list|)
 if|if
 condition|(
 name|do_switch
@@ -1677,8 +1665,6 @@ name|saveintr
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|need_resched
 argument_list|()
 expr_stmt|;
