@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: assert.c,v 1.25 2001/09/11 04:04:47 gshapiro Exp $"
+literal|"@(#)$Id: assert.c,v 1.25.2.1 2003/12/05 22:44:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -296,6 +296,7 @@ end_comment
 
 begin_function
 name|void
+name|SM_DEAD_D
 if|#
 directive|if
 name|SM_VA_STD
@@ -374,6 +375,7 @@ end_comment
 
 begin_function
 name|void
+name|SM_DEAD_D
 name|sm_abort_at
 parameter_list|(
 name|filename

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2003 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.44.2.3 2003/07/07 20:16:16 gshapiro Exp $"
+literal|"@(#)$Id: ldap.c,v 1.44.2.5 2003/12/23 21:21:56 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2174,10 +2174,6 @@ decl_stmt|;
 comment|/* 			**  If matching only and found an entry, 			**  no need to spin through attributes 			*/
 if|if
 condition|(
-name|statp
-operator|==
-name|EX_OK
-operator|&&
 name|bitset
 argument_list|(
 name|SM_LDAP_MATCHONLY
@@ -2185,7 +2181,13 @@ argument_list|,
 name|flags
 argument_list|)
 condition|)
+block|{
+name|statp
+operator|=
+name|EX_OK
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* record completed DN's to prevent loops */
 name|dn
 operator|=

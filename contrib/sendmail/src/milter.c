@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197.2.9 2003/09/07 00:18:29 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.10 2003/12/01 23:57:44 msk Exp $"
 argument_list|)
 end_macro
 
@@ -195,6 +195,34 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|MilterEOMMacros
+index|[
+name|MAXFILTERMACROS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_MACROS_EOM */
+end_comment
 
 begin_define
 define|#
@@ -5467,6 +5495,22 @@ block|,
 name|MO_LOGLEVEL
 block|}
 block|,
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+define|#
+directive|define
+name|MO_MACROS_EOM
+value|0x06
+block|{
+literal|"macros.eom"
+block|,
+name|MO_MACROS_EOM
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 block|{
 name|NULL
 block|,
@@ -5741,6 +5785,26 @@ name|macros
 operator|=
 name|MilterEnvRcptMacros
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+comment|/* FALLTHROUGH */
+case|case
+name|MO_MACROS_EOM
+case|:
+if|if
+condition|(
+name|macros
+operator|==
+name|NULL
+condition|)
+name|macros
+operator|=
+name|MilterEOMMacros
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 name|p
 operator|=
 name|newstr
@@ -13664,6 +13728,32 @@ name|MILTER_CHECK_RESULTS
 argument_list|()
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+if|if
+condition|(
+name|MilterEOMMacros
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+condition|)
+name|milter_send_macros
+argument_list|(
+name|m
+argument_list|,
+name|MilterEOMMacros
+argument_list|,
+name|SMFIC_BODYEOB
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 comment|/* send the final body chunk */
 operator|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.18 2003/08/20 22:27:44 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.20 2004/01/07 00:52:16 ca Exp $  */
 end_comment
 
 begin_comment
@@ -2896,6 +2896,44 @@ end_endif
 
 begin_comment
 comment|/* SOLARIS>= 20900 || (SOLARIS< 10000&& SOLARIS>= 209) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|21000
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|210
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* unsetenv() added in S10 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 21000 || (SOLARIS< 10000&& SOLARIS>= 210) */
 end_comment
 
 begin_ifndef
@@ -14452,7 +14490,7 @@ name|major
 parameter_list|(
 name|dev
 parameter_list|)
-value|((int)(((dev)>> 8)& 0xff)
+value|((int)(((dev)>> 8)& 0xff))
 end_define
 
 begin_define
@@ -14462,7 +14500,7 @@ name|minor
 parameter_list|(
 name|dev
 parameter_list|)
-value|((int)((dev)& 0xff)
+value|((int)((dev)& 0xff))
 end_define
 
 begin_endif

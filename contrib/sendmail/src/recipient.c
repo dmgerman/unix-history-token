@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.330.2.2 2003/09/16 19:56:25 ca Exp $"
+literal|"@(#)$Id: recipient.c,v 8.330.2.4 2003/10/06 20:43:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1434,6 +1434,7 @@ operator|->
 name|q_state
 argument_list|)
 operator|&&
+operator|(
 name|sameaddr
 argument_list|(
 name|q
@@ -1441,6 +1442,20 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|||
+name|strcmp
+argument_list|(
+name|q
+operator|->
+name|q_paddr
+argument_list|,
+name|a
+operator|.
+name|q_paddr
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if

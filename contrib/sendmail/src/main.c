@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887.2.27 2003/08/04 17:23:37 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.887.2.29 2003/11/07 00:09:31 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9058,6 +9058,10 @@ decl_stmt|;
 name|pid_t
 name|ret
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -9072,7 +9076,42 @@ operator|)
 operator|<=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ECHILD
+condition|)
+block|{
+comment|/* 						**  Oops... something got messed 						**  up really bad. Waiting for 						**  non-existent children 						**  shouldn't happen. Let's get 						**  out of here. 						*/
+name|CurChildren
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 continue|continue;
+block|}
+comment|/* something is really really wrong */
+if|if
+condition|(
+name|errno
+operator|==
+name|ECHILD
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"queue control process: lost all children: wait returned ECHILD"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* Only drop when a child gives status */
 if|if
 condition|(
@@ -9547,6 +9586,10 @@ name|group
 decl_stmt|;
 name|CHECK_RESTART
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -9561,7 +9604,42 @@ operator|)
 operator|<=
 literal|0
 condition|)
+block|{
+comment|/* 						**  Waiting for non-existent 						**  children shouldn't happen. 						**  Let's get out of here if 						**  it occurs. 						*/
+if|if
+condition|(
+name|errno
+operator|==
+name|ECHILD
+condition|)
+block|{
+name|CurChildren
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 continue|continue;
+block|}
+comment|/* something is really really wrong */
+if|if
+condition|(
+name|errno
+operator|==
+name|ECHILD
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"persistent queue runner control process: lost all children: wait returned ECHILD"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|WIFSTOPPED

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.607.2.11 2003/04/03 23:04:06 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.607.2.12 2003/10/07 17:45:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -12807,7 +12807,7 @@ name|smioout
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"WARNING: RunAsGid for MSP ignored, check group ids (egid=%d, want=%d)\n"
+literal|"WARNING: RunAsUser for MSP ignored, check group ids (egid=%d, want=%d)\n"
 argument_list|,
 operator|(
 name|int
@@ -12915,7 +12915,7 @@ name|smioout
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"WARNING: RunAsGid for MSP ignored, check group ids (egid=%d, want=%d)\n"
+literal|"WARNING: RunAsUser for MSP ignored, check group ids (egid=%d, want=%d)\n"
 argument_list|,
 operator|(
 name|int
@@ -12988,7 +12988,7 @@ name|smioout
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"WARNING: RunAsGid for MSP ignored, check group ids (egid=%d, want=%d)\n"
+literal|"WARNING: RunAsUser for MSP ignored, check group ids (egid=%d, want=%d)\n"
 argument_list|,
 operator|(
 name|int

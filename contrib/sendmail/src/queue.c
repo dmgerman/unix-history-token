@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.61 2003/09/03 19:58:26 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.67 2003/12/02 23:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -49,12 +49,77 @@ parameter_list|)
 value|((errno) == EEXIST)
 end_define
 
+begin_if
+if|#
+directive|if
+name|HASFLOCK
+operator|&&
+name|defined
+argument_list|(
+name|O_EXLOCK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_OPEN_EXLOCK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TF_OPEN_FLAGS
+value|(O_CREAT|O_WRONLY|O_EXCL|O_EXLOCK)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HASFLOCK&& defined(O_EXLOCK) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TF_OPEN_FLAGS
 value|(O_CREAT|O_WRONLY|O_EXCL)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HASFLOCK&& defined(O_EXLOCK) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_OPEN_EXLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SM_OPEN_EXLOCK
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SM_OPEN_EXLOCK */
+end_comment
 
 begin_comment
 comment|/* **  Historical notes: **	QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **	QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **	QF_VERSION == 6 is  sendmail 8.12      without _FFR_QUEUEDELAY **	QF_VERSION == 7 is  sendmail 8.12      with    _FFR_QUEUEDELAY */
@@ -1389,6 +1454,10 @@ name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
+define|#
+directive|define
+name|OPEN_TF
+value|do							\ 		{							\ 			MODE_T oldumask = 0;				\ 									\ 			if (bitset(S_IWGRP, QueueFileMode))		\ 				oldumask = umask(002);			\ 			tfd = open(tf, TF_OPEN_FLAGS, QueueFileMode);	\ 			if (bitset(S_IWGRP, QueueFileMode))		\ 				(void) umask(oldumask);			\ 		} while (0)
 name|newid
 operator|=
 operator|(
@@ -1461,16 +1530,7 @@ sizeof|sizeof
 name|tf
 argument_list|)
 expr_stmt|;
-name|tfd
-operator|=
-name|open
-argument_list|(
-name|tf
-argument_list|,
-name|TF_OPEN_FLAGS
-argument_list|,
-name|FileMode
-argument_list|)
+name|OPEN_TF
 expr_stmt|;
 if|if
 condition|(
@@ -1478,6 +1538,10 @@ name|tfd
 operator|<
 literal|0
 operator|||
+if|#
+directive|if
+operator|!
+name|SM_OPEN_EXLOCK
 operator|!
 name|lockfile
 argument_list|(
@@ -1492,6 +1556,9 @@ operator||
 name|LOCK_NB
 argument_list|)
 operator|||
+endif|#
+directive|endif
+comment|/* !SM_OPEN_EXLOCK */
 operator|(
 name|tfp
 operator|=
@@ -1582,54 +1649,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|MODE_T
-name|oldumask
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|S_IWGRP
-argument_list|,
-name|QueueFileMode
-argument_list|)
-condition|)
-name|oldumask
-operator|=
-name|umask
-argument_list|(
-literal|002
-argument_list|)
-expr_stmt|;
-name|tfd
-operator|=
-name|open
-argument_list|(
-name|tf
-argument_list|,
-name|TF_OPEN_FLAGS
-argument_list|,
-name|QueueFileMode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|S_IWGRP
-argument_list|,
-name|QueueFileMode
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-name|oldumask
-argument_list|)
+name|OPEN_TF
 expr_stmt|;
 if|if
 condition|(
@@ -1684,6 +1704,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|SM_OPEN_EXLOCK
+else|else
+break|break;
+endif|#
+directive|endif
+comment|/* SM_OPEN_EXLOCK */
 block|}
 if|if
 condition|(
@@ -1692,6 +1720,14 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|SM_OPEN_EXLOCK
+comment|/* file is locked by open() */
+break|break;
+else|#
+directive|else
+comment|/* SM_OPEN_EXLOCK */
 if|if
 condition|(
 name|lockfile
@@ -1709,6 +1745,9 @@ argument_list|)
 condition|)
 break|break;
 elseif|else
+endif|#
+directive|endif
+comment|/* SM_OPEN_EXLOCK */
 if|if
 condition|(
 name|LogLevel
@@ -19675,6 +19714,27 @@ block|}
 end_function
 
 begin_comment
+comment|/* **  INIT_QID_ALG -- Initialize the (static) parameters that are used to **	generate a queue ID. ** **	This function is called by the daemon to reset **	LastQueueTime and LastQueuePid which are used by assign_queueid(). **	Otherwise the algorithm may cause problems because **	LastQueueTime and LastQueuePid are set indirectly by main() **	before the daemon process is started, hence LastQueuePid is not **	the pid of the daemon and therefore a child of the daemon can **	actually have the same pid as LastQueuePid which means the section **	in  assign_queueid(): **	* see if we need to get a new base time/pid * **	is NOT triggered which will cause the same queue id to be generated. ** **	Parameters: **		none ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|init_qid_alg
+parameter_list|()
+block|{
+name|LastQueueTime
+operator|=
+literal|0
+expr_stmt|;
+name|LastQueuePid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* **  ASSIGN_QUEUEID -- assign a queue ID for this envelope. ** **	Assigns an id code if one does not already exist. **	This code assumes that nothing will remain in the queue for **	longer than 60 years.  It is critical that files with the given **	name do not already exist in the queue. **	[No longer initializes e_qdir to NOQDIR.] ** **	Parameters: **		e -- envelope to set it in. ** **	Returns: **		none. */
 end_comment
 
@@ -19685,7 +19745,7 @@ name|char
 name|QueueIdChars
 index|[]
 init|=
-literal|"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx"
+literal|"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 decl_stmt|;
 end_decl_stmt
 
@@ -19695,6 +19755,17 @@ directive|define
 name|QIC_LEN
 value|60
 end_define
+
+begin_define
+define|#
+directive|define
+name|QIC_LEN_R
+value|62
+end_define
+
+begin_comment
+comment|/* **  Note: the length is "officially" 60 because minutes and seconds are **	usually only 0-59.  However (Linux): **       tm_sec The number of seconds after the minute, normally in **              the range 0 to 59, but can be up to 61 to allow for **              leap seconds. **	Hence the real length of the string is 62 to take this into account. **	Alternatively % QIC_LEN can (should) be used for access everywhere. */
+end_comment
 
 begin_define
 define|#
@@ -19936,6 +20007,8 @@ index|[
 name|tm
 operator|->
 name|tm_min
+operator|%
+name|QIC_LEN_R
 index|]
 expr_stmt|;
 name|idbuf
@@ -19948,6 +20021,8 @@ index|[
 name|tm
 operator|->
 name|tm_sec
+operator|%
+name|QIC_LEN_R
 index|]
 expr_stmt|;
 name|idbuf
@@ -27413,11 +27488,10 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|total_runners
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|dir
+decl_stmt|,
+name|h
 decl_stmt|;
 name|SORTQGRP_T
 name|si
@@ -27427,6 +27501,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|total_runners
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|NumQueue
@@ -27905,6 +27983,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|h
+operator|=
+name|si
+index|[
+name|i
+index|]
+operator|.
+name|sg_idx
+expr_stmt|;
 name|WorkGrp
 index|[
 name|j
@@ -27922,12 +28009,7 @@ index|]
 operator|=
 name|Queue
 index|[
-name|si
-index|[
-name|i
-index|]
-operator|.
-name|sg_idx
+name|h
 index|]
 expr_stmt|;
 name|WorkGrp
@@ -27947,19 +28029,14 @@ name|wg_runners
 operator|+=
 name|Queue
 index|[
-name|i
+name|h
 index|]
 operator|->
 name|qg_maxqrun
 expr_stmt|;
 name|Queue
 index|[
-name|si
-index|[
-name|i
-index|]
-operator|.
-name|sg_idx
+name|h
 index|]
 operator|->
 name|qg_wgrp
@@ -27987,7 +28064,7 @@ literal|0
 operator|&&
 name|Queue
 index|[
-name|i
+name|h
 index|]
 operator|->
 name|qg_maxqrun
@@ -27996,7 +28073,7 @@ name|MaxQueueChildren
 condition|)
 name|Queue
 index|[
-name|i
+name|h
 index|]
 operator|->
 name|qg_maxqrun
@@ -28012,7 +28089,7 @@ name|wg_maxact
 operator|=
 name|Queue
 index|[
-name|i
+name|h
 index|]
 operator|->
 name|qg_maxqrun
@@ -28024,12 +28101,7 @@ if|if
 condition|(
 name|Queue
 index|[
-name|si
-index|[
-name|i
-index|]
-operator|.
-name|sg_idx
+name|h
 index|]
 operator|->
 name|qg_queueintvl
@@ -28045,12 +28117,7 @@ name|wg_lowqintvl
 operator|<
 name|Queue
 index|[
-name|si
-index|[
-name|i
-index|]
-operator|.
-name|sg_idx
+name|h
 index|]
 operator|->
 name|qg_queueintvl
@@ -28064,12 +28131,7 @@ name|wg_lowqintvl
 operator|=
 name|Queue
 index|[
-name|si
-index|[
-name|i
-index|]
-operator|.
-name|sg_idx
+name|h
 index|]
 operator|->
 name|qg_queueintvl
