@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.1 (Berkeley) %G%"
+literal|"@(#)du.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,7 +438,7 @@ name|stderr
 argument_list|,
 literal|"du: %s: %s\n"
 argument_list|,
-name|path
+name|arg
 argument_list|,
 name|strerror
 argument_list|(
