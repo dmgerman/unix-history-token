@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.8 (Berkeley) %G%"
+literal|"@(#)headers.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1572,13 +1572,6 @@ name|p
 operator|!=
 name|NULL
 condition|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|arpatounix
-parameter_list|()
-function_decl|;
 name|define
 argument_list|(
 literal|'a'
@@ -1588,34 +1581,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|arpatounix
-argument_list|(
-name|p
-argument_list|,
-name|e
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|define
-argument_list|(
-literal|'d'
-argument_list|,
-name|newstr
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Log collection information. 	*/
 ifdef|#
 directive|ifdef

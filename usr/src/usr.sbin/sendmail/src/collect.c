@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.6 (Berkeley) %G%"
+literal|"@(#)collect.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,15 +1620,6 @@ literal|24
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|define
-argument_list|(
-literal|'d'
-argument_list|,
-name|q
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 name|q
 operator|=
