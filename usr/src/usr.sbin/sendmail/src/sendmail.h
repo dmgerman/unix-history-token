@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.2	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.3	%G% */
 end_comment
 
 begin_include
@@ -307,6 +307,10 @@ modifier|*
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
+name|int
+name|q_rmailer
+decl_stmt|;
+comment|/* real mailer (before mapping) */
 name|struct
 name|address
 modifier|*

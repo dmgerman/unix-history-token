@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.1	%G%"
+literal|"@(#)parseaddr.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,6 +450,14 @@ operator|->
 name|q_paddr
 operator|=
 name|addr
+expr_stmt|;
+name|a
+operator|->
+name|q_rmailer
+operator|=
+name|t
+operator|->
+name|p_mailer
 expr_stmt|;
 name|a
 operator|->
