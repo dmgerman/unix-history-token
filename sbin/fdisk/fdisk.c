@@ -2859,18 +2859,18 @@ argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"beginning head"
+literal|"beginning sector"
 argument_list|,
-name|thd
+name|tsec
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"beginning sector"
+literal|"beginning head"
 argument_list|,
-name|tsec
+name|thd
 argument_list|,
 name|tmp
 argument_list|)
@@ -2940,18 +2940,18 @@ argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"ending head"
+literal|"ending sector"
 argument_list|,
-name|thd
+name|tsec
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"ending sector"
+literal|"ending head"
 argument_list|,
-name|tsec
+name|thd
 argument_list|,
 name|tmp
 argument_list|)
