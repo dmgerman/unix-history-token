@@ -126,44 +126,57 @@ case|case
 name|LINUX_AF_UNSPEC
 case|:
 return|return
+operator|(
 name|AF_UNSPEC
+operator|)
 return|;
 case|case
 name|LINUX_AF_UNIX
 case|:
 return|return
+operator|(
 name|AF_LOCAL
+operator|)
 return|;
 case|case
 name|LINUX_AF_INET
 case|:
 return|return
+operator|(
 name|AF_INET
+operator|)
 return|;
 case|case
 name|LINUX_AF_AX25
 case|:
 return|return
+operator|(
 name|AF_CCITT
+operator|)
 return|;
 case|case
 name|LINUX_AF_IPX
 case|:
 return|return
+operator|(
 name|AF_IPX
+operator|)
 return|;
 case|case
 name|LINUX_AF_APPLETALK
 case|:
 return|return
+operator|(
 name|AF_APPLETALK
-return|;
-default|default:
-return|return
-operator|-
-literal|1
+operator|)
 return|;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -185,13 +198,16 @@ case|case
 name|LINUX_SOL_SOCKET
 case|:
 return|return
+operator|(
 name|SOL_SOCKET
-return|;
-default|default:
-return|return
-name|level
+operator|)
 return|;
 block|}
+return|return
+operator|(
+name|level
+operator|)
+return|;
 block|}
 end_function
 
@@ -213,62 +229,81 @@ case|case
 name|LINUX_IP_TOS
 case|:
 return|return
+operator|(
 name|IP_TOS
+operator|)
 return|;
 case|case
 name|LINUX_IP_TTL
 case|:
 return|return
+operator|(
 name|IP_TTL
+operator|)
 return|;
 case|case
 name|LINUX_IP_OPTIONS
 case|:
 return|return
+operator|(
 name|IP_OPTIONS
+operator|)
 return|;
 case|case
 name|LINUX_IP_MULTICAST_IF
 case|:
 return|return
+operator|(
 name|IP_MULTICAST_IF
+operator|)
 return|;
 case|case
 name|LINUX_IP_MULTICAST_TTL
 case|:
 return|return
+operator|(
 name|IP_MULTICAST_TTL
+operator|)
 return|;
 case|case
 name|LINUX_IP_MULTICAST_LOOP
 case|:
 return|return
+operator|(
 name|IP_MULTICAST_LOOP
+operator|)
 return|;
 case|case
 name|LINUX_IP_ADD_MEMBERSHIP
 case|:
 return|return
+operator|(
 name|IP_ADD_MEMBERSHIP
+operator|)
 return|;
 case|case
 name|LINUX_IP_DROP_MEMBERSHIP
 case|:
 return|return
+operator|(
 name|IP_DROP_MEMBERSHIP
+operator|)
 return|;
 case|case
 name|LINUX_IP_HDRINCL
 case|:
 return|return
+operator|(
 name|IP_HDRINCL
-return|;
-default|default:
-return|return
-operator|-
-literal|1
+operator|)
 return|;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -290,85 +325,102 @@ case|case
 name|LINUX_SO_DEBUG
 case|:
 return|return
+operator|(
 name|SO_DEBUG
+operator|)
 return|;
 case|case
 name|LINUX_SO_REUSEADDR
 case|:
 return|return
+operator|(
 name|SO_REUSEADDR
+operator|)
 return|;
 case|case
 name|LINUX_SO_TYPE
 case|:
 return|return
+operator|(
 name|SO_TYPE
+operator|)
 return|;
 case|case
 name|LINUX_SO_ERROR
 case|:
 return|return
+operator|(
 name|SO_ERROR
+operator|)
 return|;
 case|case
 name|LINUX_SO_DONTROUTE
 case|:
 return|return
+operator|(
 name|SO_DONTROUTE
+operator|)
 return|;
 case|case
 name|LINUX_SO_BROADCAST
 case|:
 return|return
+operator|(
 name|SO_BROADCAST
+operator|)
 return|;
 case|case
 name|LINUX_SO_SNDBUF
 case|:
 return|return
+operator|(
 name|SO_SNDBUF
+operator|)
 return|;
 case|case
 name|LINUX_SO_RCVBUF
 case|:
 return|return
+operator|(
 name|SO_RCVBUF
+operator|)
 return|;
 case|case
 name|LINUX_SO_KEEPALIVE
 case|:
 return|return
+operator|(
 name|SO_KEEPALIVE
+operator|)
 return|;
 case|case
 name|LINUX_SO_OOBINLINE
 case|:
 return|return
+operator|(
 name|SO_OOBINLINE
+operator|)
 return|;
 case|case
 name|LINUX_SO_LINGER
 case|:
 return|return
+operator|(
 name|SO_LINGER
-return|;
-case|case
-name|LINUX_SO_PRIORITY
-case|:
-case|case
-name|LINUX_SO_NO_CHECK
-case|:
-default|default:
-return|return
-operator|-
-literal|1
+operator|)
 return|;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Return 0 if IP_HDRINCL is set of the given socket, not 0 otherwise */
+comment|/* Return 0 if IP_HDRINCL is set for the given socket. */
 end_comment
 
 begin_function
@@ -387,7 +439,7 @@ parameter_list|)
 block|{
 name|struct
 name|getsockopt_args
-comment|/* { 	int s; 	int level; 	int name; 	caddr_t val; 	int *avalsize;     } */
+comment|/* { 		int s; 		int level; 		int name; 		caddr_t val; 		int *avalsize; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -460,7 +512,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -511,7 +565,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -533,12 +589,16 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 return|return
+operator|(
 name|optval
 operator|==
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -591,7 +651,7 @@ name|error
 decl_stmt|;
 name|struct
 name|sendmsg_args
-comment|/* { 	int s; 	caddr_t msg; 	int flags;     } */
+comment|/* { 		int s; 		caddr_t msg; 		int flags; 	} */
 name|sendmsg_args
 decl_stmt|;
 comment|/* Check the packet isn't too small before we mess with it */
@@ -604,9 +664,11 @@ operator|<
 name|linux_ip_copysize
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
-comment|/*      * Tweaking the user buffer in place would be bad manners.      * We create a corrected IP header with just the needed length,      * then use an iovec to glue it to the rest of the user packet      * when calling sendmsg().      */
+comment|/* 	 * Tweaking the user buffer in place would be bad manners. 	 * We create a corrected IP header with just the needed length, 	 * then use an iovec to glue it to the rest of the user packet 	 * when calling sendmsg(). 	 */
 name|sg
 operator|=
 name|stackgap_init
@@ -679,9 +741,6 @@ name|bsd_args
 operator|->
 name|buf
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|packet
 argument_list|,
 name|linux_ip_copysize
@@ -689,7 +748,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* Convert fields from Linux to BSD raw IP socket format */
 name|packet
@@ -838,6 +899,7 @@ operator|->
 name|flags
 expr_stmt|;
 return|return
+operator|(
 name|sendmsg
 argument_list|(
 name|p
@@ -845,6 +907,7 @@ argument_list|,
 operator|&
 name|sendmsg_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -888,7 +951,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|socket_args
-comment|/* { 	int domain; 	int type; 	int protocol;     } */
+comment|/* { 		int domain; 		int type; 		int protocol; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -904,14 +967,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -923,7 +980,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -962,7 +1021,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|retval_socket
 operator|=
@@ -1010,7 +1071,7 @@ block|{
 comment|/* It's a raw IP socket: set the IP_HDRINCL option. */
 name|struct
 name|setsockopt_args
-comment|/* { 	    int s; 	    int level; 	    int name; 	    caddr_t val; 	    int valsize; 	} */
+comment|/* { 			int s; 			int level; 			int name; 			caddr_t val; 			int valsize; 		} */
 name|bsd_setsockopt_args
 decl_stmt|;
 name|caddr_t
@@ -1113,7 +1174,9 @@ name|s
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|retval_socket
+operator|)
 return|;
 block|}
 end_function
@@ -1159,7 +1222,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|bind_args
-comment|/* { 	int s; 	caddr_t name; 	int namelen;     } */
+comment|/* { 		int s; 		caddr_t name; 		int namelen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -1172,14 +1235,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -1191,7 +1248,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -1221,6 +1280,7 @@ operator|.
 name|namelen
 expr_stmt|;
 return|return
+operator|(
 name|bind
 argument_list|(
 name|p
@@ -1228,6 +1288,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1273,7 +1334,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|connect_args
-comment|/* { 	int s; 	caddr_t name; 	int namelen;     } */
+comment|/* { 		int s; 		caddr_t name; 		int namelen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -1286,14 +1347,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -1305,7 +1360,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -1351,15 +1408,15 @@ operator|==
 name|EISCONN
 condition|)
 block|{
-comment|/* 	 * Linux doesn't return EISCONN the first time it occurs, 	 * when on a non-blocking socket. Instead it returns the 	 * error getsockopt(SOL_SOCKET, SO_ERROR) would return on BSD. 	 */
+comment|/* 		 * Linux doesn't return EISCONN the first time it occurs, 		 * when on a non-blocking socket. Instead it returns the 		 * error getsockopt(SOL_SOCKET, SO_ERROR) would return on BSD. 		 */
 name|struct
 name|fcntl_args
-comment|/* { 	    int fd; 	    int cmd; 	    int arg; 	} */
+comment|/* { 			int fd; 			int cmd; 			int arg; 		} */
 name|bsd_fcntl_args
 decl_stmt|;
 name|struct
 name|getsockopt_args
-comment|/* { 	    int s; 	    int level; 	    int name; 	    caddr_t val; 	    int *avalsize; 	} */
+comment|/* { 			int s; 			int level; 			int name; 			caddr_t val; 			int *avalsize; 		} */
 name|bsd_getsockopt_args
 decl_stmt|;
 name|void
@@ -1474,7 +1531,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_getsockopt_args
 operator|.
@@ -1523,7 +1582,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -1543,7 +1604,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|p
 operator|->
@@ -1555,12 +1618,16 @@ operator|=
 name|stat
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1601,7 +1668,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|listen_args
-comment|/* { 	int s; 	int backlog;     } */
+comment|/* { 		int s; 		int backlog; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -1614,14 +1681,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -1633,7 +1694,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -1652,6 +1715,7 @@ operator|.
 name|backlog
 expr_stmt|;
 return|return
+operator|(
 name|listen
 argument_list|(
 name|p
@@ -1659,6 +1723,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1705,12 +1770,12 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|accept_args
-comment|/* { 	int s; 	caddr_t name; 	int *anamelen;     } */
+comment|/* { 		int s; 		caddr_t name; 		int *anamelen; 	} */
 name|bsd_args
 decl_stmt|;
 name|struct
 name|fcntl_args
-comment|/* { 	int fd; 	int cmd; 	long arg;     } */
+comment|/* { 		int fd; 		int cmd; 		long arg; 	} */
 name|f_args
 decl_stmt|;
 name|int
@@ -1723,14 +1788,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -1742,7 +1801,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -1790,7 +1851,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/*      * linux appears not to copy flags from the parent socket to the      * accepted one, so we must clear the flags in the new descriptor.      * Ignore any errors, because we already have an open fd.      */
+comment|/* 	 * linux appears not to copy flags from the parent socket to the 	 * accepted one, so we must clear the flags in the new descriptor. 	 * Ignore any errors, because we already have an open fd. 	 */
 name|f_args
 operator|.
 name|fd
@@ -1886,7 +1947,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|getsockname_args
-comment|/* { 	int fdes; 	caddr_t asa; 	int *alen;     } */
+comment|/* { 		int fdes; 		caddr_t asa; 		int *alen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -1899,14 +1960,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -1918,7 +1973,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -1948,6 +2005,7 @@ operator|.
 name|namelen
 expr_stmt|;
 return|return
+operator|(
 name|ogetsockname
 argument_list|(
 name|p
@@ -1955,6 +2013,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2001,7 +2060,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|ogetpeername_args
-comment|/* { 	int fdes; 	caddr_t asa; 	int *alen;     } */
+comment|/* { 		int fdes; 		caddr_t asa; 		int *alen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2014,14 +2073,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2033,7 +2086,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2063,6 +2118,7 @@ operator|.
 name|namelen
 expr_stmt|;
 return|return
+operator|(
 name|ogetpeername
 argument_list|(
 name|p
@@ -2070,6 +2126,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2117,7 +2174,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|socketpair_args
-comment|/* { 	int domain; 	int type; 	int protocol; 	int *rsv;     } */
+comment|/* { 		int domain; 		int type; 		int protocol; 		int *rsv; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2130,14 +2187,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2149,7 +2200,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2172,7 +2225,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2199,6 +2254,7 @@ operator|.
 name|rsv
 expr_stmt|;
 return|return
+operator|(
 name|socketpair
 argument_list|(
 name|p
@@ -2206,6 +2262,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2253,7 +2310,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|osend_args
-comment|/* { 	int s; 	caddr_t buf; 	int len; 	int flags;     } */
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2266,14 +2323,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2285,7 +2336,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2320,6 +2373,7 @@ operator|.
 name|flags
 expr_stmt|;
 return|return
+operator|(
 name|osend
 argument_list|(
 name|p
@@ -2327,6 +2381,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2374,7 +2429,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|orecv_args
-comment|/* { 	int s; 	caddr_t buf; 	int len; 	int flags;     } */
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2387,14 +2442,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2406,7 +2455,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2441,6 +2492,7 @@ operator|.
 name|flags
 expr_stmt|;
 return|return
+operator|(
 name|orecv
 argument_list|(
 name|p
@@ -2448,6 +2500,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2501,7 +2554,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|sendto_args
-comment|/* { 	int s; 	caddr_t buf; 	size_t len; 	int flags; 	caddr_t to; 	int tolen;     } */
+comment|/* { 		int s; 		caddr_t buf; 		size_t len; 		int flags; 		caddr_t to; 		int tolen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2514,14 +2567,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2533,7 +2580,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2598,6 +2647,7 @@ literal|0
 condition|)
 comment|/* IP_HDRINCL set, tweak the packet before sending */
 return|return
+operator|(
 name|linux_sendto_hdrincl
 argument_list|(
 name|p
@@ -2605,8 +2655,10 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 return|return
+operator|(
 name|sendto
 argument_list|(
 name|p
@@ -2614,6 +2666,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2668,7 +2721,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|recvfrom_args
-comment|/* { 	int s; 	caddr_t buf; 	size_t len; 	int flags; 	caddr_t from; 	int *fromlenaddr;     } */
+comment|/* { 		int s; 		caddr_t buf; 		size_t len; 		int flags; 		caddr_t from; 		int *fromlenaddr; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2681,14 +2734,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2700,7 +2747,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2751,6 +2800,7 @@ operator|.
 name|fromlen
 expr_stmt|;
 return|return
+operator|(
 name|orecvfrom
 argument_list|(
 name|p
@@ -2758,6 +2808,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2798,7 +2849,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|shutdown_args
-comment|/* { 	int s; 	int how;     } */
+comment|/* { 		int s; 		int how; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2811,14 +2862,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2830,7 +2875,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -2849,6 +2896,7 @@ operator|.
 name|how
 expr_stmt|;
 return|return
+operator|(
 name|shutdown
 argument_list|(
 name|p
@@ -2856,6 +2904,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2906,7 +2955,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|setsockopt_args
-comment|/* { 	int s; 	int level; 	int name; 	caddr_t val; 	int valsize;     } */
+comment|/* { 		int s; 		int level; 		int name; 		caddr_t val; 		int valsize; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2921,14 +2970,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -2940,7 +2983,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -3006,9 +3051,12 @@ name|optname
 expr_stmt|;
 break|break;
 default|default:
-return|return
-name|EINVAL
-return|;
+name|name
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3018,7 +3066,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -3043,6 +3093,7 @@ operator|.
 name|optlen
 expr_stmt|;
 return|return
+operator|(
 name|setsockopt
 argument_list|(
 name|p
@@ -3050,6 +3101,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3101,7 +3153,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|getsockopt_args
-comment|/* { 	int s; 	int level; 	int name; 	caddr_t val; 	int *avalsize;     } */
+comment|/* { 		int s; 		int level; 		int name; 		caddr_t val; 		int *avalsize; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3116,14 +3168,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_args
 argument_list|,
@@ -3135,7 +3181,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -3201,9 +3249,12 @@ name|optname
 expr_stmt|;
 break|break;
 default|default:
-return|return
-name|EINVAL
-return|;
+name|name
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3213,7 +3264,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|bsd_args
 operator|.
@@ -3238,6 +3291,7 @@ operator|.
 name|optlen
 expr_stmt|;
 return|return
+operator|(
 name|getsockopt
 argument_list|(
 name|p
@@ -3245,6 +3299,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3275,6 +3330,7 @@ case|case
 name|LINUX_SOCKET
 case|:
 return|return
+operator|(
 name|linux_socket
 argument_list|(
 name|p
@@ -3283,11 +3339,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_BIND
 case|:
 return|return
+operator|(
 name|linux_bind
 argument_list|(
 name|p
@@ -3296,11 +3354,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_CONNECT
 case|:
 return|return
+operator|(
 name|linux_connect
 argument_list|(
 name|p
@@ -3309,11 +3369,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_LISTEN
 case|:
 return|return
+operator|(
 name|linux_listen
 argument_list|(
 name|p
@@ -3322,11 +3384,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_ACCEPT
 case|:
 return|return
+operator|(
 name|linux_accept
 argument_list|(
 name|p
@@ -3335,11 +3399,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_GETSOCKNAME
 case|:
 return|return
+operator|(
 name|linux_getsockname
 argument_list|(
 name|p
@@ -3348,11 +3414,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_GETPEERNAME
 case|:
 return|return
+operator|(
 name|linux_getpeername
 argument_list|(
 name|p
@@ -3361,11 +3429,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SOCKETPAIR
 case|:
 return|return
+operator|(
 name|linux_socketpair
 argument_list|(
 name|p
@@ -3374,11 +3444,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SEND
 case|:
 return|return
+operator|(
 name|linux_send
 argument_list|(
 name|p
@@ -3387,11 +3459,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_RECV
 case|:
 return|return
+operator|(
 name|linux_recv
 argument_list|(
 name|p
@@ -3400,11 +3474,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SENDTO
 case|:
 return|return
+operator|(
 name|linux_sendto
 argument_list|(
 name|p
@@ -3413,11 +3489,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_RECVFROM
 case|:
 return|return
+operator|(
 name|linux_recvfrom
 argument_list|(
 name|p
@@ -3426,11 +3504,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SHUTDOWN
 case|:
 return|return
+operator|(
 name|linux_shutdown
 argument_list|(
 name|p
@@ -3439,11 +3519,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SETSOCKOPT
 case|:
 return|return
+operator|(
 name|linux_setsockopt
 argument_list|(
 name|p
@@ -3452,11 +3534,13 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_GETSOCKOPT
 case|:
 return|return
+operator|(
 name|linux_getsockopt
 argument_list|(
 name|p
@@ -3465,6 +3549,7 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_SENDMSG
@@ -3527,7 +3612,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -3568,7 +3655,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -3577,7 +3666,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * Linux thinks that SOL_SOCKET is 1; we know that it's really 		 * 0xffff, of course. 		 */
+comment|/* 				 * Linux thinks that SOL_SOCKET is 1; we know 				 * that it's really 0xffff, of course. 				 */
 name|level
 operator|=
 name|SOL_SOCKET
@@ -3612,12 +3701,15 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|done
 label|:
 return|return
+operator|(
 name|sendmsg
 argument_list|(
 name|p
@@ -3626,6 +3718,7 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
 block|}
 do|while
@@ -3637,6 +3730,7 @@ case|case
 name|LINUX_RECVMSG
 case|:
 return|return
+operator|(
 name|recvmsg
 argument_list|(
 name|p
@@ -3645,8 +3739,9 @@ name|args
 operator|->
 name|args
 argument_list|)
+operator|)
 return|;
-default|default:
+block|}
 name|uprintf
 argument_list|(
 literal|"LINUX: 'socket' typ=%d not implemented\n"
@@ -3657,9 +3752,10 @@ name|what
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOSYS
+operator|)
 return|;
-block|}
 block|}
 end_function
 
