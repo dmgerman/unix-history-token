@@ -463,6 +463,25 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|nd6_is_new_addr_neighbor
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|nd6_setmtu0
 name|__P
@@ -3364,12 +3383,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detect if a given IPv6 address identifies a neighbor on a given link.  * XXX: should take care of the destination of a p2p link?  */
+comment|/*  * Test whether a given IPv6 address is a neighbor or not, ignoring  * the actual neighbor cache.  The neighbor cache is ignored in order  * to not reenter the routing code from within itself.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|nd6_is_addr_neighbor
+name|nd6_is_new_addr_neighbor
 parameter_list|(
 name|addr
 parameter_list|,
@@ -3523,6 +3543,51 @@ literal|1
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Detect if a given IPv6 address identifies a neighbor on a given link.  * XXX: should take care of the destination of a p2p link?  */
+end_comment
+
+begin_function
+name|int
+name|nd6_is_addr_neighbor
+parameter_list|(
+name|addr
+parameter_list|,
+name|ifp
+parameter_list|)
+name|struct
+name|sockaddr_in6
+modifier|*
+name|addr
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|nd6_is_new_addr_neighbor
+argument_list|(
+name|addr
+argument_list|,
+name|ifp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 comment|/* 	 * Even if the address matches none of our addresses, it might be 	 * in the neighbor cache. 	 */
 if|if
 condition|(
@@ -4095,7 +4160,7 @@ literal|0
 operator|||
 comment|/* stf case */
 operator|!
-name|nd6_is_addr_neighbor
+name|nd6_is_new_addr_neighbor
 argument_list|(
 operator|(
 expr|struct
