@@ -1,4 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * Includes material written at Cornell University by Bill Nesheim  * with permission of the author.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8,16 +33,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Header$"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
@@ -154,44 +180,6 @@ decl_stmt|;
 name|argv0
 operator|=
 name|argv
-expr_stmt|;
-name|addr
-operator|.
-name|sns_family
-operator|=
-name|AF_NS
-expr_stmt|;
-name|addr
-operator|.
-name|sns_port
-operator|=
-name|htons
-argument_list|(
-name|IDPPORT_RIF
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|getsocket
-argument_list|(
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|<
-literal|0
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 name|argv
 operator|++
@@ -472,6 +460,44 @@ block|}
 block|}
 endif|#
 directive|endif
+name|addr
+operator|.
+name|sns_family
+operator|=
+name|AF_NS
+expr_stmt|;
+name|addr
+operator|.
+name|sns_port
+operator|=
+name|htons
+argument_list|(
+name|IDPPORT_RIF
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|getsocket
+argument_list|(
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Any extra argument is considered 	 * a tracing log file. 	 */
 if|if
 condition|(
@@ -695,7 +721,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We get the IDP header in front of the RIF packet*/
 if|if
 condition|(
 name|tracepackets
@@ -738,6 +763,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|tracepackets
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|ns_netof
 argument_list|(
 name|idp
@@ -757,7 +789,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"XNSrouted: net of interface (%d) != net on ether (%d)!\n"
+literal|"XNSrouted: net of interface (%d) "
 argument_list|,
 name|ns_netof
 argument_list|(
@@ -765,6 +797,13 @@ name|idp
 operator|->
 name|idp_dna
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"!= net on ether (%d)!\n"
 argument_list|,
 name|ns_netof
 argument_list|(
@@ -775,14 +814,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|cc
-operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|idp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fromlen
@@ -806,6 +837,16 @@ argument_list|(
 expr|struct
 name|sockaddr_ns
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* We get the IDP header in front of the RIF packet*/
+name|cc
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|idp
 argument_list|)
 expr_stmt|;
 define|#

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * This file include significant work done at Cornell University  * by Bill Nesheim.  That work included by permission.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8,16 +12,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Header$"
+literal|"@(#)af.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_include
@@ -461,7 +466,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return 1 if the address is believed  *  -- THIS IS A KLUDGE.  */
+comment|/*  * Return 1 if we want this route.  * We use this to disallow route net G entries for one for multiple  * point to point links.  */
 end_comment
 
 begin_macro
@@ -481,9 +486,52 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|interface
+modifier|*
+name|ifp
+init|=
+name|if_ifwithnet
+argument_list|(
+name|sns
+argument_list|)
+decl_stmt|;
+comment|/* 	 * We want this route if there is no more than one  	 * point to point interface with this network. 	 */
+if|if
+condition|(
+name|ifp
+operator|==
+literal|0
+operator|||
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|ifp
+operator|->
+name|int_sq
+operator|.
+name|n
+operator|==
+name|ifp
+operator|->
+name|int_sq
+operator|.
+name|p
 operator|)
 return|;
 block|}
