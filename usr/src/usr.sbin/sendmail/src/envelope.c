@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.24 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", flags=%o\n"
+literal|", flags=0x%x\n"
 argument_list|,
 name|e
 operator|->
@@ -402,13 +402,35 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+literal|4
+operator|&&
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|logsender
+argument_list|(
+name|e
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
 literal|84
 condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"dropenvelope, id=%s, flags=%o, pid=%d"
+literal|"dropenvelope, id=%s, flags=0x%x, pid=%d"
 argument_list|,
 name|id
 argument_list|,
@@ -423,6 +445,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_LOGSENDER
+expr_stmt|;
 comment|/* post statistics */
 name|poststats
 argument_list|(

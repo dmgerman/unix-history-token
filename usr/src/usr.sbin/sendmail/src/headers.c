@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.17 (Berkeley) %G%"
+literal|"@(#)headers.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1959,6 +1959,55 @@ name|LogLevel
 operator|>
 literal|4
 condition|)
+name|logsender
+argument_list|(
+name|e
+argument_list|,
+name|msgid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOG */
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_LOGSENDER
+expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  LOGSENDER -- log sender information ** **	Parameters: **		e -- the envelope to log **		msgid -- the message id ** **	Returns: **		none */
+end_comment
+
+begin_expr_stmt
+name|logsender
+argument_list|(
+name|e
+argument_list|,
+name|msgid
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msgid
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -1968,6 +2017,11 @@ specifier|register
 name|char
 modifier|*
 name|sbp
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|hbuf
@@ -2101,7 +2155,7 @@ name|sprintf
 argument_list|(
 name|sbp
 argument_list|,
-literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d, msgid=%.100s"
+literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d"
 argument_list|,
 name|e
 operator|->
@@ -2124,6 +2178,27 @@ argument_list|,
 name|e
 operator|->
 name|e_nrcpts
+argument_list|)
+expr_stmt|;
+name|sbp
+operator|+=
+name|strlen
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgid
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|sbp
+argument_list|,
+literal|", msgid=%.100s"
 argument_list|,
 name|msgid
 argument_list|)
@@ -2135,6 +2210,7 @@ argument_list|(
 name|sbp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
@@ -2260,6 +2336,12 @@ operator|->
 name|e_nrcpts
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgid
+operator|!=
+name|NULL
+condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -2339,10 +2421,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-endif|#
-directive|endif
-comment|/* LOG */
 block|}
 end_block
 

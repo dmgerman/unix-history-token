@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.21 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.22 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.21 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.22 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,6 +1202,12 @@ expr_stmt|;
 name|nrcpts
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_LOGSENDER
 expr_stmt|;
 name|setproctitle
 argument_list|(
