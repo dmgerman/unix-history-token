@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.23 1994/03/23 09:15:26 davidg Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.24 1994/04/21 22:14:43 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -3570,7 +3570,9 @@ operator||
 name|AHA_INIT
 operator|)
 condition|)
+block|{
 break|break;
+block|}
 name|DELAY
 argument_list|(
 literal|1000
@@ -3578,6 +3580,19 @@ argument_list|)
 expr_stmt|;
 comment|/* calibrated in msec */
 block|}
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+name|printf
+argument_list|(
+literal|"aha_init: AHA_RESET_TIMEOUT went to %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* AHADEBUG */
 if|if
 condition|(
 name|i
@@ -3594,7 +3609,7 @@ name|aha_debug
 condition|)
 name|printf
 argument_list|(
-literal|"aha_init: No answer from adaptec board\n"
+literal|"aha_init: No answer from board\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3606,7 +3621,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Assume we have a board at this stage, do an adapter inquire 	 * to find out what type of controller it is 	 */
+comment|/* 	 * Assume we have a board at this stage, do an adapter inquire 	 * to find out what type of controller it is.  If the AHA_INQUIRE 	 * command fails, blatter about it, nuke the boardid so the 1542C 	 * stuff gets skipped over, and reset the board again. 	 */
+if|if
+condition|(
 name|aha_cmd
 argument_list|(
 name|unit
@@ -3625,7 +3642,112 @@ name|inquire
 argument_list|,
 name|AHA_INQUIRE
 argument_list|)
+condition|)
+block|{
+comment|/* 		 * Blah.. not a real adaptec board!!! 		 * Seems that the Buslogic 545S and the DTC3290 both get 		 * this wrong. 		 */
+name|printf
+argument_list|(
+literal|"aha%d: not a REAL adaptec board, may cause warnings\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+name|inquire
+operator|.
+name|boardid
+operator|=
+literal|0
+expr_stmt|;
+name|outb
+argument_list|(
+name|AHA_CTRL_STAT_PORT
+argument_list|,
+name|AHA_HRST
+operator||
+name|AHA_SRST
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|AHA_RESET_TIMEOUT
+init|;
+name|i
+condition|;
+name|i
+operator|--
+control|)
+block|{
+name|sts
+operator|=
+name|inb
+argument_list|(
+name|AHA_CTRL_STAT_PORT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sts
+operator|==
+operator|(
+name|AHA_IDLE
+operator||
+name|AHA_INIT
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* calibrated in msec */
+block|}
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+name|printf
+argument_list|(
+literal|"aha_init2: AHA_RESET_TIMEOUT went to %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* AHADEBUG */
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+if|if
+condition|(
+name|aha_debug
+condition|)
+name|printf
+argument_list|(
+literal|"aha_init2: No answer from board\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG */
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+block|}
 ifdef|#
 directive|ifdef
 name|AHADEBUG
@@ -3655,25 +3777,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AHADEBUG */
-comment|/* 	 * XXX The Buslogic 545S gets the AHA_INQUIRE command wrong, 	 * they only return one byte which causes us to print an error, 	 * so if the boardid comes back as 0x20, tell the user why they 	 * get the "cmd/data port empty" message 	 */
-if|if
-condition|(
-name|inquire
-operator|.
-name|boardid
-operator|==
-literal|0x20
-condition|)
-block|{
-comment|/* looks like a Buslogic 545 */
-name|printf
-argument_list|(
-literal|"aha%d: above cmd/data port empty do to Buslogic 545\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If we are a 1542C or 1542CF disable the extended bios so that the 	 * mailbox interface is unlocked. 	 * No need to check the extended bios flags as some of the 	 * extensions that cause us problems are not flagged in that byte. 	 */
 if|if
 condition|(
