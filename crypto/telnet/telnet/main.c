@@ -311,13 +311,13 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-4] [-6] [-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-a] [-c] [-d]"
+literal|"[-4] [-6] [-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-c] [-d]"
 argument_list|,
 literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
+literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-c] [-d] [-e char] [-l user]"
 argument_list|,
 literal|"\n\t[-n tracefile] "
 argument_list|,
@@ -370,7 +370,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
-literal|"[-x] [host-name [port]]"
+literal|"[-y] [host-name [port]]"
 else|#
 directive|else
 comment|/* ENCRYPTION */
@@ -522,9 +522,26 @@ name|_POSIX_VDISABLE
 expr_stmt|;
 name|autologin
 operator|=
-operator|-
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+name|encrypt_auto
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|decrypt_auto
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -558,7 +575,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468EKLNS:X:acde:fFk:l:n:rs:t:x"
+literal|"468EKLNS:X:acde:fFk:l:n:rs:t:xy"
 name|IPSECOPT
 argument_list|)
 operator|)
@@ -718,10 +735,7 @@ break|break;
 case|case
 literal|'a'
 case|:
-name|autologin
-operator|=
-literal|1
-expr_stmt|;
+comment|/* It's the default now, so ignore */
 break|break;
 case|case
 literal|'c'
@@ -925,21 +939,6 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|autologin
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|autologin
-operator|==
-literal|0
-condition|)
-name|autologin
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|user
 operator|=
 name|optarg
@@ -1121,29 +1120,22 @@ break|break;
 case|case
 literal|'x'
 case|:
+comment|/* This is the default now, so ignore it */
+break|break;
+case|case
+literal|'y'
+case|:
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
 name|encrypt_auto
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|decrypt_auto
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* ENCRYPTION */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Warning: -x ignored, no ENCRYPT support.\n"
-argument_list|,
-name|prompt
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1220,65 +1212,6 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-if|if
-condition|(
-name|autologin
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* esc@magic.fi; force  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-name|autologin
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENCRYPTION
-argument_list|)
-name|encrypt_auto
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|decrypt_auto
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-if|if
-condition|(
-name|autologin
-operator|==
-operator|-
-literal|1
-condition|)
-name|autologin
-operator|=
-operator|(
-name|rlogin
-operator|==
-name|_POSIX_VDISABLE
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-expr_stmt|;
 name|argc
 operator|-=
 name|optind
