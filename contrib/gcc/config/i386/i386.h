@@ -2050,7 +2050,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPUCOMMON_SPEC
-value|"\ %{march=i386:%{!mcpu*:-D__tune_i386__ }}\ %{march=i486:-D__i486 -D__i486__ %{!mcpu*:-D__tune_i486__ }}\ %{march=pentium|march=i586:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ }}\ %{march=pentium-mmx:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   -D__pentium__mmx__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ -D__tune_pentium_mmx__}}\ %{march=pentiumpro|march=i686:-D__i686 -D__i686__ \   -D__pentiumpro -D__pentiumpro__ \   %{!mcpu*:-D__tune_i686__ -D__tune_pentiumpro__ }}\ %{march=k6:-D__k6 -D__k6__ %{!mcpu*:-D__tune_k6__ }}\ %{march=k6-2:-D__k6 -D__k6__ -D__k6_2__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_2__ }}\ %{march=k6-3:-D__k6 -D__k6__ -D__k6_3__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_3__ }}\ %{march=athlon|march=athlon-tbird:-D__athlon -D__athlon__ \   %{!mcpu*:-D__tune_athlon__ }}\ %{march=athlon-4|march=athlon-xp|march=athlon-mp:-D__athlon -D__athlon__ \   -D__athlon_sse__ \   %{!mcpu*:-D__tune_athlon__ -D__tune_athlon_sse__ }}\ %{march=pentium4:-D__pentium4 -D__pentium4__ %{!mcpu*:-D__tune_pentium4__ }}\ %{m386|mcpu=i386:-D__tune_i386__ }\ %{m486|mcpu=i486:-D__tune_i486__ }\ %{mpentium|mcpu=pentium|mcpu=i586|mcpu=pentium-mmx:-D__tune_i586__ -D__tune_pentium__ }\ %{mpentiumpro|mcpu=pentiumpro|mcpu=i686|cpu=pentium2|cpu=pentium3:-D__tune_i686__ \ -D__tune_pentiumpro__ }\ %{mcpu=k6|mcpu=k6-2|mcpu=k6-3:-D__tune_k6__ }\ %{mcpu=athlon|mcpu=athlon-tbird|mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon__ }\ %{mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon_sse__ }\ %{mcpu=pentium4:-D__tune_pentium4__ }\ %{march=athlon-tbird|march=athlon-xp|march=athlon-mp|march=pentium3|march=pentium4:\ -D__SSE__ }\ %{march=pentium-mmx|march=k6|march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp|march=pentium2|march=pentium3|march=pentium4: -D__MMX__ }\ %{march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW__ }\ %{march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW_A__ }\ %{march=pentium4: -D__SSE2__ }\ %{!march*:%{!mcpu*:%{!m386:%{!m486:%{!mpentium*:%(cpp_cpu_default)}}}}}"
+value|"\ %{march=i386:%{!mcpu*:-D__tune_i386__ }}\ %{march=i486:-D__i486 -D__i486__ %{!mcpu*:-D__tune_i486__ }}\ %{march=pentium|march=i586:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ }}\ %{march=pentium-mmx:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   -D__pentium__mmx__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ -D__tune_pentium_mmx__}}\ %{march=pentiumpro|march=i686:-D__i686 -D__i686__ \   -D__pentiumpro -D__pentiumpro__ \   %{!mcpu*:-D__tune_i686__ -D__tune_pentiumpro__ }}\ %{march=k6:-D__k6 -D__k6__ %{!mcpu*:-D__tune_k6__ }}\ %{march=k6-2:-D__k6 -D__k6__ -D__k6_2__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_2__ }}\ %{march=k6-3:-D__k6 -D__k6__ -D__k6_3__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_3__ }}\ %{march=athlon|march=athlon-tbird:-D__athlon -D__athlon__ \   %{!mcpu*:-D__tune_athlon__ }}\ %{march=athlon-4|march=athlon-xp|march=athlon-mp:-D__athlon -D__athlon__ \   -D__athlon_sse__ \   %{!mcpu*:-D__tune_athlon__ -D__tune_athlon_sse__ }}\ %{march=pentium4:-D__pentium4 -D__pentium4__ %{!mcpu*:-D__tune_pentium4__ }}\ %{m386|mcpu=i386:-D__tune_i386__ }\ %{m486|mcpu=i486:-D__tune_i486__ }\ %{mpentium|mcpu=pentium|mcpu=i586|mcpu=pentium-mmx:-D__tune_i586__ -D__tune_pentium__ }\ %{mpentiumpro|mcpu=pentiumpro|mcpu=i686|cpu=pentium2|cpu=pentium3:-D__tune_i686__ \ -D__tune_pentiumpro__ }\ %{mcpu=k6|mcpu=k6-2|mcpu=k6-3:-D__tune_k6__ }\ %{mcpu=athlon|mcpu=athlon-tbird|mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon__ }\ %{mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon_sse__ }\ %{mcpu=pentium4:-D__tune_pentium4__ }\ %{march=athlon-xp|march=athlon-mp|march=pentium3|march=pentium4:\ -D__SSE__ }\ %{march=pentium-mmx|march=k6|march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp|march=pentium2|march=pentium3|march=pentium4: -D__MMX__ }\ %{march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW__ }\ %{march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW_A__ }\ %{march=pentium4: -D__SSE2__ }\ %{!march*:%{!mcpu*:%{!m386:%{!m486:%{!mpentium*:%(cpp_cpu_default)}}}}}"
 end_define
 
 begin_ifndef
@@ -2567,20 +2567,20 @@ comment|/* The published ABIs say that doubles should be aligned on word    boun
 end_comment
 
 begin_comment
-comment|/* BIGGEST_FIELD_ALIGNMENT is also used in libobjc, where it must be    constant.  Use the smaller value in that context.  */
+comment|/* ??? Blah -- this macro is used directly by libobjc.  Since it    supports no vector modes, cut out the complexity and fall back    on BIGGEST_FIELD_ALIGNMENT.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IN_TARGET_LIBS
-end_ifndef
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|BIGGEST_FIELD_ALIGNMENT
-value|(TARGET_64BIT ? 128 : (TARGET_ALIGN_DOUBLE ? 64 : 32))
+value|32
 end_define
 
 begin_else
@@ -2591,8 +2591,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|BIGGEST_FIELD_ALIGNMENT
-value|32
+name|ADJUST_FIELD_ALIGN
+parameter_list|(
+name|FIELD
+parameter_list|,
+name|COMPUTED
+parameter_list|)
+define|\
+value|x86_field_alignment (FIELD, COMPUTED)
 end_define
 
 begin_endif
@@ -6232,7 +6238,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"x86_64_immediate_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_nonmemory_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_movabs_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_nonmemory_operand", {CONST_INT, SUBREG, REG,		\ 				     SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_general_operand", {CONST_INT, SUBREG, REG, MEM,		\ 			      SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_general_operand", {CONST_INT, SUBREG, REG, MEM,	\ 				   SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_zext_immediate_operand", {CONST_INT, CONST_DOUBLE, CONST,	\ 				       SYMBOL_REF, LABEL_REF}},		\   {"shiftdi_operand", {SUBREG, REG, MEM}},				\   {"const_int_1_operand", {CONST_INT}},					\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"aligned_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		       LABEL_REF, SUBREG, REG, MEM}},			\   {"pic_symbolic_operand", {CONST}},					\   {"call_insn_operand", {REG, SUBREG, MEM, SYMBOL_REF}},		\   {"constant_call_address_operand", {SYMBOL_REF, CONST}},		\   {"const0_operand", {CONST_INT, CONST_DOUBLE}},			\   {"const1_operand", {CONST_INT}},					\   {"const248_operand", {CONST_INT}},					\   {"incdec_operand", {CONST_INT}},					\   {"mmx_reg_operand", {REG}},						\   {"reg_no_sp_operand", {SUBREG, REG}},					\   {"general_no_elim_operand", {CONST_INT, CONST_DOUBLE, CONST,		\ 			SYMBOL_REF, LABEL_REF, SUBREG, REG, MEM}},	\   {"nonmemory_no_elim_operand", {CONST_INT, REG, SUBREG}},		\   {"q_regs_operand", {SUBREG, REG}},					\   {"non_q_regs_operand", {SUBREG, REG}},				\   {"fcmov_comparison_operator", {EQ, NE, LTU, GTU, LEU, GEU, UNORDERED, \ 				 ORDERED, LT, UNLT, GT, UNGT, LE, UNLE,	\ 				 GE, UNGE, LTGT, UNEQ}},		\   {"sse_comparison_operator", {EQ, LT, LE, UNORDERED, NE, UNGE, UNGT,	\ 			       ORDERED, UNEQ, UNLT, UNLE, LTGT, GE, GT	\ 			       }},					\   {"ix86_comparison_operator", {EQ, NE, LE, LT, GE, GT, LEU, LTU, GEU,	\ 			       GTU, UNORDERED, ORDERED, UNLE, UNLT,	\ 			       UNGE, UNGT, LTGT, UNEQ }},		\   {"cmp_fp_expander_operand", {CONST_DOUBLE, SUBREG, REG, MEM}},	\   {"ext_register_operand", {SUBREG, REG}},				\   {"binary_fp_operator", {PLUS, MINUS, MULT, DIV}},			\   {"mult_operator", {MULT}},						\   {"div_operator", {DIV}},						\   {"arith_or_logical_operator", {PLUS, MULT, AND, IOR, XOR, SMIN, SMAX, \ 				 UMIN, UMAX, COMPARE, MINUS, DIV, MOD,	\ 				 UDIV, UMOD, ASHIFT, ROTATE, ASHIFTRT,	\ 				 LSHIFTRT, ROTATERT}},			\   {"promotable_binary_operator", {PLUS, MULT, AND, IOR, XOR, ASHIFT}},	\   {"memory_displacement_operand", {MEM}},				\   {"cmpsi_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		     LABEL_REF, SUBREG, REG, MEM, AND}},		\   {"long_memory_operand", {MEM}},
+value|{"x86_64_immediate_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_nonmemory_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_movabs_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_nonmemory_operand", {CONST_INT, SUBREG, REG,		\ 				     SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_general_operand", {CONST_INT, SUBREG, REG, MEM,		\ 			      SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_general_operand", {CONST_INT, SUBREG, REG, MEM,	\ 				   SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_zext_immediate_operand", {CONST_INT, CONST_DOUBLE, CONST,	\ 				       SYMBOL_REF, LABEL_REF}},		\   {"shiftdi_operand", {SUBREG, REG, MEM}},				\   {"const_int_1_operand", {CONST_INT}},					\   {"const_int_1_31_operand", {CONST_INT}},				\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"aligned_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		       LABEL_REF, SUBREG, REG, MEM}},			\   {"pic_symbolic_operand", {CONST}},					\   {"call_insn_operand", {REG, SUBREG, MEM, SYMBOL_REF}},		\   {"constant_call_address_operand", {SYMBOL_REF, CONST}},		\   {"const0_operand", {CONST_INT, CONST_DOUBLE}},			\   {"const1_operand", {CONST_INT}},					\   {"const248_operand", {CONST_INT}},					\   {"incdec_operand", {CONST_INT}},					\   {"mmx_reg_operand", {REG}},						\   {"reg_no_sp_operand", {SUBREG, REG}},					\   {"general_no_elim_operand", {CONST_INT, CONST_DOUBLE, CONST,		\ 			SYMBOL_REF, LABEL_REF, SUBREG, REG, MEM}},	\   {"nonmemory_no_elim_operand", {CONST_INT, REG, SUBREG}},		\   {"q_regs_operand", {SUBREG, REG}},					\   {"non_q_regs_operand", {SUBREG, REG}},				\   {"fcmov_comparison_operator", {EQ, NE, LTU, GTU, LEU, GEU, UNORDERED, \ 				 ORDERED, LT, UNLT, GT, UNGT, LE, UNLE,	\ 				 GE, UNGE, LTGT, UNEQ}},		\   {"sse_comparison_operator", {EQ, LT, LE, UNORDERED, NE, UNGE, UNGT,	\ 			       ORDERED, UNEQ, UNLT, UNLE, LTGT, GE, GT	\ 			       }},					\   {"ix86_comparison_operator", {EQ, NE, LE, LT, GE, GT, LEU, LTU, GEU,	\ 			       GTU, UNORDERED, ORDERED, UNLE, UNLT,	\ 			       UNGE, UNGT, LTGT, UNEQ }},		\   {"cmp_fp_expander_operand", {CONST_DOUBLE, SUBREG, REG, MEM}},	\   {"ext_register_operand", {SUBREG, REG}},				\   {"binary_fp_operator", {PLUS, MINUS, MULT, DIV}},			\   {"mult_operator", {MULT}},						\   {"div_operator", {DIV}},						\   {"arith_or_logical_operator", {PLUS, MULT, AND, IOR, XOR, SMIN, SMAX, \ 				 UMIN, UMAX, COMPARE, MINUS, DIV, MOD,	\ 				 UDIV, UMOD, ASHIFT, ROTATE, ASHIFTRT,	\ 				 LSHIFTRT, ROTATERT}},			\   {"promotable_binary_operator", {PLUS, MULT, AND, IOR, XOR, ASHIFT}},	\   {"memory_displacement_operand", {MEM}},				\   {"cmpsi_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		     LABEL_REF, SUBREG, REG, MEM, AND}},		\   {"long_memory_operand", {MEM}},
 end_define
 
 begin_comment
