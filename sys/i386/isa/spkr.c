@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
@@ -43,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -156,6 +156,18 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SPKR
+argument_list|,
+literal|"spkr"
+argument_list|,
+literal|"Speaker buffer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the ISA console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the ISA speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
@@ -2082,8 +2094,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|buf
+name|char
 modifier|*
 name|spkr_inbuf
 decl_stmt|;
@@ -2184,9 +2195,13 @@ argument_list|()
 expr_stmt|;
 name|spkr_inbuf
 operator|=
-name|geteblk
+name|malloc
 argument_list|(
 name|DEV_BSIZE
+argument_list|,
+name|M_SPKR
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|spkr_active
@@ -2298,8 +2313,6 @@ expr_stmt|;
 name|cp
 operator|=
 name|spkr_inbuf
-operator|->
-name|b_data
 expr_stmt|;
 name|error
 operator|=
@@ -2422,9 +2435,11 @@ operator|&
 name|endrest
 argument_list|)
 expr_stmt|;
-name|brelse
+name|free
 argument_list|(
 name|spkr_inbuf
+argument_list|,
+name|M_SPKR
 argument_list|)
 expr_stmt|;
 name|spkr_active
