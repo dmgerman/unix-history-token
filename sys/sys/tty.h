@@ -328,6 +328,10 @@ modifier|*
 name|t_mdev
 decl_stmt|;
 comment|/* Device. */
+name|u_int
+name|t_devunit
+decl_stmt|;
+comment|/* Cdev unit number */
 name|int
 name|t_state
 decl_stmt|;
