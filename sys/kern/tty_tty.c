@@ -460,15 +460,13 @@ name|MAC
 comment|/* XXX: Shouldn't the cred below be td->td_ucred not NOCRED? */
 name|error
 operator|=
-name|mac_check_vnode_op
+name|mac_check_vnode_read
 argument_list|(
 name|td
 operator|->
 name|td_ucred
 argument_list|,
 name|ttyvp
-argument_list|,
-name|MAC_OP_VNODE_READ
 argument_list|)
 expr_stmt|;
 if|if
@@ -660,15 +658,13 @@ name|MAC
 comment|/* XXX: shouldn't the cred below be td->td_ucred not NOCRED? */
 name|error
 operator|=
-name|mac_check_vnode_op
+name|mac_check_vnode_write
 argument_list|(
 name|td
 operator|->
 name|td_ucred
 argument_list|,
 name|ttyvp
-argument_list|,
-name|MAC_OP_VNODE_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1029,15 +1025,13 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_vnode_op
+name|mac_check_vnode_poll
 argument_list|(
 name|td
 operator|->
 name|td_ucred
 argument_list|,
 name|ttyvp
-argument_list|,
-name|MAC_OP_VNODE_POLL
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

@@ -3706,13 +3706,11 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_op
+name|mac_check_vnode_write
 argument_list|(
 name|cred
 argument_list|,
 name|vp
-argument_list|,
-name|MAC_OP_VNODE_WRITE
 argument_list|)
 expr_stmt|;
 if|if
