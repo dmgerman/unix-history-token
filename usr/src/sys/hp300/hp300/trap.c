@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -843,36 +843,6 @@ operator|+
 name|USER
 case|:
 comment|/* SUN user trace trap */
-ifdef|#
-directive|ifdef
-name|SUNCOMPAT
-comment|/* 		 * Trap #2 is used to signal a cache flush. 		 * Should we also flush data cache? 		 */
-if|if
-condition|(
-name|type
-operator|==
-name|T_TRACE
-operator|+
-name|USER
-operator|&&
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|SSUN
-operator|)
-condition|)
-block|{
-name|ICIA
-argument_list|()
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-endif|#
-directive|endif
 name|frame
 operator|.
 name|f_sr
@@ -886,14 +856,14 @@ name|SIGTRAP
 expr_stmt|;
 break|break;
 case|case
-name|T_AST
+name|T_ASTFLT
 case|:
 comment|/* system async trap, cannot happen */
 goto|goto
 name|dopanic
 goto|;
 case|case
-name|T_AST
+name|T_ASTFLT
 operator|+
 name|USER
 case|:
@@ -976,7 +946,7 @@ if|if
 condition|(
 name|type
 operator|!=
-name|T_AST
+name|T_ASTFLT
 operator|+
 name|USER
 condition|)
@@ -2404,6 +2374,21 @@ name|error
 operator|=
 name|notimp
 argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
+name|u_ap
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+argument_list|,
 name|code
 argument_list|,
 name|callp
@@ -2620,12 +2605,18 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|code
+operator|!=
+name|SYS_sigreturn
+operator|&&
+operator|(
 name|i
 operator|=
 name|CURSIG
 argument_list|(
 name|p
 argument_list|)
+operator|)
 condition|)
 name|psig
 argument_list|(
