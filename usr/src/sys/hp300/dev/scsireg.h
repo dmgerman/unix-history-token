@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsireg.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsireg.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1769,27 +1769,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Driver ioctl's for various scsi operations.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IOCTL_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Control for SCSI "format" mode.  *  * "Format" mode allows a privileged process to issue direct SCSI  * commands to a drive (it is intended primarily to allow on-line  * formatting).  SDIOCSFORMAT with a non-zero arg will put the drive  * into format mode; a zero arg will take it out.  When in format  * mode, only the process that issued the SDIOCFORMAT can read or  * write the drive.  *  * In format mode, process is expected to  *	- do SDIOCSCSICOMMAND to supply cdb for next SCSI op  *	- do read or write as appropriate for cdb  *	- if i/o error, optionally do SDIOCSENSE to get completion  *	  status and sense data from last scsi operation.  */
