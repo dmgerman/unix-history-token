@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_PPTPGRE_COOKIE
-value|942783547
+value|1082548365
 end_define
 
 begin_comment
@@ -79,6 +79,10 @@ name|u_char
 name|enableAlwaysAck
 decl_stmt|;
 comment|/* always include ack with data */
+name|u_char
+name|enableWindowing
+decl_stmt|;
+comment|/* enable windowing algorithm */
 name|u_int16_t
 name|cid
 decl_stmt|;
@@ -107,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPTPGRE_CONF_TYPE_INFO
-value|{			\ 	  { "enabled",&ng_parse_uint8_type	},	\ 	  { "enableDelayedAck",&ng_parse_uint8_type	},	\ 	  { "enableAlwaysAck",&ng_parse_uint8_type	},	\ 	  { "cid",&ng_parse_hint16_type	},	\ 	  { "peerCid",&ng_parse_hint16_type	},	\ 	  { "recvWin",&ng_parse_uint16_type	},	\ 	  { "peerPpd",&ng_parse_uint16_type	},	\ 	  { NULL }						\ }
+value|{			\ 	  { "enabled",&ng_parse_uint8_type	},	\ 	  { "enableDelayedAck",&ng_parse_uint8_type	},	\ 	  { "enableAlwaysAck",&ng_parse_uint8_type	},	\ 	  { "enableWindowing",&ng_parse_uint8_type	},	\ 	  { "cid",&ng_parse_hint16_type	},	\ 	  { "peerCid",&ng_parse_hint16_type	},	\ 	  { "recvWin",&ng_parse_uint16_type	},	\ 	  { "peerPpd",&ng_parse_uint16_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
