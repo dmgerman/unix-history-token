@@ -5484,6 +5484,14 @@ literal|"Intel 82371AB PCI to ISA bridge"
 operator|)
 return|;
 case|case
+literal|0x71988086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX PCI to X-bus bridge"
+operator|)
+return|;
+case|case
 literal|0x24108086
 case|:
 return|return
@@ -5989,6 +5997,14 @@ literal|"Intel 82371AB/EB (PIIX4) USB controller"
 operator|)
 return|;
 case|case
+literal|0x719a8086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX USB controller"
+operator|)
+return|;
+case|case
 literal|0x24128086
 case|:
 return|return
@@ -6402,6 +6418,14 @@ literal|"Intel 82443BX host to PCI bridge (AGP disabled)"
 operator|)
 return|;
 case|case
+literal|0x71948086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX (440 MX) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x71a08086
 case|:
 return|return
@@ -6594,6 +6618,22 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801AB (ICH0) AC'97 Audio Controller"
+operator|)
+return|;
+case|case
+literal|0x71958086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX AC'97 Audio Controller"
+operator|)
+return|;
+case|case
+literal|0x719b8086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX SMBus and power management controller"
 operator|)
 return|;
 comment|/* Sony -- vendor 0x104d */
