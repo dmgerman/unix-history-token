@@ -1189,8 +1189,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Giant lock manipulation and clean exit macros.  * Used to replace return with an exit Giant and return.  *  * Note that DROP_GIANT*() needs to be paired with PICKUP_GIANT()   */
+comment|/*  * Giant lock manipulation and clean exit macros.  * Used to replace return with an exit Giant and return.  *  * Note that DROP_GIANT*() needs to be paired with PICKUP_GIANT()   * The #ifndef is to allow lint-like tools to redefine DROP_GIANT.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DROP_GIANT
+end_ifndef
 
 begin_define
 define|#
@@ -1218,6 +1224,11 @@ parameter_list|()
 define|\
 value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.mtx_object, Giant)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1264,7 +1275,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|static struct mtx_args name##_args = {				\ 		mtx,							\ 		desc,							\ 		opts							\ 	};								\ 	SYSINIT(name##_mtx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_sysinit,&name##_args)
+value|static struct mtx_args name##_args = {				\ 		(mtx),							\ 		(desc),							\ 		(opts)							\ 	};								\ 	SYSINIT(name##_mtx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    mtx_sysinit,&name##_args)
 end_define
 
 begin_comment
