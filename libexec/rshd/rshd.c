@@ -1976,11 +1976,7 @@ name|kdata
 argument_list|,
 literal|""
 argument_list|,
-operator|(
-name|bit_64
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|version
 argument_list|)
