@@ -1288,7 +1288,7 @@ parameter_list|,
 name|class
 parameter_list|)
 define|\
-value|((class) != PRI_ITHD&& (ke)->ke_thread->td_pinned == 0&&		\     (ke)->ke_flags& KEF_BOUND) == 0)
+value|((class) != PRI_ITHD&& (ke)->ke_thread->td_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_endif
