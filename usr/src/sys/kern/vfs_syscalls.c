@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1206,6 +1206,19 @@ expr_stmt|;
 name|vfs_remove
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_mounth
+operator|!=
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"unmount: dangling vnode"
 argument_list|)
 expr_stmt|;
 name|free
