@@ -6078,7 +6078,7 @@ name|XL_RX_LIST_SZ
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|XL_RX_LIST_SZ
 argument_list|,
 literal|0
 argument_list|,
@@ -6283,7 +6283,7 @@ name|XL_TX_LIST_SZ
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|XL_TX_LIST_SZ
 argument_list|,
 literal|0
 argument_list|,
@@ -6486,10 +6486,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MCLBYTES
+operator|*
+name|XL_MAXFRAGS
 argument_list|,
 name|XL_MAXFRAGS
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
