@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -775,7 +775,9 @@ operator|)
 return|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PS
 index|]
@@ -784,7 +786,9 @@ name|PSL_ALLCC
 expr_stmt|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|R0
 index|]
@@ -795,7 +799,9 @@ name|options
 expr_stmt|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|R1
 index|]
@@ -6502,7 +6508,9 @@ name|ar0
 init|=
 name|curproc
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 decl_stmt|;
 name|struct
 name|hpuxfp
@@ -6966,7 +6974,9 @@ name|hpuxu_ar0
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 name|foop
 operator|=
@@ -6976,7 +6986,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 name|foop
 index|[
