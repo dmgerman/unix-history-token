@@ -7075,9 +7075,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|mc
-operator|->
-name|mc_data
+name|result
 operator|=
 name|NULL
 expr_stmt|;
