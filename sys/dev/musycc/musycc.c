@@ -3933,6 +3933,9 @@ expr_stmt|;
 name|m_print
 argument_list|(
 name|m
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|printf
