@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	5.11 (Berkeley) %G%"
+literal|"@(#)nfsd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2345,6 +2345,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|inetpeer
+operator|.
+name|sin_zero
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inetpeer
+operator|.
+name|sin_zero
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setsockopt
@@ -2397,7 +2415,10 @@ name|nfsdargs
 operator|.
 name|namelen
 operator|=
-name|len
+sizeof|sizeof
+argument_list|(
+name|inetpeer
+argument_list|)
 expr_stmt|;
 name|nfssvc
 argument_list|(
