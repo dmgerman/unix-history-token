@@ -1158,15 +1158,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|apic_itrace_splz
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|apic_itrace_eoi
 index|[
 literal|32
