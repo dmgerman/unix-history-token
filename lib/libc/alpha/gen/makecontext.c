@@ -249,7 +249,7 @@ name|uc_mcontext
 operator|.
 name|mc_format
 operator|==
-name|__UC_REV0_SIGFRAME
+name|_MC_REV0_SIGFRAME
 condition|)
 block|{
 comment|/* 		 * Alpha passes the first 6 parameters in registers and 		 * remaining parameters on the stack.  Set up the context 		 * accordingly, with the user start routine in register 		 * S0, and the context start wrapper (_ctx_start) in the 		 * program counter and return address.  The context must 		 * be in trapframe format. 		 * 		 * Note: The context start wrapper needs to retrieve the 		 *       ucontext pointer.  Place this in register S1 		 *       which must be saved by the callee. 		 */
