@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.46 1998/04/28 03:37:23 dg Exp $"
+literal|"$Id: ftpd.c,v 1.49 1998/05/16 21:23:33 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,6 +1159,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3950,6 +3952,8 @@ argument_list|(
 name|_PATH_FTPUSERS
 argument_list|,
 literal|"ftp"
+argument_list|,
+literal|0
 argument_list|)
 operator|||
 name|checkuser
@@ -3957,6 +3961,8 @@ argument_list|(
 name|_PATH_FTPUSERS
 argument_list|,
 literal|"anonymous"
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|reply
@@ -4137,6 +4143,8 @@ argument_list|(
 name|_PATH_FTPUSERS
 argument_list|,
 name|name
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -4265,6 +4273,8 @@ parameter_list|(
 name|fname
 parameter_list|,
 name|name
+parameter_list|,
+name|pwset
 parameter_list|)
 name|char
 modifier|*
@@ -4273,6 +4283,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|pwset
 decl_stmt|;
 block|{
 name|FILE
@@ -4396,6 +4409,24 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* 					 * Check user's default group 					 */
+if|if
+condition|(
+name|pwset
+operator|&&
+name|grp
+operator|->
+name|gr_gid
+operator|==
+name|pw
+operator|->
+name|pw_gid
+condition|)
+name|found
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 					 * Check supplementary groups 					 */
 while|while
 condition|(
 operator|!
@@ -5073,6 +5104,8 @@ argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
