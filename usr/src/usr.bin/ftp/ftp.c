@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.4 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1034,11 +1034,21 @@ name|n
 operator|==
 literal|'5'
 condition|)
+block|{
 name|putchar
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|continuation
@@ -1255,8 +1265,12 @@ name|int
 name|bytes
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|c
+decl_stmt|,
+name|d
 decl_stmt|;
 name|struct
 name|stat
@@ -1267,10 +1281,6 @@ name|timeval
 name|start
 decl_stmt|,
 name|stop
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|closefunc
 operator|=
@@ -1511,6 +1521,8 @@ name|TYPE_L
 case|:
 name|errno
 operator|=
+name|d
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -1539,6 +1551,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|d
+operator|=
 name|write
 argument_list|(
 name|fileno
@@ -1550,6 +1565,7 @@ name|buf
 argument_list|,
 name|c
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -1570,10 +1586,11 @@ argument_list|(
 name|local
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-name|errno
+name|d
+operator|<
+literal|0
 condition|)
 name|perror
 argument_list|(
@@ -1665,7 +1682,6 @@ argument_list|(
 name|local
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|ferror
@@ -1883,8 +1899,6 @@ operator|*
 name|oldintr
 argument_list|)
 argument_list|()
-decl_stmt|,
-name|c
 decl_stmt|;
 specifier|register
 name|int
@@ -1892,15 +1906,17 @@ name|bytes
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|int
+name|c
+decl_stmt|,
+name|d
+decl_stmt|;
 name|struct
 name|timeval
 name|start
 decl_stmt|,
 name|stop
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|closefunc
 operator|=
@@ -2171,6 +2187,8 @@ name|TYPE_L
 case|:
 name|errno
 operator|=
+name|d
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -2199,6 +2217,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|d
+operator|=
 name|write
 argument_list|(
 name|fileno
@@ -2210,6 +2231,7 @@ name|buf
 argument_list|,
 name|c
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -2232,7 +2254,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
+name|d
+operator|<
+literal|0
 condition|)
 name|perror
 argument_list|(
