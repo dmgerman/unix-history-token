@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -169,6 +175,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
+end_comment
+
 begin_function
 name|void
 name|cpu_fork
@@ -202,6 +212,22 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|p1
+operator|==
+name|curproc
+operator|||
+name|p1
+operator|==
+operator|&
+name|proc0
+argument_list|,
+operator|(
+literal|"cpu_fork: p1 not curproc and not proc0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -213,6 +239,7 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * Ensure that p1's pcb is up to date. 	 */
 name|pcb
 operator|=
 operator|&
@@ -274,12 +301,8 @@ expr_stmt|;
 name|savefpctx
 argument_list|(
 operator|&
-name|p1
+name|pcb
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
 name|pcb_fpstate
 argument_list|)
 expr_stmt|;
@@ -293,6 +316,15 @@ block|}
 comment|/* Make sure the copied windows are spilled. */
 asm|__asm __volatile("flushw");
 comment|/* Copy the pcb (this will copy the windows saved in the pcb, too). */
+name|pcb
+operator|=
+operator|&
+name|p2
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -311,6 +343,13 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_cwp
+operator|=
+literal|2
+expr_stmt|;
+comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies most of the user mode register values. 	 */
 name|tf
 operator|=
 operator|(
@@ -348,6 +387,38 @@ name|tf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Child returns zero */
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|1
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX i386 returns 1 in %edx */
+name|tf
+operator|->
+name|tf_tstate
+operator|&=
+operator|~
+operator|(
+name|TSTATE_XCC_C
+operator||
+name|TSTATE_CWP_MASK
+operator|)
+expr_stmt|;
+comment|/* success */
 name|p2
 operator|->
 name|p_frame
@@ -403,6 +474,12 @@ name|tf
 expr_stmt|;
 name|pcb
 operator|->
+name|pcb_cwp
+operator|=
+literal|2
+expr_stmt|;
+name|pcb
+operator|->
 name|pcb_fp
 operator|=
 operator|(
@@ -423,6 +500,7 @@ name|fork_trampoline
 operator|-
 literal|8
 expr_stmt|;
+comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 */
 block|}
 end_function
 
@@ -438,6 +516,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
+end_comment
 
 begin_function
 name|void
