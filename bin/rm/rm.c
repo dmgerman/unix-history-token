@@ -1637,7 +1637,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc"
+literal|"%s: malloc"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 define|#
@@ -1741,6 +1743,18 @@ condition|)
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 name|warn
