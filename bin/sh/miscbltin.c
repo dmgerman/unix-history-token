@@ -1583,7 +1583,7 @@ name|optc
 operator|=
 name|nextopt
 argument_list|(
-literal|"HSatfdsmcnulb"
+literal|"HSatfdsmcnuvlb"
 argument_list|)
 operator|)
 operator|!=
