@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.18 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,7 +842,7 @@ comment|/*  * Skip over a compressed domain name. Return the size or -1.  */
 end_comment
 
 begin_macro
-name|dn_skipname
+name|__dn_skipname
 argument_list|(
 argument|comp_dn
 argument_list|,
@@ -1310,7 +1310,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|putshort
+name|__putshort
 argument_list|(
 name|s
 argument_list|,
@@ -1352,7 +1352,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|putlong
+name|__putlong
 argument_list|(
 name|l
 argument_list|,

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.13 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,7 +448,7 @@ name|buflen
 operator|-=
 name|n
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|type
 argument_list|,
@@ -462,7 +462,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|class
 argument_list|,
@@ -536,7 +536,7 @@ name|buflen
 operator|-=
 name|n
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|T_NULL
 argument_list|,
@@ -550,7 +550,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|class
 argument_list|,
@@ -564,7 +564,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putlong
+name|__putlong
 argument_list|(
 literal|0
 argument_list|,
@@ -578,7 +578,7 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 literal|0
 argument_list|,
@@ -629,7 +629,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* no domain name */
-name|putshort
+name|__putshort
 argument_list|(
 name|type
 argument_list|,
@@ -643,7 +643,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|class
 argument_list|,
@@ -657,7 +657,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putlong
+name|__putlong
 argument_list|(
 literal|0
 argument_list|,
@@ -671,7 +671,7 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|datalen
 argument_list|,
@@ -768,7 +768,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|type
 argument_list|,
@@ -782,7 +782,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|class
 argument_list|,
@@ -796,7 +796,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putlong
+name|__putlong
 argument_list|(
 literal|0
 argument_list|,
@@ -810,7 +810,7 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|datalen
 argument_list|,
@@ -911,7 +911,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|newrr
 operator|->
@@ -927,7 +927,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|newrr
 operator|->
@@ -943,7 +943,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-name|putlong
+name|__putlong
 argument_list|(
 literal|0
 argument_list|,
@@ -957,7 +957,7 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|putshort
+name|__putshort
 argument_list|(
 name|newrr
 operator|->

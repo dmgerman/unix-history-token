@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.25 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +334,7 @@ argument_list|(
 literal|"res_send()\n"
 argument_list|)
 expr_stmt|;
-name|p_query
+name|__p_query
 argument_list|(
 name|buf
 argument_list|)
@@ -1523,7 +1523,7 @@ argument_list|(
 literal|"old answer:\n"
 argument_list|)
 expr_stmt|;
-name|p_query
+name|__p_query
 argument_list|(
 name|answer
 argument_list|)
@@ -1611,7 +1611,7 @@ argument_list|(
 literal|"got answer:\n"
 argument_list|)
 expr_stmt|;
-name|p_query
+name|__p_query
 argument_list|(
 name|answer
 argument_list|)

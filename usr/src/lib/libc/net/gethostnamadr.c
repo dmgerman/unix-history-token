@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.41 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,7 +501,7 @@ block|}
 else|else
 name|cp
 operator|+=
-name|dn_skipname
+name|__dn_skipname
 argument_list|(
 name|cp
 argument_list|,
@@ -519,7 +519,7 @@ literal|0
 condition|)
 name|cp
 operator|+=
-name|dn_skipname
+name|__dn_skipname
 argument_list|(
 name|cp
 argument_list|,

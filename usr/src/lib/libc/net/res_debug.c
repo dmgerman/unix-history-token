@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.31 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.32 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.31 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,31 +61,6 @@ directive|include
 file|<arpa/nameser.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|p_cdname
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_rr
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_type
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_class
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_time
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|char
@@ -94,6 +69,31 @@ name|inet_ntoa
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|p_cdname
+argument_list|()
+decl_stmt|,
+modifier|*
+name|p_class
+argument_list|()
+decl_stmt|,
+modifier|*
+name|p_rr
+argument_list|()
+decl_stmt|,
+modifier|*
+name|p_time
+argument_list|()
+decl_stmt|,
+modifier|*
+name|p_type
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -180,7 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|p_query
+name|__p_query
 argument_list|(
 argument|msg
 argument_list|)
@@ -209,21 +209,19 @@ begin_comment
 comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|fp_query
 argument_list|(
 argument|msg
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|msg
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|FILE
@@ -724,6 +722,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|p_cdname
@@ -839,6 +838,7 @@ comment|/*  * Print resource record fields in human readable form.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|p_rr
@@ -1891,6 +1891,7 @@ comment|/*  * Return a string for the type  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|p_type
@@ -2132,6 +2133,7 @@ comment|/*  * Return a mnemonic for class  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|p_class
@@ -2201,6 +2203,7 @@ comment|/*  * Return a mnemonic for a time to live  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|p_time

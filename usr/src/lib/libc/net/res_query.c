@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.7 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -587,6 +587,7 @@ name|got_nodata
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|hostalias
@@ -1072,6 +1073,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|hostalias
