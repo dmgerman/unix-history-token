@@ -33,15 +33,11 @@ directive|undef
 name|EXCLUDE_GUS
 end_undef
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|EXCLUDE_MPU401
-end_define
-
-begin_comment
-comment|/* Not ready yet */
-end_comment
+end_undef
 
 begin_undef
 undef|#
