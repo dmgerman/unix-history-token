@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1987, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987, 1993 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mesg.c	5.3 (Berkeley) %G%"
+literal|"@(#)mesg.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -93,35 +99,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|usage
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -177,9 +154,9 @@ case|case
 literal|'?'
 case|:
 default|default:
+goto|goto
 name|usage
-argument_list|()
-expr_stmt|;
+goto|;
 block|}
 name|argc
 operator|-=
@@ -204,12 +181,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"ttyname: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ttyname"
 argument_list|)
 expr_stmt|;
 if|if
@@ -226,12 +200,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"%s"
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
 if|if
@@ -312,12 +285,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"%s"
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit
@@ -346,12 +318,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"%s"
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit
@@ -361,17 +332,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|usage
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_function
-name|void
-name|usage
-parameter_list|()
-block|{
+label|:
 operator|(
 name|void
 operator|)
@@ -387,132 +348,6 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mesg: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
