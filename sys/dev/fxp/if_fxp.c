@@ -5606,12 +5606,18 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in an unused status bit, so that the 	 * info will be used in the subsequent polling cycle. 	 */
+comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 */
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+comment|/* 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in an unused status bit, so that the 	 * info will be used in the subsequent polling cycle. 	 * 	 * XXX there is absolutely no guarantee that this reserved bit 	 * will be ignored by the hardware! 	 */
 define|#
 directive|define
 name|FXP_RFA_RNRMARK
 value|0x4000
 comment|/* used to mark a pending RNR intr */
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -5673,6 +5679,9 @@ operator|==
 literal|0
 condition|)
 break|break;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
 if|if
 condition|(
 name|rfa
@@ -5685,6 +5694,8 @@ name|rnr
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Remove first packet from the chain. 		 */
 name|sc
 operator|->
@@ -5789,6 +5800,9 @@ condition|(
 name|rnr
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
 if|if
 condition|(
 name|rfa
@@ -5805,6 +5819,8 @@ name|FXP_RFA_RNRMARK
 expr_stmt|;
 else|else
 block|{
+endif|#
+directive|endif
 name|fxp_scb_wait
 argument_list|(
 name|sc
@@ -5837,7 +5853,12 @@ argument_list|,
 name|FXP_SCB_COMMAND_RU_START
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 end_function
