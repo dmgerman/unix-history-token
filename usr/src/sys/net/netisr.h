@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	netisr.h	4.2	82/10/31	*/
+comment|/*	netisr.h	4.3	83/01/17	*/
 end_comment
 
 begin_comment
@@ -84,6 +84,17 @@ end_define
 
 begin_comment
 comment|/* same as AF_NS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_ND
+value|7
+end_define
+
+begin_comment
+comment|/* network disk protocol */
 end_comment
 
 begin_define
