@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.41 (Berkeley) %G%"
+literal|"@(#)collect.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1952,6 +1952,34 @@ argument_list|,
 name|MaxMessageSize
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|6
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: message size (%ld) exceeds maximum (%ld)"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|e
+operator|->
+name|e_msgsize
+argument_list|,
+name|MaxMessageSize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* check for illegal 8-bit data */
 if|if
