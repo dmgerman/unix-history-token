@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.63 2002/01/02 20:58:12 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.65 2002/01/03 22:20:45 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3298,6 +3298,9 @@ operator|&
 name|usb_events
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ueq
@@ -3322,6 +3325,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 operator|*
 name|ue
 operator|=
