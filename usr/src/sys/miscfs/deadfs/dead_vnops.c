@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1011,31 +1011,18 @@ operator|)
 return|;
 return|return
 operator|(
-name|VOP_IOCTL
+name|VCALL
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|ap
-operator|->
-name|a_command
+name|VDESC
+argument_list|(
+name|vop_ioctl
+argument_list|)
 argument_list|,
 name|ap
-operator|->
-name|a_data
-argument_list|,
-name|ap
-operator|->
-name|a_fflag
-argument_list|,
-name|ap
-operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_p
 argument_list|)
 operator|)
 return|;
@@ -1190,11 +1177,18 @@ operator|)
 return|;
 return|return
 operator|(
-name|VOP_LOCK
+name|VCALL
 argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+name|VDESC
+argument_list|(
+name|vop_lock
+argument_list|)
+argument_list|,
+name|ap
 argument_list|)
 operator|)
 return|;
