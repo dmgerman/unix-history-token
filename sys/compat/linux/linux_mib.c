@@ -1356,7 +1356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Usage: sysctl -w linux.debug=<syscall_nr>.<0/1>  *  *    E.g.: sysctl -w linux.debug=21.0  *  * As a special case, syscall "all" will apply to all syscalls globally.  */
+comment|/*  * Usage: sysctl linux.debug=<syscall_nr>.<0/1>  *  *    E.g.: sysctl linux.debug=21.0  *  * As a special case, syscall "all" will apply to all syscalls globally.  */
 end_comment
 
 begin_define
