@@ -995,6 +995,15 @@ operator|.
 name|s_args
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}
