@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.8	83/08/19  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.9	83/10/22  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -31,14 +31,18 @@ directive|include
 file|"dev.h"
 end_include
 
+begin_comment
+comment|/* #define DEBUGABLE		/* No, not debugable... */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DEBUGABLE
+name|DRIVER
 end_define
 
 begin_comment
-comment|/* Yes, debugable... */
+comment|/* Yes, we're driving directly */
 end_comment
 
 begin_define
@@ -186,7 +190,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.8	83/08/19"
+literal|"dver.c	1.9	83/10/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,16 +304,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|smnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* index of first special font */
-end_comment
-
-begin_decl_stmt
-name|int
 name|nchtab
 decl_stmt|;
 end_decl_stmt
@@ -402,28 +396,21 @@ begin_comment
 comment|/* place to find raster fonts and fontmap */
 end_comment
 
-begin_struct
-struct|struct
-block|{
-comment|/* table of what font */
+begin_decl_stmt
 name|char
 modifier|*
-name|name
-decl_stmt|;
-comment|/*   name is on what */
-name|int
-name|number
-decl_stmt|;
-comment|/*   position in font tables */
-block|}
 name|fontname
 index|[
 name|NFONTS
 operator|+
 literal|1
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of what font is on what position */
+end_comment
 
 begin_struct
 struct|struct
@@ -615,7 +602,7 @@ begin_define
 define|#
 directive|define
 name|BAND
-value|3
+value|2
 end_define
 
 begin_comment
@@ -630,7 +617,7 @@ value|(int)(BAND * RES)
 end_define
 
 begin_comment
-comment|/* 3" long bands */
+comment|/* BAND" long bands */
 end_comment
 
 begin_define
@@ -657,6 +644,17 @@ directive|define
 name|BUFBOTTOM
 value|(&buffer[BUFFER_SIZE] - 1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|buf0p
+value|BUFTOP
+end_define
+
+begin_comment
+comment|/* vorigin in circular buffer */
+end_comment
 
 begin_define
 define|#
@@ -716,19 +714,6 @@ comment|/* versatec-wide NLINES buffer */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|buf0p
-init|=
-name|BUFTOP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vorigin in circular buffer */
-end_comment
-
-begin_decl_stmt
 name|int
 name|vorigin
 init|=
@@ -772,6 +757,14 @@ begin_function_decl
 name|char
 modifier|*
 name|allpanic
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|operand
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -838,6 +831,7 @@ block|{
 name|int
 name|fnum
 decl_stmt|;
+comment|/* if == -1, this position unused */
 name|int
 name|psize
 decl_stmt|;
@@ -854,17 +848,15 @@ block|}
 name|fontdes
 index|[
 name|NFONTS
+operator|+
+literal|1
 index|]
-init|=
-block|{
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* is initialized at start of main */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -948,33 +940,58 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|NFONTS
+condition|;
+name|fontdes
+index|[
+name|i
+operator|++
+index|]
+operator|.
+name|fnum
+operator|=
+operator|-
+literal|1
+control|)
+empty_stmt|;
 while|while
 condition|(
+operator|--
 name|argc
 operator|>
-literal|1
-operator|&&
-name|argv
-index|[
-literal|1
-index|]
-index|[
 literal|0
-index|]
+operator|&&
+operator|*
+operator|*
+operator|++
+name|argv
 operator|==
 literal|'-'
 condition|)
 block|{
 switch|switch
 condition|(
+operator|(
+operator|*
 name|argv
-index|[
-literal|1
-index|]
+operator|)
 index|[
 literal|1
 index|]
@@ -985,14 +1002,14 @@ literal|'F'
 case|:
 name|bitdir
 operator|=
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
 operator|&
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1000,14 +1017,14 @@ literal|'f'
 case|:
 name|fontdir
 operator|=
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
 operator|&
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1015,14 +1032,14 @@ literal|'o'
 case|:
 name|outlist
 argument_list|(
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
 operator|&
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1036,14 +1053,14 @@ name|dbg
 operator|=
 name|atoi
 argument_list|(
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
 operator|&
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1066,14 +1083,14 @@ name|spage
 operator|=
 name|atoi
 argument_list|(
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
 operator|&
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1088,18 +1105,25 @@ literal|9999
 expr_stmt|;
 break|break;
 block|}
-name|argc
-operator|--
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
 block|}
-comment|/*nov	ioctl(OUTFILE, VSETSTATE, pltmode);  */
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|pltmode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc
-operator|<=
+operator|<
 literal|1
 condition|)
 name|conv
@@ -1110,8 +1134,8 @@ expr_stmt|;
 else|else
 while|while
 condition|(
-operator|--
 name|argc
+operator|--
 operator|>
 literal|0
 condition|)
@@ -1121,7 +1145,6 @@ condition|(
 name|strcmp
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|,
 literal|"-"
@@ -1170,12 +1193,96 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
 block|}
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	char  * operand (& argc,& argv)  |  | Results:	returns address of the operand given with a command-line  |		option.  It uses either "-Xoperand" or "-X operand", whichever  |		is present.  The program is terminated if no option is present.  |  | Side Efct:	argc and argv are updated as necessary.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|operand
+parameter_list|(
+name|argcp
+parameter_list|,
+name|argvp
+parameter_list|)
+name|int
+modifier|*
+name|argcp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|argvp
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+operator|*
+name|argvp
+operator|)
+index|[
+literal|2
+index|]
+condition|)
+return|return
+operator|(
+operator|*
+operator|*
+name|argvp
+operator|+
+literal|2
+operator|)
+return|;
+comment|/* operand immediately follows */
+if|if
+condition|(
+operator|(
+operator|--
+operator|*
+name|argcp
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* no operand */
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"command-line option operand missing."
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+operator|*
+operator|(
+operator|++
+operator|(
+operator|*
+name|argvp
+operator|)
+operator|)
+operator|)
+return|;
+comment|/* operand next word */
 block|}
 end_function
 
@@ -1203,9 +1310,15 @@ name|int
 name|n1
 decl_stmt|,
 name|n2
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|nolist
 operator|=
 literal|0
@@ -1569,6 +1682,9 @@ case|case
 literal|'t'
 case|:
 comment|/* straight text */
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|buf
@@ -1591,6 +1707,9 @@ case|case
 literal|'D'
 case|:
 comment|/* draw function */
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|buf
@@ -2020,6 +2139,10 @@ case|case
 literal|'P'
 case|:
 comment|/* new spread */
+if|if
+condition|(
+name|output
+condition|)
 name|outband
 argument_list|(
 name|OVERBAND
@@ -2245,6 +2368,9 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|buf
@@ -2255,7 +2381,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* in case there's a filename */
+comment|/* in case of filename */
 name|ungetc
 argument_list|(
 literal|'\n'
@@ -2663,7 +2789,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/devver/DESC.out"
+literal|"%s/devvp/DESC.out"
 argument_list|,
 name|fontdir
 argument_list|)
@@ -2692,6 +2818,8 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|fin
@@ -2704,6 +2832,21 @@ argument_list|(
 expr|struct
 name|dev
 argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dev
+argument_list|)
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"can't read header for %s"
+argument_list|,
+name|temp
 argument_list|)
 expr_stmt|;
 name|nfonts
@@ -2736,6 +2879,8 @@ name|filesize
 argument_list|)
 expr_stmt|;
 comment|/* enough room for whole file */
+if|if
+condition|(
 name|read
 argument_list|(
 name|fin
@@ -2746,8 +2891,21 @@ name|dev
 operator|.
 name|filesize
 argument_list|)
+operator|!=
+name|dev
+operator|.
+name|filesize
+condition|)
+comment|/* at once */
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"can't read width table for %s"
+argument_list|,
+name|temp
+argument_list|)
 expr_stmt|;
-comment|/* all at once */
 name|pstab
 operator|=
 operator|(
@@ -2820,26 +2978,6 @@ operator|&
 name|BMASK
 expr_stmt|;
 comment|/* 1st thing is width count */
-if|if
-condition|(
-name|smnt
-operator|==
-literal|0
-operator|&&
-name|fontbase
-index|[
-name|i
-index|]
-operator|->
-name|specfont
-operator|==
-literal|1
-condition|)
-name|smnt
-operator|=
-name|i
-expr_stmt|;
-comment|/* first special font */
 name|p
 operator|+=
 sizeof|sizeof
@@ -2848,7 +2986,6 @@ expr|struct
 name|font
 argument_list|)
 expr_stmt|;
-comment|/* that is on the beginning */
 name|widtab
 index|[
 name|i
@@ -2999,6 +3136,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+end_ifdef
 
 begin_macro
 name|fontprint
@@ -3266,6 +3409,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|loadfont
 argument_list|(
@@ -3367,7 +3515,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/devver/%s.out"
+literal|"%s/devvp/%s.out"
 argument_list|,
 name|fontdir
 argument_list|,
@@ -3421,6 +3569,8 @@ name|nwfont
 operator|&
 name|BMASK
 expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|fin
@@ -3445,6 +3595,19 @@ argument_list|(
 expr|struct
 name|font
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"Can't read in font %s on position %d"
+argument_list|,
+name|s
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 if|if
@@ -3663,7 +3826,7 @@ name|f
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|ABORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -3680,9 +3843,10 @@ end_comment
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
+name|vorigin
+operator|=
+name|pagelen
+operator|=
 name|maxv
 operator|=
 name|hpos
@@ -3691,6 +3855,11 @@ name|vpos
 operator|=
 literal|0
 expr_stmt|;
+name|output
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't output anything yet */
 name|setsize
 argument_list|(
 name|t_size
@@ -3904,32 +4073,11 @@ if|if
 condition|(
 name|output
 condition|)
-block|{
-if|if
-condition|(
-operator|++
-name|scount
-operator|>=
-name|spage
-condition|)
-block|{
-name|scount
-operator|=
-literal|0
-expr_stmt|;
-name|t_reset
-argument_list|(
-literal|'p'
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|outband
 argument_list|(
 name|PAGEEND
 argument_list|)
 expr_stmt|;
-block|}
 name|maxv
 operator|=
 name|vpos
@@ -4020,39 +4168,38 @@ operator|==
 name|PAGEEND
 condition|)
 block|{
-comment|/* set to inch boundary */
-if|if
-condition|(
-operator|(
+comment|/* set outsize to inch boundary */
 name|outsize
 operator|=
+operator|(
 name|maxv
+operator|+
+operator|(
+name|RES
 operator|-
-operator|++
+literal|1
+operator|)
+operator|-
 name|pagelen
 operator|)
+operator|/
+name|RES
+expr_stmt|;
+if|if
+condition|(
+name|outsize
 operator|<
 literal|1
 condition|)
 return|return;
+comment|/* if outsize<= zero, forget it */
 name|outsize
-operator|=
-operator|(
-operator|(
-name|outsize
-operator|+
-name|RES
-operator|-
-literal|1
-operator|)
-operator|/
-name|RES
-operator|)
-operator|*
+operator|*=
 name|RES
 operator|*
 name|BYTES_PER_LINE
 expr_stmt|;
+comment|/* are assured that outsize */
 name|vwrite
 argument_list|(
 name|buf0p
@@ -4060,6 +4207,7 @@ argument_list|,
 name|outsize
 argument_list|)
 expr_stmt|;
+comment|/* will NOT be> BUFFER_SIZE */
 name|vclear
 argument_list|(
 name|buf0p
@@ -4067,14 +4215,14 @@ argument_list|,
 name|outsize
 argument_list|)
 expr_stmt|;
+comment|/* since vsort makes sure of */
 name|vorigin
 operator|=
-literal|0
-expr_stmt|;
 name|pagelen
 operator|=
 literal|0
 expr_stmt|;
+comment|/* putting P commands in */
 block|}
 else|else
 block|{
@@ -4203,6 +4351,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|t_charht
 argument_list|(
@@ -4241,6 +4393,10 @@ endif|#
 directive|endif
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|t_slant
@@ -4485,33 +4641,33 @@ end_macro
 
 begin_block
 block|{
-name|output
-operator|=
-literal|1
-expr_stmt|;
 switch|switch
 condition|(
 name|c
 condition|)
 block|{
 case|case
-literal|'p'
-case|:
-name|outband
-argument_list|(
-name|PAGEEND
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'s'
 case|:
-name|outband
+name|t_page
 argument_list|(
-name|PAGEEND
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/*nov		ioctl(OUTFILE, VSETSTATE, prtmode); */
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -4794,20 +4950,13 @@ index|]
 expr_stmt|;
 comment|/* get the width */
 block|}
-elseif|else
-if|if
-condition|(
-name|smnt
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* on special (we hope) */
+else|else
+comment|/* on another font (we hope) */
 for|for
 control|(
 name|k
 operator|=
-name|smnt
+name|font
 operator|,
 name|j
 operator|=
@@ -4884,7 +5033,6 @@ name|k
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -5077,6 +5225,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|t_fp
 argument_list|(
@@ -5097,6 +5249,10 @@ name|int
 name|n
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* internal name is ignored */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -5221,22 +5377,8 @@ name|fontname
 index|[
 name|n
 index|]
-operator|.
-name|name
 operator|=
 name|s
-expr_stmt|;
-name|fontname
-index|[
-name|n
-index|]
-operator|.
-name|number
-operator|=
-name|atoi
-argument_list|(
-name|si
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -5245,7 +5387,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|NFONTS
 condition|;
 name|i
@@ -5273,15 +5415,6 @@ index|]
 operator|.
 name|bits
 argument_list|)
-expr_stmt|;
-name|fontdes
-index|[
-name|i
-index|]
-operator|.
-name|bits
-operator|=
-literal|0
 expr_stmt|;
 name|fontdes
 index|[
@@ -5409,7 +5542,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|NFONTS
 condition|;
 name|i
@@ -5503,8 +5636,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 operator|==
 literal|0
 condition|)
@@ -5582,7 +5713,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|int
-name|savesize
+name|sizehunt
 init|=
 name|size
 decl_stmt|;
@@ -5622,8 +5753,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 argument_list|,
 name|fsize
 argument_list|)
@@ -5646,13 +5775,13 @@ literal|1
 condition|)
 block|{
 comment|/* File wasn't found. Try another ps */
-name|size
+name|sizehunt
 operator|+=
 name|d
 expr_stmt|;
 if|if
 condition|(
-name|size
+name|sizehunt
 operator|<
 literal|0
 condition|)
@@ -5662,16 +5791,16 @@ name|d
 operator|=
 literal|1
 expr_stmt|;
-name|size
+name|sizehunt
 operator|=
-name|savesize
+name|size
 operator|+
 literal|1
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|size
+name|sizehunt
 operator|>
 name|nsizes
 condition|)
@@ -5688,7 +5817,7 @@ name|fsize
 operator|=
 name|pstab
 index|[
-name|size
+name|sizehunt
 index|]
 expr_stmt|;
 block|}
@@ -5735,8 +5864,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 argument_list|)
 expr_stmt|;
 name|fontwanted
@@ -5833,18 +5960,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+name|FATAL
 argument_list|,
-literal|"%s: ran out of memory\n"
+literal|"%s: ran out of memory"
 argument_list|,
 name|cbuf
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ABORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -6033,22 +6155,10 @@ index|[
 name|newfont
 index|]
 operator|.
-name|bits
+name|fnum
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 operator|-
 literal|1
-operator|||
-operator|!
-name|fontdes
-index|[
-name|newfont
-index|]
-operator|.
-name|bits
 condition|)
 break|break;
 if|if
@@ -6058,21 +6168,10 @@ index|[
 name|newfont
 index|]
 operator|.
-name|bits
+name|fnum
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 operator|-
 literal|1
-operator|&&
-name|fontdes
-index|[
-name|newfont
-index|]
-operator|.
-name|bits
 condition|)
 block|{
 name|nfree
@@ -6084,19 +6183,6 @@ index|]
 operator|.
 name|bits
 argument_list|)
-expr_stmt|;
-name|fontdes
-index|[
-name|newfont
-index|]
-operator|.
-name|bits
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6138,9 +6224,10 @@ index|[
 name|newfont
 index|]
 operator|.
-name|bits
+name|fnum
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -6178,6 +6265,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|fontdes
@@ -6185,27 +6273,10 @@ index|[
 name|i
 index|]
 operator|.
-name|bits
+name|fnum
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 operator|-
 literal|1
-operator|&&
-name|fontdes
-index|[
-name|i
-index|]
-operator|.
-name|bits
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 condition|)
 name|nfree
 argument_list|(
@@ -6217,20 +6288,6 @@ operator|.
 name|bits
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-name|NFONTS
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|fontdes
 index|[
 name|i
@@ -6247,15 +6304,6 @@ name|psize
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|fontdes
-index|[
-name|i
-index|]
-operator|.
-name|bits
-operator|=
-literal|0
 expr_stmt|;
 name|cfnum
 operator|=
@@ -6429,9 +6477,12 @@ if|if
 condition|(
 name|fontwanted
 condition|)
+if|if
+condition|(
 name|getfont
 argument_list|()
-expr_stmt|;
+condition|)
+return|return;
 name|dis
 operator|=
 name|dispatch
@@ -6510,8 +6561,6 @@ operator|+
 name|dis
 operator|->
 name|up
-operator|+
-literal|1
 operator|)
 operator|)
 operator|*
@@ -6570,6 +6619,10 @@ control|)
 block|{
 if|if
 condition|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|scanp
 operator|+
 operator|(
@@ -6577,7 +6630,11 @@ name|count
 operator|=
 name|llen
 operator|)
+argument_list|)
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|BUFBOTTOM
 condition|)
 return|return;
@@ -6686,9 +6743,7 @@ operator|+=
 name|count
 expr_stmt|;
 block|}
-return|return;
 block|}
-return|return;
 block|}
 end_block
 
@@ -6709,7 +6764,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|int
 name|usize
 decl_stmt|;
 end_decl_stmt
@@ -6815,7 +6870,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|int
 name|nbytes
 decl_stmt|;
 end_decl_stmt
@@ -6911,7 +6966,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|char
 modifier|*
 name|lp
 decl_stmt|;
