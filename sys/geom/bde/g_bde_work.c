@@ -3183,12 +3183,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0

@@ -2509,12 +2509,6 @@ operator|->
 name|it_lock
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|ithd

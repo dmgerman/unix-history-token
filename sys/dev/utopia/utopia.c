@@ -6719,12 +6719,6 @@ expr_stmt|;
 name|UTP_RUNLOCK_LIST
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0

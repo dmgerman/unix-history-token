@@ -2393,6 +2393,12 @@ name|nfs4_daemonproc
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"nfsv4 renewd exiting\n"

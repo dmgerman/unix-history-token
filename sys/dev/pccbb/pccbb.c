@@ -4966,13 +4966,6 @@ operator|&=
 operator|~
 name|CBB_KTHREAD_RUNNING
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* kthread_exit drops */
 name|kthread_exit
 argument_list|(
 literal|0
