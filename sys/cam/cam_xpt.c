@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.21 1998/10/14 21:17:39 ken Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.22 1998/10/14 22:51:51 ken Exp $  */
 end_comment
 
 begin_include
@@ -4081,9 +4081,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|ccb
 operator|=
 operator|(
@@ -7507,9 +7504,6 @@ name|cdm
 decl_stmt|;
 name|dev_match_ret
 name|retval
-decl_stmt|;
-name|u_int
-name|dev_gen
 decl_stmt|;
 name|cdm
 operator|=
@@ -12398,9 +12392,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
-name|reduction
-decl_stmt|;
 comment|/* Don't ever go below one opening */
 if|if
 condition|(
@@ -19882,9 +19873,6 @@ modifier|*
 name|request_ccb
 parameter_list|)
 block|{
-name|u_int32_t
-name|unit
-decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
@@ -23492,11 +23480,6 @@ name|arg
 parameter_list|)
 block|{
 comment|/* Now that interrupts are enabled, go find our devices */
-name|struct
-name|cam_eb
-modifier|*
-name|bus
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CAMDEBUG
@@ -23895,31 +23878,6 @@ name|periph_driver
 modifier|*
 modifier|*
 name|p_drv
-decl_stmt|;
-name|struct
-name|cam_eb
-modifier|*
-name|bus
-decl_stmt|;
-name|struct
-name|cam_et
-modifier|*
-name|target
-decl_stmt|;
-name|struct
-name|cam_ed
-modifier|*
-name|dev
-decl_stmt|;
-name|struct
-name|cam_periph
-modifier|*
-name|nperiph
-decl_stmt|;
-name|struct
-name|periph_list
-modifier|*
-name|periph_head
 decl_stmt|;
 name|int
 name|i
