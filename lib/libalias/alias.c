@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"alias_local.h"
 end_include
 
@@ -648,10 +654,13 @@ name|original_id
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/* Put original sequence number back in */
 name|ic
 operator|->
@@ -1058,10 +1067,13 @@ name|original_port
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/* Un-alias address in IP header */
 name|DifferentialChecksum
 argument_list|(
@@ -1204,10 +1216,13 @@ name|original_id
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/* Un-alias address in IP header */
 name|DifferentialChecksum
 argument_list|(
@@ -1497,10 +1512,13 @@ name|alias_id
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/* Alias sequence number */
 name|ic
 operator|->
@@ -1907,10 +1925,13 @@ name|alias_port
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/*  * Alias address in IP header if it comes from the host  * the original TCP/UDP packet was destined for.  */
 if|if
 condition|(
@@ -2069,10 +2090,13 @@ name|alias_id
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/*  * Alias address in IP header if it comes from the host  * the original ICMP message was destined for.  */
 if|if
 condition|(
@@ -2799,10 +2823,13 @@ name|sptr
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ud->uh_sum
+name|ud
+operator|->
+name|uh_sum
 argument_list|)
+expr_stmt|;
 block|}
 comment|/* Restore original IP address */
 name|DifferentialChecksum
@@ -3142,10 +3169,13 @@ name|sptr
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ud->uh_sum
+name|ud
+operator|->
+name|uh_sum
 argument_list|)
+expr_stmt|;
 block|}
 comment|/* Put alias port in UDP header */
 name|ud
@@ -4394,10 +4424,13 @@ block|}
 block|}
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|tc->th_sum
+name|tc
+operator|->
+name|th_sum
 argument_list|)
+expr_stmt|;
 comment|/* Change source address */
 name|sptr
 operator|=
@@ -4455,10 +4488,13 @@ name|sptr
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|pip->ip_sum
+name|pip
+operator|->
+name|ip_sum
 argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|PKT_ALIAS_OK
@@ -5905,10 +5941,13 @@ name|original_port
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ud->uh_sum
+name|ud
+operator|->
+name|uh_sum
 argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5924,10 +5963,13 @@ name|original_port
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|tc->th_sum
+name|tc
+operator|->
+name|th_sum
 argument_list|)
+expr_stmt|;
 block|}
 comment|/* Adjust IP checksum */
 name|DifferentialChecksum
@@ -6084,10 +6126,13 @@ name|original_id
 expr_stmt|;
 name|ADJUST_CHECKSUM
 argument_list|(
-argument|accumulate
+name|accumulate
 argument_list|,
-argument|ic->icmp_cksum
+name|ic
+operator|->
+name|icmp_cksum
 argument_list|)
+expr_stmt|;
 comment|/* Adjust IP checksum */
 name|DifferentialChecksum
 argument_list|(
