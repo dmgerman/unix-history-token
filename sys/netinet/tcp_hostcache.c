@@ -2637,8 +2637,6 @@ name|hc_entry
 operator|->
 name|rmx_bandwidth
 operator|*
-name|hz
-operator|*
 literal|8
 argument_list|,
 name|hc_entry
