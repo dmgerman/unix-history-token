@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2425,6 +2425,7 @@ case|case
 literal|'d'
 case|:
 block|{
+specifier|static
 name|char
 name|fmt
 index|[]
