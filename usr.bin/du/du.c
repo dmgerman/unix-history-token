@@ -1209,6 +1209,10 @@ name|printf
 argument_list|(
 literal|"%qd\t%s\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|howmany
 argument_list|(
 name|p
