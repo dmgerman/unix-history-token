@@ -1282,6 +1282,17 @@ operator|&&
 name|__FreeBSD__
 operator|>
 literal|4
+if|if
+condition|(
+operator|!
+name|mtx_initialized
+argument_list|(
+operator|&
+name|i4b_rdqueue
+operator|.
+name|ifq_mtx
+argument_list|)
+condition|)
 name|mtx_init
 argument_list|(
 operator|&
