@@ -830,6 +830,13 @@ name|HAVE_SETREUID
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_SETEUID
+value|1
+end_define
+
 begin_comment
 comment|/* There are several functions which are replaced in the subdirectory    lib.  If they are missing, the configure script will automatically    add them to lib/Makefile to force them to be recompiled.  If you    are configuring by hand, you will have to do this yourself.  The    string @LIBOBJS@ in lib/Makefile.in should be replaced by a list of    object files in lib/Makefile.  The following comments tell you    which object file names to add (they are generally fairly obvious,    given that the file names have no more than six characters before    the period).  */
 end_comment

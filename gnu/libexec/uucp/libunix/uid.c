@@ -27,6 +27,28 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_comment
+comment|/* NetBSD apparently does not support setuid as required by POSIX when    using saved setuid, so use seteuid instead.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_SETEUID
+end_if
+
+begin_define
+define|#
+directive|define
+name|setuid
+value|seteuid
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_escape
 end_escape
 

@@ -368,7 +368,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* On some systems, such as the DG Aviion and, possibly, the RS/6000,    the setreuid function is broken.  It should be possible to use    setreuid to swap the real and effective user ID's, but on some    systems it will not change the real user ID (I believe this is due    to a misreading of the POSIX standard).  On such a system you must    set HAVE_BROKEN_SETREUID to 1; if you do not, you will get error    messages from setreuid.  Systems on which setreuid exists but is    broken pretty much always have saved setuid.  */
+comment|/* On some systems, such as 4.4BSD-Lite, NetBSD, the DG Aviion and,    possibly, the RS/6000, the setreuid function is broken.  It should    be possible to use setreuid to swap the real and effective user    ID's, but on some systems it will not change the real user ID (I    believe this is due to a misreading of the POSIX standard).  On    such a system you must set HAVE_BROKEN_SETREUID to 1; if you do    not, you will get error messages from setreuid.  Systems on which    setreuid exists but is broken pretty much always have saved setuid.  */
 end_comment
 
 begin_define

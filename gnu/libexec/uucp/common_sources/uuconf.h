@@ -997,7 +997,7 @@ name|UUCONF_GRADE_LEGAL
 parameter_list|(
 name|b
 parameter_list|)
-value|(isascii (BUCHAR (b))&& isalnum (BUCHAR (b)))
+value|(isalnum (BUCHAR (b)))
 end_define
 
 begin_comment

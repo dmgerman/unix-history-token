@@ -21,7 +21,7 @@ name|char
 name|uucp_rcsid
 index|[]
 init|=
-literal|"$Id: uucp.c,v 1.63 1995/08/02 01:22:53 ian Rel $"
+literal|"$Id: uucp.c,v 1.3 1995/08/19 21:30:10 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1010,6 +1010,38 @@ name|UUCONF_GRADE_LEGAL
 argument_list|(
 name|bCgrade
 argument_list|)
+operator|||
+operator|(
+operator|(
+name|bCgrade
+operator|<
+literal|'0'
+operator|||
+name|bCgrade
+operator|>
+literal|'9'
+operator|)
+operator|&&
+operator|(
+name|bCgrade
+operator|<
+literal|'a'
+operator|||
+name|bCgrade
+operator|>
+literal|'z'
+operator|)
+operator|&&
+operator|(
+name|bCgrade
+operator|<
+literal|'A'
+operator|||
+name|bCgrade
+operator|>
+literal|'Z'
+operator|)
+operator|)
 condition|)
 block|{
 name|ulog

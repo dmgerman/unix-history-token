@@ -21,7 +21,7 @@ name|char
 name|uux_rcsid
 index|[]
 init|=
-literal|"$Id: uux.c,v 1.81 1995/08/02 01:25:17 ian Rel $"
+literal|"$Id: uux.c,v 1.7 1995/08/19 21:30:27 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1209,6 +1209,38 @@ name|UUCONF_GRADE_LEGAL
 argument_list|(
 name|bXgrade
 argument_list|)
+operator|||
+operator|(
+operator|(
+name|bXgrade
+operator|<
+literal|'0'
+operator|||
+name|bXgrade
+operator|>
+literal|'9'
+operator|)
+operator|&&
+operator|(
+name|bXgrade
+operator|<
+literal|'a'
+operator|||
+name|bXgrade
+operator|>
+literal|'z'
+operator|)
+operator|&&
+operator|(
+name|bXgrade
+operator|<
+literal|'A'
+operator|||
+name|bXgrade
+operator|>
+literal|'Z'
+operator|)
+operator|)
 condition|)
 block|{
 name|ulog

@@ -21,7 +21,7 @@ name|char
 name|trans_rcsid
 index|[]
 init|=
-literal|"$Id: trans.c,v 1.40 1995/08/11 02:43:32 ian Rel $"
+literal|"$Id: trans.c,v 1.4 1995/08/19 21:29:55 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1612,6 +1612,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|q
+operator|->
+name|zlog
+operator|=
+name|NULL
+expr_stmt|;
 name|q
 operator|->
 name|isecs

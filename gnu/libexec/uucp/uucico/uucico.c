@@ -21,7 +21,7 @@ name|char
 name|uucico_rcsid
 index|[]
 init|=
-literal|"$Id: uucico.c,v 1.190 1995/06/29 19:35:59 ian Rel $"
+literal|"$Id: uucico.c,v 1.5 1995/08/19 21:29:59 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,6 +752,12 @@ specifier|const
 name|char
 operator|*
 name|zlogin
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|pzsystem
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2848,6 +2854,14 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2918,6 +2932,9 @@ operator|&
 name|sconn
 argument_list|,
 name|zlogin
+argument_list|,
+operator|&
+name|zsystem
 argument_list|)
 expr_stmt|;
 else|else
@@ -6963,6 +6980,8 @@ parameter_list|,
 name|qconn
 parameter_list|,
 name|zlogin
+parameter_list|,
+name|pzsystem
 parameter_list|)
 name|pointer
 name|puuconf
@@ -6984,6 +7003,12 @@ specifier|const
 name|char
 modifier|*
 name|zlogin
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|pzsystem
 decl_stmt|;
 block|{
 name|int
@@ -7009,6 +7034,17 @@ name|struct
 name|scallin_info
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|pzsystem
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|pzsystem
+operator|=
+name|NULL
+expr_stmt|;
 name|DEBUG_MESSAGE0
 argument_list|(
 name|DEBUG_HANDSHAKE
@@ -7285,13 +7321,7 @@ name|zlogin
 argument_list|,
 name|qconn
 argument_list|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
-name|NULL
+name|pzsystem
 argument_list|)
 expr_stmt|;
 if|#
