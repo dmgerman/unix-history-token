@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|/* Addr. resolution protocol */
 end_comment
 
 begin_comment
-comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERPUP_TRAIL)*512 bytes of data followed  * by a PUP type (as given above) and then the (variable-length) header.  */
+comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERTYPE_TRAIL)*512 bytes of data followed  * by an ETHER type (as given above) and then the (variable-length) header.  */
 end_comment
 
 begin_define
@@ -107,40 +107,11 @@ begin_struct
 struct|struct
 name|ether_arp
 block|{
-name|u_short
-name|arp_hrd
+name|struct
+name|arphdr
+name|ea_hdr
 decl_stmt|;
-comment|/* format of hardware address */
-define|#
-directive|define
-name|ARPHRD_ETHER
-value|1
-comment|/* ethernet hardware address */
-name|u_short
-name|arp_pro
-decl_stmt|;
-comment|/* format of proto. address (ETHERPUP_IPTYPE) */
-name|u_char
-name|arp_hln
-decl_stmt|;
-comment|/* length of hardware address (6) */
-name|u_char
-name|arp_pln
-decl_stmt|;
-comment|/* length of protocol address (4) */
-name|u_short
-name|arp_op
-decl_stmt|;
-define|#
-directive|define
-name|ARPOP_REQUEST
-value|1
-comment|/* request to resolve address */
-define|#
-directive|define
-name|ARPOP_REPLY
-value|2
-comment|/* response to previous request */
+comment|/* fixed-size header */
 name|u_char
 name|arp_sha
 index|[
@@ -172,6 +143,41 @@ comment|/* target protocol address */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|arp_hrd
+value|ea_hdr.ar_hrd
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_pro
+value|ea_hdr.ar_pro
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_hln
+value|ea_hdr.ar_hln
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_pln
+value|ea_hdr.ar_pln
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_op
+value|ea_hdr.ar_op
+end_define
 
 begin_comment
 comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  For example, each ec_softc or il_softc  * begins with this structure.  */
@@ -260,6 +266,14 @@ name|struct
 name|arptab
 modifier|*
 name|arptnew
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|ether_sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
