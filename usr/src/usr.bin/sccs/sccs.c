@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.13 %G%"
+literal|"@(#)sccs.c	1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1533,6 +1533,9 @@ name|char
 modifier|*
 name|basefile
 decl_stmt|;
+name|bool
+name|gotedit
+decl_stmt|;
 name|dirfd
 operator|=
 name|fopen
@@ -1561,6 +1564,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	**  Scan the SCCS directory looking for s. files. 	*/
+name|gotedit
+operator|=
+name|FALSE
+expr_stmt|;
 while|while
 condition|(
 name|fread
@@ -1679,6 +1686,10 @@ argument_list|,
 name|basefile
 argument_list|)
 expr_stmt|;
+name|gotedit
+operator|=
+name|TRUE
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* the s. file exists and no p. file exists -- unlink the g-file */
@@ -1729,6 +1740,19 @@ block|}
 name|fclose
 argument_list|(
 name|dirfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|gotedit
+operator|&&
+operator|!
+name|really
+condition|)
+name|printf
+argument_list|(
+literal|"Nothing being editted\n"
 argument_list|)
 expr_stmt|;
 block|}
