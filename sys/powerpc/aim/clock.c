@@ -1,23 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996 Wolfgang Solfrank.  * Copyright (C) 1995, 1996 TooLs GmbH.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$NetBSD: clock.c,v 1.9 2000/01/19 02:52:19 msaitoh Exp $	*/
+comment|/*  * Copyright (C) 1995, 1996 Wolfgang Solfrank.  * Copyright (C) 1995, 1996 TooLs GmbH.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$NetBSD: clock.c,v 1.9 2000/01/19 02:52:19 msaitoh Exp $  */
 end_comment
 
-begin_expr_stmt
-operator|*
-operator|/
+begin_comment
+comment|/*  * Copyright (C) 2001 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
+end_ifndef
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
 name|rcsid
 index|[]
-operator|=
+init|=
 literal|"$FreeBSD$"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -43,13 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -62,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include
@@ -86,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr.h>
 end_include
 
 begin_if
@@ -124,6 +135,15 @@ end_endif
 begin_comment
 comment|/*  * Initially we assume a processor with a bus frequency of 12.5 MHz.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|ticks_per_sec
+init|=
+literal|12500000
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -211,6 +231,65 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|timecounter_get_t
+name|powerpc_get_timecount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timecounter
+name|powerpc_timecounter
+init|=
+block|{
+name|powerpc_get_timecount
+block|,
+comment|/* get_timecount */
+literal|0
+block|,
+comment|/* no poll_pps */
+operator|~
+literal|0u
+block|,
+comment|/* counter_mask */
+literal|0
+block|,
+comment|/* frequency */
+literal|"powerpc"
+comment|/* name */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|powerpc_timecounter
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|powerpc_timecounter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|powerpc_timecounter
+argument_list|)
+argument_list|,
+literal|"S,timecounter"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -447,17 +526,53 @@ name|tick
 operator|-
 name|ticks_per_intr
 expr_stmt|;
+comment|/* 	 * This probably needs some kind of locking. 	 */
+name|intrcnt
+index|[
+name|CNT_CLOCK
+index|]
+operator|++
+expr_stmt|;
+block|{
+name|int
+name|msr
+decl_stmt|;
+name|nticks
+operator|+=
+name|tickspending
+expr_stmt|;
+name|tickspending
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* XXX */
-block|intrcnt[CNT_CLOCK]++; 	{ 		int pri; 		int msr;  		pri = splclock(); 		if (pri& (1<< SPL_CLOCK)) { 			tickspending += nticks; 		} 		else { 			nticks += tickspending; 			tickspending = 0;
-comment|/* 			 * Reenable interrupts 			 */
-block|__asm __volatile ("mfmsr %0; ori %0, %0, %1; mtmsr %0" 				          : "=r"(msr) : "K"(PSL_EE));
-comment|/* 			 * Do standard timer interrupt stuff. 			 * Do softclock stuff only on the last iteration. 			 */
-block|frame->pri = pri | (1<< SIR_CLOCK); 			while (--nticks> 0) 				hardclock(frame); 			frame->pri = pri; 			hardclock(frame); 		} 		splx(pri); 	}
+comment|/* 		 * Reenable interrupts 		 */
+block|msr = mfmsr(); 		mtmsr(msr | PSL_EE);
 endif|#
 directive|endif
+comment|/* 		 * Do standard timer interrupt stuff. 		 * Do softclock stuff only on the last iteration. 		 */
+while|while
+condition|(
+operator|--
+name|nticks
+operator|>
+literal|0
+condition|)
+block|{
+name|hardclock
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+block|}
+name|hardclock
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -468,7 +583,177 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Do nothing */
+name|int
+name|qhandle
+decl_stmt|,
+name|phandle
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|msr
+decl_stmt|;
+comment|/* 	 * Get this info during autoconf?				XXX 	 */
+for|for
+control|(
+name|qhandle
+operator|=
+name|OF_peer
+argument_list|(
+literal|0
+argument_list|)
+init|;
+name|qhandle
+condition|;
+name|qhandle
+operator|=
+name|phandle
+control|)
+block|{
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|qhandle
+argument_list|,
+literal|"device_type"
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+name|name
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"cpu"
+argument_list|)
+operator|&&
+name|OF_getprop
+argument_list|(
+name|qhandle
+argument_list|,
+literal|"timebase-frequency"
+argument_list|,
+operator|&
+name|ticks_per_sec
+argument_list|,
+sizeof|sizeof
+name|ticks_per_sec
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Should check for correct CPU here?		XXX 			 */
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator|&
+operator|~
+name|PSL_EE
+argument_list|)
+expr_stmt|;
+name|powerpc_timecounter
+operator|.
+name|tc_frequency
+operator|=
+name|ticks_per_sec
+expr_stmt|;
+name|tc_init
+argument_list|(
+operator|&
+name|powerpc_timecounter
+argument_list|)
+expr_stmt|;
+name|ns_per_tick
+operator|=
+literal|1000000000
+operator|/
+name|ticks_per_sec
+expr_stmt|;
+name|ticks_per_intr
+operator|=
+name|ticks_per_sec
+operator|/
+name|hz
+expr_stmt|;
+asm|__asm __volatile ("mftb %0" : "=r"(lasttb));
+name|mtdec
+argument_list|(
+name|ticks_per_intr
+argument_list|)
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|(
+name|phandle
+operator|=
+name|OF_child
+argument_list|(
+name|qhandle
+argument_list|)
+operator|)
+condition|)
+continue|continue;
+while|while
+condition|(
+name|qhandle
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|phandle
+operator|=
+name|OF_peer
+argument_list|(
+name|qhandle
+argument_list|)
+operator|)
+condition|)
+break|break;
+name|qhandle
+operator|=
+name|OF_parent
+argument_list|(
+name|qhandle
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|phandle
+condition|)
+name|panic
+argument_list|(
+literal|"no cpu node"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -508,20 +793,35 @@ name|tb
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|unsigned
+name|powerpc_get_timecount
+parameter_list|(
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+block|{
+return|return
+name|mftb
+argument_list|()
+return|;
+block|}
+end_function
+
 begin_comment
-unit|}
 comment|/*  * Wait for about n microseconds (at least!).  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|delay
-argument_list|(
-argument|unsigned n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|n
+parameter_list|)
 block|{
 name|u_quad_t
 name|tb
@@ -580,11 +880,8 @@ operator|(
 name|tbl
 operator|)
 block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+function|;
+end_function
 
 begin_comment
 unit|}

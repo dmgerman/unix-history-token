@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/trap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 
@@ -239,13 +245,43 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-if|#
-directive|if
+name|unsigned
+name|int
+name|msr
+decl_stmt|;
+name|cold
+operator|=
 literal|0
-comment|/* XXX */
-block|cold = 0;
-endif|#
-directive|endif
+expr_stmt|;
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|msr
+operator|=
+name|PSL_EE
+operator||
+name|PSL_FP
+operator||
+name|PSL_ME
+operator||
+name|PSL_IR
+operator||
+name|PSL_DR
+operator||
+name|PSL_RI
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
