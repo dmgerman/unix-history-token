@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netdaemon.c	4.4	(Berkeley)	%G%"
+literal|"@(#)netdaemon.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
