@@ -2130,6 +2130,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|devclass_get_count
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|devclass_get_maxunit
 parameter_list|(
 name|devclass_t
