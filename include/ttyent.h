@@ -50,6 +50,20 @@ name|_TTYS_WINDOW
 value|"window"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_TTYS_GROUP
+value|"group"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_NOGROUP
+value|"none"
+end_define
+
 begin_struct
 struct|struct
 name|ttyent
@@ -93,6 +107,11 @@ modifier|*
 name|ty_comment
 decl_stmt|;
 comment|/* comment field */
+name|char
+modifier|*
+name|ty_group
+decl_stmt|;
+comment|/* tty group */
 block|}
 struct|;
 end_struct
