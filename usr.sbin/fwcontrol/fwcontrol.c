@@ -281,7 +281,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"node       EUI64       status\n"
+literal|"node        EUI64        status\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -312,7 +312,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d  %08x%08x %6d\n"
+literal|"%4d  0x%08x%08x %6d\n"
 argument_list|,
 operator|(
 name|devinfo
