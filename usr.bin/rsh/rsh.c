@@ -49,11 +49,12 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.13 1997/09/28 08:57:24 markm Exp $"
+literal|"$Id: rsh.c,v 1.14 1998/02/20 04:50:50 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
