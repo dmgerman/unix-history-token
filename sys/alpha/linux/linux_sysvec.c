@@ -813,8 +813,6 @@ init|=
 block|{
 name|ELFOSABI_LINUX
 block|,
-literal|"Linux"
-block|,
 literal|"/compat/linux"
 block|,
 literal|"/lib/ld-linux.so.1"
@@ -832,8 +830,6 @@ name|linux_glibc2brand
 init|=
 block|{
 name|ELFOSABI_LINUX
-block|,
-literal|"Linux"
 block|,
 literal|"/compat/linux"
 block|,
