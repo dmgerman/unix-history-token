@@ -70,10 +70,6 @@ modifier|*
 name|md_ldt
 decl_stmt|;
 comment|/* (j) per-process ldt */
-name|uint32_t
-name|md_iopl
-decl_stmt|;
-comment|/* process' iopl level */
 block|}
 struct|;
 end_struct
