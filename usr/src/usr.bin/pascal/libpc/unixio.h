@@ -8,6 +8,9 @@ argument_list|(
 name|c
 argument_list|)
 literal|1979
+operator|,
+literal|1993
+operator|*
 name|The
 name|Regents
 name|of
@@ -16,7 +19,6 @@ name|University
 name|of
 name|California
 operator|.
-modifier|*
 name|All
 name|rights
 name|reserved
@@ -41,7 +43,7 @@ operator|)
 name|unixio
 operator|.
 name|h
-literal|1.2
+literal|8.1
 operator|(
 name|Berkeley
 operator|)
@@ -53,7 +55,7 @@ operator|)
 specifier|const
 name|sccsid
 operator|=
-literal|'@(#)unixio.h 1.2 %G%'
+literal|'@(#)unixio.h 8.1 %G%'
 expr_stmt|;
 end_expr_stmt
 
