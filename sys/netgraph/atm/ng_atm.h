@@ -67,10 +67,16 @@ name|NGM_ATM_CARRIER_CHANGE
 init|=
 literal|1000
 block|,
-comment|/* carrier changed */
+comment|/* UNUSED: carrier changed */
 name|NGM_ATM_VCC_CHANGE
 block|,
 comment|/* permanent VCC changed */
+name|NGM_ATM_ACR_CHANGE
+block|,
+comment|/* ABR ACR has changed */
+name|NGM_ATM_IF_CHANGE
+block|,
+comment|/* interface state change */
 block|}
 enum|;
 end_enum
@@ -313,13 +319,16 @@ end_define
 
 begin_struct
 struct|struct
-name|ngm_atm_carrier_change
+name|ngm_atm_if_change
 block|{
 name|uint32_t
 name|node
 decl_stmt|;
-name|uint32_t
-name|state
+name|uint8_t
+name|carrier
+decl_stmt|;
+name|uint8_t
+name|running
 decl_stmt|;
 block|}
 struct|;
@@ -328,9 +337,9 @@ end_struct
 begin_define
 define|#
 directive|define
-name|NGM_ATM_CARRIER_CHANGE_INFO
+name|NGM_ATM_IF_CHANGE_INFO
 define|\
-value|{							\ 	  { "node",&ng_parse_hint32_type },		\ 	  { "state",&ng_parse_uint32_type },		\ 	  { NULL }						\ 	}
+value|{							\ 	  { "node",&ng_parse_hint32_type },		\ 	  { "carrier",&ng_parse_uint8_type },			\ 	  { "running",&ng_parse_uint8_type },			\ 	  { NULL }						\ 	}
 end_define
 
 begin_struct
@@ -359,6 +368,34 @@ directive|define
 name|NGM_ATM_VCC_CHANGE_INFO
 define|\
 value|{							\ 	  { "node",&ng_parse_hint32_type },		\ 	  { "vci",&ng_parse_uint16_type },		\ 	  { "vpi",&ng_parse_uint8_type },			\ 	  { "state",&ng_parse_uint8_type },			\ 	  { NULL }						\ 	}
+end_define
+
+begin_struct
+struct|struct
+name|ngm_atm_acr_change
+block|{
+name|uint32_t
+name|node
+decl_stmt|;
+name|uint16_t
+name|vci
+decl_stmt|;
+name|uint8_t
+name|vpi
+decl_stmt|;
+name|uint32_t
+name|acr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NGM_ATM_ACR_CHANGE_INFO
+define|\
+value|{							\ 	  { "node",&ng_parse_hint32_type },		\ 	  { "vci",&ng_parse_uint16_type },		\ 	  { "vpi",&ng_parse_uint8_type },			\ 	  { "acr",&ng_parse_uint32_type },		\ 	  { NULL }						\ 	}
 end_define
 
 begin_endif
