@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_PLAYERIDS
-value|"/usr/share/games/larn/playerids"
+value|"/var/games/larn/playerids"
 end_define
 
 end_unit
