@@ -28,17 +28,6 @@ literal|"@(#) Copyright (c) 1996 Jason R. Thorpe.  All rights reserved."
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -47,6 +36,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -113,18 +116,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from crt0.o */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1211,7 +1202,8 @@ argument_list|,
 literal|"usage: %s %s "
 literal|"<from ET><from EU><to ET><to EU> [inv]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -1630,7 +1622,8 @@ argument_list|,
 literal|"usage: %s %s<src ET><src EU><dst1 ET><dst1 EU>\n"
 literal|"       [<dst2 ET><dst2 EU>] [inv1] [inv2]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -1846,7 +1839,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s<to ET><to EU> [inv]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -2088,7 +2082,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -2200,7 +2195,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -2324,7 +2320,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s<picker>\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -3245,7 +3242,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s [-vVsSbaA] [<element type> [<start-addr> [<end-addr>] ] ]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -3356,7 +3354,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s [<timeout>]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -3744,7 +3743,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s %s [-fca]<element> [<voltag> [<vsn>] ]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -4522,7 +4522,8 @@ argument_list|,
 literal|"usage: %s %s "
 literal|"<from ET><from EU>\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|cname
 argument_list|)
@@ -5354,7 +5355,8 @@ argument_list|,
 literal|"usage: %s [-f changer] command [-<flags>] "
 literal|"arg1 arg2 [arg3 [...]]\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
