@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -1105,6 +1105,13 @@ directive|ifdef
 name|LOG
 if|if
 condition|(
+operator|!
+name|QueueRun
+operator|&&
+name|LogLevel
+operator|>
+literal|8
+operator|&&
 name|strcmp
 argument_list|(
 name|h
@@ -1115,10 +1122,6 @@ literal|"message-id"
 argument_list|)
 operator|==
 literal|0
-operator|&&
-name|LogLevel
-operator|>
-literal|8
 condition|)
 block|{
 name|char
@@ -1448,6 +1451,9 @@ directive|ifdef
 name|LOG
 if|if
 condition|(
+operator|!
+name|QueueRun
+operator|&&
 name|LogLevel
 operator|>
 literal|1
