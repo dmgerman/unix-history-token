@@ -139,11 +139,6 @@ operator|.
 name|d_name
 operator|=
 literal|"sndstat"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|SND_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

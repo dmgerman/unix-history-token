@@ -585,17 +585,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Major nuber for the sound driver.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SND_CDEV_MAJOR
-value|30
-end_define
-
 begin_define
 define|#
 directive|define

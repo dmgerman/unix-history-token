@@ -467,12 +467,6 @@ operator|.
 name|d_name
 operator|=
 name|DRIVER_NAME
-block|,
-operator|.
-name|d_maj
-operator|=
-operator|-
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
