@@ -474,6 +474,12 @@ begin_comment
 comment|/* function prototypes */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -527,6 +533,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -539,6 +550,12 @@ name|kbdc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -579,6 +596,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* associate a port number with a KBDC */
 end_comment
@@ -591,6 +613,50 @@ name|int
 name|port
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|NKBDC
+condition|)
+block|{
+comment|/* PC-98 has only one keyboard I/F */
+name|kbdc_softc
+index|[
+literal|0
+index|]
+operator|.
+name|port
+operator|=
+name|port
+expr_stmt|;
+name|kbdc_softc
+index|[
+literal|0
+index|]
+operator|.
+name|lock
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+operator|(
+name|KBDC
+operator|)
+operator|&
+name|kbdc_softc
+index|[
+literal|0
+index|]
+return|;
+block|}
+return|return
+name|NULL
+return|;
+comment|/* You didn't include sc driver in your config file */
+else|#
+directive|else
 name|int
 name|s
 decl_stmt|;
@@ -827,6 +893,8 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -892,6 +960,28 @@ name|KBDC
 name|p
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+return|return
+operator|(
+name|inb
+argument_list|(
+name|kbdcp
+argument_list|(
+name|p
+argument_list|)
+operator|->
+name|port
+operator|+
+name|KBD_STATUS_PORT
+argument_list|)
+operator|&
+name|KBDS_ANY_BUFFER_FULL
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|availq
@@ -933,8 +1023,16 @@ name|KBDS_ANY_BUFFER_FULL
 operator|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_comment
 comment|/* queuing functions */
@@ -1118,19 +1216,6 @@ modifier|*
 name|kbdc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
-name|DELAY
-argument_list|(
-name|KBDC_DELAYTIME
-argument_list|)
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-else|#
-directive|else
 comment|/* CPU will stay inside the loop for 100msec at most */
 name|int
 name|retry
@@ -1247,8 +1332,6 @@ block|}
 return|return
 name|TRUE
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1328,6 +1411,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !PC98 */
+end_comment
+
 begin_comment
 comment|/* wait for data from the keyboard */
 end_comment
@@ -1377,6 +1469,16 @@ operator|!=
 name|KBDS_KBD_BUFFER_FULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|DELAY
+argument_list|(
+name|KBDD_DELAYTIME
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|f
@@ -1405,6 +1507,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|DELAY
 argument_list|(
 name|KBDC_DELAYTIME
@@ -1431,6 +1535,12 @@ name|f
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_comment
 comment|/*   * wait for an ACK(FAh), RESEND(FEh), or RESET_FAIL(FCh) from the keyboard.  * queue anything else.  */
@@ -2571,6 +2681,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !PC98 */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -2605,6 +2724,9 @@ name|KBDC
 name|p
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 if|#
 directive|if
 name|KBDIO_DEBUG
@@ -2694,6 +2816,9 @@ operator|->
 name|kbd
 argument_list|)
 return|;
+endif|#
+directive|endif
+comment|/* !PC98 */
 if|if
 condition|(
 operator|!
@@ -2751,6 +2876,27 @@ block|{
 name|int
 name|f
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|f
+operator|=
+name|inb
+argument_list|(
+name|kbdcp
+argument_list|(
+name|p
+argument_list|)
+operator|->
+name|port
+operator|+
+name|KBD_STATUS_PORT
+argument_list|)
+operator|&
+name|KBDS_BUFFER_FULL
+expr_stmt|;
+else|#
+directive|else
 if|#
 directive|if
 name|KBDIO_DEBUG
@@ -2908,6 +3054,9 @@ operator|&
 name|KBDS_BUFFER_FULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* PC98 */
 if|if
 condition|(
 name|f
@@ -2941,6 +3090,12 @@ return|;
 comment|/* no data */
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_comment
 comment|/* read one byte from the aux device */
@@ -4744,6 +4899,15 @@ name|TRUE
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !PC98 */
+end_comment
 
 end_unit
 
