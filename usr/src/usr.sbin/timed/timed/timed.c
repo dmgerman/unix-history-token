@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.7 (Berkeley) %G%"
+literal|"@(#)timed.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -902,18 +902,8 @@ argument_list|)
 expr_stmt|;
 name|sequence
 operator|=
-name|casual
-argument_list|(
-operator|(
-name|long
-operator|)
-literal|1
-argument_list|,
-operator|(
-name|long
-operator|)
-name|MAXSEQ
-argument_list|)
+name|random
+argument_list|()
 expr_stmt|;
 comment|/* initial seq number */
 comment|/* rounds kernel variable time to multiple of 5 ms. */
@@ -2870,10 +2860,6 @@ parameter_list|()
 block|{
 name|char
 modifier|*
-name|ret
-decl_stmt|;
-name|char
-modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
@@ -2897,8 +2883,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|ctime
 argument_list|(
 operator|&
@@ -2906,10 +2892,6 @@ name|tv
 operator|.
 name|tv_sec
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
 operator|)
 return|;
 block|}
@@ -2931,6 +2913,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|nets
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.8 (Berkeley) %G%"
+literal|"@(#)master.c	2.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,6 +346,7 @@ operator|.
 name|tsp_seq
 operator|=
 name|sequence
+operator|++
 expr_stmt|;
 name|to
 operator|.
@@ -418,17 +419,6 @@ name|exit
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|++
-name|sequence
-operator|>
-name|MAXSEQ
-condition|)
-name|sequence
-operator|=
-literal|1
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acksend.c	2.3 (Berkeley) %G%"
+literal|"@(#)acksend.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,16 +353,8 @@ operator|!=
 name|RECEIVED
 condition|)
 do|;
-if|if
-condition|(
+name|sequence
 operator|++
-name|sequence
-operator|>
-name|MAXSEQ
-condition|)
-name|sequence
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
