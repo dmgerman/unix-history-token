@@ -4450,7 +4450,7 @@ comment|/* XXX */
 return|return;
 block|}
 comment|/* send the read command */
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|SCD_WRITE
@@ -4525,7 +4525,7 @@ argument_list|,
 name|CMD_READ
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|mbx

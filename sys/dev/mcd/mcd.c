@@ -4807,7 +4807,7 @@ expr_stmt|;
 name|retry_read
 label|:
 comment|/* send the read command */
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|MCD_WRITE
@@ -4892,7 +4892,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 comment|/* Spin briefly (<= 2ms) to avoid missing next block */
@@ -8824,7 +8824,7 @@ name|retry
 operator|++
 control|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|MCD_WRITE
@@ -8920,7 +8920,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|status
