@@ -866,9 +866,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* XXX - Temporary hack needed for new ATA to work. */
 name|printf
 argument_list|(
-literal|"nothing to autoload yet.\n"
+literal|"Turning off DMA for ATA.\n"
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"hw.ata.ata_dma"
+argument_list|,
+literal|"0"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
