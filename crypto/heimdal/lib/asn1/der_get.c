@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: der_get.c,v 1.32 2002/08/22 19:11:07 assar Exp $"
+literal|"$Id: der_get.c,v 1.33 2002/09/03 16:21:49 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1159,6 +1159,15 @@ name|ret
 operator|+=
 name|l
 expr_stmt|;
+if|if
+condition|(
+name|reallen
+operator|>
+name|len
+condition|)
+return|return
+name|ASN1_OVERRUN
+return|;
 name|e
 operator|=
 name|der_get_int
@@ -1313,6 +1322,15 @@ name|ret
 operator|+=
 name|l
 expr_stmt|;
+if|if
+condition|(
+name|reallen
+operator|>
+name|len
+condition|)
+return|return
+name|ASN1_OVERRUN
+return|;
 name|e
 operator|=
 name|der_get_unsigned

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2000, 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_comment
-comment|/* $Id: rsh_locl.h,v 1.27 2002/08/12 15:09:16 joda Exp $ */
+comment|/* $Id: rsh_locl.h,v 1.28 2002/09/03 20:03:46 joda Exp $ */
 end_comment
 
 begin_ifdef
@@ -362,6 +362,16 @@ directive|include
 file|<krb5.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<krb5-private.h>
+end_include
+
+begin_comment
+comment|/* for _krb5_{get,put}_int */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -516,6 +526,44 @@ name|crypto
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|key_usage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|ivec_in
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|ivec_out
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|init_ivecs
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -549,8 +597,15 @@ end_endif
 begin_define
 define|#
 directive|define
-name|KCMD_VERSION
+name|KCMD_OLD_VERSION
 value|"KCMDV0.1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KCMD_NEW_VERSION
+value|"KCMDV0.2"
 end_define
 
 begin_define
@@ -571,8 +626,12 @@ begin_define
 define|#
 directive|define
 name|RSH_BUFSIZ
-value|(16 * 1024)
+value|(5 * 1024)
 end_define
+
+begin_comment
+comment|/* MIT kcmd can't handle larger buffers */
+end_comment
 
 begin_define
 define|#
@@ -600,14 +659,14 @@ name|ssize_t
 name|do_read
 parameter_list|(
 name|int
-name|fd
 parameter_list|,
 name|void
 modifier|*
-name|buf
 parameter_list|,
 name|size_t
-name|sz
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -617,14 +676,14 @@ name|ssize_t
 name|do_write
 parameter_list|(
 name|int
-name|fd
 parameter_list|,
 name|void
 modifier|*
-name|buf
 parameter_list|,
 name|size_t
-name|sz
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -644,6 +703,8 @@ parameter_list|,
 name|B
 parameter_list|,
 name|L
+parameter_list|,
+name|I
 parameter_list|)
 value|write((F), (B), (L))
 end_define
@@ -658,6 +719,8 @@ parameter_list|,
 name|B
 parameter_list|,
 name|L
+parameter_list|,
+name|I
 parameter_list|)
 value|read((F), (B), (L))
 end_define

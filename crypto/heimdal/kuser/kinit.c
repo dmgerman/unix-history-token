@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.89 2002/08/21 12:21:31 joda Exp $"
+literal|"$Id: kinit.c,v 1.90 2002/09/09 22:17:53 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1281,6 +1281,13 @@ operator|.
 name|server
 argument_list|)
 expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|client
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -1303,6 +1310,15 @@ name|in_creds
 argument_list|,
 operator|&
 name|real_creds
+argument_list|)
+expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|in_creds
+operator|.
+name|server
 argument_list|)
 expr_stmt|;
 if|if

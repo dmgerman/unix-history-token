@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: pam.c,v 1.27 2001/02/15 04:30:05 assar Exp $"
+literal|"$Id: pam.c,v 1.28 2002/09/09 15:57:24 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -467,8 +467,6 @@ name|openlog
 argument_list|(
 literal|"pam_krb4"
 argument_list|,
-name|LOG_CONS
-operator||
 name|LOG_PID
 argument_list|,
 name|LOG_AUTH

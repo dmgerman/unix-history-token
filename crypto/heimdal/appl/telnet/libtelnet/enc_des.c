@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: enc_des.c,v 1.20 2001/08/29 00:45:19 assar Exp $"
+literal|"$Id: enc_des.c,v 1.21 2002/09/10 20:03:47 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -106,33 +106,11 @@ directive|include
 file|"misc-proto.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<openssl/des.h>
+file|"crypto-headers.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

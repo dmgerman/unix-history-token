@@ -432,12 +432,9 @@ begin_comment
 comment|/* Define to 1 if you have the `cap_set_proc' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_CAP_SET_PROC
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_CAP_SET_PROC */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `cgetent' function. */
@@ -827,12 +824,25 @@ begin_comment
 comment|/* Define if el_init takes four arguments. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500024
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_FOUR_VALUED_EL_INIT
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* define if krb_put_int takes four arguments. */
@@ -1064,6 +1074,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getpagesize' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPAGESIZE
 value|1
 end_define
 
@@ -1615,6 +1636,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have a working `mmap' system call. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have a ndbm library */
 end_comment
 
@@ -1646,6 +1678,14 @@ directive|define
 name|HAVE_NETDB_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<netgroup.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETGROUP_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<netinet6/in6.h> header file. */
@@ -1763,6 +1803,14 @@ directive|define
 name|HAVE_NEW_DB
 value|1
 end_define
+
+begin_comment
+comment|/* define if you have hash functions like md4_finito() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OLD_HASH_NAMES */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `on_exit' function. */
@@ -1990,6 +2038,14 @@ directive|define
 name|HAVE_RESOLV_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `res_nsearch' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_RES_NSEARCH */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `res_search' function. */
@@ -2402,12 +2458,25 @@ begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500028
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_STDINT_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
@@ -2917,12 +2986,9 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/capability.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_CAPABILITY_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_CAPABILITY_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/category.h> header file. */
@@ -2973,6 +3039,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/mman.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MMAN_H
 value|1
 end_define
 
@@ -3652,34 +3729,25 @@ begin_comment
 comment|/* Define to 1 if you have the `XauFileName' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUFILENAME
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUFILENAME */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `XauReadAuth' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUREADAUTH
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUREADAUTH */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `XauWriteAuth' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUWRITEAUTH
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUWRITEAUTH */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `yp_get_default_domain' function. */
@@ -4051,6 +4119,14 @@ comment|/* #undef NEED_VSNPRINTF_PROTO */
 end_comment
 
 begin_comment
+comment|/* Define if you don't want to use mmap. */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MMAP */
+end_comment
+
+begin_comment
 comment|/* Define this to enable old environment option in telnet. */
 end_comment
 
@@ -4285,6 +4361,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
+
+begin_comment
 comment|/* Define to enable extensions on glibc-based systems such as Linux. */
 end_comment
 
@@ -4294,6 +4378,14 @@ directive|define
 name|_GNU_SOURCE
 value|1
 end_define
+
+begin_comment
+comment|/* Define for large files, on AIX-style hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGE_FILES */
+end_comment
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */
@@ -4366,6 +4458,63 @@ end_comment
 begin_comment
 comment|/* #undef uid_t */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FOUR_VALUED_KRB_PUT_INT
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KRB_PUT_INT
+parameter_list|(
+name|F
+parameter_list|,
+name|T
+parameter_list|,
+name|L
+parameter_list|,
+name|S
+parameter_list|)
+value|krb_put_int((F), (T), (L), (S))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KRB_PUT_INT
+parameter_list|(
+name|F
+parameter_list|,
+name|T
+parameter_list|,
+name|L
+parameter_list|,
+name|S
+parameter_list|)
+value|krb_put_int((F), (T), (S))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -4449,6 +4598,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB_KDCTIMEOFDAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb_kdctimeofday
+parameter_list|(
+name|X
+parameter_list|)
+value|gettimeofday((X), NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB_GET_KDC_TIME_DIFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb_get_kdc_time_diff
+parameter_list|()
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4513,103 +4702,6 @@ parameter_list|,
 name|Y
 parameter_list|)
 value|((X) ? realloc((X), (Y)) : malloc(Y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_FOUR_VALUED_KRB_PUT_INT
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (L), (S))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (S))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_KRB_KDCTIMEOFDAY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|krb_kdctimeofday
-parameter_list|(
-name|X
-parameter_list|)
-value|gettimeofday((X), NULL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_KRB_GET_KDC_TIME_DIFF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|krb_get_kdc_time_diff
-parameter_list|()
-value|(0)
 end_define
 
 begin_endif

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_keyfile.c,v 1.13 2002/04/18 14:04:21 joda Exp $"
+literal|"$Id: keytab_keyfile.c,v 1.14 2002/09/09 14:22:26 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1187,6 +1187,8 @@ operator||
 name|O_BINARY
 operator||
 name|O_CREAT
+operator||
+name|O_EXCL
 argument_list|,
 literal|0600
 argument_list|)

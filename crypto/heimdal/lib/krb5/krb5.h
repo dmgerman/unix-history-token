@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.203 2002/08/22 10:06:20 joda Exp $ */
+comment|/* $Id: krb5.h,v 1.205 2002/09/03 17:31:47 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -274,11 +274,7 @@ block|,
 name|ENCTYPE_DES_PCBC_NONE
 init|=
 name|ETYPE_DES_PCBC_NONE
-block|,
-name|ENCTYPE_DES3_CBC_NONE_IVEC
-init|=
-name|ETYPE_DES3_CBC_NONE_IVEC
-block|}
+block|, }
 enum|;
 end_enum
 
@@ -533,6 +529,11 @@ block|,
 name|AP_OPTS_MUTUAL_REQUIRED
 init|=
 literal|2
+block|,
+name|AP_OPTS_USE_SUBKEY
+init|=
+literal|4
+comment|/* library internal */
 block|}
 enum|;
 end_enum

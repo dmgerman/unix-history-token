@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: config_file.c,v 1.45 2002/08/14 17:35:03 joda Exp $"
+literal|"$Id: config_file.c,v 1.46 2002/09/10 19:04:55 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1559,7 +1559,7 @@ argument_list|,
 name|name
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
