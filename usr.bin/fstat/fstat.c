@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fstat.c,v 1.11 1997/07/08 11:02:48 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -855,7 +855,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|" -p requires a process id"
+literal|"-p requires a process id"
 argument_list|)
 expr_stmt|;
 name|usage
