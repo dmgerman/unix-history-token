@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.23	82/01/19	*/
+comment|/*	ip_output.c	1.24	82/02/12	*/
 end_comment
 
 begin_include
@@ -463,6 +463,8 @@ operator|->
 name|ip_off
 operator|=
 name|off
+operator|>>
+literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -474,6 +476,8 @@ name|ip
 operator|->
 name|ip_len
 condition|)
+name|len
+operator|=
 name|mhip
 operator|->
 name|ip_len
@@ -502,25 +506,32 @@ block|}
 name|mhip
 operator|->
 name|ip_len
-operator|=
-name|htons
-argument_list|(
-call|(
-name|u_short
-call|)
-argument_list|(
-name|mhip
-operator|->
-name|ip_len
-operator|+
+operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
 argument_list|)
-argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|vax
+name|mhip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|mhip
+operator|->
+name|ip_len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mh
 operator|->
 name|m_next
@@ -555,6 +566,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|#
+directive|if
+name|vax
 name|ip
 operator|->
 name|ip_off
@@ -569,6 +583,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_sum
