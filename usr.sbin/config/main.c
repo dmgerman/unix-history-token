@@ -245,6 +245,32 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_DONT_CLOBBER
+if|if
+condition|(
+name|stat
+argument_list|(
+name|p
+operator|=
+name|path
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+condition|)
+block|{
+else|#
+directive|else
+comment|/* CONFIG_DONT_CLOBBER */
 name|p
 operator|=
 name|path
@@ -267,6 +293,9 @@ name|buf
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* CONFIG_DONT_CLOBBER */
 if|if
 condition|(
 name|mkdir
@@ -317,6 +346,9 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_DONT_CLOBBER
 block|}
 else|else
 block|{
@@ -408,6 +440,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_DONT_CLOBBER */
 block|}
 name|loadaddress
 operator|=
@@ -576,13 +611,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * get_word  *	returns EOF on end of file  *	NULL on end of line  *	pointer to the word otherwise  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|get_word
@@ -736,13 +765,7 @@ name|line
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * get_quoted_word  *	like get_word but will accept something in double or single quotes  *	(to allow embedded spaces).  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|get_quoted_word
@@ -976,13 +999,7 @@ name|line
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * prepend the path to a filename  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|path
