@@ -1634,6 +1634,7 @@ begin_function_decl
 name|uint16_t
 name|g_dec_be2
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|p
@@ -1645,6 +1646,7 @@ begin_function_decl
 name|uint32_t
 name|g_dec_be4
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|p
@@ -1656,6 +1658,7 @@ begin_function_decl
 name|uint16_t
 name|g_dec_le2
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|p
@@ -1667,6 +1670,7 @@ begin_function_decl
 name|uint32_t
 name|g_dec_le4
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|p
@@ -1678,6 +1682,7 @@ begin_function_decl
 name|uint64_t
 name|g_dec_le8
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|p
