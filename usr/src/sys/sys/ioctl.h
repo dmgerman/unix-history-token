@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.28	83/03/19	*/
+comment|/*	ioctl.h	4.29	83/03/19	*/
 end_comment
 
 begin_comment
@@ -1775,7 +1775,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFCONF
-value|_IOR(s,20, struct ifconf)
+value|_IOWR(s,20,struct ifconf)
 end_define
 
 begin_comment
