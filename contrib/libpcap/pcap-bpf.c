@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: pcap-bpf.c,v 1.28 96/12/10 23:14:56 leres Exp $ (LBL)"
+literal|"@(#) $Header: pcap-bpf.c,v 1.31 98/07/12 13:14:55 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -810,6 +810,28 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|v
+operator|=
+literal|32768
+expr_stmt|;
+comment|/* XXX this should be a user-accessible hook */
+comment|/* Ignore the return value - this is because the call fails on 	 * BPF systems that don't have kernel malloc.  And if the call 	 * fails, it's no big deal, we just continue to use the standard 	 * buffer size. 	 */
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|BIOCSBLEN
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|v
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -900,6 +922,38 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|#
+directive|if
+name|_BSDI_VERSION
+operator|-
+literal|0
+operator|>=
+literal|199510
+comment|/* The SLIP and PPP link layer header changed in BSD/OS 2.1 */
+switch|switch
+condition|(
+name|v
+condition|)
+block|{
+case|case
+name|DLT_SLIP
+case|:
+name|v
+operator|=
+name|DLT_SLIP_BSDOS
+expr_stmt|;
+break|break;
+case|case
+name|DLT_PPP
+case|:
+name|v
+operator|=
+name|DLT_PPP_BSDOS
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 name|p
 operator|->
 name|linktype

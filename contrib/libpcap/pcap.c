@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: pcap.c,v 1.27 96/11/27 18:43:25 leres Exp $ (LBL)"
+literal|"@(#) $Header: pcap.c,v 1.29 98/07/12 13:15:39 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,10 +103,6 @@ modifier|*
 name|user
 parameter_list|)
 block|{
-specifier|register
-name|int
-name|cc
-decl_stmt|;
 if|if
 condition|(
 name|p
@@ -131,11 +127,8 @@ name|user
 argument_list|)
 operator|)
 return|;
-comment|/* XXX keep reading until we get something (or an error occurs) */
-do|do
-block|{
-name|cc
-operator|=
+return|return
+operator|(
 name|pcap_read
 argument_list|(
 name|p
@@ -146,18 +139,6 @@ name|callback
 argument_list|,
 name|user
 argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|cc
-operator|==
-literal|0
-condition|)
-do|;
-return|return
-operator|(
-name|cc
 operator|)
 return|;
 block|}
@@ -182,16 +163,29 @@ modifier|*
 name|user
 parameter_list|)
 block|{
+specifier|register
+name|int
+name|n
+decl_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-name|int
+if|if
+condition|(
+name|p
+operator|->
+name|sf
+operator|.
+name|rfile
+operator|!=
+name|NULL
+condition|)
 name|n
-init|=
-name|pcap_dispatch
+operator|=
+name|pcap_offline_read
 argument_list|(
 name|p
 argument_list|,
@@ -201,7 +195,34 @@ name|callback
 argument_list|,
 name|user
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * XXX keep reading until we get something 			 * (or an error occurs) 			 */
+do|do
+block|{
+name|n
+operator|=
+name|pcap_read
+argument_list|(
+name|p
+argument_list|,
+name|cnt
+argument_list|,
+name|callback
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+do|;
+block|}
 if|if
 condition|(
 name|n
