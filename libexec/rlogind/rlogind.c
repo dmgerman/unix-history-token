@@ -1555,7 +1555,6 @@ name|lusername
 operator|==
 literal|'-'
 condition|)
-block|)
 block|{
 name|syslog
 argument_list|(
@@ -1678,25 +1677,13 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|CRYPT
-end_ifdef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERBEROS
-end_ifdef
-
-begin_comment
 comment|/* 	 * If encrypted, don't turn on NBIO or the des read/write 	 * routines will croak. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1716,9 +1703,6 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 name|master
@@ -1729,9 +1713,6 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 name|master
@@ -1742,9 +1723,6 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -1752,9 +1730,6 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|protocol
 argument_list|(
 name|f
@@ -1762,9 +1737,6 @@ argument_list|,
 name|master
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -1772,30 +1744,28 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  char
+begin_decl_stmt
+name|char
 name|magic
 index|[
 literal|2
 index|]
-operator|=
+init|=
 block|{
 literal|0377
 block|,
 literal|0377
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
