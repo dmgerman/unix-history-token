@@ -3531,6 +3531,8 @@ condition|)
 block|{
 name|u_short
 name|save
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
