@@ -1776,6 +1776,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|close
+argument_list|(
+name|fdf
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Read %ju requests from %s.\n"
@@ -1813,9 +1818,9 @@ argument_list|,
 name|nprocs
 argument_list|)
 expr_stmt|;
-name|close
+name|fflush
 argument_list|(
-name|fdf
+name|stdout
 argument_list|)
 expr_stmt|;
 name|reqs_per_proc
@@ -1905,7 +1910,6 @@ argument_list|(
 name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 operator|-
 literal|1
