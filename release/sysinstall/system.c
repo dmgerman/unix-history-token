@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.81 1997/05/27 18:56:03 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.82 1997/07/31 11:08:45 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -128,6 +128,16 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|gunzip
+init|=
+name|RunningAsInit
+condition|?
+literal|"/stand/gunzip"
+else|:
+literal|"/usr/bin/gunzip"
+decl_stmt|;
 name|Mkdir
 argument_list|(
 name|DOC_TMP_DIR
@@ -148,7 +158,9 @@ argument_list|)
 operator|||
 name|vsystem
 argument_list|(
-literal|"gzip -c -d %s> %s"
+literal|"%s -c %s> %s"
+argument_list|,
+name|gunzip
 argument_list|,
 name|fname
 argument_list|,
