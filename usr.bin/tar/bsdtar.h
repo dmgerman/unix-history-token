@@ -15,6 +15,13 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_BYTES_PER_BLOCK
+value|(20*512)
+end_define
+
 begin_comment
 comment|/*  * The internal state for the "bsdtar" program.  *  * Keeping all of the state in a structure like this simplifies memory  * leak testing (at exit, anything left on the heap is suspect).  A  * pointer to this structure is passed to most bsdtar internal  * functions.  */
 end_comment

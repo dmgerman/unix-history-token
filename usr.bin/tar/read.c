@@ -289,6 +289,14 @@ argument_list|,
 name|bsdtar
 operator|->
 name|bytes_per_block
+operator|!=
+literal|0
+condition|?
+name|bsdtar
+operator|->
+name|bytes_per_block
+else|:
+name|DEFAULT_BYTES_PER_BLOCK
 argument_list|)
 condition|)
 name|bsdtar_errc

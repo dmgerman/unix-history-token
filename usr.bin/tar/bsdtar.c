@@ -794,12 +794,6 @@ name|filename
 operator|=
 name|_PATH_DEFTAPE
 expr_stmt|;
-name|bsdtar
-operator|->
-name|bytes_per_block
-operator|=
-literal|10240
-expr_stmt|;
 comment|/* Default: preserve mod time on extract */
 name|bsdtar
 operator|->
