@@ -2779,6 +2779,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|pcic_imask
+operator|=
+name|SWI_MASK
+expr_stmt|;
 name|pcic_irq
 operator|=
 name|pccard_alloc_intr
