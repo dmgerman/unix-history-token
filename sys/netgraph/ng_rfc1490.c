@@ -277,6 +277,8 @@ block|,
 name|ng_rfc1490_rcvdata
 block|,
 name|ng_rfc1490_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

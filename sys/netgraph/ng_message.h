@@ -148,12 +148,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_NG_MESG_INFO
+parameter_list|(
+name|dtype
+parameter_list|)
+value|{			\ 	{							\ 	  { "version",&ng_parse_int8_type	},	\ 	  { "spare",&ng_parse_int8_type	},	\ 	  { "arglen",&ng_parse_int16_type	},	\ 	  { "flags",&ng_parse_int32_type	},	\ 	  { "token",&ng_parse_int32_type	},	\ 	  { "typecookie",&ng_parse_int32_type	},	\ 	  { "cmd",&ng_parse_int32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Negraph type binary compatibility field */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|1
+value|2
 end_define
+
+begin_comment
+comment|/* Flags field flags */
+end_comment
 
 begin_define
 define|#
@@ -178,6 +200,17 @@ comment|/* the message is a response */
 end_comment
 
 begin_comment
+comment|/* Type of a unique node ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ng_ID_t
+value|unsigned int
+end_define
+
+begin_comment
 comment|/*  * Here we describe the "generic" messages that all nodes inherently  * understand. With the exception of NGM_TEXT_STATUS, these are handled  * automatically by the base netgraph code.  */
 end_comment
 
@@ -200,46 +233,62 @@ begin_define
 define|#
 directive|define
 name|NGM_SHUTDOWN
-value|0x0001
+value|1
 end_define
 
 begin_comment
-comment|/* no args */
+comment|/* shut down node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_MKPEER
-value|0x0002
+value|2
 end_define
+
+begin_comment
+comment|/* create and attach a peer node */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_CONNECT
-value|0x0003
+value|3
 end_define
+
+begin_comment
+comment|/* connect two nodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_NAME
-value|0x0004
+value|4
 end_define
+
+begin_comment
+comment|/* give a node a name */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_RMHOOK
-value|0x0005
+value|5
 end_define
+
+begin_comment
+comment|/* break a connection btw. two nodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_NODEINFO
-value|0x0006
+value|6
 end_define
 
 begin_comment
@@ -250,18 +299,18 @@ begin_define
 define|#
 directive|define
 name|NGM_LISTHOOKS
-value|0x0007
+value|7
 end_define
 
 begin_comment
-comment|/* get nodeinfo for the target + hook info */
+comment|/* get list of hooks on node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_LISTNAMES
-value|0x0008
+value|8
 end_define
 
 begin_comment
@@ -272,7 +321,7 @@ begin_define
 define|#
 directive|define
 name|NGM_LISTNODES
-value|0x0009
+value|9
 end_define
 
 begin_comment
@@ -283,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|NGM_LISTTYPES
-value|0x000a
+value|10
 end_define
 
 begin_comment
@@ -294,15 +343,37 @@ begin_define
 define|#
 directive|define
 name|NGM_TEXT_STATUS
-value|0x000b
+value|11
 end_define
 
 begin_comment
-comment|/* (optional) returns human readable status */
+comment|/* (optional) get text status report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_BINARY2ASCII
+value|12
+end_define
+
+begin_comment
+comment|/* convert struct ng_mesg to ascii */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_ASCII2BINARY
+value|13
+end_define
+
+begin_comment
+comment|/* convert ascii to struct ng_mesg */
 end_comment
 
 begin_comment
-comment|/*  * Args sections for generic NG commands. All strings are NUL-terminated.  */
+comment|/* Structure used for NGM_MKPEER */
 end_comment
 
 begin_struct
@@ -340,6 +411,22 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_MKPEER_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "type",&ng_parse_typebuf_type	},	\ 	  { "ourhook",&ng_parse_hookbuf_type	},	\ 	  { "peerhook",&ng_parse_hookbuf_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_CONNECT */
+end_comment
+
 begin_struct
 struct|struct
 name|ngm_connect
@@ -375,6 +462,22 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_CONNECT_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "path",&ng_parse_pathbuf_type	},	\ 	  { "ourhook",&ng_parse_hookbuf_type	},	\ 	  { "peerhook",&ng_parse_hookbuf_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_NAME */
+end_comment
+
 begin_struct
 struct|struct
 name|ngm_name
@@ -391,6 +494,22 @@ comment|/* node name */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_NAME_INFO
+parameter_list|()
+value|{				\ 	{							\ 	  { "name",&ng_parse_nodebuf_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_RMHOOK */
+end_comment
 
 begin_struct
 struct|struct
@@ -409,15 +528,20 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ng_ID_t
-value|unsigned int
+name|NG_GENERIC_RMHOOK_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
-comment|/* Structures used in response to NGM_NODEINFO and NGM_LISTHOOKS */
+comment|/* Structure used for NGM_NODEINFO */
 end_comment
 
 begin_struct
@@ -454,6 +578,22 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_NODEINFO_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "name",&ng_parse_nodebuf_type	},	\ 	  { "type",&ng_parse_typebuf_type	},	\ 	  { "id",&ng_parse_int32_type	},	\ 	  { "hooks",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_LISTHOOKS */
+end_comment
+
 begin_struct
 struct|struct
 name|linkinfo
@@ -484,6 +624,20 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_LINKINFO_INFO
+parameter_list|(
+name|nitype
+parameter_list|)
+value|{		\ 	{							\ 	  { "ourhook",&ng_parse_hookbuf_type	},	\ 	  { "peerhook",&ng_parse_hookbuf_type	},	\ 	  { "nodeinfo",		(nitype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
 begin_struct
 struct|struct
 name|hooklist
@@ -506,7 +660,23 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Structure used for NGM_LISTNAMES/NGM_LISTNODES (not node specific) */
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_HOOKLIST_INFO
+parameter_list|(
+name|nitype
+parameter_list|,
+name|litype
+parameter_list|)
+value|{		\ 	{							\ 	  { "nodeinfo",		(nitype)		},	\ 	  { "linkinfo",		(litype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_LISTNAMES/NGM_LISTNODES */
 end_comment
 
 begin_struct
@@ -528,7 +698,21 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Structures used for NGM_LISTTYPES (not node specific) */
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_LISTNODES_INFO
+parameter_list|(
+name|niarraytype
+parameter_list|)
+value|{		\ 	{							\ 	  { "numnames",&ng_parse_int32_type	},	\ 	  { "nodeinfo",		(niarraytype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Structure used for NGM_LISTTYPES */
 end_comment
 
 begin_struct
@@ -552,6 +736,18 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_TYPEINFO_INFO
+parameter_list|()
+value|{		\ 	{							\ 	  { "typename",&ng_parse_typebuf_type	},	\ 	  { "typeinfo",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
 begin_struct
 struct|struct
 name|typelist
@@ -569,6 +765,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_TYPELIST_INFO
+parameter_list|(
+name|tiarraytype
+parameter_list|)
+value|{		\ 	{							\ 	  { "numtypes",&ng_parse_int32_type	},	\ 	  { "typeinfo",		(tiarraytype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
 
 begin_comment
 comment|/*  * For netgraph nodes that are somehow associated with file descriptors  * (e.g., a device that has a /dev entry and is also a netgraph node),  * we define a generic ioctl for requesting the corresponding nodeinfo  * structure and for assigning a name (if there isn't one already).  *  * For these to you need to also #include<sys/ioccom.h>.  */

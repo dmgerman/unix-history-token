@@ -485,6 +485,8 @@ block|,
 name|ngfrm_rcvdata
 block|,
 name|ngfrm_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

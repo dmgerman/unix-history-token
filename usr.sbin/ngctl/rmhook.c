@@ -41,6 +41,10 @@ block|,
 literal|"The rmhook command forces the node at \"path\" to break the link"
 literal|" formed by its hook \"hook\", if connected."
 literal|" If \"path\" is omitted then \".\" is assumed."
+block|,
+block|{
+literal|"disconnect"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

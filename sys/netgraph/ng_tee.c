@@ -200,6 +200,8 @@ block|,
 name|ngt_rcvdata
 block|,
 name|ngt_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

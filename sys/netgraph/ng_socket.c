@@ -383,6 +383,8 @@ block|,
 name|ngs_rcvdata
 block|,
 name|ngs_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -34,6 +34,58 @@ value|942710669
 end_define
 
 begin_comment
+comment|/* For NGM_KSOCKET_SETOPT and NGM_KSOCKET_GETOPT control messages */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_ksocket_sockopt
+block|{
+name|u_int32_t
+name|level
+decl_stmt|;
+comment|/* second arg of [gs]etsockopt() */
+name|u_int32_t
+name|name
+decl_stmt|;
+comment|/* third arg of [gs]etsockopt() */
+name|u_char
+name|value
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* fourth arg of [gs]etsockopt() */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Max length socket option we can return via NGM_KSOCKET_GETOPT    XXX This should not be necessary, we should dynamically size    XXX the response. Until then.. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_KSOCKET_MAX_OPTLEN
+value|1024
+end_define
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_KSOCKET_SOCKOPT_INFO
+parameter_list|(
+name|svtype
+parameter_list|)
+value|{			\ 	{							\ 	  { "level",&ng_parse_int32_type	},	\ 	  { "name",&ng_parse_int32_type	},	\ 	  { "value",		(svtype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 

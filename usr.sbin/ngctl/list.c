@@ -41,6 +41,10 @@ block|,
 literal|"The list command shows information every node that currently"
 literal|" exists in the netgraph system. The optional -n argument limits"
 literal|" this list to only those nodes with a global name assignment."
+block|,
+block|{
+literal|"ls"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

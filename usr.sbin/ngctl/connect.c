@@ -43,6 +43,10 @@ literal|" \"path\" and \"relpath\" using hooks \"hook\" and \"peerhook\","
 literal|" respectively. The \"relpath\", if not absolute, is specified"
 literal|" relative to the node at \"path\"."
 literal|" If \"path\" is omitted then \".\" is assumed."
+block|,
+block|{
+literal|"join"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

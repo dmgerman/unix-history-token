@@ -205,6 +205,8 @@ block|,
 name|ng_pppoe_rcvdata
 block|,
 name|ng_pppoe_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

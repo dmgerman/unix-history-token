@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -150,12 +156,6 @@ ifdef|#
 directive|ifdef
 name|INET
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
 
 begin_include
 include|#
@@ -735,6 +735,8 @@ block|,
 name|ng_iface_rcvdata
 block|,
 name|ng_iface_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2717,39 +2719,34 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Sanity checks */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|iffam
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+name|iffam
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: iffam"
+operator|,
 name|__FUNCTION__
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|KASSERT
+argument_list|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
+literal|"%s: not pkthdr"
+operator|,
 name|__FUNCTION__
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|m

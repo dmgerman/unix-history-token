@@ -165,6 +165,8 @@ block|,
 name|ng_xxx_rcvdataq
 block|,
 name|ng_xxx_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

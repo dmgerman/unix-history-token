@@ -302,6 +302,8 @@ block|,
 name|ng_vjc_rcvdata
 block|,
 name|ng_vjc_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

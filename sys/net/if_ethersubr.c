@@ -629,6 +629,8 @@ block|,
 name|ngether_rcvdata
 block|,
 name|ngether_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

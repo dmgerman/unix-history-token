@@ -221,6 +221,8 @@ block|,
 name|ng_UI_rcvdata
 block|,
 name|ng_UI_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

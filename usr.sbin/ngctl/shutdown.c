@@ -39,6 +39,12 @@ block|,
 literal|"Shutdown the node at<path>"
 block|,
 name|NULL
+block|,
+block|{
+literal|"kill"
+block|,
+literal|"rmnode"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

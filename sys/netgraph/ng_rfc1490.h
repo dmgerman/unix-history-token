@@ -29,7 +29,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGM_RFC1490_NODE_COOKIE
+name|NGM_RFC1490_COOKIE
 value|861060632
 end_define
 

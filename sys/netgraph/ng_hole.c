@@ -115,6 +115,8 @@ block|,
 name|ngh_rcvdata
 block|,
 name|ngh_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
