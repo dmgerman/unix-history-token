@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.141 1996/04/23 18:36:56 nate Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.142 1996/05/02 09:34:40 phk Exp $  */
 end_comment
 
 begin_include
@@ -137,16 +137,6 @@ include|#
 directive|include
 file|<machine/clock.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_comment
-comment|/* XXX just to get at `imen' */
-end_comment
 
 begin_include
 include|#
@@ -795,9 +785,16 @@ decl_stmt|;
 name|bool_t
 name|do_timestamp
 decl_stmt|;
+name|bool_t
+name|do_dcd_timestamp
+decl_stmt|;
 name|struct
 name|timeval
 name|timestamp
+decl_stmt|;
+name|struct
+name|timeval
+name|dcd_timestamp
 decl_stmt|;
 name|u_long
 name|bytes_in
@@ -890,14 +887,8 @@ comment|/*  * XXX public functions in drivers should be declared in headers prod
 end_comment
 
 begin_comment
-comment|/* Interrupt handling entry points. */
+comment|/* Interrupt handling entry point. */
 end_comment
-
-begin_decl_stmt
-name|inthand2_t
-name|siointrts
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -1237,14 +1228,6 @@ name|unit
 parameter_list|)
 value|(p_com_addr[unit])
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|intr_timestamp
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -2558,16 +2541,6 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* EXTRA DELAY? */
-comment|/* 	 * XXX DELAY() reenables CPU interrupts.  This is a problem for 	 * shared interrupts after the first device using one has been 	 * successfully probed - config_isadev() has enabled the interrupt 	 * in the ICU. 	 */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize the speed and the word size and wait long enough to 	 * drain the maximum of 16 bytes of junk in device output queues. 	 * The speed is undefined after a master reset and must be set 	 * before relying on anything related to output.  There may be 	 * junk after a (very fast) soft reboot and (apparently) after 	 * master reset. 	 * XXX what about the UART bug avoided by waiting in comparam()? 	 * We don't want to to wait long enough to drain at 2 bps. 	 */
 name|outb
 argument_list|(
@@ -2930,16 +2903,6 @@ operator|)
 operator|-
 name|IIR_NOPEND
 expr_stmt|;
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-name|imen
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -5981,56 +5944,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Interrupt routine for timekeeping purposes */
-end_comment
-
-begin_function
-name|void
-name|siointrts
-parameter_list|(
-name|unit
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-comment|/* 	 * XXX microtime() reenables CPU interrupts.  We can't afford to 	 * be interrupted and don't want to slow down microtime(), so lock 	 * out interrupts in another way. 	 */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|intr_timestamp
-argument_list|)
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-name|imen
-argument_list|)
-expr_stmt|;
-name|siointr
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|void
 name|siointr
@@ -6165,19 +6078,6 @@ decl_stmt|;
 name|u_char
 name|recv_data
 decl_stmt|;
-if|if
-condition|(
-name|com
-operator|->
-name|do_timestamp
-condition|)
-comment|/* XXX a little bloat here... */
-name|com
-operator|->
-name|timestamp
-operator|=
-name|intr_timestamp
-expr_stmt|;
 while|while
 condition|(
 name|TRUE
@@ -6424,6 +6324,20 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|com
+operator|->
+name|do_timestamp
+condition|)
+name|microtime
+argument_list|(
+operator|&
+name|com
+operator|->
+name|timestamp
+argument_list|)
+expr_stmt|;
 operator|++
 name|com_events
 expr_stmt|;
@@ -6534,6 +6448,33 @@ operator|->
 name|last_modem_status
 condition|)
 block|{
+if|if
+condition|(
+name|com
+operator|->
+name|do_dcd_timestamp
+operator|&&
+operator|!
+operator|(
+name|com
+operator|->
+name|last_modem_status
+operator|&
+name|MSR_DCD
+operator|)
+operator|&&
+name|modem_status
+operator|&
+name|MSR_DCD
+condition|)
+name|microtime
+argument_list|(
+operator|&
+name|com
+operator|->
+name|dcd_timestamp
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Schedule high level to handle DCD changes.  Note 			 * that we don't use the delta bits anywhere.  Some 			 * UARTs mess them up, and it's easy to remember the 			 * previous bits and calculate the delta. 			 */
 name|com
 operator|->
@@ -7919,6 +7860,28 @@ operator|=
 name|com
 operator|->
 name|timestamp
+expr_stmt|;
+break|break;
+case|case
+name|TIOCDCDTIMESTAMP
+case|:
+name|com
+operator|->
+name|do_dcd_timestamp
+operator|=
+name|TRUE
+expr_stmt|;
+operator|*
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+name|data
+operator|=
+name|com
+operator|->
+name|dcd_timestamp
 expr_stmt|;
 break|break;
 default|default:
