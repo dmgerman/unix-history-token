@@ -545,7 +545,7 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"0x%x:"
+literal|"0x%lx:"
 else|:
 literal|"%lu:"
 argument_list|,
@@ -610,7 +610,7 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|" 0x%x"
+literal|" 0x%lx"
 else|:
 literal|" %lu"
 argument_list|,
@@ -629,7 +629,7 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|" 0x%x"
+literal|" 0x%lx"
 else|:
 literal|" %lu"
 argument_list|,
@@ -639,9 +639,6 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|/=
-operator|(
-name|long
-operator|)
 operator|*
 name|fact
 expr_stmt|;
@@ -651,9 +648,6 @@ condition|(
 operator|(
 name|val
 operator|%
-operator|(
-name|long
-operator|)
 operator|*
 name|fact
 operator|)

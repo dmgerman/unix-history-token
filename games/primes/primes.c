@@ -924,7 +924,7 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"0x%x\n"
+literal|"0x%lx\n"
 else|:
 literal|"%lu\n"
 argument_list|,
@@ -1281,7 +1281,7 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"0x%x\n"
+literal|"0x%lx\n"
 else|:
 literal|"%lu\n"
 argument_list|,
