@@ -972,7 +972,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|mb_init
+name|mbuf_init
 parameter_list|(
 name|void
 modifier|*
@@ -1051,7 +1051,7 @@ argument|SI_SUB_MBUF
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|mb_init
+argument|mbuf_init
 argument_list|,
 argument|NULL
 argument_list|)
@@ -1059,7 +1059,7 @@ end_macro
 
 begin_function
 name|void
-name|mb_init
+name|mbuf_init
 parameter_list|(
 name|void
 modifier|*
@@ -1982,7 +1982,7 @@ name|bad
 label|:
 name|panic
 argument_list|(
-literal|"mb_init(): failed to initialize mbuf subsystem!"
+literal|"mbuf_init(): failed to initialize mbuf subsystem!"
 argument_list|)
 expr_stmt|;
 block|}
