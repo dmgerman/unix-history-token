@@ -330,6 +330,55 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_EXEC
+value|0x00
+end_define
+
+begin_comment
+comment|/* break on execute       */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_WRONLY
+value|0x01
+end_define
+
+begin_comment
+comment|/* break on write         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_RDWR
+value|0x03
+end_define
+
+begin_comment
+comment|/* break on read or write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DRX
+parameter_list|(
+name|d
+parameter_list|,
+name|x
+parameter_list|)
+value|((&d->dr0)[x])
+end_define
+
+begin_comment
+comment|/* reference dr0 - dr7 by                                          register number */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
