@@ -572,7 +572,7 @@ name|box_x
 argument_list|,
 name|box_width
 argument_list|,
-name|dialog_attr
+name|inputbox_attr
 argument_list|,
 name|first
 argument_list|,
