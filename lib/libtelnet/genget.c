@@ -50,6 +50,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"misc-proto.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -72,6 +78,7 @@ name|char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s2
@@ -321,16 +328,12 @@ name|Ambiguous
 parameter_list|(
 name|char
 modifier|*
+modifier|*
 name|s
 parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|s
 operator|==
 operator|&
