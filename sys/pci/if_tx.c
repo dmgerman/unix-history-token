@@ -4304,17 +4304,6 @@ operator|==
 name|m
 condition|)
 block|{
-name|printf
-argument_list|(
-name|EPIC_FORMAT
-literal|": cannot allocate mbuf cluster\n"
-argument_list|,
-name|EPIC_ARGS
-argument_list|(
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m0
@@ -4691,17 +4680,6 @@ operator|->
 name|mbuf
 condition|)
 block|{
-name|printf
-argument_list|(
-name|EPIC_FORMAT
-literal|": cannot allocate mbuf cluster\n"
-argument_list|,
-name|EPIC_ARGS
-argument_list|(
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|buf
 operator|->
 name|mbuf
