@@ -2902,6 +2902,13 @@ argument_list|,
 literal|"\t%lu datagram%s with bad address in header\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|ips_evil
+argument_list|,
+literal|"\t%lu EVIL datagram%s received.\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p

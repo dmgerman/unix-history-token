@@ -99,6 +99,11 @@ value|0x8000
 comment|/* reserved fragment flag */
 define|#
 directive|define
+name|IP_EVIL
+value|0x8000
+comment|/* packet is evil */
+define|#
+directive|define
 name|IP_DF
 value|0x4000
 comment|/* dont fragment flag */

@@ -975,6 +975,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_EVIL
+value|0x400
+end_define
+
+begin_comment
+comment|/* Packet has evil intentions */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
