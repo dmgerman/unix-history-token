@@ -8437,6 +8437,21 @@ comment|/* SpeedStream USB */
 end_comment
 
 begin_comment
+comment|/* Sigmatel products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_SIGMATEL_I_BEAD100
+value|0x8008
+end_define
+
+begin_comment
+comment|/* i-Bead 100 MP3 Player */
+end_comment
+
+begin_comment
 comment|/* SIIG products */
 end_comment
 

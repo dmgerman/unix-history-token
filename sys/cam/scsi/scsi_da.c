@@ -986,7 +986,24 @@ block|,
 endif|#
 directive|endif
 comment|/* DA_OLD_QUIRKS */
+block|{
+comment|/* 		 * EXATELECOM (Sigmatel) i-Bead 100/105 USB Flash MP3 Player 		 * PR: kern/51675 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"EXATEL"
+block|,
+literal|"i-BEAD10*"
+block|,
+literal|"*"
 block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

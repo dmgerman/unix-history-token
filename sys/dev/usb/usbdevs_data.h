@@ -5144,6 +5144,18 @@ literal|"SpeedStream USB"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_SIGMATEL
+block|,
+name|USB_PRODUCT_SIGMATEL_I_BEAD100
+block|,
+literal|0
+block|,
+literal|"Sigmatel"
+block|,
+literal|"i-Bead 100 MP3 Player"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SIIG
 block|,
 name|USB_PRODUCT_SIIG_DIGIFILMREADER
