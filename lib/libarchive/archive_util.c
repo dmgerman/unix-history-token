@@ -228,12 +228,17 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR_R
 name|char
 name|errbuff
 index|[
 literal|512
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|errp
@@ -299,12 +304,12 @@ argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_GLIBC_STRERROR_R
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR_R
+ifdef|#
+directive|ifdef
+name|STRERROR_R_CHAR_P
 name|errp
 operator|=
 name|strerror_r
@@ -319,12 +324,8 @@ name|errbuff
 argument_list|)
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_POSIX_STRERROR_R
-argument_list|)
+else|#
+directive|else
 name|strerror_r
 argument_list|(
 name|error_number
@@ -341,6 +342,8 @@ name|errp
 operator|=
 name|errbuff
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* Note: this is not threadsafe! */

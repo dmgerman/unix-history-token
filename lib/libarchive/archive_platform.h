@@ -84,7 +84,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_POSIX_STRERROR_R
+name|HAVE_STRERROR_R
 value|1
 end_define
 
@@ -278,7 +278,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_GLIBC_STRERROR_R
+name|HAVE_STRERROR_R
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRERROR_R_CHAR_P
 value|1
 end_define
 
