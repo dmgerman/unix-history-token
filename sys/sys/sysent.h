@@ -225,6 +225,12 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|off_t
 operator|)
 argument_list|)
 expr_stmt|;
