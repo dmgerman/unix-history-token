@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailst.c	5.4 (Berkeley) %G%"
+literal|"@(#)mailst.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,8 +23,36 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uucp.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|USG
+end_endif
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	mailst  -  this routine will fork and execute  *	a mail command sending string (str) to user (user).  *	If file is non-null, the file is also sent.  *	(this is used for mail returned to sender.)  */
@@ -179,6 +207,193 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * 'reverting' version of popen  * which runs process with permissions of real gid/uid  * rather than the effective gid/uid.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tst
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(*mode == 'r'? (b) : (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RDR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WTR
+value|1
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|popen_pid
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|FILE
+modifier|*
+name|rpopen
+parameter_list|(
+name|cmd
+parameter_list|,
+name|mode
+parameter_list|)
+name|char
+modifier|*
+name|cmd
+decl_stmt|;
+name|char
+modifier|*
+name|mode
+decl_stmt|;
+block|{
+name|int
+name|p
+index|[
+literal|2
+index|]
+decl_stmt|;
+specifier|register
+name|myside
+operator|,
+name|hisside
+operator|,
+name|pid
+expr_stmt|;
+if|if
+condition|(
+name|pipe
+argument_list|(
+name|p
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+name|myside
+operator|=
+name|tst
+argument_list|(
+name|p
+index|[
+name|WTR
+index|]
+argument_list|,
+name|p
+index|[
+name|RDR
+index|]
+argument_list|)
+expr_stmt|;
+name|hisside
+operator|=
+name|tst
+argument_list|(
+name|p
+index|[
+name|RDR
+index|]
+argument_list|,
+name|p
+index|[
+name|WTR
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pid
+operator|=
+name|fork
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* myside and hisside reverse roles in child */
+name|close
+argument_list|(
+name|myside
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USG
+name|close
+argument_list|(
+argument|tst(
+literal|0
+argument|,
+literal|1
+argument|); 		fcntl(hisside, F_DUPFD, tst(
+literal|0
+argument|,
+literal|1
+argument|));
+else|#
+directive|else
+else|!USG
+argument|dup2(hisside, tst(
+literal|0
+argument|,
+literal|1
+argument|));
+endif|#
+directive|endif
+endif|!USG
+argument|close(hisside);
+comment|/* revert permissions */
+argument|setgid(getgid()); 		setuid(getuid()); 		execl(
+literal|"/bin/sh"
+argument|,
+literal|"sh"
+argument|,
+literal|"-c"
+argument|, cmd, (char *)
+literal|0
+argument|); 		_exit(
+literal|1
+argument|); 	} 	if(pid == -
+literal|1
+argument|) 		return NULL; 	popen_pid[myside] = pid; 	close(hisside); 	return(fdopen(myside, mode)); }  rpclose(ptr) FILE *ptr; { 	register f
+argument_list|,
+argument|r
+argument_list|,
+argument|(*hstat)()
+argument_list|,
+argument|(*istat)()
+argument_list|,
+argument|(*qstat)(); 	int status;  	f = fileno(ptr); 	fclose(ptr); 	istat = signal(SIGINT, SIG_IGN); 	qstat = signal(SIGQUIT, SIG_IGN); 	hstat = signal(SIGHUP, SIG_IGN); 	while((r = wait(&status)) != popen_pid[f]&& r != -
+literal|1
+argument|) 		; 	if(r == -
+literal|1
+argument|) 		status = -
+literal|1
+argument|; 	signal(SIGINT, istat); 	signal(SIGQUIT, qstat); 	signal(SIGHUP, hstat); 	return status; }
+end_function
 
 end_unit
 
