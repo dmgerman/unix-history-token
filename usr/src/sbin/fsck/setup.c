@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.15 (Berkeley) %G%"
+literal|"@(#)setup.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,8 @@ decl_stmt|,
 name|ncg
 decl_stmt|,
 name|size
+decl_stmt|,
+name|asked
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -756,8 +758,15 @@ comment|/* 	 * read in the summary info. 	 */
 end_comment
 
 begin_expr_stmt
-unit|for
-operator|(
+unit|asked
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
 name|i
 operator|=
 literal|0
@@ -765,13 +774,13 @@ operator|,
 name|j
 operator|=
 literal|0
-expr|;
+init|;
 name|i
 operator|<
 name|sblock
 operator|.
 name|fs_cssize
-expr|;
+condition|;
 name|i
 operator|+=
 name|sblock
@@ -780,7 +789,7 @@ name|fs_bsize
 operator|,
 name|j
 operator|++
-operator|)
+control|)
 block|{
 name|size
 operator|=
@@ -793,17 +802,17 @@ operator|<
 name|sblock
 operator|.
 name|fs_bsize
-operator|?
+condition|?
 name|sblock
 operator|.
 name|fs_cssize
 operator|-
 name|i
-operator|:
+else|:
 name|sblock
 operator|.
 name|fs_bsize
-block|;
+expr_stmt|;
 name|sblock
 operator|.
 name|fs_csp
@@ -825,7 +834,7 @@ name|unsigned
 operator|)
 name|size
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|bread
@@ -864,14 +873,36 @@ name|size
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|asked
 condition|)
-return|return
-operator|(
+block|{
+name|pfatal
+argument_list|(
+literal|"BAD SUMMARY INFORMATION"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"CONTINUE"
+argument_list|)
+operator|==
 literal|0
-operator|)
-return|;
+condition|)
+name|errexit
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+name|asked
+operator|++
+expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_for
 
 begin_comment
 comment|/* 	 * allocate and initialize the necessary maps 	 */
