@@ -275,27 +275,6 @@ name|v
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
-if|if
-condition|(
-name|kernel_map
-operator|->
-name|first_free
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning: no free entries in kernel_map.\n"
-argument_list|)
-expr_stmt|;
-name|physmem_est
-operator|=
-name|physmem
-expr_stmt|;
-block|}
-else|else
-block|{
 name|physmem_est
 operator|=
 name|lmin
@@ -314,7 +293,6 @@ name|min_offset
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|v
 operator|=
 name|kern_vfs_bio_buffer_alloc
