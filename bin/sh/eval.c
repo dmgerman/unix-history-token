@@ -63,6 +63,12 @@ begin_comment
 comment|/* For WIFSIGNALED(status) */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/*  * Evaluate a command.  */
 end_comment
@@ -2118,7 +2124,12 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Pipe call failed"
+literal|"Pipe call failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2444,7 +2455,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Pipe call failed"
+literal|"Pipe call failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|jp
@@ -3435,7 +3451,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Pipe call failed"
+literal|"Pipe call failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

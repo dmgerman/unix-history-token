@@ -1068,9 +1068,14 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"Can't open %s"
+literal|"Can't open %s: %s"
 argument_list|,
 name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|INTON
