@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.6 (Berkeley) %G%"
+literal|"@(#)process.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,7 +765,7 @@ name|fd
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -774,9 +774,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"Can't open /etc/utmp"
+name|stderr
+argument_list|,
+literal|"talkd: can't read %s.\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 return|return
