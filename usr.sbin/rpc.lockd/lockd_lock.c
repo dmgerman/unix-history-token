@@ -3851,6 +3851,7 @@ name|hostname
 parameter_list|,
 name|state
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|hostname

@@ -162,6 +162,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|log_netobj
+name|__P
+argument_list|(
+operator|(
+name|netobj
+operator|*
+name|obj
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|addrcmp
 name|__P
@@ -317,6 +332,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|,
@@ -3462,8 +3478,13 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Lock Offset: %d\n"
+literal|"Lock Offset: %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|arg
 operator|->
 name|alock
@@ -3475,8 +3496,13 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Lock Length: %d\n"
+literal|"Lock Length: %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|arg
 operator|->
 name|alock
@@ -3939,8 +3965,13 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Lock Offset: %d\n"
+literal|"Lock Offset: %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|arg
 operator|->
 name|alock
@@ -3952,8 +3983,13 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Lock Length: %d\n"
+literal|"Lock Length: %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|arg
 operator|->
 name|alock
