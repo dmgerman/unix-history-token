@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.8 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +870,33 @@ block|}
 name|kvmfilesopen
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|kvminit
+operator|==
+literal|0
+operator|&&
+name|kvm_init
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/*XXX*/
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -1131,13 +1158,13 @@ decl_stmt|;
 name|char
 name|dbversion
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 index|]
 decl_stmt|;
 name|char
 name|kversion
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 index|]
 decl_stmt|;
 name|int
@@ -5165,7 +5192,7 @@ specifier|static
 name|char
 name|errbuf
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
