@@ -129,7 +129,8 @@ name|tfp
 parameter_list|,
 name|signo
 parameter_list|)
-value|tfp->tf_eip = oldeip; return (signo);
+define|\
+value|do { tfp->tf_eip = oldeip; return (signo);} while(0)
 end_define
 
 begin_comment
