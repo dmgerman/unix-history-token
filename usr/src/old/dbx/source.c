@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c	5.1 (Berkeley) %G%"
+literal|"@(#)source.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: source.c,v 1.4 84/06/07 16:29:38 linton Exp $"
+literal|"$Header: source.c,v 1.3 87/08/19 15:19:40 mike Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,11 +87,49 @@ directive|include
 file|"eval.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|R_OK
+value|04
+end_define
+
+begin_comment
+comment|/* read access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_SET
+value|01
+end_define
+
+begin_comment
+comment|/* absolute offset for seek */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -146,6 +184,34 @@ name|List
 name|sourcepath
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|re_comp
+value|regcmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|re_exec
+parameter_list|(
+name|buf
+parameter_list|)
+value|(regex(buf) != NULL)
+end_define
 
 begin_endif
 endif|#
@@ -1768,6 +1834,50 @@ block|}
 block|}
 end_function
 
+begin_function
+name|public
+name|integer
+name|srcwindowlen
+parameter_list|()
+block|{
+name|Node
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|findvar
+argument_list|(
+name|identname
+argument_list|(
+literal|"$listwindow"
+argument_list|,
+name|true
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|nil
+condition|)
+return|return
+literal|10
+return|;
+name|eval
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|pop
+argument_list|(
+name|integer
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Compute a small window around the given line.  */
 end_comment
@@ -1795,51 +1905,14 @@ end_function
 
 begin_block
 block|{
-name|Node
-name|s
-decl_stmt|;
 name|integer
 name|size
 decl_stmt|;
-name|s
-operator|=
-name|findvar
-argument_list|(
-name|identname
-argument_list|(
-literal|"$listwindow"
-argument_list|,
-name|true
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|nil
-condition|)
-block|{
 name|size
 operator|=
-literal|10
+name|srcwindowlen
+argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|eval
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|size
-operator|=
-name|pop
-argument_list|(
-name|integer
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|l1
 operator|=
