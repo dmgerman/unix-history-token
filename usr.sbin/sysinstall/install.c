@@ -2373,6 +2373,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|notyet
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2472,6 +2475,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* notyet */
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
