@@ -262,42 +262,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_INTERRUPT
+name|T_INSTRUCTION_MISS
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PA_WATCHPOINT
+name|T_DATA_MISS
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_VA_WATCHPOINT
+name|T_INTERRUPT
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CORRECTED_ECC_ERROR
+name|T_PA_WATCHPOINT
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_INSTRUCTION_MISS
+name|T_VA_WATCHPOINT
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DATA_MISS
+name|T_CORRECTED_ECC_ERROR
 value|39
 end_define
 

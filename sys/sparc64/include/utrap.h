@@ -249,8 +249,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|UT_MAX
+name|UT_INSTRUCTION_MISS
 value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_DATA_MISS
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_MAX
+value|36
 end_define
 
 begin_define
