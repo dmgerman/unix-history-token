@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.13 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1741,7 +1741,7 @@ name|DTYPE_INODE
 case|:
 name|printf
 argument_list|(
-literal|"\t%2d, %2d\t%5lu\t%6ld\t%3s %s\n"
+literal|"\t%2d, %2d\t%5lu\t"
 argument_list|,
 name|major
 argument_list|(
@@ -1760,18 +1760,63 @@ argument_list|,
 name|inode
 operator|.
 name|i_number
-argument_list|,
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
 name|inode
 operator|.
 name|i_mode
-operator|==
+operator|&
+name|IFMT
+condition|)
+block|{
+case|case
 name|IFSOCK
-condition|?
-literal|0
-else|:
+case|:
+name|printf
+argument_list|(
+literal|"     0\t"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFCHR
+case|:
+name|printf
+argument_list|(
+literal|"%2d, %2d\t"
+argument_list|,
+name|major
+argument_list|(
+name|inode
+operator|.
+name|i_rdev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|inode
+operator|.
+name|i_rdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"%6ld\t"
+argument_list|,
 name|inode
 operator|.
 name|i_size
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%3s %s\n"
 argument_list|,
 name|itype
 argument_list|(
