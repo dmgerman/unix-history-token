@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ptx.c	4.3 (Berkeley) %G%"
+literal|"@(#)ptx.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,8 +290,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|sortfile
+index|[]
+init|=
+literal|"/tmp/ptxsXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,11 +1095,9 @@ comment|/* open output file for sorting */
 end_comment
 
 begin_expr_stmt
-name|sortfile
-operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/ptxsXXXXX"
+name|sortfile
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1253,17 +1253,13 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|sortfile
-condition|)
+begin_expr_stmt
 name|unlink
 argument_list|(
 name|sortfile
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
 name|exit
@@ -2679,10 +2675,6 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-name|sortfile
-condition|)
 name|unlink
 argument_list|(
 name|sortfile
