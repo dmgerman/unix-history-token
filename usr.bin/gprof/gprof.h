@@ -212,8 +212,7 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|int32_t
 name|UNIT
 typedef|;
 end_typedef
