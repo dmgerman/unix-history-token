@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.1 1994/08/07 18:36:11 wollman Exp $"
+literal|"$Id: svc_tcp.c,v 1.2 1995/05/30 05:41:38 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -68,18 +86,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|bool_t
-name|abort
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_extern
-extern|extern errno;
-end_extern
 
 begin_comment
 comment|/*  * Ops vector for TCP/IP based rpc service handle  */
@@ -1252,13 +1258,13 @@ operator|&
 name|readfds
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL

@@ -55,6 +55,12 @@ name|x
 decl_stmt|,
 name|n
 decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|u
+decl_stmt|;
+comment|/* system-dependent */
 name|x
 operator|=
 operator|*
@@ -109,6 +115,10 @@ operator|-
 name|n
 expr_stmt|;
 block|}
+name|u
+operator|=
+name|n
+expr_stmt|;
 for|for
 control|(
 name|pow
@@ -120,7 +130,7 @@ control|)
 block|{
 if|if
 condition|(
-name|n
+name|u
 operator|&
 literal|01
 condition|)
@@ -130,7 +140,7 @@ name|x
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|u
 operator|>>=
 literal|1
 condition|)

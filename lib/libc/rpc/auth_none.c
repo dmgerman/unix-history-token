@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_none.c,v 1.1 1994/08/07 18:35:38 wollman Exp $"
+literal|"$Id: auth_none.c,v 1.2 1995/05/30 05:41:11 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ end_endif
 begin_comment
 comment|/*  * auth_none.c  * Creates a client authentication handle for passing "null"  * credentials and verifiers to remote systems.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#

@@ -119,6 +119,12 @@ directive|ifdef
 name|Allow_TYQUAD
 end_ifdef
 
+begin_undef
+undef|#
+directive|undef
+name|TYQUAD
+end_undef
+
 begin_define
 define|#
 directive|define

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/lib/libc/gen/crypt.c,v 1.2 1994/08/22 20:38:00 csgr Exp $"
+literal|"$Header: /home/ncvs/src/lib/libc/gen/crypt.c,v 1.3 1995/05/30 05:40:10 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,24 +53,38 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * UNIX password, and DES, encryption.  *  * since this is non-exportable, this is just a dummy.  if you want real  * encryption, make sure you've got libcrypt.a around.  */
 end_comment
 
 begin_expr_stmt
-name|des_setkey
+name|__warn_references
 argument_list|(
-name|key
+name|des_setkey
+argument_list|,
+literal|"WARNING!  des_setkey(3) not present in the system!"
 argument_list|)
-specifier|register
-specifier|const
-name|char
-operator|*
-name|key
 expr_stmt|;
 end_expr_stmt
 
-begin_block
+begin_function
+name|int
+name|des_setkey
+parameter_list|(
+name|key
+parameter_list|)
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|key
+decl_stmt|;
 block|{
 name|fprintf
 argument_list|(
@@ -85,49 +99,45 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|des_cipher
+begin_expr_stmt
+name|__warn_references
 argument_list|(
-argument|in
+name|des_cipher
 argument_list|,
-argument|out
-argument_list|,
-argument|salt
-argument_list|,
-argument|num_iter
+literal|"WARNING!  des_cipher(3) not present in the system!"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_function
+name|int
+name|des_cipher
+parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|,
+name|salt
+parameter_list|,
+name|num_iter
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|out
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|salt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|num_iter
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -151,22 +161,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
-name|setkey
+name|__warn_references
 argument_list|(
-name|key
+name|setkey
+argument_list|,
+literal|"WARNING!  setkey(3) not present in the system!"
 argument_list|)
-specifier|register
-specifier|const
-name|char
-operator|*
-name|key
 expr_stmt|;
 end_expr_stmt
 
-begin_block
+begin_function
+name|int
+name|setkey
+parameter_list|(
+name|key
+parameter_list|)
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|key
+decl_stmt|;
 block|{
 name|fprintf
 argument_list|(
@@ -181,29 +199,34 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
-name|encrypt
+name|__warn_references
 argument_list|(
-name|block
+name|encrypt
 argument_list|,
-name|flag
+literal|"WARNING!  encrypt(3) not present in the system!"
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|block
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
+name|int
+name|encrypt
+parameter_list|(
+name|block
+parameter_list|,
+name|flag
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|block
+decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -218,7 +241,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.2 1995/05/30 05:40:59 rgrimes Exp $ */
+comment|/*	$Id: msgcat.c,v 1.2.4.1 1995/08/28 05:06:51 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -1169,14 +1169,8 @@ name|MCSetT
 modifier|*
 name|set
 decl_stmt|;
-name|MCMsgT
-modifier|*
-name|msg
-decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 if|if
 condition|(
@@ -1332,14 +1326,8 @@ name|MCSetT
 modifier|*
 name|set
 decl_stmt|;
-name|MCMsgT
-modifier|*
-name|msg
-decl_stmt|;
 name|long
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|off_t
 name|nextSet

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_clnt.c,v 1.1 1994/08/07 18:35:53 wollman Exp $"
+literal|"$Id: pmap_clnt.c,v 1.2 1995/05/30 05:41:22 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ end_endif
 begin_comment
 comment|/*  * pmap_clnt.c  * Client interface to pmap rpc service.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hash.h	8.2 (Berkeley) 2/21/94  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hash.h	8.3 (Berkeley) 5/31/94  */
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ modifier|*
 name|ovfl
 decl_stmt|;
 comment|/* Overflow page buffer header */
-name|u_int
+name|u_int32_t
 name|addr
 decl_stmt|;
 comment|/* Address of this page */
@@ -127,7 +127,7 @@ name|int
 name|version
 decl_stmt|;
 comment|/* Version ID */
-name|long
+name|u_int32_t
 name|lorder
 decl_stmt|;
 comment|/* Byte Order */
@@ -154,7 +154,7 @@ comment|/* Segment shift */
 name|int
 name|ovfl_point
 decl_stmt|;
-comment|/* Where overflow pages are being allocated */
+comment|/* Where overflow pages are being  					 * allocated */
 name|int
 name|last_freed
 decl_stmt|;
@@ -170,7 +170,7 @@ comment|/* Mask to modulo into entire table */
 name|int
 name|low_mask
 decl_stmt|;
-comment|/* Mask to modulo into lower half of table */
+comment|/* Mask to modulo into lower half of  					 * table */
 name|int
 name|ffactor
 decl_stmt|;
@@ -191,7 +191,7 @@ define|#
 directive|define
 name|NCACHED
 value|32
-comment|/* number of bit maps and spare points */
+comment|/* number of bit maps and spare  					 * points */
 name|int
 name|spares
 index|[
@@ -199,13 +199,13 @@ name|NCACHED
 index|]
 decl_stmt|;
 comment|/* spare pages for overflow */
-name|u_short
+name|u_int16_t
 name|bitmaps
 index|[
 name|NCACHED
 index|]
 decl_stmt|;
-comment|/* address of overflow page bitmaps */
+comment|/* address of overflow page  						 * bitmaps */
 block|}
 name|HASHHDR
 typedef|;
@@ -228,7 +228,7 @@ comment|/* Number of allocated segments */
 name|int
 name|exsegs
 decl_stmt|;
-comment|/* Number of extra allocated segments */
+comment|/* Number of extra allocated  					 * segments */
 name|u_int32_t
 comment|/* Hash function */
 argument_list|(
@@ -277,18 +277,18 @@ name|cndx
 decl_stmt|;
 comment|/* Index of next item on cpage */
 name|int
-name|errno
+name|error
 decl_stmt|;
-comment|/* Error Number -- for DBM compatability */
+comment|/* Error Number -- for DBM  					 * compatability */
 name|int
 name|new_file
 decl_stmt|;
-comment|/* Indicates if fd is backing store or no */
+comment|/* Indicates if fd is backing store  					 * or no */
 name|int
 name|save_file
 decl_stmt|;
-comment|/* Indicates whether we need to flush file at 				 * exit */
-name|u_long
+comment|/* Indicates whether we need to flush  					 * file at 					 * exit */
+name|u_int32_t
 modifier|*
 name|mapp
 index|[
@@ -303,7 +303,7 @@ comment|/* Initial number of bitmaps */
 name|int
 name|nbufs
 decl_stmt|;
-comment|/* Number of buffers left to allocate */
+comment|/* Number of buffers left to  					 * allocate */
 name|BUFHEAD
 name|bufhead
 decl_stmt|;
@@ -461,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|ALL_SET
-value|((u_int)0xFFFFFFFF)
+value|((u_int32_t)0xFFFFFFFF)
 end_define
 
 begin_define
@@ -478,7 +478,7 @@ name|PTROF
 parameter_list|(
 name|X
 parameter_list|)
-value|((BUFHEAD *)((u_int)(X)&~0x3))
+value|((BUFHEAD *)((ptrdiff_t)(X)&~0x3))
 end_define
 
 begin_define
@@ -488,7 +488,7 @@ name|ISMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|((u_int)(X)&0x1)
+value|((u_int32_t)(ptrdiff_t)(X)&0x1)
 end_define
 
 begin_define
@@ -498,7 +498,7 @@ name|DOMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|((X) = (char *)((u_int)(X)|0x1))
+value|((X) = (char *)((ptrdiff_t)(X)|0x1))
 end_define
 
 begin_define
@@ -508,7 +508,7 @@ name|ISDISK
 parameter_list|(
 name|X
 parameter_list|)
-value|((u_int)(X)&0x2)
+value|((u_int32_t)(ptrdiff_t)(X)&0x2)
 end_define
 
 begin_define
@@ -518,7 +518,7 @@ name|DODISK
 parameter_list|(
 name|X
 parameter_list|)
-value|((X) = (char *)((u_int)(X)|0x2))
+value|((X) = (char *)((ptrdiff_t)(X)|0x2))
 end_define
 
 begin_define
@@ -597,7 +597,7 @@ name|SPLITNUM
 parameter_list|(
 name|N
 parameter_list|)
-value|(((u_int)(N))>> SPLITSHIFT)
+value|(((u_int32_t)(N))>> SPLITSHIFT)
 end_define
 
 begin_define
@@ -619,7 +619,7 @@ name|S
 parameter_list|,
 name|O
 parameter_list|)
-value|((u_int)((u_int)(S)<< SPLITSHIFT) + (O))
+value|((u_int32_t)((u_int32_t)(S)<< SPLITSHIFT) + (O))
 end_define
 
 begin_define

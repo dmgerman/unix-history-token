@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	8.2 (Berkeley) 9/11/93"
+literal|"@(#)ndbm.c	8.4 (Berkeley) 7/21/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ndbm.h>
 end_include
 
 begin_include
@@ -129,7 +129,7 @@ name|info
 operator|.
 name|cachesize
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|info
 operator|.
@@ -594,7 +594,7 @@ return|return
 operator|(
 name|hp
 operator|->
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -628,7 +628,7 @@ name|internal
 expr_stmt|;
 name|hp
 operator|->
-name|errno
+name|error
 operator|=
 literal|0
 expr_stmt|;

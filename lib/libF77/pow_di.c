@@ -60,6 +60,10 @@ decl_stmt|;
 name|integer
 name|n
 decl_stmt|;
+name|unsigned
+name|long
+name|u
+decl_stmt|;
 name|pow
 operator|=
 literal|1
@@ -102,13 +106,16 @@ expr_stmt|;
 block|}
 for|for
 control|(
+name|u
+operator|=
+name|n
 init|;
 condition|;
 control|)
 block|{
 if|if
 condition|(
-name|n
+name|u
 operator|&
 literal|01
 condition|)
@@ -118,7 +125,7 @@ name|x
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|u
 operator|>>=
 literal|1
 condition|)

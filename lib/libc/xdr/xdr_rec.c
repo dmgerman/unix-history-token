@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.2 1994/08/07 22:21:14 wollman Exp $"
+literal|"$Id: xdr_rec.c,v 1.3 1995/05/30 05:42:09 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

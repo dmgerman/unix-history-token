@@ -929,16 +929,9 @@ parameter_list|(
 name|Void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
+return|return
 name|en_fio
 argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function

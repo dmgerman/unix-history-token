@@ -111,6 +111,29 @@ directive|include
 file|"fvwrite.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pthread_private.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Define FLOATING_POINT to get floating point. */
 end_comment
@@ -1197,13 +1220,9 @@ name|dprec
 decl_stmt|;
 comment|/* a copy of prec if [diouxX], 0 otherwise */
 name|int
-name|fieldsz
-decl_stmt|;
-comment|/* field size expanded by sign, etc */
-name|int
 name|realsz
 decl_stmt|;
-comment|/* field size expanded by dprec */
+comment|/* field size expanded by dprec, sign, etc */
 name|int
 name|size
 decl_stmt|;
@@ -1369,6 +1388,20 @@ name|UARG
 parameter_list|()
 define|\
 value|(flags&LONGINT ? va_arg(ap, u_long) : \ 	    flags&SHORTINT ? (u_long)(u_short)va_arg(ap, int) : \ 	    (u_long)va_arg(ap, u_int))
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_flockfile
+argument_list|(
+name|fp
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 if|if
 condition|(
@@ -1377,11 +1410,23 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_funlockfile
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
+block|}
 comment|/* optimise fprintf(stderr) (and other unbuffered Unix files) */
 if|if
 condition|(
@@ -1411,6 +1456,17 @@ name|_file
 operator|>=
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_funlockfile
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|__sbprintf
@@ -1423,6 +1479,7 @@ name|ap
 argument_list|)
 operator|)
 return|;
+block|}
 name|fmt
 operator|=
 operator|(
@@ -2759,16 +2816,22 @@ literal|'\0'
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * All reasonable formats wind up here.  At this point, `cp' 		 * points to a string which (if not flags&LADJUST) should be 		 * padded out to `width' places.  If flags&ZEROPAD, it should 		 * first be prefixed by any sign or other prefix; otherwise, 		 * it should be blank padded before the prefix is emitted. 		 * After any left-hand padding and prefixing, emit zeroes 		 * required by a decimal [diouxX] precision, then print the 		 * string proper, then emit zeroes required by any leftover 		 * floating precision; finally, if LADJUST, pad with blanks. 		 * 		 * Compute actual size, so we know how much to pad. 		 * fieldsz excludes decimal prec; realsz includes it. 		 */
-name|fieldsz
+comment|/* 		 * All reasonable formats wind up here.  At this point, `cp' 		 * points to a string which (if not flags&LADJUST) should be 		 * padded out to `width' places.  If flags&ZEROPAD, it should 		 * first be prefixed by any sign or other prefix; otherwise, 		 * it should be blank padded before the prefix is emitted. 		 * After any left-hand padding and prefixing, emit zeroes 		 * required by a decimal [diouxX] precision, then print the 		 * string proper, then emit zeroes required by any leftover 		 * floating precision; finally, if LADJUST, pad with blanks. 		 * 		 * Compute actual size, so we know how much to pad. 		 * size excludes decimal prec; realsz includes it. 		 */
+name|realsz
 operator|=
+name|dprec
+operator|>
+name|size
+condition|?
+name|dprec
+else|:
 name|size
 expr_stmt|;
 if|if
 condition|(
 name|sign
 condition|)
-name|fieldsz
+name|realsz
 operator|++
 expr_stmt|;
 elseif|else
@@ -2778,19 +2841,9 @@ name|flags
 operator|&
 name|HEXPREFIX
 condition|)
-name|fieldsz
+name|realsz
 operator|+=
 literal|2
-expr_stmt|;
-name|realsz
-operator|=
-name|dprec
-operator|>
-name|fieldsz
-condition|?
-name|dprec
-else|:
-name|fieldsz
 expr_stmt|;
 comment|/* right-adjusting blank padding */
 if|if
@@ -2890,7 +2943,7 @@ name|PAD
 argument_list|(
 name|dprec
 operator|-
-name|fieldsz
+name|size
 argument_list|,
 name|zeroes
 argument_list|)
@@ -3213,15 +3266,29 @@ argument_list|()
 expr_stmt|;
 name|error
 label|:
-return|return
-operator|(
+if|if
+condition|(
 name|__sferror
 argument_list|(
 name|fp
 argument_list|)
-condition|?
+condition|)
+name|ret
+operator|=
 name|EOF
-else|:
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_funlockfile
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
 name|ret
 operator|)
 return|;

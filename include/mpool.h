@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mpool.h	8.1 (Berkeley) 6/2/93  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mpool.h	8.2 (Berkeley) 7/14/94  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,14 @@ directive|define
 name|_MPOOL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
-comment|/*  * The memory pool scheme is a simple one.  Each in memory page is referenced  * by a bucket which is threaded in three ways.  All active pages are threaded  * on a hash chain (hashed by the page number) and an lru chain.  Inactive  * pages are threaded on a free chain.  Each reference to a memory pool is  * handed an MPOOL which is the opaque cookie passed to all of the memory  * routines.  */
+comment|/*  * The memory pool scheme is a simple one.  Each in-memory page is referenced  * by a bucket which is threaded in up to two of three ways.  All active pages  * are threaded on a hash chain (hashed by page number) and an lru chain.  * Inactive pages are threaded on a free chain.  Each reference to a memory  * pool is handed an opaque MPOOL cookie which stores all of this information.  */
 end_comment
 
 begin_define
@@ -37,38 +43,28 @@ value|((pgno - 1) % HASHSIZE)
 end_define
 
 begin_comment
-comment|/* The BKT structures are the elements of the lists. */
+comment|/* The BKT structures are the elements of the queues. */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|BKT
+name|_bkt
 block|{
-name|struct
-name|BKT
-modifier|*
-name|hnext
-decl_stmt|;
-comment|/* next hash bucket */
-name|struct
-name|BKT
-modifier|*
-name|hprev
-decl_stmt|;
-comment|/* previous hash bucket */
-name|struct
-name|BKT
-modifier|*
-name|cnext
-decl_stmt|;
-comment|/* next free/lru bucket */
-name|struct
-name|BKT
-modifier|*
-name|cprev
-decl_stmt|;
-comment|/* previous free/lru bucket */
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|_bkt
+argument_list|)
+name|hq
+expr_stmt|;
+comment|/* hash queue */
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|_bkt
+argument_list|)
+name|q
+expr_stmt|;
+comment|/* lru queue */
 name|void
 modifier|*
 name|page
@@ -88,8 +84,7 @@ directive|define
 name|MPOOL_PINNED
 value|0x02
 comment|/* page is pinned into memory */
-name|unsigned
-name|long
+name|u_int8_t
 name|flags
 decl_stmt|;
 comment|/* flags */
@@ -98,85 +93,53 @@ name|BKT
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* The BKTHDR structures are the heads of the lists. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BKTHDR
-block|{
-name|struct
-name|BKT
-modifier|*
-name|hnext
-decl_stmt|;
-comment|/* next hash bucket */
-name|struct
-name|BKT
-modifier|*
-name|hprev
-decl_stmt|;
-comment|/* previous hash bucket */
-name|struct
-name|BKT
-modifier|*
-name|cnext
-decl_stmt|;
-comment|/* next free/lru bucket */
-name|struct
-name|BKT
-modifier|*
-name|cprev
-decl_stmt|;
-comment|/* previous free/lru bucket */
-block|}
-name|BKTHDR
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
 name|MPOOL
 block|{
-name|BKTHDR
-name|free
-decl_stmt|;
-comment|/* The free list. */
-name|BKTHDR
-name|lru
-decl_stmt|;
-comment|/* The LRU list. */
-name|BKTHDR
-name|hashtable
+name|CIRCLEQ_HEAD
+argument_list|(
+argument|_lqh
+argument_list|,
+argument|_bkt
+argument_list|)
+name|lqh
+expr_stmt|;
+comment|/* lru queue head */
+comment|/* hash queue array */
+name|CIRCLEQ_HEAD
+argument_list|(
+argument|_hqh
+argument_list|,
+argument|_bkt
+argument_list|)
+name|hqh
 index|[
 name|HASHSIZE
 index|]
-decl_stmt|;
-comment|/* Hashed list by page number. */
+expr_stmt|;
 name|pgno_t
 name|curcache
 decl_stmt|;
-comment|/* Current number of cached pages. */
+comment|/* current number of cached pages */
 name|pgno_t
 name|maxcache
 decl_stmt|;
-comment|/* Max number of cached pages. */
+comment|/* max number of cached pages */
 name|pgno_t
 name|npages
 decl_stmt|;
-comment|/* Number of pages in the file. */
+comment|/* number of pages in the file */
 name|u_long
 name|pagesize
 decl_stmt|;
-comment|/* File page size. */
+comment|/* file page size */
 name|int
 name|fd
 decl_stmt|;
-comment|/* File descriptor. */
-comment|/* Page in conversion routine. */
+comment|/* file descriptor */
+comment|/* page in conversion routine */
 name|void
 argument_list|(
 argument|*pgin
@@ -194,7 +157,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Page out conversion routine. */
+comment|/* page out conversion routine */
 name|void
 argument_list|(
 argument|*pgout
@@ -216,44 +179,35 @@ name|void
 modifier|*
 name|pgcookie
 decl_stmt|;
-comment|/* Cookie for page in/out routines. */
+comment|/* cookie for page in/out routines */
 ifdef|#
 directive|ifdef
 name|STATISTICS
-name|unsigned
-name|long
+name|u_long
 name|cachehit
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|cachemiss
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pagealloc
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pageflush
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pageget
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pagenew
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pageput
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pageread
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|pagewrite
 decl_stmt|;
 endif|#
@@ -263,69 +217,6 @@ name|MPOOL
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__MPOOLINTERFACE_PRIVATE
-end_ifdef
-
-begin_comment
-comment|/* Macros to insert/delete into/from hash chain. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|rmhash
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \         (bp)->hprev->hnext = (bp)->hnext; \         (bp)->hnext->hprev = (bp)->hprev; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|inshash
-parameter_list|(
-name|bp
-parameter_list|,
-name|pg
-parameter_list|)
-value|{ \ 	hp =&mp->hashtable[HASHKEY(pg)]; \         (bp)->hnext = hp->hnext; \         (bp)->hprev = (struct BKT *)hp; \         hp->hnext->hprev = (bp); \         hp->hnext = (bp); \ }
-end_define
-
-begin_comment
-comment|/* Macros to insert/delete into/from lru and free chains. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|rmchain
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \         (bp)->cprev->cnext = (bp)->cnext; \         (bp)->cnext->cprev = (bp)->cprev; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|inschain
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \         (bp)->cnext = (dp)->cnext; \         (bp)->cprev = (struct BKT *)(dp); \         (dp)->cnext->cprev = (bp); \         (dp)->cnext = (bp); \ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|MPOOL
@@ -334,7 +225,7 @@ name|mpool_open
 name|__P
 argument_list|(
 operator|(
-name|DBT
+name|void
 operator|*
 operator|,
 name|int

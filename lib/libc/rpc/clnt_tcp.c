@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.1 1994/08/07 18:35:47 wollman Exp $"
+literal|"$Id: clnt_tcp.c,v 1.2 1995/05/30 05:41:18 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,24 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -673,7 +691,7 @@ name|cb_vers
 operator|=
 name|vers
 expr_stmt|;
-comment|/* 	 * pre-serialize the staic part of the call msg and stash it away 	 */
+comment|/* 	 * pre-serialize the static part of the call msg and stash it away 	 */
 name|xdrmem_create
 argument_list|(
 operator|&
@@ -1879,13 +1897,13 @@ operator|&
 name|readfds
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL

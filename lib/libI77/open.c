@@ -496,6 +496,14 @@ literal|101
 argument_list|,
 literal|"open"
 argument_list|)
+if|if
+condition|(
+operator|!
+name|f__init
+condition|)
+name|f_init
+argument_list|()
+expr_stmt|;
 name|f__curunit
 operator|=
 name|b

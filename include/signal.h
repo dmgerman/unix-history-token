@@ -6,20 +6,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USER_SIGNAL_H
+name|_SIGNAL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USER_SIGNAL_H
+name|_SIGNAL_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
 end_include
 
 begin_if
@@ -105,7 +105,7 @@ name|kill
 name|__P
 argument_list|(
 operator|(
-name|pid_t
+name|_BSD_PID_T_
 operator|,
 name|int
 operator|)
@@ -264,7 +264,7 @@ name|killpg
 name|__P
 argument_list|(
 operator|(
-name|pid_t
+name|_BSD_PID_T_
 operator|,
 name|int
 operator|)
@@ -414,6 +414,12 @@ begin_macro
 name|__END_DECLS
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
 begin_comment
 comment|/* List definitions after function declarations, or Reiser cpp gets upset. */
 end_comment
@@ -480,7 +486,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_USER_SIGNAL_H */
+comment|/* !_ANSI_SOURCE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_SIGNAL_H_ */
 end_comment
 
 end_unit

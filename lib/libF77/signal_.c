@@ -13,7 +13,7 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|int
+name|VOID
 function_decl|(
 modifier|*
 name|sig_type
@@ -29,6 +29,17 @@ name|signal
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sig_proc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
 
 begin_decl_stmt
 name|ftnint
@@ -74,6 +85,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sig_proc
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function
 name|ftnint
 name|signal_
@@ -82,7 +106,7 @@ name|integer
 modifier|*
 name|sigp
 parameter_list|,
-name|sig_type
+name|sig_proc
 name|proc
 parameter_list|)
 endif|#
@@ -107,6 +131,9 @@ name|signal
 argument_list|(
 name|sig
 argument_list|,
+operator|(
+name|sig_type
+operator|)
 name|proc
 argument_list|)
 return|;

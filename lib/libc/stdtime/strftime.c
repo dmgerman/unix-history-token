@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strftime.c,v 1.5 1995/08/07 23:35:41 ache Exp $"
+literal|"$Id: strftime.c,v 1.2.4.1 1995/08/28 05:07:03 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2023,12 +2023,32 @@ decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
+name|int
+name|save_using_locale
+decl_stmt|;
+name|save_using_locale
+operator|=
+name|using_locale
+expr_stmt|;
 name|using_locale
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|no_locale
+goto|;
+if|if
+condition|(
+operator|!
+operator|*
+name|name
+operator|||
 operator|!
 name|strcmp
 argument_list|(
@@ -2048,22 +2068,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-operator|||
-operator|*
-name|name
-operator|==
-literal|'\0'
-condition|)
-block|{
-goto|goto
-name|no_locale
-goto|;
-block|}
 comment|/* 	** If the locale name is the same as our cache, use the cache. 	*/
 name|lbuf
 operator|=
@@ -2181,11 +2185,9 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
 goto|goto
 name|no_locale
 goto|;
-block|}
 if|if
 condition|(
 name|fstat
@@ -2369,7 +2371,7 @@ operator|==
 name|plim
 condition|)
 goto|goto
-name|bad_lbuf
+name|reset_locale
 goto|;
 operator|*
 name|ap
@@ -2405,6 +2407,21 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|reset_locale
+label|:
+comment|/* 	 * XXX - This may not be the correct thing to do in this case. 	 * setlocale() assumes that we left the old locale alone. 	 */
+name|locale_buf
+operator|=
+name|locale_buf_C
+expr_stmt|;
+name|localebuf
+operator|=
+name|C_time_locale
+expr_stmt|;
+name|save_using_locale
+operator|=
+literal|0
+expr_stmt|;
 name|bad_lbuf
 label|:
 name|free
@@ -2424,14 +2441,9 @@ argument_list|)
 expr_stmt|;
 name|no_locale
 label|:
-comment|/* 	 * XXX - This may not be the correct thing to do in this case. 	 * setlocale() assumes that we left the old locale alone. 	 */
-name|locale_buf
+name|using_locale
 operator|=
-name|locale_buf_C
-expr_stmt|;
-name|localebuf
-operator|=
-name|C_time_locale
+name|save_using_locale
 expr_stmt|;
 return|return
 operator|-

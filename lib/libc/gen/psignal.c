@@ -44,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
 end_include
 
 begin_include

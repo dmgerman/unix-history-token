@@ -666,11 +666,6 @@ name|DB
 modifier|*
 name|capdbp
 decl_stmt|;
-name|DBT
-name|key
-decl_stmt|,
-name|data
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2019,13 +2014,6 @@ name|DBT
 name|key
 decl_stmt|,
 name|data
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|st
 decl_stmt|;
 name|key
 operator|.

@@ -669,6 +669,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|line
 operator|=
 name|fgetln
@@ -678,6 +679,9 @@ argument_list|,
 operator|&
 name|linelen
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1281,6 +1285,11 @@ operator|)
 return|;
 block|}
 comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1877,6 +1886,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|result
 operator|=
 name|strchr
@@ -1885,6 +1895,9 @@ name|resultbuf
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|result

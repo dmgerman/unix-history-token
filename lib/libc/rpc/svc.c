@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.1 1994/08/07 18:36:06 wollman Exp $"
+literal|"$Id: svc.c,v 1.2 1995/05/30 05:41:31 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,18 @@ end_endif
 begin_comment
 comment|/*  * svc.c, Server-side remote procedure call interface.  *  * There are two sets of procedures here.  The xprt routines are  * for handling transport handles.  The svc routines handle the  * list of service routines.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_mem.c,v 1.1 1994/08/07 18:39:33 wollman Exp $"
+literal|"$Id: xdr_mem.c,v 1.2 1995/05/30 05:42:06 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ end_endif
 begin_comment
 comment|/*  * xdr_mem.h, XDR implementation using memory buffers.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * If you have some data to be interpreted as external data representation  * or to be converted to external data representation in a memory buffer,  * then this is the package for you.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#

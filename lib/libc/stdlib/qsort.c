@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)qsort.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)qsort.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,14 +53,22 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
+
+begin_typedef
+typedef|typedef
+name|int
+name|cmp_t
+name|__P
+typedef|((const
+name|void
+modifier|*
+typedef|, const
+name|void
+modifier|*
+typedef|));
+end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -67,11 +88,8 @@ operator|,
 name|char
 operator|*
 operator|,
-name|int
-argument_list|(
+name|cmp_t
 operator|*
-argument_list|)
-argument_list|()
 operator|)
 argument_list|)
 decl_stmt|;
@@ -233,42 +251,39 @@ parameter_list|)
 value|if ((n)> 0) swapfunc(a, b, n, swaptype)
 end_define
 
-begin_decl_stmt
+begin_function
 specifier|static
 specifier|inline
 name|char
 modifier|*
 name|med3
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|,
+parameter_list|,
 name|c
-argument_list|,
+parameter_list|,
 name|cmp
-argument_list|)
+parameter_list|)
 name|char
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|,
 modifier|*
 name|c
 decl_stmt|;
-end_decl_stmt
+end_function
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+name|cmp_t
 modifier|*
 name|cmp
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -341,43 +356,31 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
+begin_function
 name|void
 name|qsort
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|n
-argument_list|,
+parameter_list|,
 name|es
-argument_list|,
+parameter_list|,
 name|cmp
-argument_list|)
+parameter_list|)
 name|void
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|n
 decl_stmt|,
 name|es
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
+name|cmp_t
 modifier|*
 name|cmp
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -965,7 +968,7 @@ goto|;
 block|}
 comment|/*		qsort(pn - r, r / es, es, cmp);*/
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_getport.c,v 1.1 1994/08/07 18:35:55 wollman Exp $"
+literal|"$Id: pmap_getport.c,v 1.2 1995/05/30 05:41:24 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt

@@ -94,6 +94,11 @@ expr_stmt|;
 return|return
 operator|(
 operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|f__icptr
 operator|++
 operator|)
@@ -523,6 +528,24 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|f__recpos
+operator|<
+name|f__hiwater
+condition|)
+block|{
+name|f__icptr
+operator|+=
+name|f__hiwater
+operator|-
+name|f__recpos
+expr_stmt|;
+name|f__recpos
+operator|=
+name|f__hiwater
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|f__recpos

@@ -411,12 +411,12 @@ define|#
 directive|define
 name|__SOPT
 value|0x0400
-comment|/* do fseek() optimisation */
+comment|/* do fseek() optimization */
 define|#
 directive|define
 name|__SNPT
 value|0x0800
-comment|/* do not do fseek() optimisation */
+comment|/* do not do fseek() optimization */
 define|#
 directive|define
 name|__SOFF
@@ -630,7 +630,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|size_t
+name|int
 operator|,
 name|FILE
 operator|*
@@ -810,7 +810,6 @@ name|ftell
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|FILE
 operator|*
 operator|)
@@ -1305,6 +1304,26 @@ argument_list|(
 name|_POSIX_SOURCE
 argument_list|)
 name|__BEGIN_DECLS
+name|int
+name|asprintf
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|fgetln
@@ -1460,6 +1479,26 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vasprintf
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|_BSD_VA_LIST_
 operator|)
 argument_list|)
 decl_stmt|;

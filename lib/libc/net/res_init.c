@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.4 1995/05/30 05:40:55 rgrimes Exp $"
+literal|"$Id: res_init.c,v 1.4.4.1 1995/08/30 04:06:52 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set up default settings.  If the configuration file exist, the values  * there will have precedence.  Otherwise, the server address is set to  * INADDR_ANY and the default domain name comes from the gethostname().  *  * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1  * rather than INADDR_ANY ("0.0.0.0") as the default name server address  * since it was noted that INADDR_ANY actually meant ``the first interface  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,  * it had to be "up" in order for you to reach your own name server.  It  * was later decided that since the recommended practice is to always  * install local static routes through 127.0.0.1 for all your network  * interfaces, that we could solve this problem without a code change.  *  * The configuration file should always be used, since it is the only way  * to specify a default domain.  If you are running a server on your local  * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"  * in the configuration file.  *  * Return 0 if completes successfully, -1 on error  */
+comment|/*  * Set up default settings.  If the configuration file exist, the values  * there will have precedence.  Otherwise, the server address is set to  * INADDR_ANY and the default domain name comes from the gethostname().  *  * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1  * rather than INADDR_ANY ("0.0.0.0") as the default name server address  * since it was noted that INADDR_ANY actually meant ``the first interface  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,  * it had to be "up" in order for you to reach your own name server.  It  * was later decided that since the recommended practice is to always   * install local static routes through 127.0.0.1 for all your network  * interfaces, that we could solve this problem without a code change.  *  * The configuration file should always be used, since it is the only way  * to specify a default domain.  If you are running a server on your local  * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"  * in the configuration file.  *  * Return 0 if completes successfully, -1 on error  */
 end_comment
 
 begin_function
@@ -686,9 +686,6 @@ literal|'\n'
 operator|)
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|_res
@@ -795,9 +792,6 @@ literal|'\n'
 operator|)
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|_res
@@ -1616,7 +1610,7 @@ directive|endif
 comment|/* DEBUG */
 endif|#
 directive|endif
-comment|/*!RFC1535*/
+comment|/* !RFC1535 */
 block|}
 if|if
 condition|(
