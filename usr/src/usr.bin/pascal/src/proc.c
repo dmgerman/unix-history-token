@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.6 %G%"
+literal|"@(#)proc.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,6 +1005,45 @@ literal|"Negative widths are not allowed"
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|fmtspec
+operator|&
+name|CONPREC
+operator|)
+operator|&&
+name|prec
+operator|==
+literal|0
+operator|||
+operator|(
+name|fmtspec
+operator|&
+name|CONWIDTH
+operator|)
+operator|&&
+name|field
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|standard
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Zero widths are non-standard"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
