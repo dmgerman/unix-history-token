@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.22 (Berkeley) %G%"
+literal|"@(#)send.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1953,7 +1953,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|remove
+name|rm
 argument_list|(
 name|tempMail
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.22 (Berkeley) %G%"
+literal|"@(#)collect.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,7 +331,7 @@ name|colljmp
 argument_list|)
 condition|)
 block|{
-name|remove
+name|rm
 argument_list|(
 name|tempMail
 argument_list|)

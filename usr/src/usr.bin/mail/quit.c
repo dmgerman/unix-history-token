@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.15 (Berkeley) %G%"
+literal|"@(#)quit.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ condition|)
 goto|goto
 name|newmail
 goto|;
-name|remove
+name|rm
 argument_list|(
 name|tempResid
 argument_list|)
@@ -790,7 +790,7 @@ argument_list|(
 name|tempQuit
 argument_list|)
 expr_stmt|;
-name|remove
+name|rm
 argument_list|(
 name|tempQuit
 argument_list|)
@@ -807,7 +807,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|remove
+name|rm
 argument_list|(
 name|tempQuit
 argument_list|)
@@ -1927,7 +1927,7 @@ argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-name|remove
+name|rm
 argument_list|(
 name|tempname
 argument_list|)
@@ -2004,7 +2004,7 @@ argument_list|(
 name|tempname
 argument_list|)
 expr_stmt|;
-name|remove
+name|rm
 argument_list|(
 name|tempname
 argument_list|)
@@ -2018,7 +2018,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|remove
+name|rm
 argument_list|(
 name|tempname
 argument_list|)
@@ -2234,7 +2234,7 @@ condition|(
 name|gotcha
 condition|)
 block|{
-name|remove
+name|rm
 argument_list|(
 name|mailname
 argument_list|)
