@@ -84,7 +84,7 @@ name|u_int
 name|tc_counter_mask
 decl_stmt|;
 comment|/* This mask should mask off any unimplemented bits. */
-name|u_int32_t
+name|u_int64_t
 name|tc_frequency
 decl_stmt|;
 comment|/* Frequency of the counter in Hz. */
@@ -118,7 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|u_int32_t
+name|u_int64_t
 name|tc_getfrequency
 parameter_list|(
 name|void

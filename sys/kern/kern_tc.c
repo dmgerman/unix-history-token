@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1472,14 +1478,14 @@ name|u
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Timecounter \"%s\"  frequency %lu Hz"
+literal|"Timecounter \"%s\"  frequency %ju Hz"
 argument_list|,
 name|tc
 operator|->
 name|tc_name
 argument_list|,
 operator|(
-name|u_long
+name|intmax_t
 operator|)
 name|tc
 operator|->
@@ -1559,7 +1565,7 @@ comment|/* Report the frequency of the current timecounter. */
 end_comment
 
 begin_function
-name|u_int32_t
+name|u_int64_t
 name|tc_getfrequency
 parameter_list|(
 name|void
