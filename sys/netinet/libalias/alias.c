@@ -263,7 +263,7 @@ argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/*FALLTHROUGH*/
 case|case
 name|ALIAS_TCP_STATE_CONNECTED
 case|:
@@ -363,7 +363,7 @@ argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/*FALLTHROUGH*/
 case|case
 name|ALIAS_TCP_STATE_CONNECTED
 case|:
