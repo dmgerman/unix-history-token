@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_VDISABLE
-value|((unsigned char)'\377')
+value|0xff
 end_define
 
 begin_comment
