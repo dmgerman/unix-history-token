@@ -425,17 +425,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* misuse a flag to identify format operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_FORMAT
-value|B_XXX
-end_define
-
 begin_struct
 struct|struct
 name|wfd
