@@ -117,6 +117,24 @@ directive|include
 file|<isa/isavar.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MDNSECT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MDNSECT
+value|(10000 * 2)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -769,6 +787,7 @@ condition|(
 operator|(
 name|u_int
 operator|)
+operator|*
 name|secpp
 operator|>
 literal|255
@@ -795,6 +814,7 @@ operator|=
 operator|(
 name|u_int
 operator|)
+operator|*
 name|secpp
 expr_stmt|;
 block|}
@@ -814,6 +834,27 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|md_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"%x %p %p %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_flags
+argument_list|,
+name|secpp
+argument_list|,
+name|secp
+argument_list|,
+name|secval
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1165,12 +1206,7 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|biodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|devstat_end_transaction
+name|devstat_end_transaction_buf
 argument_list|(
 operator|&
 name|sc
@@ -1178,12 +1214,11 @@ operator|->
 name|stats
 argument_list|,
 name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|DEVSTAT_TAG_NONE
-argument_list|,
-name|dop
+argument_list|)
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|s
@@ -1320,9 +1355,7 @@ name|sc
 operator|->
 name|nsect
 operator|=
-literal|10000
-operator|*
-literal|2
+name|MDNSECT
 expr_stmt|;
 comment|/* for now */
 name|MALLOC
