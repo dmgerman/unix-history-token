@@ -214,7 +214,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 end_ifdef
 
 begin_define

@@ -127,7 +127,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 end_ifdef
 
 begin_include
@@ -619,6 +619,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|stat
 modifier|*
@@ -2475,7 +2476,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 name|int
 name|fd
 decl_stmt|,
@@ -2747,7 +2748,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the dir and do an ioctl on it... 			 */
 if|if
 condition|(
@@ -2975,7 +2976,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the file and do an ioctl on it... 			 */
 if|if
 condition|(
@@ -3205,6 +3206,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|struct
 name|stat
 modifier|*
@@ -3237,7 +3239,7 @@ name|fd
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 name|int
 name|r
 decl_stmt|;
@@ -3271,23 +3273,6 @@ name|entry
 operator|=
 name|archive_entry_new
 argument_list|()
-expr_stmt|;
-comment|/* Non-regular files get archived with zero size. */
-if|if
-condition|(
-operator|!
-name|S_ISREG
-argument_list|(
-name|st
-operator|->
-name|st_mode
-argument_list|)
-condition|)
-name|st
-operator|->
-name|st_size
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Strip redundant "./" from start of filename. */
 if|if
@@ -3565,7 +3550,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux
 if|if
 condition|(
 operator|(
@@ -3726,6 +3711,24 @@ name|cleanup
 goto|;
 block|}
 block|}
+comment|/* Non-regular files get archived with zero size. */
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|st
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|e
 operator|=
 name|archive_write_header
@@ -6130,7 +6133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test if the specified file is newer than what's already  * in the archive.  */
+comment|/*  * Test if the specified file is new enough to include in the archive.  */
 end_comment
 
 begin_function

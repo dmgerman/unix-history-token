@@ -1084,6 +1084,16 @@ begin_comment
 comment|/* Use system fnmatch() if it suits our needs. */
 end_comment
 
+begin_comment
+comment|/* On Linux, _GNU_SOURCE must be defined to get FNM_LEADING_DIR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+end_define
+
 begin_include
 include|#
 directive|include
