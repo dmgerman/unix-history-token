@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.21 (Berkeley) %G%"
+literal|"@(#)su.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +295,7 @@ name|getlogin
 argument_list|()
 decl_stmt|,
 modifier|*
-name|mytty
+name|ontty
 argument_list|()
 decl_stmt|;
 name|np
@@ -453,20 +453,99 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* get current login name and shell */
+name|openlog
+argument_list|(
+literal|"su"
+argument_list|,
+name|LOG_CONS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Get current login name and shell. 	 * This code assumes the trustable (system call) 	 * version of getlogin (the old one was easily confused). 	 */
+name|ruid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|username
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
+name|username
+operator|==
+name|NULL
+operator|||
 operator|(
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|username
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|username
+condition|)
+name|syslog
+argument_list|(
+name|LOG_AUTH
+operator||
+name|LOG_ERR
+argument_list|,
+literal|"su attempt by unknown user %s (uid %d) to %s%s"
+argument_list|,
+name|username
+argument_list|,
+name|ruid
+argument_list|,
+name|user
+argument_list|,
+name|ontty
+argument_list|()
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* 		 * The following will happen regularly from cron, etc. 		 * unless such things do a setlogin(). 		 */
+else|else
+name|syslog
+argument_list|(
+name|LOG_AUTH
+operator||
+name|LOG_ERR
+argument_list|,
+literal|"su attempt with null login name (uid %d) to %s%s"
+argument_list|,
+name|ruid
+argument_list|,
+name|user
+argument_list|,
+name|ontty
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pwd
 operator|=
 name|getpwuid
 argument_list|(
 name|ruid
-operator|=
-name|getuid
-argument_list|()
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd
 operator|==
 name|NULL
 condition|)
@@ -493,6 +572,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|asme
@@ -642,15 +722,6 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|openlog
-argument_list|(
-literal|"su"
-argument_list|,
-name|LOG_CONS
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ruid
@@ -723,16 +794,16 @@ name|syslog
 argument_list|(
 name|LOG_AUTH
 operator||
-name|LOG_CRIT
+name|LOG_WARNING
 argument_list|,
-literal|"BAD SU %s on %s to %s"
+literal|"BAD SU %s to %s%s"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
-argument_list|()
-argument_list|,
 name|user
+argument_list|,
+name|ontty
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1097,20 +1168,26 @@ literal|"_su"
 else|:
 literal|"su"
 expr_stmt|;
+if|if
+condition|(
+name|ruid
+operator|!=
+literal|0
+condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"%s on %s to %s"
+literal|"%s to %s%s"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
-argument_list|()
-argument_list|,
 name|user
+argument_list|,
+name|ontty
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1215,7 +1292,7 @@ end_block
 begin_function
 name|char
 modifier|*
-name|mytty
+name|ontty
 parameter_list|()
 block|{
 name|char
@@ -1226,20 +1303,43 @@ modifier|*
 name|ttyname
 argument_list|()
 decl_stmt|;
-return|return
-operator|(
-operator|(
+specifier|static
+name|char
+name|buf
+index|[
+name|MAXPATHLEN
+operator|+
+literal|4
+index|]
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|p
 operator|=
 name|ttyname
 argument_list|(
 name|STDERR_FILENO
 argument_list|)
-operator|)
-condition|?
+condition|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|" on %s"
+argument_list|,
 name|p
-else|:
-literal|"UNKNOWN TTY"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
 operator|)
 return|;
 block|}
@@ -1332,7 +1432,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|mytty
+name|ontty
 parameter_list|()
 function_decl|;
 if|if
@@ -1425,6 +1525,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set real as well as effective ID to 0 for the moment, 	 * to make the kerberos library do the right thing. 	 */
 if|if
 condition|(
 name|setuid
@@ -1454,7 +1555,7 @@ argument_list|(
 name|krbtkfile
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Little trick here -- if we are su'ing to root, 	 * we need to get a ticket for "xxx.root", where xxx represents 	 * the name of the person su'ing.  Otherwise (non-root case), 	 * we need to get a ticket for "yyy.", where yyy represents 	 * the name of the person being su'd to, and the instance is null 	 * 	 * Also: POLICY: short ticket lifetime for root 	 */
+comment|/* 	 * Little trick here -- if we are su'ing to root, 	 * we need to get a ticket for "xxx.root", where xxx represents 	 * the name of the person su'ing.  Otherwise (non-root case), 	 * we need to get a ticket for "yyy.", where yyy represents 	 * the name of the person being su'd to, and the instance is null 	 * 	 * We should have a way to set the ticket lifetime, 	 * with a system default for root. 	 */
 name|kerno
 operator|=
 name|krb_get_pw_in_tkt
@@ -1485,15 +1586,7 @@ literal|"krbtgt"
 argument_list|,
 name|lrealm
 argument_list|,
-operator|(
-name|uid
-operator|==
-literal|0
-condition|?
-literal|2
-else|:
 name|DEFAULT_TKT_LIFE
-operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -1566,14 +1659,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: BAD Kerberos SU: %s on %s to %s: %s"
+literal|"su: BAD Kerberos SU: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
-argument_list|()
-argument_list|,
 name|user
+argument_list|,
+name|ontty
+argument_list|()
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1731,14 +1824,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: %s on %s to %s, TGT not verified"
+literal|"su: %s to %s%s, TGT not verified"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
-argument_list|()
-argument_list|,
 name|user
+argument_list|,
+name|ontty
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -1769,14 +1862,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s on %s to %s: %s"
+literal|"su: failed su: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
-argument_list|()
-argument_list|,
 name|user
+argument_list|,
+name|ontty
+argument_list|()
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1898,11 +1991,11 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s on %s to %s: %s"
+literal|"su: failed su: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|mytty
+name|ontty
 argument_list|()
 argument_list|,
 name|user
