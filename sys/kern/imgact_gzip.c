@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.13 1995/03/16 18:12:27 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.14 1995/05/30 08:05:18 rgrimes Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -178,12 +178,12 @@ begin_function
 name|int
 name|exec_gzip_imgact
 parameter_list|(
-name|iparams
+name|imgp
 parameter_list|)
 name|struct
 name|image_params
 modifier|*
-name|iparams
+name|imgp
 decl_stmt|;
 block|{
 name|int
@@ -201,7 +201,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|iparams
+name|imgp
 operator|->
 name|image_header
 decl_stmt|;
@@ -335,7 +335,7 @@ name|igz
 operator|.
 name|ip
 operator|=
-name|iparams
+name|imgp
 expr_stmt|;
 name|igz
 operator|.
@@ -1369,7 +1369,7 @@ name|igz
 operator|->
 name|ip
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 comment|/* vnode */
 name|igz

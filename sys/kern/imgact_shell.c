@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_shell.c,v 1.7 1995/09/08 13:24:33 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_shell.c,v 1.8 1995/10/08 00:05:58 swallace Exp $  */
 end_comment
 
 begin_include
@@ -95,19 +95,19 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Shell interpreter image activator. A interpreter name beginning  *	at iparams->stringbase is the minimal successful exit requirement.  */
+comment|/*  * Shell interpreter image activator. A interpreter name beginning  *	at imgp->stringbase is the minimal successful exit requirement.  */
 end_comment
 
 begin_function
 name|int
 name|exec_shell_imgact
 parameter_list|(
-name|iparams
+name|imgp
 parameter_list|)
 name|struct
 name|image_params
 modifier|*
-name|iparams
+name|imgp
 decl_stmt|;
 block|{
 specifier|const
@@ -115,7 +115,7 @@ name|char
 modifier|*
 name|image_header
 init|=
-name|iparams
+name|imgp
 operator|->
 name|image_header
 decl_stmt|;
@@ -156,7 +156,7 @@ return|;
 comment|/* 	 * Don't allow a shell script to be the shell for a shell 	 *	script. :-) 	 */
 if|if
 condition|(
-name|iparams
+name|imgp
 operator|->
 name|interpreted
 condition|)
@@ -165,7 +165,7 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
-name|iparams
+name|imgp
 operator|->
 name|interpreted
 operator|=
@@ -244,7 +244,7 @@ expr_stmt|;
 comment|/* copy the interpreter name */
 name|interp
 operator|=
-name|iparams
+name|imgp
 operator|->
 name|interpreter_name
 expr_stmt|;
@@ -287,7 +287,7 @@ comment|/* Disallow a null interpreter filename */
 if|if
 condition|(
 operator|*
-name|iparams
+name|imgp
 operator|->
 name|interpreter_name
 operator|==
@@ -367,7 +367,7 @@ operator|)
 condition|)
 block|{
 operator|*
-name|iparams
+name|imgp
 operator|->
 name|stringp
 operator|++
@@ -376,26 +376,26 @@ operator|*
 name|ihp
 operator|++
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|stringspace
 operator|--
 expr_stmt|;
 block|}
 operator|*
-name|iparams
+name|imgp
 operator|->
 name|stringp
 operator|++
 operator|=
 literal|0
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|stringspace
 operator|--
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|argc
 operator|++
@@ -405,7 +405,7 @@ block|}
 comment|/* set argv[0] to point to original file name */
 name|suword
 argument_list|(
-name|iparams
+name|imgp
 operator|->
 name|uap
 operator|->
@@ -414,7 +414,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|iparams
+name|imgp
 operator|->
 name|uap
 operator|->

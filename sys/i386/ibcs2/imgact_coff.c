@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.7 1995/09/13 02:12:51 sef Exp $  */
+comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.9 1995/10/10 17:33:19 swallace Exp $  */
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ operator|(
 expr|struct
 name|image_params
 operator|*
-name|iparams
+name|imgp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -565,7 +565,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|vnodep
+name|vp
 decl_stmt|;
 name|struct
 name|vattr
@@ -668,7 +668,7 @@ condition|)
 return|return
 name|error
 return|;
-name|vnodep
+name|vp
 operator|=
 name|nd
 operator|.
@@ -676,7 +676,7 @@ name|ni_vp
 expr_stmt|;
 if|if
 condition|(
-name|vnodep
+name|vp
 operator|==
 name|NULL
 condition|)
@@ -685,7 +685,7 @@ name|ENOEXEC
 return|;
 if|if
 condition|(
-name|vnodep
+name|vp
 operator|->
 name|v_writecount
 condition|)
@@ -704,7 +704,7 @@ name|error
 operator|=
 name|VOP_GETATTR
 argument_list|(
-name|vnodep
+name|vp
 argument_list|,
 operator|&
 name|attr
@@ -722,7 +722,7 @@ goto|;
 if|if
 condition|(
 operator|(
-name|vnodep
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -777,7 +777,7 @@ name|error
 operator|=
 name|VOP_ACCESS
 argument_list|(
-name|vnodep
+name|vp
 argument_list|,
 name|VEXEC
 argument_list|,
@@ -797,7 +797,7 @@ name|error
 operator|=
 name|VOP_OPEN
 argument_list|(
-name|vnodep
+name|vp
 argument_list|,
 name|FREAD
 argument_list|,
@@ -814,7 +814,7 @@ goto|;
 comment|/* 	 * Lose the lock on the vnode. It's no longer needed, and must not 	 * exist for the pagefault paging to work below. 	 */
 name|VOP_UNLOCK
 argument_list|(
-name|vnodep
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -843,7 +843,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|vnodep
+name|vp
 argument_list|,
 literal|0
 argument_list|)
@@ -1087,7 +1087,7 @@ name|load_coff_section
 argument_list|(
 name|vmspace
 argument_list|,
-name|vnodep
+name|vp
 argument_list|,
 name|text_offset
 argument_list|,
@@ -1118,7 +1118,7 @@ name|load_coff_section
 argument_list|(
 name|vmspace
 argument_list|,
-name|vnodep
+name|vp
 argument_list|,
 name|data_offset
 argument_list|,
@@ -1202,12 +1202,12 @@ begin_function
 name|int
 name|exec_coff_imgact
 parameter_list|(
-name|iparams
+name|imgp
 parameter_list|)
 name|struct
 name|image_params
 modifier|*
-name|iparams
+name|imgp
 decl_stmt|;
 block|{
 name|struct
@@ -1220,7 +1220,7 @@ expr|struct
 name|filehdr
 operator|*
 operator|)
-name|iparams
+name|imgp
 operator|->
 name|image_header
 decl_stmt|;
@@ -1242,7 +1242,7 @@ name|vmspace
 modifier|*
 name|vmspace
 init|=
-name|iparams
+name|imgp
 operator|->
 name|proc
 operator|->
@@ -1416,7 +1416,7 @@ name|char
 operator|*
 operator|)
 operator|(
-name|iparams
+name|imgp
 operator|->
 name|image_header
 operator|)
@@ -1428,7 +1428,7 @@ name|filehdr
 argument_list|)
 operator|)
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|entry_addr
 operator|=
@@ -1449,7 +1449,7 @@ name|char
 operator|*
 operator|)
 operator|(
-name|iparams
+name|imgp
 operator|->
 name|image_header
 operator|)
@@ -1473,7 +1473,7 @@ name|error
 operator|=
 name|exec_extract_strings
 argument_list|(
-name|iparams
+name|imgp
 argument_list|)
 condition|)
 block|{
@@ -1496,7 +1496,7 @@ return|;
 block|}
 name|exec_new_vmspace
 argument_list|(
-name|iparams
+name|imgp
 argument_list|)
 expr_stmt|;
 for|for
@@ -1757,9 +1757,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 name|foff
 argument_list|)
@@ -1900,7 +1900,7 @@ name|error
 operator|=
 name|coff_load_file
 argument_list|(
-name|iparams
+name|imgp
 operator|->
 name|proc
 argument_list|,
@@ -1915,7 +1915,7 @@ name|error
 operator|=
 name|coff_load_file
 argument_list|(
-name|iparams
+name|imgp
 operator|->
 name|proc
 argument_list|,
@@ -1974,7 +1974,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s(%d):  load_coff_section(vmspace, "
-literal|"iparams->vnodep, %08lx, %08lx, 0x%x, 0x%x, 0x%x)\n"
+literal|"imgp->vp, %08lx, %08lx, 0x%x, 0x%x, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -2002,9 +2002,9 @@ name|load_coff_section
 argument_list|(
 name|vmspace
 argument_list|,
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 name|text_offset
 argument_list|,
@@ -2045,7 +2045,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s(%d): load_coff_section(vmspace, "
-literal|"iparams->vnodep, 0x%08lx, 0x%08lx, 0x%x, 0x%x, 0x%x)\n"
+literal|"imgp->vp, 0x%08lx, 0x%08lx, 0x%x, 0x%x, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -2073,9 +2073,9 @@ name|load_coff_section
 argument_list|(
 name|vmspace
 argument_list|,
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 name|data_offset
 argument_list|,
@@ -2111,13 +2111,13 @@ return|return
 name|error
 return|;
 block|}
-name|iparams
+name|imgp
 operator|->
 name|interpreted
 operator|=
 literal|0
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|proc
 operator|->
@@ -2275,9 +2275,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Indicate that this file should not be modified */
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 operator|->
 name|v_flag
 operator||=

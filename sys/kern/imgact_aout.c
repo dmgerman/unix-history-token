@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_aout.c,v 1.15 1995/08/24 10:32:36 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: imgact_aout.c,v 1.16 1995/09/08 13:24:32 davidg Exp $  */
 end_comment
 
 begin_include
@@ -67,12 +67,12 @@ begin_function
 name|int
 name|exec_aout_imgact
 parameter_list|(
-name|iparams
+name|imgp
 parameter_list|)
 name|struct
 name|image_params
 modifier|*
-name|iparams
+name|imgp
 decl_stmt|;
 block|{
 name|struct
@@ -85,7 +85,7 @@ expr|struct
 name|exec
 operator|*
 operator|)
-name|iparams
+name|imgp
 operator|->
 name|image_header
 decl_stmt|;
@@ -94,7 +94,7 @@ name|vmspace
 modifier|*
 name|vmspace
 init|=
-name|iparams
+name|imgp
 operator|->
 name|proc
 operator|->
@@ -315,7 +315,7 @@ name|a_out
 operator|->
 name|a_text
 operator|>
-name|iparams
+name|imgp
 operator|->
 name|attr
 operator|->
@@ -352,7 +352,7 @@ name|a_data
 operator|+
 name|bss_size
 operator|>
-name|iparams
+name|imgp
 operator|->
 name|proc
 operator|->
@@ -373,7 +373,7 @@ name|error
 operator|=
 name|exec_extract_strings
 argument_list|(
-name|iparams
+name|imgp
 argument_list|)
 expr_stmt|;
 if|if
@@ -388,7 +388,7 @@ return|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
 name|exec_new_vmspace
 argument_list|(
-name|iparams
+name|imgp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map text read/execute 	 */
@@ -435,9 +435,9 @@ comment|/* flags */
 operator|(
 name|caddr_t
 operator|)
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 comment|/* vnode */
 name|file_offset
@@ -501,9 +501,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 argument_list|,
 name|file_offset
 operator|+
@@ -620,13 +620,13 @@ operator|->
 name|a_text
 expr_stmt|;
 comment|/* Fill in image_params */
-name|iparams
+name|imgp
 operator|->
 name|interpreted
 operator|=
 literal|0
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|entry_addr
 operator|=
@@ -634,7 +634,7 @@ name|a_out
 operator|->
 name|a_entry
 expr_stmt|;
-name|iparams
+name|imgp
 operator|->
 name|proc
 operator|->
@@ -644,9 +644,9 @@ operator|&
 name|aout_sysvec
 expr_stmt|;
 comment|/* Indicate that this file should not be modified */
-name|iparams
+name|imgp
 operator|->
-name|vnodep
+name|vp
 operator|->
 name|v_flag
 operator||=
