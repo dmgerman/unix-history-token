@@ -698,9 +698,7 @@ decl_stmt|;
 name|int
 name|reg
 init|=
-name|mp
-operator|->
-name|window
+name|win
 operator|*
 name|PCIC_MEMSIZE
 operator|+
