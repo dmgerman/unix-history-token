@@ -2412,7 +2412,7 @@ literal|0
 condition|)
 block|{
 name|char
-name|c
+name|touch_c
 decl_stmt|;
 if|if
 condition|(
@@ -2421,7 +2421,7 @@ argument_list|(
 name|tfd
 argument_list|,
 operator|&
-name|c
+name|touch_c
 argument_list|,
 literal|1
 argument_list|)
@@ -2447,7 +2447,7 @@ argument_list|(
 name|tfd
 argument_list|,
 operator|&
-name|c
+name|touch_c
 argument_list|,
 literal|1
 argument_list|)
