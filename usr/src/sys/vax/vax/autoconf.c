@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4687,9 +4687,6 @@ argument_list|,
 name|mindev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DOSWAP
 comment|/* 	 * If the original rootdev is the same as the one 	 * just calculated, don't need to adjust the swap configuration. 	 */
 if|if
 condition|(
@@ -4698,6 +4695,34 @@ operator|==
 name|orootdev
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"Changing root device to %c%c(%d, %d)\n"
+argument_list|,
+name|devname
+index|[
+name|majdev
+index|]
+index|[
+literal|0
+index|]
+argument_list|,
+name|devname
+index|[
+name|majdev
+index|]
+index|[
+literal|1
+index|]
+argument_list|,
+name|majdev
+argument_list|,
+name|mindev
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DOSWAP
 name|mindev
 operator|&=
 operator|~
