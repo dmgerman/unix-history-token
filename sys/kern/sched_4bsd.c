@@ -112,13 +112,37 @@ begin_comment
 comment|/* Priorities per nice level. */
 end_comment
 
+begin_struct
+struct|struct
+name|ke_sched
+block|{
+name|int
+name|ske_cpticks
+decl_stmt|;
+comment|/* (j) Ticks of cpu time. */
+name|fixpt_t
+name|ske_pctcpu
+decl_stmt|;
+comment|/* (j) %cpu during p_swtime. */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|ke_sched
+name|ke_sched
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|ke_sched
 modifier|*
 name|kse0_sched
 init|=
-name|NULL
+operator|&
+name|ke_sched
 decl_stmt|;
 end_decl_stmt
 
@@ -778,12 +802,16 @@ block|}
 comment|/* 				 * pctcpu is only for ps? 				 * Do it per kse.. and add them up at the end? 				 * XXXKSE 				 */
 name|ke
 operator|->
-name|ke_pctcpu
+name|ke_sched
+operator|->
+name|ske_pctcpu
 operator|=
 operator|(
 name|ke
 operator|->
-name|ke_pctcpu
+name|ke_sched
+operator|->
+name|ske_pctcpu
 operator|*
 name|ccpu
 operator|)
@@ -795,7 +823,9 @@ if|if
 condition|(
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|==
 literal|0
 condition|)
@@ -809,7 +839,9 @@ name|CCPU_SHIFT
 operator|)
 name|ke
 operator|->
-name|ke_pctcpu
+name|ke_sched
+operator|->
+name|ske_pctcpu
 operator|+=
 operator|(
 name|realstathz
@@ -823,7 +855,9 @@ name|fixpt_t
 operator|)
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|)
 operator|<<
 operator|(
@@ -841,7 +875,9 @@ name|fixpt_t
 operator|)
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|)
 operator|<<
 operator|(
@@ -857,7 +893,9 @@ else|#
 directive|else
 name|ke
 operator|->
-name|ke_pctcpu
+name|ke_sched
+operator|->
+name|ske_pctcpu
 operator|+=
 operator|(
 operator|(
@@ -869,7 +907,9 @@ operator|*
 operator|(
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|*
 name|FSCALE
 operator|/
@@ -883,7 +923,9 @@ endif|#
 directive|endif
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|=
 literal|0
 expr_stmt|;
@@ -1369,7 +1411,9 @@ name|td_ksegrp
 expr_stmt|;
 name|ke
 operator|->
-name|ke_cpticks
+name|ke_sched
+operator|->
+name|ske_cpticks
 operator|++
 expr_stmt|;
 name|kg
@@ -1475,6 +1519,11 @@ modifier|*
 name|child
 parameter_list|)
 block|{
+name|struct
+name|kse
+modifier|*
+name|ke
+decl_stmt|;
 comment|/* 	 * set priority of child to be that of parent. 	 * XXXKSE this needs redefining.. 	 */
 name|child
 operator|->
@@ -1483,6 +1532,30 @@ operator|=
 name|kg
 operator|->
 name|kg_estcpu
+expr_stmt|;
+comment|/* Set up scheduler specific data */
+name|ke
+operator|=
+name|FIRST_KSE_IN_KSEGRP
+argument_list|(
+name|kg
+argument_list|)
+expr_stmt|;
+name|ke
+operator|->
+name|ke_sched
+operator|->
+name|ske_pctcpu
+operator|=
+literal|0
+expr_stmt|;
+name|ke
+operator|->
+name|ke_sched
+operator|->
+name|ske_cpticks
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2128,6 +2201,12 @@ argument_list|(
 expr|struct
 name|kse
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ke_sched
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2204,7 +2283,9 @@ return|return
 operator|(
 name|ke
 operator|->
-name|ke_pctcpu
+name|ke_sched
+operator|->
+name|ske_pctcpu
 operator|)
 return|;
 block|}
