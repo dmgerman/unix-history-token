@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ofw_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
 end_include
 
 begin_include
