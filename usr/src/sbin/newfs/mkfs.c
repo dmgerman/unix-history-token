@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.13 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2628,6 +2628,16 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|acg
+operator|.
+name|cg_btot
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -2653,6 +2663,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cylno
@@ -2746,6 +2757,20 @@ operator|.
 name|cg_cs
 operator|.
 name|cs_nbfree
+operator|++
+expr_stmt|;
+name|acg
+operator|.
+name|cg_btot
+index|[
+name|cbtocylno
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|d
+argument_list|)
+index|]
 operator|++
 expr_stmt|;
 name|acg
@@ -3423,6 +3448,20 @@ name|cs_ndir
 operator|++
 expr_stmt|;
 block|}
+name|acg
+operator|.
+name|cg_btot
+index|[
+name|cbtocylno
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|d
+argument_list|)
+index|]
+operator|--
+expr_stmt|;
 name|acg
 operator|.
 name|cg_b

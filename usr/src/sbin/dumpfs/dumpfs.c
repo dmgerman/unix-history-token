@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.8 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1125,9 +1125,16 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"   c%d:\t"
+literal|"   c%d:\t(%d)\t"
 argument_list|,
 name|i
+argument_list|,
+name|acg
+operator|.
+name|cg_btot
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 for|for

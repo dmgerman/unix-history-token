@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.13 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2741,6 +2741,16 @@ condition|;
 name|s
 operator|++
 control|)
+block|{
+name|cgrp
+operator|.
+name|cg_btot
+index|[
+name|s
+index|]
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2766,6 +2776,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -2912,6 +2923,20 @@ operator|.
 name|cg_cs
 operator|.
 name|cs_nbfree
+operator|++
+expr_stmt|;
+name|cgrp
+operator|.
+name|cg_btot
+index|[
+name|cbtocylno
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|d
+argument_list|)
+index|]
 operator|++
 expr_stmt|;
 name|cgrp
