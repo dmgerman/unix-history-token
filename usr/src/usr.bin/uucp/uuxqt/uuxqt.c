@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.10	(Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.11	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,6 +459,13 @@ argument_list|)
 expr_stmt|;
 name|uucpname
 argument_list|(
+name|Myname
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|Rmtname
+argument_list|,
 name|Myname
 argument_list|)
 expr_stmt|;
