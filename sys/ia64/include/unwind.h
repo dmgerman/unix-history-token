@@ -136,6 +136,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|unw_get_sp
+parameter_list|(
+name|struct
+name|unw_regstate
+modifier|*
+name|s
+parameter_list|,
+name|uint64_t
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|unw_table_add
 parameter_list|(
 name|uint64_t
