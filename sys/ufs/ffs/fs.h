@@ -1424,7 +1424,7 @@ parameter_list|,
 name|percentreserved
 parameter_list|)
 define|\
-value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nffree - ((fs)->fs_dsize * (percentreserved) / 100))
+value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nffree - \ 	((off_t)((fs)->fs_dsize) * (percentreserved) / 100))
 end_define
 
 begin_comment
