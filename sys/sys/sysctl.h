@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.61 1998/07/28 22:34:12 joerg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.62 1998/08/24 08:39:37 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -387,7 +387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the "raw" function for a mib-oid */
+comment|/* This constructs a "raw" MIB oid. */
 end_comment
 
 begin_define
@@ -418,7 +418,7 @@ value|static const struct sysctl_oid sysctl__##parent##_##name = { \ 		nbr, kind
 end_define
 
 begin_comment
-comment|/* This makes a node from which other oids can hang */
+comment|/* This constructs a node from which other oids can hang. */
 end_comment
 
 begin_define
@@ -443,7 +443,7 @@ value|extern struct linker_set sysctl_##parent##_##name; \ 	SYSCTL_OID(parent, n
 end_define
 
 begin_comment
-comment|/* This is a string len can be 0 to indicate '\0' termination */
+comment|/* Oid for a string.  len can be 0 to indicate '\0' termination. */
 end_comment
 
 begin_define
@@ -470,7 +470,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|access, \ 		arg, len, sysctl_
 end_define
 
 begin_comment
-comment|/* This is a integer, if ptr is NULL, val is returned */
+comment|/* Oid for an int.  If ptr is NULL, val is returned. */
 end_comment
 
 begin_define
@@ -497,7 +497,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_han
 end_define
 
 begin_comment
-comment|/* This is a integer, if ptr is NULL, val is returned */
+comment|/* Oid for a long.  If ptr is NULL, val is returned. */
 end_comment
 
 begin_define
@@ -524,7 +524,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_han
 end_define
 
 begin_comment
-comment|/* This is a integer, if ptr is NULL, val is returned */
+comment|/* Oid for an intptr_t.  If ptr is NULL, val is returned. */
 end_comment
 
 begin_define
@@ -551,7 +551,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_han
 end_define
 
 begin_comment
-comment|/* This is anything, specified by a pointer and a lenth */
+comment|/* Oid for an opaque object.  Specified by a pointer and a length. */
 end_comment
 
 begin_define
@@ -580,7 +580,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, len, sysctl_
 end_define
 
 begin_comment
-comment|/* This is a struct, specified by a pointer and type */
+comment|/* Oid for a struct.  Specified by a pointer and a type. */
 end_comment
 
 begin_define
@@ -607,7 +607,7 @@ value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, sizeof(struc
 end_define
 
 begin_comment
-comment|/* Needs a proc.  Specify by pointer and arg */
+comment|/* Oid for a procedure.  Specified by a pointer and an arg. */
 end_comment
 
 begin_define
@@ -2153,10 +2153,6 @@ name|retval
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* int	sysctl_clockrate __P((char *, size_t*)); int	sysctl_file __P((char *, size_t*)); int	sysctl_doproc __P((int *, u_int, char *, size_t*)); int	sysctl_doprof __P((int *, u_int, void *, size_t *, void *, size_t)); */
-end_comment
 
 begin_else
 else|#
