@@ -4,7 +4,7 @@ comment|/* Copyright 1993,1994 by Paul Vixie  * All rights reserved  *  * Distri
 end_comment
 
 begin_comment
-comment|/*  * $Id: compat.h,v 1.8 1994/01/15 20:43:43 vixie Exp $  */
+comment|/*  * $Id: compat.h,v 1.1.1.1 1994/08/27 13:43:04 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -618,21 +618,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_SAVED_IDS
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|HAVE_SAVED_UIDS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
