@@ -370,6 +370,9 @@ return|return
 literal|"Intel ICH ATA66 controller"
 return|;
 case|case
+literal|0x244a8086
+case|:
+case|case
 literal|0x244b8086
 case|:
 return|return

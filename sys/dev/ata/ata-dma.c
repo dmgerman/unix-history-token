@@ -443,6 +443,10 @@ name|chiptype
 condition|)
 block|{
 case|case
+literal|0x244a8086
+case|:
+comment|/* Intel ICH2 mobile */
+case|case
 literal|0x244b8086
 case|:
 comment|/* Intel ICH2 */
@@ -516,7 +520,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA5 on ICH2 chip\n"
+literal|"%s setting UDMA5 on Intel chip\n"
 argument_list|,
 operator|(
 name|error
@@ -736,7 +740,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA4 on ICH%s chip\n"
+literal|"%s setting UDMA4 on Intel chip\n"
 argument_list|,
 operator|(
 name|error
@@ -745,18 +749,6 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
-argument_list|,
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x244b8086
-operator|)
-condition|?
-literal|"2"
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -951,7 +943,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA2 on %s chip\n"
+literal|"%s setting UDMA2 on Intel chip\n"
 argument_list|,
 operator|(
 name|error
@@ -960,38 +952,6 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
-argument_list|,
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x244b8086
-operator|)
-condition|?
-literal|"ICH2"
-else|:
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x24118086
-operator|)
-condition|?
-literal|"ICH"
-else|:
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x24218086
-operator|)
-condition|?
-literal|"ICH0"
-else|:
-literal|"PIIX4"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1321,7 +1281,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting WDMA2 on %s chip\n"
+literal|"%s setting WDMA2 on Intel chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1330,48 +1290,6 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
-argument_list|,
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x244b8086
-operator|)
-condition|?
-literal|"ICH2"
-else|:
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x24118086
-operator|)
-condition|?
-literal|"ICH"
-else|:
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x24218086
-operator|)
-condition|?
-literal|"ICH0"
-else|:
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x70108086
-operator|)
-condition|?
-literal|"PIIX3"
-else|:
-literal|"PIIX4"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1619,7 +1537,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting WDMA2 on PIIX chip\n"
+literal|"%s setting WDMA2 on Intel chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1737,7 +1655,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA5 on Aladdin chip\n"
+literal|"%s setting UDMA5 on Acer chip\n"
 argument_list|,
 operator|(
 name|error
@@ -1904,7 +1822,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA4 on Aladdin chip\n"
+literal|"%s setting UDMA4 on Acer chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2071,7 +1989,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA2 on Aladdin chip\n"
+literal|"%s setting UDMA2 on Acer chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2251,7 +2169,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting WDMA2 on Aladdin chip\n"
+literal|"%s setting WDMA2 on Acer chip\n"
 argument_list|,
 operator|(
 name|error
