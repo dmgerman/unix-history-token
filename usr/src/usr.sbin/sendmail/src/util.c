@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.72 (Berkeley) %G%"
+literal|"@(#)util.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6250,6 +6250,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|bool
+name|canon
+init|=
+name|FALSE
+decl_stmt|;
 comment|/* strip off final dot */
 name|p
 operator|=
@@ -6271,11 +6276,17 @@ name|p
 operator|==
 literal|'.'
 condition|)
+block|{
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+name|canon
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* see if there is any domain at all -- if not, we are done */
 name|p
 operator|=
@@ -6323,6 +6334,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|canon
+condition|?
+name|strcasecmp
+argument_list|(
+name|p
+argument_list|,
+name|mydom
+argument_list|)
+else|:
 name|strncasecmp
 argument_list|(
 name|p
@@ -6331,6 +6352,7 @@ name|mydom
 argument_list|,
 name|i
 argument_list|)
+operator|)
 operator|==
 literal|0
 operator|&&
