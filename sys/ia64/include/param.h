@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_ALIGNBYTES
-value|7
+value|15
 end_define
 
 begin_endif
