@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.2	86/07/13	*/
+comment|/*	srt0.c	1.3	86/11/03	*/
 end_comment
 
 begin_include
@@ -45,7 +45,7 @@ name|mask
 end_expr_stmt
 
 begin_for
-for|for total disable
+for|for total disable  	.globl	_entry _entry:
 ifndef|#
 directive|ifndef
 name|REL
@@ -62,6 +62,9 @@ end_for
 
 begin_case
 case|case
+ifdef|#
+directive|ifdef
+name|REL
 name|movl
 name|$RELOC
 operator|,
@@ -77,10 +80,10 @@ decl_stmt|,
 name|r1
 comment|/* destination address */
 name|movl
-name|aend
+name|aedata
 decl_stmt|,
 name|r2
-comment|/* length */
+comment|/* length to copy */
 name|addl2
 name|r2
 decl_stmt|,
@@ -107,6 +110,33 @@ name|decl
 name|r2
 name|bgeq
 name|mvloop
+comment|/*  * zero bss  */
+name|movab
+name|_edata
+decl_stmt|,
+name|r1
+comment|/* destination address */
+name|subl3
+name|aend
+decl_stmt|,
+name|aedata
+decl_stmt|,
+name|r2
+comment|/* length to zero */
+name|zloop
+range|:
+name|movb
+name|$0
+decl_stmt|,
+argument_list|(
+name|r1
+argument_list|)
+name|incl
+name|r1
+name|decl
+name|r2
+name|bgeq
+name|zloop
 name|mtpr
 name|$0
 decl_stmt|,
@@ -114,8 +144,14 @@ name|$PACC
 name|jmp
 modifier|*
 name|abegin
+endif|#
+directive|endif
 name|begin
 range|:
+name|movl
+name|fp
+decl_stmt|,
+name|ofp
 name|movl
 name|$1
 decl_stmt|,
@@ -124,34 +160,46 @@ name|callf
 name|$4
 decl_stmt|,
 name|_main
-name|jmp
-name|begin
+ifdef|#
+directive|ifdef
+name|REL
+name|halt
+endif|#
+directive|endif
+name|ret
 name|__rtt
 range|:
 operator|.
 name|word
 literal|0x0
-name|jmp
-name|begin
+ifdef|#
+directive|ifdef
+name|REL
+name|halt
+endif|#
+directive|endif
+name|movl
+name|ofp
+decl_stmt|,
+name|fp
+name|ret
 operator|.
 name|data
 name|abegin
+range|:
+operator|.
+name|long
+name|begin
+name|aend
 case|:
 end_case
 
 begin_expr_stmt
 operator|.
 name|long
-name|begin
-name|aend
-operator|:
-operator|.
-name|long
 name|_end
 operator|-
 name|RELOC
-operator|-
-literal|0x800
 name|aedata
 operator|:
 operator|.
@@ -159,16 +207,11 @@ name|long
 name|_edata
 operator|-
 name|RELOC
-operator|-
-literal|0x800
+name|ofp
+operator|:
 operator|.
-name|globl
-name|_entry
-operator|.
-name|set
-name|_entry
-operator|,
-literal|0x800
+name|long
+literal|0
 end_expr_stmt
 
 end_unit
