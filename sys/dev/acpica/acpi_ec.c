@@ -1739,7 +1739,7 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_EVENT_EDGE_TRIGGERED
+name|ACPI_GPE_EDGE_TRIGGERED
 argument_list|,
 operator|&
 name|EcGpeHandler
