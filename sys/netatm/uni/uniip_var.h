@@ -65,7 +65,7 @@ modifier|*
 name|uip_arpsvrvcc
 decl_stmt|;
 comment|/* ATMARP server's VCC */
-name|int
+name|u_int
 name|uip_nprefix
 decl_stmt|;
 comment|/* Count of IP prefixes (server only) */
