@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)vars.c	2.3 %G%"
+literal|"@(#)vars.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,7 +597,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|unsigned
 name|h
 decl_stmt|;
 specifier|register
