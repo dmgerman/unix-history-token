@@ -291,6 +291,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|user
+modifier|*
+name|proc0paddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|clean_sva
 decl_stmt|;
@@ -1273,6 +1281,9 @@ name|bi
 operator|->
 name|bi_metadata
 expr_stmt|;
+name|init_param
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -1341,6 +1352,15 @@ name|proc0
 operator|.
 name|p_contested
 argument_list|)
+expr_stmt|;
+name|proc0paddr
+operator|=
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|user0
 expr_stmt|;
 name|proc0
 operator|.
