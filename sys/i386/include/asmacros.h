@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: asmacros.h,v 1.9.2.1 1997/02/13 08:34:40 bde Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: asmacros.h,v 1.9.2.2 1997/02/23 11:02:51 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -401,7 +401,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			PIC_PROLOGUE; \ 			movl PIC_GOT(AVECNAME(x)),%eax; \ 			PIC_EPILOGUE; \ 			jmpl *(%eax)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			PIC_PROLOGUE; \ 			movl PIC_GOT(AVECNAME(x)),%eax; \ 			PIC_EPILOGUE; \ 			jmpl *(%eax)
 end_define
 
 begin_define
@@ -411,7 +411,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			PIC_PROLOGUE; \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testl %eax,%eax; \ 			movl PIC_GOT(ANAME(x)),%eax; \ 			jne 8f; \ 			movl PIC_GOT(GNAME(x)),%eax; \ 			8: \ 			movl PIC_GOT(AVECNAME(x)),%edx; \ 			movl %eax,(%edx); \ 			PIC_EPILOGUE; \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			PIC_PROLOGUE; \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testl %eax,%eax; \ 			movl PIC_GOT(ANAME(x)),%eax; \ 			jne 8f; \ 			movl PIC_GOT(GNAME(x)),%eax; \ 			8: \ 			movl PIC_GOT(AVECNAME(x)),%edx; \ 			movl %eax,(%edx); \ 			PIC_EPILOGUE; \ 			jmpl *%eax
 end_define
 
 begin_else
@@ -431,7 +431,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpl *AVECNAME(x)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpl *AVECNAME(x)
 end_define
 
 begin_define
@@ -441,7 +441,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testl %eax,%eax; \ 			movl $ANAME(x),%eax; \ 			jne 8f; \ 			movl $GNAME(x),%eax; \ 			8: \ 			movl %eax,AVECNAME(x); \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testl %eax,%eax; \ 			movl $ANAME(x),%eax; \ 			jne 8f; \ 			movl $GNAME(x),%eax; \ 			8: \ 			movl %eax,AVECNAME(x); \ 			jmpl *%eax
 end_define
 
 begin_endif
@@ -486,7 +486,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):; \ 			call HIDENAME(mcount); 9:
+value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			_START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):; \ 			call HIDENAME(mcount); 9:
 end_define
 
 begin_else
@@ -515,7 +515,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):
+value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			_START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):
 end_define
 
 begin_endif
