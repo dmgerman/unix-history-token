@@ -1765,7 +1765,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Our thread state says that we are already on a run queue, so 	 * update our state as if we had been dequeued by choosethread(). 	 * However we must not actually be on the system run queue yet. 	 */
+comment|/* 	 * Thread is runnable but not yet put on system run queue. 	 */
 name|MPASS
 argument_list|(
 name|TD_ON_RUNQ
@@ -1871,6 +1871,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_INVOL
+operator||
+name|SW_PREEMPT
 argument_list|,
 name|td
 argument_list|)
@@ -2285,6 +2287,9 @@ name|struct
 name|kse
 modifier|*
 name|ke
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2351,6 +2356,25 @@ argument_list|,
 name|rqh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|SRQ_PREEMPTED
+condition|)
+block|{
+name|TAILQ_INSERT_HEAD
+argument_list|(
+name|rqh
+argument_list|,
+name|ke
+argument_list|,
+name|ke_procq
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|rqh
@@ -2360,6 +2384,7 @@ argument_list|,
 name|ke_procq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
