@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.14 1998/02/20 04:50:50 jb Exp $"
+literal|"$Id: rsh.c,v 1.15 1998/03/23 07:46:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -387,6 +393,15 @@ name|timeout
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|char
+modifier|*
+name|k
+decl_stmt|;
+endif|#
+directive|endif
 name|argoff
 operator|=
 name|asrsh
@@ -783,6 +798,29 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+operator|!
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|use_kerberos

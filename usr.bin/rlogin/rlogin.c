@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rlogin.c,v 1.17 1998/03/26 18:03:41 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -761,6 +767,15 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|char
+modifier|*
+name|k
+decl_stmt|;
+endif|#
+directive|endif
 name|argoff
 operator|=
 name|dflag
@@ -1095,6 +1110,29 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+operator|!
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|use_kerberos
