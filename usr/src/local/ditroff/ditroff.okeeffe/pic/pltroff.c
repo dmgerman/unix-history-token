@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pltroff.c	3.1 (CWI) 85/07/30"
+literal|"@(#)pltroff.c	3.2 (CWI) 85/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -2026,7 +2026,7 @@ comment|/* on the 202, l. is good but small. */
 comment|/* in general, use a smaller, shifted period and hope */
 name|printf
 argument_list|(
-literal|"\\&\\f1\\h'-.1m'\\v'.03m'\\s-3.\\s+3\\fP\n"
+literal|"\\&\\f1\\h'-.05m'\\v'.03m'\\s-3.\\s+3\\fP\n"
 argument_list|)
 expr_stmt|;
 name|flyback
