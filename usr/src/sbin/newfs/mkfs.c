@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.2 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* rotational delay between blocks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bbsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* boot block size */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* superblock size */
 end_comment
 
 begin_union
@@ -979,9 +1001,9 @@ name|roundup
 argument_list|(
 name|howmany
 argument_list|(
-name|BBSIZE
+name|bbsize
 operator|+
-name|SBSIZE
+name|sbsize
 argument_list|,
 name|sblock
 operator|.
@@ -1009,7 +1031,7 @@ name|roundup
 argument_list|(
 name|howmany
 argument_list|(
-name|SBSIZE
+name|sbsize
 argument_list|,
 name|sblock
 operator|.
@@ -2762,9 +2784,11 @@ name|utime
 expr_stmt|;
 name|wtfs
 argument_list|(
-name|SBLOCK
+name|SBOFF
+operator|/
+name|sectorsize
 argument_list|,
-name|SBSIZE
+name|sbsize
 argument_list|,
 operator|(
 name|char
@@ -2875,7 +2899,7 @@ name|cylno
 argument_list|)
 argument_list|)
 argument_list|,
-name|SBSIZE
+name|sbsize
 argument_list|,
 operator|(
 name|char
