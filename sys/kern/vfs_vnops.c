@@ -5236,7 +5236,7 @@ block|}
 comment|/* authorize attribute removal as kernel */
 name|error
 operator|=
-name|VOP_RMEXTATTR
+name|VOP_DELETEEXTATTR
 argument_list|(
 name|vp
 argument_list|,

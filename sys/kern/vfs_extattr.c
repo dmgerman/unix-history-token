@@ -21075,7 +21075,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|VOP_RMEXTATTR
+name|VOP_DELETEEXTATTR
 argument_list|(
 name|vp
 argument_list|,
