@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.42 1996/06/25 00:22:20 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.43 1996/06/29 03:33:20 alex Exp $  */
 end_comment
 
 begin_comment
@@ -1419,6 +1419,23 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fw_verbose_limit
+operator|!=
+literal|0
+operator|&&
+name|counter
+operator|==
+name|fw_verbose_limit
+condition|)
+name|printf
+argument_list|(
+literal|"ipfw: limit reached on rule #%d\n"
+argument_list|,
+name|rule
 argument_list|)
 expr_stmt|;
 block|}
@@ -3053,6 +3070,25 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|frwl
+condition|)
+name|printf
+argument_list|(
+literal|"ipfw: Entry %d cleared.\n"
+argument_list|,
+name|frwl
+operator|->
+name|fw_number
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ipfw: Accounting cleared.\n"
 argument_list|)
 expr_stmt|;
 return|return
