@@ -406,6 +406,12 @@ begin_struct
 struct|struct
 name|eeProm
 block|{
+name|short
+name|offset
+decl_stmt|;
+name|short
+name|count
+decl_stmt|;
 name|u_char
 name|bytes
 index|[
@@ -654,13 +660,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BT848_EEPROM
-value|_IOR('x', 45, struct eeProm)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BT848_SAUDIO
 value|_IOW('x', 46, int)
 end_define
@@ -690,6 +689,31 @@ end_define
 begin_comment
 comment|/* set audio channel */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GSTATUS
+value|_IOR('x', 49, unsigned int)
+end_define
+
+begin_comment
+comment|/* reap status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_WEEPROM
+value|_IOWR('x', 50, struct eeProm)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT848_REEPROM
+value|_IOWR('x', 51, struct eeProm)
+end_define
 
 begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
