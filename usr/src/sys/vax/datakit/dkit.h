@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	DATAKIT VCS Interface Definitions  *		@(#)dkit.h	1.4 Garage 84/03/30  */
+comment|/*  * 	DATAKIT VCS Interface Definitions  *		@(#)dkit.h	1.4 Garage 84/03/30  *		   @(#)dkit.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|DKMT_HDR
-value|128
+value|16
 end_define
 
 begin_comment
