@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.3 1998/09/15 08:42:55 gibbs Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.4 1998/09/16 16:42:40 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -939,36 +939,23 @@ break|break;
 case|case
 name|CMD_EAGAIN
 case|:
-name|printf
-argument_list|(
-literal|"%s: EAGAINed %d.%d\n"
-argument_list|,
+if|#
+directive|if
+literal|0
+block|printf("%s: EAGAINed %d.%d\n", isp->isp_name, 			    ccb->ccb_h.target_id, ccb->ccb_h.target_lun); 			printf("%s: %d EAGAIN\n", __FILE__, __LINE__);
+endif|#
+directive|endif
+if|if
+condition|(
 name|isp
 operator|->
-name|isp_name
-argument_list|,
-name|ccb
-operator|->
-name|ccb_h
+name|isp_osinfo
 operator|.
-name|target_id
-argument_list|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_lun
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %d EAGAIN\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
+name|simqfrozen
+operator|==
+literal|0
+condition|)
+block|{
 name|xpt_freeze_simq
 argument_list|(
 name|sim
@@ -976,6 +963,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|simqfrozen
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ccb
 operator|->
 name|ccb_h

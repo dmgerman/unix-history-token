@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.2 1998/09/15 09:59:37 gibbs Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.3 1998/09/16 16:42:40 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -194,6 +194,10 @@ decl_stmt|;
 name|struct
 name|callout_handle
 name|watchid
+decl_stmt|;
+specifier|volatile
+name|char
+name|simqfrozen
 decl_stmt|;
 block|}
 struct|;
@@ -612,7 +616,7 @@ parameter_list|(
 name|sccb
 parameter_list|)
 define|\
-value|if (XS_NOERR((sccb))) \ 		XS_SETERR((sccb), CAM_REQ_CMP); \ 	(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 	(sccb)->ccb_h.status |= (sccb)->ccb_h.spriv_field0; \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_CMP&& \ 	    (sccb)->scsi_status != SCSI_STATUS_OK) { \ 		(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 		(sccb)->ccb_h.status |= CAM_SCSI_STATUS_ERROR; \ 	} \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { \ 		if (((sccb)->ccb_h.status& CAM_DEV_QFRZN) == 0) { \ 			struct ispsoftc *isp = XS_ISP((sccb)); \ 			IDPRINTF(3, ("%s: freeze devq %d.%d ccbstat 0x%x\n",\ 			    isp->isp_name, (sccb)->ccb_h.target_id, \ 			    (sccb)->ccb_h.target_lun, (sccb)->ccb_h.status)); \ 			xpt_freeze_devq((sccb)->ccb_h.path, 1); \ 			(sccb)->ccb_h.status |= CAM_DEV_QFRZN; \ 		} \ 	} \ 	(sccb)->ccb_h.status&= ~CAM_SIM_QUEUED; \ 	xpt_done((union ccb *)(sccb))
+value|if (XS_NOERR((sccb))) \ 		XS_SETERR((sccb), CAM_REQ_CMP); \ 	(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 	(sccb)->ccb_h.status |= (sccb)->ccb_h.spriv_field0; \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_CMP&& \ 	    (sccb)->scsi_status != SCSI_STATUS_OK) { \ 		(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 		(sccb)->ccb_h.status |= CAM_SCSI_STATUS_ERROR; \ 	} \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { \ 		if (((sccb)->ccb_h.status& CAM_DEV_QFRZN) == 0) { \ 			struct ispsoftc *isp = XS_ISP((sccb)); \ 			IDPRINTF(3, ("%s: freeze devq %d.%d ccbstat 0x%x\n",\ 			    isp->isp_name, (sccb)->ccb_h.target_id, \ 			    (sccb)->ccb_h.target_lun, (sccb)->ccb_h.status)); \ 			xpt_freeze_devq((sccb)->ccb_h.path, 1); \ 			(sccb)->ccb_h.status |= CAM_DEV_QFRZN; \ 		} \ 	} \ 	if ((XS_ISP((sccb)))->isp_osinfo.simqfrozen) { \ 		(sccb)->ccb_h.status |= CAM_RELEASE_SIMQ; \ 		(XS_ISP((sccb)))->isp_osinfo.simqfrozen = 0; \ 	} \ 	(sccb)->ccb_h.status&= ~CAM_SIM_QUEUED; \ 	xpt_done((union ccb *)(sccb))
 end_define
 
 begin_define
