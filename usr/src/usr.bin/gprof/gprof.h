@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -77,6 +77,40 @@ begin_include
 include|#
 directive|include
 file|"tahoe.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|hp300
+end_if
+
+begin_include
+include|#
+directive|include
+file|"hp300.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|i386
+end_if
+
+begin_include
+include|#
+directive|include
+file|"i386.h"
 end_include
 
 begin_endif
