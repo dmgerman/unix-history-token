@@ -112,18 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ccp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pred.h"
 end_include
 
@@ -161,6 +149,18 @@ begin_include
 include|#
 directive|include
 file|"hdlc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ccp.h"
 end_include
 
 begin_include

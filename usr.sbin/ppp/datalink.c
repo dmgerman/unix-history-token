@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"descriptor.h"
 end_include
 
@@ -127,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"hdlc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcp.h"
 end_include
 
 begin_include
