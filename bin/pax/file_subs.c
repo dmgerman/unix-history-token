@@ -2408,9 +2408,6 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-operator|(
-name|long
-operator|)
 name|atime
 expr_stmt|;
 name|tv
@@ -2420,9 +2417,6 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-operator|(
-name|long
-operator|)
 name|mtime
 expr_stmt|;
 if|if
@@ -2465,9 +2459,6 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-operator|(
-name|long
-operator|)
 name|sb
 operator|.
 name|st_atime
@@ -2484,9 +2475,6 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-operator|(
-name|long
-operator|)
 name|sb
 operator|.
 name|st_mtime
