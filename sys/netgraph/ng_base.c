@@ -2098,26 +2098,22 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|)
 break|break;
 block|}
-end_function
-
-begin_return
 return|return
 operator|(
 name|node
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Decode a ID name, eg. "[f03034de]". Returns 0 if the  * string is not valid, otherwise returns the value.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|ng_ID_t
 name|ng_decodeidname
 parameter_list|(
