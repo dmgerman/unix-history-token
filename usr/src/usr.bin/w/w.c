@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.16 (Berkeley) %G%"
+literal|"@(#)w.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,22 +1142,17 @@ name|HEADER
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
+while|while
+condition|(
+operator|(
 name|p
 operator|=
 name|kvm_nextproc
 argument_list|()
-init|;
-name|p
+operator|)
 operator|!=
 name|NULL
-condition|;
-name|p
-operator|=
-name|kvm_nextproc
-argument_list|()
-control|)
+condition|)
 block|{
 if|if
 condition|(
