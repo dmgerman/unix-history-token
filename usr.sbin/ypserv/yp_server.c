@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.17 1997/01/07 06:07:20 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.12.2.1 1997/01/14 01:33:57 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,6 +1639,7 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
 name|close
 argument_list|(
 literal|0
@@ -1654,6 +1655,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
