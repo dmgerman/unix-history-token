@@ -2778,7 +2778,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: We don't re-VOP_OPEN in FREAD|FWRITE mode if the filesystem 	 * XXX: is subsequently remounted, so open it FREAD|FWRITE from the 	 * XXX: start to avoid getting trashed later on. 	 */
+comment|/* 	 * XXX: open the device with read and write access even if only 	 * read access is needed now.  Write access is needed if the 	 * filesystem is ever mounted read/write, and we don't change the 	 * access mode for remounts. 	 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -4139,7 +4139,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: see comment above VOP_OPEN */
+comment|/* XXX: see comment above VOP_OPEN. */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -4997,7 +4997,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX: see comment above VOP_OPEN */
+comment|/* XXX: see comment above VOP_OPEN. */
 ifdef|#
 directive|ifdef
 name|notyet
