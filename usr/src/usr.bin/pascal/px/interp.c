@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c	5.6 (Berkeley) %G%"
+literal|"@(#)interp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,11 +285,7 @@ comment|/* lcount  */
 literal|0x7fffffff
 block|,
 comment|/* llimit  */
-operator|&
-name|_iob
-index|[
-literal|2
-index|]
+name|stderr
 block|,
 comment|/* fbuf    */
 name|FILNIL
@@ -333,11 +329,7 @@ comment|/* lcount  */
 literal|0x7fffffff
 block|,
 comment|/* llimit  */
-operator|&
-name|_iob
-index|[
-literal|1
-index|]
+name|stdout
 block|,
 comment|/* fbuf    */
 name|ERR
@@ -381,11 +373,7 @@ comment|/* lcount  */
 literal|0x7fffffff
 block|,
 comment|/* llimit  */
-operator|&
-name|_iob
-index|[
-literal|0
-index|]
+name|stdin
 block|,
 comment|/* fbuf    */
 name|OUTPUT
