@@ -7843,7 +7843,7 @@ block|,
 block|{
 literal|"nis domainname"
 block|,
-literal|"Set NIS doimainname (if enabled)"
+literal|"Set NIS domainname (if enabled)"
 block|,
 name|dmenuVarCheck
 block|,
