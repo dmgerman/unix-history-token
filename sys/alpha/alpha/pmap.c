@@ -3543,6 +3543,8 @@ operator||
 name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_WIRED
+operator||
+name|VM_ALLOC_ZERO
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -3585,27 +3587,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|lev1pg
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|lev1pg
-operator|->
-name|flags
-operator|&
-name|PG_ZERO
-operator|)
-operator|==
-literal|0
-condition|)
-name|bzero
-argument_list|(
-name|pmap
-operator|->
-name|pm_lev1
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* install self-referential address mapping entry (not PG_ASM) */
