@@ -167,6 +167,33 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Destroy the inode hash table.  */
+end_comment
+
+begin_function
+name|void
+name|ufs_ihashuninit
+parameter_list|()
+block|{
+name|hashdestroy
+argument_list|(
+name|ihashtbl
+argument_list|,
+name|M_UFSIHASH
+argument_list|,
+name|ihash
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ufs_ihash_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Use the device/inum pair to find the incore inode, and return a pointer  * to it. If it is in core, return it, even if it is locked.  */
 end_comment
 

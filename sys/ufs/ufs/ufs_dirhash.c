@@ -440,16 +440,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ufsdirhash_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ufsdirhash_recycle
 parameter_list|(
@@ -5346,7 +5336,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ufsdirhash_init
 parameter_list|()
@@ -5398,20 +5387,37 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|SYSINIT
+begin_function
+name|void
+name|ufsdirhash_uninit
+parameter_list|()
+block|{
+name|KASSERT
 argument_list|(
-argument|ufsdirhash
-argument_list|,
-argument|SI_SUB_PSEUDO
-argument_list|,
-argument|SI_ORDER_ANY
-argument_list|,
-argument|ufsdirhash_init
-argument_list|,
-argument|NULL
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|ufsdirhash_list
 argument_list|)
-end_macro
+argument_list|,
+operator|(
+literal|"ufsdirhash_uninit"
+operator|)
+argument_list|)
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|ufsdirhash_zone
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ufsdirhash_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

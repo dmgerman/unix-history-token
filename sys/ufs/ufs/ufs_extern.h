@@ -448,6 +448,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ufs_ihashuninit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ufs_inactive
 parameter_list|(
@@ -553,6 +562,17 @@ name|int
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ufs_uninit
+parameter_list|(
+name|struct
+name|vfsconf
 modifier|*
 parameter_list|)
 function_decl|;
