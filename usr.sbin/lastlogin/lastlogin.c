@@ -481,6 +481,16 @@ modifier|*
 name|l
 decl_stmt|;
 block|{
+name|time_t
+name|t
+init|=
+name|int_to_time
+argument_list|(
+name|l
+operator|->
+name|ll_time
+argument_list|)
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"%-*.*s  %-*.*s %-*.*s   %s"
@@ -518,11 +528,7 @@ condition|?
 name|ctime
 argument_list|(
 operator|&
-operator|(
-name|l
-operator|->
-name|ll_time
-operator|)
+name|t
 argument_list|)
 else|:
 literal|"Never logged in\n"
