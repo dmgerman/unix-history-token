@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if_stf.c,v 1.40 2000/06/20 19:44:42 itojun Exp $	*/
+comment|/*	$KAME: if_stf.c,v 1.42 2000/08/15 07:24:23 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1883,9 +1883,12 @@ if|if
 condition|(
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|in
 operator|->
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 return|return

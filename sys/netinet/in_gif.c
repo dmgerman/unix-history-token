@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in_gif.c,v 1.43 2000/06/20 19:45:00 itojun Exp $	*/
+comment|/*	$KAME: in_gif.c,v 1.44 2000/08/15 07:24:24 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1639,11 +1639,14 @@ if|if
 condition|(
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|ip
 operator|.
 name|ip_src
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 return|return
