@@ -3691,6 +3691,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNS_GFF_ID
+value|0x11F
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNS_GID_FT
 value|0x171
 end_define
@@ -4111,6 +4118,31 @@ define|#
 directive|define
 name|SNS_GXN_ID_RESP_SIZE
 value|(sizeof (sns_gxn_id_rsp_t))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ct_hdr_t
+name|snscb_cthdr
+decl_stmt|;
+name|u_int32_t
+name|snscb_fc4_features
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|sns_gff_id_rsp_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNS_GFF_ID_RESP_SIZE
+value|(sizeof (sns_gff_id_rsp_t))
 end_define
 
 begin_typedef

@@ -3314,7 +3314,7 @@ name|isp_state
 operator|=
 name|ISP_RESETSTATE
 expr_stmt|;
-comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 65536 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 * 	 * Note that we only do this once (the first time thru isp_reset) 	 * because we may be called again after firmware has been loaded once 	 * and released. 	 */
+comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 16384 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 * 	 * Note that we only do this once (the first time thru isp_reset) 	 * because we may be called again after firmware has been loaded once 	 * and released. 	 */
 if|if
 condition|(
 name|touched
@@ -3370,7 +3370,7 @@ name|isp
 operator|->
 name|isp_maxluns
 operator|=
-literal|65536
+literal|16384
 expr_stmt|;
 block|}
 else|else
@@ -8390,6 +8390,12 @@ name|lp
 operator|->
 name|loggedin
 operator|&&
+name|lp
+operator|->
+name|force_logout
+operator|==
+literal|0
+operator|&&
 name|isp_getpdb
 argument_list|(
 name|isp
@@ -8774,12 +8780,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|lp
-operator|->
-name|force_logout
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|fcp
@@ -8812,6 +8812,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|lp
+operator|->
+name|force_logout
+operator|||
 name|isp_getpdb
 argument_list|(
 name|isp
@@ -8877,12 +8881,6 @@ argument_list|,
 name|MBLOGNONE
 argument_list|)
 expr_stmt|;
-name|lp
-operator|->
-name|loggedin
-operator|=
-literal|0
-expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -8912,6 +8910,10 @@ name|portid
 argument_list|)
 expr_stmt|;
 block|}
+name|lp
+operator|->
+name|force_logout
+operator|=
 name|lp
 operator|->
 name|loggedin
@@ -9000,30 +9002,6 @@ name|portid
 operator|&
 literal|0xffff
 expr_stmt|;
-if|if
-condition|(
-name|IS_2200
-argument_list|(
-name|isp
-argument_list|)
-operator|||
-name|IS_23XX
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-comment|/* only issue a PLOGI if not logged in */
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-operator||=
-literal|0x1
-expr_stmt|;
-block|}
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -12361,13 +12339,6 @@ decl_stmt|;
 name|mbreg_t
 name|mbs
 decl_stmt|;
-name|u_int8_t
-name|sc
-index|[
-name|GIDLEN
-index|]
-decl_stmt|;
-comment|/* XXX USE ->tport */
 name|int
 name|i
 decl_stmt|;
@@ -12420,7 +12391,9 @@ operator|(
 name|sns_gid_ft_req_t
 operator|*
 operator|)
-name|sc
+name|fcp
+operator|->
+name|tport
 expr_stmt|;
 name|MEMZERO
 argument_list|(
@@ -12709,7 +12682,9 @@ operator|(
 name|sns_gid_ft_rsp_t
 operator|*
 operator|)
-name|sc
+name|fcp
+operator|->
+name|tport
 expr_stmt|;
 name|rs0
 operator|=
@@ -12826,6 +12801,12 @@ name|struct
 name|lportdb
 name|lcl
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|sns_gff_id_rsp_t *fs0, ffsbuf, *fs1 =&ffsbuf;
+endif|#
+directive|endif
 name|i
 operator|++
 expr_stmt|;
@@ -13239,13 +13220,13 @@ name|swrej
 argument_list|,
 literal|"GPN_ID"
 argument_list|,
-name|rs1
+name|gs1
 operator|->
 name|snscb_cthdr
 operator|.
 name|ct_reason
 argument_list|,
-name|rs1
+name|gs1
 operator|->
 name|snscb_cthdr
 operator|.
@@ -13737,13 +13718,13 @@ name|swrej
 argument_list|,
 literal|"GNN_ID"
 argument_list|,
-name|rs1
+name|gs1
 operator|->
 name|snscb_cthdr
 operator|.
 name|ct_reason
 argument_list|,
-name|rs1
+name|gs1
 operator|->
 name|snscb_cthdr
 operator|.
@@ -13907,7 +13888,18 @@ index|]
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 		 * XXX: Argh! I saw some PDF which I now can't find that 		 * XXX: had proposed that the bottom nibble of CONTROL 		 * XXX: would have the SCSI-FCP role flags, which would 		 * XXX: be *awesome*. 		 * 		lcl.roles = rs1->snscb_port[i].control& 0xf; 		 */
+comment|/* 		 * The QLogic f/w is bouncing this with a parameter error. 		 */
+if|#
+directive|if
+literal|0
+comment|/* 		 * Try and get FC4 Features (FC-GS-3 only). 		 * We can use the sns_gxn_id_req_t for this request. 		 */
+block|MEMZERO((void *) gq, sizeof (sns_gxn_id_req_t)); 		gq->snscb_rblen = SNS_GFF_ID_RESP_SIZE>> 1; 		gq->snscb_addr[RQRSP_ADDR0015] = DMA_WD0(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR1631] = DMA_WD1(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR3247] = DMA_WD2(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR4863] = DMA_WD3(fcp->isp_scdma+GXOFF); 		gq->snscb_sblen = 6; 		gq->snscb_cmd = SNS_GFF_ID; 		gq->snscb_portid = lcl.portid; 		isp_put_gxn_id_request(isp, gq, 		    (sns_gxn_id_req_t *) fcp->isp_scratch); 		MEMORYBARRIER(isp, SYNC_SFORDEV, 0, SNS_GXN_ID_REQ_SIZE); 		mbs.param[0] = MBOX_SEND_SNS; 		mbs.param[1] = SNS_GXN_ID_REQ_SIZE>> 1; 		mbs.param[2] = DMA_WD1(fcp->isp_scdma); 		mbs.param[3] = DMA_WD0(fcp->isp_scdma);
+comment|/* 		 * Leave 4 and 5 alone 		 */
+block|mbs.param[6] = DMA_WD3(fcp->isp_scdma); 		mbs.param[7] = DMA_WD2(fcp->isp_scdma); 		if (isp_fabric_mbox_cmd(isp,&mbs)) { 			if (fcp->isp_loopstate>= LOOP_SCANNING_FABRIC) { 				fcp->isp_loopstate = LOOP_PDB_RCVD; 			} 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		if (fcp->isp_loopstate != LOOP_SCANNING_FABRIC) { 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		MEMORYBARRIER(isp, SYNC_SFORCPU, GXOFF, SNS_GFF_ID_RESP_SIZE); 		fs0 = (sns_gff_id_rsp_t *) ((u_int8_t *)fcp->isp_scratch+GXOFF); 		isp_get_gff_id_response(isp, fs0, fs1); 		if (fs1->snscb_cthdr.ct_response != FS_ACC) { 			isp_prt(isp,
+comment|/* ISP_LOGDEBUG0 */
+block|ISP_LOGWARN, 			    swrej, "GFF_ID", 			    fs1->snscb_cthdr.ct_reason, 			    fs1->snscb_cthdr.ct_explanation, lcl.portid); 			if (fcp->isp_loopstate != LOOP_SCANNING_FABRIC) { 				FC_SCRATCH_RELEASE(isp); 				return (-1); 			} 		} else { 			int index = (ftype>> 3); 			int bshft = (ftype& 0x7) * 4; 			int fc4_fval = 			    (fs1->snscb_fc4_features[index]>> bshft)& 0xf; 			if (fc4_fval& 0x1) { 				lcl.roles |= 				    (SVC3_INI_ROLE>> SVC3_ROLE_SHIFT); 			} 			if (fc4_fval& 0x2) { 				lcl.roles |= 				    (SVC3_TGT_ROLE>> SVC3_ROLE_SHIFT); 			} 		}
+endif|#
+directive|endif
 comment|/* 		 * If we really want to know what kind of port type this is, 		 * we have to run another CT command. Otherwise, we'll leave 		 * it as undefined. 		 * 		lcl.port_type = 0; 		 */
 if|if
 condition|(
@@ -17825,6 +17817,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|u_int8_t
+name|ts
+init|=
+name|sp
+operator|->
+name|req_completion_status
+operator|&
+literal|0xff
+decl_stmt|;
 name|MEMZERO
 argument_list|(
 name|hp
@@ -17833,6 +17834,22 @@ name|QENTRY_LEN
 argument_list|)
 expr_stmt|;
 comment|/* PERF */
+comment|/* 			 * Only whine if this isn't the expected fallout of 			 * aborting the command. 			 */
+if|if
+condition|(
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_entry_type
+operator|!=
+name|RQSTYPE_RESPONSE
+operator|||
+name|ts
+operator|!=
+name|RQCS_ABORTED
+condition|)
+block|{
 name|isp_prt
 argument_list|(
 name|isp
@@ -17846,6 +17863,7 @@ operator|->
 name|req_handle
 argument_list|)
 expr_stmt|;
+block|}
 name|WRITE_RESPONSE_QUEUE_OUT_POINTER
 argument_list|(
 name|isp
