@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -272,18 +272,34 @@ begin_define
 define|#
 directive|define
 name|RLIM_INFINITY
-value|0x7fffffff
+value|(((quad_t)1<< 63) - 1)
 end_define
 
 begin_struct
 struct|struct
-name|rlimit
+name|orlimit
 block|{
 name|long
 name|rlim_cur
 decl_stmt|;
 comment|/* current (soft) limit */
 name|long
+name|rlim_max
+decl_stmt|;
+comment|/* maximum value for rlim_cur */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rlimit
+block|{
+name|quad_t
+name|rlim_cur
+decl_stmt|;
+comment|/* current (soft) limit */
+name|quad_t
 name|rlim_max
 decl_stmt|;
 comment|/* maximum value for rlim_cur */
@@ -317,6 +333,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|getrlimit
+value|__getrlimit
+end_define
 
 begin_decl_stmt
 name|int
@@ -365,6 +388,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|setrlimit
+value|__setrlimit
+end_define
 
 begin_decl_stmt
 name|int
