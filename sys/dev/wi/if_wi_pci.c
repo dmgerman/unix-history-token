@@ -277,24 +277,15 @@ name|pci_ids
 index|[]
 init|=
 block|{
+comment|/* Sorted by description */
 block|{
-literal|0x1638
+literal|0x10b7
 block|,
-literal|0x1100
+literal|0x7770
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"PRISM2STA PCI WaveLAN"
-block|}
-block|,
-block|{
-literal|0x1385
-block|,
-literal|0x4100
-block|,
-name|WI_BUS_PCI_PLX
-block|,
-literal|"Netgear MA301 PCI"
+literal|"3Com Airconnect"
 block|}
 block|,
 block|{
@@ -304,17 +295,7 @@ literal|0x1101
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"GLPRISM2 PCI WaveLAN"
-block|}
-block|,
-block|{
-literal|0x16ab
-block|,
-literal|0x1102
-block|,
-name|WI_BUS_PCI_PLX
-block|,
-literal|"Linksys WDT11 PCI"
+literal|"GLPRISM2 WaveLAN"
 block|}
 block|,
 block|{
@@ -324,17 +305,37 @@ literal|0x3873
 block|,
 name|WI_BUS_PCI_NATIVE
 block|,
-literal|"Intersil Prism2.5 PCI"
+literal|"Intersil Prism2.5"
 block|}
 block|,
 block|{
-literal|0x10b7
+literal|0x16ab
 block|,
-literal|0x7770
+literal|0x1102
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"3Com Airconnect"
+literal|"Linksys WDT11"
+block|}
+block|,
+block|{
+literal|0x1385
+block|,
+literal|0x4100
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"Netgear MA301"
+block|}
+block|,
+block|{
+literal|0x1638
+block|,
+literal|0x1100
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"PRISM2STA WaveLAN"
 block|}
 block|,
 block|{
