@@ -21,38 +21,27 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__OpenBSD__
-end_ifndef
-
-begin_function
-name|void
-name|ENGINE_load_cryptodev
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* This is a NOP unless __OpenBSD__ is defined */
-return|return;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __OpenBSD__ */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__unix__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -63,10 +52,71 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|OpenBSD
-operator|<
+operator|>=
 literal|200112
+operator|)
+operator|||
+operator|(
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|470101
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+operator|||
+name|__FreeBSD_version
+operator|>=
+literal|500041
+operator|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPTODEV
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|OpenBSD
+operator|>=
+literal|200110
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSLOG_R
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_CRYPTODEV
+end_ifndef
 
 begin_function
 name|void
@@ -75,7 +125,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* This is a NOP unless we have release 3.0 (released december 2001) */
+comment|/* This is a NOP on platforms without /dev/crypto */
 return|return;
 block|}
 end_function
@@ -85,9 +135,11 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* OpenBSD 3.0 or above */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -5314,18 +5366,26 @@ function_decl|)
 parameter_list|()
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_R
 name|struct
 name|syslog_data
 name|sd
 init|=
 name|SYSLOG_DATA_INIT
 decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|cmd
 condition|)
 block|{
 default|default:
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_R
 name|syslog_r
 argument_list|(
 name|LOG_ERR
@@ -5338,6 +5398,19 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cryptodev_ctrl: unknown command %d"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 return|return
@@ -5428,7 +5501,7 @@ name|ENGINE_set_name
 argument_list|(
 name|engine
 argument_list|,
-literal|"OpenBSD cryptodev engine"
+literal|"BSD cryptodev engine"
 argument_list|)
 operator|||
 operator|!
@@ -5741,16 +5814,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OpenBSD 3.0 or above */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __OpenBSD__ */
+comment|/* HAVE_CRYPTODEV */
 end_comment
 
 end_unit
