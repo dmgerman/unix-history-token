@@ -379,6 +379,13 @@ name|MACHINE_PMAX
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|MACHINE_LUNA68K
+value|7
+end_define
+
 begin_comment
 comment|/*  * For each machine, a set of CPU's may be specified as supported.  * These and the options (below) are put in the C flags in the makefile.  */
 end_comment
