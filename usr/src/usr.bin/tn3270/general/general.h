@@ -145,6 +145,20 @@ parameter_list|)
 value|if (c == 0) { \ 				    bzero(s,n); \ 				} else { \ 				    register char *src = s; \ 				    register int count = n; \ 					\ 				    while (count--) { \ 					*src++ = c; \ 				    } \ 				}
 end_define
 
+begin_define
+define|#
+directive|define
+name|memcmp
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+value|bcmp(s1,s2,n)
+end_define
+
 begin_endif
 endif|#
 directive|endif
