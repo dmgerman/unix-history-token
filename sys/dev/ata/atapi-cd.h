@@ -1099,7 +1099,7 @@ decl_stmt|;
 comment|/* device place holders */
 ifdef|#
 directive|ifdef
-name|GONE_IN_5
+name|BURN_BRIDGES
 name|eventhandler_tag
 name|clone_evh
 decl_stmt|;

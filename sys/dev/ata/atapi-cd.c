@@ -1666,7 +1666,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|GONE_IN_5
+name|BURN_BRIDGES
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -1864,7 +1864,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GONE_IN_5
+name|BURN_BRIDGES
 end_ifdef
 
 begin_function
@@ -1927,6 +1927,19 @@ name|unit
 argument_list|)
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|GONE_IN_5
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+return|return;
+else|#
+directive|else
 if|if
 condition|(
 operator|*
@@ -1953,6 +1966,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|unit
@@ -2043,7 +2058,7 @@ name|ATA_D_MEDIA_CHANGED
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|GONE_IN_5
+name|BURN_BRIDGES
 name|cdp
 operator|->
 name|clone_evh
