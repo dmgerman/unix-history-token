@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vops2.c	6.10 (Berkeley) %G%"
+literal|"@(#)ex_vops2.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

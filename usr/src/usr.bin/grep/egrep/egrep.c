@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.13 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*      Hybrid Boyer/Moore/Gosper-assisted 'grep/egrep/fgrep' search, with delta0      table as in original paper (CACM, October, 1977).  No delta1 or delta2.      According to experiment (Horspool, Soft. Prac. Exp., 1982), delta2 is of      minimal practical value.  However, to improve for worst case input,      integrating the improved Galil strategies (Apostolico/Giancarlo, SIAM. J.      Comput., Feb. 1986) deserves consideration.       Method: 	extract longest metacharacter-free string from expression. 		this is done using a side-effect from henry spencer's regcomp(). 		use boyer-moore to match such, then pass submatching lines 		to either regexp() or standard 'egrep', depending on certain 		criteria within execstrategy() below.  [this tradeoff is due 		to the general slowness of the regexp() nondeterministic 		machine on complex expressions, as well as the startup time 		of standard 'egrep' on short files.]  alternatively, one may 		change the vendor-supplied 'egrep' automaton to include 		boyer-moore directly.  see accompanying writeup for discussion 		of kanji expression treatment.  		late addition:  apply trickbag for fast match of simple 		alternations (sublinear, in common low-cardinality cases). 		trap fgrep into this lair.  		gnu additions:  -f, newline as |, \< and \> [in regexec()], more 				comments.  inspire better dfa exec() strategy. 				serious testing and help with special cases.       Algorithm amalgam summary:  		dfa e?grep 		(aho/thompson) 		ndfa regexp() 		(spencer/aho) 		bmg			(boyer/moore/gosper) 		"superimposed" bmg   	(jaw) 		fgrep			(aho/corrasick)  		sorry, but the knuth/morris/pratt machine, horspool's 		"frequentist" code, and the rabin/karp matcher, however cute, 		just don't cut it for this production.       James A. Woods				Copyright (c) 1986      NASA Ames Research Center */

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * %sccs.include.proprietary.c%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8,22 +12,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|ehash_sccsid
+name|sccsid
 index|[]
 init|=
-literal|"@(#)ehash.c	4.3	(Berkeley)	91/02/02"
+literal|"@(#)ehash.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
-begin_empty
-empty|#
-end_empty
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_struct
 struct|struct

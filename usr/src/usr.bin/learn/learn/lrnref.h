@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lrnref.h	4.4	86/05/15	*/
+comment|/*-  * Copyright (c) 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)lrnref.h	4.5 (Berkeley) %G%  */
 end_comment
 
 begin_define

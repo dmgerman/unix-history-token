@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	names.h	4.3	83/08/11	*/
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)names.h	4.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
