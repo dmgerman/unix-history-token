@@ -2348,7 +2348,7 @@ comment|/* MMX instructions */
 literal|"\031FXSR"
 comment|/* FXSAVE/FXRSTOR */
 literal|"\032XMM"
-comment|/* Katami SIMD/MMX2 instructions */
+comment|/* Katmai SIMD/MMX2 instructions */
 literal|"\033<b26>"
 literal|"\034<b27>"
 literal|"\035<b28>"
