@@ -2288,8 +2288,7 @@ name|lc
 argument_list|,
 literal|"requirehome"
 argument_list|,
-operator|!
-name|rootlogin
+literal|0
 argument_list|)
 condition|)
 name|refused
