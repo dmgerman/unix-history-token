@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_VJC_COOKIE
-value|868219207
+value|868219208
 end_define
 
 begin_comment
@@ -108,13 +108,17 @@ struct|struct
 name|ngm_vjc_config
 block|{
 name|u_char
-name|enabled
+name|enableComp
 decl_stmt|;
-comment|/* Enable compression/decompression */
+comment|/* Enable compression */
+name|u_char
+name|enableDecomp
+decl_stmt|;
+comment|/* Enable decompression */
 name|u_char
 name|numChannels
 decl_stmt|;
-comment|/* Number of outgoing channels */
+comment|/* Number of compression channels */
 name|u_char
 name|compressCID
 decl_stmt|;
@@ -130,7 +134,7 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|NGM_VJC_CONFIG
+name|NGM_VJC_SET_CONFIG
 block|,
 comment|/* Supply a struct ngm_vjc_config */
 name|NGM_VJC_GET_STATE

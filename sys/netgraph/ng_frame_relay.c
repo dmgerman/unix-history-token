@@ -1801,6 +1801,12 @@ name|ctxnum
 decl_stmt|;
 if|if
 condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+literal|4
+operator|&&
 operator|(
 name|m
 operator|=

@@ -4651,6 +4651,18 @@ name|sp
 operator|->
 name|neg
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|wh
+argument_list|)
+condition|)
 name|m_pullup
 argument_list|(
 name|m
@@ -4662,7 +4674,6 @@ name|wh
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Checks length */
 if|if
 condition|(
 name|m

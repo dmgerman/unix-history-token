@@ -630,6 +630,13 @@ condition|(
 operator|!
 name|m
 operator|||
+operator|(
+name|m
+operator|->
+name|m_len
+operator|<
+name|MAX_ENCAPS_HDR
+operator|&&
 operator|!
 operator|(
 name|m
@@ -640,6 +647,7 @@ name|m
 argument_list|,
 name|MAX_ENCAPS_HDR
 argument_list|)
+operator|)
 operator|)
 condition|)
 name|ERROUT

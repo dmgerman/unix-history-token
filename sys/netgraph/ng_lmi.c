@@ -2666,6 +2666,12 @@ goto|;
 block|}
 if|if
 condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+name|packetlen
+operator|&&
 operator|(
 name|m
 operator|=
