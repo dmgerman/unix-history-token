@@ -5675,6 +5675,8 @@ name|periph_list
 modifier|*
 name|periph_head
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|device
 operator|=
 name|periph
@@ -5776,6 +5778,8 @@ name|cam_ed
 modifier|*
 name|device
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|device
 operator|=
 name|periph
@@ -5903,6 +5907,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|path
 operator|=
 name|periph
@@ -6621,6 +6627,8 @@ name|struct
 name|ccb_trans_settings
 name|cts
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|path
 operator|=
 name|periph
@@ -12389,6 +12397,8 @@ block|{
 name|int
 name|iopl
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|start_ccb
@@ -15022,6 +15032,8 @@ name|cam_ed
 modifier|*
 name|dev
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|timeout
 operator|=
 name|start_ccb
@@ -15278,6 +15290,8 @@ decl_stmt|;
 name|int
 name|runq
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|perph
@@ -16437,6 +16451,8 @@ modifier|*
 name|slave_ccb
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Pull fields that are valid for peripheral drivers to set 	 * into the master CCB along with the CCB "payload". 	 */
 name|master_ccb
 operator|->
@@ -16544,6 +16560,8 @@ name|u_int32_t
 name|priority
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|path
@@ -16700,6 +16718,8 @@ decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|path
 operator|=
 operator|(
@@ -17200,6 +17220,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|path
@@ -17245,6 +17267,8 @@ modifier|*
 name|path2
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|int
 name|retval
 init|=
@@ -17428,6 +17452,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|path
@@ -17590,6 +17616,8 @@ name|struct
 name|sbuf
 name|sb
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|sbuf_new
 argument_list|(
 operator|&
@@ -17795,6 +17823,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 return|return
 operator|(
 name|path
@@ -17817,6 +17847,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|path
@@ -17853,6 +17885,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|path
@@ -17891,6 +17925,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 return|return
 operator|(
 name|path
@@ -17915,6 +17951,8 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 return|return
 operator|(
 name|path
@@ -17957,6 +17995,8 @@ name|cam_eb
 modifier|*
 name|bus
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
 name|CAM_DEBUG_XPT
@@ -18144,6 +18184,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|sim
 operator|->
 name|bus_id
@@ -18442,6 +18484,8 @@ decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|status
 operator|=
 name|xpt_compile_path
@@ -18849,6 +18893,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|path
@@ -19427,6 +19473,8 @@ name|ccb_hdr
 modifier|*
 name|ccbh
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|s
 operator|=
 name|splcam
@@ -19503,6 +19551,8 @@ name|u_int
 name|count
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|sim
 operator|->
 name|devq
@@ -19632,6 +19682,8 @@ name|int
 name|run_queue
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|xpt_release_devq_device
 argument_list|(
 name|path
@@ -19857,6 +19909,8 @@ name|camq
 modifier|*
 name|sendq
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|sendq
 operator|=
 operator|&
@@ -20030,6 +20084,8 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|s
 operator|=
 name|splcam
@@ -20173,6 +20229,8 @@ name|ccb
 modifier|*
 name|new_ccb
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|new_ccb
 operator|=
 name|malloc
