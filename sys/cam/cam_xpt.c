@@ -24542,6 +24542,7 @@ literal|0
 operator|)
 operator|||
 operator|(
+operator|(
 name|cpi
 operator|.
 name|hba_inquiry
@@ -24550,6 +24551,23 @@ name|PI_SDTR_ABLE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|cts
+operator|->
+name|sync_offset
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|cts
+operator|->
+name|sync_period
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Force async */
@@ -24566,7 +24584,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * Don't allow DT transmission rates if the 		 * device does not support it. 		 */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -24595,12 +24613,15 @@ name|sync_period
 operator|<=
 literal|0x9
 condition|)
+block|{
+comment|/* 			 * Don't allow DT transmission rates if the 			 * device does not support it. 			 */
 name|cts
 operator|->
 name|sync_period
 operator|=
 literal|0xa
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|cts
