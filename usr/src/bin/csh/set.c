@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.17 (Berkeley) %G%"
+literal|"@(#)set.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3335,6 +3335,42 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|(
+operator|*
+operator|*
+name|val
+operator|!=
+literal|'/'
+operator|||
+operator|*
+operator|*
+name|val
+operator|==
+literal|'\0'
+operator|)
+operator|&&
+operator|(
+name|euid
+operator|==
+literal|0
+operator|||
+name|uid
+operator|==
+literal|0
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|csherr
+argument_list|,
+literal|"Warning: exported path contains relative components.\n"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4030,22 +4066,14 @@ name|fprintf
 argument_list|(
 name|cshout
 argument_list|,
+literal|"%s\t"
+argument_list|,
 name|short2str
 argument_list|(
 name|p
 operator|->
 name|v_name
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputc
-argument_list|(
-literal|'\t'
-argument_list|,
-name|cshout
 argument_list|)
 expr_stmt|;
 if|if
