@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -564,7 +564,7 @@ argument_list|()
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$e"
+literal|"\001e"
 argument_list|,
 name|inp
 argument_list|,

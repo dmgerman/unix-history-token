@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -658,7 +658,7 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"$g"
+literal|"\001g"
 argument_list|,
 name|buf
 argument_list|,

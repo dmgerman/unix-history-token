@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|DELIMCHARS
-value|"$()<>,;\\\"\r\n"
+value|"\001()<>,;\\\"\r\n"
 end_define
 
 begin_comment
@@ -1399,7 +1399,7 @@ name|FALSE
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$o"
+literal|"\001o"
 argument_list|,
 name|buf
 argument_list|,
@@ -3400,7 +3400,7 @@ literal|0
 argument|) 		return (name);
 comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
 argument|if (canonical) 		fancy =
-literal|"$g"
+literal|"\001g"
 argument|; 	else 		fancy = crackaddr(name);
 comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
 argument|pvp = prescan(name,
@@ -3434,20 +3434,14 @@ comment|/* 	**  Do any final sanitation the address may require. 	**	This will n
 argument|rewrite(pvp,
 literal|4
 argument|);
-comment|/* 	**  Now restore the comment information we had at the beginning. 	**	Make sure that any real '$' characters in the input are 	**	not accidently interpreted as macro expansions by quoting 	**	them before expansion. 	*/
-argument|cataddr(pvp, lbuf, sizeof lbuf); 	for (p = lbuf; *p !=
-literal|'\0'
-argument|; p++) 		if (*p ==
-literal|'$'
-argument|) 			*p |=
-literal|0200
-argument|; 	define(
+comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
+argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
 literal|'g'
 argument|, lbuf, CurEnv); 	expand(fancy, buf,&buf[sizeof buf -
 literal|1
 argument|], CurEnv); 	define(
 literal|'g'
-argument|, oldg, CurEnv); 	stripquotes(buf, FALSE);
+argument|, oldg, CurEnv);
 ifdef|#
 directive|ifdef
 name|DEBUG

@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -348,7 +348,7 @@ comment|/* 	**  Do initial argv setup. 	**	Insert the mailer name.  Notice that 
 comment|/* rewrite from address, using rewriting rules */
 name|expand
 argument_list|(
-literal|"$f"
+literal|"\001f"
 argument_list|,
 name|buf
 argument_list|,
@@ -474,7 +474,7 @@ literal|"-r"
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$g"
+literal|"\001g"
 argument_list|,
 name|buf
 argument_list|,
@@ -530,7 +530,7 @@ name|index
 argument_list|(
 name|p
 argument_list|,
-literal|'$'
+literal|'\001'
 argument_list|)
 operator|)
 operator|!=
@@ -3376,7 +3376,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is **	contained herein: UUCP wants those stupid **	"emote from<host>" lines.  Why oh why does a **	well-meaning programmer such as myself have to **	deal with this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
+comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is contained herein: **	UUCP wants those stupid "remote from<host>" lines.  Why oh why **	does a well-meaning programmer such as myself have to deal with **	this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
 end_comment
 
 begin_expr_stmt
@@ -3407,7 +3407,7 @@ name|char
 modifier|*
 name|template
 init|=
-literal|"$l\n"
+literal|"\001l\n"
 decl_stmt|;
 name|char
 name|buf
@@ -3459,7 +3459,7 @@ index|]
 decl_stmt|;
 name|expand
 argument_list|(
-literal|"$g"
+literal|"\001g"
 argument_list|,
 name|buf
 argument_list|,
@@ -3512,7 +3512,7 @@ name|sprintf
 argument_list|(
 name|xbuf
 argument_list|,
-literal|"From %s  $d remote from %s\n"
+literal|"From %s  \001d remote from %s\n"
 argument_list|,
 name|bang
 argument_list|,

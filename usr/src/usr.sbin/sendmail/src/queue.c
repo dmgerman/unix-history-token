@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -660,7 +660,7 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
-literal|"$f"
+literal|"\001f"
 argument_list|,
 name|e
 argument_list|)

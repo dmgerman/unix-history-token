@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -2417,7 +2417,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$z/.mailcf"
+literal|"\001z/.mailcf"
 argument_list|,
 name|buf
 argument_list|,

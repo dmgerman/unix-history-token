@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -2038,7 +2038,7 @@ name|strcpy
 argument_list|(
 name|bp
 argument_list|,
-literal|"$g"
+literal|"\001g"
 argument_list|)
 expr_stmt|;
 name|bp

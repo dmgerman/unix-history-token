@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -290,7 +290,7 @@ else|else
 block|{
 name|expand
 argument_list|(
-literal|"$n"
+literal|"\001n"
 argument_list|,
 name|buf
 argument_list|,
@@ -589,7 +589,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$z/dead.letter"
+literal|"\001z/dead.letter"
 argument_list|,
 name|buf
 argument_list|,
@@ -883,7 +883,7 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
-literal|"$f"
+literal|"\001f"
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -1019,7 +1019,7 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"$n"
+literal|"\001n"
 argument_list|,
 name|buf
 argument_list|,
@@ -1095,7 +1095,7 @@ name|define
 argument_list|(
 literal|'f'
 argument_list|,
-literal|"$n"
+literal|"\001n"
 argument_list|,
 name|ee
 argument_list|)

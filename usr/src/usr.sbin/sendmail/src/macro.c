@@ -21,7 +21,7 @@ operator|)
 name|macro
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Bugs: **		The handling of $$ (to get one dollar) is rather bizarre, **			especially if there should be another macro **			expansion in the same string. */
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -228,7 +228,7 @@ name|FALSE
 expr_stmt|;
 continue|continue;
 case|case
-literal|'$'
+literal|'\001'
 case|:
 comment|/* macro interpolation */
 name|c
@@ -237,13 +237,6 @@ operator|*
 operator|++
 name|s
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-literal|'$'
-condition|)
-break|break;
 name|q
 operator|=
 name|macvalue

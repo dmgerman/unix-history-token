@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.3		%G%"
+literal|"@(#)sendmail.h	4.4		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1396,6 +1396,10 @@ end_define
 
 begin_comment
 comment|/* conditional fi */
+end_comment
+
+begin_comment
+comment|/* \001 is also reserved as the macro expansion character */
 end_comment
 
 begin_escape

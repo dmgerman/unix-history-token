@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -1551,7 +1551,7 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"$j"
+literal|"\001j"
 argument_list|,
 name|jbuf
 argument_list|,

@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -1750,7 +1750,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"$z/.forward"
+literal|"\001z/.forward"
 argument_list|,
 name|buf
 argument_list|,
