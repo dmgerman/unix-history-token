@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.5	%G%  */
+comment|/*  *	@(#)bib.h	2.6	%G%  */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ begin_define
 define|#
 directive|define
 name|REFSIZE
-value|1024
+value|2048
 end_define
 
 begin_comment
