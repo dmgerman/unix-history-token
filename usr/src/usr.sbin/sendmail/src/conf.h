@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.157 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.158 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -552,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_SUBR
+value|LA_HPUX
 end_define
 
 begin_define
@@ -1521,7 +1521,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_SUBR
+value|LA_DGUX
 end_define
 
 begin_define
@@ -6831,6 +6831,28 @@ directive|ifndef
 name|LA_TYPE
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MIOC_READKSYM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_READKSYM
+end_define
+
+begin_comment
+comment|/* use MIOC_READKSYM ioctl */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -6841,6 +6863,11 @@ end_define
 begin_comment
 comment|/* assume integer load average */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
