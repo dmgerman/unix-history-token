@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.6 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.7 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.6 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.7 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,39 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* don't use sizeof because sizeof(long) is different on 64-bit machines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHORTSIZE
+value|2
+end_define
+
+begin_comment
+comment|/* size of a short (really, must be 2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LONGSIZE
+value|4
+end_define
+
+begin_comment
+comment|/* size of a long (really, must be 4) */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		localhost -- the name of the local host.  All MX records **			less preferred than this one will be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
+end_comment
 
 begin_macro
 name|getmxrr
@@ -544,15 +577,9 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
+name|SHORTSIZE
 operator|+
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
+name|LONGSIZE
 expr_stmt|;
 name|GETSHORT
 argument_list|(
@@ -1657,15 +1684,9 @@ argument_list|)
 expr_stmt|;
 name|ap
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
+name|SHORTSIZE
 operator|+
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
+name|LONGSIZE
 expr_stmt|;
 name|GETSHORT
 argument_list|(
