@@ -200,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|LOMTU
-value|65535
+value|65532
 end_define
 
 begin_endif
