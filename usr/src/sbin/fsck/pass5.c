@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.4 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ expr_stmt|;
 if|if
 condition|(
 name|cvtlevel
-operator|>
+operator|>=
 literal|3
 condition|)
 block|{
