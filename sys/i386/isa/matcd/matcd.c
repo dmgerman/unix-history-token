@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*matcd.c--------------------------------------------------------------------  	Matsushita(Panasonic) / Creative CD-ROM Driver	(matcd) 	Authored by Frank Durda IV  	Copyright 1994, 1995  Frank Durda IV.  All rights reserved. 	"FDIV" is a trademark of Frank Durda IV.   	Redistribution and use in source and binary forms, with or 	without modification, are permitted provided that the following 	conditions are met: 	1.  Redistributions of source code must retain the above copyright 	    notice positioned at the very beginning of this file without 	    modification, all copyright strings, all related programming 	    codes that display the copyright strings, this list of 	    conditions and the following disclaimer. 	2.  Redistributions in binary form must contain all copyright strings 	    and related programming code that display the copyright strings. 	3.  Redistributions in binary form must reproduce the above copyright 	    notice, this list of conditions and the following disclaimer in 	    the documentation and/or other materials provided with the 	    distribution. 	4.  All advertising materials mentioning features or use of this 	    software must display the following acknowledgement: 		"The Matsushita/Panasonic CD-ROM driver  was developed 		 by Frank Durda IV for use with "FreeBSD" and similar 		 operating systems." 	    "Similar operating systems" includes mainly non-profit oriented 	    systems for research and education, including but not restricted 	    to "NetBSD", "386BSD", and "Mach" (by CMU).  The wording of the 	    acknowledgement (in electronic form or printed text) may not be 	    changed without permission from the author. 	5.  Absolutely no warranty of function, fitness or purpose is made 	    by the author Frank Durda IV. 	6.  Neither the name of the author nor the name "FreeBSD" may 	    be used to endorse or promote products derived from this software 	    without specific prior written permission. 	    (The author can be reached at   bsdmail@nemesis.lonestar.org) 	7.  The product containing this software must meet all of these 	    conditions even if it is unsupported, not a complete system 	    and/or does not contain compiled code. 	8.  These conditions will be in force for the full life of the 	    copyright. 	9.  If all the above conditions are met, modifications to other 	    parts of this file may be freely made, although any person 	    or persons making changes do not receive the right to add their 	    name or names to the copyright strings and notices in this 	    software.  Persons making changes are encouraged to insert edit 	    history in matcd.c and to put your name and details of the 	    change there. 	10. You must have prior written permission from the author to 	    deviate from these terms.  	Vendors who produce product(s) containing this code are encouraged 	(but not required) to provide copies of the finished product(s) to 	the author and to correspond with the author about development 	activity relating to this code.   Donations of development hardware 	and/or software are also welcome.  (This is one of the faster ways 	to get a driver developed for a device.)   	THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  	PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  	LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  	OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   ----------------------------------------------------------------------------- Dedicated to:	My family, my Grandfather, 		and Max, my Golden Retriever  Thanks to:	Jordon Hubbard (jkh) for getting me ramped-up to 2.x system 		quickly enough to make the 2.1 release.  He put up with 		plenty of silly questions and might get the post of 		ambassador some day.  and 		The people who donated equipment and other material to make 		development of this driver possible.  Donations and 		sponsors for projects are appreciated.   -----No changes are allowed above this line------------------------------------  Edit History - (should be in sync with any source control log entries)  	Never seen one of these before?  Ok, here is how it works. 	Every time you change the code, you increment the edit number, 	that number over there in the<%d> and in the (%d) in the 	version string.  You never set this number lower than it is. 	Near, or preferably on lines that change, insert the edit 	number.  If there is a number there already, you can replace it 	with a newer one.  This makes searches for code changes very fast.  	In the edit history, start with the edit number, and a good 	description of what changes were made.  Then follow it with 	the date, your name and an EMAIL address where you can be reached.  	Please follow this practice; it helps leave understandable code in 	your wake.  	FYI, you have major and minor release codes.  Major releases numbered 	1 thru n.  Major feature additions should get a new major release 	number.  Minor releases start with a null and then letters 	A thru Z.  So  3A(456) is Major release 3, Minor release 1, 	Edit 456 (in Microsoft-ese that would be 03.01.456), and 5(731) 	is Major release 5, Minor release 0, Edit 731.  Typically only the 	author will change the major and minor release codes in small 	projects.  				EDIT edit Edit HISTORY history History<1>	This initial version is to get basic filesystem I/O working 	using the SoundBlaster 16 interface.  The stand-alone adapter 	card doesn't work yet. 	December 1994  Frank Durda IV	bsdmail@nemesis.lonestar.org<2>	Corrections to resolve a race condition when multiple drives 	on the same controller was active.  Fixed drive 1& 2 swap 	problem.  See selectdrive(). 	21-Jan-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<3>	Added automatic probing and support for all Creative Labs sound 	cards with the Creative/Panasonic interface and the stand-alone 	interface adapters.  See AUTOHUNT and FULLCONFIG conditionals 	for more information. 	21-Jan-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<4>	Rebundled debug conditionals. 	14-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<5>	Changes needed to work on FreeBSD 2.1.  Also added draincmd 	since some conditions cause the drive to produce surprise data. 	See setmode and draincmd 	19-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<6>	Got rid of some redundant error code by creating chk_error(). 	Also built a nice generic bus-lock function. 	20-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<7>	Improved comments, general structuring. 	Fixed a problem with disc eject not working if LOCKDRIVE was set. 	Apparently the drive will reject an EJECT command if the drive 	is LOCKED. 	21-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org  Edit number code marking begins here - earlier edits were during development.<8>	Final device name selected and actually made to compile under>2.0. For newer systems, it is "matcd", for older it is "mat". 	24-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<9>	Added some additional disk-related ioctl functions that didn't 	make it into earlier versions. 	26-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<10>	Updated some conditionals so the code will compile under 	1.1.5.1, although this is not the supported platform. 	Also found that some other devices probe code was changing the 	settings for the port 0x302 debug board, so added code to set it 	to a sane state before we use it. 	26-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<11>	The Copyright and Use statement has been replaced in all files 	with a new version. 	1-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<12>	Added ioctls having to do with audio volume, routing and playback 	speed.  Also added some code I think is for dynamic loading. 	12-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<13>	Added ioctls to return TOC headers and entries. 	19-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<14>	More ioctls to finish out general audio support and some clean-up. 	Also fixed a bug in open where CD label information would not 	always be cleared after a disc change.  	Added a check to block attempts to resume audio if already playing. 	The resulting sound is a cross between Kryten and Max Headroom. 	But, if you *want* this "feature", enable #define KRYTEN 	in options.h.  	So it is not BSD-ish enough, eh?  What, too many comments?  :-) 	21-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<15>	LOCKDRIVE has been modified so that a new series of minor 	numbers are created.  When these are opened, the selected 	drive will have its door locked and the device must be completely 	closed to unlock the media.  The EJECT ioctl will be refused 	when the drive is locked this way.   This is useful for 	servers and other places where the media needs to remain in the 	drive.  Bit 7 of the minor number controls locking.  	As of this edit, the code compiles with no warnings with -Wall set. 	22-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<16>	Added a new check in the probe code that looks for the drive 	interface being in an idle state after issuing a reset.  If this 	isn't the case, then the device at this location isn't a 	Matsushita CD-ROM drive.  This will prevent hangs in draincmd later. 	Added the tray close ioctl.  This required modifications to open 	to allow the character devices to be "partially" opened so that 	the close ioctl could be issued when the open would otherwise fail. 	Close also delays slightly after completing because the drive 	doesn't update its disc and media status instantly. 	Also created the capability ioctl that lets an application find out 	up front what things a drive can do. 	Fixed a global spelling error. 	Changed matcddriver structure to simply say "matcd".  The original 	string "matcd interface " broke the kernel -c boot mechanism. 	Updated the #includes in response to a complaint in first release. 	Updated and tested conditionals so that driver will still compile 	under FreeBSD 1.1.5.1 as well as 2.0 and early 2.1. 	4-Apr-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<17>	The function matcd_toc_entries which is executed in response to 	the CDIOREADTOCENTRYS ioctl didn't cope with programs that only 	requested part of the TOC.  This change is based on code submitted 	by Doug Robson (dfr@render.com). 	(This change was introduced out of order and exists in FreeBSD 	 2.0.5 without the version stamp being updated.  I.N.M.F.) 	1-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<18>	While working on the TEAC CD-ROM driver (teaccd) that is reusing 	chunks of code from this driver, I discovered several functions, 	arrays and other things that should have been declared 'static'. 	These changes are necessary if the TEAC CD-ROM driver is to be 	present at the same time as matcd. 	Also fixed the residual buss vs bus symbols and strings. 	There are no functional code changes in this edit. 	2-May-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<19>	Creative has changed the Status port slightly in their 	sound boards based on the Vibra-16 (and probably the Vibra-16S) 	chipset.  This change masks some unused bits that were formally 	on all the time and are doing different things in this design. 	The changes are transparent to all other supported boards. 	20-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<20>	Code was added to detect non-Creative (SoundBlaster) host 	interfaces, and the driver will  switch to code compatible with the 	detected host interface.  This should add support for MediaVision, 	IBM, Reveal, and other compatible adapters with split 	data/status-ports.  This code allows a mix of SoundBlaster (Type 0) 	and non-SoundBlaster (Type 1) boards in the same system with no 	special configuration.    	I also updated the attach code to display the interface type and 	changed the host interface probe messages to reflect the "c" for 	controller in controller-specific messages as the existing messages 	were confusing when a second card was in place .  The kernel -c 	tables have been updated accordingly, so you now have a matcdc%d 	controller to change settings on. 	24-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<21>	Added interface handling code in two of those "this should not 	happen" routines, draincmd and get_stat.   Since these routines are 	called by functions during probing that may not know what type 	interface is out there, the code assumes that a given adapter is  	both a type 0 and a type 1 adapter at the same time.  Plus, 	this code gets executed once in a very long time so the cost of 	assuming both host adapter types is not significant. 	4-Jul-95  Frank Durda IV	bsdmail@nemesis.lonestar.org  ---------------------------------------------------------------------------*/
+comment|/*matcd.c--------------------------------------------------------------------  	Matsushita(Panasonic) / Creative CD-ROM Driver	(matcd) 	Authored by Frank Durda IV  	Copyright 1994, 1995  Frank Durda IV.  All rights reserved. 	"FDIV" is a trademark of Frank Durda IV.   	Redistribution and use in source and binary forms, with or 	without modification, are permitted provided that the following 	conditions are met: 	1.  Redistributions of source code must retain the above copyright 	    notice positioned at the very beginning of this file without 	    modification, all copyright strings, all related programming 	    codes that display the copyright strings, this list of 	    conditions and the following disclaimer. 	2.  Redistributions in binary form must contain all copyright strings 	    and related programming code that display the copyright strings. 	3.  Redistributions in binary form must reproduce the above copyright 	    notice, this list of conditions and the following disclaimer in 	    the documentation and/or other materials provided with the 	    distribution. 	4.  All advertising materials mentioning features or use of this 	    software must display the following acknowledgement: 		"The Matsushita/Panasonic CD-ROM driver  was developed 		 by Frank Durda IV for use with "FreeBSD" and similar 		 operating systems." 	    "Similar operating systems" includes mainly non-profit oriented 	    systems for research and education, including but not restricted 	    to "NetBSD", "386BSD", and "Mach" (by CMU).  The wording of the 	    acknowledgement (in electronic form or printed text) may not be 	    changed without permission from the author. 	5.  Absolutely no warranty of function, fitness or purpose is made 	    by the author Frank Durda IV. 	6.  Neither the name of the author nor the name "FreeBSD" may 	    be used to endorse or promote products derived from this software 	    without specific prior written permission. 	    (The author can be reached at   bsdmail@nemesis.lonestar.org) 	7.  The product containing this software must meet all of these 	    conditions even if it is unsupported, not a complete system 	    and/or does not contain compiled code. 	8.  These conditions will be in force for the full life of the 	    copyright. 	9.  If all the above conditions are met, modifications to other 	    parts of this file may be freely made, although any person 	    or persons making changes do not receive the right to add their 	    name or names to the copyright strings and notices in this 	    software.  Persons making changes are encouraged to insert edit 	    history in matcd.c and to put your name and details of the 	    change there. 	10. You must have prior written permission from the author to 	    deviate from these terms.  	Vendors who produce product(s) containing this code are encouraged 	(but not required) to provide copies of the finished product(s) to 	the author and to correspond with the author about development 	activity relating to this code.   Donations of development hardware 	and/or software are also welcome.  (This is one of the faster ways 	to get a driver developed for a device.)   	THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  	PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  	LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  	OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   ----------------------------------------------------------------------------- Dedicated to:	My family, my Grandfather, 		and Max, my Golden Retriever  Thanks to:	Jordon Hubbard (jkh) for getting me ramped-up to 2.x system 		quickly enough to make the 2.1 release.  He put up with 		plenty of silly questions and might get the post of 		ambassador some day.  and 		The people who donated equipment and other material to make 		development of this driver possible.  Donations and 		sponsors for projects are appreciated.   -----No changes are allowed above this line------------------------------------  Edit History - (should be in sync with any source control log entries)  	Never seen one of these before?  Ok, here is how it works. 	Every time you change the code, you increment the edit number, 	that number over there in the<%d> and in the (%d) in the 	version string.  You never set this number lower than it is. 	Near, or preferably on lines that change, insert the edit 	number.  If there is a number there already, you can replace it 	with a newer one.  This makes searches for code changes very fast.  	In the edit history, start with the edit number, and a good 	description of what changes were made.  Then follow it with 	the date, your name and an EMAIL address where you can be reached.  	Please follow this practice; it helps leave understandable code in 	your wake.  	FYI, you have major and minor release codes.  Major releases numbered 	1 thru n.  Major feature additions should get a new major release 	number.  Minor releases start with a null and then letters 	A thru Z.  So  3A(456) is Major release 3, Minor release 1, 	Edit 456 (in Microsoft-ese that would be 03.01.456), and 5(731) 	is Major release 5, Minor release 0, Edit 731.  Typically only the 	author will change the major and minor release codes in small 	projects.  				EDIT edit Edit HISTORY history History<1>	This initial version is to get basic filesystem I/O working 	using the SoundBlaster 16 interface.  The stand-alone adapter 	card doesn't work yet. 	December 1994  Frank Durda IV	bsdmail@nemesis.lonestar.org<2>	Corrections to resolve a race condition when multiple drives 	on the same controller was active.  Fixed drive 1& 2 swap 	problem.  See selectdrive(). 	21-Jan-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<3>	Added automatic probing and support for all Creative Labs sound 	cards with the Creative/Panasonic interface and the stand-alone 	interface adapters.  See AUTOHUNT and FULLCONFIG conditionals 	for more information. 	21-Jan-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<4>	Rebundled debug conditionals. 	14-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<5>	Changes needed to work on FreeBSD 2.1.  Also added draincmd 	since some conditions cause the drive to produce surprise data. 	See setmode and draincmd 	19-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<6>	Got rid of some redundant error code by creating chk_error(). 	Also built a nice generic bus-lock function. 	20-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<7>	Improved comments, general structuring. 	Fixed a problem with disc eject not working if LOCKDRIVE was set. 	Apparently the drive will reject an EJECT command if the drive 	is LOCKED. 	21-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org  Edit number code marking begins here - earlier edits were during development.<8>	Final device name selected and actually made to compile under>2.0. For newer systems, it is "matcd", for older it is "mat". 	24-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<9>	Added some additional disk-related ioctl functions that didn't 	make it into earlier versions. 	26-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<10>	Updated some conditionals so the code will compile under 	1.1.5.1, although this is not the supported platform. 	Also found that some other devices probe code was changing the 	settings for the port 0x302 debug board, so added code to set it 	to a sane state before we use it. 	26-Feb-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<11>	The Copyright and Use statement has been replaced in all files 	with a new version. 	1-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<12>	Added ioctls having to do with audio volume, routing and playback 	speed.  Also added some code I think is for dynamic loading. 	12-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<13>	Added ioctls to return TOC headers and entries. 	19-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<14>	More ioctls to finish out general audio support and some clean-up. 	Also fixed a bug in open where CD label information would not 	always be cleared after a disc change.  	Added a check to block attempts to resume audio if already playing. 	The resulting sound is a cross between Kryten and Max Headroom. 	But, if you *want* this "feature", enable #define KRYTEN 	in options.h.  	So it is not BSD-ish enough, eh?  What, too many comments?  :-) 	21-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<15>	LOCKDRIVE has been modified so that a new series of minor 	numbers are created.  When these are opened, the selected 	drive will have its door locked and the device must be completely 	closed to unlock the media.  The EJECT ioctl will be refused 	when the drive is locked this way.   This is useful for 	servers and other places where the media needs to remain in the 	drive.  Bit 7 of the minor number controls locking.  	As of this edit, the code compiles with no warnings with -Wall set. 	22-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<16>	Added a new check in the probe code that looks for the drive 	interface being in an idle state after issuing a reset.  If this 	isn't the case, then the device at this location isn't a 	Matsushita CD-ROM drive.  This will prevent hangs in draincmd later. 	Added the tray close ioctl.  This required modifications to open 	to allow the character devices to be "partially" opened so that 	the close ioctl could be issued when the open would otherwise fail. 	Close also delays slightly after completing because the drive 	doesn't update its disc and media status instantly. 	Also created the capability ioctl that lets an application find out 	up front what things a drive can do. 	Fixed a global spelling error. 	Changed matcddriver structure to simply say "matcd".  The original 	string "matcd interface " broke the kernel -c boot mechanism. 	Updated the #includes in response to a complaint in first release. 	Updated and tested conditionals so that driver will still compile 	under FreeBSD 1.1.5.1 as well as 2.0 and early 2.1. 	4-Apr-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<17>	The function matcd_toc_entries which is executed in response to 	the CDIOREADTOCENTRYS ioctl didn't cope with programs that only 	requested part of the TOC.  This change is based on code submitted 	by Doug Robson (dfr@render.com). 	(This change was introduced out of order and exists in FreeBSD 	 2.0.5 without the version stamp being updated.  I.N.M.F.) 	1-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<18>	While working on the TEAC CD-ROM driver (teaccd) that is reusing 	chunks of code from this driver, I discovered several functions, 	arrays and other things that should have been declared 'static'. 	These changes are necessary if the TEAC CD-ROM driver is to be 	present at the same time as matcd. 	Also fixed the residual buss vs bus symbols and strings. 	There are no functional code changes in this edit. 	2-May-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<19>	Creative has changed the Status port slightly in their 	sound boards based on the Vibra-16 (and probably the Vibra-16S) 	chipset.  This change masks some unused bits that were formally 	on all the time and are doing different things in this design. 	The changes are transparent to all other supported boards. 	20-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<20>	Code was added to detect non-Creative (SoundBlaster) host 	interfaces, and the driver will  switch to code compatible with the 	detected host interface.  This should add support for MediaVision, 	IBM, Reveal, and other compatible adapters with split 	data/status-ports.  This code allows a mix of SoundBlaster (Type 0) 	and non-SoundBlaster (Type 1) boards in the same system with no 	special configuration.    	I also updated the attach code to display the interface type and 	changed the host interface probe messages to reflect the "c" for 	controller in controller-specific messages as the existing messages 	were confusing when a second card was in place .  The kernel -c 	tables have been updated accordingly, so you now have a matcdc%d 	controller to change settings on. 	24-Jun-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<21>	Added interface handling code in two of those "this should not 	happen" routines, draincmd and get_stat.   Since these routines are 	called by functions during probing that may not know what type 	interface is out there, the code assumes that a given adapter is  	both a type 0 and a type 1 adapter at the same time.  Plus, 	this code gets executed once in a very long time so the cost of 	assuming both host adapter types is not significant. 	4-Jul-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<22>	Four external interface prototypes were altered by someone else. 	I believe these changes are for making GCC and/or the linker shut-up 	when building some other part of the system since matcd already 	compiles -Wall with no warnings... 	8-Sep-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<23>	This change implements the ioctls for preventing media removal 	and allowing media removal. 	Currently, these calls will work according to the following rules: 			No "l" devs opened	Any "l" dev open 	CDALLOW		accepted always		rejected always 	CDPREVENT	accepted always		accepted always  	One refinement might be to allow CDALLOW/CDPREVENT to always 	work if UID 0 issued the ioctl, but that will wait for later.  	I also made a change to the information that the toc_entry code 	returns so that xcdplayer won't malfunction.  (It would not play 	the last track on a non-mixed mode audio CD.)  Unlike cdplayer, 	xcdplayer asks for track information one track at a time, and 	calls for information on the lead-out track by its official 	number (0xaa), rather than referring to the "after last" (n+1) track 	as cdplayer does.  Anyway, this change should make both players 	happy.  	16-Sep-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<24>	In Edit 15 when the extra devs were created for selective locking, 	the door locking was broken if a non-locking dev on the drive is 	closed.  The problem was caused by not tracking locked devs and 	non-locking devs as being different partitions.   The change is to 	simply use the locking dev bit to flag a set of shadow partitions 	when it comes to lock operations.  All other operations treat the 	locked and unlocked partitions as being identical. 	18-Sep-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<25>	During work on Edit 23, I noted that on slow and very busy systems, 	sometimes the driver would go to sleep forever.  The problem appears 	to have been a race condition caused by doing separate timeout/sleep 	calls without using SPL first.  The change here is to use tsleep 	which provides the equivalent of timeout/sleep timeout/tsleep if the 	last paremeter is tsleep is set to the time value that would have been 	given to timeout. 	I also fixed some duplicate location strings in the tsleep calls. 	24-Sep-95  Frank Durda IV	bsdmail@nemesis.lonestar.org  ---------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
@@ -13,7 +13,7 @@ name|char
 name|MATCDVERSION
 index|[]
 init|=
-literal|"Version  1(21)  4-Jul-95"
+literal|"Version  1(25) 18-Sep-95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1010,11 +1010,11 @@ name|matcd_lockable
 parameter_list|(
 name|dev
 parameter_list|)
-value|((minor(dev))& 0x80)
+value|(((minor(dev))& 0x80)>> 5)
 end_define
 
 begin_comment
-comment|/*<15>*/
+comment|/*<24>*/
 end_comment
 
 begin_endif
@@ -1129,6 +1129,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+comment|/*<22>*/
 name|int
 name|fmt
 parameter_list|,
@@ -1140,6 +1141,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*<22>*/
+end_comment
+
 begin_function_decl
 name|int
 name|matcdclose
@@ -1150,6 +1155,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+comment|/*<22>*/
 name|int
 name|fmt
 parameter_list|,
@@ -1160,6 +1166,10 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*<22>*/
+end_comment
 
 begin_function_decl
 name|void
@@ -1183,12 +1193,14 @@ parameter_list|,
 name|int
 name|command
 parameter_list|,
+comment|/*<22>*/
 name|caddr_t
 name|addr
 parameter_list|,
 name|int
 name|flags
 parameter_list|,
+comment|/*<22>*/
 name|struct
 name|proc
 modifier|*
@@ -1196,6 +1208,10 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*<22>*/
+end_comment
 
 begin_function_decl
 name|int
@@ -1400,21 +1416,6 @@ name|port
 parameter_list|,
 name|int
 name|cdrive
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|watchdog
-parameter_list|(
-name|int
-name|state
-parameter_list|,
-name|char
-modifier|*
-name|foo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1938,6 +1939,31 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
+name|matcd_dlock
+parameter_list|(
+name|int
+name|ldrive
+parameter_list|,
+name|int
+name|cdrive
+parameter_list|,
+comment|/*<23>*/
+name|int
+name|controller
+parameter_list|,
+name|int
+name|action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*<23>*/
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
 name|docmd
 parameter_list|(
 name|char
@@ -1981,11 +2007,13 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
+comment|/*<22>*/
 name|struct
 name|proc
 modifier|*
 name|p
 parameter_list|)
+comment|/*<22>*/
 block|{
 name|int
 name|cdrive
@@ -1995,7 +2023,10 @@ decl_stmt|,
 name|partition
 decl_stmt|,
 name|controller
+decl_stmt|,
+name|lock
 decl_stmt|;
+comment|/*<24>*/
 name|struct
 name|matcd_data
 modifier|*
@@ -2075,6 +2106,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|lock
+operator|=
+name|matcd_lockable
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/*<24>*/
 name|cd
 operator|=
 operator|&
@@ -2219,7 +2258,7 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"matcdopen"
+literal|"matopen"
 argument_list|)
 expr_stmt|;
 name|z
@@ -2764,13 +2803,10 @@ name|openflags
 operator|==
 literal|0
 operator|&&
-name|matcd_lockable
-argument_list|(
-name|dev
-argument_list|)
+name|lock
 condition|)
 block|{
-comment|/*<15>*/
+comment|/*<24>*/
 name|zero_cmd
 argument_list|(
 name|cmd
@@ -2823,10 +2859,14 @@ operator||=
 operator|(
 literal|1
 operator|<<
+operator|(
 name|partition
+operator|+
+name|lock
+operator|)
 operator|)
 expr_stmt|;
-comment|/*Mark partition open*/
+comment|/*<24>Mark partition open*/
 if|if
 condition|(
 name|partition
@@ -2888,9 +2928,13 @@ directive|ifdef
 name|DEBUGOPEN
 name|printf
 argument_list|(
-literal|"matcd%d: Open is complete\n"
+literal|"matcd%d: Open is complete - openflags %x\n"
 argument_list|,
 name|ldrive
+argument_list|,
+name|cd
+operator|->
+name|openflags
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2940,11 +2984,13 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
+comment|/*<22>*/
 name|struct
 name|proc
 modifier|*
 name|p
 parameter_list|)
+comment|/*<22>*/
 block|{
 name|int
 name|ldrive
@@ -2956,7 +3002,10 @@ decl_stmt|,
 name|partition
 decl_stmt|,
 name|controller
+decl_stmt|,
+name|lock
 decl_stmt|;
+comment|/*<24>*/
 name|struct
 name|matcd_data
 modifier|*
@@ -2989,6 +3038,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|lock
+operator|=
+name|matcd_lockable
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/*<24>*/
 name|cd
 operator|=
 name|matcd_data
@@ -3046,11 +3103,26 @@ directive|ifdef
 name|DEBUGOPEN
 name|printf
 argument_list|(
-literal|"matcd%d: Close partition=%d\n"
+literal|"matcd%d: Close partition=%d flags %x openflags %x partflags %x\n"
 argument_list|,
 name|ldrive
 argument_list|,
 name|partition
+argument_list|,
+name|cd
+operator|->
+name|flags
+argument_list|,
+name|cd
+operator|->
+name|openflags
+argument_list|,
+name|cd
+operator|->
+name|partflags
+index|[
+name|partition
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3094,12 +3166,13 @@ operator|~
 operator|(
 literal|1
 operator|<<
+operator|(
 name|partition
+operator|+
+name|lock
+operator|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCKDRIVE
 if|if
 condition|(
 name|cd
@@ -3107,22 +3180,28 @@ operator|->
 name|openflags
 operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/*<24>Really last close?*/
+ifdef|#
+directive|ifdef
+name|LOCKDRIVE
+if|if
+condition|(
 name|cd
 operator|->
 name|flags
 operator|&
 name|MATCDLOCK
-operator|)
 condition|)
 block|{
-comment|/*<15>*/
+comment|/*<24>Was drive locked?*/
 name|zero_cmd
 argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
+comment|/*Yes, so unlock it*/
 name|cmd
 index|[
 literal|0
@@ -3144,7 +3223,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-comment|/*<14>Issue cmd*/
 block|}
 endif|#
 directive|endif
@@ -3160,7 +3238,9 @@ operator||
 name|MATCDLOCK
 operator|)
 expr_stmt|;
-comment|/*<15>Clear any warning flag*/
+comment|/*<15>*/
+comment|/*<15>Clear warning flag*/
+block|}
 return|return
 operator|(
 literal|0
@@ -3849,6 +3929,7 @@ parameter_list|,
 name|caddr_t
 name|addr
 parameter_list|,
+comment|/*<22>*/
 name|int
 name|flags
 parameter_list|,
@@ -3857,6 +3938,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
+comment|/*<22>*/
 block|{
 name|struct
 name|matcd_data
@@ -4208,6 +4290,46 @@ name|controller
 argument_list|)
 operator|)
 return|;
+case|case
+name|CDIOCALLOW
+case|:
+comment|/*<23>*/
+return|return
+operator|(
+name|matcd_dlock
+argument_list|(
+name|ldrive
+argument_list|,
+name|cdrive
+argument_list|,
+comment|/*<23>*/
+name|controller
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+comment|/*<23>*/
+case|case
+name|CDIOCPREVENT
+case|:
+comment|/*<23>*/
+return|return
+operator|(
+name|matcd_dlock
+argument_list|(
+name|ldrive
+argument_list|,
+name|cdrive
+argument_list|,
+comment|/*<23>*/
+name|controller
+argument_list|,
+name|MATCDLOCK
+argument_list|)
+operator|)
+return|;
+comment|/*<23>*/
 ifdef|#
 directive|ifdef
 name|FULLDRIVER
@@ -7351,7 +7473,7 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"volinfo"
+literal|"matvinf"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7508,22 +7630,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|timeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|watchdog
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/*<16>*/
 name|tsleep
 argument_list|(
 operator|(
@@ -7534,12 +7640,12 @@ name|nextcontroller
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"volinfo2"
+literal|"matvi2"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
-comment|/*<16>*/
+comment|/*<25>*/
 if|if
 condition|(
 operator|(
@@ -9086,9 +9192,10 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"cmd"
+literal|"matcmd"
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 name|z
 operator|=
 name|get_stat
@@ -9717,23 +9824,6 @@ name|DTEN
 operator|)
 condition|)
 break|break;
-name|timeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|watchdog
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-operator|/
-literal|100
-argument_list|)
-expr_stmt|;
 name|tsleep
 argument_list|(
 operator|(
@@ -9746,9 +9836,12 @@ name|PRIBIO
 argument_list|,
 name|where
 argument_list|,
-literal|0
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 name|i
 operator|++
 expr_stmt|;
@@ -9820,50 +9913,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- 	watchdog - Gives us a heartbeat for things we are waiting on ---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|watchdog
-parameter_list|(
-name|int
-name|state
-parameter_list|,
-name|char
-modifier|*
-name|foo
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xF0
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|nextcontroller
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
 comment|/*--------------------------------------------------------------------------- 	lockbus - Wait for the bus on the requested driver interface 		to go idle and acquire it. 	Created in Edit 6 ---------------------------------------------------------------------------*/
 end_comment
 
@@ -9930,11 +9979,12 @@ name|status
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"matcdopen"
+literal|"matlck"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 block|}
 name|if_state
 index|[
@@ -10407,21 +10457,6 @@ name|MATCDLOCK
 operator|)
 expr_stmt|;
 comment|/*Mark vol info invalid*/
-name|timeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|watchdog
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 name|tsleep
 argument_list|(
 operator|(
@@ -10432,11 +10467,12 @@ name|nextcontroller
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"doorclose"
+literal|"matclos"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 return|return
 operator|(
 name|i
@@ -10445,6 +10481,142 @@ return|;
 comment|/*Return result we got*/
 block|}
 end_function
+
+begin_comment
+comment|/*---------------------------------------------------------------------------<23>	matcd_dlock - Honor/Reject drive tray requests ---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|int
+name|matcd_dlock
+parameter_list|(
+name|int
+name|ldrive
+parameter_list|,
+name|int
+name|cdrive
+parameter_list|,
+name|int
+name|controller
+parameter_list|,
+name|int
+name|action
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|port
+decl_stmt|;
+comment|/*<23>*/
+name|struct
+name|matcd_data
+modifier|*
+name|cd
+decl_stmt|;
+comment|/*<23>*/
+name|unsigned
+name|char
+name|cmd
+index|[
+name|MAXCMDSIZ
+index|]
+decl_stmt|;
+comment|/*<23>*/
+name|cd
+operator|=
+operator|&
+name|matcd_data
+index|[
+name|ldrive
+index|]
+expr_stmt|;
+comment|/*<23>*/
+name|port
+operator|=
+name|cd
+operator|->
+name|iobase
+expr_stmt|;
+comment|/*<23>Get I/O port base*/
+name|zero_cmd
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+comment|/*<23>Initialize command buffer*/
+name|cmd
+index|[
+literal|0
+index|]
+operator|=
+name|LOCK
+expr_stmt|;
+comment|/*<23>Unlock drive*/
+if|if
+condition|(
+name|action
+condition|)
+block|{
+comment|/*<23>They want to lock the door?*/
+name|cd
+operator|->
+name|flags
+operator||=
+name|MATCDLOCK
+expr_stmt|;
+comment|/*<23>Remember we did this*/
+name|cmd
+index|[
+literal|1
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|/*<23>Lock Door command*/
+block|}
+else|else
+block|{
+comment|/*<23>*/
+name|cd
+operator|->
+name|flags
+operator|&=
+operator|~
+name|MATCDLOCK
+expr_stmt|;
+comment|/*<23>Remember we did this*/
+comment|/*<23>Unlock Door command*/
+block|}
+comment|/*<23>*/
+name|i
+operator|=
+name|docmd
+argument_list|(
+name|cmd
+argument_list|,
+name|ldrive
+argument_list|,
+name|cdrive
+argument_list|,
+name|controller
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+comment|/*<23>Issue command*/
+return|return
+operator|(
+name|i
+operator|)
+return|;
+comment|/*<23>Return result we got*/
+block|}
+end_function
+
+begin_comment
+comment|/*<23>*/
+end_comment
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcd_toc_header - Return Table of Contents header to caller<13>	New for Edit 13 ---------------------------------------------------------------------------*/
@@ -10727,9 +10899,10 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"sense"
+literal|"mats1"
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 name|matcd_pread
 argument_list|(
 name|port
@@ -10964,7 +11137,7 @@ name|track
 operator|=
 literal|0xaa
 expr_stmt|;
-comment|/*Lead-out*/
+comment|/*<23>Lead-out*/
 name|entries
 index|[
 name|trk
@@ -11056,10 +11229,31 @@ operator|=
 name|ioc_entry
 operator|->
 name|starting_track
+expr_stmt|;
+comment|/*<23>What did they want?*/
+if|if
+condition|(
+name|i
+operator|==
+literal|0xaa
+condition|)
+name|i
+operator|=
+name|trk
 operator|-
 literal|1
 expr_stmt|;
-comment|/*<17>*/
+comment|/*<23>Give them lead-out info*/
+else|else
+name|i
+operator|=
+name|ioc_entry
+operator|->
+name|starting_track
+operator|-
+literal|1
+expr_stmt|;
+comment|/*<23>start where they asked*/
 name|from
 operator|=
 operator|&
@@ -11342,9 +11536,10 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"sense"
+literal|"mats2"
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 name|matcd_pread
 argument_list|(
 name|port

@@ -708,10 +708,10 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"sense"
+literal|"matpau"
 argument_list|)
 expr_stmt|;
-comment|/*<14>*/
+comment|/*<25>*/
 name|z
 operator|=
 name|get_stat
@@ -1292,9 +1292,10 @@ name|DTEN
 argument_list|,
 name|port
 argument_list|,
-literal|"sense"
+literal|"matlvl"
 argument_list|)
 expr_stmt|;
+comment|/*<25>*/
 name|matcd_pread
 argument_list|(
 name|port
