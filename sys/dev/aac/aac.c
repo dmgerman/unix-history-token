@@ -1807,6 +1807,20 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* loop over possible containers */
+do|do
+block|{
+comment|/* request information on this container */
+name|bzero
+argument_list|(
+name|mi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_mntinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mi
 operator|->
 name|Command
@@ -1819,9 +1833,6 @@ name|MntType
 operator|=
 name|FT_FILESYS
 expr_stmt|;
-do|do
-block|{
-comment|/* request information on this container */
 name|mi
 operator|->
 name|MntCount
@@ -1859,7 +1870,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* check response size */
 name|mir
 operator|=
 operator|(
@@ -2656,6 +2666,17 @@ name|data
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|bzero
+argument_list|(
+name|cc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_close_command
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|cc
 operator|->
@@ -10524,6 +10545,20 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+do|do
+block|{
+comment|/* 				 * Ask the controller for its containers one at 				 * a time. 				 * XXX What if the controller's list changes 				 * midway through this enumaration? 				 * XXX This should be done async. 				 */
+name|bzero
+argument_list|(
+name|mi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_mntinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mi
 operator|->
 name|Command
@@ -10536,9 +10571,6 @@ name|MntType
 operator|=
 name|FT_FILESYS
 expr_stmt|;
-do|do
-block|{
-comment|/* 				 * Ask the controller for its containers one at 				 * a time. 				 * XXX What if the controller's list changes 				 * midway through this enumaration? 				 * XXX This should be done async. 				 */
 name|mi
 operator|->
 name|MntCount
@@ -11929,6 +11961,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|bzero
+argument_list|(
+name|c_cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_ctcfg
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|c_cmd
 operator|->
 name|Command
@@ -12056,6 +12099,17 @@ name|data
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|bzero
+argument_list|(
+name|vmi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_vmioctl
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|vmi
 operator|->
