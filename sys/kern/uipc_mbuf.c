@@ -5256,6 +5256,7 @@ block|{
 name|int
 name|len
 decl_stmt|;
+specifier|const
 name|struct
 name|mbuf
 modifier|*
