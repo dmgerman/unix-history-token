@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.15 1994/11/14 03:22:28 bde Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.16 1994/11/27 13:43:37 joerg Exp $  */
 end_comment
 
 begin_include
@@ -305,6 +305,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|set_device_iosize
+parameter_list|(
+name|CmdParm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|set_device_mem
 parameter_list|(
 name|CmdParm
@@ -339,6 +350,28 @@ begin_function_decl
 specifier|static
 name|int
 name|set_device_disable
+parameter_list|(
+name|CmdParm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|device_attach
+parameter_list|(
+name|CmdParm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|device_probe
 parameter_list|(
 name|CmdParm
 modifier|*
@@ -473,6 +506,15 @@ block|}
 block|,
 comment|/* ? (help)	*/
 block|{
+literal|"a"
+block|,
+name|device_attach
+block|,
+name|dev_parms
+block|}
+block|,
+comment|/* attach dev */
+block|{
 literal|"di"
 block|,
 name|set_device_disable
@@ -527,7 +569,7 @@ block|}
 block|,
 comment|/* help		*/
 block|{
-literal|"io"
+literal|"iom"
 block|,
 name|set_device_mem
 block|,
@@ -535,6 +577,15 @@ name|addr_parms
 block|}
 block|,
 comment|/* iomem dev addr */
+block|{
+literal|"ios"
+block|,
+name|set_device_iosize
+block|,
+name|int_parms
+block|}
+block|,
+comment|/* iosize dev size */
 block|{
 literal|"ir"
 block|,
@@ -554,7 +605,7 @@ block|}
 block|,
 comment|/* ls, list	*/
 block|{
-literal|"p"
+literal|"po"
 block|,
 name|set_device_ioaddr
 block|,
@@ -562,6 +613,15 @@ name|int_parms
 block|}
 block|,
 comment|/* port dev addr */
+block|{
+literal|"pr"
+block|,
+name|device_probe
+block|,
+name|dev_parms
+block|}
+block|,
+comment|/* probe dev */
 block|{
 literal|"q"
 block|,
@@ -1329,6 +1389,42 @@ end_function
 begin_function
 specifier|static
 name|int
+name|set_device_iosize
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|->
+name|id_msize
+operator|=
+name|parms
+index|[
+literal|1
+index|]
+operator|.
+name|parm
+operator|.
+name|iparm
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|set_device_mem
 parameter_list|(
 name|CmdParm
@@ -1459,6 +1555,118 @@ end_function
 begin_function
 specifier|static
 name|int
+name|device_attach
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|int
+name|status
+decl_stmt|;
+name|status
+operator|=
+operator|(
+operator|*
+operator|(
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|->
+name|id_driver
+operator|->
+name|attach
+operator|)
+operator|)
+operator|(
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"attach returned status of 0x%x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|device_probe
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|int
+name|status
+decl_stmt|;
+name|status
+operator|=
+operator|(
+operator|*
+operator|(
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|->
+name|id_driver
+operator|->
+name|probe
+operator|)
+operator|)
+operator|(
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"probe returned status of 0x%x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|quitfunc
 parameter_list|(
 name|CmdParm
@@ -1494,6 +1702,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"attach<devname>\tReturn results of device attach\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"ls\t\t\tList currently configured devices\n"
 argument_list|)
 expr_stmt|;
@@ -1519,12 +1732,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"iosize<devname><size>\tSet device memory size\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"flags<devname><mask>\tSet device flags\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"enable<devname>\tEnable device\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"probe<devname>\t\tReturn results of device probe\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1623,7 +1846,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device   port       irq   drq   iomem      unit  flags      enabled\n"
+literal|"Device   port       irq   drq   iomem   iosize   unit  flags      enabled\n"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1715,6 +1938,19 @@ operator|->
 name|id_maddr
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|40
+argument_list|,
+literal|"%d"
+argument_list|,
+name|dt
+operator|->
+name|id_msize
+argument_list|)
+expr_stmt|;
 comment|/* Missing: id_msize (0 at start, useful if we can get here later). */
 comment|/* Missing: id_intr (useful if we could show it by name). */
 comment|/* Display only: id_unit. */
@@ -1722,7 +1958,7 @@ name|sprintf
 argument_list|(
 name|line
 operator|+
-literal|43
+literal|49
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1735,7 +1971,7 @@ name|sprintf
 argument_list|(
 name|line
 operator|+
-literal|49
+literal|55
 argument_list|,
 literal|"0x%x"
 argument_list|,
@@ -1749,7 +1985,7 @@ name|sprintf
 argument_list|(
 name|line
 operator|+
-literal|60
+literal|66
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1770,7 +2006,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|60
+literal|66
 condition|;
 operator|++
 name|i
