@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.43 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,11 +185,11 @@ begin_define
 define|#
 directive|define
 name|DELIMCHARS
-value|"\201()<>,;\\\"\r\n"
+value|"()<>,;\"\r\n"
 end_define
 
 begin_comment
-comment|/* word delimiters */
+comment|/* default word delimiters */
 end_comment
 
 begin_function
@@ -1325,6 +1325,9 @@ condition|(
 name|c
 operator|!=
 name|NOCHAR
+operator|&&
+operator|!
+name|bslashmode
 condition|)
 block|{
 comment|/* see if there is room */
@@ -1544,11 +1547,6 @@ name|bslashmode
 operator|=
 name|TRUE
 expr_stmt|;
-name|c
-operator|=
-name|NOCHAR
-expr_stmt|;
-continue|continue;
 block|}
 if|if
 condition|(
