@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.6 %G%"
+literal|"@(#)utilities.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_macro
@@ -334,13 +340,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|disp
+name|dispsave
 modifier|*
 name|mydp
 decl_stmt|;
 specifier|register
 name|struct
-name|stack
+name|blockmark
 modifier|*
 name|ap
 decl_stmt|;
@@ -356,7 +362,7 @@ decl_stmt|,
 name|linum
 decl_stmt|;
 name|struct
-name|disply
+name|display
 name|disp
 decl_stmt|;
 if|if
