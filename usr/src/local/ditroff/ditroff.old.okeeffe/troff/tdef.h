@@ -1037,7 +1037,7 @@ begin_define
 define|#
 directive|define
 name|NM
-value|350
+value|500
 end_define
 
 begin_comment
