@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1985, 1987, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	8.2 (Berkeley) %G%"
+literal|"@(#)tcopy.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mtio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -156,7 +162,11 @@ name|long
 name|lastrec
 decl_stmt|,
 name|record
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|off_t
 name|size
 decl_stmt|,
 name|tsize
@@ -257,17 +267,21 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
-name|lastnread
+name|ch
 decl_stmt|,
-name|nread
+name|needeof
 decl_stmt|,
 name|nw
 decl_stmt|,
 name|inp
 decl_stmt|,
 name|outp
+decl_stmt|;
+name|ssize_t
+name|lastnread
+decl_stmt|,
+name|nread
 decl_stmt|;
 enum|enum
 block|{
@@ -285,11 +299,6 @@ name|READ
 enum|;
 name|sig_t
 name|oldsig
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|,
-name|needeof
 decl_stmt|;
 name|char
 modifier|*
@@ -352,11 +361,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tcopy: illegal block size\n"
+literal|"illegal block size"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -495,17 +502,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+literal|3
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|3
 argument_list|)
 expr_stmt|;
 block|}
@@ -532,18 +536,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|inf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|buff
 operator|=
 name|getspace
@@ -664,25 +663,15 @@ goto|goto
 name|r1
 goto|;
 block|}
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"read error, file %d, record %ld: "
+literal|"read error, file %d, record %ld"
 argument_list|,
 name|filen
 argument_list|,
 name|record
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -844,6 +833,11 @@ operator|!=
 name|nread
 condition|)
 block|{
+name|int
+name|error
+init|=
+name|errno
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -862,9 +856,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|fprintf
 argument_list|(
-literal|""
+name|stderr
+argument_list|,
+literal|": %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|error
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -927,7 +928,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"file %d: eof after %ld records: %ld bytes\n"
+literal|"file %d: eof after %ld records: %qd bytes\n"
 argument_list|,
 name|filen
 argument_list|,
@@ -969,7 +970,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %ld bytes\n"
+literal|"total length: %qd bytes\n"
 argument_list|,
 name|tsize
 argument_list|)
@@ -1059,19 +1060,16 @@ name|outp
 parameter_list|,
 name|outb
 parameter_list|)
-specifier|register
 name|int
 name|inp
 decl_stmt|,
 name|outp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|outb
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|eot
 decl_stmt|,
@@ -1083,7 +1081,6 @@ name|outmaxblk
 decl_stmt|,
 name|outn
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|inb
@@ -1170,9 +1167,9 @@ goto|goto
 name|r1
 goto|;
 block|}
-name|perror
+name|warn
 argument_list|(
-literal|"tcopy: read error"
+literal|"read error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1236,9 +1233,9 @@ goto|goto
 name|r2
 goto|;
 block|}
-name|perror
+name|warn
 argument_list|(
-literal|"tcopy: read error"
+literal|"read error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1283,7 +1280,9 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"tcopy: tapes are identical.\n"
+literal|"%s: tapes are identical.\n"
+argument_list|,
+literal|"tcopy"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1307,7 +1306,9 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"tcopy: tapes have different data.\n"
+literal|"%s: tapes have different data.\n"
+argument_list|,
+literal|"tcopy"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1384,7 +1385,7 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %ld bytes\n"
+literal|"total length: %qd bytes\n"
 argument_list|,
 name|tsize
 operator|+
@@ -1430,20 +1431,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tcopy: no memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|11
+argument_list|,
+literal|"no memory"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|bp
@@ -1503,18 +1497,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"tcopy: tape op"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|6
+argument_list|,
+literal|"tape op"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
