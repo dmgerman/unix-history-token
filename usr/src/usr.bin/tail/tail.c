@@ -5,13 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tail.c	4.2 (Berkeley) %G%"
+literal|"@(#)tail.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* tail command   *  *	tail where [file]  *	where is +
-comment|_n[type]  *	- means n lines before end  *	+ means nth line from beginning  *	type 'b' means tail n blocks, not lines  *	type 'c' means tail n characters  *	Type 'r' means in lines in reverse order from end  *	 (for -r, default is entire buffer )  *	option 'f' means loop endlessly trying to read more  *		characters after the end of file, on the  assumption  *		that the file is growing */
+comment|/* tail command   *  *	tail where [file]  *	where is +/-n[type]  *	- means n lines before end  *	+ means nth line from beginning  *	type 'b' means tail n blocks, not lines  *	type 'c' means tail n characters  *	Type 'r' means in lines in reverse order from end  *	 (for -r, default is entire buffer )  *	option 'f' means loop endlessly trying to read more  *		characters after the end of file, on the  assumption  *		that the file is growing */
 end_comment
 
 begin_include
