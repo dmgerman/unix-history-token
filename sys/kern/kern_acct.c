@@ -826,13 +826,25 @@ name|t
 decl_stmt|,
 name|ret
 decl_stmt|;
+comment|/* 	 * Lockless check of accounting condition before doing the hard 	 * work. 	 */
+if|if
+condition|(
+name|acctp
+operator|==
+name|NULLVP
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|acct_mtx
 argument_list|)
 expr_stmt|;
-comment|/* If accounting isn't enabled, don't bother */
+comment|/* 	 * If accounting isn't enabled, don't bother.  Have to check again 	 * once we own the lock in case we raced with disabling of accounting 	 * by another thread. 	 */
 name|vp
 operator|=
 name|acctp
