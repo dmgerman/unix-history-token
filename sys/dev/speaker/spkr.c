@@ -214,6 +214,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|SPKR_DESC
+value|"PC98 speaker"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPI_SPKR
 value|0x08
 end_define
@@ -275,6 +282,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|SPKR_DESC
+value|"PC speaker"
+end_define
 
 begin_define
 define|#
@@ -2730,7 +2744,7 @@ block|{
 literal|0x0008d041
 comment|/* PNP0800 */
 block|,
-literal|"PC speaker"
+name|SPKR_DESC
 block|}
 block|,
 endif|#
@@ -2823,7 +2837,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PC speaker"
+name|SPKR_DESC
 argument_list|)
 expr_stmt|;
 return|return
