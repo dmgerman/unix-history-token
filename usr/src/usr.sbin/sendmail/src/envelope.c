@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.62 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,12 +770,20 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+block|{
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+name|q
+operator|->
+name|q_status
+operator|=
+literal|"4.4.7"
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -2836,6 +2844,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* it was a bogus mailer in the from addr */
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.1.7"
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"553 Invalid sender address"

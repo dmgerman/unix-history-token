@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysexits.c	8.3 (Berkeley) %G%"
+literal|"@(#)sysexits.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,7 +239,7 @@ return|;
 case|case
 literal|1
 case|:
-comment|/* Bad mailbox address */
+comment|/* Bad destination mailbox address */
 case|case
 literal|6
 case|:
@@ -250,28 +250,36 @@ return|;
 case|case
 literal|2
 case|:
-comment|/* Bad system address */
+comment|/* Bad destination system address */
+case|case
+literal|8
+case|:
+comment|/* Bad senders system address */
 return|return
 name|EX_NOHOST
 return|;
 case|case
 literal|3
 case|:
-comment|/* Bad mailbox address syntax */
+comment|/* Bad destination mailbox address syntax */
+case|case
+literal|7
+case|:
+comment|/* Bad senders mailbox address syntax */
 return|return
 name|EX_USAGE
 return|;
 case|case
 literal|4
 case|:
-comment|/* Mailbox address ambiguous */
+comment|/* Destination mailbox address ambiguous */
 return|return
 name|EX_UNAVAILABLE
 return|;
 case|case
 literal|5
 case|:
-comment|/* Address valid */
+comment|/* Destination address valid */
 return|return
 name|EX_OK
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.66 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4107,13 +4107,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Content-Type: message/rfc822%s"
+literal|"Content-Type: %s"
 argument_list|,
 name|sendbody
 condition|?
-literal|""
+literal|"message/rfc822"
 else|:
-literal|"-headers"
+literal|"text/rfc822-headers"
 argument_list|)
 expr_stmt|;
 name|putline
