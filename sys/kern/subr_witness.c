@@ -104,7 +104,7 @@ value|(WITNESS_COUNT * 4)
 end_define
 
 begin_comment
-comment|/*  * XXX: This is somewhat bogus, as we assume here that at most 1024 processes  * will hold LOCK_NCHILDREN * 2 locks.  We handle failure ok, and we should  * probably be safe for the most part, but it's still a SWAG.  */
+comment|/*  * XXX: This is somewhat bogus, as we assume here that at most 1024 threads  * will hold LOCK_NCHILDREN * 2 locks.  We handle failure ok, and we should  * probably be safe for the most part, but it's still a SWAG.  */
 end_comment
 
 begin_define
@@ -2248,11 +2248,6 @@ modifier|*
 name|w1
 decl_stmt|;
 name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -2305,12 +2300,6 @@ expr_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 comment|/* 	 * We have to hold a spinlock to keep lock_list valid across the check 	 * in the LC_SLEEPLOCK case.  In the LC_SPINLOCK case, it is already 	 * protected by the spinlock we are currently performing the witness 	 * checks on, so it is ok to release the lock after performing this 	 * check.  All we have to protect is the LC_SLEEPLOCK case when no 	 * spinlocks are held as we may get preempted during this check and 	 * lock_list could end up pointing to some other CPU's spinlock list. 	 */
 name|mtx_lock_spin
@@ -3986,11 +3975,6 @@ modifier|*
 name|class
 decl_stmt|;
 name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -4023,12 +4007,6 @@ return|return;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 name|class
 operator|=
@@ -4479,7 +4457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Warn if any held locks are not sleepable.  Note that Giant and the lock  * passed in are both special cases since they are both released during the  * sleep process and aren't actually held while the process is asleep.  */
+comment|/*  * Warn if any held locks are not sleepable.  Note that Giant and the lock  * passed in are both special cases since they are both released during the  * sleep process and aren't actually held while the thread is asleep.  */
 end_comment
 
 begin_function
@@ -4516,11 +4494,6 @@ name|struct
 name|lock_instance
 modifier|*
 name|lock1
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
 decl_stmt|;
 name|struct
 name|thread
@@ -4573,12 +4546,6 @@ expr_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 name|lock_list
 operator|=
@@ -6943,7 +6910,7 @@ operator|->
 name|td_sleeplocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if p is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use p->p_oncpu to 	 * get the list of spinlocks for this process and "fix" this. 	 */
+comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_kse->ke_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 */
 if|if
 condition|(
 name|td
