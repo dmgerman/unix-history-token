@@ -3535,6 +3535,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* 					 * Make %[gG] smell like %[eE], but 					 * trim trailing zeroes if no # flag. 					 */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|ALT
+operator|)
+condition|)
+name|prec
+operator|=
+name|ndig
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
