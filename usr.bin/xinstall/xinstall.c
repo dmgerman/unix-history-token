@@ -1257,6 +1257,16 @@ name|files_match
 operator|=
 literal|0
 expr_stmt|;
+name|from_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|to_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* If try to install NULL file to a directory, fails. */
 if|if
 condition|(
