@@ -562,6 +562,10 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* leave the actual invitation on my talk daemon */
+name|current_state
+operator|=
+literal|"Trying to connect to local talk daemon"
+expr_stmt|;
 name|ctl_transact
 argument_list|(
 name|my_machine_addr
