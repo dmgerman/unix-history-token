@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucplock.c	4.3	81/11/29	*/
+comment|/*	uucplock.c	4.4	82/07/29	*/
 end_comment
 
 begin_comment
@@ -137,7 +137,7 @@ specifier|static
 name|char
 name|tempfile
 index|[
-name|NAMESIZE
+literal|30
 index|]
 decl_stmt|;
 if|if
