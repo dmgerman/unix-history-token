@@ -1460,7 +1460,7 @@ name|resolved
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check to see if the filesystem if mounted read-write. 	 */
+comment|/* 	 * Check to see if the filesystem is mounted read-write. 	 */
 if|if
 condition|(
 name|mntbuf
@@ -1858,7 +1858,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|device
+name|devname
 argument_list|,
 operator|&
 name|mntdevstat
