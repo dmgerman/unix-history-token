@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.1 1997/08/04 17:58:18 smp Exp smp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.174 1997/08/04 19:12:54 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -203,6 +203,62 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|COM_LOCK
+parameter_list|()
+value|s_lock(&com_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_UNLOCK
+parameter_list|()
+value|s_unlock(&com_lock)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COM_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_UNLOCK
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2398,6 +2454,9 @@ name|com_s
 modifier|*
 name|com
 decl_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|com
 operator|=
 name|com_addr
@@ -2436,6 +2495,9 @@ operator|.
 name|id_unit
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -5129,6 +5191,9 @@ block|}
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5178,6 +5243,9 @@ name|IER_ERLS
 operator||
 name|IER_EMSC
 argument_list|)
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -6253,6 +6321,9 @@ block|{
 ifndef|#
 directive|ifndef
 name|COM_MULTIPORT
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|siointr1
 argument_list|(
 name|com_addr
@@ -6260,6 +6331,9 @@ argument_list|(
 name|unit
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 else|#
 directive|else
@@ -6273,6 +6347,9 @@ name|bool_t
 name|possibly_more_intrs
 decl_stmt|;
 comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on. 	 */
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 do|do
 block|{
 name|possibly_more_intrs
@@ -6342,6 +6419,9 @@ condition|(
 name|possibly_more_intrs
 condition|)
 do|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* COM_MULTIPORT */
@@ -8266,6 +8346,9 @@ comment|/* 			 * XXX forget any events related to closed devices 			 * (actually
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|incc
 operator|=
 name|com
@@ -8308,6 +8391,9 @@ block|}
 name|com_events
 operator|-=
 name|incc
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -8364,6 +8450,9 @@ operator|=
 name|ibuf
 expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|incc
@@ -8463,6 +8552,9 @@ operator||=
 name|MCR_RTS
 argument_list|)
 expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -8486,6 +8578,9 @@ name|u_char
 name|delta_modem_status
 decl_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|delta_modem_status
@@ -8516,6 +8611,9 @@ name|state
 operator|&=
 operator|~
 name|CS_CHECKMSR
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -8560,6 +8658,9 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|com_events
 operator|-=
 name|LOTS_OF_EVENTS
@@ -8570,6 +8671,9 @@ name|state
 operator|&=
 operator|~
 name|CS_ODONE
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -9238,6 +9342,9 @@ comment|/* 	 * Some UARTs lock up if the divisor latch registers are selected 	 
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|retry
 label|:
 name|com
@@ -9252,6 +9359,9 @@ operator|=
 name|tp
 operator|->
 name|t_timeout
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -9373,11 +9483,17 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|com
 operator|->
 name|state
 operator||=
 name|CS_TTGO
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -9399,6 +9515,9 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* very important while com_data is hidden */
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * XXX - clearing CS_TTGO is not sufficient to stop further output, 	 * because siopoll() calls comstart() which usually sets it again 	 * because TS_TTSTOP is clear.  Setting TS_TTSTOP would not be 	 * sufficient, for similar reasons. 	 */
 if|if
 condition|(
@@ -9800,6 +9919,9 @@ argument_list|(
 name|com
 argument_list|)
 expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -9867,6 +9989,9 @@ name|spltty
 argument_list|()
 expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -9970,6 +10095,9 @@ name|MCR_RTS
 argument_list|)
 expr_stmt|;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10082,6 +10210,9 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|com
@@ -10181,6 +10312,9 @@ operator||=
 name|CS_BUSY
 expr_stmt|;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10261,6 +10395,9 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|com
@@ -10360,6 +10497,9 @@ operator||=
 name|CS_BUSY
 expr_stmt|;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10372,6 +10512,9 @@ name|TS_BUSY
 expr_stmt|;
 block|}
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -10392,6 +10535,9 @@ name|com
 argument_list|)
 expr_stmt|;
 comment|/* fake interrupt to start output */
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10451,6 +10597,9 @@ name|gone
 condition|)
 return|return;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -10613,6 +10762,9 @@ operator|->
 name|ibuf
 expr_stmt|;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10856,6 +11008,9 @@ return|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|how
@@ -10922,6 +11077,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -11190,10 +11348,16 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|siointr1
 argument_list|(
 name|com
 argument_list|)
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -11276,6 +11440,9 @@ decl_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
 name|delta
 operator|=
 name|com
@@ -11293,6 +11460,9 @@ name|errnum
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
