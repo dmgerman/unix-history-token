@@ -575,7 +575,8 @@ name|signbit
 parameter_list|(
 name|x
 parameter_list|)
-value|__signbit(x)
+define|\
+value|((sizeof (x) == sizeof (float)) ? __signbitf(x)	\     : (sizeof (x) == sizeof (double)) ? __signbit(x)	\     : __signbitl(x))
 end_define
 
 begin_typedef
@@ -1126,6 +1127,27 @@ begin_decl_stmt
 name|int
 name|__signbit
 argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__signbitf
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__signbitl
+argument_list|(
+name|long
 name|double
 argument_list|)
 name|__pure2
