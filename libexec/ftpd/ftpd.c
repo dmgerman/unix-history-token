@@ -5184,7 +5184,7 @@ name|ttyline
 argument_list|,
 literal|""
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pw
@@ -6514,7 +6514,13 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|remotehost
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|his_addr
 argument_list|)
 expr_stmt|;
 name|logged_in
@@ -11533,7 +11539,7 @@ name|ttyline
 argument_list|,
 literal|""
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
