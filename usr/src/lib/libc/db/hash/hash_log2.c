@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_log2.c	5.2 (Berkeley) %G%"
+literal|"@(#)hash_log2.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,17 +68,17 @@ file|"extern.h"
 end_include
 
 begin_function
-name|int
+name|u_int
 name|__log2
 parameter_list|(
 name|num
 parameter_list|)
-name|int
+name|u_int
 name|num
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|,
 name|limit

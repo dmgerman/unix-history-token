@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.8 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,12 +222,12 @@ name|bp
 decl_stmt|;
 specifier|register
 name|u_int
-name|is_disk
-decl_stmt|,
 name|is_disk_mask
 decl_stmt|;
 specifier|register
 name|int
+name|is_disk
+decl_stmt|,
 name|segment_ndx
 decl_stmt|;
 name|SEGMENT
