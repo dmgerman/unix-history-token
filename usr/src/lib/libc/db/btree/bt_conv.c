@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_conv.c	5.2 (Berkeley) %G%"
+literal|"@(#)bt_conv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,10 +292,11 @@ decl_stmt|,
 name|top
 decl_stmt|;
 specifier|register
-name|void
+name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Really void, thanks ANSI! */
 name|u_char
 name|flags
 decl_stmt|;
@@ -344,6 +345,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|GETBINTERNAL
 argument_list|(
 name|h
@@ -443,6 +448,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|GETBLEAF
 argument_list|(
 name|h
