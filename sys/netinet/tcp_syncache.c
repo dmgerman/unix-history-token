@@ -1040,8 +1040,6 @@ argument_list|,
 name|M_SYNCACHE
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the hash buckets. */
