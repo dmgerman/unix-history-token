@@ -711,6 +711,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|double
+name|wcstod
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+name|__restrict
+parameter_list|,
+name|wchar_t
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|wchar_t
 modifier|*
 name|wcstok
