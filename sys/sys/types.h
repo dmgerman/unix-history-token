@@ -785,7 +785,7 @@ begin_define
 define|#
 directive|define
 name|NBBY
-value|8
+value|8U
 end_define
 
 begin_comment
@@ -806,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|FD_SETSIZE
-value|1024
+value|1024U
 end_define
 
 begin_endif
@@ -848,7 +848,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(((x) + ((y) - 1)) / (y))
+value|(((x) + ((y) - 1U)) / (y))
 end_define
 
 begin_endif

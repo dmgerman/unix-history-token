@@ -917,7 +917,7 @@ begin_define
 define|#
 directive|define
 name|_SS_MAXSIZE
-value|128
+value|128U
 end_define
 
 begin_define
