@@ -207,30 +207,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"mntopts.h"
-end_include
-
-begin_decl_stmt
-name|struct
-name|mntopt
-name|mopts
-index|[]
-init|=
-block|{
-name|MOPT_STDOPTS
-block|,
-name|MOPT_ASYNC
-block|,
-block|{
-name|NULL
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
