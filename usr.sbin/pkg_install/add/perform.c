@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.52 1998/09/08 03:02:45 jkh Exp $"
+literal|"$Id: perform.c,v 1.53 1998/09/11 07:26:54 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,37 @@ name|sb
 decl_stmt|;
 name|int
 name|inPlace
+decl_stmt|;
+comment|/* support for separate pre/post install scripts */
+name|int
+name|new_m
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|pre_script
+index|[
+name|FILENAME_MAX
+index|]
+init|=
+name|INSTALL_FNAME
+decl_stmt|;
+name|char
+name|post_script
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
+name|char
+name|pre_arg
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|,
+name|post_arg
+index|[
+name|FILENAME_MAX
+index|]
 decl_stmt|;
 name|code
 operator|=
@@ -1445,6 +1476,78 @@ comment|/* close enough for government work */
 block|}
 block|}
 block|}
+comment|/* Test whether to use the old method of passing tokens to installation      * scripts, and set appropriate variables..      */
+if|if
+condition|(
+name|fexists
+argument_list|(
+name|POST_INSTALL_FNAME
+argument_list|)
+condition|)
+block|{
+name|new_m
+operator|=
+literal|1
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|post_script
+argument_list|,
+literal|"%s"
+argument_list|,
+name|POST_INSTALL_FNAME
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|pre_arg
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|post_arg
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|fexists
+argument_list|(
+name|INSTALL_FNAME
+argument_list|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|post_script
+argument_list|,
+literal|"%s"
+argument_list|,
+name|INSTALL_FNAME
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|pre_arg
+argument_list|,
+literal|"PRE-INSTALL"
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|post_arg
+argument_list|,
+literal|"POST-INSTALL"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* If we're really installing, and have an installation file, run it */
 if|if
 condition|(
@@ -1453,7 +1556,7 @@ name|NoInstall
 operator|&&
 name|fexists
 argument_list|(
-name|INSTALL_FNAME
+name|pre_script
 argument_list|)
 condition|)
 block|{
@@ -1461,7 +1564,7 @@ name|vsystem
 argument_list|(
 literal|"chmod +x %s"
 argument_list|,
-name|INSTALL_FNAME
+name|pre_script
 argument_list|)
 expr_stmt|;
 comment|/* make sure */
@@ -1471,7 +1574,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Running install with PRE-INSTALL for %s..\n"
+literal|"Running pre-install for %s..\n"
 argument_list|,
 name|PkgName
 argument_list|)
@@ -1483,11 +1586,13 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"./%s %s PRE-INSTALL"
+literal|"./%s %s %s"
 argument_list|,
-name|INSTALL_FNAME
+name|pre_script
 argument_list|,
 name|PkgName
+argument_list|,
+name|pre_arg
 argument_list|)
 condition|)
 block|{
@@ -1498,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|INSTALL_FNAME
+name|pre_script
 argument_list|)
 expr_stmt|;
 name|code
@@ -1510,6 +1615,15 @@ name|success
 goto|;
 comment|/* nothing to uninstall yet */
 block|}
+if|if
+condition|(
+name|new_m
+condition|)
+name|unlink
+argument_list|(
+name|pre_script
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Now finally extract the entire show if we're not going direct */
 if|if
@@ -1622,17 +1736,25 @@ name|NoInstall
 operator|&&
 name|fexists
 argument_list|(
-name|INSTALL_FNAME
+name|post_script
 argument_list|)
 condition|)
 block|{
+name|vsystem
+argument_list|(
+literal|"chmod +x %s"
+argument_list|,
+name|post_script
+argument_list|)
+expr_stmt|;
+comment|/* make sure */
 if|if
 condition|(
 name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Running install with POST-INSTALL for %s..\n"
+literal|"Running post-install for %s..\n"
 argument_list|,
 name|PkgName
 argument_list|)
@@ -1644,11 +1766,13 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"./%s %s POST-INSTALL"
+literal|"./%s %s %s"
 argument_list|,
-name|INSTALL_FNAME
+name|post_script
 argument_list|,
 name|PkgName
+argument_list|,
+name|post_arg
 argument_list|)
 condition|)
 block|{
@@ -1659,7 +1783,7 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|INSTALL_FNAME
+name|post_script
 argument_list|)
 expr_stmt|;
 name|code
@@ -1672,7 +1796,7 @@ goto|;
 block|}
 name|unlink
 argument_list|(
-name|INSTALL_FNAME
+name|post_script
 argument_list|)
 expr_stmt|;
 block|}
@@ -1821,6 +1945,22 @@ argument_list|(
 literal|"."
 argument_list|,
 name|DEINSTALL_FNAME
+argument_list|,
+name|LogDir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fexists
+argument_list|(
+name|POST_DEINSTALL_FNAME
+argument_list|)
+condition|)
+name|move_file
+argument_list|(
+literal|"."
+argument_list|,
+name|POST_DEINSTALL_FNAME
 argument_list|,
 name|LogDir
 argument_list|)

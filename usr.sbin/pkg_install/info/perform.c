@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.24 1998/02/16 17:16:38 jkh Exp $"
+literal|"$Id: perform.c,v 1.25 1998/09/11 07:26:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -831,6 +831,26 @@ condition|(
 operator|(
 name|Flags
 operator|&
+name|SHOW_INSTALL
+operator|)
+operator|&&
+name|fexists
+argument_list|(
+name|POST_INSTALL_FNAME
+argument_list|)
+condition|)
+name|show_file
+argument_list|(
+literal|"Post-Install script:\n"
+argument_list|,
+name|POST_INSTALL_FNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Flags
+operator|&
 name|SHOW_DEINSTALL
 operator|)
 operator|&&
@@ -844,6 +864,26 @@ argument_list|(
 literal|"De-Install script:\n"
 argument_list|,
 name|DEINSTALL_FNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_DEINSTALL
+operator|)
+operator|&&
+name|fexists
+argument_list|(
+name|POST_DEINSTALL_FNAME
+argument_list|)
+condition|)
+name|show_file
+argument_list|(
+literal|"Post-DeInstall script:\n"
+argument_list|,
+name|POST_DEINSTALL_FNAME
 argument_list|)
 expr_stmt|;
 if|if

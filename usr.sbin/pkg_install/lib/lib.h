@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.25 1997/10/08 07:48:03 charnier Exp $ */
+comment|/* $Id: lib.h,v 1.26 1998/02/16 17:16:47 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -230,8 +230,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|POST_INSTALL_FNAME
+value|"+POST-INSTALL"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEINSTALL_FNAME
 value|"+DEINSTALL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|POST_DEINSTALL_FNAME
+value|"+POST-DEINSTALL"
 end_define
 
 begin_define
