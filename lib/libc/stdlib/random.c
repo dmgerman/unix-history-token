@@ -821,7 +821,7 @@ name|fd
 operator|=
 name|_open
 argument_list|(
-literal|"/dev/urandom"
+literal|"/dev/random"
 argument_list|,
 name|O_RDONLY
 argument_list|,
