@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	new_curse.c  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1992, 1993, 1994, 1995 Hugh Mahon  |	All are rights reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/new_curse.c,v 1.43 1996/03/21 04:27:06 hugh Exp $  |  */
+comment|/*  |	new_curse.c  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1992, 1993, 1994, 1995 Hugh Mahon  |	All are rights reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/new_curse.c,v 1.49 1998/12/21 02:25:59 hugh Exp hugh $  |  */
 end_comment
 
 begin_decl_stmt
@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|new_curse_name
 init|=
-literal|"@(#) new_curse.c $Revision: 1.43 $"
+literal|"@(#) new_curse.c $Revision: 1.49 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,16 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(a< b ? a : b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|highbitset
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& 0x80)
 end_define
 
 begin_ifndef
@@ -3748,6 +3758,705 @@ name|KEY_POINT
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  |  |	Not all systems have good terminal information, so we will define   |	keyboard information here for the most widely used terminal type,   |	the VT100.  |  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|KEYS
+name|vt100
+index|[]
+init|=
+block|{
+block|{
+literal|3
+block|,
+literal|"\033[A"
+block|,
+literal|0403
+block|}
+block|,
+comment|/* key up 	*/
+block|{
+literal|3
+block|,
+literal|"\033[C"
+block|,
+literal|0405
+block|}
+block|,
+comment|/* key right	*/
+block|{
+literal|3
+block|,
+literal|"\033[D"
+block|,
+literal|0404
+block|}
+block|,
+comment|/* key left	*/
+block|{
+literal|4
+block|,
+literal|"\033[6~"
+block|,
+literal|0522
+block|}
+block|,
+comment|/* key next page	*/
+block|{
+literal|4
+block|,
+literal|"\033[5~"
+block|,
+literal|0523
+block|}
+block|,
+comment|/* key prev page	*/
+block|{
+literal|3
+block|,
+literal|"\033[["
+block|,
+literal|0550
+block|}
+block|,
+comment|/* key end	*/
+block|{
+literal|3
+block|,
+literal|"\033[@"
+block|,
+literal|0406
+block|}
+block|,
+comment|/* key home	*/
+block|{
+literal|4
+block|,
+literal|"\033[2~"
+block|,
+literal|0513
+block|}
+block|,
+comment|/* key insert char	*/
+block|{
+literal|3
+block|,
+literal|"\033[y"
+block|,
+literal|0410
+block|}
+block|,
+comment|/* key F0	*/
+block|{
+literal|3
+block|,
+literal|"\033[P"
+block|,
+literal|0411
+block|}
+block|,
+comment|/* key F1	*/
+block|{
+literal|3
+block|,
+literal|"\033[Q"
+block|,
+literal|0412
+block|}
+block|,
+comment|/* key F2	*/
+block|{
+literal|3
+block|,
+literal|"\033[R"
+block|,
+literal|0413
+block|}
+block|,
+comment|/* key F3	*/
+block|{
+literal|3
+block|,
+literal|"\033[S"
+block|,
+literal|0414
+block|}
+block|,
+comment|/* key F4	*/
+block|{
+literal|3
+block|,
+literal|"\033[t"
+block|,
+literal|0415
+block|}
+block|,
+comment|/* key F5	*/
+block|{
+literal|3
+block|,
+literal|"\033[u"
+block|,
+literal|0416
+block|}
+block|,
+comment|/* key F6	*/
+block|{
+literal|3
+block|,
+literal|"\033[v"
+block|,
+literal|0417
+block|}
+block|,
+comment|/* key F7	*/
+block|{
+literal|3
+block|,
+literal|"\033[l"
+block|,
+literal|0420
+block|}
+block|,
+comment|/* key F8	*/
+block|{
+literal|3
+block|,
+literal|"\033[w"
+block|,
+literal|0421
+block|}
+block|,
+comment|/* key F9	*/
+block|{
+literal|3
+block|,
+literal|"\033[x"
+block|,
+literal|0422
+block|}
+block|,
+comment|/* key F10	*/
+block|{
+literal|5
+block|,
+literal|"\033[10~"
+block|,
+literal|0410
+block|}
+block|,
+comment|/* key F0	*/
+block|{
+literal|5
+block|,
+literal|"\033[11~"
+block|,
+literal|0411
+block|}
+block|,
+comment|/* key F1	*/
+block|{
+literal|5
+block|,
+literal|"\033[12~"
+block|,
+literal|0412
+block|}
+block|,
+comment|/* key F2	*/
+block|{
+literal|5
+block|,
+literal|"\033[13~"
+block|,
+literal|0413
+block|}
+block|,
+comment|/* key F3	*/
+block|{
+literal|5
+block|,
+literal|"\033[14~"
+block|,
+literal|0414
+block|}
+block|,
+comment|/* key F4	*/
+block|{
+literal|5
+block|,
+literal|"\033[15~"
+block|,
+literal|0415
+block|}
+block|,
+comment|/* key F5	*/
+block|{
+literal|5
+block|,
+literal|"\033[17~"
+block|,
+literal|0416
+block|}
+block|,
+comment|/* key F6	*/
+block|{
+literal|5
+block|,
+literal|"\033[18~"
+block|,
+literal|0417
+block|}
+block|,
+comment|/* key F7	*/
+block|{
+literal|5
+block|,
+literal|"\033[19~"
+block|,
+literal|0420
+block|}
+block|,
+comment|/* key F8	*/
+block|{
+literal|5
+block|,
+literal|"\033[20~"
+block|,
+literal|0421
+block|}
+block|,
+comment|/* key F9	*/
+block|{
+literal|5
+block|,
+literal|"\033[21~"
+block|,
+literal|0422
+block|}
+block|,
+comment|/* key F10	*/
+block|{
+literal|5
+block|,
+literal|"\033[23~"
+block|,
+literal|0423
+block|}
+block|,
+comment|/* key F11	*/
+block|{
+literal|5
+block|,
+literal|"\033[24~"
+block|,
+literal|0424
+block|}
+block|,
+comment|/* key F12	*/
+block|{
+literal|3
+block|,
+literal|"\033[q"
+block|,
+literal|0534
+block|}
+block|,
+comment|/* ka1 upper-left of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033[s"
+block|,
+literal|0535
+block|}
+block|,
+comment|/* ka3 upper-right of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033[r"
+block|,
+literal|0536
+block|}
+block|,
+comment|/* kb2 center of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033[p"
+block|,
+literal|0537
+block|}
+block|,
+comment|/* kc1 lower-left of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033[n"
+block|,
+literal|0540
+block|}
+block|,
+comment|/* kc3 lower-right of keypad	*/
+comment|/* 		 |	The following are the same keys as above, but with  		 |	a different character following the escape char. 		 */
+block|{
+literal|3
+block|,
+literal|"\033OA"
+block|,
+literal|0403
+block|}
+block|,
+comment|/* key up 	*/
+block|{
+literal|3
+block|,
+literal|"\033OC"
+block|,
+literal|0405
+block|}
+block|,
+comment|/* key right	*/
+block|{
+literal|3
+block|,
+literal|"\033OD"
+block|,
+literal|0404
+block|}
+block|,
+comment|/* key left	*/
+block|{
+literal|3
+block|,
+literal|"\033OB"
+block|,
+literal|0402
+block|}
+block|,
+comment|/* key down	*/
+block|{
+literal|4
+block|,
+literal|"\033O6~"
+block|,
+literal|0522
+block|}
+block|,
+comment|/* key next page	*/
+block|{
+literal|4
+block|,
+literal|"\033O5~"
+block|,
+literal|0523
+block|}
+block|,
+comment|/* key prev page	*/
+block|{
+literal|3
+block|,
+literal|"\033O["
+block|,
+literal|0550
+block|}
+block|,
+comment|/* key end	*/
+block|{
+literal|3
+block|,
+literal|"\033O@"
+block|,
+literal|0406
+block|}
+block|,
+comment|/* key home	*/
+block|{
+literal|4
+block|,
+literal|"\033O2~"
+block|,
+literal|0513
+block|}
+block|,
+comment|/* key insert char	*/
+block|{
+literal|3
+block|,
+literal|"\033Oy"
+block|,
+literal|0410
+block|}
+block|,
+comment|/* key F0	*/
+block|{
+literal|3
+block|,
+literal|"\033OP"
+block|,
+literal|0411
+block|}
+block|,
+comment|/* key F1	*/
+block|{
+literal|3
+block|,
+literal|"\033OQ"
+block|,
+literal|0412
+block|}
+block|,
+comment|/* key F2	*/
+block|{
+literal|3
+block|,
+literal|"\033OR"
+block|,
+literal|0413
+block|}
+block|,
+comment|/* key F3	*/
+block|{
+literal|3
+block|,
+literal|"\033OS"
+block|,
+literal|0414
+block|}
+block|,
+comment|/* key F4	*/
+block|{
+literal|3
+block|,
+literal|"\033Ot"
+block|,
+literal|0415
+block|}
+block|,
+comment|/* key F5	*/
+block|{
+literal|3
+block|,
+literal|"\033Ou"
+block|,
+literal|0416
+block|}
+block|,
+comment|/* key F6	*/
+block|{
+literal|3
+block|,
+literal|"\033Ov"
+block|,
+literal|0417
+block|}
+block|,
+comment|/* key F7	*/
+block|{
+literal|3
+block|,
+literal|"\033Ol"
+block|,
+literal|0420
+block|}
+block|,
+comment|/* key F8	*/
+block|{
+literal|3
+block|,
+literal|"\033Ow"
+block|,
+literal|0421
+block|}
+block|,
+comment|/* key F9	*/
+block|{
+literal|3
+block|,
+literal|"\033Ox"
+block|,
+literal|0422
+block|}
+block|,
+comment|/* key F10	*/
+block|{
+literal|5
+block|,
+literal|"\033O10~"
+block|,
+literal|0410
+block|}
+block|,
+comment|/* key F0	*/
+block|{
+literal|5
+block|,
+literal|"\033O11~"
+block|,
+literal|0411
+block|}
+block|,
+comment|/* key F1	*/
+block|{
+literal|5
+block|,
+literal|"\033O12~"
+block|,
+literal|0412
+block|}
+block|,
+comment|/* key F2	*/
+block|{
+literal|5
+block|,
+literal|"\033O13~"
+block|,
+literal|0413
+block|}
+block|,
+comment|/* key F3	*/
+block|{
+literal|5
+block|,
+literal|"\033O14~"
+block|,
+literal|0414
+block|}
+block|,
+comment|/* key F4	*/
+block|{
+literal|5
+block|,
+literal|"\033O15~"
+block|,
+literal|0415
+block|}
+block|,
+comment|/* key F5	*/
+block|{
+literal|5
+block|,
+literal|"\033O17~"
+block|,
+literal|0416
+block|}
+block|,
+comment|/* key F6	*/
+block|{
+literal|5
+block|,
+literal|"\033O18~"
+block|,
+literal|0417
+block|}
+block|,
+comment|/* key F7	*/
+block|{
+literal|5
+block|,
+literal|"\033O19~"
+block|,
+literal|0420
+block|}
+block|,
+comment|/* key F8	*/
+block|{
+literal|5
+block|,
+literal|"\033O20~"
+block|,
+literal|0421
+block|}
+block|,
+comment|/* key F9	*/
+block|{
+literal|5
+block|,
+literal|"\033O21~"
+block|,
+literal|0422
+block|}
+block|,
+comment|/* key F10	*/
+block|{
+literal|5
+block|,
+literal|"\033O23~"
+block|,
+literal|0423
+block|}
+block|,
+comment|/* key F11	*/
+block|{
+literal|5
+block|,
+literal|"\033O24~"
+block|,
+literal|0424
+block|}
+block|,
+comment|/* key F12	*/
+block|{
+literal|3
+block|,
+literal|"\033Oq"
+block|,
+literal|0534
+block|}
+block|,
+comment|/* ka1 upper-left of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033Os"
+block|,
+literal|0535
+block|}
+block|,
+comment|/* ka3 upper-right of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033Or"
+block|,
+literal|0536
+block|}
+block|,
+comment|/* kb2 center of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033Op"
+block|,
+literal|0537
+block|}
+block|,
+comment|/* kc1 lower-left of keypad	*/
+block|{
+literal|3
+block|,
+literal|"\033On"
+block|,
+literal|0540
+block|}
+block|,
+comment|/* kc3 lower-right of keypad	*/
+block|{
+literal|0
+block|,
+literal|""
+block|,
+literal|0
+block|}
+comment|/* end	*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|Parameters
@@ -4079,6 +4788,19 @@ literal|9
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nc_attributes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global attributes for new_curse to observe */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -5551,6 +6273,63 @@ operator|-
 literal|1
 condition|)
 block|{
+name|TERM_PATH
+operator|=
+literal|"/usr/share/terminfo"
+expr_stmt|;
+name|Data_Line_len
+operator|=
+literal|23
+operator|+
+name|strlen
+argument_list|(
+name|TERM_PATH
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|TERMINAL_TYPE
+argument_list|)
+expr_stmt|;
+name|Term_File_name
+operator|=
+name|malloc
+argument_list|(
+name|Data_Line_len
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|Term_File_name
+argument_list|,
+literal|"%s/%c/%s"
+argument_list|,
+name|TERM_PATH
+argument_list|,
+operator|*
+name|TERMINAL_TYPE
+argument_list|,
+name|TERMINAL_TYPE
+argument_list|)
+expr_stmt|;
+name|Fildes
+operator|=
+name|open
+argument_list|(
+name|Term_File_name
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Fildes
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|free
 argument_list|(
 name|Term_File_name
@@ -5777,6 +6556,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|Key_Get
+argument_list|()
+expr_stmt|;
+name|keys_vt100
 argument_list|()
 expr_stmt|;
 name|LINES
@@ -7005,6 +7787,128 @@ operator|++
 expr_stmt|;
 name|Counter
 operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  |	insert information about keys for a vt100 terminal  */
+end_comment
+
+begin_function
+name|void
+name|keys_vt100
+parameter_list|()
+block|{
+name|int
+name|counter
+decl_stmt|;
+name|int
+name|Klen
+decl_stmt|;
+name|struct
+name|KEY_STACK
+modifier|*
+name|Spoint
+decl_stmt|;
+name|Spoint
+operator|=
+name|KEY_TOS
+expr_stmt|;
+while|while
+condition|(
+name|Spoint
+operator|->
+name|next
+operator|!=
+name|NULL
+condition|)
+name|Spoint
+operator|=
+name|Spoint
+operator|->
+name|next
+expr_stmt|;
+for|for
+control|(
+name|counter
+operator|=
+literal|0
+init|;
+name|vt100
+index|[
+name|counter
+index|]
+operator|.
+name|length
+operator|!=
+literal|0
+condition|;
+name|counter
+operator|++
+control|)
+block|{
+name|Spoint
+operator|->
+name|next
+operator|=
+operator|(
+expr|struct
+name|KEY_STACK
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|KEY_STACK
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Spoint
+operator|=
+name|Spoint
+operator|->
+name|next
+expr_stmt|;
+name|Spoint
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|Spoint
+operator|->
+name|element
+operator|=
+operator|&
+name|vt100
+index|[
+name|counter
+index|]
+expr_stmt|;
+name|Klen
+operator|=
+name|strlen
+argument_list|(
+name|Spoint
+operator|->
+name|element
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Klen
+operator|>
+name|Max_Key_len
+condition|)
+name|Max_Key_len
+operator|=
+name|Klen
 expr_stmt|;
 block|}
 block|}
@@ -14830,11 +15734,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|stdscr
-argument_list|)
-expr_stmt|;
 name|initialized
 operator|=
 name|FALSE
@@ -17152,6 +18051,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  |	Check if characters were inserted in the middle of a line, and if   |	so, insert them.  */
+end_comment
+
 begin_function
 name|int
 name|check_insert
@@ -17798,9 +18701,29 @@ decl_stmt|,
 modifier|*
 name|c2
 decl_stmt|;
+name|char
+name|NC_chinese
+init|=
+name|FALSE
+decl_stmt|;
+comment|/* flag to indicate handling Chinese */
 name|window
 operator|=
 name|virtual_scr
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|nc_attributes
+operator|&
+name|A_NC_BIG5
+operator|)
+operator|!=
+literal|0
+condition|)
+name|NC_chinese
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -18128,7 +19051,7 @@ name|similar
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 |  if the window has lines that are different 	 */
+comment|/* 	 |  if the window has lines that are different, check for scrolling 	 */
 if|if
 condition|(
 name|diff
@@ -18520,6 +19443,8 @@ literal|0
 index|]
 operator|=
 name|LINES
+operator|-
+literal|1
 expr_stmt|;
 name|String_Out
 argument_list|(
@@ -18894,6 +19819,8 @@ literal|0
 index|]
 operator|=
 name|LINES
+operator|-
+literal|1
 expr_stmt|;
 name|String_Out
 argument_list|(
@@ -19033,6 +19960,7 @@ name|next_screen
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 |	Scrolling done, now need to insert, delete, or modify text  	 |	within lines. 	 */
 for|for
 control|(
 name|from_top
@@ -19102,6 +20030,7 @@ operator|->
 name|next_screen
 control|)
 block|{
+comment|/* 		 |	If either 'insert mode' or 'insert char' are  		 |	available, enter the following 'if' statement,  		 |	else, need to simply rewrite the contents of the line 		 |	at the point where the contents of the line change. 		 */
 if|if
 condition|(
 operator|(
@@ -19139,6 +20068,11 @@ operator|(
 name|char
 operator|)
 name|NULL
+operator|)
+operator|&&
+operator|(
+operator|!
+name|NC_chinese
 operator|)
 condition|)
 block|{
@@ -19814,6 +20748,28 @@ operator|)
 condition|)
 name|j
 operator|++
+expr_stmt|;
+comment|/* 				 |	if previous character is an eight bit  				 |	char, start redraw from that character 				 */
+if|if
+condition|(
+operator|(
+name|NC_chinese
+operator|)
+operator|&&
+operator|(
+name|highbitset
+argument_list|(
+name|c1
+index|[
+name|j
+operator|-
+literal|1
+index|]
+argument_list|)
+operator|)
+condition|)
+name|j
+operator|--
 expr_stmt|;
 name|begin_old
 operator|=
@@ -20684,6 +21640,45 @@ expr_stmt|;
 block|}
 name|Curr_x
 operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  |  |	The two routines that follow, nc_setattrib(), nc_clearattrib(), are   |	hacks that notify new_curse to handle characters that have the high   |	bit set as the first of two bytes of a multi-byte string.  |  */
+end_comment
+
+begin_function
+name|void
+name|nc_setattrib
+parameter_list|(
+name|flag
+parameter_list|)
+name|int
+name|flag
+decl_stmt|;
+block|{
+name|nc_attributes
+operator||=
+name|flag
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|nc_clearattrib
+parameter_list|(
+name|flag
+parameter_list|)
+name|int
+name|flag
+decl_stmt|;
+block|{
+name|nc_attributes
+operator|&=
+operator|~
+name|flag
 expr_stmt|;
 block|}
 end_function

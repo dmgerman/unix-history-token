@@ -698,7 +698,18 @@ value|0001
 end_define
 
 begin_comment
-comment|/* standout mode			*/
+comment|/* standout mode		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_NC_BIG5
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Handle Chinese Big5 characters	*/
 end_comment
 
 begin_define
@@ -1019,6 +1030,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|Key_Get
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keys_vt100
 name|P_
 argument_list|(
 operator|(
@@ -1979,6 +2003,32 @@ name|attrib
 operator|,
 name|int
 name|offset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nc_setattrib
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nc_clearattrib
+name|P_
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
