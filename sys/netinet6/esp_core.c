@@ -5723,6 +5723,11 @@ operator|&
 name|s
 argument_list|,
 name|sumbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sumbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy

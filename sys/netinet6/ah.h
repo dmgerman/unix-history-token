@@ -228,6 +228,8 @@ name|ah_algorithm_state
 operator|*
 operator|,
 name|caddr_t
+operator|,
+name|size_t
 operator|)
 argument_list|)
 expr_stmt|;

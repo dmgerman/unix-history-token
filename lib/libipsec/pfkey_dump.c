@@ -636,6 +636,17 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_RIPEMD160HMAC
+block|{
+name|SADB_X_AALG_RIPEMD160HMAC
+block|,
+literal|"hmac-ripemd160"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1
