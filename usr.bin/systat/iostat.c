@@ -864,7 +864,7 @@ literal|3
 expr_stmt|;
 name|col
 operator|=
-literal|0
+name|INSET
 expr_stmt|;
 for|for
 control|(
@@ -909,7 +909,7 @@ condition|)
 block|{
 name|col
 operator|=
-literal|0
+name|INSET
 operator|,
 name|row
 operator|+=
@@ -1065,7 +1065,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"%3.3s   bps|"
+literal|"%-4.4s  bps|"
 argument_list|,
 name|dr_name
 index|[
@@ -1318,7 +1318,7 @@ return|return;
 block|}
 name|col
 operator|=
-literal|0
+name|INSET
 expr_stmt|;
 name|wmove
 argument_list|(
@@ -1389,11 +1389,13 @@ operator|>=
 name|wnd
 operator|->
 name|maxx
+operator|-
+name|INSET
 condition|)
 block|{
 name|col
 operator|=
-literal|0
+name|INSET
 operator|,
 name|row
 operator|+=

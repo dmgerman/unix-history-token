@@ -1747,7 +1747,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"          %3.3s "
+literal|"         %4.4s "
 argument_list|,
 name|dr_name
 index|[
@@ -1847,6 +1847,9 @@ condition|)
 continue|continue;
 name|words
 operator|=
+operator|(
+name|double
+operator|)
 name|cur
 operator|.
 name|dk_wds

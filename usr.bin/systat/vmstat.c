@@ -1841,7 +1841,7 @@ literal|5
 operator|*
 name|j
 argument_list|,
-literal|"  %3.3s"
+literal|" %4.4s"
 argument_list|,
 name|dr_name
 index|[
@@ -3368,7 +3368,7 @@ literal|5
 operator|*
 name|c
 argument_list|,
-literal|"  %3.3s"
+literal|" %4.4s"
 argument_list|,
 name|dr_name
 index|[
