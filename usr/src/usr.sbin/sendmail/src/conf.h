@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.156 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.157 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6142,6 +6142,12 @@ directive|ifdef
 name|uniosb
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -6337,16 +6343,26 @@ directive|ifdef
 name|nec_ews_svr4
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__svr4__
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|SYSTEM5
-value|1
+name|__svr4__
 end_define
 
 begin_comment
-comment|/* include all the System V defines */
+comment|/* use all System V Releae 4 defines below */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -6362,40 +6378,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASINITGROUPS
-value|1
-end_define
-
-begin_comment
-comment|/* has initgroups(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_comment
-comment|/* has setreuid(2) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setreuid
-parameter_list|(
-name|r
-parameter_list|,
-name|e
-parameter_list|)
-value|seteuid(e)
-end_define
-
-begin_define
-define|#
-directive|define
 name|HASSETSID
 value|1
 end_define
@@ -6403,13 +6385,6 @@ end_define
 begin_comment
 comment|/* has Posix setsid(2) call */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_INT
-end_define
 
 begin_define
 define|#
@@ -6429,28 +6404,6 @@ name|GIDSET_T
 value|gid_t
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASGETUSERSHELL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HASGETUSERSHELL
-value|0
-end_define
-
-begin_comment
-comment|/* does not have getusershell(3) call */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef
@@ -6463,60 +6416,6 @@ directive|undef
 name|WEXITSTATUS
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_UNIX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_UNIX
-value|"/unix"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILCF
-value|"/var/ucblib/sendmail.cf"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILPID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILPID
-value|"/var/ucblib/sendmail.pid"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -6526,6 +6425,16 @@ end_define
 
 begin_comment
 comment|/* mask for nlist() values */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ksym.h>
+end_include
+
+begin_comment
+comment|/* for MIOC_READKSYM */
 end_comment
 
 begin_endif
