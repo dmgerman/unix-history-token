@@ -2121,8 +2121,6 @@ name|MAP_ANON
 operator||
 name|MAP_FIXED
 operator||
-name|MAP_INHERIT
-operator||
 name|MAP_SHARED
 argument_list|,
 operator|-

@@ -1401,8 +1401,6 @@ name|MAP_FILE
 operator||
 name|MAP_FIXED
 operator||
-name|MAP_INHERIT
-operator||
 name|MAP_SHARED
 argument_list|,
 name|fd
@@ -1434,7 +1432,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|addr = mmap((caddr_t)0x100000 - 0x1000, 0x1000, 		PROT_EXEC | PROT_READ | PROT_WRITE, 		MAP_FILE | MAP_FIXED | MAP_INHERIT | MAP_SHARED, 		fd, 0);     if (addr != (caddr_t)(0x100000 - 0x1000)) { 	perror("mmap"); 	quit(1);     }
+block|addr = mmap((caddr_t)0x100000 - 0x1000, 0x1000, 		PROT_EXEC | PROT_READ | PROT_WRITE, 		MAP_FILE | MAP_FIXED | MAP_SHARED, 		fd, 0);     if (addr != (caddr_t)(0x100000 - 0x1000)) { 	perror("mmap"); 	quit(1);     }
 endif|#
 directive|endif
 if|if
