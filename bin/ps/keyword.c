@@ -2204,13 +2204,21 @@ condition|(
 operator|!
 name|vhead
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
-literal|"no valid keywords"
+literal|"no valid keywords; valid keywords:"
 argument_list|)
 expr_stmt|;
+name|showkey
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
