@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ROUND.c 1.1 %G%"
+literal|"@(#)ROUND.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|value
+operator|>=
+literal|0.0
+condition|)
 return|return
 call|(
 name|long
@@ -35,6 +41,16 @@ call|)
 argument_list|(
 name|value
 operator|+
+literal|0.5
+argument_list|)
+return|;
+return|return
+call|(
+name|long
+call|)
+argument_list|(
+name|value
+operator|-
 literal|0.5
 argument_list|)
 return|;
