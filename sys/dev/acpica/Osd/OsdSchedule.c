@@ -1013,8 +1013,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
+literal|"%s: curproc is NULL!"
+operator|,
 name|__func__
-literal|": curproc is NULL!"
 operator|)
 argument_list|)
 expr_stmt|;
