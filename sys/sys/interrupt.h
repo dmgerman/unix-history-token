@@ -107,6 +107,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IH_DEAD
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Handler should be removed. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IH_MPSAFE
 value|0x80000000
 end_define
