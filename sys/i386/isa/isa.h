@@ -976,69 +976,6 @@ begin_comment
 comment|/* !RAM_BEGIN */
 end_comment
 
-begin_comment
-comment|/*  * Oddball Physical Memory Addresses  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAQ_RAMRELOC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|COMPAQ_RAMRELOC
-value|0x80C00000
-end_define
-
-begin_comment
-comment|/* Compaq RAM relocation/diag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COMPAQ_RAMSETUP
-value|0x80C00002
-end_define
-
-begin_comment
-comment|/* Compaq RAM setup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WEITEK_FPU
-value|0xC0000000
-end_define
-
-begin_comment
-comment|/* WTL 2167 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CYRIX_EMC
-value|0xC0000000
-end_define
-
-begin_comment
-comment|/* Cyrix EMC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !COMPAQ_RAMRELOC */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
