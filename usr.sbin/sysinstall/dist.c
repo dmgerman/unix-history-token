@@ -3144,9 +3144,14 @@ decl_stmt|,
 modifier|*
 name|dist
 decl_stmt|,
+modifier|*
 name|buf
+init|=
+name|NULL
+decl_stmt|,
+name|fname
 index|[
-literal|300000
+name|PATH_MAX
 index|]
 decl_stmt|;
 specifier|const
@@ -3414,10 +3419,10 @@ literal|0
 expr_stmt|;
 name|snprintf
 argument_list|(
-name|buf
+name|fname
 argument_list|,
 sizeof|sizeof
-name|buf
+name|fname
 argument_list|,
 literal|"%s/%s.inf"
 argument_list|,
@@ -3434,7 +3439,7 @@ name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
-name|buf
+name|fname
 argument_list|,
 name|TRUE
 argument_list|)
@@ -3468,7 +3473,7 @@ name|msgYesNo
 argument_list|(
 literal|"Unable to open %s: %s.\nReinitialize media?"
 argument_list|,
-name|buf
+name|fname
 argument_list|,
 operator|!
 name|intr
@@ -3620,10 +3625,10 @@ block|{
 comment|/* Try to get the distribution as a single file */
 name|snprintf
 argument_list|(
-name|buf
+name|fname
 argument_list|,
 sizeof|sizeof
-name|buf
+name|fname
 argument_list|,
 literal|"%s/%s.%s"
 argument_list|,
@@ -3647,7 +3652,7 @@ name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
-name|buf
+name|fname
 argument_list|,
 name|TRUE
 argument_list|)
@@ -3683,7 +3688,7 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to open %s: User interrupt"
 argument_list|,
-name|buf
+name|fname
 argument_list|)
 expr_stmt|;
 else|else
@@ -3691,7 +3696,7 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to open %s: I/O error"
 argument_list|,
-name|buf
+name|fname
 argument_list|)
 expr_stmt|;
 name|DEVICE_SHUTDOWN
@@ -3925,10 +3930,10 @@ name|getchunk
 label|:
 name|snprintf
 argument_list|(
-name|buf
+name|fname
 argument_list|,
 sizeof|sizeof
-name|buf
+name|fname
 argument_list|,
 literal|"cksum.%c%c"
 argument_list|,
@@ -3955,7 +3960,7 @@ name|property_find
 argument_list|(
 name|dist_attr
 argument_list|,
-name|buf
+name|fname
 argument_list|)
 expr_stmt|;
 name|chunksize
@@ -3990,10 +3995,10 @@ expr_stmt|;
 block|}
 name|snprintf
 argument_list|(
-name|buf
+name|fname
 argument_list|,
 sizeof|sizeof
-name|buf
+name|fname
 argument_list|,
 literal|"%s/%s.%c%c"
 argument_list|,
@@ -4033,7 +4038,7 @@ literal|1
 argument_list|,
 name|numchunks
 argument_list|,
-name|buf
+name|fname
 argument_list|)
 expr_stmt|;
 name|fp
@@ -4042,7 +4047,7 @@ name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
-name|buf
+name|fname
 argument_list|,
 name|FALSE
 argument_list|)
@@ -4079,7 +4084,7 @@ name|msgConfirm
 argument_list|(
 literal|"Failed to find %s on this media.  Reinitializing media."
 argument_list|,
-name|buf
+name|fname
 argument_list|)
 expr_stmt|;
 else|else
@@ -4088,7 +4093,7 @@ argument_list|(
 literal|"failed to retreive piece file %s.\n"
 literal|"%s: Reinitializing media."
 argument_list|,
-name|buf
+name|fname
 argument_list|,
 operator|!
 name|intr
@@ -4186,6 +4191,15 @@ block|{
 name|int
 name|seconds
 decl_stmt|;
+name|buf
+operator|=
+name|safe_realloc
+argument_list|(
+name|buf
+argument_list|,
+name|chunksize
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|fread
