@@ -1852,7 +1852,7 @@ name|ih_irq
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * now, config one pccard device per socket 	 * 	 * XXX This should add all devices that can attach to pcic, which 	 * is what we want in the general case. 	 * 	 * XXX Notice we don't use h AT ALL.  This should be considered to 	 * XXX be BAD. 	 */
+comment|/*  	 * now, config one pccard device per socket 	 * 	 * XXX This should add all devices that can attach to pcic, which 	 * is what we want in the general case. 	 */
 name|device_add_child
 argument_list|(
 name|dev
