@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,12 +218,25 @@ block|,
 block|{
 name|CTRL
 argument_list|(
+name|y
+argument_list|)
+block|,
+name|NORM
+block|,
+literal|"suspend tip (local+remote)"
+block|,
+name|suspend
+block|}
+block|,
+block|{
+name|CTRL
+argument_list|(
 name|z
 argument_list|)
 block|,
 name|NORM
 block|,
-literal|"suspend tip"
+literal|"suspend tip (local only)"
 block|,
 name|suspend
 block|}

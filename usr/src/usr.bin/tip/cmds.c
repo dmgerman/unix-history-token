@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3999,8 +3999,16 @@ end_comment
 
 begin_macro
 name|suspend
-argument_list|()
+argument_list|(
+argument|c
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+name|c
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4009,6 +4017,16 @@ argument_list|()
 expr_stmt|;
 name|kill
 argument_list|(
+name|c
+operator|==
+name|CTRL
+argument_list|(
+name|y
+argument_list|)
+condition|?
+name|getpid
+argument_list|()
+else|:
 literal|0
 argument_list|,
 name|SIGTSTP
