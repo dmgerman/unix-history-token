@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.3 (Berkeley) %G%"
+literal|"@(#)devname.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,11 +112,7 @@ name|devs
 modifier|*
 name|devhash
 index|[
-name|minor
-argument_list|(
-operator|~
-literal|0
-argument_list|)
+literal|0xff
 index|]
 decl_stmt|;
 end_decl_stmt
