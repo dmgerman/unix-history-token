@@ -325,6 +325,12 @@ parameter_list|)
 value|mtx_assert(&(fd)->fd_mtx, (type))
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|closef

@@ -38,21 +38,6 @@ name|u_int
 name|mtx_recurse
 decl_stmt|;
 comment|/* Number of recursive holds. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|mtx_blocked
-expr_stmt|;
-comment|/* Threads blocked on us. */
-name|LIST_ENTRY
-argument_list|(
-argument|mtx
-argument_list|)
-name|mtx_contested
-expr_stmt|;
-comment|/* Next contested mtx. */
 ifdef|#
 directive|ifdef
 name|MUTEX_PROFILING

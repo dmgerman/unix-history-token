@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/turnstile.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -859,6 +865,13 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
+name|td_turnstile
+operator|=
+name|turnstile_alloc
+argument_list|()
+expr_stmt|;
+name|td
+operator|->
 name|td_sched
 operator|=
 operator|(
@@ -905,6 +918,13 @@ name|thread
 operator|*
 operator|)
 name|mem
+expr_stmt|;
+name|turnstile_free
+argument_list|(
+name|td
+operator|->
+name|td_turnstile
+argument_list|)
 expr_stmt|;
 name|vm_thread_dispose
 argument_list|(

@@ -1321,6 +1321,20 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"turnstile chain"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"td_contested"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"callout"
 block|,
 operator|&
@@ -1568,21 +1582,7 @@ comment|/* mtx_object.lo_witness */
 name|MTX_UNOWNED
 block|,
 literal|0
-block|,
 comment|/* mtx_lock, mtx_recurse */
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|all_mtx
-operator|.
-name|mtx_blocked
-argument_list|)
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-comment|/* mtx_contested */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -301,7 +301,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -343,6 +343,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|trapframe
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|turnstile
 struct_decl|;
 end_struct_decl
 
@@ -431,14 +437,14 @@ argument|thread
 argument_list|)
 name|td_slpq
 expr_stmt|;
-comment|/* (j) Sleep queue. XXXKSE */
+comment|/* (j) Sleep queue. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_lockq
 expr_stmt|;
-comment|/* (j) Lock queue. XXXKSE */
+comment|/* (j) Lock queue. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -454,6 +460,12 @@ argument_list|)
 name|td_selq
 expr_stmt|;
 comment|/* (p) List of selinfos. */
+name|struct
+name|turnstile
+modifier|*
+name|td_turnstile
+decl_stmt|;
+comment|/* (k) Associated turnstile. */
 comment|/* Cleared during fork1() or thread_sched_upcall(). */
 define|#
 directive|define
@@ -511,11 +523,11 @@ name|td_locks
 decl_stmt|;
 comment|/* (k) DEBUG: lockmgr count of locks. */
 name|struct
-name|mtx
+name|turnstile
 modifier|*
 name|td_blocked
 decl_stmt|;
-comment|/* (j) Mutex process is blocked on. */
+comment|/* (j) Lock process is blocked on. */
 name|struct
 name|ithd
 modifier|*
@@ -531,11 +543,11 @@ comment|/* (j) Name of lock blocked on. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|mtx
+argument|turnstile
 argument_list|)
 name|td_contested
 expr_stmt|;
-comment|/* (j) Contested locks. */
+comment|/* (q) Contested locks. */
 name|struct
 name|lock_list_entry
 modifier|*
@@ -811,6 +823,17 @@ end_define
 
 begin_comment
 comment|/* Thread is on a cv_waitq (not slpq). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_TSNOBLOCK
+value|0x000100
+end_define
+
+begin_comment
+comment|/* Don't block on a turnstile due to race. */
 end_comment
 
 begin_define
