@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -490,14 +496,14 @@ name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
 argument_list|,
-name|bus_generic_setup_intr
+name|alpha_platform_pci_setup_intr
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_teardown_intr
 argument_list|,
-name|bus_generic_teardown_intr
+name|alpha_platform_pci_teardown_intr
 argument_list|)
 block|,
 block|{
