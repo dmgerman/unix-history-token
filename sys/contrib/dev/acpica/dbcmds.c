@@ -735,6 +735,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
 name|AcpiDmDisassemble
 argument_list|(
 name|NULL
@@ -744,6 +747,8 @@ argument_list|,
 name|NumStatements
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -662,6 +662,9 @@ block|}
 block|}
 block|}
 comment|/* Now we can display it */
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
 name|AcpiDmDisassemble
 argument_list|(
 name|WalkState
@@ -671,6 +674,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -908,11 +913,14 @@ name|AcpiGbl_DbOpt_tables
 operator|=
 name|FALSE
 expr_stmt|;
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_stats
 operator|=
 name|FALSE
 expr_stmt|;
-name|AcpiGbl_DbOpt_stats
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
+name|AcpiGbl_DbOpt_disasm
 operator|=
 name|FALSE
 expr_stmt|;
@@ -920,6 +928,8 @@ name|AcpiGbl_DbOpt_verbose
 operator|=
 name|TRUE
 expr_stmt|;
+endif|#
+directive|endif
 name|AcpiGbl_DbOpt_ini_methods
 operator|=
 name|TRUE
@@ -1064,6 +1074,9 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
 if|if
 condition|(
 operator|!
@@ -1079,6 +1092,8 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|AE_OK
