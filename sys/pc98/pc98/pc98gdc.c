@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"gdc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_gdc.h"
 end_include
 
@@ -26,14 +20,6 @@ include|#
 directive|include
 file|"opt_syscons.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NGDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -5110,15 +5096,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NGDC> 0 */
-end_comment
 
 end_unit
 
