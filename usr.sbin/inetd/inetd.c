@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.21 1997/02/22 16:05:52 peter Exp $"
+literal|"$Id: inetd.c,v 1.22 1997/03/31 05:10:10 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4262,6 +4262,9 @@ argument_list|,
 literal|"setsockopt (SO_REUSEADDR): %m"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SO_PRIVSTATE
 if|if
 condition|(
 name|turnon
@@ -4282,6 +4285,8 @@ argument_list|,
 literal|"setsockopt (SO_PRIVSTATE): %m"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 undef|#
 directive|undef
 name|turnon
