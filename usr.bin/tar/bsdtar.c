@@ -1130,6 +1130,11 @@ argument_list|(
 name|bsdtar
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -1635,7 +1640,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2379,28 +2384,36 @@ name|bsdtar
 operator|->
 name|progname
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"Basic Usage:\n"
+name|stderr
+argument_list|,
+literal|"Usage:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"  List:    %s -tf [archive-filename]\n"
+name|stderr
+argument_list|,
+literal|"  List:    %s -tf<archive-filename>\n"
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"  Extract: %s -xf [archive-filename]\n"
+name|stderr
+argument_list|,
+literal|"  Extract: %s -xf<archive-filename>\n"
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"  Create:  %s -cf [archive-filename] [filenames...]\n"
+name|stderr
+argument_list|,
+literal|"  Create:  %s -cf<archive-filename> [filenames...]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -2408,8 +2421,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  Help:    %s --help\n"
 argument_list|,
 name|p
@@ -2417,8 +2432,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  Help:    %s -h\n"
 argument_list|,
 name|p
@@ -2464,8 +2481,13 @@ literal|"  -z, -j  Compress archive with gzip/bzip2\n"
 block|,
 literal|"  -F {ustar|pax|cpio|shar}  Select archive format\n"
 block|,
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_LONG
 literal|"  --exclude<pattern>  Skip files that match pattern\n"
 block|,
+endif|#
+directive|endif
 literal|"  C=<dir>  Change to<dir> before processing remaining files\n"
 block|,
 literal|"  @<archive>  Add entries from<archive> to output\n"
@@ -2489,6 +2511,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+comment|/*  * Note that the word 'bsdtar' will always appear in the first line  * of output.  *  * In particular, /bin/sh scripts that need to test for the presence  * of bsdtar can use the following template:  *  * if (tar --help 2>&1 | grep bsdtar>/dev/null 2>&1 ) then \  *          echo bsdtar; else echo not bsdtar; fi  */
 specifier|static
 name|void
 name|long_help
@@ -2521,11 +2544,40 @@ name|bsdtar
 operator|->
 name|progname
 expr_stmt|;
-name|printf
+name|fflush
 argument_list|(
-literal|"%s: manipulate archive files\n"
+name|stderr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|prog
+argument_list|,
+literal|"bsdtar"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|p
+operator|=
+literal|"(bsdtar)"
+expr_stmt|;
+else|else
+name|p
+operator|=
+literal|""
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s%s: manipulate archive files\n"
 argument_list|,
 name|prog
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 for|for
@@ -2589,7 +2641,7 @@ name|fputs
 argument_list|(
 name|prog
 argument_list|,
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 name|p
@@ -2612,6 +2664,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
