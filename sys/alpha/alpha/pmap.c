@@ -5984,6 +5984,11 @@ argument_list|(
 literal|"pmap_protect: unaligned addresses"
 argument_list|)
 expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|sva
@@ -6201,6 +6206,11 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
