@@ -666,7 +666,7 @@ name|p
 operator|->
 name|p_oncpu
 operator|!=
-literal|0xff
+name|NOCPU
 condition|)
 block|{
 name|MPASS
@@ -3912,6 +3912,10 @@ literal|"cy"
 block|,
 endif|#
 directive|endif
+literal|"ithread table lock"
+block|,
+literal|"ithread list lock"
+block|,
 literal|"sched lock"
 block|,
 ifdef|#
@@ -3924,10 +3928,6 @@ directive|endif
 literal|"callout"
 block|,
 comment|/* 	 * leaf locks 	 */
-literal|"ithread table lock"
-block|,
-literal|"ithread list lock"
-block|,
 ifdef|#
 directive|ifdef
 name|SMP
