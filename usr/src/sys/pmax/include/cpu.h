@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -37,50 +37,6 @@ end_undef
 
 begin_comment
 comment|/* copy sigcode above user stack in exec */
-end_comment
-
-begin_comment
-comment|/*  * function vs. inline configuration;  * these are defined to get generic functions  * rather than inline or machine-dependent implementations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_MINMAX
-end_define
-
-begin_comment
-comment|/* need {,i,l,ul}{min,max} functions */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_FFS
-end_undef
-
-begin_comment
-comment|/* don't need ffs function */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_BCMP
-end_undef
-
-begin_comment
-comment|/* don't need bcmp function */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_STRLEN
-end_undef
-
-begin_comment
-comment|/* don't need strlen function */
 end_comment
 
 begin_define
@@ -124,24 +80,24 @@ value|(p)->p_md.md_regs[SP] = ap
 end_define
 
 begin_comment
-comment|/*  * Arguments to hardclock, softclock and gatherstats  * encapsulate the previous machine state in an opaque  * clockframe;  */
+comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|intrframe
+name|clockframe
 block|{
 name|int
 name|pc
 decl_stmt|;
+comment|/* program counter at time of interrupt */
 name|int
-name|ps
+name|sr
 decl_stmt|;
+comment|/* status register at time of interrupt */
 block|}
-name|clockframe
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -150,7 +106,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->ps& MACH_SR_KU_PREV)
+value|((framep)->sr& MACH_SR_KU_PREV)
 end_define
 
 begin_define
@@ -161,7 +117,7 @@ parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|(((framep)->ps& (MACH_INT_MASK | MACH_SR_INT_ENA_PREV)) == \ 	(MACH_INT_MASK | MACH_SR_INT_ENA_PREV))
+value|((~(framep)->sr& (MACH_INT_MASK | MACH_SR_INT_ENA_PREV)) == 0)
 end_define
 
 begin_define
@@ -172,6 +128,16 @@ parameter_list|(
 name|framep
 parameter_list|)
 value|((framep)->pc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKF_INTR
+parameter_list|(
+name|framep
+parameter_list|)
+value|(0)
 end_define
 
 begin_comment
@@ -187,20 +153,17 @@ value|{ want_resched = 1; aston(); }
 end_define
 
 begin_comment
-comment|/*  * Give a profiling tick to the current process from the softclock  * interrupt.  */
+comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the PMAX, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|profile_tick
+name|need_proftick
 parameter_list|(
 name|p
-parameter_list|,
-name|framep
 parameter_list|)
-define|\
-value|addupc((framep)->pc,&p->p_stats->p_prof, 1);
+value|{ (p)->p_flag |= SOWEUPC; aston(); }
 end_define
 
 begin_comment
