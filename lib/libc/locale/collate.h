@@ -57,8 +57,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|COLLATE_VERSION1_1
-value|"1.1\n"
+name|COLLATE_VERSION1_2
+value|"1.2\n"
 end_define
 
 begin_struct
