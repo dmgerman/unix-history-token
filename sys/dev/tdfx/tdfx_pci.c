@@ -7,24 +7,6 @@ begin_comment
 comment|/* 3dfx driver for FreeBSD 4.x - Finished 11 May 2000, 12:25AM ET  *  * Copyright (C) 2000, by Coleman Kane<cokane@FreeBSD.org>,   * based upon the 3dfx driver written for linux, by Daryll Straus, Jon Taylor,  * and Jens Axboe, located at http://linux.3dfx.com.  */
 end_comment
 
-begin_comment
-comment|/*  * put this here, so as to bail out immediately if we have no PCI BUS installed  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -3476,15 +3458,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCI */
-end_comment
 
 end_unit
 
