@@ -46,6 +46,103 @@ name|kmem
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+specifier|static
+struct|struct
+name|mbtypes
+block|{
+name|int
+name|mt_type
+decl_stmt|;
+name|char
+modifier|*
+name|mt_name
+decl_stmt|;
+block|}
+name|mbtypes
+index|[]
+init|=
+block|{
+block|{
+name|MT_DATA
+block|,
+literal|"data"
+block|}
+block|,
+block|{
+name|MT_HEADER
+block|,
+literal|"packet headers"
+block|}
+block|,
+block|{
+name|MT_SOCKET
+block|,
+literal|"socket structures"
+block|}
+block|,
+block|{
+name|MT_PCB
+block|,
+literal|"protocol control blocks"
+block|}
+block|,
+block|{
+name|MT_RTABLE
+block|,
+literal|"routing table entries"
+block|}
+block|,
+block|{
+name|MT_HTABLE
+block|,
+literal|"IMP host table entries"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|notdef
+block|{
+name|MT_ATABLE
+block|,
+literal|"address resolution tables"
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+name|MT_FTABLE
+block|,
+literal|"fragment reassembly queue headers"
+block|}
+block|,
+block|{
+name|MT_SONAME
+block|,
+literal|"socket names and addresses"
+block|}
+block|,
+block|{
+name|MT_ZOMBIE
+block|,
+literal|"zombie process information"
+block|}
+block|,
+block|{
+name|MT_SOOPTS
+block|,
+literal|"socket options"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Print mbuf statistics.  */
 end_comment
@@ -70,6 +167,14 @@ name|int
 name|totmem
 decl_stmt|,
 name|totfree
+decl_stmt|,
+name|totmbufs
+decl_stmt|;
+specifier|register
+name|struct
+name|mbtypes
+modifier|*
+name|mp
 decl_stmt|;
 if|if
 condition|(
@@ -124,7 +229,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%d/%d mbufs in use\n"
+literal|"%d/%d mbufs in use:\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -137,6 +242,94 @@ argument_list|,
 name|mbstat
 operator|.
 name|m_mbufs
+argument_list|)
+expr_stmt|;
+name|totmbufs
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|mp
+operator|=
+name|mbtypes
+init|;
+name|mp
+operator|->
+name|mt_name
+condition|;
+name|mp
+operator|++
+control|)
+if|if
+condition|(
+name|mbstat
+operator|.
+name|m_mtypes
+index|[
+name|mp
+operator|->
+name|mt_type
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\t%d mbufs allocated to %s\n"
+argument_list|,
+name|mbstat
+operator|.
+name|m_mtypes
+index|[
+name|mp
+operator|->
+name|mt_type
+index|]
+argument_list|,
+name|mp
+operator|->
+name|mt_name
+argument_list|)
+expr_stmt|;
+name|totmbufs
+operator|+=
+name|mbstat
+operator|.
+name|m_mtypes
+index|[
+name|mp
+operator|->
+name|mt_type
+index|]
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|totmbufs
+operator|!=
+name|mbstat
+operator|.
+name|m_mbufs
+operator|-
+name|mbstat
+operator|.
+name|m_mbfree
+condition|)
+name|printf
+argument_list|(
+literal|"*** %d mbufs missing ***\n"
+argument_list|,
+operator|(
+name|mbstat
+operator|.
+name|m_mbufs
+operator|-
+name|mbstat
+operator|.
+name|m_mbfree
+operator|)
+operator|-
+name|totmbufs
 argument_list|)
 expr_stmt|;
 name|printf
@@ -156,15 +349,6 @@ operator|.
 name|m_clusters
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%d requests for memory denied\n"
-argument_list|,
-name|mbstat
-operator|.
-name|m_drops
-argument_list|)
-expr_stmt|;
 name|totmem
 operator|=
 name|mbstat
@@ -195,7 +379,7 @@ name|CLBYTES
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%dKbytes allocated to network (%d%% in use)\n"
+literal|"%d Kbytes allocated to network (%d%% in use)\n"
 argument_list|,
 name|totmem
 operator|/
@@ -210,6 +394,15 @@ operator|*
 literal|100
 operator|/
 name|totmem
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d requests for memory denied\n"
+argument_list|,
+name|mbstat
+operator|.
+name|m_drops
 argument_list|)
 expr_stmt|;
 block|}
