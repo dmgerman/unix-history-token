@@ -1442,13 +1442,6 @@ argument_list|)
 expr_stmt|;
 name|done1
 label|:
-name|fdrop
-argument_list|(
-name|fp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|fputsock
 argument_list|(
 name|so
@@ -2180,13 +2173,6 @@ argument_list|)
 expr_stmt|;
 name|done1
 label|:
-name|fdrop
-argument_list|(
-name|fp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|fputsock
 argument_list|(
 name|so
@@ -9314,11 +9300,13 @@ end_function
 
 begin_function
 name|int
-name|svr4_sys_getmsg
+name|svr4_do_getmsg
 parameter_list|(
 name|td
 parameter_list|,
 name|uap
+parameter_list|,
+name|fp
 parameter_list|)
 specifier|register
 name|struct
