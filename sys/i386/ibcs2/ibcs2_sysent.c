@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -44,46 +38,6 @@ include|#
 directive|include
 file|<i386/ibcs2/ibcs2_proto.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|compat
-parameter_list|(
-name|n
-parameter_list|,
-name|name
-parameter_list|)
-value|n, (sy_call_t *)__CONCAT(o,name)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|compat
-parameter_list|(
-name|n
-parameter_list|,
-name|name
-parameter_list|)
-value|0, (sy_call_t *)nosys
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The casts are bogus but will do for now. */
