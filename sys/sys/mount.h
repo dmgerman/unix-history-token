@@ -2012,6 +2012,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2396,11 +2399,14 @@ name|VFS_ROOT
 parameter_list|(
 name|MP
 parameter_list|,
+name|FLAGS
+parameter_list|,
 name|VPP
 parameter_list|,
 name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_root)(MP, VPP, P)
+define|\
+value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP, P)
 end_define
 
 begin_define
