@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)measure.c	1.1 (Berkeley) %G%"
+literal|"@(#)measure.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -703,16 +703,16 @@ operator|->
 name|icmp_rtime
 argument_list|)
 expr_stmt|;
+comment|/*  				 * a hosts using a time format different from  				 * ms. since midnight UT (as per RFC792) should 				 * set the high order bit of the 32-bit time 				 * value it transmits. 				 */
 if|if
 condition|(
 operator|(
 name|histime
-operator|>>
-literal|32
+operator|&
+literal|0x80000000
 operator|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|status
