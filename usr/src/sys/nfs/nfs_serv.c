@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4206,6 +4206,8 @@ operator|=
 name|DELETE
 operator||
 name|WANTPARENT
+operator||
+name|SAVESTARTDIR
 expr_stmt|;
 if|if
 condition|(
@@ -4287,6 +4289,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|NOCACHE
+operator||
+name|SAVESTARTDIR
 expr_stmt|;
 if|if
 condition|(
@@ -4501,8 +4505,22 @@ name|fvp
 argument_list|)
 expr_stmt|;
 block|}
+name|vrele
+argument_list|(
+name|tond
+operator|.
+name|ni_startdir
+argument_list|)
+expr_stmt|;
 name|out1
 label|:
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
 name|crfree
 argument_list|(
 name|cred
@@ -4520,6 +4538,21 @@ operator|)
 return|;
 name|nfsmout
 label|:
+if|if
+condition|(
+name|ndp
+operator|->
+name|ni_nameiop
+operator|&
+name|SAVESTARTDIR
+condition|)
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
 name|VOP_ABORTOP
 argument_list|(
 name|ndp
@@ -5587,6 +5620,8 @@ operator|=
 name|CREATE
 operator||
 name|LOCKPARENT
+operator||
+name|SAVESTARTDIR
 expr_stmt|;
 if|if
 condition|(
@@ -5690,6 +5725,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EEXIST
@@ -5700,8 +5742,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_MKDIR
@@ -5710,6 +5750,17 @@ name|ndp
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(

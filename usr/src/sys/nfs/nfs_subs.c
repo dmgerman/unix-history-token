@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4101,29 +4101,10 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-init|=
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_fd
-decl_stmt|;
-comment|/* XXX */
 name|struct
 name|vnode
 modifier|*
 name|dp
-decl_stmt|,
-modifier|*
-name|savedcdir
-decl_stmt|,
-modifier|*
-name|savedrdir
 decl_stmt|;
 name|int
 name|flag
@@ -4150,7 +4131,7 @@ name|ndp
 operator|->
 name|ni_nameiop
 operator|&
-name|OPFLAG
+name|OPMASK
 expr_stmt|;
 comment|/* 		 * Copy the name from the mbuf list to the d_name field of ndp 		 * and set the various ndp fields appropriately. 		 */
 name|cp
@@ -4467,8 +4448,11 @@ operator||
 name|REMOTE
 operator||
 name|HASBUF
+operator||
+name|STARTDIR
 operator|)
 expr_stmt|;
+comment|/* 	 * Extract and set starting directory. 	 */
 if|if
 condition|(
 name|error
@@ -4512,30 +4496,11 @@ name|ENOTDIR
 operator|)
 return|;
 block|}
-comment|/* 	 * Must set current directory here to avoid confusion in namei() 	 * called from rename() 	 */
-name|savedcdir
-operator|=
-name|fdp
+name|ndp
 operator|->
-name|fd_cdir
-expr_stmt|;
-name|savedrdir
-operator|=
-name|fdp
-operator|->
-name|fd_rdir
-expr_stmt|;
-name|fdp
-operator|->
-name|fd_cdir
+name|ni_startdir
 operator|=
 name|dp
-expr_stmt|;
-name|fdp
-operator|->
-name|fd_rdir
-operator|=
-name|NULLVP
 expr_stmt|;
 comment|/* 	 * And call namei() to do the real work 	 */
 name|error
@@ -4545,18 +4510,20 @@ argument_list|(
 name|ndp
 argument_list|)
 expr_stmt|;
-name|fdp
+if|if
+condition|(
+name|error
+operator|||
+operator|(
+name|ndp
 operator|->
-name|fd_cdir
-operator|=
-name|savedcdir
-expr_stmt|;
-name|fdp
-operator|->
-name|fd_rdir
-operator|=
-name|savedrdir
-expr_stmt|;
+name|ni_nameiop
+operator|&
+name|SAVESTARTDIR
+operator|)
+operator|==
+literal|0
+condition|)
 name|vrele
 argument_list|(
 name|dp

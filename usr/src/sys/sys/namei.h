@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -73,7 +73,7 @@ name|uio_seg
 name|ni_segflg
 decl_stmt|;
 comment|/* location of pathname */
-name|short
+name|u_long
 name|ni_nameiop
 decl_stmt|;
 comment|/* see below */
@@ -83,6 +83,12 @@ modifier|*
 name|ni_cred
 decl_stmt|;
 comment|/* credentials */
+name|struct
+name|vnode
+modifier|*
+name|ni_startdir
+decl_stmt|;
+comment|/* alternate starting directory */
 comment|/* shared between namei, lookup routines and commit routines: */
 name|caddr_t
 name|ni_pnbuf
@@ -238,7 +244,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * namei operations and modifiers  */
+comment|/*  * namei operations  */
 end_comment
 
 begin_define
@@ -288,7 +294,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPFLAG
+name|OPMASK
 value|3
 end_define
 
@@ -296,11 +302,15 @@ begin_comment
 comment|/* mask for operation */
 end_comment
 
+begin_comment
+comment|/*  * namei operational modifiers  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LOCKLEAF
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -311,7 +321,7 @@ begin_define
 define|#
 directive|define
 name|LOCKPARENT
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -322,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|WANTPARENT
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -333,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|NOCACHE
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -344,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|FOLLOW
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -355,7 +365,7 @@ begin_define
 define|#
 directive|define
 name|NOFOLLOW
-value|0x000
+value|0x0000
 end_define
 
 begin_comment
@@ -365,8 +375,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MODMASK
+value|0x00fc
+end_define
+
+begin_comment
+comment|/* mask of operational modifiers */
+end_comment
+
+begin_comment
+comment|/*  * namei parameter descriptors  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NOCROSSMOUNT
-value|0x080
+value|0x0100
 end_define
 
 begin_comment
@@ -377,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|REMOTE
-value|0x100
+value|0x0200
 end_define
 
 begin_comment
@@ -388,11 +413,44 @@ begin_define
 define|#
 directive|define
 name|HASBUF
-value|0x200
+value|0x0400
 end_define
 
 begin_comment
 comment|/* has preallocated pathname buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STARTDIR
+value|0x0800
+end_define
+
+begin_comment
+comment|/* has alternate starting directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVESTARTDIR
+value|0x1000
+end_define
+
+begin_comment
+comment|/* do not vrele alternate starting directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARAMASK
+value|0xff00
+end_define
+
+begin_comment
+comment|/* mask of parameter descriptors */
 end_comment
 
 begin_endif
