@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read, sort and compare two directories.  Used for GNU DIFF.    Copyright (C) 1988, 1989, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Read, sort and compare two directories.  Used for GNU DIFF.    Copyright (C) 1988, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -239,6 +239,13 @@ name|d_name
 decl_stmt|;
 name|size_t
 name|d_size
+init|=
+name|NAMLEN
+argument_list|(
+name|next
+argument_list|)
+operator|+
+literal|1
 decl_stmt|;
 comment|/* Ignore the files `.' and `..' */
 if|if
@@ -284,15 +291,6 @@ name|d_name
 argument_list|)
 condition|)
 continue|continue;
-name|d_size
-operator|=
-name|strlen
-argument_list|(
-name|d_name
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
 while|while
 condition|(
 name|data_alloc
@@ -361,7 +359,7 @@ return|;
 block|}
 if|#
 directive|if
-name|VOID_CLOSEDIR
+name|CLOSEDIR_VOID
 name|closedir
 argument_list|(
 name|reading
@@ -499,7 +497,7 @@ end_function
 begin_block
 block|{
 return|return
-name|strcmp
+name|filename_cmp
 argument_list|(
 operator|*
 operator|(
@@ -729,7 +727,7 @@ condition|(
 operator|*
 name|names0
 operator|&&
-name|strcmp
+name|filename_cmp
 argument_list|(
 operator|*
 name|names0
@@ -747,7 +745,7 @@ condition|(
 operator|*
 name|names1
 operator|&&
-name|strcmp
+name|filename_cmp
 argument_list|(
 operator|*
 name|names1
@@ -789,7 +787,7 @@ condition|?
 operator|-
 literal|1
 else|:
-name|strcmp
+name|filename_cmp
 argument_list|(
 operator|*
 name|names0

@@ -4,7 +4,7 @@ comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+comment|/* config.hin.  Generated automatically from configure.in by autoheader.  */
 end_comment
 
 begin_comment
@@ -13,6 +13,14 @@ end_comment
 
 begin_comment
 comment|/* #undef C_ALLOCA */
+end_comment
+
+begin_comment
+comment|/* Define if the closedir function returns void instead of int.  */
+end_comment
+
+begin_comment
+comment|/* #undef CLOSEDIR_VOID */
 end_comment
 
 begin_comment
@@ -32,18 +40,7 @@ comment|/* #undef CRAY_STACKSEG_END */
 end_comment
 
 begin_comment
-comment|/* Define if you have dirent.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIRENT
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have alloca.h and it should be used (not Ultrix).  */
+comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
 end_comment
 
 begin_comment
@@ -70,7 +67,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have vfork.h.  */
+comment|/* Define if you have<vfork.h>.  */
 end_comment
 
 begin_comment
@@ -94,14 +91,6 @@ end_comment
 
 begin_comment
 comment|/* #undef _MINIX */
-end_comment
-
-begin_comment
-comment|/* Define if you don't have dirent.h, but have ndir.h.  */
-end_comment
-
-begin_comment
-comment|/* #undef NDIR */
 end_comment
 
 begin_comment
@@ -167,20 +156,15 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you don't have dirent.h, but have sys/dir.h.  */
+comment|/* Define if<sys/wait.h> is compatible with Posix applications.  */
 end_comment
 
-begin_comment
-comment|/* #undef SYSDIR */
-end_comment
-
-begin_comment
-comment|/* Define if you don't have dirent.h, but have sys/ndir.h.  */
-end_comment
-
-begin_comment
-comment|/* #undef SYSNDIR */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define vfork as fork if vfork does not work.  */
@@ -191,15 +175,7 @@ comment|/* #undef vfork */
 end_comment
 
 begin_comment
-comment|/* Define if the closedir function returns void instead of int.  */
-end_comment
-
-begin_comment
-comment|/* #undef VOID_CLOSEDIR */
-end_comment
-
-begin_comment
-comment|/* Define if you have dup2.  */
+comment|/* Define if you have the dup2 function.  */
 end_comment
 
 begin_define
@@ -210,7 +186,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have memchr.  */
+comment|/* Define if you have the memchr function.  */
 end_comment
 
 begin_define
@@ -221,7 +197,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have sigaction.  */
+comment|/* Define if you have the sigaction function.  */
 end_comment
 
 begin_define
@@ -232,7 +208,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have strerror.  */
+comment|/* Define if you have the strchr function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strerror function.  */
 end_comment
 
 begin_define
@@ -243,13 +230,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have waitpid.  */
+comment|/* Define if you have the tmpnam function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_WAITPID
+name|HAVE_TMPNAM
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<dirent.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
 value|1
 end_define
 
@@ -276,6 +274,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<ndir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NDIR_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<stdlib.h> header file.  */
 end_comment
 
@@ -298,15 +304,31 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/wait.h> header file.  */
+comment|/* Define if you have the<sys/dir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DIR_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/file.h> header file.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_SYS_WAIT_H
+name|HAVE_SYS_FILE_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the<sys/ndir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_NDIR_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<time.h> header file.  */

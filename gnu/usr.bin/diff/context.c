@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Context-format output routines for GNU DIFF.    Copyright (C) 1988, 89, 91, 92, 93 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Context-format output routines for GNU DIFF.    Copyright (C) 1988,1989,1991,1992,1993,1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -232,6 +232,31 @@ name|label
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|char
+specifier|const
+modifier|*
+name|ct
+init|=
+name|ctime
+argument_list|(
+operator|&
+name|inf
+operator|->
+name|stat
+operator|.
+name|st_mtime
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ct
+condition|)
+name|ct
+operator|=
+literal|"?\n"
+expr_stmt|;
 comment|/* See Posix.2 section 4.17.6.1.4 for this format.  */
 name|fprintf
 argument_list|(
@@ -245,17 +270,10 @@ name|inf
 operator|->
 name|name
 argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|inf
-operator|->
-name|stat
-operator|.
-name|st_mtime
-argument_list|)
+name|ct
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

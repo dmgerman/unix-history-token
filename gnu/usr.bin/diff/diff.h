@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -26,24 +20,6 @@ include|#
 directive|include
 file|"gnuregex.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PR_FILE_NAME
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PR_FILE_NAME
-value|"/bin/pr"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -219,13 +195,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 if lines may match even if their lengths are different.    This depends on various options.  */
+comment|/* 1 if lines may match even if their contents do not match exactly.    This depends on various options.  */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
 name|int
-name|length_varies
+name|ignore_some_line_changes
 decl_stmt|;
 end_decl_stmt
 
@@ -328,17 +304,6 @@ begin_decl_stmt
 name|EXTERN
 name|int
 name|print_file_same_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* character that ends a line.  Currently this is always `\n'.  */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-name|line_end_char
 decl_stmt|;
 end_decl_stmt
 
@@ -544,7 +509,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|program
+name|program_name
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,13 +1082,9 @@ name|char
 specifier|const
 operator|*
 operator|,
-name|size_t
-operator|,
 name|char
 specifier|const
 operator|*
-operator|,
-name|size_t
 operator|)
 argument_list|)
 decl_stmt|;

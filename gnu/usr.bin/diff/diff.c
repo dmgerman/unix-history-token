@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU DIFF main routine.    Copyright (C) 1988, 1989, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* GNU DIFF main routine.    Copyright (C) 1988, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,29 @@ begin_include
 include|#
 directive|include
 file|"diff.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -235,13 +258,39 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|usage
+name|try_help
 name|PARAMS
 argument_list|(
 operator|(
 name|char
 specifier|const
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|check_stdout
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -267,6 +316,28 @@ name|int
 name|no_discards
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|HAVE_SETMODE
+end_if
+
+begin_comment
+comment|/* I/O mode: nonzero only if using binary input/output.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|binary_I_O
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return a string containing the command options with which diff was invoked.    Spaces appear between what were separate ARGV-elements.    There is a space at the beginning but none at the end.    If there were no options, the result is an empty string.     Arguments: OPTIONVEC, a vector containing separate ARGV-elements, and COUNT,    the length of that vector.  */
@@ -1055,17 +1126,6 @@ literal|'p'
 block|}
 block|,
 block|{
-literal|"binary"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|'q'
-block|}
-block|,
-comment|/* An alias, no longer recommended */
-block|{
 literal|"brief"
 block|,
 literal|0
@@ -1296,6 +1356,16 @@ literal|141
 block|}
 block|,
 block|{
+literal|"binary"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|142
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1342,8 +1412,37 @@ name|width
 init|=
 name|DEFAULT_WIDTH
 decl_stmt|;
+name|int
+name|show_c_function
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Do our initializations.  */
-name|program
+name|initialize_main
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
+name|program_name
 operator|=
 name|argv
 index|[
@@ -1358,10 +1457,6 @@ name|context
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|line_end_char
-operator|=
-literal|'\n'
 expr_stmt|;
 comment|/* Decode the options.  */
 while|while
@@ -1478,11 +1573,11 @@ name|ignore_space_change_flag
 operator|=
 literal|1
 expr_stmt|;
-name|length_varies
+name|ignore_some_changes
 operator|=
 literal|1
 expr_stmt|;
-name|ignore_some_changes
+name|ignore_some_line_changes
 operator|=
 literal|1
 expr_stmt|;
@@ -1754,6 +1849,10 @@ name|ignore_some_changes
 operator|=
 literal|1
 expr_stmt|;
+name|ignore_some_line_changes
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'I'
@@ -1780,6 +1879,37 @@ name|paginate_flag
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SIGCHLD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIGCLD
+argument_list|)
+define|#
+directive|define
+name|SIGCHLD
+value|SIGCLD
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+comment|/* Pagination requires forking and waiting, and 	     System V fork+wait does not work if SIGCHLD is ignored.  */
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'L'
@@ -1846,10 +1976,9 @@ case|case
 literal|'p'
 case|:
 comment|/* Make context-style output and show name of last C function.  */
-name|specify_style
-argument_list|(
-name|OUTPUT_CONTEXT
-argument_list|)
+name|show_c_function
+operator|=
+literal|1
 expr_stmt|;
 name|add_regexp
 argument_list|(
@@ -1937,7 +2066,7 @@ literal|'v'
 case|:
 name|printf
 argument_list|(
-literal|"GNU diff version %s\n"
+literal|"diff - GNU diffutils version %s\n"
 argument_list|,
 name|version_string
 argument_list|)
@@ -1959,7 +2088,7 @@ name|ignore_some_changes
 operator|=
 literal|1
 expr_stmt|;
-name|length_varies
+name|ignore_some_line_changes
 operator|=
 literal|1
 expr_stmt|;
@@ -2233,14 +2362,41 @@ case|case
 literal|141
 case|:
 name|usage
+argument_list|()
+expr_stmt|;
+name|check_stdout
+argument_list|()
+expr_stmt|;
+name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-default|default:
-name|usage
+case|case
+literal|142
+case|:
+comment|/* Use binary I/O when reading and writing data. 	     On Posix hosts, this has no effect.  */
+if|#
+directive|if
+name|HAVE_SETMODE
+name|binary_I_O
+operator|=
+literal|1
+expr_stmt|;
+name|setmode
 argument_list|(
-literal|""
+name|STDOUT_FILENO
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+default|default:
+name|try_help
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2251,23 +2407,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|argc
+operator|-
 name|optind
 operator|!=
-name|argc
-operator|-
 literal|2
 condition|)
-name|usage
+name|try_help
 argument_list|(
-name|optind
-operator|<
 name|argc
 operator|-
+name|optind
+operator|<
 literal|2
 condition|?
-literal|"extra operand"
-else|:
 literal|"missing operand"
+else|:
+literal|"extra operand"
 argument_list|)
 expr_stmt|;
 block|{
@@ -2329,6 +2485,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|show_c_function
+operator|&&
+name|output_style
+operator|!=
+name|OUTPUT_UNIFIED
+condition|)
+name|specify_style
+argument_list|(
+name|OUTPUT_CONTEXT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|output_style
 operator|!=
 name|OUTPUT_CONTEXT
@@ -2361,6 +2530,7 @@ operator|==
 name|OUTPUT_IFDEF
 condition|)
 block|{
+comment|/* Format arrays are char *, not char const *, 	 because integer formats are temporarily modified. 	 But it is safe to assign a constant like "%=" to a format array, 	 since "%=" does not format any integers.  */
 name|int
 name|i
 decl_stmt|;
@@ -2581,24 +2751,8 @@ comment|/* Print any messages that were saved up for last.  */
 name|print_message_queue
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|stdout
-argument_list|)
-operator|||
-name|fclose
-argument_list|(
-name|stdout
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"write error"
-argument_list|)
+name|check_stdout
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2735,7 +2889,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usage
+name|try_help
 parameter_list|(
 name|reason
 parameter_list|)
@@ -2748,65 +2902,242 @@ block|{
 if|if
 condition|(
 name|reason
-operator|&&
-operator|*
-name|reason
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|program
+literal|"%s"
 argument_list|,
 name|reason
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Usage: %s [options] from-file to-file\n"
 argument_list|,
-name|program
+literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|error
 argument_list|(
-literal|"Options:\n\ 	[-abBcdefhHilnNpPqrstTuvwy] [-C lines] [-D name] [-F regexp]\n\ 	[-I regexp] [-L from-label [-L to-label]] [-S starting-file] [-U lines]\n\ 	[-W columns] [-x pattern] [-X pattern-file]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\ 	[--brief] [--changed-group-format=format] [--context[=lines]] [--ed]\n\ 	[--exclude=pattern] [--exclude-from=pattern-file] [--expand-tabs]\n\ 	[--forward-ed] [--help] [--horizon-lines=lines] [--ifdef=name]\n\ 	[--ignore-all-space] [--ignore-blank-lines] [--ignore-case]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\ 	[--ignore-matching-lines=regexp] [--ignore-space-change]\n\ 	[--initial-tab] [--label=from-label [--label=to-label]]\n\ 	[--left-column] [--minimal] [--new-file] [--new-group-format=format]\n\ 	[--new-line-format=format] [--old-group-format=format]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\ 	[--old-line-format=format] [--paginate] [--rcs] [--recursive]\n\ 	[--report-identical-files] [--sdiff-merge-assist] [--show-c-function]\n\ 	[--show-function-line=regexp] [--side-by-side] [--speed-large-files]\n\ 	[--starting-file=starting-file] [--suppress-common-lines] [--text]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\ 	[--unchanged-group-format=format] [--unchanged-line-format=format]\n\ 	[--unidirectional-new-file] [--unified[=lines]] [--version]\n\ 	[--width=columns]\n"
+literal|"Try `%s --help' for more information."
+argument_list|,
+name|program_name
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|reason
-condition|?
 literal|2
-else|:
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|check_stdout
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+operator|||
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+operator|!=
 literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"write error"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+specifier|const
+name|option_help
+index|[]
+init|=
+block|{
+literal|"-i  --ignore-case  Consider upper- and lower-case to be the same."
+block|,
+literal|"-w  --ignore-all-space  Ignore all white space."
+block|,
+literal|"-b  --ignore-space-change  Ignore changes in the amount of white space."
+block|,
+literal|"-B  --ignore-blank-lines  Ignore changes whose lines are all blank."
+block|,
+literal|"-I RE  --ignore-matching-lines=RE  Ignore changes whose lines all match RE."
+block|,
+if|#
+directive|if
+name|HAVE_SETMODE
+literal|"--binary  Read and write data in binary mode."
+block|,
+endif|#
+directive|endif
+literal|"-a  --text  Treat all files as text.\n"
+block|,
+literal|"-c  -C NUM  --context[=NUM]  Output NUM (default 2) lines of copied context."
+block|,
+literal|"-u  -U NUM  --unified[=NUM]  Output NUM (default 2) lines of unified context."
+block|,
+literal|"  -NUM  Use NUM context lines."
+block|,
+literal|"  -L LABEL  --label LABEL  Use LABEL instead of file name."
+block|,
+literal|"  -p  --show-c-function  Show which C function each change is in."
+block|,
+literal|"  -F RE  --show-function-line=RE  Show the most recent line matching RE."
+block|,
+literal|"-q  --brief  Output only whether files differ."
+block|,
+literal|"-e  --ed  Output an ed script."
+block|,
+literal|"-n  --rcs  Output an RCS format diff."
+block|,
+literal|"-y  --side-by-side  Output in two columns."
+block|,
+literal|"  -w NUM  --width=NUM  Output at most NUM (default 130) characters per line."
+block|,
+literal|"  --left-column  Output only the left column of common lines."
+block|,
+literal|"  --suppress-common-lines  Do not output common lines."
+block|,
+literal|"-DNAME  --ifdef=NAME  Output merged file to show `#ifdef NAME' diffs."
+block|,
+literal|"--GTYPE-group-format=GFMT  Similar, but format GTYPE input groups with GFMT."
+block|,
+literal|"--line-format=LFMT  Similar, but format all input lines with LFMT."
+block|,
+literal|"--LTYPE-line-format=LFMT  Similar, but format LTYPE input lines with LFMT."
+block|,
+literal|"  LTYPE is `old', `new', or `unchanged'.  GTYPE is LTYPE or `changed'."
+block|,
+literal|"  GFMT may contain:"
+block|,
+literal|"    %<  lines from FILE1"
+block|,
+literal|"    %>  lines from FILE2"
+block|,
+literal|"    %=  lines common to FILE1 and FILE2"
+block|,
+literal|"    %[-][WIDTH][.[PREC]]{doxX}LETTER  printf-style spec for LETTER"
+block|,
+literal|"      LETTERs are as follows for new group, lower case for old group:"
+block|,
+literal|"        F  first line number"
+block|,
+literal|"        L  last line number"
+block|,
+literal|"        N  number of lines = L-F+1"
+block|,
+literal|"        E  F-1"
+block|,
+literal|"        M  L+1"
+block|,
+literal|"  LFMT may contain:"
+block|,
+literal|"    %L  contents of line"
+block|,
+literal|"    %l  contents of line, excluding any trailing newline"
+block|,
+literal|"    %[-][WIDTH][.[PREC]]{doxX}n  printf-style spec for input line number"
+block|,
+literal|"  Either GFMT or LFMT may contain:"
+block|,
+literal|"    %%  %"
+block|,
+literal|"    %c'C'  the single character C"
+block|,
+literal|"    %c'\\OOO'  the character with octal code OOO\n"
+block|,
+literal|"-l  --paginate  Pass the output through `pr' to paginate it."
+block|,
+literal|"-t  --expand-tabs  Expand tabs to spaces in output."
+block|,
+literal|"-T  --initial-tab  Make tabs line up by prepending a tab.\n"
+block|,
+literal|"-r  --recursive  Recursively compare any subdirectories found."
+block|,
+literal|"-N  --new-file  Treat absent files as empty."
+block|,
+literal|"-P  --unidirectional-new-file  Treat absent first files as empty."
+block|,
+literal|"-s  --report-identical-files  Report when two files are the same."
+block|,
+literal|"-x PAT  --exclude=PAT  Exclude files that match PAT."
+block|,
+literal|"-X FILE  --exclude-from=FILE  Exclude files that match any pattern in FILE."
+block|,
+literal|"-S FILE  --starting-file=FILE  Start with FILE when comparing directories.\n"
+block|,
+literal|"--horizon-lines=NUM  Keep NUM lines of the common prefix and suffix."
+block|,
+literal|"-d  --minimal  Try hard to find a smaller set of changes."
+block|,
+literal|"-H  --speed-large-files  Assume large files and many scattered small changes.\n"
+block|,
+literal|"-v  --version  Output version info."
+block|,
+literal|"--help  Output this help."
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|char
+specifier|const
+modifier|*
+specifier|const
+modifier|*
+name|p
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Usage: %s [OPTION]... FILE1 FILE2\n\n"
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|option_help
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"  %s\n"
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nIf FILE1 or FILE2 is `-', read standard input.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3006,8 +3337,54 @@ literal|"fifo"
 return|;
 endif|#
 directive|endif
+comment|/* other Posix.1b file types */
+ifdef|#
+directive|ifdef
+name|S_TYPEISMQ
+if|if
+condition|(
+name|S_TYPEISMQ
+argument_list|(
+name|st
+argument_list|)
+condition|)
+return|return
+literal|"message queue"
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|S_TYPEISSEM
+if|if
+condition|(
+name|S_TYPEISSEM
+argument_list|(
+name|st
+argument_list|)
+condition|)
+return|return
+literal|"semaphore"
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|S_TYPEISSHM
+if|if
+condition|(
+name|S_TYPEISSHM
+argument_list|(
+name|st
+argument_list|)
+condition|)
+return|return
+literal|"shared memory object"
+return|;
+endif|#
+directive|endif
 comment|/* other popular file types */
-comment|/* S_ISLNK is impossible with `stat'.  */
+comment|/* S_ISLNK is impossible with `fstat' and `stat'.  */
 ifdef|#
 directive|ifdef
 name|S_ISSOCK
@@ -3332,7 +3709,7 @@ if|if
 condition|(
 name|i
 operator|&&
-name|strcmp
+name|filename_cmp
 argument_list|(
 name|inf
 index|[
@@ -3713,11 +4090,9 @@ specifier|const
 modifier|*
 name|p
 init|=
-name|strrchr
+name|filename_lastdirchar
 argument_list|(
 name|fnm
-argument_list|,
-literal|'/'
 argument_list|)
 decl_stmt|;
 name|char
@@ -3832,60 +4207,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|stat
-operator|.
-name|st_ino
-operator|==
-name|inf
-index|[
-literal|1
-index|]
-operator|.
-name|stat
-operator|.
-name|st_ino
-operator|&&
-name|inf
-index|[
-literal|0
-index|]
-operator|.
-name|stat
-operator|.
-name|st_dev
-operator|==
-name|inf
-index|[
-literal|1
-index|]
-operator|.
-name|stat
-operator|.
-name|st_dev
-operator|&&
-name|inf
-index|[
-literal|0
-index|]
-operator|.
-name|stat
-operator|.
-name|st_size
-operator|==
-name|inf
-index|[
-literal|1
-index|]
-operator|.
-name|stat
-operator|.
-name|st_size
-operator|&&
-name|inf
-index|[
-literal|0
-index|]
-operator|.
 name|desc
 operator|!=
 operator|-
@@ -3900,6 +4221,27 @@ name|desc
 operator|!=
 operator|-
 literal|1
+operator|&&
+literal|0
+operator|<
+name|same_file
+argument_list|(
+operator|&
+name|inf
+index|[
+literal|0
+index|]
+operator|.
+name|stat
+argument_list|,
+operator|&
+name|inf
+index|[
+literal|1
+index|]
+operator|.
+name|stat
+argument_list|)
 operator|)
 operator|&&
 name|no_diff_means_no_output
@@ -4443,6 +4785,51 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|HAVE_SETMODE
+if|if
+condition|(
+name|binary_I_O
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+literal|0
+operator|<=
+name|inf
+index|[
+name|i
+index|]
+operator|.
+name|desc
+condition|)
+name|setmode
+argument_list|(
+name|inf
+index|[
+name|i
+index|]
+operator|.
+name|desc
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Compare the files, if no error was found.  */
 name|val
 operator|=

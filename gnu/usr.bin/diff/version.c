@@ -15,7 +15,7 @@ specifier|const
 name|version_string
 index|[]
 init|=
-literal|"2.6"
+literal|"2.7"
 decl_stmt|;
 end_decl_stmt
 

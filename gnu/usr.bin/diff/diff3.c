@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Three way file comparison program (diff3) for Project GNU.    Copyright (C) 1988, 1989, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Three way file comparison program (diff3) for Project GNU.    Copyright (C) 1988, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
@@ -25,7 +25,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -520,7 +520,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If nonzero, show information for 3_way and DIFF_2ND diffs.    1= show 2nd only when 1st and 3rd differ    2= show 2nd when DIFF_2ND (1 and 3 have same change relative to 2) */
+comment|/* If nonzero, show information for DIFF_2ND diffs.  */
 end_comment
 
 begin_decl_stmt
@@ -556,7 +556,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|argv0
+name|program_name
 decl_stmt|;
 end_decl_stmt
 
@@ -975,6 +975,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|check_stdout
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|fatal
 name|PARAMS
 argument_list|(
@@ -1035,6 +1048,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|try_help
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|undotlines
 name|PARAMS
 argument_list|(
@@ -1059,7 +1087,7 @@ name|usage
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1103,16 +1131,6 @@ block|,
 literal|0
 block|,
 literal|'A'
-block|}
-block|,
-block|{
-literal|"show-bogus-conflicts"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|'B'
 block|}
 block|,
 block|{
@@ -1258,6 +1276,8 @@ index|]
 decl_stmt|;
 name|int
 name|incompat
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|conflicts_found
@@ -1303,11 +1323,16 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
-name|incompat
-operator|=
-literal|0
+name|initialize_main
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
 expr_stmt|;
-name|argv0
+name|program_name
 operator|=
 name|argv
 index|[
@@ -1325,7 +1350,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aeimvx3ABEL:TX"
+literal|"aeimvx3AEL:TX"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1350,17 +1375,11 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'B'
-case|:
-operator|++
-name|show_2nd
-expr_stmt|;
-comment|/* Falls through */
-case|case
 literal|'A'
 case|:
-operator|++
 name|show_2nd
+operator|=
+literal|1
 expr_stmt|;
 name|flagging
 operator|=
@@ -1444,7 +1463,7 @@ literal|'v'
 case|:
 name|printf
 argument_list|(
-literal|"GNU diff3 version %s\n"
+literal|"diff3 - GNU diffutils version %s\n"
 argument_list|,
 name|version_string
 argument_list|)
@@ -1458,6 +1477,12 @@ case|case
 literal|129
 case|:
 name|usage
+argument_list|()
+expr_stmt|;
+name|check_stdout
+argument_list|()
+expr_stmt|;
+name|exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1483,11 +1508,15 @@ name|optarg
 expr_stmt|;
 break|break;
 block|}
-comment|/* Falls through */
-default|default:
-name|usage
+name|try_help
 argument_list|(
-literal|2
+literal|"Too many labels were given.  The limit is 3."
+argument_list|)
+expr_stmt|;
+default|default:
+name|try_help
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1533,17 +1562,32 @@ operator|&&
 operator|!
 name|flagging
 operator|)
+condition|)
 comment|/* -L requires one of -AEX.  */
-operator|||
+name|try_help
+argument_list|(
+literal|"incompatible options"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|argc
 operator|-
 name|optind
 operator|!=
 literal|3
 condition|)
-name|usage
+name|try_help
 argument_list|(
-literal|2
+name|argc
+operator|-
+name|optind
+operator|<
+literal|3
+condition|?
+literal|"missing operand"
+else|:
+literal|"extra operand"
 argument_list|)
 expr_stmt|;
 name|file
@@ -1763,7 +1807,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s: Is a directory\n"
 argument_list|,
-name|argv0
+name|program_name
 argument_list|,
 name|file
 index|[
@@ -1778,6 +1822,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SIGCHLD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIGCLD
+argument_list|)
+define|#
+directive|define
+name|SIGCHLD
+value|SIGCLD
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+comment|/* System V fork+wait does not work if SIGCHLD is ignored.  */
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|commonname
 operator|=
 name|file
@@ -2008,6 +2083,73 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|check_stdout
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|conflicts_found
+argument_list|)
+expr_stmt|;
+return|return
+name|conflicts_found
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|try_help
+parameter_list|(
+name|reason
+parameter_list|)
+name|char
+specifier|const
+modifier|*
+name|reason
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|reason
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s\n"
+argument_list|,
+name|program_name
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Try `%s --help' for more information.\n"
+argument_list|,
+name|program_name
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|check_stdout
+parameter_list|()
+block|{
 if|if
 condition|(
 name|ferror
@@ -2027,47 +2169,50 @@ argument_list|(
 literal|"write error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|conflicts_found
-argument_list|)
-expr_stmt|;
-return|return
-name|conflicts_found
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Explain, patiently and kindly, how to use this program.  Then exit.  */
+comment|/*  * Explain, patiently and kindly, how to use this program.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|status
-parameter_list|)
-name|int
-name|status
-decl_stmt|;
+parameter_list|()
 block|{
-name|fflush
+name|printf
 argument_list|(
-name|stderr
+literal|"Usage: %s [OPTION]... MYFILE OLDFILE YOURFILE\n\n"
+argument_list|,
+name|program_name
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ Usage: %s [options] my-file older-file your-file\n\ Options:\n\ 	[-exABEX3aTv] [-i|-m] [-L label1 [-L label2 [-L label3]]]\n\ 	[--easy-only] [--ed] [--help] [--initial-tab]\n\ 	[--label=label1 [--label=label2 [--label=label3]]] [--merge]\n\ 	[--overlap-only] [--show-all] [ --show-bogus-conflicts ]\n\ 	[--show-overlap] [--text] [--version]\n\ 	Only one of [exABEX3] is allowed\n"
+literal|"%s"
 argument_list|,
-name|argv0
+literal|"\   -e  --ed  Output unmerged changes from OLDFILE to YOURFILE into MYFILE.\n\   -E  --show-overlap  Output unmerged changes, bracketing conflicts.\n\   -A  --show-all  Output all changes, bracketing conflicts.\n\   -x  --overlap-only  Output overlapping changes.\n\   -X  Output overlapping changes, bracketing them.\n\   -3  --easy-only  Output unmerged nonoverlapping changes.\n\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|printf
 argument_list|(
-name|status
+literal|"%s"
+argument_list|,
+literal|"\   -m  --merge  Output merged file instead of ed script (default -A).\n\   -L LABEL  --label=LABEL  Use LABEL instead of file name.\n\   -i  Append `w' and `q' commands to ed scripts.\n\   -a  --text  Treat all files as text.\n\   -T  --initial-tab  Make tabs line up by prepending a tab.\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|"\   -v  --version  Output version info.\n\   --help  Output this help.\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"If a FILE is `-', read standard input.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3997,13 +4142,6 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DIFF_CHUNK_SIZE
-value|10000
-end_define
-
 begin_function
 specifier|static
 name|struct
@@ -4172,7 +4310,7 @@ name|stderr
 argument_list|,
 literal|"%s: diff error: "
 argument_list|,
-name|argv0
+name|program_name
 argument_list|)
 expr_stmt|;
 do|do
@@ -4563,7 +4701,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|{ unsigned char c = *s; if (!isdigit (c)) return ERROR; holdnum = 0; \ 	  do { holdnum = (c - '0' + holdnum * 10); }	\ 	  while (isdigit (c = *++s)); (num) = holdnum; }
+value|{ unsigned char c = *s; if (!ISDIGIT (c)) return ERROR; holdnum = 0; \ 	  do { holdnum = (c - '0' + holdnum * 10); }	\ 	  while (ISDIGIT (c = *++s)); (num) = holdnum; }
 comment|/* Read first set of digits */
 name|SKIPWHITE
 argument_list|(
@@ -4822,6 +4960,26 @@ name|current_chunk_size
 decl_stmt|,
 name|total
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|,
+name|wstatus
+decl_stmt|;
+name|struct
+name|stat
+name|pipestat
+decl_stmt|;
+comment|/* 302 / 1000 is log10(2.0) rounded up.  Subtract 1 for the sign bit;      add 1 for integer division truncation; add 1 more for a minus sign.  */
+define|#
+directive|define
+name|INT_STRLEN_BOUND
+parameter_list|(
+name|type
+parameter_list|)
+value|((sizeof(type)*CHAR_BIT - 1) * 302 / 1000 + 2)
+if|#
+directive|if
+name|HAVE_FORK
 name|char
 specifier|const
 modifier|*
@@ -4833,7 +4991,12 @@ decl_stmt|;
 name|char
 name|horizon_arg
 index|[
-literal|256
+literal|17
+operator|+
+name|INT_STRLEN_BOUND
+argument_list|(
+name|int
+argument_list|)
 index|]
 decl_stmt|;
 name|char
@@ -4850,9 +5013,6 @@ index|]
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|;
-name|int
-name|wstatus
 decl_stmt|;
 name|ap
 operator|=
@@ -4918,12 +5078,12 @@ name|pipe
 argument_list|(
 name|fds
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|perror_with_exit
 argument_list|(
-literal|"pipe failed"
+literal|"pipe"
 argument_list|)
 expr_stmt|;
 name|pid
@@ -5039,9 +5199,165 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Prevent erroneous lack of EOF */
+name|fd
+operator|=
+name|fds
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|#
+directive|else
+comment|/* ! HAVE_FORK */
+name|FILE
+modifier|*
+name|fpipe
+decl_stmt|;
+name|char
+modifier|*
+name|command
+init|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|diff_program
+argument_list|)
+operator|+
+literal|30
+operator|+
+name|INT_STRLEN_BOUND
+argument_list|(
+name|int
+argument_list|)
+operator|+
+literal|4
+operator|*
+operator|(
+name|strlen
+argument_list|(
+name|filea
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|fileb
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|command
+argument_list|,
+literal|"%s -a --horizon-lines=%d -- "
+argument_list|,
+name|diff_program
+argument_list|,
+name|horizon_lines
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|command
+operator|+
+name|strlen
+argument_list|(
+name|command
+argument_list|)
+expr_stmt|;
+name|SYSTEM_QUOTE_ARG
+argument_list|(
+name|p
+argument_list|,
+name|filea
+argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+name|SYSTEM_QUOTE_ARG
+argument_list|(
+name|p
+argument_list|,
+name|fileb
+argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|fpipe
+operator|=
+name|popen
+argument_list|(
+name|command
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fpipe
+condition|)
+name|perror_with_exit
+argument_list|(
+name|command
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|command
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|fileno
+argument_list|(
+name|fpipe
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! HAVE_FORK */
 name|current_chunk_size
 operator|=
-name|DIFF_CHUNK_SIZE
+literal|8
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|pipestat
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|current_chunk_size
+operator|=
+name|max
+argument_list|(
+name|current_chunk_size
+argument_list|,
+name|STAT_BLOCKSIZE
+argument_list|(
+name|pipestat
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|diff_result
 operator|=
@@ -5060,10 +5376,7 @@ name|bytes
 operator|=
 name|myread
 argument_list|(
-name|fds
-index|[
-literal|0
-index|]
+name|fd
 argument_list|,
 name|diff_result
 operator|+
@@ -5171,7 +5484,32 @@ name|diff_result
 expr_stmt|;
 if|#
 directive|if
-name|HAVE_WAITPID
+operator|!
+name|HAVE_FORK
+name|wstatus
+operator|=
+name|pclose
+argument_list|(
+name|fpipe
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_FORK */
+if|if
+condition|(
+name|close
+argument_list|(
+name|fd
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|perror_with_exit
+argument_list|(
+literal|"pipe close"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|waitpid
@@ -5191,44 +5529,9 @@ argument_list|(
 literal|"waitpid failed"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|pid_t
-name|w
-init|=
-name|wait
-argument_list|(
-operator|&
-name|wstatus
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|w
-operator|<
-literal|0
-condition|)
-name|perror_with_exit
-argument_list|(
-literal|"wait failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|==
-name|pid
-condition|)
-break|break;
-block|}
 endif|#
 directive|endif
+comment|/* HAVE_FORK */
 if|if
 condition|(
 operator|!
@@ -5277,7 +5580,7 @@ name|set_length
 parameter_list|,
 name|limit
 parameter_list|,
-name|firstchar
+name|leadingchar
 parameter_list|)
 name|char
 modifier|*
@@ -5304,8 +5607,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|firstchar
+name|int
+name|leadingchar
 decl_stmt|;
 end_decl_stmt
 
@@ -5324,9 +5627,7 @@ index|[
 literal|0
 index|]
 operator|==
-operator|(
-name|firstchar
-operator|)
+name|leadingchar
 operator|&&
 name|scan_ptr
 index|[
@@ -5390,7 +5691,7 @@ name|stderr
 argument_list|,
 literal|"%s:"
 argument_list|,
-name|argv0
+name|program_name
 argument_list|)
 expr_stmt|;
 else|else
@@ -6215,9 +6516,8 @@ name|DIFF_2ND
 case|:
 if|if
 condition|(
+operator|!
 name|show_2nd
-operator|<
-literal|2
 condition|)
 continue|continue;
 name|conflict
@@ -6885,9 +7185,8 @@ name|DIFF_2ND
 case|:
 if|if
 condition|(
+operator|!
 name|show_2nd
-operator|<
-literal|2
 condition|)
 continue|continue;
 name|conflict
@@ -7604,7 +7903,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
-name|argv0
+name|program_name
 argument_list|,
 name|string
 argument_list|)
@@ -7641,7 +7940,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|argv0
+name|program_name
 argument_list|)
 expr_stmt|;
 name|errno
