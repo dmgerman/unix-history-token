@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3068,8 +3068,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|unneeded
 end_endif
+
+begin_comment
+comment|/* unneeded */
+end_comment
 
 end_unit
 

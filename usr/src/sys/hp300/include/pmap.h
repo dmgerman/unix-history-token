@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.11 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -405,14 +405,20 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|_PMAP_MACHINE_
 end_endif
+
+begin_comment
+comment|/* _PMAP_MACHINE_ */
+end_comment
 
 end_unit
 
