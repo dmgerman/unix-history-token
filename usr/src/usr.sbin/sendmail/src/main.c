@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.115 (Berkeley) %G%"
+literal|"@(#)main.c	8.116 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3840,12 +3840,23 @@ literal|"No prog mailer defined"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|ProgMailer
 operator|=
 name|st
 operator|->
 name|s_mailer
 expr_stmt|;
+name|clrbitn
+argument_list|(
+name|M_MUSER
+argument_list|,
+name|ProgMailer
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
@@ -3875,12 +3886,23 @@ literal|"No *file* mailer defined"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|FileMailer
 operator|=
 name|st
 operator|->
 name|s_mailer
 expr_stmt|;
+name|clrbitn
+argument_list|(
+name|M_MUSER
+argument_list|,
+name|FileMailer
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
