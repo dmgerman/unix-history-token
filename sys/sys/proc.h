@@ -922,6 +922,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_UMTXWAKEUP
+value|0x080000
+end_define
+
+begin_comment
+comment|/* Libthr thread must not sleep on a umtx. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_DEADLKTREAT
 value|0x800000
 end_define
