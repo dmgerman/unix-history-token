@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	1.33 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	1.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,64 +610,6 @@ expr_stmt|;
 name|maxusers
 operator|=
 literal|128
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|sun
-if|if
-condition|(
-name|maxusers
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"maxusers not specified; 8 assumed\n"
-argument_list|)
-expr_stmt|;
-name|maxusers
-operator|=
-literal|8
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|maxusers
-operator|<
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"minimum of 2 maxusers assumed\n"
-argument_list|)
-expr_stmt|;
-name|maxusers
-operator|=
-literal|2
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|maxusers
-operator|>
-literal|32
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"maxusers truncated to 32\n"
-argument_list|)
-expr_stmt|;
-name|maxusers
-operator|=
-literal|32
 expr_stmt|;
 block|}
 endif|#
@@ -2212,7 +2154,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -E ${COPTS} %sc | ${AS} -o %so\n"
+literal|"\t${CC} -E ${COPTS} %sc | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -2269,7 +2211,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} %s../%sc\n"
+literal|"\t${CC} -c -S ${COPTS} %s../%sc\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2306,21 +2248,6 @@ name|tp
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|MACHINE_SUN
-case|:
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} %s../%sc\n\n"
-argument_list|,
-name|extras
-argument_list|,
-name|np
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 break|break;
 case|case
@@ -2338,7 +2265,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} %s../%sc\n"
+literal|"\t${CC} -c -S ${COPTS} %s../%sc\n"
 argument_list|,
 name|extras
 argument_list|,
@@ -2375,20 +2302,6 @@ name|tp
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|MACHINE_SUN
-case|:
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} %s../%sc\n\n"
-argument_list|,
-name|extras
-argument_list|,
-name|np
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -2431,7 +2344,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S %s %s../%sc\n"
+literal|"\t${CC} -c -S %s %s../%sc\n"
 argument_list|,
 name|COPTS
 argument_list|,
@@ -2469,17 +2382,6 @@ argument_list|,
 literal|"\trm -f %ss\n\n"
 argument_list|,
 name|tp
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MACHINE_SUN
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"config: don't know how to profile kernel on sun\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2755,21 +2657,6 @@ name|f_needs
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|MACHINE_SUN
-case|:
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\t@${LD} -o %s -e start -x -T 4000 "
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 name|fprintf
 argument_list|(
@@ -2921,7 +2808,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} swap%s.c\n\n"
+literal|"\t${CC} -c -O ${COPTS} swap%s.c\n\n"
 argument_list|,
 name|name
 argument_list|)
@@ -2949,7 +2836,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} "
+literal|"\t${CC} -c -S ${COPTS} "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2989,26 +2876,6 @@ argument_list|(
 name|f
 argument_list|,
 literal|"\trm -f swapgeneric.s\n\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MACHINE_SUN
-case|:
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"../%s/swapgeneric.c\n\n"
-argument_list|,
-name|machinename
 argument_list|)
 expr_stmt|;
 break|break;
