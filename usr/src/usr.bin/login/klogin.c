@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.6 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,6 +269,10 @@ operator|&&
 name|kerror
 operator|!=
 name|KDC_PR_UNKNOWN
+operator|&&
+name|kerror
+operator|!=
+name|KFAILURE
 condition|)
 block|{
 name|syslog
