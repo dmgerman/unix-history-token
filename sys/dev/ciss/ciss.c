@@ -8635,6 +8635,15 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
+name|xpt_free_path
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ccb
