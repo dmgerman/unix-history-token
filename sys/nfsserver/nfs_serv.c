@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|NUM_HEURISTIC
-value|64
+value|1017
 end_define
 
 begin_define
@@ -4065,7 +4065,7 @@ decl_stmt|;
 name|int
 name|try
 init|=
-literal|4
+literal|32
 decl_stmt|;
 comment|/* 		 * Locate best candidate 		 */
 name|hi
@@ -4085,12 +4085,8 @@ expr|struct
 name|vnode
 argument_list|)
 operator|)
-operator|&
-operator|(
+operator|%
 name|NUM_HEURISTIC
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|nh
 operator|=
@@ -4154,12 +4150,8 @@ name|hi
 operator|+
 literal|1
 operator|)
-operator|&
-operator|(
+operator|%
 name|NUM_HEURISTIC
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
