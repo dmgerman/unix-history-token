@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.21 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -316,13 +322,6 @@ name|malloc
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|void
@@ -1434,7 +1433,7 @@ argument_list|(
 name|utmpf
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 literal|0
 argument_list|,
@@ -2031,7 +2030,7 @@ argument_list|(
 name|kmemf
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|nl
 index|[
