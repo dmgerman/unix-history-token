@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -17,6 +17,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MB_LEN_MAX
+value|1
+end_define
+
+begin_comment
+comment|/* no multibyte characters */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CLK_TCK
 value|60
 end_define
@@ -25,15 +36,8 @@ begin_comment
 comment|/* ticks per second */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MB_LEN_MAX
-value|1
-end_define
-
 begin_comment
-comment|/* no multibyte characters */
+comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN and LONG_MIN is so the value is not unsigned; 2147483648 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers work for pcc as well.  */
 end_comment
 
 begin_define
@@ -84,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MIN
-value|128
+value|-128
 end_define
 
 begin_comment
