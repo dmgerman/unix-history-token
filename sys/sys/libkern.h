@@ -44,6 +44,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
 begin_comment
 comment|/* BCD conversions. */
 end_comment
