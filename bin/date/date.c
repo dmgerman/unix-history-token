@@ -465,7 +465,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-comment|/* minutes west of GMT */
+comment|/* minutes west of UTC */
 comment|/* error check; don't allow "PST" */
 name|tz
 operator|.
@@ -503,7 +503,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-comment|/* do everything in GMT */
+comment|/* do everything in UTC */
 operator|(
 name|void
 operator|)
@@ -511,7 +511,7 @@ name|setenv
 argument_list|(
 literal|"TZ"
 argument_list|,
-literal|"GMT0"
+literal|"UTC0"
 argument_list|,
 literal|1
 argument_list|)
