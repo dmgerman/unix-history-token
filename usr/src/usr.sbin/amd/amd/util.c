@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)util.c	5.4 (Berkeley) %G%  *  * $Id: util.c,v 5.2.2.1 1992/02/09 15:09:11 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)util.c	5.5 (Berkeley) %G%  *  * $Id: util.c,v 5.2.2.2 1992/03/07 17:52:06 jsp Exp $  *  */
 end_comment
 
 begin_comment
@@ -420,8 +420,11 @@ operator|==
 name|ch
 operator|)
 condition|)
+operator|*
 name|s
 operator|++
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 		 * End of string? 		 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)xutil.c	5.4 (Berkeley) %G%  *  * $Id: xutil.c,v 5.2.2.1 1992/02/09 15:09:13 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)xutil.c	5.5 (Berkeley) %G%  *  * $Id: xutil.c,v 5.2.2.3 1992/03/07 10:36:09 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -201,6 +201,17 @@ name|retries
 init|=
 literal|600
 decl_stmt|;
+comment|/* 	 * Avoid malloc's which return NULL for malloc(0) 	 */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+name|len
+operator|=
+literal|1
+expr_stmt|;
 do|do
 block|{
 name|p
@@ -346,6 +357,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(DEBUG)&& defined(DEBUG_MEM) */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+name|len
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ptr

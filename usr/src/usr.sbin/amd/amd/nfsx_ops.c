@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfsx_ops.c	1.2 (Berkeley) 6/25/91  *  * $Id: nfsx_ops.c,v 5.2.2.1 1992/02/09 15:08:49 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfsx_ops.c	5.5 (Berkeley) %G%  *  * $Id: nfsx_ops.c,v 5.2.2.3 1992/05/31 16:13:07 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -261,6 +261,7 @@ operator|->
 name|opt_fs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Bump string length to allow trailing / 	 */
 name|len
 operator|=
 name|strlen
@@ -281,6 +282,8 @@ operator|->
 name|opt_fs
 argument_list|,
 name|len
+operator|+
+literal|1
 operator|+
 literal|1
 argument_list|)
@@ -308,38 +311,19 @@ expr_stmt|;
 comment|/* 	 * Determine magic cookie to put in mtab 	 */
 name|xmtab
 operator|=
+name|str3cat
+argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|fo
-operator|->
-name|opt_rhost
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|fo
-operator|->
-name|opt_rfs
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|xmtab
-argument_list|,
-literal|"%s:%s"
+literal|0
 argument_list|,
 name|fo
 operator|->
 name|opt_rhost
+argument_list|,
+literal|":"
 argument_list|,
 name|fo
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	1.3 (Berkeley) 6/26/91  *  * $Id: opts.c,v 5.2.2.1 1992/02/09 15:08:54 jsp beta $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	1.3 (Berkeley) 6/26/91  *  * $Id: opts.c,v 5.2.2.3 1992/05/31 16:34:13 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -1740,6 +1740,12 @@ argument_list|,
 literal|'/'
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|f0
+init|=
+name|f
+decl_stmt|;
 if|if
 condition|(
 name|f
@@ -1758,7 +1764,7 @@ if|if
 condition|(
 name|f
 operator|==
-name|t
+name|f0
 operator|&&
 name|f
 index|[
@@ -1819,7 +1825,16 @@ operator|++
 expr_stmt|;
 comment|/* assert(*f != '/'); */
 comment|/* keep copying up to next / */
-do|do
+while|while
+condition|(
+operator|*
+name|f
+operator|&&
+operator|*
+name|f
+operator|!=
+literal|'/'
+condition|)
 block|{
 operator|*
 name|t
@@ -1830,17 +1845,6 @@ name|f
 operator|++
 expr_stmt|;
 block|}
-do|while
-condition|(
-operator|*
-name|f
-operator|&&
-operator|*
-name|f
-operator|!=
-literal|'/'
-condition|)
-do|;
 comment|/* assert(*f == 0 || *f == '/'); */
 block|}
 do|while

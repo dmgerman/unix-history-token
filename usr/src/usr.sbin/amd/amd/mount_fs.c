@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mount_fs.c	5.4 (Berkeley) %G%  *  * $Id: mount_fs.c,v 5.2.2.1 1992/02/09 15:08:43 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mount_fs.c	5.5 (Berkeley) %G%  *  * $Id: mount_fs.c,v 5.2.2.2 1992/05/31 16:35:45 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -421,7 +421,7 @@ name|mnt
 operator|->
 name|mnt_type
 operator|=
-name|MNTTYPE_NFS
+name|FASCIST_DF_COMMAND
 expr_stmt|;
 block|}
 endif|#

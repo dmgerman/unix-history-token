@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aix3.h	5.4 (Berkeley) %G%  *  * $Id: os-aix3.h,v 5.2.2.1 1992/02/09 15:10:03 jsp beta $  *  * AIX 3.1 definitions for Amd (automounter)  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aix3.h	5.5 (Berkeley) %G%  *  * $Id: os-aix3.h,v 5.2.2.2 1992/05/31 16:38:49 jsp Exp $  *  * AIX 3.1 definitions for Amd (automounter)  */
 end_comment
 
 begin_comment
@@ -54,13 +54,14 @@ name|UPDATE_MTAB
 end_undef
 
 begin_comment
-comment|/*  * Pick up BSD bits from include files  */
+comment|/*  * Pick up BSD bits from include files  * Try for 4.4 compatibility if available (AIX 3.2 and later)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_BSD
+value|44
 end_define
 
 begin_comment

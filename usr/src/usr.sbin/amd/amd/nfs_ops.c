@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_ops.c	1.3 (Berkeley) 6/26/91  *  * $Id: nfs_ops.c,v 5.2.2.1 1992/02/09 15:08:47 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_ops.c	1.3 (Berkeley) 6/26/91  *  * $Id: nfs_ops.c,v 5.2.2.2 1992/05/31 16:35:05 jsp Exp $  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"am.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_ifdef
@@ -1553,6 +1559,15 @@ operator|-
 name|len
 expr_stmt|;
 block|}
+comment|/*  * It may be the case that we're sending to the wrong MOUNTD port.  This  * occurs if mountd is restarted on the server after the port has been  * looked up and stored in the filehandle cache somewhere.  The correct  * solution, if we're going to cache port numbers is to catch the ICMP  * port unreachable reply from the server and cause the portmap request  * to be redone.  The quick solution here is to invalidate the MOUNTD  * port.  */
+name|fp
+operator|->
+name|fh_sin
+operator|.
+name|sin_port
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -3165,6 +3180,119 @@ block|}
 endif|#
 directive|endif
 comment|/* INFORM_MOUNTD */
+ifdef|#
+directive|ifdef
+name|KICK_KERNEL
+comment|/* This should go into the mainline code, not in nfs_ops... */
+comment|/* 	 * Run lstat over the underlying directory in 	 * case this was a direct mount.  This will 	 * get the kernel back in sync with reality. 	 */
+if|if
+condition|(
+name|mp
+operator|->
+name|am_parent
+operator|&&
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_path
+operator|&&
+name|STREQ
+argument_list|(
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_mnt
+operator|->
+name|mf_ops
+operator|->
+name|fs_type
+argument_list|,
+literal|"direct"
+argument_list|)
+condition|)
+block|{
+name|struct
+name|stat
+name|stb
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pid
+operator|=
+name|background
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_path
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"lstat(%s) after unmount: %m"
+argument_list|,
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_path
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+block|}
+else|else
+block|{
+name|dlog
+argument_list|(
+literal|"hack lstat(%s): ok"
+argument_list|,
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_path
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+block|}
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* KICK_KERNEL */
 block|}
 end_function
 

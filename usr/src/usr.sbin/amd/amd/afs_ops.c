@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.4 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.1 1992/02/09 15:08:11 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.5 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.4 1992/05/31 16:36:36 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -2257,6 +2257,10 @@ operator|||
 name|term
 condition|)
 block|{
+name|am_node
+modifier|*
+name|xmp
+decl_stmt|;
 if|if
 condition|(
 name|term
@@ -2337,6 +2341,12 @@ operator|->
 name|ivec
 operator|++
 expr_stmt|;
+name|xmp
+operator|=
+name|cp
+operator|->
+name|mp
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2349,9 +2359,7 @@ argument_list|)
 expr_stmt|;
 name|assign_error_mntfs
 argument_list|(
-name|cp
-operator|->
-name|mp
+name|xmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -4490,6 +4498,23 @@ name|mf_server
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|dlog
+argument_list|(
+literal|"server hung"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+name|error
+operator|=
+name|ap
+operator|->
+name|am_error
+expr_stmt|;
 name|ap_hung
 operator|=
 name|ap
@@ -5033,7 +5058,13 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 		 * Log error if there were other values 		 */
+comment|/* 		 * If there were any values at all... 		 */
+if|if
+condition|(
+name|dfl
+condition|)
+block|{
+comment|/* 			 * Log error if there were other values 			 */
 if|if
 condition|(
 name|rvec
@@ -5067,21 +5098,6 @@ name|mf_info
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Don't need info vector any more 		 */
-name|free
-argument_list|(
-operator|(
-name|voidp
-operator|)
-name|rvec
-argument_list|)
-expr_stmt|;
-comment|/* 		 * If there were any values at all... 		 */
-if|if
-condition|(
-name|dfl
-condition|)
-block|{
 comment|/* 			 * Prepend to existing defaults if they exist, 			 * otherwise just use these defaults. 			 */
 if|if
 condition|(
@@ -5157,6 +5173,15 @@ block|}
 name|free
 argument_list|(
 name|dflts
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Don't need info vector any more 		 */
+name|free
+argument_list|(
+operator|(
+name|voidp
+operator|)
+name|rvec
 argument_list|)
 expr_stmt|;
 block|}
@@ -5353,11 +5378,34 @@ return|return
 name|new_mp
 return|;
 block|}
-name|assign_error_mntfs
-argument_list|(
+if|if
+condition|(
+name|error
+operator|&&
+operator|(
 name|cp
 operator|->
 name|mp
+operator|->
+name|am_mnt
+operator|->
+name|mf_ops
+operator|==
+operator|&
+name|efs_ops
+operator|)
+condition|)
+name|cp
+operator|->
+name|mp
+operator|->
+name|am_error
+operator|=
+name|error
+expr_stmt|;
+name|assign_error_mntfs
+argument_list|(
+name|new_mp
 argument_list|)
 expr_stmt|;
 name|free
@@ -5585,6 +5633,43 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+comment|/* 		 * Check for enough room.  This is extremely 		 * approximate but is more than enough space. 		 * Really need 2 times: 		 * 	4byte fileid 		 * 	4byte cookie 		 * 	4byte name length 		 * 	4byte name 		 * plus the dirlist structure 		 */
+if|if
+condition|(
+name|count
+operator|<
+operator|(
+literal|2
+operator|*
+operator|(
+literal|2
+operator|*
+operator|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ep
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|".."
+argument_list|)
+operator|+
+literal|4
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dp
+argument_list|)
+operator|)
+operator|)
+condition|)
+return|return
+name|EINVAL
+return|;
 name|xp
 operator|=
 name|next_nonerror_node
