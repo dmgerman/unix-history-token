@@ -2857,9 +2857,9 @@ argument_list|,
 name|mbrSize
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 break|break;
 case|case
