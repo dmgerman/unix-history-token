@@ -507,6 +507,8 @@ literal|"bti2c"
 block|,
 name|bti2c_methods
 block|,
+name|DRIVER_TYPE_MISC
+block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
