@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.12	82/04/01	*/
+comment|/*	va.c	4.13	82/05/19	*/
 end_comment
 
 begin_include
@@ -496,7 +496,7 @@ literal|1
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|vaaddr
