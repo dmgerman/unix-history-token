@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.24 1999/08/16 01:49:35 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.25 1999/08/21 06:24:02 msmith Exp $"
 end_empty
 
 begin_define
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
 end_include
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.29 1999/07/06 19:23:30 des Exp $ */
+comment|/*	$Id: if_tx.c,v 1.30 1999/08/21 06:24:35 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -378,6 +378,12 @@ end_else
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
 
 begin_include
 include|#
