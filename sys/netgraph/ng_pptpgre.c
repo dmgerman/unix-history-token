@@ -3321,13 +3321,13 @@ if|if
 condition|(
 operator|!
 operator|(
+name|callout_pending
+argument_list|(
+operator|&
 name|a
 operator|->
 name|sackTimer
-operator|.
-name|c_flags
-operator|&
-name|CALLOUT_PENDING
+argument_list|)
 operator|)
 condition|)
 block|{
