@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)confstr.c	5.3 (Berkeley) %G%"
+literal|"@(#)confstr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,8 @@ block|}
 return|return
 operator|(
 name|tlen
+operator|+
+literal|1
 operator|)
 return|;
 default|default:
