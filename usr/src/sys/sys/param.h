@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -20,6 +20,12 @@ directive|define
 name|BSD4_3
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/syslimits.h>
+end_include
 
 begin_comment
 comment|/*  * Machine-independent constants  */
@@ -55,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|MAXUPRC
-value|40
+value|CHILD_MAX
 end_define
 
 begin_comment
@@ -66,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|NOFILE
-value|64
+value|OPEN_MAX
 end_define
 
 begin_comment
@@ -88,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|NCARGS
-value|20480
+value|ARG_MAX
 end_define
 
 begin_comment
@@ -110,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|NGROUPS
-value|16
+value|NGROUPS_MAX
 end_define
 
 begin_comment
@@ -552,7 +558,7 @@ begin_define
 define|#
 directive|define
 name|MAXPATHLEN
-value|1024
+value|PATH_MAX
 end_define
 
 begin_define
