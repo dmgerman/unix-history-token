@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.12	%G%	*/
+comment|/*	uba.c	4.13	%G%	*/
 end_comment
 
 begin_define
@@ -103,33 +103,6 @@ directive|include
 file|"../h/dk.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"rk.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NRK11
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_driver
-name|hkdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  * If you call this routine with the head of the queue for a  * UBA, it will automatically remove the device from the UBA  * queue before it returns.  If some other device is given  * as argument, it will be added to the request queue if the  * request cannot be started immediately.  This means that  * passing a device which is on the queue but not at the head  * of the request queue is likely to be a disaster.  */
 end_comment
@@ -186,19 +159,13 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|NRK11
-operator|>
-literal|0
 if|if
 condition|(
 name|um
 operator|->
 name|um_driver
-operator|==
-operator|&
-name|hkdriver
+operator|->
+name|ud_xclu
 operator|&&
 name|uh
 operator|->
@@ -213,8 +180,6 @@ condition|)
 goto|goto
 name|rwait
 goto|;
-endif|#
-directive|endif
 name|um
 operator|->
 name|um_ubinfo
@@ -249,11 +214,6 @@ condition|)
 goto|goto
 name|rwait
 goto|;
-if|#
-directive|if
-name|NRK11
-operator|>
-literal|0
 name|uh
 operator|->
 name|uh_users
@@ -264,9 +224,8 @@ condition|(
 name|um
 operator|->
 name|um_driver
-operator|==
-operator|&
-name|hkdriver
+operator|->
+name|ud_xclu
 condition|)
 name|uh
 operator|->
@@ -274,8 +233,6 @@ name|uh_xclu
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -456,19 +413,13 @@ operator|->
 name|um_ubanum
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|NRK11
-operator|>
-literal|0
 if|if
 condition|(
 name|um
 operator|->
 name|um_driver
-operator|==
-operator|&
-name|hkdriver
+operator|->
+name|ud_xclu
 condition|)
 name|uh
 operator|->
@@ -481,8 +432,6 @@ operator|->
 name|uh_users
 operator|--
 expr_stmt|;
-endif|#
-directive|endif
 name|ubarelse
 argument_list|(
 name|um
