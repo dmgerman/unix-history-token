@@ -1903,14 +1903,6 @@ name|struct
 name|callout_handle
 name|sis_stat_ch
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-name|int
-name|rxcycles
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

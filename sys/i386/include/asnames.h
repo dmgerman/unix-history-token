@@ -1239,13 +1239,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_idle_poll
-value|idle_poll
-end_define
-
-begin_define
-define|#
-directive|define
 name|_ihandlers
 value|ihandlers
 end_define

@@ -981,21 +981,6 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-if|if
-condition|(
-name|poll_in_trap
-condition|)
-name|ether_poll
-argument_list|(
-name|poll_in_trap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVICE_POLLING */
 if|#
 directive|if
 name|defined
