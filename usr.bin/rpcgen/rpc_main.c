@@ -484,27 +484,19 @@ name|SVR4_CPP
 value|"/usr/ccs/lib/cpp"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SUNOS_CPP
-value|"/usr/libexec/cpp"
-end_define
-
-begin_elif
-elif|#
-directive|elif
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
