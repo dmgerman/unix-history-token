@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -490,7 +490,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags for va_cflags.  */
+comment|/*  * Flags for va_vaflags.  */
 end_comment
 
 begin_define
@@ -502,6 +502,17 @@ end_define
 
 begin_comment
 comment|/* utimes argument was NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_EXCLUSIVE
+value|0x02
+end_define
+
+begin_comment
+comment|/* exclusive create request */
 end_comment
 
 begin_comment
