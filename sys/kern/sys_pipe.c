@@ -5401,6 +5401,18 @@ name|cpipe
 operator|->
 name|pipe_peer
 expr_stmt|;
+if|if
+condition|(
+name|cpipe
+operator|==
+name|NULL
+condition|)
+comment|/* other end of pipe has been closed */
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
 break|break;
 default|default:
 return|return
