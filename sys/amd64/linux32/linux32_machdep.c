@@ -2929,7 +2929,7 @@ name|fd
 argument_list|,
 name|linux_args
 operator|.
-name|pos
+name|pgoff
 argument_list|)
 expr_stmt|;
 endif|#
