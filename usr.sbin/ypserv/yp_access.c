@@ -269,7 +269,7 @@ argument|inet_ntoa(rqhost->sin_addr,
 literal|""
 argument|);  	if (!status&& rqhost->sin_addr.s_addr != oldaddr) { 		yp_error(
 literal|"connect from %s:%d refused"
-argument|, 			  inet_ntoa(rqhost->sin_addr, ntohs(rqhost->sin_port)); 		oldaddr = rqhost->sin_addr.s_addr; 		return(
+argument|, 			  inet_ntoa(rqhost->sin_addr), ntohs(rqhost->sin_port)); 		oldaddr = rqhost->sin_addr.s_addr; 		return(
 literal|1
 argument|); 	}
 endif|#
