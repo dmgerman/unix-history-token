@@ -4873,6 +4873,11 @@ name|inp_ppcb
 argument_list|)
 condition|)
 block|{
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|tcp_twclose
 argument_list|(
 operator|(
