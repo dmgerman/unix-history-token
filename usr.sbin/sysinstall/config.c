@@ -5534,7 +5534,7 @@ name|fprintf
 argument_list|(
 name|mailerconf
 argument_list|,
-literal|"newaliases	/usr/local/sbin/exim -bi\n"
+literal|"newaliases	/usr/local/sbin/exim\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
