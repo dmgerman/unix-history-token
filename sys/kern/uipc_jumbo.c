@@ -813,6 +813,11 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|jumbo_vm_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pg
@@ -847,6 +852,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|jumbo_vm_object
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

@@ -8958,6 +8958,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -9035,6 +9044,11 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 name|sbunlock
 argument_list|(
