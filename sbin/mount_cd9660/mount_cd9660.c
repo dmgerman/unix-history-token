@@ -424,7 +424,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"%s"
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 name|exit
