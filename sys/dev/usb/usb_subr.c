@@ -3771,6 +3771,11 @@ name|USBD_INVAL
 operator|)
 return|;
 block|}
+name|device_quiet
+argument_list|(
+name|bdev
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|uaa
@@ -4105,6 +4110,11 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
+name|device_quiet
+argument_list|(
+name|bdev
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
