@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)learn.c	4.3	(Berkeley)	%G%"
+literal|"@(#)learn.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,30 @@ name|ask
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|again
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|skip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|teed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|total
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -175,6 +199,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -242,12 +269,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|setbuf
+argument_list|(
+name|stderr
+argument_list|,
+name|malloc
+argument_list|(
+name|BUFSIZ
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|selsub
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|chgenv
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -379,7 +425,7 @@ literal|'y'
 condition|)
 name|wrapup
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 end_if
