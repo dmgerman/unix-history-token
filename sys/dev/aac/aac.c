@@ -1544,9 +1544,9 @@ name|unit
 argument_list|,
 name|UID_ROOT
 argument_list|,
-name|GID_WHEEL
+name|GID_OPERATOR
 argument_list|,
-literal|0644
+literal|0640
 argument_list|,
 literal|"aac%d"
 argument_list|,
