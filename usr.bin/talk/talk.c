@@ -59,6 +59,12 @@ directive|include
 file|"talk.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_comment
 comment|/*  * talk:	A visual form of write. Using sockets, a two way  *		connection is set up between the two people talking.  *		With the aid of curses, the screen is split into two  *		windows, and each users text is added to the window,  *		one character at a time...  *  *		Written by Kipp Hickman  *  *		Modified to run under 4.1a by Clem Cole and Peter Moore  *		Modified to run between hosts by Peter Moore, 8/19/82  *		Modified to run under 4.1c by Peter Moore 3/17/83  *		Fixed to not run with unwriteable terminals MRVM 28/12/94  */
 end_comment
@@ -79,6 +85,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|get_names
 argument_list|(
 name|argc
