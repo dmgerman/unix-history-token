@@ -17,6 +17,29 @@ end_define
 
 begin_struct
 struct|struct
+name|mca_guid
+block|{
+name|uint32_t
+name|data1
+decl_stmt|;
+name|uint16_t
+name|data2
+decl_stmt|;
+name|uint16_t
+name|data3
+decl_stmt|;
+name|uint8_t
+name|data4
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|mca_record_header
 block|{
 name|uint64_t
@@ -93,13 +116,11 @@ define|#
 directive|define
 name|MCA_RH_TIME_CENT
 value|7
-name|uint8_t
+name|struct
+name|mca_guid
 name|rh_platform
-index|[
-literal|16
-index|]
 decl_stmt|;
-comment|/* Platform id. */
+comment|/* XXX not really a GUID. */
 block|}
 struct|;
 end_struct
@@ -108,11 +129,9 @@ begin_struct
 struct|struct
 name|mca_section_header
 block|{
-name|uint8_t
+name|struct
+name|mca_guid
 name|sh_guid
-index|[
-literal|16
-index|]
 decl_stmt|;
 name|uint8_t
 name|sh_major
@@ -165,11 +184,11 @@ name|cpu_flags
 decl_stmt|;
 define|#
 directive|define
-name|MCA_CPU_FLAGS_ERROR_MAP
+name|MCA_CPU_FLAGS_ERRMAP
 value|(1ULL<< 0)
 define|#
 directive|define
-name|MCA_CPU_FLAGS_STATE_PARM
+name|MCA_CPU_FLAGS_STATE
 value|(1ULL<< 1)
 define|#
 directive|define
@@ -202,7 +221,7 @@ parameter_list|)
 value|(((x)>> 12)& 15)
 define|#
 directive|define
-name|MCA_CPU_FLAGS_REGF
+name|MCA_CPU_FLAGS_REG
 parameter_list|(
 name|x
 parameter_list|)
@@ -230,7 +249,7 @@ decl_stmt|;
 comment|/* Nx cpu_mod (cache) */
 comment|/* Nx cpu_mod (TLB) */
 comment|/* Nx cpu_mod (bus) */
-comment|/* Nx cpu_mod (regf) */
+comment|/* Nx cpu_mod (reg) */
 comment|/* Nx cpu_mod (MS) */
 comment|/* cpu_cpuid */
 comment|/* cpu_psi */
@@ -372,6 +391,62 @@ comment|/* 16 bytes per register! */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_CPU
+define|\
+value|{0xe429faf1,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_MEMORY
+define|\
+value|{0xe429faf2,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_SEL
+define|\
+value|{0xe429faf3,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_PCI_BUS
+define|\
+value|{0xe429faf4,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_SMBIOS
+define|\
+value|{0xe429faf5,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_PCI_DEV
+define|\
+value|{0xe429faf6,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCA_GUID_GENERIC
+define|\
+value|{0xe429faf7,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+end_define
 
 begin_ifdef
 ifdef|#
