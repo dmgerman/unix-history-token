@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -117,22 +111,11 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<net/pfil.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3530,10 +3513,20 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-comment|/* 	 * Run through list of hooks for output packets. 	 */
+comment|/* Jump over all PFIL processing if hooks are not active. */
+if|if
+condition|(
+name|inet6_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passout
+goto|;
+comment|/* Run through list of hooks for output packets. */
 name|error
 operator|=
 name|pfil_run_hooks
@@ -3573,9 +3566,8 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
+name|passout
+label|:
 comment|/* 	 * Send the packet to the outgoing interface. 	 * If necessary, do IPv6 fragmentation before sending. 	 * 	 * the logic here is rather complex: 	 * 1: normal case (dontfrag == 0, alwaysfrag == 0) 	 * 1-a:	send as is if tlen<= path mtu 	 * 1-b:	fragment if tlen> path mtu 	 * 	 * 2: if user asks us not to fragment (dontfrag == 1) 	 * 2-a:	send as is if tlen<= interface mtu 	 * 2-b:	error if tlen> interface mtu 	 * 	 * 3: if we always need to attach fragment header (alwaysfrag == 1) 	 *	always fragment 	 * 	 * 4: if dontfrag == 1&& alwaysfrag == 1 	 *	error, as we cannot handle this conflicting request 	 */
 name|tlen
 operator|=

@@ -971,12 +971,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -985,10 +979,9 @@ name|inet_pfil_hook
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* packet filter hooks */
+end_comment
 
 begin_function_decl
 name|void

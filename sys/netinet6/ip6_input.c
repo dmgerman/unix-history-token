@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -153,22 +147,11 @@ directive|include
 file|<net/netisr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<net/pfil.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -428,23 +411,12 @@ name|ip6_ours_check_algorithm
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|pfil_head
 name|inet6_pfil_hook
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* firewall hooks */
@@ -719,9 +691,7 @@ name|pr
 operator|-
 name|inet6sw
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
+comment|/* Initialize packet filter hooks. */
 name|inet6_pfil_hook
 operator|.
 name|ph_type
@@ -758,9 +728,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
 name|ip6intrq
 operator|.
 name|ifq_maxlen
@@ -972,15 +939,10 @@ name|srczone
 decl_stmt|,
 name|dstzone
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 name|struct
 name|in6_addr
 name|odst
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|srcrt
 init|=
@@ -1671,9 +1633,6 @@ name|bad
 goto|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing 	 *     (e.g. by NAT rewriting).  When this happens, 	 *     tell ip6_forward to do the right thing. 	 */
 name|odst
 operator|=
@@ -1681,6 +1640,19 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
+comment|/* Jump over all PFIL processing if hooks are not active. */
+if|if
+condition|(
+name|inet6_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passin
+goto|;
 if|if
 condition|(
 name|pfil_run_hooks
@@ -1734,9 +1706,8 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
+name|passin
+label|:
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -119,22 +113,11 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<net/pfil.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1953,10 +1936,20 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-comment|/* 	 * Run through list of hooks for output packets. 	 */
+comment|/* Jump over all PFIL processing if hooks are not active. */
+if|if
+condition|(
+name|inet6_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|pass
+goto|;
+comment|/* Run through list of hooks for output packets. */
 name|error
 operator|=
 name|pfil_run_hooks
@@ -2003,9 +1996,8 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
+name|pass
+label|:
 name|error
 operator|=
 name|nd6_output
@@ -2079,13 +2071,8 @@ name|freecopy
 goto|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 name|senderr
 label|:
-endif|#
-directive|endif
 if|if
 condition|(
 name|mcopy
