@@ -7,20 +7,6 @@ begin_comment
 comment|/*  * Luke Mewburn<lm@rmit.edu.au> added the following on 940622:  *    - mail status ("No Mail", "Mail read:...", or "New Mail ...,  *	Unread since ...".)  *    - 4 digit phone extensions (3210 is printed as x3210.)  *    - host/office toggling in short format with -h& -o.  *    - short day names (`Tue' printed instead of `Jun 21' if the  *	login time is< 6 days.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -47,27 +33,42 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)finger.c	8.5 (Berkeley) 5/4/95"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char sccsid[] = "@(#)finger.c	8.5 (Berkeley) 5/4/95";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Finger prints out information about users.  It is not portable since  * certain fields (e.g. the full user name, office, and phone numbers) are  * extracted from the gecos field of the passwd file which other UNIXes  * may not have or may use for other things.  *  * There are currently two output formats; the short format is one line  * per user and displays login name, tty, login time, real name, idle time,  * and either remote host information (default) or office location/phone  * number, depending on if -h or -o is used respectively.  * The long format gives the same information (in a more legible format) as  * well as home directory, shell, mail info, and .plan/.project files.  */

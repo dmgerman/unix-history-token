@@ -3,6 +3,35 @@ begin_comment
 comment|/*   * This module implements a simple but effective form of login access   * control based on login names and on host (or domain) names, internet   * addresses (or network numbers), or on terminal line names in case of   * non-networked logins. Diagnostics are reported through syslog(3).   *   * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_ACCESS
+end_ifdef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_endif
+unit|static char sccsid[] = "%Z% %M% %I% %E% %U%";
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -16,34 +45,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGIN_ACCESS
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"%Z% %M% %I% %E% %U%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
