@@ -579,12 +579,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -701,6 +695,59 @@ name|u
 parameter_list|)
 value|u.u_pcb.pcb_savefpu
 end_define
+
+begin_function
+specifier|static
+name|void
+name|i387_to_double
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|)
+name|char
+modifier|*
+name|from
+decl_stmt|;
+name|char
+modifier|*
+name|to
+decl_stmt|;
+block|{
+name|long
+modifier|*
+name|lp
+decl_stmt|;
+comment|/* push extended mode on 387 stack, then pop in double mode    *    * first, set exception masks so no error is generated -    * number will be rounded to inf or 0, if necessary    */
+asm|asm ("pushl %eax");
+comment|/* grab a stack slot */
+asm|asm ("fstcw (%esp)");
+comment|/* get 387 control word */
+asm|asm ("movl (%esp),%eax");
+comment|/* save old value */
+asm|asm ("orl $0x3f,%eax");
+comment|/* mask all exceptions */
+asm|asm ("pushl %eax");
+asm|asm ("fldcw (%esp)");
+comment|/* load new value into 387 */
+asm|asm ("movl 8(%ebp),%eax");
+asm|asm ("fldt (%eax)");
+comment|/* push extended number on 387 stack */
+asm|asm ("fwait");
+asm|asm ("movl 12(%ebp),%eax");
+asm|asm ("fstpl (%eax)");
+comment|/* pop double */
+asm|asm ("fwait");
+asm|asm ("popl %eax");
+comment|/* flush modified control word */
+asm|asm ("fnclex");
+comment|/* clear exceptions */
+asm|asm ("fldcw (%esp)");
+comment|/* restore original control word */
+asm|asm ("popl %eax");
+comment|/* flush saved copy */
+block|}
+end_function
 
 begin_struct
 struct|struct
@@ -963,7 +1010,7 @@ literal|7
 expr_stmt|;
 name|printf_unfiltered
 argument_list|(
-literal|"regno     tag  msb              lsb  value\n"
+literal|" regno     tag  msb              lsb  value\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -980,12 +1027,30 @@ name|fpreg
 operator|--
 control|)
 block|{
+name|int
+name|st_regno
+decl_stmt|;
 name|double
 name|val
 decl_stmt|;
+comment|/* The physical regno `fpreg' is only relevant as an index into the        * tag word.  Logical `%st' numbers are required for indexing ep->regs.        */
+name|st_regno
+operator|=
+operator|(
+name|fpreg
+operator|+
+literal|8
+operator|-
+name|top
+operator|)
+operator|&
+literal|7
+expr_stmt|;
 name|printf_unfiltered
 argument_list|(
-literal|"%s %d: "
+literal|"%%st(%d) %s "
+argument_list|,
+name|st_regno
 argument_list|,
 name|fpreg
 operator|==
@@ -994,8 +1059,6 @@ condition|?
 literal|"=>"
 else|:
 literal|"  "
-argument_list|,
-name|fpreg
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1073,18 +1136,15 @@ name|ep
 operator|->
 name|regs
 index|[
-name|fpreg
+name|st_regno
 index|]
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|floatformat_to_double
+name|i387_to_double
 argument_list|(
-operator|&
-name|floatformat_i387_ext
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -1093,9 +1153,13 @@ name|ep
 operator|->
 name|regs
 index|[
-name|fpreg
+name|st_regno
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|val
 argument_list|)
