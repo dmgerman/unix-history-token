@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.40 (Berkeley) %G%"
+literal|"@(#)login.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +466,12 @@ literal|10
 index|]
 decl_stmt|;
 name|char
+name|localhost
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+name|char
 modifier|*
 name|ctime
 argument_list|()
@@ -562,24 +568,37 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol;  	 * -f is used to skip a second login authentication  	 * -h is used by other servers to pass the name of the remote 	 *    host to login so that it may be placed in utmp and wtmp 	 */
-operator|(
-name|void
-operator|)
+name|domain
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|gethostname
 argument_list|(
-name|tbuf
+name|localhost
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|tbuf
+name|localhost
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"couldn't get local hostname: %m"
 argument_list|)
 expr_stmt|;
+else|else
 name|domain
 operator|=
 name|index
 argument_list|(
-name|tbuf
+name|localhost
 argument_list|,
 literal|'.'
 argument_list|)
