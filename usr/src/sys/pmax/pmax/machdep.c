@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1243,6 +1243,11 @@ name|boothowto
 operator|&
 name|RB_MINIROOT
 condition|)
+block|{
+name|boothowto
+operator||=
+name|RB_DFLTROOT
+expr_stmt|;
 name|v
 operator|+=
 name|mfs_initminiroot
@@ -1250,6 +1255,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Init mapping for u page(s) for proc[0], pm_tlbpid 1. 	 */
@@ -2748,6 +2754,38 @@ name|cn_screen
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * The boot program uses PMAX ROM entrypoints so the ROM sets 	 * osconsole to '1' like the PMAX. 	 */
+if|if
+condition|(
+name|pmax_boardtype
+operator|==
+name|DS_3MAX
+operator|&&
+name|crt
+operator|==
+operator|-
+literal|1
+operator|&&
+name|kbd
+operator|==
+literal|1
+condition|)
+block|{
+name|cn_tab
+operator|.
+name|cn_screen
+operator|=
+literal|1
+expr_stmt|;
+name|crt
+operator|=
+literal|0
+expr_stmt|;
+name|kbd
+operator|=
+literal|7
+expr_stmt|;
+block|}
 comment|/* 	 * First try the keyboard/crt cases then fall through to the 	 * remote serial lines. 	 */
 if|if
 condition|(
