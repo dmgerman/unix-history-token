@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.25 1996/06/12 05:08:29 gpalmer Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.26 1996/07/24 21:22:36 phk Exp $  */
 end_comment
 
 begin_include
@@ -2669,6 +2669,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS_ROOT
+end_ifdef
+
 begin_function
 specifier|static
 name|dn_p
@@ -2828,6 +2834,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVFS_ROOT */
+end_comment
 
 begin_comment
 comment|/***************************************************************\ * given a dev_node, find the appropriate vnode if one is already* * associated, or get a new one an associate it with the dev_node* * need to check about vnode references.. should we increment it?* \***************************************************************/
