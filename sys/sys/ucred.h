@@ -18,8 +18,22 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser()/suser_xxx() function should be used for this.  */

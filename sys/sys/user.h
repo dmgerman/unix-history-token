@@ -64,6 +64,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -91,16 +111,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_comment
