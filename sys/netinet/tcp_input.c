@@ -2942,6 +2942,9 @@ name|defined
 argument_list|(
 name|FAST_IPSEC
 argument_list|)
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2971,13 +2974,15 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*IPSEC*/
 goto|goto
 name|drop
 goto|;
 block|}
 block|}
 elseif|else
+endif|#
+directive|endif
+comment|/* INET6 */
 if|if
 condition|(
 name|inp
@@ -3002,7 +3007,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*IPSEC*/
 goto|goto
 name|drop
 goto|;
