@@ -98,9 +98,8 @@ comment|/*  * Expand the line buffer.  Return -1 on error. #ifdef notdef  * The 
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|slbexpand
+name|__slbexpand
 parameter_list|(
 name|FILE
 modifier|*
@@ -379,7 +378,7 @@ decl_stmt|;
 comment|/* 		 * Make sure there is room for more bytes.  Copy data from 		 * file buffer to line buffer, refill file and look for 		 * newline.  The loop stops only when we find a newline. 		 */
 if|if
 condition|(
-name|slbexpand
+name|__slbexpand
 argument_list|(
 name|fp
 argument_list|,
@@ -483,7 +482,7 @@ name|diff
 expr_stmt|;
 if|if
 condition|(
-name|slbexpand
+name|__slbexpand
 argument_list|(
 name|fp
 argument_list|,
