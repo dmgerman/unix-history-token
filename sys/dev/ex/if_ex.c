@@ -1201,6 +1201,15 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ex_isa_identify()\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ioport
@@ -1228,6 +1237,17 @@ condition|)
 block|{
 continue|continue;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ex: Found card at 0x%03x!\n"
+argument_list|,
+name|ioport
+argument_list|)
+expr_stmt|;
 comment|/* Board in PnP mode */
 if|if
 condition|(
@@ -1235,12 +1255,38 @@ name|eeprom_read
 argument_list|(
 name|ioport
 argument_list|,
-literal|0
+name|EE_W0
 argument_list|)
 operator|&
-literal|0x01
+name|EE_W0_PNP
 condition|)
 block|{
+comment|/* Reset the card. */
+name|outb
+argument_list|(
+name|ioport
+operator|+
+name|CMD_REG
+argument_list|,
+name|Reset_CMD
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ex: card at 0x%03x in PnP mode!\n"
+argument_list|,
+name|ioport
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|bzero
@@ -1281,10 +1327,10 @@ name|eeprom_read
 argument_list|(
 name|ioport
 argument_list|,
-name|EE_IRQ_No
+name|EE_W1
 argument_list|)
 operator|&
-name|IRQ_No_Mask
+name|EE_W1_INT_SEL
 expr_stmt|;
 comment|/* work out which set of irq<-> internal tables to use */
 if|if
@@ -1375,6 +1421,19 @@ argument_list|,
 name|ioport
 argument_list|,
 name|EX_IOSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ex: Adding board at 0x%03x, irq %d\n"
+argument_list|,
+name|ioport
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1489,8 +1548,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|iobase
-operator|&&
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ex: no iobase?\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|look_for_card
 argument_list|(
@@ -1511,6 +1585,17 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ex: ex_isa_probe() found card at 0x%03x\n"
+argument_list|,
+name|iobase
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Reset the card. 	 */
 name|outb
 argument_list|(
@@ -1523,7 +1608,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|400
+literal|800
 argument_list|)
 expr_stmt|;
 name|ex_get_address
@@ -1570,10 +1655,10 @@ name|eeprom_read
 argument_list|(
 name|iobase
 argument_list|,
-name|EE_IRQ_No
+name|EE_W1
 argument_list|)
 operator|&
-name|IRQ_No_Mask
+name|EE_W1_INT_SEL
 expr_stmt|;
 name|irq
 operator|=
