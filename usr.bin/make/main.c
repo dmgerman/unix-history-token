@@ -3287,7 +3287,6 @@ name|targs
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|Lst_Destroy
 argument_list|(
 name|targs
@@ -3295,6 +3294,7 @@ argument_list|,
 name|NOFREE
 argument_list|)
 expr_stmt|;
+block|}
 name|Lst_Destroy
 argument_list|(
 name|variables
