@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	5.2 (Berkeley) %G%"
+literal|"@(#)kgmon.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,30 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)&~ 0x80000000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|clear
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&~ 0xc0000000)
 end_define
 
 begin_endif
