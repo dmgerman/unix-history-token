@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.3 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1749,7 +1749,7 @@ parameter_list|(
 name|fORKfN
 parameter_list|)
 define|\
-value|{\ 	register int i;\ \ 	for (i = NFORKTRIES; i--> 0; )\ 	{\ 		pid = fORKfN();\ 		if (pid>= 0)\ 			break;\ 		sleep(NFORKTRIES - i);\ 	}\ }
+value|{\ 	register int i;\ \ 	for (i = NFORKTRIES; --i>= 0; )\ 	{\ 		pid = fORKfN();\ 		if (pid>= 0)\ 			break;\ 		if (i> 0)\ 			sleep(NFORKTRIES - i);\ 	}\ }
 end_define
 
 begin_escape
