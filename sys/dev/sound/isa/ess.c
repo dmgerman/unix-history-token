@@ -522,13 +522,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  *  * ess_cmd write a single byte to the CMD port.  * ess_cmd1 write a CMD + 1 byte arg  * ess_cmd2 write a CMD + 2 byte arg  * ess_get_byte returns a single byte from the DSP data port  *  * ess_write is actually ess_cmd1  * ess_read access ext. regs via ess_cmd(0xc0, reg) followed by ess_get_byte  */
 end_comment

@@ -437,13 +437,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  *  * sb_cmd write a single byte to the CMD port.  * sb_cmd1 write a CMD + 1 byte arg  * sb_cmd2 write a CMD + 2 byte arg  * sb_get_byte returns a single byte from the DSP data port  */
 end_comment

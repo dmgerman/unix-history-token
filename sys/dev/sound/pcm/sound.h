@@ -437,30 +437,19 @@ expr_stmt|;
 name|struct
 name|pcm_channel
 modifier|*
-modifier|*
-name|aplay
-decl_stmt|,
-modifier|*
-modifier|*
-name|arec
-decl_stmt|,
-modifier|*
 name|fakechan
 decl_stmt|;
 name|unsigned
 name|chancount
 decl_stmt|,
-name|maxchans
-decl_stmt|,
 name|defaultchan
 decl_stmt|;
-name|struct
-name|snd_mixer
-modifier|*
-name|mixer
-decl_stmt|;
+comment|/* struct snd_mixer *mixer; */
 name|unsigned
 name|flags
+decl_stmt|;
+name|int
+name|inprog
 decl_stmt|;
 name|void
 modifier|*
@@ -483,15 +472,6 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|sysctl_tree_top
-decl_stmt|;
-name|dev_t
-name|dspdev
-decl_stmt|,
-name|dspWdev
-decl_stmt|,
-name|audiodev
-decl_stmt|,
-name|mixerdev
 decl_stmt|;
 name|void
 modifier|*
@@ -561,14 +541,62 @@ name|PCM_MAXVER
 value|1
 end_define
 
+begin_comment
+comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 20) + (dev<< 16) + channel currently minor = (channel<< 16) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.] */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MAGIC
+name|PCMMINOR
 parameter_list|(
-name|unit
+name|x
 parameter_list|)
-value|(0xa4d10de0 + unit)
+value|(minor(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCHAN
+parameter_list|(
+name|x
+parameter_list|)
+value|((PCMMINOR(x)& 0x00ff0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMUNIT
+parameter_list|(
+name|x
+parameter_list|)
+value|((PCMMINOR(x)& 0x000000f0)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMDEV
+parameter_list|(
+name|x
+parameter_list|)
+value|(PCMMINOR(x)& 0x0000000f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMMKMINOR
+parameter_list|(
+name|u
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|((((c)& 0xff)<< 16) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
 end_define
 
 begin_define
@@ -700,6 +728,17 @@ name|c
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Major nuber for the sound driver.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_CDEV_MAJOR
+value|30
+end_define
 
 begin_comment
 comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
@@ -852,6 +891,20 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|snd_unit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|pcm_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * some macros for debugging purposes  * DDB/DEB to enable/disable debugging stuff  * BVDDB   to enable debugging when bootverbose  */

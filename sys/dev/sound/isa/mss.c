@@ -575,13 +575,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|devclass_t
-name|pcm_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_int32_t
 name|mss_fmt
 index|[]
