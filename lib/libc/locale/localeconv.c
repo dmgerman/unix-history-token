@@ -113,7 +113,7 @@ name|str
 argument_list|,
 name|NULL
 argument_list|,
-literal|10
+literal|0
 argument_list|)
 return|;
 block|}
