@@ -4023,6 +4023,12 @@ condition|(
 name|hrp
 operator|->
 name|hostinfo
+operator|&&
+name|hrp
+operator|->
+name|hostinfo
+operator|!=
+name|res
 condition|)
 name|freeaddrinfo
 argument_list|(
