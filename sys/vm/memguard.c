@@ -604,7 +604,7 @@ argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|round_page
+name|trunc_page
 argument_list|(
 operator|(
 name|unsigned
@@ -626,7 +626,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|round_page
+name|trunc_page
 argument_list|(
 operator|(
 name|unsigned
@@ -674,7 +674,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|round_page
+name|trunc_page
 argument_list|(
 operator|(
 name|unsigned
@@ -738,7 +738,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|round_page
+name|trunc_page
 argument_list|(
 operator|(
 name|unsigned
