@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -431,7 +431,6 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-specifier|extern
 name|unsigned
 name|long
 name|___runetype
@@ -445,7 +444,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|_BSD_RUNE_T_
 name|___tolower
 name|__P
@@ -458,7 +456,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|_BSD_RUNE_T_
 name|___toupper
 name|__P
@@ -696,7 +693,6 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-specifier|extern
 name|int
 name|__istype
 name|__P
@@ -712,7 +708,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|__isctype
 name|__P
@@ -728,7 +723,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|_BSD_RUNE_T_
 name|toupper
 name|__P
@@ -741,7 +735,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|_BSD_RUNE_T_
 name|tolower
 name|__P
