@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	8.2 (Berkeley) 1/21/94"
+literal|"@(#)common.c	8.5 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -572,12 +578,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|sendtorem
+name|remote
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* are we sending to a remote? */
+comment|/* true if sending files to a remote host */
 end_comment
 
 begin_decl_stmt
@@ -616,7 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Create a connection to the remote printer server.  * Most of this code comes from rcmd.c.  */
+comment|/*  * Create a TCP connection to host "rhost" at port "rport".  * If rport == 0, then use the printer service port.  * Most of this code comes from rcmd.c.  */
 end_comment
 
 begin_function
@@ -624,10 +630,15 @@ name|int
 name|getport
 parameter_list|(
 name|rhost
+parameter_list|,
+name|rport
 parameter_list|)
 name|char
 modifier|*
 name|rhost
+decl_stmt|;
+name|int
+name|rport
 decl_stmt|;
 block|{
 name|struct
@@ -672,6 +683,50 @@ argument_list|(
 literal|"no remote host to connect to"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+name|rhost
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_NONE
+condition|)
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+else|else
+block|{
 name|hp
 operator|=
 name|gethostbyname
@@ -690,41 +745,6 @@ argument_list|(
 literal|"unknown host %s"
 argument_list|,
 name|rhost
-argument_list|)
-expr_stmt|;
-name|sp
-operator|=
-name|getservbyname
-argument_list|(
-literal|"printer"
-argument_list|,
-literal|"tcp"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"printer/tcp: unknown service"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sin
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sin
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -754,6 +774,34 @@ name|hp
 operator|->
 name|h_addrtype
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|rport
+operator|==
+literal|0
+condition|)
+block|{
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"printer"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"printer/tcp: unknown service"
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_port
@@ -761,6 +809,17 @@ operator|=
 name|sp
 operator|->
 name|s_port
+expr_stmt|;
+block|}
+else|else
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|rport
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Try connecting to the server. 	 */
 name|retry
@@ -1236,6 +1295,10 @@ operator|>
 name|arraysz
 condition|)
 block|{
+name|arraysz
+operator|*=
+literal|2
+expr_stmt|;
 name|queue
 operator|=
 operator|(
@@ -1252,13 +1315,7 @@ operator|*
 operator|)
 name|queue
 argument_list|,
-operator|(
-name|stbuf
-operator|.
-name|st_size
-operator|/
-literal|12
-operator|)
+name|arraysz
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1468,7 +1525,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|sendtorem
+name|remote
 operator|=
 literal|0
 expr_stmt|;
@@ -1477,10 +1534,6 @@ if|if
 condition|(
 name|RM
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1604,7 +1657,7 @@ block|}
 comment|/* 		 * if the two hosts are not the same, 		 * then the printer must be remote. 		 */
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|name
 argument_list|,
@@ -1615,18 +1668,96 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|sendtorem
+name|remote
 operator|=
 literal|1
 expr_stmt|;
 block|}
 return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* sleep n milliseconds */
+end_comment
+
+begin_function
+name|void
+name|delay
+parameter_list|(
+name|n
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|tdelay
+decl_stmt|;
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+operator|||
+name|n
+operator|>
+literal|10000
+condition|)
+name|fatal
+argument_list|(
+literal|"unreasonable delay period (%d)"
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|tdelay
+operator|.
+name|tv_sec
+operator|=
+name|n
+operator|/
+literal|1000
+expr_stmt|;
+name|tdelay
+operator|.
+name|tv_usec
+operator|=
+name|n
+operator|*
+literal|1000
+operator|%
+literal|1000000
+expr_stmt|;
 operator|(
-name|char
+name|void
+operator|)
+name|select
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+name|fd_set
 operator|*
 operator|)
 literal|0
-return|;
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|&
+name|tdelay
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmjob.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)rmjob.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1362,7 +1362,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|sendtorem
+name|remote
 condition|)
 return|return;
 comment|/* not sending to a remote machine */
@@ -1486,6 +1486,8 @@ operator|=
 name|getport
 argument_list|(
 name|RM
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

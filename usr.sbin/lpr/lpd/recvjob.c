@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)recvjob.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1577,8 +1577,8 @@ directive|endif
 block|{
 specifier|extern
 name|char
-modifier|*
 name|fromb
+index|[]
 decl_stmt|;
 name|va_list
 name|ap
