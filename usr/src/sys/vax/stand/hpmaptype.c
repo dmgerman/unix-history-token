@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.4	83/02/22	*/
+comment|/*	hpmaptype.c	4.5	83/02/27	*/
 end_comment
 
 begin_comment
@@ -707,6 +707,11 @@ operator|==
 literal|13
 condition|)
 block|{
+name|int
+name|newtype
+init|=
+name|type
+decl_stmt|;
 name|hpaddr
 operator|->
 name|hpcs1
@@ -736,12 +741,22 @@ name|ntracks
 operator|==
 literal|16
 condition|)
-return|return
-operator|(
+block|{
+name|newtype
+operator|=
 literal|10
-operator|)
-return|;
+expr_stmt|;
 comment|/* AMPEX capricorn */
+goto|goto
+name|done
+goto|;
+block|}
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_NOP
+expr_stmt|;
 name|hpaddr
 operator|->
 name|hphr
@@ -765,12 +780,16 @@ name|ntracks
 operator|==
 literal|48
 condition|)
-return|return
-operator|(
+block|{
+name|newtype
+operator|=
 literal|11
-operator|)
-return|;
+expr_stmt|;
 comment|/* 48 sector Eagle */
+goto|goto
+name|done
+goto|;
+block|}
 name|printf
 argument_list|(
 literal|"RM02 with %d sectors/track?\n"
@@ -778,9 +797,19 @@ argument_list|,
 name|ntracks
 argument_list|)
 expr_stmt|;
+name|done
+label|:
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_DCLR
+operator||
+name|HP_GO
+expr_stmt|;
 return|return
 operator|(
-name|type
+name|newtype
 operator|)
 return|;
 block|}
