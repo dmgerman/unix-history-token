@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id$  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.1 1997/08/05 00:07:29 dyson Exp $  */
 end_comment
 
 begin_include
@@ -112,12 +112,16 @@ file|<vm/vm_pageout.h>
 end_include
 
 begin_comment
-comment|/*  * This file comprises a very simple zone allocator.  This is used  * in lieu of the malloc allocator, where needed or more optimal.  *  * Note that the initial implementation of this had coloring, and  * absolutely no improvement (actually perf degradation) occurred.  *  * _zinit, zinit, _zbootinit are the initialization routines.  * zalloc, zfree, are the interrupt/lock unsafe allocation/free routines.  * zalloci, zfreei, are the interrupt/lock safe allocation/free routines.  */
+comment|/*  * This file comprises a very simple zone allocator.  This is used  * in lieu of the malloc allocator, where needed or more optimal.  *  * Note that the initial implementation of this had coloring, and  * absolutely no improvement (actually perf degradation) occurred.  *  * zinitna, zinit, zbootinit are the initialization routines.  * zalloc, zfree, are the interrupt/lock unsafe allocation/free routines.  * zalloci, zfreei, are the interrupt/lock safe allocation/free routines.  */
+end_comment
+
+begin_comment
+comment|/*  * Create a zone, but don't allocate the zone structure.  If the  * zone had been previously created by the zone boot code, initialize  * various parts of the zone code.  *  * If waits are not allowed during allocation (e.g. during interrupt  * code), a-priori allocate the kernel virtual space, and allocate  * only pages when needed.  *  * Arguments:  * z		pointer to zone structure.  * obj		pointer to VM object (opt).  * name		name of zone.  * size		size of zone entries.  * nentries	number of zone entries allocated (only ZONE_INTERRUPT.)  * flags	ZONE_INTERRUPT --	items can be allocated at interrupt time.  * zalloc	number of pages allocated when memory is needed.  *  * Note that when using ZONE_INTERRUPT, the size of the zone is limited  * by the nentries argument.  The size of the memory allocatable is  * unlimited if ZONE_INTERRUPT is not set.  *  */
 end_comment
 
 begin_function
 name|int
-name|_zinit
+name|zinitna
 parameter_list|(
 name|vm_zone_t
 name|z
@@ -194,15 +198,11 @@ expr_stmt|;
 comment|/* 	 * If we cannot wait, allocate KVA space up front, and we will fill 	 * in pages as needed. 	 */
 if|if
 condition|(
-operator|(
 name|z
 operator|->
 name|zflags
 operator|&
-name|ZONE_WAIT
-operator|)
-operator|==
-literal|0
+name|ZONE_INTERRUPT
 condition|)
 block|{
 name|totsize
@@ -289,6 +289,21 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
+name|z
+operator|->
+name|zallocflag
+operator|=
+name|VM_ALLOC_INTERRUPT
+expr_stmt|;
+block|}
+else|else
+block|{
+name|z
+operator|->
+name|zallocflag
+operator|=
+name|VM_ALLOC_SYSTEM
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -314,26 +329,6 @@ operator|/
 name|z
 operator|->
 name|zsize
-expr_stmt|;
-name|z
-operator|->
-name|zallocflag
-operator|=
-name|VM_ALLOC_SYSTEM
-expr_stmt|;
-if|if
-condition|(
-name|z
-operator|->
-name|zflags
-operator|&
-name|ZONE_INTERRUPT
-condition|)
-name|z
-operator|->
-name|zallocflag
-operator|=
-name|VM_ALLOC_INTERRUPT
 expr_stmt|;
 name|z
 operator|->
@@ -363,6 +358,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Subroutine same as zinitna, except zone data structure is allocated  * automatically by malloc.  This routine should normally be used, except  * in certain tricky startup conditions in the VM system -- then  * zbootinit and zinitna can be used.  Zinit is the standard zone  * initialization call.  */
+end_comment
 
 begin_function
 name|vm_zone_t
@@ -415,9 +414,15 @@ condition|)
 return|return
 name|NULL
 return|;
+name|z
+operator|->
+name|zflags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|_zinit
+name|zinitna
 argument_list|(
 name|z
 argument_list|,
@@ -454,9 +459,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize a zone before the system is fully up.  This routine should  * only be called before full VM startup.  */
+end_comment
+
 begin_function
 name|void
-name|_zbootinit
+name|zbootinit
 parameter_list|(
 name|vm_zone_t
 name|z
@@ -573,11 +582,6 @@ name|zitems
 operator|=
 name|item
 expr_stmt|;
-operator|++
-name|z
-operator|->
-name|zfreecnt
-expr_stmt|;
 operator|(
 name|char
 operator|*
@@ -589,8 +593,18 @@ operator|->
 name|zsize
 expr_stmt|;
 block|}
+name|z
+operator|->
+name|zfreecnt
+operator|+=
+name|nitems
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Zone critical region locks.  */
+end_comment
 
 begin_function
 specifier|static
@@ -653,6 +667,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * void *zalloc(vm_zone_t zone) --  *	Returns an item from a specified zone.  *  * void zfree(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone.  *  * void *zalloci(vm_zone_t zone) --  *	Returns an item from a specified zone, interrupt safe.  *  * void zfreei(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone, interrupt safe.  *  */
+end_comment
+
+begin_comment
+comment|/*  * Zone allocator/deallocator.  These are interrupt / (or potentially SMP)  * safe.  The raw zalloc/zfree routines are in the vm_zone header file,  * and are not interrupt safe, but are fast.  */
+end_comment
+
 begin_function
 name|void
 modifier|*
@@ -678,7 +700,7 @@ argument_list|)
 expr_stmt|;
 name|item
 operator|=
-name|zalloc
+name|_zalloc
 argument_list|(
 name|z
 argument_list|)
@@ -718,7 +740,7 @@ argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
-name|zfree
+name|_zfree
 argument_list|(
 name|z
 argument_list|,
@@ -736,16 +758,17 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Internal zone routine.  Not to be called from external (non vm_zone) code.  */
+end_comment
+
 begin_function
 name|void
 modifier|*
-name|zget
+name|_zget
 parameter_list|(
 name|vm_zone_t
 name|z
-parameter_list|,
-name|int
-name|s
 parameter_list|)
 block|{
 name|int
@@ -760,21 +783,14 @@ decl_stmt|;
 name|void
 modifier|*
 name|item
-decl_stmt|,
-modifier|*
-name|litem
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|z
 operator|->
 name|zflags
 operator|&
-name|ZONE_WAIT
-operator|)
-operator|==
-literal|0
+name|ZONE_INTERRUPT
 condition|)
 block|{
 name|item
@@ -867,10 +883,10 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|++
 name|z
 operator|->
 name|zpagecount
+operator|++
 expr_stmt|;
 block|}
 name|nitems
@@ -922,6 +938,13 @@ name|zsize
 expr_stmt|;
 block|}
 comment|/* 	 * Save one for immediate allocation 	 */
+if|if
+condition|(
+name|nitems
+operator|!=
+literal|0
+condition|)
+block|{
 name|nitems
 operator|-=
 literal|1
@@ -968,10 +991,53 @@ name|z
 operator|->
 name|zsize
 expr_stmt|;
-operator|++
+block|}
 name|z
 operator|->
 name|zfreecnt
+operator|+=
+name|nitems
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|z
+operator|->
+name|zfreecnt
+operator|>
+literal|0
+condition|)
+block|{
+name|item
+operator|=
+name|z
+operator|->
+name|zitems
+expr_stmt|;
+name|z
+operator|->
+name|zitems
+operator|=
+operator|*
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|item
+expr_stmt|;
+name|z
+operator|->
+name|zfreecnt
+operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
+name|item
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 return|return
