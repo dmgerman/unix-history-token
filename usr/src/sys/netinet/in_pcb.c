@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	6.3	84/10/19	*/
+comment|/*	in_pcb.c	6.4	84/11/14	*/
 end_comment
 
 begin_include
@@ -1313,7 +1313,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pass an error to all internet connections  * associated with address sin.  Call the  * protocol specific routine to clean up the  * mess afterwards.  */
+comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  Call the  * protocol specific routine to handle each connection.  */
 end_comment
 
 begin_macro
@@ -1325,7 +1325,7 @@ argument|dst
 argument_list|,
 argument|errno
 argument_list|,
-argument|abort
+argument|notify
 argument_list|)
 end_macro
 
@@ -1352,7 +1352,7 @@ name|errno
 decl_stmt|,
 argument_list|(
 operator|*
-name|abort
+name|notify
 argument_list|)
 argument_list|()
 decl_stmt|;
@@ -1423,6 +1423,10 @@ condition|)
 goto|goto
 name|next
 goto|;
+if|if
+condition|(
+name|errno
+condition|)
 name|inp
 operator|->
 name|inp_socket
@@ -1443,7 +1447,7 @@ name|inp_next
 expr_stmt|;
 call|(
 modifier|*
-name|abort
+name|notify
 call|)
 argument_list|(
 name|oinp
@@ -1455,6 +1459,59 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * After a routing change, flush old routing  * and allocate a (hopefully) better one.  */
+end_comment
+
+begin_macro
+name|in_rtchange
+argument_list|(
+argument|inp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+condition|)
+block|{
+name|rtfree
+argument_list|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * A new route can be allocated the next time 		 * output is attempted. 		 */
+block|}
+comment|/* SHOULD NOTIFY HIGHER-LEVEL PROTOCOLS */
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.5	84/08/29	*/
+comment|/*	ip_input.c	6.6	84/11/14	*/
 end_comment
 
 begin_include
@@ -640,6 +640,10 @@ name|ipstat
 operator|.
 name|ips_tooshort
 operator|++
+expr_stmt|;
+name|m
+operator|=
+name|m0
 expr_stmt|;
 goto|goto
 name|bad
@@ -2833,6 +2837,9 @@ modifier|*
 name|in
 decl_stmt|;
 name|int
+name|in_rtchange
+argument_list|()
+decl_stmt|,
 name|tcp_abort
 argument_list|()
 decl_stmt|,
@@ -2926,6 +2933,44 @@ operator|.
 name|ip_dst
 expr_stmt|;
 comment|/* THIS IS VERY QUESTIONABLE, SHOULD HIT ALL PROTOCOLS */
+if|if
+condition|(
+name|cmd
+operator|==
+name|PRC_REDIRECT_NET
+operator|||
+name|cmd
+operator|==
+name|PRC_REDIRECT_HOST
+condition|)
+block|{
+name|in_pcbnotify
+argument_list|(
+operator|&
+name|tcb
+argument_list|,
+name|in
+argument_list|,
+literal|0
+argument_list|,
+name|in_rtchange
+argument_list|)
+expr_stmt|;
+name|in_pcbnotify
+argument_list|(
+operator|&
+name|udb
+argument_list|,
+name|in
+argument_list|,
+literal|0
+argument_list|,
+name|in_rtchange
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|in_pcbnotify
 argument_list|(
 operator|&
@@ -2962,6 +3007,7 @@ argument_list|,
 name|udp_abort
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

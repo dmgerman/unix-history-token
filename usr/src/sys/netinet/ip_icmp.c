@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	6.7	84/08/29	*/
+comment|/*	ip_icmp.c	6.8	84/11/14	*/
 end_comment
 
 begin_include
@@ -1105,6 +1105,16 @@ argument_list|,
 name|RTF_GATEWAY
 argument_list|)
 expr_stmt|;
+name|ip_ctlinput
+argument_list|(
+name|PRC_REDIRECT_NET
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|icp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1139,6 +1149,16 @@ argument_list|,
 name|RTF_GATEWAY
 operator||
 name|RTF_HOST
+argument_list|)
+expr_stmt|;
+name|ip_ctlinput
+argument_list|(
+name|PRC_REDIRECT_HOST
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|icp
 argument_list|)
 expr_stmt|;
 block|}
