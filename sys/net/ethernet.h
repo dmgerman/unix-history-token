@@ -429,7 +429,6 @@ name|ether_aton
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
@@ -443,7 +442,6 @@ name|ether_hostton
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -461,7 +459,6 @@ name|ether_line
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -483,7 +480,6 @@ name|ether_ntoa
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|ether_addr
 operator|*
@@ -501,7 +497,6 @@ operator|(
 name|char
 operator|*
 operator|,
-specifier|const
 expr|struct
 name|ether_addr
 operator|*
