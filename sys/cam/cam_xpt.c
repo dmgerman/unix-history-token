@@ -1353,6 +1353,29 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* 		 * These Hitachi drives don't like multi-lun probing. 		 * The PR submitter has a DK319H, but says that the Linux 		 * kernel has a similar work-around for the DK312 and DK314, 		 * so all DK31* drives are quirked here. 		 * PR:		  misc/18793 		 * Submitted by:  Paul Haddad<paul@pth.com> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"HITACHI"
+block|,
+literal|"DK31*"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOLUNS
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|255
+block|}
+block|,
+block|{
 comment|/* 		 * This old revision of the TDC3600 is also SCSI-1, and 		 * hangs upon serial number probing. 		 */
 block|{
 name|T_SEQUENTIAL
