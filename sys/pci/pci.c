@@ -6658,5 +6658,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|pci
+argument_list|,
+name|acpi_pcib
+argument_list|,
+name|pci_driver
+argument_list|,
+name|pci_devclass
+argument_list|,
+name|pci_modevent
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
