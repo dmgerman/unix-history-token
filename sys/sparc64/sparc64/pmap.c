@@ -381,15 +381,6 @@ name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|boolean_t
-name|pmap_initialized
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Allocate physical memory for use in pmap_bootstrap.  */
 end_comment
@@ -2800,10 +2791,6 @@ literal|"pmap_init: vm_map_find"
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_initialized
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 end_function
 
