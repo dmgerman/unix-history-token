@@ -366,6 +366,10 @@ block|,
 literal|"19200"
 block|,
 literal|"38400"
+block|,
+literal|"57600"
+block|,
+literal|"115200"
 block|}
 decl_stmt|;
 end_decl_stmt
