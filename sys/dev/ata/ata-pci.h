@@ -560,15 +560,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_PDC20268R
-value|0x6268105a
+name|ATA_PDC20269
+value|0x4d69105a
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_PDC20269
-value|0x4d69105a
+name|ATA_PDC20270
+value|0x6268105a
 end_define
 
 begin_define
