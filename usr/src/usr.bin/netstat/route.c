@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.10 (Berkeley) 87/04/28"
+literal|"@(#)route.c	5.11 (Berkeley) 87/08/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20.20s %-20.20s %-8.8s %-6.6s %-10.10s %s\n"
+literal|"%-16.16s %-18.18s %-6.6s  %6.6s%8.8s  %s\n"
 argument_list|,
 literal|"Destination"
 argument_list|,
@@ -394,7 +394,7 @@ literal|"Gateway"
 argument_list|,
 literal|"Flags"
 argument_list|,
-literal|"Refcnt"
+literal|"Refs"
 argument_list|,
 literal|"Use"
 argument_list|,
@@ -547,7 +547,7 @@ name|rt_dst
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20.20s "
+literal|"%-16.16s "
 argument_list|,
 operator|(
 name|sin
@@ -600,7 +600,7 @@ name|rt_gateway
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20.20s "
+literal|"%-18.18s "
 argument_list|,
 name|routename
 argument_list|(
@@ -616,7 +616,7 @@ name|AF_NS
 case|:
 name|printf
 argument_list|(
-literal|"%-20s "
+literal|"%-16s "
 argument_list|,
 name|ns_print
 argument_list|(
@@ -634,7 +634,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20s "
+literal|"%-18s "
 argument_list|,
 name|ns_print
 argument_list|(
@@ -815,7 +815,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8.8s %-6d %-10d "
+literal|"%-6.6s %6d %8d "
 argument_list|,
 name|name
 argument_list|,
@@ -906,7 +906,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d\n"
+literal|" %s%d\n"
 argument_list|,
 name|name
 argument_list|,
