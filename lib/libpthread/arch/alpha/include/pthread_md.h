@@ -57,7 +57,7 @@ name|THR_SETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
-value|_alpha_restore_context(&(ucp)->uc_mcontext, \ 				    0, NULL)
+value|PANIC("THR_SETCONTEXT() now in use!\n")
 end_define
 
 begin_define
@@ -101,12 +101,12 @@ comment|/* We don't know what this is yet? */
 end_comment
 
 begin_comment
-comment|/*  * tp points to one of these. We define the static TLS as an array  * of long double to enforce 16-byte alignment of the TLS memory,  * struct ia64_tp, struct tcb and also struct kcb. Both static and  * dynamic allocation of any of these structures will result in a  * valid, well-aligned thread pointer.  */
+comment|/*  * tp points to one of these. We define the static TLS as an array  * of long double to enforce 16-byte alignment of the TLS memory,  * struct alpha_tp, struct tcb and also struct kcb. Both static and  * dynamic allocation of any of these structures will result in a  * valid, well-aligned thread pointer.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ia64_tp
+name|alpha_tp
 block|{
 name|struct
 name|tdv
@@ -151,7 +151,7 @@ name|long
 name|tcb_isfake
 decl_stmt|;
 name|struct
-name|ia64_tp
+name|alpha_tp
 name|tcb_tp
 decl_stmt|;
 block|}
