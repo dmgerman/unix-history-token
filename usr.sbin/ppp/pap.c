@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.32 1999/02/20 01:12:45 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.33 1999/03/31 14:21:45 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -890,6 +890,45 @@ decl_stmt|,
 modifier|*
 name|key
 decl_stmt|;
+if|if
+condition|(
+name|bundle_Phase
+argument_list|(
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|)
+operator|!=
+name|PHASE_NETWORK
+operator|&&
+name|bundle_Phase
+argument_list|(
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|)
+operator|!=
+name|PHASE_AUTHENTICATE
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Unexpected pap input - dropped !\n"
+argument_list|)
+expr_stmt|;
+name|mbuf_Free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
