@@ -544,10 +544,9 @@ expr_stmt|;
 comment|/*      * See if the device table matches our expectations.      */
 if|if
 condition|(
-name|devsw
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_devsw
 operator|->
 name|d_open
 operator|!=
