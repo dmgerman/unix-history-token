@@ -442,14 +442,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<consumer>\n"
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"\t<ref>%p</ref>\n"
+literal|"\t<consumer id=\"%p\">\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -458,18 +451,26 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<geom><ref>%p</ref></geom>\n"
+literal|"\t<geom ref=\"%p\"/>\n"
 argument_list|,
 name|cp
 operator|->
 name|geom
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|provider
+operator|!=
+name|NULL
+condition|)
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<provider><ref>%p</ref></provider>\n"
+literal|"\t<provider ref=\"%p\"/>\n"
 argument_list|,
 name|cp
 operator|->
@@ -568,14 +569,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<provider>\n"
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"\t<ref>%p</ref>\n"
+literal|"\t<provider id=\"%p\">\n"
 argument_list|,
 name|pp
 argument_list|)
@@ -584,7 +578,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<geom><ref>%p</ref></geom>\n"
+literal|"\t<geom ref=\"%p\"/>\n"
 argument_list|,
 name|pp
 operator|->
@@ -714,14 +708,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<geom>\n"
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"<ref>%p</ref>\n"
+literal|"<geom id=\"%p\">\n"
 argument_list|,
 name|gp
 argument_list|)
@@ -730,7 +717,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<class><ref>%p</ref></class>\n"
+literal|"<class ref=\"%p\"/>\n"
 argument_list|,
 name|gp
 operator|->
@@ -902,14 +889,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<class>\n"
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"<ref>%p</ref>\n"
+literal|"<class id=\"%p\">\n"
 argument_list|,
 name|mp
 argument_list|)
