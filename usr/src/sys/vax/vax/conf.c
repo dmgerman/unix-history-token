@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.6	%G%	*/
+comment|/*	conf.c	3.7	%G%	*/
 end_comment
 
 begin_include
@@ -179,6 +179,19 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|int
+name|swstrategy
+argument_list|()
+decl_stmt|,
+name|swread
+argument_list|()
+decl_stmt|,
+name|swwrite
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|bdevsw
 name|bdevsw
@@ -220,6 +233,24 @@ name|uptab
 block|,
 endif|#
 directive|endif
+comment|/* 3 */
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+literal|0
+block|,
+comment|/* 4 */
+name|nodev
+block|,
+name|nodev
+block|,
+name|swstrategy
+block|,
+literal|0
+block|,
 literal|0
 block|, }
 decl_stmt|;
@@ -597,13 +628,13 @@ block|,
 endif|#
 directive|endif
 comment|/*7*/
-name|nodev
+name|nulldev
 block|,
-name|nodev
+name|nulldev
 block|,
-name|nodev
+name|swread
 block|,
-name|nodev
+name|swwrite
 block|,
 name|nodev
 block|,
@@ -928,23 +959,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|dev_t
-name|swapdev
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* WRONG (eventually) */
-end_comment
-
-begin_decl_stmt
-name|dev_t
 name|pipedev
 init|=
 name|makedev
@@ -957,22 +971,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
-name|swplo
+name|dev_t
+name|argdev
 init|=
+name|makedev
+argument_list|(
+literal|0
+argument_list|,
 literal|1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* (swplo-1) % CLSIZE must be 0 */
+comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines as well as the placement  * of the block on the d_tab chains.  Instead, /dev/drum is  * provided as a character (raw) device.  */
+end_comment
+
+begin_decl_stmt
+name|dev_t
+name|swapdev
+init|=
+name|makedev
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Nswap is the basic number of blocks of swap per  * swap device, and is multipliet by nswdev after  * nswdev is determined at boot.  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|nswap
 init|=
-literal|33439
+literal|33440
 decl_stmt|;
 end_decl_stmt
 
@@ -992,18 +1028,21 @@ argument_list|)
 block|,
 literal|0
 block|,
+comment|/* rp0b */
+name|makedev
+argument_list|(
+literal|2
+argument_list|,
+literal|9
+argument_list|)
+block|,
+literal|0
+block|,
+comment|/* up1b */
 literal|0
 block|,
 literal|0
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nswdev
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
