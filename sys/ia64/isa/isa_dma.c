@@ -317,19 +317,19 @@ comment|/*  * Setup a DMA channel's bounce buffer.  */
 end_comment
 
 begin_function
-name|void
-name|isa_dmainit
+name|int
+name|isa_dma_init
 parameter_list|(
-name|chan
-parameter_list|,
-name|bouncebufsize
-parameter_list|)
 name|int
 name|chan
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|bouncebufsize
-decl_stmt|;
+parameter_list|,
+name|int
+name|flag
+name|__unused
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -391,7 +391,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"isa_dmainit: channel out of range"
+literal|"isa_dma_init: channel out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -408,7 +408,7 @@ index|]
 condition|)
 name|panic
 argument_list|(
-literal|"isa_dmainit: impossible request"
+literal|"isa_dma_init: impossible request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -469,7 +469,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"isa_dmainit: unable to create dma tag\n"
+literal|"isa_dma_init: unable to create dma tag\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -494,10 +494,15 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"isa_dmainit: unable to create dma map\n"
+literal|"isa_dma_init: unable to create dma map\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1330,7 +1335,7 @@ index|]
 condition|)
 name|panic
 argument_list|(
-literal|"isa_dmastart: called without isa_dmainit"
+literal|"isa_dmastart: called without isa_dma_init"
 argument_list|)
 expr_stmt|;
 name|dma_busy

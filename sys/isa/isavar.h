@@ -584,14 +584,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|isa_dmainit
+name|int
+name|isa_dma_init
 parameter_list|(
 name|int
 name|chan
 parameter_list|,
 name|u_int
 name|bouncebufsize
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -659,6 +662,18 @@ name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|isa_dmainit
+parameter_list|(
+name|chan
+parameter_list|,
+name|size
+parameter_list|)
+value|do { \ 	if (isa_dma_init(chan, size, M_NOWAIT)) \ 		printf("WARNING: isa_dma_init(%d, %ju) failed\n", \ 		    (int)(chan), (uintmax_t)(size)); \ 	} while (0)
+end_define
 
 begin_function_decl
 name|int

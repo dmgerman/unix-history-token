@@ -646,7 +646,7 @@ name|vm_page_array_size
 operator|=
 name|page_range
 expr_stmt|;
-comment|/* 	 * Construct the free queue(s) in descending order (by physical 	 * address) so that the first 16MB of physical memory is allocated 	 * last rather than first.  On large-memory machines, this avoids 	 * the exhaustion of low physical memory before isa_dmainit has run. 	 */
+comment|/* 	 * Construct the free queue(s) in descending order (by physical 	 * address) so that the first 16MB of physical memory is allocated 	 * last rather than first.  On large-memory machines, this avoids 	 * the exhaustion of low physical memory before isa_dma_init has run. 	 */
 name|cnt
 operator|.
 name|v_page_count

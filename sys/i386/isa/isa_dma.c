@@ -338,25 +338,24 @@ comment|/*  * Setup a DMA channel's bounce buffer.  */
 end_comment
 
 begin_function
-name|void
-name|isa_dmainit
+name|int
+name|isa_dma_init
 parameter_list|(
-name|chan
-parameter_list|,
-name|bouncebufsize
-parameter_list|)
 name|int
 name|chan
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|bouncebufsize
-decl_stmt|;
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 block|{
 name|void
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* 	 * If a DMA channel is shared, both drivers have to call isa_dmainit 	 * since they don't know that the other driver will do it. 	 * Just return if we're already set up good. 	 * XXX: this only works if they agree on the bouncebuf size.  This 	 * XXX: is typically the case since they are multiple instances of 	 * XXX: the same driver. 	 */
+comment|/* 	 * If a DMA channel is shared, both drivers have to call isa_dma_init 	 * since they don't know that the other driver will do it. 	 * Just return if we're already set up good. 	 * XXX: this only works if they agree on the bouncebuf size.  This 	 * XXX: is typically the case since they are multiple instances of 	 * XXX: the same driver. 	 */
 if|if
 condition|(
 name|dma_bouncebuf
@@ -366,7 +365,11 @@ index|]
 operator|!=
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -379,7 +382,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"isa_dmainit: channel out of range"
+literal|"isa_dma_init: channel out of range"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -400,7 +403,7 @@ name|bouncebufsize
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|flag
 argument_list|)
 expr_stmt|;
 if|if
@@ -431,7 +434,11 @@ index|]
 operator|=
 name|buf
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|free
 argument_list|(
@@ -449,7 +456,7 @@ name|bouncebufsize
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|flag
 argument_list|,
 literal|0ul
 argument_list|,
@@ -472,16 +479,11 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|printf
-argument_list|(
-literal|"isa_dmainit(%d, %d) failed\n"
-argument_list|,
-name|chan
-argument_list|,
-name|bouncebufsize
-argument_list|)
-expr_stmt|;
-else|else
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|dma_bouncebuf
 index|[
 name|chan
@@ -489,6 +491,11 @@ index|]
 operator|=
 name|buf
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
