@@ -195,6 +195,16 @@ comment|/* don't permit xargs delimiting chars */
 end_comment
 
 begin_decl_stmt
+name|int
+name|issort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* travel the file hierarchy lexicographical order */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -290,7 +300,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPXdf:x"
+literal|"HLPXdf:sx"
 argument_list|)
 operator|)
 operator|!=
@@ -360,6 +370,14 @@ name|p
 operator|++
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|issort
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
