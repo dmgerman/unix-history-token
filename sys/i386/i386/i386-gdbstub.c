@@ -7,6 +7,10 @@ begin_comment
 comment|/****************************************************************************  *  Header: remcom.c,v 1.34 91/03/09 12:29:49 glenne Exp $  *  *  Module name: remcom.c $  *  Revision: 1.34 $  *  Date: 91/03/09 12:29:49 $  *  Contributor:     Lake Stevens Instrument Division$  *  *  Description:     low level support for gdb debugger. $  *  *  Considerations:  only works on target hardware $  *  *  Written by:      Glenn Engel $  *  ModuleState:     Experimental $  *  *  NOTES:           See Below $  *  *  Modified for FreeBSD by Stu Grossman.  *  *  To enable debugger support, two things need to happen.  One, a  *  call to set_debug_traps() is necessary in order to allow any breakpoints  *  or error conditions to be properly intercepted and reported to gdb.  *  Two, a breakpoint needs to be generated to begin communication.  This  *  is most easily accomplished by a call to breakpoint().  Breakpoint()  *  simulates a breakpoint by executing a trap #1.  *  *  The external function exceptionHandler() is  *  used to attach a specific handler to a specific 386 vector number.  *  It should use the same privilege level it runs at.  It should  *  install it as an interrupt gate so that interrupts are masked  *  while the handler runs.  *  Also, need to assign exceptionHook and oldExceptionHook.  *  *  Because gdb will sometimes write to the stack area to execute function  *  calls, this program cannot rely on using the supervisor stack so it  *  uses its own stack area reserved in the int array remcomStack.  *  *************  *  *    The following gdb commands are supported:  *  * command          function                               Return value  *  *    g             return the value of the CPU registers  hex data or ENN  *    G             set the value of the CPU registers     OK or ENN  *  *    mAA..AA,LLLL  Read LLLL bytes at address AA..AA      hex data or ENN  *    MAA..AA,LLLL: Write LLLL bytes at address AA.AA      OK or ENN  *  *    c             Resume at current address              SNN   ( signal NN)  *    cAA..AA       Continue at address AA..AA             SNN  *  *    s             Step one instruction                   SNN  *    sAA..AA       Step one instruction from AA..AA       SNN  *  *    k             kill  *  *    ?             What was the last sigval ?             SNN   (signal NN)  *  *    D             detach                                 OK  *  * All commands and responses are sent with a packet which includes a  * checksum.  A packet consists of  *  * $<packet info>#<checksum>.  *  * where  *<packet info> ::<characters representing the command or response>  *<checksum>    ::< two hex digits computed as modulo 256 sum of<packetinfo>>  *  * When a packet is received, it is first acknowledged with either '+' or '-'.  * '+' indicates a successful transfer.  '-' indicates a failed transfer.  *  * Example:  *  * Host:                  Reply:  * $m0,10#2a               +$00010203040506070809101112131415#42  *  ****************************************************************************/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -56,7 +60,7 @@ file|"opt_ddb.h"
 end_include
 
 begin_function_decl
-name|void
+name|int
 name|gdb_handle_exception
 parameter_list|(
 name|db_regs_t
@@ -78,7 +82,7 @@ literal|0
 end_if
 
 begin_function
-name|void
+name|int
 name|gdb_handle_exception
 parameter_list|(
 name|db_regs_t
@@ -419,6 +423,14 @@ name|unsigned
 name|char
 name|ch
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 do|do
 block|{
 comment|/* wait around for the start character, ignore all other characters */
@@ -620,6 +632,11 @@ operator|!=
 name|xmitcsum
 condition|)
 do|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -648,7 +665,15 @@ name|unsigned
 name|char
 name|ch
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/*  $<packet info>#<checksum>. */
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 do|do
 block|{
 comment|/*  * This is a non-standard hack to allow use of the serial console for  * operation as well as debugging.  Simply turn on 'remotechat' in gdb.  *  * This extension is not part of the Cygnus protocol, is kinda gross,  * but gets the job done.  */
@@ -756,6 +781,11 @@ operator|!=
 literal|'+'
 condition|)
 do|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1366,7 +1396,7 @@ comment|/*  * This function does all command procesing for interfacing to gdb.  
 end_comment
 
 begin_function
-name|void
+name|int
 name|gdb_handle_exception
 parameter_list|(
 name|db_regs_t
@@ -1778,6 +1808,17 @@ condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|gdbdev
+operator|==
+name|NODEV
+condition|)
+comment|/* somebody's removed it */
+return|return
+literal|1
+return|;
+comment|/* get out of here */
 name|remcomOutBuffer
 index|[
 literal|0
@@ -1854,7 +1895,9 @@ operator|&=
 operator|~
 name|RB_GDB
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 case|case
 literal|'g'
 case|:
@@ -2312,7 +2355,9 @@ name|registers
 operator|.
 name|es
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* switch */
 comment|/* reply to the request */
@@ -2322,6 +2367,9 @@ name|remcomOutBuffer
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
