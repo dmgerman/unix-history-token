@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.34 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,34 +291,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNAMESZ
-value|8
-end_define
-
-begin_comment
-comment|/* length of a login name */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAXUNAMES
 value|20
 end_define
 
 begin_comment
 comment|/* maximum number of user names */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXFNAME
-value|200
-end_define
-
-begin_comment
-comment|/* max file pathname length */
 end_comment
 
 begin_define
@@ -434,7 +412,7 @@ index|[
 name|MAXUNAMES
 index|]
 index|[
-name|UNAMESZ
+name|UT_NAMESIZE
 operator|+
 literal|1
 index|]
@@ -460,7 +438,7 @@ comment|/* forwarding address */
 name|char
 name|f_fname
 index|[
-name|MAXFNAME
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 block|}
@@ -791,17 +769,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1882,11 +1849,14 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-d] [-m markinterval] [-p path] [-f conffile]\n"
+literal|"usage: syslogd [-d] [-f conffile] [-m markinterval] [-p path]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2262,7 +2232,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|line
 argument_list|,
@@ -3965,7 +3935,7 @@ name|ut
 operator|.
 name|ut_name
 argument_list|,
-name|UNAMESZ
+name|UT_NAMESIZE
 argument_list|)
 operator|==
 literal|0
@@ -3997,7 +3967,7 @@ name|ut
 operator|.
 name|ut_line
 argument_list|,
-name|UNAMESZ
+name|UT_NAMESIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4494,50 +4464,15 @@ name|buf
 index|[
 literal|100
 index|]
+decl_stmt|,
+modifier|*
+name|strerror
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
 name|errno
-operator|==
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"syslogd: %s"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|errno
-operator|>
-name|sys_nerr
-condition|)
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"syslogd: %s: error %d"
-argument_list|,
-name|type
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)
@@ -4549,10 +4484,23 @@ literal|"syslogd: %s: %s"
 argument_list|,
 name|type
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"syslogd: %s"
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 name|errno
@@ -5485,7 +5433,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-comment|/* keep sys_errlist stuff out of logerror messages */
+comment|/* keep strerror() stuff out of logerror messages */
 comment|/* clear out file entry */
 name|bzero
 argument_list|(
@@ -6131,7 +6079,7 @@ index|]
 argument_list|,
 name|p
 argument_list|,
-name|UNAMESZ
+name|UT_NAMESIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6142,7 +6090,7 @@ operator|-
 name|p
 operator|)
 operator|>
-name|UNAMESZ
+name|UT_NAMESIZE
 condition|)
 name|f
 operator|->
@@ -6153,7 +6101,7 @@ index|[
 name|i
 index|]
 index|[
-name|UNAMESZ
+name|UT_NAMESIZE
 index|]
 operator|=
 literal|'\0'
