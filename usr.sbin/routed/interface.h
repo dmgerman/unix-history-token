@@ -164,6 +164,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFF_KERNELPUN
+value|0x1f
+end_define
+
+begin_comment
+comment|/* mask for above */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFF_SUBNET
 value|0x1000
 end_define

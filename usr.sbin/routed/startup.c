@@ -410,9 +410,13 @@ name|ifs
 operator|.
 name|int_flags
 operator|=
+operator|(
 name|ifreq
 operator|.
 name|ifr_flags
+operator|&
+name|IFF_KERNELPUN
+operator|)
 operator||
 name|IFF_INTERFACE
 expr_stmt|;
