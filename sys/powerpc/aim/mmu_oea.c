@@ -4601,9 +4601,6 @@ name|VM_PROT_WRITE
 operator|)
 condition|)
 return|return;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|pvo_head
 operator|=
 name|vm_page_to_pvoh
@@ -4762,9 +4759,6 @@ argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -5982,9 +5976,6 @@ name|pte
 modifier|*
 name|pt
 decl_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If this pvo already has a valid pte, we need to save it so it can 	 * be restored later.  We then just reload the new PTE over the old 	 * slot. 	 */
 if|if
 condition|(
@@ -6087,9 +6078,6 @@ name|depth_p
 operator|)
 operator|++
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -6118,9 +6106,6 @@ name|pte
 modifier|*
 name|pt
 decl_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|pt
 operator|=
 name|pmap_pvo_to_pte
@@ -6232,9 +6217,6 @@ name|pvo
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -6389,9 +6371,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry if 	 * there is a mapping. 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -6430,18 +6409,12 @@ break|break;
 block|}
 block|}
 comment|/* 	 * If we aren't overwriting a mapping, try to allocate. 	 */
-name|critical_exit
-argument_list|()
-expr_stmt|;
 name|pvo
 operator|=
 name|zalloc
 argument_list|(
 name|zone
 argument_list|)
-expr_stmt|;
-name|critical_enter
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6450,9 +6423,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -6633,9 +6603,6 @@ name|pmap_pte_overflow
 operator|++
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|first
@@ -7846,9 +7813,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -7889,9 +7853,6 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -7970,9 +7931,6 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -7981,9 +7939,6 @@ return|;
 block|}
 block|}
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -8017,9 +7972,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Clear the cached value. 	 */
 name|rv
 operator|=
@@ -8129,9 +8081,6 @@ argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 operator|(
