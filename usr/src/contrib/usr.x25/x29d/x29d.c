@@ -977,8 +977,7 @@ init|;
 condition|;
 control|)
 block|{
-name|s
-name|truct
+name|struct
 name|sockaddr_x25
 name|from
 decl_stmt|;
