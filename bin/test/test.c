@@ -147,7 +147,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|))
-name|__printflike
+name|__printf0like
 argument_list|(
 literal|1
 argument_list|,
