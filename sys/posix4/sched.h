@@ -22,28 +22,27 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/_types.h>
 end_include
-
-begin_comment
-comment|/* For pid_t */
-end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_KERNEL
+name|_PID_T_DECLARED
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
+begin_typedef
+typedef|typedef
+name|__pid_t
+name|pid_t
+typedef|;
+end_typedef
 
-begin_comment
-comment|/* Per P1003.4 */
-end_comment
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -97,6 +96,12 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
