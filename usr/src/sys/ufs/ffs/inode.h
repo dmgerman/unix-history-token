@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|ILOCKED
-value|0x1
+value|0x0001
 end_define
 
 begin_comment
@@ -263,8 +263,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IWANT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* some process waiting on lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRENAME
+value|0x0004
+end_define
+
+begin_comment
+comment|/* inode is being renamed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IUPD
-value|0x2
+value|0x0010
 end_define
 
 begin_comment
@@ -275,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|IACC
-value|0x4
+value|0x0020
 end_define
 
 begin_comment
@@ -285,19 +307,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWANT
-value|0x8
-end_define
-
-begin_comment
-comment|/* some process waiting on lock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ICHG
-value|0x10
+value|0x0040
 end_define
 
 begin_comment
@@ -307,8 +318,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IMOD
+value|0x0080
+end_define
+
+begin_comment
+comment|/* inode has been modified */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISHLOCK
-value|0x20
+value|0x0100
 end_define
 
 begin_comment
@@ -319,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|IEXLOCK
-value|0x40
+value|0x0200
 end_define
 
 begin_comment
@@ -330,33 +352,11 @@ begin_define
 define|#
 directive|define
 name|ILWAIT
-value|0x80
+value|0x0400
 end_define
 
 begin_comment
 comment|/* someone waiting on file lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMOD
-value|0x100
-end_define
-
-begin_comment
-comment|/* inode has been modified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRENAME
-value|0x200
-end_define
-
-begin_comment
-comment|/* inode is being renamed */
 end_comment
 
 begin_ifdef
