@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	diff.h	4.7	85/08/16	*/
+comment|/*	diff.h	4.8	91/03/01	*/
 end_comment
 
 begin_comment
@@ -406,7 +406,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|done
 parameter_list|()
 function_decl|;

@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.7 %G%"
+literal|"@(#)diff.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,12 +728,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|done
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -750,7 +748,7 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
