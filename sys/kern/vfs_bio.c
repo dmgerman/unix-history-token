@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.174 1998/09/04 08:06:55 dfr Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.175 1998/09/05 14:13:06 phk Exp $  */
 end_comment
 
 begin_comment
@@ -2425,7 +2425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ordered write.  * Start output on a buffer, but only wait for it to complete if the  * output device cannot guarantee ordering in some other way.  Devices  * that can perform asynchronous ordered writes will set the B_ASYNC  * flag in their strategy routine.  * The buffer is released when the output completes.  */
+comment|/*  * Ordered write.  * Start output on a buffer, and flag it so that the device will write  * it in the order it was queued.  The buffer is released when the output  * completes.  */
 end_comment
 
 begin_function
@@ -2438,12 +2438,13 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * XXX Add in B_ASYNC once the SCSI 	 *     layer can deal with ordered 	 *     writes properly. 	 */
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_ORDERED
+operator||
+name|B_ASYNC
 expr_stmt|;
 return|return
 operator|(
