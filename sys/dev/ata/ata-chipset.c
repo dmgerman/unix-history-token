@@ -14376,7 +14376,21 @@ index|[]
 init|=
 block|{
 block|{
-name|ATA_VIA8237_1
+name|ATA_VIA6410
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA6
+block|,
+literal|"VIA 6410"
+block|}
+block|,
+block|{
+name|ATA_VIA6420
 block|,
 literal|0x00
 block|,
@@ -14386,7 +14400,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"VIA 8237"
+literal|"VIA 6420"
 block|}
 block|,
 block|{
