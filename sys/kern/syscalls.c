@@ -1373,6 +1373,9 @@ comment|/* 452 = setaudit_addr */
 literal|"auditctl"
 block|,
 comment|/* 453 = auditctl */
+literal|"_umtx_op"
+block|,
+comment|/* 454 = _umtx_op */
 block|}
 decl_stmt|;
 end_decl_stmt

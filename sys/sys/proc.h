@@ -607,12 +607,11 @@ modifier|*
 name|td_waitset
 decl_stmt|;
 comment|/* (c) Wait set for sigwait. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|thread
-argument_list|)
-name|td_umtx
-expr_stmt|;
+name|struct
+name|umtx_q
+modifier|*
+name|td_umtxq
+decl_stmt|;
 comment|/* (c?) Link for when we're blocked. */
 specifier|volatile
 name|u_int
@@ -953,12 +952,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UMTXWAKEUP
+name|TDF_UMTXQ
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Libthr thread must not sleep on a umtx. */
+comment|/* Thread is sleeping on a umtx. */
 end_comment
 
 begin_define

@@ -6431,6 +6431,22 @@ name|lkmressys
 block|}
 block|,
 comment|/* 453 = auditctl */
+block|{
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|_umtx_op_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|_umtx_op
+block|}
+block|,
+comment|/* 454 = _umtx_op */
 block|}
 decl_stmt|;
 end_decl_stmt
