@@ -1135,6 +1135,17 @@ begin_comment
 comment|/* show statistics */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|dowait
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wait for children to exit */
+end_comment
+
 begin_comment
 comment|/* Structures to read kernel data into */
 end_comment
