@@ -22,7 +22,7 @@ name|char
 name|vpdSCCSid
 index|[]
 init|=
-literal|"@(#)vpd.c	1.2\t%G%"
+literal|"@(#)vpd.c	1.3\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -281,13 +281,6 @@ literal|6
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|dir
-name|dbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|onalrm
@@ -335,8 +328,6 @@ name|argv
 parameter_list|)
 block|{
 name|char
-name|dp
-decl_stmt|,
 name|n
 decl_stmt|;
 specifier|register
@@ -350,6 +341,16 @@ decl_stmt|;
 specifier|register
 name|int
 name|df
+decl_stmt|;
+specifier|register
+name|struct
+name|direct
+modifier|*
+name|dirp
+decl_stmt|;
+name|DIR
+modifier|*
+name|dp
 decl_stmt|;
 name|struct
 name|stat
@@ -682,11 +683,9 @@ expr_stmt|;
 block|}
 name|dp
 operator|=
-name|open
+name|opendir
 argument_list|(
 literal|"."
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|search
@@ -703,35 +702,25 @@ operator|==
 literal|1
 condition|)
 block|{
-name|lseek
+name|rewinddir
 argument_list|(
 name|dp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|n
+name|dirp
 operator|=
-name|read
+name|readdir
 argument_list|(
 name|dp
-argument_list|,
-operator|&
-name|dbuf
-argument_list|,
-sizeof|sizeof
-name|dbuf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<=
-literal|0
+name|dirp
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -783,6 +772,11 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
+name|closedir
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 literal|30
@@ -795,13 +789,8 @@ block|}
 block|}
 do|while
 condition|(
-operator|!
-name|dbuf
-operator|.
-name|d_ino
-operator|||
-name|dbuf
-operator|.
+name|dirp
+operator|->
 name|d_name
 index|[
 literal|0
@@ -809,8 +798,8 @@ index|]
 operator|!=
 literal|'d'
 operator|||
-name|dbuf
-operator|.
+name|dirp
+operator|->
 name|d_name
 index|[
 literal|1
@@ -827,8 +816,8 @@ index|[
 literal|15
 index|]
 argument_list|,
-name|dbuf
-operator|.
+name|dirp
+operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
@@ -836,8 +825,8 @@ name|dprcons
 argument_list|(
 literal|"found %s\n"
 argument_list|,
-name|dbuf
-operator|.
+name|dirp
+operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
@@ -876,7 +865,7 @@ name|okreque
 operator|=
 literal|0
 expr_stmt|;
-name|close
+name|closedir
 argument_list|(
 name|dp
 argument_list|)
