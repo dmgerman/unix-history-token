@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.9 %G%"
+literal|"@(#)main.c 2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +275,18 @@ name|mflag
 init|=
 literal|0
 decl_stmt|,
+name|vflag
+init|=
+literal|0
+decl_stmt|,
+name|yflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|cvtflag
 init|=
 literal|0
@@ -864,6 +876,29 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'x'
+case|:
+name|command
+operator|=
+operator|*
+name|cp
+expr_stmt|;
+comment|/* set verbose mode by default */
+case|case
+literal|'v'
+case|:
+name|vflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|yflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 case|case
@@ -877,9 +912,6 @@ operator|++
 expr_stmt|;
 case|case
 literal|'t'
-case|:
-case|case
-literal|'x'
 case|:
 name|command
 operator|=
@@ -1423,7 +1455,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
 literal|"%s: not on tape\n"
 argument_list|,
@@ -1962,6 +1994,10 @@ case|:
 case|case
 name|IFBLK
 case|:
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -2031,6 +2067,10 @@ condition|(
 name|mflag
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -2088,6 +2128,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -2199,6 +2243,10 @@ break|break;
 case|case
 name|IFLNK
 case|:
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -2295,6 +2343,10 @@ break|break;
 case|case
 name|IFREG
 case|:
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -2535,6 +2587,10 @@ operator|!
 name|mflag
 condition|)
 continue|continue;
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -3203,6 +3259,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -4443,7 +4503,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tape read error, continue?"
+literal|"Tape read error"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|yflag
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"continue?"
 argument_list|)
 expr_stmt|;
 do|do
@@ -4481,9 +4554,6 @@ operator|!=
 literal|'n'
 condition|)
 do|;
-name|eflag
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -4494,6 +4564,10 @@ name|done
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+block|}
+name|eflag
+operator|++
 expr_stmt|;
 name|i
 operator|=
@@ -5904,8 +5978,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s mounted on %s\n"
 argument_list|,
 name|dev
@@ -6797,6 +6873,12 @@ operator|--
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+return|return;
 if|if
 condition|(
 name|xp
