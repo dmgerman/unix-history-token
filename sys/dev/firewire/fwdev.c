@@ -4009,7 +4009,7 @@ name|nchunk
 argument_list|,
 name|M_FW
 argument_list|,
-name|M_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4052,7 +4052,7 @@ name|nchunk
 argument_list|,
 name|M_FW
 argument_list|,
-name|M_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4106,7 +4106,7 @@ operator|)
 argument_list|,
 name|M_FW
 argument_list|,
-name|M_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4196,7 +4196,7 @@ operator|)
 argument_list|,
 name|M_FW
 argument_list|,
-name|M_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4838,6 +4838,7 @@ name|sc
 operator|->
 name|fc
 argument_list|,
+operator|&
 name|asyreq
 operator|->
 name|req

@@ -323,6 +323,11 @@ operator|->
 name|info_len
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"node       EUI64       status\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -351,13 +356,24 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d node %d eui:%08x%08x status:%d\n"
+literal|"%4d  %08x%08x %6d\n"
 argument_list|,
+operator|(
+name|devinfo
+operator|->
+name|status
+operator|||
 name|i
-argument_list|,
+operator|==
+literal|0
+operator|)
+condition|?
 name|devinfo
 operator|->
 name|dst
+else|:
+operator|-
+literal|1
 argument_list|,
 name|devinfo
 operator|->
@@ -2143,9 +2159,6 @@ name|list_dev
 argument_list|(
 name|fd
 argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
 expr_stmt|;
 block|}
 while|while
