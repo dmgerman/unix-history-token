@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.24 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2121,6 +2121,7 @@ name|cmd
 operator|==
 literal|0
 condition|)
+block|{
 name|fin
 operator|=
 name|fopen
@@ -2134,6 +2135,13 @@ name|closefunc
 operator|=
 name|fclose
 expr_stmt|;
+name|st
+operator|.
+name|st_size
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|char
@@ -2171,6 +2179,13 @@ name|closefunc
 operator|=
 name|ftpd_pclose
 expr_stmt|;
+name|st
+operator|.
+name|st_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2194,12 +2209,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|st
-operator|.
-name|st_size
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|cmd
