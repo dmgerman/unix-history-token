@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,15 +35,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)chown.c	8.8 (Berkeley) 4/4/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)chown.c	8.8 (Berkeley) 4/4/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1028,6 +1047,7 @@ name|errno
 operator|!=
 name|EPERM
 operator|||
+operator|(
 name|uid
 operator|!=
 operator|-
@@ -1046,17 +1066,8 @@ argument_list|()
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|fflag
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -1066,7 +1077,6 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Check group membership; kernel just returns EPERM. */
 if|if
 condition|(
@@ -1079,6 +1089,20 @@ name|ngroups
 operator|==
 operator|-
 literal|1
+operator|&&
+name|euid
+operator|==
+operator|-
+literal|1
+operator|&&
+operator|(
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ngroups
@@ -1111,16 +1135,6 @@ name|ngroups
 operator|<
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|fflag
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -1131,12 +1145,6 @@ name|gname
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|fflag
-condition|)
 name|warn
 argument_list|(
 literal|"%s"
