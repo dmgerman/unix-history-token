@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.1 (Berkeley) %G%"
+literal|"@(#)mount.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,38 @@ condition|)
 goto|goto
 name|argcnt
 goto|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_type
+argument_list|,
+name|FSTAB_RO
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_type
+argument_list|,
+name|FSTAB_RW
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_type
+argument_list|,
+name|FSTAB_RQ
+argument_list|)
+condition|)
+goto|goto
+name|argcnt
+goto|;
 name|mountfs
 argument_list|(
 name|fs
@@ -548,7 +580,9 @@ name|fs
 operator|->
 name|fs_file
 argument_list|,
-name|type
+name|fs
+operator|->
+name|fs_type
 argument_list|)
 expr_stmt|;
 name|exit
