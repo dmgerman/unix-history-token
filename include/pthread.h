@@ -585,6 +585,7 @@ name|pthread_attr_getstacksize
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -601,6 +602,7 @@ name|pthread_attr_getstackaddr
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -618,6 +620,7 @@ name|pthread_attr_getdetachstate
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1052,6 +1055,22 @@ name|__P
 argument_list|(
 operator|(
 name|pthread_mutexattr_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_mutexattr_gettype
+name|__P
+argument_list|(
+operator|(
+name|pthread_mutexattr_t
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
