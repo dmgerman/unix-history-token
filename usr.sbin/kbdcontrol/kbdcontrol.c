@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.25 1999/05/09 04:57:51 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.26 1999/06/22 14:15:34 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4146,6 +4146,25 @@ operator|,
 name|pitch
 operator|=
 literal|800
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"off"
+argument_list|)
+condition|)
+name|duration
+operator|=
+literal|0
+operator|,
+name|pitch
+operator|=
+literal|0
 expr_stmt|;
 else|else
 block|{
