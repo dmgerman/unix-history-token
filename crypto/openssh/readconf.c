@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * readconf.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Apr 22 00:03:10 1995 ylo  *   * Functions for reading the configuration files.  *   */
+comment|/*  *   * readconf.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Apr 22 00:03:10 1995 ylo  *   * Functions for reading the configuration files.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2994,7 +2994,7 @@ name|options
 operator|->
 name|check_host_ip
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
