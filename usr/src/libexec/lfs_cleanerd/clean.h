@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ name|NUM_TO_CLEAN
 parameter_list|(
 name|fsp
 parameter_list|)
-value|(5)
+value|(1)
 end_define
 
 begin_define
