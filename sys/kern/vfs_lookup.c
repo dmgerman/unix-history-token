@@ -118,6 +118,19 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|NAMEI_DIAGNOSTIC
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NAMEI_DIAGNOSTIC
+end_undef
+
 begin_comment
 comment|/*  * Allocation zone for namei  */
 end_comment
@@ -1936,6 +1949,18 @@ argument_list|,
 literal|"lookup"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|vprint
+argument_list|(
+literal|"lookup in"
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2717,20 +2742,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NAMEI_DIAGNOSTIC
-name|int
-name|newhash
-decl_stmt|;
-comment|/* DEBUG: check name hash */
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* DEBUG: check name ptr/len */
-endif|#
-directive|endif
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|wantparent
 operator|=
@@ -2813,35 +2824,6 @@ comment|/* 	 * Search a new directory. 	 * 	 * The last component of the filenam
 ifdef|#
 directive|ifdef
 name|NAMEI_DIAGNOSTIC
-if|if
-condition|(
-name|cnp
-operator|->
-name|cn_namelen
-operator|!=
-name|cp
-operator|-
-name|cnp
-operator|->
-name|cn_nameptr
-condition|)
-name|panic
-argument_list|(
-literal|"relookup: bad len"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|cp
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"relookup: not last component"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"{%s}: "
@@ -2961,6 +2943,18 @@ literal|"relookup: lookup on dot-dot"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 */
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|vprint
+argument_list|(
+literal|"search in:"
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
