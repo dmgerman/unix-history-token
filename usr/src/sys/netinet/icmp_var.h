@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	icmp_var.h	4.1	83/03/10	*/
+comment|/*	icmp_var.h	4.2	83/03/10	*/
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ end_ifdef
 
 begin_decl_stmt
 name|struct
-name|impcstat
+name|icmpstat
 name|icmpstat
 decl_stmt|;
 end_decl_stmt
