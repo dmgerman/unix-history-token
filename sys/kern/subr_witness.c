@@ -1309,6 +1309,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"sleepq chain"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sched lock"
 block|,
 operator|&
