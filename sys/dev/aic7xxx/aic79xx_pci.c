@@ -4249,6 +4249,8 @@ operator||
 name|AHD_NEW_DFCNTRL_OPTS
 operator||
 name|AHD_FAST_CDB_DELIVERY
+operator||
+name|AHD_BUSFREEREV_BUG
 expr_stmt|;
 name|ahd
 operator|->

@@ -4361,7 +4361,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: Queueing SCB 0x%x bus addr 0x%x - 0x%x%x/0x%x\n"
+literal|"%s: Queueing SCB %d:0x%x bus addr 0x%x - 0x%x%x/0x%x\n"
 argument_list|,
 name|ahd_name
 argument_list|(
@@ -4372,6 +4372,12 @@ name|SCB_GET_TAG
 argument_list|(
 name|scb
 argument_list|)
+argument_list|,
+name|scb
+operator|->
+name|hscb
+operator|->
+name|scsiid
 argument_list|,
 name|aic_le32toh
 argument_list|(

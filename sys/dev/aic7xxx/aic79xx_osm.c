@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Bus independent FreeBSD shim for the aic79xx based Adaptec SCSI controllers  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#35 $  */
+comment|/*  * Bus independent FreeBSD shim for the aic79xx based Adaptec SCSI controllers  *  * Copyright (c) 1994-2002, 2004 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#35 $  */
 end_comment
 
 begin_include
@@ -7711,9 +7711,9 @@ end_decl_stmt
 begin_macro
 name|DB_COMMAND
 argument_list|(
-argument|ahd_set_unit
+argument|ahd_sunit
 argument_list|,
-argument|ahd_ddb_set_unit
+argument|ahd_ddb_sunit
 argument_list|)
 end_macro
 
@@ -7784,7 +7784,7 @@ condition|)
 block|{
 name|db_error
 argument_list|(
-literal|"Must set unit with ahd_set_unit first!\n"
+literal|"Must set unit with ahd_sunit first!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7841,7 +7841,7 @@ condition|)
 block|{
 name|db_error
 argument_list|(
-literal|"Must set unit with ahd_set_unit first!\n"
+literal|"Must set unit with ahd_sunit first!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7916,7 +7916,7 @@ condition|)
 block|{
 name|db_error
 argument_list|(
-literal|"Must set unit with ahd_set_unit first!\n"
+literal|"Must set unit with ahd_sunit first!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8104,7 +8104,7 @@ condition|)
 block|{
 name|db_error
 argument_list|(
-literal|"Must set unit with ahd_set_unit first!\n"
+literal|"Must set unit with ahd_sunit first!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8268,6 +8268,39 @@ expr_stmt|;
 block|}
 name|db_skip_to_eol
 argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|DB_COMMAND
+argument_list|(
+argument|ahd_dump
+argument_list|,
+argument|ahd_ddb_dump
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|ahd_ddb_softc
+operator|==
+name|NULL
+condition|)
+block|{
+name|db_error
+argument_list|(
+literal|"Must set unit with ahd_sunit first!\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ahd_dump_card_state
+argument_list|(
+name|ahd_ddb_softc
+argument_list|)
 expr_stmt|;
 block|}
 end_block

@@ -4540,6 +4540,26 @@ typedef|;
 end_typedef
 
 begin_function_decl
+name|void
+name|ahd_done_with_status
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|,
+name|uint32_t
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ahd_search_qinfifo
 parameter_list|(
