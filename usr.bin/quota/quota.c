@@ -632,7 +632,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"quota: %s (uid %d): permission denied\n"
+literal|"quota: %s (uid %lu): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -875,7 +875,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"quota: %s (gid %d): permission denied\n"
+literal|"quota: %s (gid %lu): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1460,12 +1460,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%15s%8d%c%7d%8d%8s"
+literal|"%15s%8lu%c%7lu%8lu%8s"
 argument_list|,
 name|qup
 operator|->
 name|fsname
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1476,6 +1480,7 @@ name|dqb_curblocks
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
 operator|(
 name|msgb
@@ -1491,6 +1496,10 @@ literal|' '
 else|:
 literal|'*'
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1501,7 +1510,12 @@ name|dqb_bsoftlimit
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|qup
@@ -1512,6 +1526,7 @@ name|dqb_bhardlimit
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
 operator|(
 name|msgb
@@ -1537,7 +1552,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c%7d%8d%8s\n"
+literal|"%8lu%c%7lu%8lu%8s\n"
 argument_list|,
 name|qup
 operator|->
@@ -1658,7 +1673,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"Disk quotas for %s %s (%cid %d): %s\n"
+literal|"Disk quotas for %s %s (%cid %lu): %s\n"
 argument_list|,
 name|qfextension
 index|[
@@ -1807,7 +1822,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ddays"
+literal|"%lddays"
 argument_list|,
 operator|(
 name|hours
@@ -1835,7 +1850,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d:%d"
+literal|"%2ld:%ld"
 argument_list|,
 name|minutes
 operator|/
@@ -1856,7 +1871,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d"
+literal|"%2ld"
 argument_list|,
 name|minutes
 argument_list|)
