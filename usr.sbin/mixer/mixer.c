@@ -186,6 +186,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|names
 index|[
 name|i
@@ -241,6 +243,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|names
 index|[
 name|i
@@ -389,6 +393,8 @@ expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
+argument_list|,
+literal|"%s"
 argument_list|,
 name|names
 index|[
