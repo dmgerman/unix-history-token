@@ -3206,6 +3206,17 @@ operator|.
 name|kernend
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preload_metadata
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: loader(8) metadata is missing!\n"
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|getenv

@@ -8053,6 +8053,14 @@ name|KERNBASE
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: loader(8) metadata is missing!\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bootinfo
