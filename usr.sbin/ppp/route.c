@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.29 1997/12/04 18:49:39 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.30 1997/12/07 04:09:15 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -151,6 +151,24 @@ begin_include
 include|#
 directive|include
 file|"id.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"os.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iplist.h"
 end_include
 
 begin_include
@@ -722,9 +740,14 @@ name|EEXIST
 case|:
 name|LogPrintf
 argument_list|(
-name|LogTCPIP
+name|LogWARN
 argument_list|,
-literal|"Add route failed: Already exists\n"
+literal|"Add route failed: %s already exists\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|dst
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -733,9 +756,14 @@ name|ESRCH
 case|:
 name|LogPrintf
 argument_list|(
-name|LogTCPIP
+name|LogWARN
 argument_list|,
-literal|"Del route failed: Non-existent\n"
+literal|"Del route failed: %s: Non-existent\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|dst
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -744,7 +772,7 @@ literal|0
 case|:
 name|LogPrintf
 argument_list|(
-name|LogTCPIP
+name|LogWARN
 argument_list|,
 literal|"%s route failed: %s\n"
 argument_list|,
@@ -763,7 +791,7 @@ case|:
 default|default:
 name|LogPrintf
 argument_list|(
-name|LogTCPIP
+name|LogWARN
 argument_list|,
 literal|"%s route failed: %s\n"
 argument_list|,
@@ -1543,12 +1571,13 @@ specifier|static
 name|char
 name|ifs
 index|[
-literal|50
+literal|200
 index|]
 index|[
 literal|6
 index|]
 decl_stmt|;
+comment|/* We could have 256 tun devices ! */
 specifier|static
 name|int
 name|nifs
@@ -2898,6 +2927,118 @@ expr_stmt|;
 return|return
 operator|-
 literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|in_addr
+name|ChooseHisAddr
+parameter_list|(
+specifier|const
+name|struct
+name|in_addr
+name|gw
+parameter_list|)
+block|{
+name|struct
+name|in_addr
+name|try
+decl_stmt|;
+name|int
+name|f
+decl_stmt|;
+for|for
+control|(
+name|f
+operator|=
+literal|0
+init|;
+name|f
+operator|<
+name|DefHisChoice
+operator|.
+name|nItems
+condition|;
+name|f
+operator|++
+control|)
+block|{
+name|try
+operator|=
+name|iplist_next
+argument_list|(
+operator|&
+name|DefHisChoice
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"ChooseHisAddr: Check item %d (%s)\n"
+argument_list|,
+name|f
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|try
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OsTrySetIpaddress
+argument_list|(
+name|gw
+argument_list|,
+name|try
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogIPCP
+argument_list|,
+literal|"ChooseHisAddr: Selected IP address %s\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|try
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|f
+operator|==
+name|DefHisChoice
+operator|.
+name|nItems
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"ChooseHisAddr: All addresses in use !\n"
+argument_list|)
+expr_stmt|;
+name|try
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+block|}
+return|return
+name|try
 return|;
 block|}
 end_function

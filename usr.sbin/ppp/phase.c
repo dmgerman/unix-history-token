@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: phase.c,v 1.3 1997/11/22 03:37:43 brian Exp $  */
+comment|/*  * $Id: phase.c,v 1.4 1997/12/07 23:55:29 brian Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"ccp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
 end_include
 
 begin_include
