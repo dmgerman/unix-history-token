@@ -1124,7 +1124,7 @@ block|,
 block|{
 literal|"sbsize"
 block|,
-name|login_getcapnum
+name|login_getcapsize
 block|}
 block|,
 block|{
