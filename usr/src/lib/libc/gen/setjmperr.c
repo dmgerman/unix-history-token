@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setjmperr.c	5.4 (Berkeley) %G%"
+literal|"@(#)setjmperr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_comment
 comment|/*  * This routine is called from longjmp() when an error occurs.  * Programs that wish to exit gracefully from this error may  * write their own versions.  * If this routine returns, the program is aborted.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_macro
 name|longjmperror
 argument_list|()
@@ -54,7 +60,10 @@ name|ERRMSG
 value|"longjmp botch\n"
 name|write
 argument_list|(
-literal|2
+name|fileno
+argument_list|(
+name|stderr
+argument_list|)
 argument_list|,
 name|ERRMSG
 argument_list|,
