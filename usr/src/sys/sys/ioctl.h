@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.17	82/02/18	*/
+comment|/*	ioctl.h	4.18	82/03/03	*/
 end_comment
 
 begin_comment
@@ -1110,6 +1110,39 @@ end_define
 
 begin_comment
 comment|/* get process group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCADDRT
+value|(('s'<<8)|10)
+end_define
+
+begin_comment
+comment|/* add a routing table entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDELRT
+value|(('s'<<8)|11)
+end_define
+
+begin_comment
+comment|/* delete a routing table entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCCHGRT
+value|(('s'<<8)|12)
+end_define
+
+begin_comment
+comment|/* change a routing table entry */
 end_comment
 
 begin_endif
