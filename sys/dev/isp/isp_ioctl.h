@@ -76,14 +76,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_INITIATOR
+name|ISP_ROLE_TARGET
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_TARGET
+name|ISP_ROLE_INITIATOR
 value|0x2
 end_define
 
@@ -241,8 +241,17 @@ name|loopid
 decl_stmt|;
 comment|/* 0..255 */
 name|u_int32_t
+label|:
+literal|6
+operator|,
+name|role
+operator|:
+literal|2
+operator|,
 name|portid
-decl_stmt|;
+operator|:
+literal|24
+expr_stmt|;
 comment|/* 24 bit Port ID */
 name|u_int64_t
 name|node_wwn
