@@ -1651,7 +1651,7 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|uint
+name|u_int
 operator|)
 name|iframe
 operator|.
