@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.8 (Berkeley) %G%"
+literal|"@(#)print.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2655,7 +2655,7 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|ecmx
+name|mempages
 decl_stmt|,
 name|nlistread
 decl_stmt|;
@@ -2767,7 +2767,7 @@ operator|)
 operator|/
 name|CLSIZE
 operator|/
-name|ecmx
+name|mempages
 expr_stmt|;
 if|if
 condition|(
@@ -2796,7 +2796,7 @@ name|e
 operator|->
 name|e_xccount
 operator|/
-name|ecmx
+name|mempages
 expr_stmt|;
 else|#
 directive|else
@@ -2824,7 +2824,7 @@ operator|)
 operator|/
 name|CLSIZE
 operator|/
-name|ecmx
+name|mempages
 expr_stmt|;
 endif|#
 directive|endif
