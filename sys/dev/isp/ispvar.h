@@ -2101,6 +2101,23 @@ parameter_list|)
 value|(xp[2])
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_FW_NEWER_THAN
+parameter_list|(
+name|i
+parameter_list|,
+name|major
+parameter_list|,
+name|minor
+parameter_list|,
+name|micro
+parameter_list|)
+define|\
+value|(ISP_FW_REVX((i)->isp_fwrev)> ISP_FW_REV(major, minor, micro))
+end_define
+
 begin_comment
 comment|/*  * Bus (implementation) types  */
 end_comment
@@ -2756,6 +2773,9 @@ comment|/* Unhandled Response Entry */
 name|ISPASYNC_FW_CRASH
 block|,
 comment|/* Firmware has crashed */
+name|ISPASYNC_FW_DUMPED
+block|,
+comment|/* Firmware crashdump taken */
 name|ISPASYNC_FW_RESTARTED
 comment|/* Firmware has been restarted */
 block|}
