@@ -4870,6 +4870,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_ACCTON_EN2226
+value|{ "Accton", "Fast EtherCard-16", "EN2226", "1.00" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ACCTON_EN2226
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ACCTON_EN2226
+value|"Accton EN2226"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_ADDTRON_AWP100
 value|{ "Addtron", "AWP-100 Wireless PCMCIA", "Version 01.02", NULL }
 end_define
