@@ -1581,7 +1581,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:dl:f:m:p:rsuv"
+literal|"a:dl:f:m:p:nsuv"
 argument_list|)
 operator|)
 operator|!=
