@@ -928,9 +928,6 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sockp
 operator|->
 name|sa_data
@@ -956,7 +953,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 name|len

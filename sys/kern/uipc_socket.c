@@ -3157,7 +3157,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 operator|(
@@ -3707,7 +3708,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 name|min
@@ -3743,7 +3745,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 operator|(
@@ -4737,7 +4740,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|char
+operator|*
 argument_list|)
 operator|+
 name|moff
@@ -4769,7 +4773,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|char
+operator|*
 argument_list|)
 operator|+
 name|moff

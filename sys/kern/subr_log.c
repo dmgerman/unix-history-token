@@ -606,7 +606,8 @@ operator|=
 name|uiomove
 argument_list|(
 operator|(
-name|caddr_t
+name|char
+operator|*
 operator|)
 name|msgbufp
 operator|->

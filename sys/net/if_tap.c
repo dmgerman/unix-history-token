@@ -3625,7 +3625,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 name|len
@@ -3913,7 +3914,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
 name|m

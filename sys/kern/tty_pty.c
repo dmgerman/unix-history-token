@@ -2046,9 +2046,6 @@ argument_list|)
 expr_stmt|;
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tp
 operator|->
@@ -2891,9 +2888,6 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|cc
@@ -3051,9 +3045,6 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|cc

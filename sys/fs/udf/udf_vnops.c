@@ -2105,9 +2105,6 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|data
 argument_list|,
 name|size
@@ -2611,9 +2608,6 @@ return|return
 operator|(
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|uiodir
 operator|->
 name|dirent

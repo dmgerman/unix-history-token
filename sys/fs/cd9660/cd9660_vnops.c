@@ -1636,9 +1636,6 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dp
 argument_list|,
 name|dp
