@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/*  * Prerequisites:<sys/cdefs.h>,<sys/_types.h>  *  * This file must be kept synchronized with<sys/timespec.h>.  * It defines a structure which must be a type pun for  * `struct timespec'; this structure is used in header files where  * the ABI uses a `struct timespec' but standards prohibit its  * definition.  (Currently only<sys/stat.h>.)  */
+comment|/*  * Prerequisite:<sys/_types.h>  *  * This file must be kept synchronized with<sys/timespec.h>.  * It defines a structure which must be a type pun for  * `struct timespec'; this structure is used in header files where  * the ABI uses a `struct timespec' but standards prohibit its  * definition.  (Currently only<sys/stat.h>.)  *  * XXX should just declare struct __timespec as necessary.  It's simple,  * so is easy to keep synchronized, and hopefully not needed in as many  * places as struct timespec, so we don't need this extra header.  * Perhaps we don't need timespec.h either.  */
 end_comment
 
 begin_ifndef
@@ -23,23 +23,12 @@ begin_struct
 struct|struct
 name|__timespec
 block|{
-ifndef|#
-directive|ifndef
-name|_TIME_T_DECLARED
 name|__time_t
-name|__tv_sec
-decl_stmt|;
-comment|/* seconds, but time_t is not yet defined */
-else|#
-directive|else
-name|time_t
-name|__tv_sec
+name|tv_sec
 decl_stmt|;
 comment|/* seconds */
-endif|#
-directive|endif
 name|long
-name|__tv_nsec
+name|tv_nsec
 decl_stmt|;
 comment|/* and nanoseconds */
 block|}
@@ -52,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS__TIMESPEC_H_ */
+comment|/* !_SYS__TIMESPEC_H_ */
 end_comment
 
 end_unit
