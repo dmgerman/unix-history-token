@@ -190,6 +190,14 @@ name|maxtimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|txrx_error
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -874,6 +882,10 @@ operator|->
 name|th_msg
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -1476,6 +1488,10 @@ name|dp
 operator|->
 name|th_msg
 argument_list|)
+expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|abort
@@ -2458,6 +2474,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|timeoutbuf
