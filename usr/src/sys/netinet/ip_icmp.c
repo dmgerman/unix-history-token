@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.10	81/12/03	*/
+comment|/*	ip_icmp.c	4.11	81/12/22	*/
 end_comment
 
 begin_include
@@ -688,62 +688,17 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|icmp
-modifier|*
-name|icp
-init|=
-literal|0
-decl_stmt|;
-comment|/* XXX */
 name|COUNT
 argument_list|(
 name|ICMP_SEND
 argument_list|)
 expr_stmt|;
-name|icp
-operator|->
-name|icmp_cksum
-operator|=
-literal|0
-expr_stmt|;
-name|icp
-operator|->
-name|icmp_cksum
-operator|=
-name|in_cksum
+name|m_freem
 argument_list|(
 name|dtom
 argument_list|(
 name|ip
 argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|ip
-operator|->
-name|ip_ttl
-operator|=
-name|MAXTTL
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ip_output
-argument_list|(
-name|dtom
-argument_list|(
-name|ip
-argument_list|)
-argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
