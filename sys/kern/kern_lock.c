@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/systm.h>
 end_include
 
 begin_comment
@@ -166,12 +166,15 @@ name|lock_mtx_array
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(
+specifier|static
+argument_list|,
 name|lock_mtx
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -253,6 +256,8 @@ argument_list|,
 literal|"lockmgr"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 else|else
@@ -2158,6 +2163,8 @@ argument_list|,
 literal|"lockmgr"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 name|lock_mtx_selector
