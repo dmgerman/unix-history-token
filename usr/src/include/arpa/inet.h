@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet.h	4.1	83/05/28	*/
+comment|/*	inet.h	4.2	85/01/10	*/
 end_comment
 
 begin_comment
@@ -8,8 +8,8 @@ comment|/*  * External definitions for  * functions in inet(3N)  */
 end_comment
 
 begin_function_decl
-name|struct
-name|in_addr
+name|unsigned
+name|long
 name|inet_addr
 parameter_list|()
 function_decl|;
