@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|UMA_BOOT_PAGES
-value|30
+value|32
 end_define
 
 begin_comment
