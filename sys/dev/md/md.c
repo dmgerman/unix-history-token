@@ -1384,11 +1384,10 @@ name|g_class
 name|g_md_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"MD"
-block|,
-name|NULL
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}
