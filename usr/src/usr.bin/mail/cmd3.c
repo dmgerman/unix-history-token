@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.8 %G%"
+literal|"@(#)cmd3.c	1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -938,6 +938,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|rcv
+decl_stmt|,
+modifier|*
+name|replyto
 decl_stmt|;
 name|struct
 name|name
@@ -1000,6 +1003,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|replyto
+operator|=
+name|hfield
+argument_list|(
+literal|"reply-to"
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|buf
@@ -1007,6 +1019,21 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|replyto
+operator|!=
+name|NOSTR
+condition|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|replyto
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|cp
 operator|=
 name|hfield
@@ -1029,6 +1056,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 name|np
 operator|=
 name|elide
@@ -1078,6 +1106,10 @@ condition|(
 name|cp
 operator|!=
 name|NOSTR
+operator|&&
+name|replyto
+operator|==
+name|NOSTR
 condition|)
 block|{
 name|strcpy
@@ -1103,6 +1135,28 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|cp
+operator|==
+name|NOSTR
+operator|&&
+name|replyto
+operator|!=
+name|NOSTR
+condition|)
+name|printf
+argument_list|(
+literal|"Empty reply-to field -- replying to author\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NOSTR
+condition|)
 name|strcpy
 argument_list|(
 name|buf
@@ -1110,6 +1164,15 @@ argument_list|,
 name|rcv
 argument_list|)
 expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
 name|head
 operator|.
 name|h_to
@@ -1163,6 +1226,13 @@ name|h_cc
 operator|=
 name|NOSTR
 expr_stmt|;
+if|if
+condition|(
+name|replyto
+operator|==
+name|NOSTR
+condition|)
+block|{
 name|cp
 operator|=
 name|hfield
@@ -1218,6 +1288,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|head
 operator|.
