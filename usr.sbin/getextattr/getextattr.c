@@ -108,10 +108,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|struct
-name|iovec
-name|iov_buf
-decl_stmt|;
 name|char
 modifier|*
 name|attrname
@@ -263,18 +259,7 @@ expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
-name|iov_buf
-operator|.
-name|iov_base
-operator|=
-name|buf
-expr_stmt|;
-name|iov_buf
-operator|.
-name|iov_len
-operator|=
-name|BUFSIZE
-expr_stmt|;
+comment|/* 	 * XXX: Note: now that EAs support querying the size, we could 	 * actually allocate a buffer of the right size, rather than 	 * truncating at BUFSIZE. 	 */
 for|for
 control|(
 name|arg_counter
@@ -302,10 +287,9 @@ name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
-operator|&
-name|iov_buf
+name|buf
 argument_list|,
-literal|1
+name|BUFSIZE
 argument_list|)
 expr_stmt|;
 if|if
