@@ -25,13 +25,13 @@ name|queue_entry
 block|{
 name|void
 modifier|*
-name|next
+name|qe_next
 decl_stmt|;
 comment|/* next element */
 name|void
 modifier|*
 modifier|*
-name|prev
+name|qe_prev
 decl_stmt|;
 comment|/* address of previous next element */
 block|}
@@ -44,7 +44,7 @@ name|list_entry
 block|{
 name|void
 modifier|*
-name|next
+name|le_next
 decl_stmt|;
 comment|/* next element */
 block|}
@@ -73,7 +73,7 @@ name|queue_init
 parameter_list|(
 name|head
 parameter_list|)
-value|((head)->next = 0, (head)->prev =&(head)->next)
+value|{ \ 	(head)->qe_next = 0; \ 	(head)->qe_prev =&(head)->qe_next; \ }
 end_define
 
 begin_define
@@ -89,7 +89,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	(elm)->field.next = 0; \ 	(elm)->field.prev = (head)->prev; \ 	*(head)->prev = (elm); \ 	(head)->prev =&(elm)->field.next; \ }
+value|{ \ 	(elm)->field.qe_next = 0; \ 	(elm)->field.qe_prev = (head)->qe_prev; \ 	*(head)->qe_prev = (elm); \ 	(head)->qe_prev =&(elm)->field.qe_next; \ }
 end_define
 
 begin_define
@@ -105,7 +105,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (head)->next) \ 		queue_ptr->field.prev =&(elm)->field.next; \ 	else \ 		(head)->prev =&(elm)->field.next; \ 	(head)->next = (elm); \ 	(elm)->field.next = queue_ptr; \ 	(elm)->field.prev =&(head)->next; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (head)->qe_next) \ 		queue_ptr->field.qe_prev =&(elm)->field.qe_next; \ 	else \ 		(head)->qe_prev =&(elm)->field.qe_next; \ 	(head)->qe_next = (elm); \ 	(elm)->field.qe_next = queue_ptr; \ 	(elm)->field.qe_prev =&(head)->qe_next; \ }
 end_define
 
 begin_define
@@ -123,7 +123,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (listelm)->next) \ 		queue_ptr->field.prev =&(elm)->field.next; \ 	else \ 		(head)->prev =&(elm)->field.next; \ 	(listelm)->next = (elm); \ 	(elm)->field.next = queue_ptr; \ 	(elm)->field.prev =&(listelm)->next; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (listelm)->qe_next) \ 		queue_ptr->field.qe_prev =&(elm)->field.qe_next; \ 	else \ 		(head)->qe_prev =&(elm)->field.qe_next; \ 	(listelm)->qe_next = (elm); \ 	(elm)->field.qe_next = queue_ptr; \ 	(elm)->field.qe_prev =&(listelm)->qe_next; \ }
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (elm)->field.next) \ 		queue_ptr->field.prev = (elm)->field.prev; \ 	else \ 		(head)->prev = (elm)->field.prev; \ 	*(elm)->field.prev = queue_ptr; \ 	(elm)->field.next = NOLIST; \ 	(elm)->field.prev = NOLIST; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (elm)->field.qe_next) \ 		queue_ptr->field.qe_prev = (elm)->field.qe_prev; \ 	else \ 		(head)->qe_prev = (elm)->field.qe_prev; \ 	*(elm)->field.qe_prev = queue_ptr; \ 	(elm)->field.qe_next = NOLIST; \ 	(elm)->field.qe_prev = NOLIST; \ }
 end_define
 
 begin_comment
@@ -159,7 +159,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (head)->next) \ 		queue_ptr->field.prev =&(elm)->field.next; \ 	(head)->next = (elm); \ 	(elm)->field.next = queue_ptr; \ 	(elm)->field.prev =&(head)->next; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (head)->le_next) \ 		queue_ptr->field.qe_prev =&(elm)->field.qe_next; \ 	(head)->le_next = (elm); \ 	(elm)->field.qe_next = queue_ptr; \ 	(elm)->field.qe_prev =&(head)->le_next; \ }
 end_define
 
 begin_define
@@ -175,7 +175,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (listelm)->next) \ 		queue_ptr->field.prev =&(elm)->field.next; \ 	(listelm)->next = (elm); \ 	(elm)->field.next = queue_ptr; \ 	(elm)->field.prev =&(listelm)->next; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (listelm)->qe_next) \ 		queue_ptr->field.qe_prev =&(elm)->field.qe_next; \ 	(listelm)->qe_next = (elm); \ 	(elm)->field.qe_next = queue_ptr; \ 	(elm)->field.qe_prev =&(listelm)->qe_next; \ }
 end_define
 
 begin_define
@@ -189,7 +189,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (elm)->field.next) \ 		queue_ptr->field.prev = (elm)->field.prev; \ 	*(elm)->field.prev = queue_ptr; \ 	(elm)->field.next = NOLIST; \ 	(elm)->field.prev = NOLIST; \ }
+value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (elm)->field.qe_next) \ 		queue_ptr->field.qe_prev = (elm)->field.qe_prev; \ 	*(elm)->field.qe_prev = queue_ptr; \ 	(elm)->field.qe_next = NOLIST; \ 	(elm)->field.qe_prev = NOLIST; \ }
 end_define
 
 begin_endif
