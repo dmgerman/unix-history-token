@@ -626,6 +626,19 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|__strong_reference
+parameter_list|(
+name|sym
+parameter_list|,
+name|alias
+parameter_list|)
+define|\
+value|extern __typeof (sym) alias __attribute__ ((alias (#sym)));
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
