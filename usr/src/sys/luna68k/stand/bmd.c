@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmd.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmd.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -898,6 +898,18 @@ operator|*
 operator|)
 literal|0xB1000000
 decl_stmt|;
+specifier|volatile
+specifier|register
+name|long
+modifier|*
+name|bmd_bmsel
+init|=
+operator|(
+name|long
+operator|*
+operator|)
+literal|0xB1040000
+decl_stmt|;
 specifier|register
 name|struct
 name|bmd_softc
@@ -1141,6 +1153,12 @@ name|bc_escape
 operator|=
 name|bmd_escape
 expr_stmt|;
+operator|*
+name|bmd_bmsel
+operator|=
+literal|0xff
+expr_stmt|;
+comment|/* all planes */
 name|bmd_erase_screen
 argument_list|(
 operator|(
@@ -1153,6 +1171,12 @@ name|bc_waddr
 argument_list|)
 expr_stmt|;
 comment|/* clear screen */
+operator|*
+name|bmd_bmsel
+operator|=
+literal|0x01
+expr_stmt|;
+comment|/* 1 plane */
 comment|/* turn on  cursole */
 name|bmd_reverse_char
 argument_list|(
