@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.47 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1325,6 +1325,29 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_function
+name|int
+name|vn_bwrite
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_bwrite_args
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+return|return
+name|bwrite
+argument_list|(
+name|ap
+operator|->
+name|a_bp
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Delayed write.  *  * The buffer is marked dirty, but is not queued for I/O.  * This routine should be used when the buffer is expected  * to be modified again soon, typically a small write that  * partially fills a buffer.  *  * NB: magnetic tapes cannot be delayed; they must be  * written in the order that the writes are requested.  */
