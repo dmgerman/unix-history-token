@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rpcbind.c,v 1.1 2000/06/02 23:15:42 fvdl Exp $	*/
+comment|/*	$NetBSD: rpcbind.c,v 1.3 2002/11/08 00:16:40 fvdl Exp $	*/
 end_comment
 
 begin_comment
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc_com.h>
 end_include
 
 begin_ifdef
@@ -553,6 +559,11 @@ name|struct
 name|rlimit
 name|rl
 decl_stmt|;
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 name|parseargs
 argument_list|(
 name|argc
@@ -779,6 +790,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|rpc_control
+argument_list|(
+name|RPC_SVC_CONNMAXREC_SET
+argument_list|,
+operator|&
+name|maxrec
+argument_list|)
+expr_stmt|;
 name|init_transport
 argument_list|(
 name|nconf
@@ -2040,9 +2059,9 @@ argument_list|,
 operator|&
 name|taddr
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2405,9 +2424,9 @@ argument_list|,
 operator|&
 name|taddr
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 expr_stmt|;
 if|if

@@ -121,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpcsvc/sm_inter.h>
 end_include
 
@@ -327,6 +333,11 @@ name|netconfig
 modifier|*
 name|nconf
 decl_stmt|;
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -509,6 +520,14 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
+name|rpc_control
+argument_list|(
+name|RPC_SVC_CONNMAXREC_SET
+argument_list|,
+operator|&
+name|maxrec
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -564,9 +583,9 @@ name|nconf
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|,
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 expr_stmt|;
 if|if

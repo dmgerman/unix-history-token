@@ -3142,6 +3142,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|tirpcflag
+condition|)
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<rpc/rpc_com.h>\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|svcclosetime

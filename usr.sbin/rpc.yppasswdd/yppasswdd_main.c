@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/pmap_clnt.h>
 end_include
 
@@ -763,6 +769,11 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 specifier|extern
 name|int
 name|debug
@@ -1188,6 +1199,14 @@ argument_list|,
 name|MASTER_YPPASSWDVERS
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|rpc_control
+argument_list|(
+name|RPC_SVC_CONNMAXREC_SET
+argument_list|,
+operator|&
+name|maxrec
 argument_list|)
 expr_stmt|;
 if|if

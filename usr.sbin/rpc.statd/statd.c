@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -168,6 +174,11 @@ name|struct
 name|sigaction
 name|sa
 decl_stmt|;
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -205,6 +216,14 @@ argument_list|,
 name|SM_VERS
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|rpc_control
+argument_list|(
+name|RPC_SVC_CONNMAXREC_SET
+argument_list|,
+operator|&
+name|maxrec
 argument_list|)
 expr_stmt|;
 if|if
