@@ -1101,8 +1101,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_IF_IPPRE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* ip precedence */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_IF_IPMSK
-value|0x00003f00
+value|0x00007f00
 end_define
 
 begin_comment
