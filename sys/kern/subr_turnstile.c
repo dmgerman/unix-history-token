@@ -2842,6 +2842,7 @@ name|witness
 modifier|*
 name|w_next
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|w_description
@@ -3054,6 +3055,7 @@ name|enroll
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|description
@@ -4975,6 +4977,7 @@ name|witness
 modifier|*
 name|enroll
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|description
