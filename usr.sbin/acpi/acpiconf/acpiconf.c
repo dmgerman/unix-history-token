@@ -258,6 +258,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* should be a acpi define, but doesn't appear to be */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNKNOWN_CAP
+value|0xffffffff
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -351,6 +362,22 @@ name|pwr_units
 operator|=
 literal|"mAh"
 expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bif
+operator|.
+name|dcap
+operator|==
+name|UNKNOWN_CAP
+condition|)
+name|printf
+argument_list|(
+literal|"Design capacity:\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Design capacity:\t%d %s\n"
@@ -364,6 +391,22 @@ argument_list|,
 name|pwr_units
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bif
+operator|.
+name|lfcap
+operator|==
+name|UNKNOWN_CAP
+condition|)
+name|printf
+argument_list|(
+literal|"Last full capacity:\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Last full capacity:\t%d %s\n"
@@ -394,6 +437,22 @@ else|:
 literal|"secondary (rechargeable)"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bif
+operator|.
+name|dvol
+operator|==
+name|UNKNOWN_CAP
+condition|)
+name|printf
+argument_list|(
+literal|"Design voltage:\t\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Design voltage:\t\t%d mV\n"
@@ -544,31 +603,133 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"State:\t\t\tPresent\n"
+literal|"State:\t\t\t"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|state
+operator|&
+name|ACPI_BATT_STAT_CRITICAL
+condition|)
+name|printf
+argument_list|(
+literal|"CRITICAL "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|state
+operator|&
+name|ACPI_BATT_STAT_DISCHARG
+condition|)
+name|printf
+argument_list|(
+literal|"Discharging "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|state
+operator|&
+name|ACPI_BATT_STAT_CHARGING
+condition|)
+name|printf
+argument_list|(
+literal|"Charging"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Present Rate:\t\t%d mWh\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|rate
+operator|==
+name|UNKNOWN_CAP
+condition|)
+name|printf
+argument_list|(
+literal|"Present Rate:\t\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Present Rate:\t\t%d %s\n"
 argument_list|,
 name|battio
 operator|.
 name|bst
 operator|.
 name|rate
+argument_list|,
+name|pwr_units
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|cap
+operator|==
+name|UNKNOWN_CAP
+condition|)
 name|printf
 argument_list|(
-literal|"Remaining Capacity:\t%d mWh\n"
+literal|"Remaining Capacity:\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Remaining Capacity:\t%d %s\n"
 argument_list|,
 name|battio
 operator|.
 name|bst
 operator|.
 name|cap
+argument_list|,
+name|pwr_units
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|battio
+operator|.
+name|bst
+operator|.
+name|volt
+operator|==
+name|UNKNOWN_CAP
+condition|)
+name|printf
+argument_list|(
+literal|"Volt:\t\t\tUnknown\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Volt:\t\t\t%d mV\n"
