@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.5 1999/03/29 08:54:19 dfr Exp $  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.6 1999/04/16 21:22:54 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -240,12 +240,22 @@ define|#
 directive|define
 name|DEVOPOFF
 parameter_list|(
-name|DEV
+name|OPS
 parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|((DEVOPDESC(OP)->offset>= DEV->ops->maxoffset	\ 	  || !DEV->ops->methods[DEVOPDESC(OP)->offset])	\ 	 ? 0 : DEVOPDESC(OP)->offset)
+value|((DEVOPDESC(OP)->offset>= OPS->maxoffset	\ 	  || !OPS->methods[DEVOPDESC(OP)->offset])	\ 	 ? 0 : DEVOPDESC(OP)->offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVOPS
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(DEV->ops)
 end_define
 
 begin_define
@@ -257,7 +267,29 @@ name|DEV
 parameter_list|,
 name|OP
 parameter_list|)
-value|(DEV->ops->methods[DEVOPOFF(DEV, OP)])
+value|(DEVOPS(DEV)->methods[DEVOPOFF(DEVOPS(DEV), OP)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRVOPS
+parameter_list|(
+name|DRV
+parameter_list|)
+value|((struct device_ops *)DRV->ops)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRVOPMETH
+parameter_list|(
+name|DRV
+parameter_list|,
+name|OP
+parameter_list|)
+value|(DRVOPS(DRV)->methods[DEVOPOFF(DRVOPS(DRV), OP)])
 end_define
 
 begin_comment
@@ -389,6 +421,10 @@ modifier|*
 name|method
 decl_stmt|;
 comment|/* internal method implementation */
+name|devop_t
+name|deflt
+decl_stmt|;
+comment|/* default implementation */
 specifier|const
 name|char
 modifier|*
