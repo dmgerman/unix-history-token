@@ -3094,6 +3094,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|kse_wakeup_multi
+argument_list|(
+name|curkse
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Resume the thread and tell it to yield when 		 * it leaves the critical region. 		 */
 name|curthread
 operator|->
