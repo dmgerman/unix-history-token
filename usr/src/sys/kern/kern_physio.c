@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	6.1	83/07/29	*/
+comment|/*	kern_physio.c	6.2	83/09/09	*/
 end_comment
 
 begin_include
@@ -1360,42 +1360,6 @@ directive|define
 name|MAXPHYS
 value|(63 * 1024)
 end_define
-
-begin_comment
-comment|/* network disk brain damage */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"nd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NND
-operator|>
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|MAXPHYS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MAXPHYS
-value|(32 * 1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|unsigned
