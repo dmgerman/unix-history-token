@@ -6964,6 +6964,7 @@ argument_list|(
 literal|"getnewbuf: locked buf"
 argument_list|)
 expr_stmt|;
+comment|/* XXX bqlock needs to be held across bremfree() */
 name|mtx_unlock
 argument_list|(
 operator|&
