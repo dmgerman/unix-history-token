@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.22 (Berkeley) %G%"
+literal|"@(#)main.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,7 +226,7 @@ comment|/* command line args for pid file */
 end_comment
 
 begin_comment
-comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. **	These must be kept out of BSS for frozen configuration files **		to work. */
+comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. */
 end_comment
 
 begin_ifdef
@@ -406,9 +406,6 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* process queue requests */
-name|bool
-name|nothaw
-decl_stmt|;
 name|bool
 name|safecf
 init|=
@@ -1039,15 +1036,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	**  Do a quick prescan of the argument list. 	**	We do this to find out if we can potentially thaw the 	**	configuration file.  If not, we do the thaw now so that 	**	the argument processing applies to this run rather than 	**	to the run that froze the configuration. 	*/
+comment|/* 	**  Do a quick prescan of the argument list. 	*/
 end_comment
-
-begin_expr_stmt
-name|nothaw
-operator|=
-name|FALSE
-expr_stmt|;
-end_expr_stmt
 
 begin_if
 if|#
@@ -1137,62 +1127,6 @@ condition|(
 name|j
 condition|)
 block|{
-case|case
-literal|'b'
-case|:
-if|if
-condition|(
-name|optarg
-index|[
-literal|0
-index|]
-operator|==
-literal|'z'
-operator|&&
-name|optarg
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|nothaw
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
-literal|'C'
-case|:
-name|ConfFile
-operator|=
-name|optarg
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|RealGid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|safecf
-operator|=
-name|FALSE
-expr_stmt|;
-name|nothaw
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
 case|case
 literal|'d'
 case|:
@@ -2157,37 +2091,35 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+name|ConfFile
+operator|=
+name|optarg
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|RealGid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
+name|safecf
+operator|=
+name|FALSE
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
 case|:
-comment|/* debugging -- redo in case frozen */
-name|tTsetup
-argument_list|(
-name|tTdvect
-argument_list|,
-sizeof|sizeof
-name|tTdvect
-argument_list|,
-literal|"0-99.1"
-argument_list|)
-expr_stmt|;
-name|tTflag
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
+comment|/* debugging -- already done */
 break|break;
 case|case
 literal|'f'

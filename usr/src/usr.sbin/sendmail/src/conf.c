@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.20 (Berkeley) %G%"
+literal|"@(#)conf.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,19 +245,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* runtime configuration */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|FreezeFile
-init|=
-name|_PATH_SENDMAILFC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* frozen version of above */
 end_comment
 
 begin_decl_stmt
