@@ -666,7 +666,7 @@ modifier|*
 name|lnk
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|hlen
 decl_stmt|,
 name|tlen
@@ -678,12 +678,12 @@ name|tcphdr
 modifier|*
 name|tc
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|msgId
 decl_stmt|,
-name|len
-decl_stmt|,
 name|t
+decl_stmt|,
+name|len
 decl_stmt|,
 name|lip
 decl_stmt|;
@@ -692,7 +692,7 @@ name|skinny_header
 modifier|*
 name|sd
 decl_stmt|;
-name|int
+name|size_t
 name|orig_len
 decl_stmt|,
 name|skinny_hdr_len
@@ -996,6 +996,7 @@ name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
+argument_list|,
 literal|"PacketAlias/Skinny: Received ipport message\n"
 argument_list|)
 expr_stmt|;
