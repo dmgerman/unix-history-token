@@ -388,6 +388,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|digittoint
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -522,14 +534,14 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)& 0x7F)
-comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
 name|digittoint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), 0xFF)
+value|(__maskrune((c), 0xFF))
+comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
 name|ishexnumber
@@ -821,6 +833,48 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__maskrune
+parameter_list|(
+name|_BSD_RUNE_T_
+name|c
+parameter_list|,
+name|unsigned
+name|long
+name|f
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|c
+operator|&
+name|_CRMASK
+operator|)
+condition|?
+name|___runetype
+argument_list|(
+name|c
+argument_list|)
+else|:
+name|_CurrentRuneLocale
+operator|->
+name|runetype
+index|[
+name|c
+index|]
+operator|)
+operator|&
+name|f
+operator|)
+return|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -849,6 +903,21 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|__isctype
+name|__P
+argument_list|(
+operator|(
+name|_BSD_CT_RUNE_T_
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__maskrune
 name|__P
 argument_list|(
 operator|(
