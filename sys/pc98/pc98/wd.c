@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.44 1998/02/16 23:57:45 eivind Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.45 1998/04/02 11:06:59 kato Exp $  */
 end_comment
 
 begin_comment
@@ -376,6 +376,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WDOPT_LBA
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|WDOPT_FORCEHD
 parameter_list|(
 name|x
@@ -694,6 +701,11 @@ directive|define
 name|DKFL_DMA
 value|0x01000
 comment|/* using DMA on this transfer-- DKFL_SINGLE 				 * overrides this 				 */
+define|#
+directive|define
+name|DKFL_LBA
+value|0x02000
+comment|/* use LBA for data transfers */
 name|struct
 name|wdparams
 name|dk_params
@@ -2499,6 +2511,19 @@ name|du
 operator|->
 name|dk_flags
 operator|&
+name|DKFL_LBA
+condition|)
+name|printf
+argument_list|(
+literal|", LBA"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|du
+operator|->
+name|dk_flags
+operator|&
 name|DKFL_USEDMA
 condition|)
 name|printf
@@ -3941,7 +3966,19 @@ comment|/* mark controller active */
 comment|/* if starting a multisector transfer, or doing single transfers */
 argument|if (du->dk_skip ==
 literal|0
-argument||| (du->dk_flags& DKFL_SINGLE)) { 		u_int	command; 		u_int	count1; 		long	cylin, head, sector;  		cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk;
+argument||| (du->dk_flags& DKFL_SINGLE)) { 		u_int	command; 		u_int	count1; 		long	cylin, head, sector;  		if (du->dk_flags& DKFL_LBA) { 			sector = (blknum>>
+literal|0
+argument|)&
+literal|0xff
+argument|;  			cylin = (blknum>>
+literal|8
+argument|)&
+literal|0xffff
+argument|; 			head = ((blknum>>
+literal|24
+argument|)&
+literal|0xf
+argument|) | WDSD_LBA;  		} 		else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
 comment|/*  		 * XXX this looks like an attempt to skip bad sectors 		 * on write. 		 */
 argument|if (wdtab[ctrlr].b_errcnt&& (bp->b_flags& B_READ) ==
 literal|0
@@ -4475,7 +4512,7 @@ literal|4
 argument|) | head);
 endif|#
 directive|endif
-argument|outb(wdc + wd_sector, sector +
+argument|if (head& WDSD_LBA) 			outb(wdc + wd_sector, sector); 		else 			outb(wdc + wd_sector, sector +
 literal|1
 argument|); 			outb(wdc + wd_seccnt, count); 		} 	} 	if (wdwait(du, (command == WDCC_DIAGNOSE || command == WDCC_IDC) 		       ?
 literal|0
@@ -4528,33 +4565,33 @@ literal|"wd(%d,%d): wdsetctlr: C %lu H %lu S %lu\n"
 argument|, 	       du->dk_ctrlr, du->dk_unit, 	       du->dk_dd.d_ncylinders, du->dk_dd.d_ntracks, 	       du->dk_dd.d_nsectors);
 endif|#
 directive|endif
-argument|if (du->dk_dd.d_ntracks ==
+argument|if (!(du->dk_flags&= DKFL_LBA)) { 		if (du->dk_dd.d_ntracks ==
 literal|0
 argument||| du->dk_dd.d_ntracks>
 literal|16
-argument|) { 		struct wdparams *wp;  		printf(
+argument|) { 			struct wdparams *wp; 	 			printf(
 literal|"wd%d: can't handle %lu heads from partition table "
-argument|, 		       du->dk_lunit, du->dk_dd.d_ntracks);
+argument|, 		       	du->dk_lunit, du->dk_dd.d_ntracks);
 comment|/* obtain parameters */
-argument|wp =&du->dk_params; 		if (wp->wdp_heads>
+argument|wp =&du->dk_params; 			if (wp->wdp_heads>
 literal|0
 argument|&& wp->wdp_heads<=
 literal|16
-argument|) { 			printf(
+argument|) { 				printf(
 literal|"(controller value %u restored)\n"
-argument|, 				wp->wdp_heads); 			du->dk_dd.d_ntracks = wp->wdp_heads; 		} 		else { 			printf(
+argument|, 					wp->wdp_heads); 				du->dk_dd.d_ntracks = wp->wdp_heads; 			} 			else { 				printf(
 literal|"(truncating to 16)\n"
-argument|); 			du->dk_dd.d_ntracks =
+argument|); 				du->dk_dd.d_ntracks =
 literal|16
-argument|; 		} 	}  	if (du->dk_dd.d_nsectors ==
+argument|; 			} 		} 	 		if (du->dk_dd.d_nsectors ==
 literal|0
 argument||| du->dk_dd.d_nsectors>
 literal|255
-argument|) { 		printf(
+argument|) { 			printf(
 literal|"wd%d: cannot handle %lu sectors (max 255)\n"
-argument|, 		       du->dk_lunit, du->dk_dd.d_nsectors); 		error =
+argument|, 		       	du->dk_lunit, du->dk_dd.d_nsectors); 			error =
 literal|1
-argument|; 	} 	if (error) {
+argument|; 		} 		if (error) {
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4566,19 +4603,19 @@ endif|#
 directive|endif
 argument|return (
 literal|1
-argument|); 	} 	if (wdcommand(du, du->dk_dd.d_ncylinders, du->dk_dd.d_ntracks -
+argument|); 		} 		if (wdcommand(du, du->dk_dd.d_ncylinders, 						      du->dk_dd.d_ntracks -
 literal|1
 argument|,
 literal|0
-argument|, 		      du->dk_dd.d_nsectors, WDCC_IDC) !=
+argument|, 		      	      du->dk_dd.d_nsectors, WDCC_IDC) !=
 literal|0
 argument||| wdwait(du, WDCS_READY, TIMEOUT)<
 literal|0
-argument|) { 		wderror((struct buf *)NULL, du,
+argument|) { 			wderror((struct buf *)NULL, du,
 literal|"wdsetctlr failed"
-argument|); 		return (
+argument|); 			return (
 literal|1
-argument|); 	}  	wdsetmulti(du);
+argument|); 		} 	}  	wdsetmulti(du);
 ifdef|#
 directive|ifdef
 name|NOTYET
@@ -4829,9 +4866,67 @@ argument|; 	  }  	  wp->wdp_cylinders = cyl / (wp->wdp_heads * wp->wdp_sectors);
 endif|#
 directive|endif
 comment|/* update disklabel given drive information */
-argument|du->dk_dd.d_secsize = DEV_BSIZE; 	du->dk_dd.d_ncylinders = wp->wdp_cylinders;
+argument|du->dk_dd.d_secsize = DEV_BSIZE; 	if ((du->cfg_flags& WDOPT_LBA)&& wp->wdp_lbasize) { 		du->dk_dd.d_nsectors =
+literal|63
+argument|; 		if (wp->wdp_lbasize<
+literal|16
+argument|*
+literal|63
+argument|*
+literal|1024
+argument|) {
+comment|/*<=528.4 MB */
+argument|du->dk_dd.d_ntracks =
+literal|16
+argument|; 		} 		else if (wp->wdp_lbasize<
+literal|32
+argument|*
+literal|63
+argument|*
+literal|1024
+argument|) {
+comment|/*<=1.057 GB */
+argument|du->dk_dd.d_ntracks =
+literal|32
+argument|; 		} 		else if (wp->wdp_lbasize<
+literal|64
+argument|*
+literal|63
+argument|*
+literal|1024
+argument|) {
+comment|/*<=2.114 GB */
+argument|du->dk_dd.d_ntracks =
+literal|64
+argument|; 		} 		else if (wp->wdp_lbasize<
+literal|128
+argument|*
+literal|63
+argument|*
+literal|1024
+argument|) {
+comment|/*<=4.228 GB */
+argument|du->dk_dd.d_ntracks =
+literal|128
+argument|; 		} 		else if (wp->wdp_lbasize<
+literal|128
+argument|*
+literal|63
+argument|*
+literal|1024
+argument|) {
+comment|/*<=8.422 GB */
+argument|du->dk_dd.d_ntracks =
+literal|255
+argument|; 		} 		else {
+comment|/*>8.422 GB */
+argument|du->dk_dd.d_ntracks =
+literal|255
+argument|;
+comment|/* XXX */
+argument|} 		du->dk_dd.d_secpercyl= du->dk_dd.d_ntracks*du->dk_dd.d_nsectors; 		du->dk_dd.d_ncylinders = wp->wdp_lbasize/du->dk_dd.d_secpercyl; 		du->dk_dd.d_secperunit = wp->wdp_lbasize; 		du->dk_flags |= DKFL_LBA; 	} 	else { 		du->dk_dd.d_ncylinders = wp->wdp_cylinders;
 comment|/* +- 1 */
-argument|du->dk_dd.d_ntracks = wp->wdp_heads; 	du->dk_dd.d_nsectors = wp->wdp_sectors; 	du->dk_dd.d_secpercyl = du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 	du->dk_dd.d_secperunit = du->dk_dd.d_secpercyl * du->dk_dd.d_ncylinders; 	if (WDOPT_FORCEHD(du->cfg_flags)) { 		du->dk_dd.d_ntracks = WDOPT_FORCEHD(du->cfg_flags); 		du->dk_dd.d_secpercyl =  		    du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_ncylinders = 		    du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 	}
+argument|du->dk_dd.d_ntracks = wp->wdp_heads; 		du->dk_dd.d_nsectors = wp->wdp_sectors; 		du->dk_dd.d_secpercyl =  			du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_secperunit =  			du->dk_dd.d_secpercyl * du->dk_dd.d_ncylinders; 	} 	if (WDOPT_FORCEHD(du->cfg_flags)) { 		du->dk_dd.d_ntracks = WDOPT_FORCEHD(du->cfg_flags); 		du->dk_dd.d_secpercyl =  		    du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_ncylinders = 		    du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 	}
 if|#
 directive|if
 literal|0
