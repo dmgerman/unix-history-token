@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_machdep.c	4.2	83/06/13	*/
+comment|/*	sys_machdep.c	4.3	83/06/21	*/
 end_comment
 
 begin_include
@@ -407,11 +407,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOCOMPAT
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT
+end_ifdef
 
 begin_comment
 comment|/*  * Note: these tables are sorted by  * ioctl "code" (in ascending order).  */
