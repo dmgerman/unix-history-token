@@ -3488,10 +3488,9 @@ argument_list|(
 name|EOPNOTSUPP
 argument_list|)
 expr_stmt|;
-comment|/* XXX it's a bit more complex than that, really... */
 name|PFS_RETURN
 argument_list|(
-literal|0
+name|EPERM
 argument_list|)
 expr_stmt|;
 block|}
