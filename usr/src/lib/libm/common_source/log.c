@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	8.1 (Berkeley) %G%"
+literal|"@(#)log.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,13 +826,6 @@ name|one
 init|=
 literal|1.0
 decl_stmt|;
-name|double
-name|logb
-argument_list|()
-decl_stmt|,
-name|ldexp
-argument_list|()
-decl_stmt|;
 specifier|volatile
 name|double
 name|u1
@@ -1215,13 +1208,6 @@ decl_stmt|,
 name|one
 init|=
 literal|1.0
-decl_stmt|;
-name|double
-name|logb
-argument_list|()
-decl_stmt|,
-name|ldexp
-argument_list|()
 decl_stmt|;
 specifier|volatile
 name|double

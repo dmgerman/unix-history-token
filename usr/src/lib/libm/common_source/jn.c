@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jn.c	8.1 (Berkeley) %G%"
+literal|"@(#)jn.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,38 +105,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|j0
-argument_list|()
-decl_stmt|,
-name|j1
-argument_list|()
-decl_stmt|,
-name|log
-argument_list|()
-decl_stmt|,
-name|fabs
-argument_list|()
-decl_stmt|,
-name|sqrt
-argument_list|()
-decl_stmt|,
-name|cos
-argument_list|()
-decl_stmt|,
-name|sin
-argument_list|()
-decl_stmt|,
-name|y0
-argument_list|()
-decl_stmt|,
-name|y1
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static

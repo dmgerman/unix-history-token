@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j0.c	8.1 (Berkeley) %G%"
+literal|"@(#)j0.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,9 +620,6 @@ decl_stmt|,
 name|u
 decl_stmt|,
 name|v
-decl_stmt|,
-name|j0
-argument_list|()
 decl_stmt|;
 comment|/* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
 if|if

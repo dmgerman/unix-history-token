@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	8.1 (Berkeley) %G%"
+literal|"@(#)lgamma.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,16 +132,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|double
-name|log1p
-parameter_list|(
-name|double
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -492,6 +482,7 @@ value|-1.44705562421428915453880392761e-02
 end_define
 
 begin_function
+name|__pure
 name|double
 name|lgamma
 parameter_list|(
