@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: main.c,v 1.26.2.4 1997/03/06 07:21:40 mpp Exp $ */
 end_comment
 
 begin_include
@@ -136,23 +136,17 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|argv0
-parameter_list|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage:\n\t%s [-DHILMNPRTValmnpqrv] [-o outputfile] "
-literal|"[-f file -h host [-c dir] | URL]\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|argv0
+literal|"usage: fetch [-DHILMNPRTValmnpqrv] [-o outputfile]"
 argument_list|,
-name|argv0
+literal|"             [-f file -h host [-c dir] | URL]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -477,12 +471,7 @@ case|case
 literal|'?'
 case|:
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -513,12 +502,7 @@ literal|"cannot use -h, -c, or -f with a URI argument"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -580,12 +564,7 @@ literal|0
 condition|)
 block|{
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|uri
