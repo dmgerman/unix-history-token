@@ -4644,6 +4644,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t%s -i iface -L\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t%s -i iface -t tx rate\n"
 argument_list|,
 name|p
