@@ -601,6 +601,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TIME_WITH_SYS_TIME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPEOF_CHTYPE
 value|long
 end_define
