@@ -688,13 +688,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" real%c"
-argument_list|,
-name|hflag
-condition|?
-literal|'\t'
-else|:
-literal|' '
+literal|" real\t"
 argument_list|)
 expr_stmt|;
 name|humantime
@@ -720,13 +714,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" user%c"
-argument_list|,
-name|hflag
-condition|?
-literal|'\t'
-else|:
-literal|' '
+literal|" user\t"
 argument_list|)
 expr_stmt|;
 name|humantime
