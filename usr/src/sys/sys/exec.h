@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,6 +29,35 @@ begin_struct
 struct|struct
 name|exec
 block|{
+ifdef|#
+directive|ifdef
+name|sparc
+name|unsigned
+name|char
+name|a_dynamic
+range|:
+literal|1
+decl_stmt|;
+comment|/* dynamically linked */
+name|unsigned
+name|char
+name|a_toolversion
+range|:
+literal|7
+decl_stmt|;
+comment|/* Sun toolset version  XXX */
+name|unsigned
+name|char
+name|a_mid
+decl_stmt|;
+comment|/* machine ID */
+name|unsigned
+name|short
+name|a_magic
+decl_stmt|;
+comment|/* magic number */
+else|#
+directive|else
 if|#
 directive|if
 operator|!
@@ -64,6 +93,8 @@ name|long
 name|a_magic
 decl_stmt|;
 comment|/* magic number */
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|unsigned
@@ -219,6 +250,17 @@ end_define
 
 begin_comment
 comment|/* sun 68020-only binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_SUN_SPARC
+value|3
+end_define
+
+begin_comment
+comment|/* sparc binary */
 end_comment
 
 begin_define
