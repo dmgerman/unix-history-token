@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.19	(Berkeley) %G%"
+literal|"@(#)condevs.c	5.20	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2747,6 +2747,12 @@ name|type
 argument_list|,
 name|dev
 argument_list|,
+name|Rmtname
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
