@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	4.9 (Berkeley) %G%"
+literal|"@(#)syslogd.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,6 +2320,14 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|omask
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
