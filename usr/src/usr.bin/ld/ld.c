@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ld.c	6.3 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
+comment|/*	@(#)ld.c	6.4 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
 end_comment
 
 begin_comment
@@ -7364,7 +7364,7 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-operator|!=
+operator|>
 name|member_length
 condition|)
 name|fatal_with_file
