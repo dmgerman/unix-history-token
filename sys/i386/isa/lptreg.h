@@ -290,11 +290,6 @@ begin_comment
 comment|/* printer selected */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -303,8 +298,13 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* printer out of paper */
+comment|/* enable IRQ */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
