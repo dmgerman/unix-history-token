@@ -1723,34 +1723,6 @@ begin_comment
 comment|/*  * Buffer Descriptors.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_struct
-struct|struct
-name|hme_xd
-block|{
-specifier|volatile
-name|u_int32_t
-name|xd_flags
-decl_stmt|;
-specifier|volatile
-name|u_int32_t
-name|xd_addr
-decl_stmt|;
-comment|/* Buffer address (DMA) */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
