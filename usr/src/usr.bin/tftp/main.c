@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,7 +1082,7 @@ literal|"octet"
 block|}
 block|,
 block|{
-literal|"octect"
+literal|"octet"
 block|,
 literal|"octet"
 block|}
@@ -2791,7 +2791,24 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|feof
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+block|{
+name|quit
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 continue|continue;
+block|}
+block|}
 if|if
 condition|(
 name|line
