@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.16 1995/05/16 02:53:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.17 1995/05/16 11:37:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -249,29 +249,22 @@ name|VAR_GATEWAY
 value|"gateway"
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_IFCONFIG
+value|"ifconfig_"
+end_define
+
 begin_comment
-comment|/* per-interface flags */
+comment|/* The help file for the TCP/IP setup screen */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VAR_IFCONFIG_ARGS
-value|"if_flags"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_NETMASK
-value|"netmask"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_IPADDR
-value|"ip_addr"
+name|TCP_HELPFILE
+value|"tcp.hlp"
 end_define
 
 begin_comment
@@ -629,7 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The file descriptor for our CPIO floppy */
+comment|/* The file descriptor for our CPIO floppy	*/
 end_comment
 
 begin_decl_stmt
@@ -640,7 +633,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Where diagnostic output goes	*/
+comment|/* Where diagnostic output goes			*/
 end_comment
 
 begin_decl_stmt
@@ -651,7 +644,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are we running off of a CDROM?	*/
+comment|/* Are we running off of a CDROM?		*/
 end_comment
 
 begin_decl_stmt
@@ -662,7 +655,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are we on a serial console?	*/
+comment|/* Are we on a serial console?			*/
 end_comment
 
 begin_decl_stmt
@@ -673,7 +666,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Did we install it?       */
+comment|/* Did we install it?				*/
 end_comment
 
 begin_decl_stmt
@@ -684,7 +677,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Is the dialog() stuff up?	*/
+comment|/* Is the dialog() stuff up?			*/
 end_comment
 
 begin_decl_stmt
@@ -695,7 +688,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are we on a color display?     */
+comment|/* Are we on a color display?			*/
 end_comment
 
 begin_decl_stmt
@@ -706,7 +699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* On a syscons VTY?			*/
+comment|/* On a syscons VTY?				*/
 end_comment
 
 begin_decl_stmt
@@ -718,7 +711,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The head of the variable chain	*/
+comment|/* The head of the variable chain		*/
 end_comment
 
 begin_decl_stmt
@@ -730,7 +723,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Which distributions we want        */
+comment|/* Which distributions we want			*/
 end_comment
 
 begin_decl_stmt
@@ -742,7 +735,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Which src distributions we want    */
+comment|/* Which src distributions we want		*/
 end_comment
 
 begin_decl_stmt
@@ -754,7 +747,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Which XFree86 dists we want	*/
+comment|/* Which XFree86 dists we want			*/
 end_comment
 
 begin_decl_stmt
@@ -766,7 +759,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The XFree86 servers we want */
+comment|/* The XFree86 servers we want			*/
 end_comment
 
 begin_decl_stmt
@@ -778,7 +771,216 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The XFree86 fonts we want     */
+comment|/* The XFree86 fonts we want			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuInitial
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initial installation menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuDocumentation
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Documentation menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuOptions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Installation options				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuOptionsLanguage
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Language options menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuOptionsFTP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FTP options menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuMedia
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Media type menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuMediaCDROM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CDROM media menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuMediaFloppy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Floppy media menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuMediaFTP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FTP media menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuInstall
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Installation menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuInstallType
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Installation type menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuDistributions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Distribution menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuSrcDistributions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Source distribution menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 main menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86Select
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 distribution selection menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86SelectCore
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 core distribution menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86SelectServer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 server distribution menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86SelectFonts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 font selection menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuDiskDevices
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disk devices menu				*/
 end_comment
 
 begin_comment
@@ -1293,7 +1495,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|diskLabelEditor
 parameter_list|(
 name|char
@@ -1531,6 +1733,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* media_strategy.c */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|Boolean
@@ -1559,6 +1765,30 @@ begin_function_decl
 specifier|extern
 name|Boolean
 name|mediaInitCDROM
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
+name|mediaGetFloppy
+parameter_list|(
+name|char
+modifier|*
+name|dist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
+name|mediaInitFloppy
 parameter_list|(
 name|Device
 modifier|*
@@ -1655,6 +1885,18 @@ begin_function_decl
 specifier|extern
 name|void
 name|mediaCloseNetwork
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mediaCloseFloppy
 parameter_list|(
 name|Device
 modifier|*

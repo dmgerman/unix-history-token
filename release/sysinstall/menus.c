@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.13 1995/05/16 02:53:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.14 1995/05/16 11:37:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -12,115 +12,6 @@ end_include
 begin_comment
 comment|/* All the system menus go here.  *  * Hardcoded things like version number strings will disappear from  * these menus just as soon as I add the code for doing inline variable  * expansion.  */
 end_comment
-
-begin_comment
-comment|/* Forward decls for submenus */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuDocumentation
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuOptions
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuOptionsLanguage
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuOptionsFTP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuMedia
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuMediaFloppy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuInstall
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuInstallType
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuInstallOptions
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuDistributions
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86Select
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86SelectCore
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86SelectServer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86SelectFonts
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* The initial installation menu */
@@ -206,11 +97,11 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Install"
+literal|"Proceed"
 block|,
-literal|"Begin installation"
+literal|"Go to the installation menu"
 block|,
-comment|/* I */
+comment|/* P */
 name|DMENU_SUBMENU
 block|,
 operator|(
@@ -631,7 +522,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu, it's either\n\ because you haven't booted directly from the CDROM in DOS/Windows or\n\ your CDROM was not detected.  If you feel that you are seeing this dialog\n\ in error, you may wish to reboot FreeBSD with the -c boot flag (see the\n\ hardware guide in the Documentation menu for more info) and check that your\n\ CDROM controller and the kernel agree on reasonable values.  Please also note\n\ that FreeBSD does NOT currently support IDE CDROM drives!"
+literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu, it's either\n\ because you haven't booted directly from the CDROM in DOS/Windows or\n\ your CDROM was not detected.  If you feel that you are seeing this dialog\n\ in error, you may wish to reboot FreeBSD with the -c boot flag (see the\n\ hardware guide in the Documentation menu for more info) and check that your\n\ CDROM controller and the kernel agree on reasonable values.  Please also\n\ note that FreeBSD does NOT currently support IDE CDROM drives!"
 block|,
 literal|"Press F1 for more information on CDROM support"
 block|,
@@ -797,7 +688,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please specify an FTP site"
 block|,
-literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be available\n\ from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates."
+literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be\n\ available from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates.\n\ You may also wish to investigate the Ftp options menu in case of trouble."
 block|,
 literal|"Select a site that's close!"
 block|,
@@ -1451,7 +1342,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Type"
 block|,
-literal|"As a convenience, we provide several `canned' installation types.\n\ These pick what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose\n\ the list of distributions yourself, simply select `custom'."
+literal|"As a convenience, we provide several \"canned\" installation types.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose\n\ the list of distributions yourself, simply select \"custom\"."
 block|,
 literal|"Press F1 for more information on the various distributions"
 block|,
@@ -2210,15 +2101,15 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"XFree86 3.1.1u1 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.1.1u1\n\ distribution.  Select what you need from the basic components set\n\ and at least one entry from the Server menu and the Font set menu\n"
+literal|"Please select the components you need from the XFree86 3.1.1u1\n\ distribution.  We recommend that you select what you need from the basic\n\ components set and at least one entry from the Server and Font set menus.\n\n\ When you're finished, select Cancel."
 block|,
-literal|"Press F1 for a sample sequence"
+literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
-literal|"XF86Select.hlp"
+literal|"XF86S.hlp"
 block|,
 block|{
 block|{
-literal|"Core"
+literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
 block|,
@@ -2862,7 +2753,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Installation Options"
 block|,
-literal|"This menu controls how the FreeBSD installation will deal with various\n\ error conditions, should they arise, and the degree to which you, the\n\ user, will be prompted for options."
+literal|"This menu controls how the FreeBSD installation will deal with various\n\ error conditions (should they arise), the default language used for\n\ documentation, etc.\n\n\ When you're done setting options, please select Cancel."
 block|,
 name|NULL
 block|,
@@ -3099,7 +2990,7 @@ block|,
 literal|"Choose Installation Options"
 block|,
 comment|/* title */
-literal|"Before installation can continue, you need to specify a few items\n\ of information regarding the type of distribution you wish to have\n\ and from where you wish to install it.  There are also a number\n\ of options you can specify in the Options menu which will determine\n\ how.  You may choose  install FreeBSD at this time, you may\n\ select Cancel to leave this menu."
+literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from, and how you wish to allocate disk storage to FreeBSD\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"GO!\" menu item (and even then, only\n\ after a final confirmation).  If you do not wish to install FreeBSD\n\ at this time then select Cancel to leave this menu."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -3216,26 +3107,6 @@ name|void
 operator|*
 operator|)
 name|installCommit
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Options"
-block|,
-literal|"Set special installation options"
-block|,
-comment|/* O */
-name|DMENU_SUBMENU
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|MenuOptions
 block|,
 literal|0
 block|,
