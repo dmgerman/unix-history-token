@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Matthew Dillon.  All Rights Reserved.  Copyright   * terms are as specified in the COPYRIGHT file at the base of the source  * tree.  *  * Mutex pool routines.  These routines are designed to be used as short  * term leaf mutexes (e.g. the last mutex you might aquire other then  * calling msleep()).  They operate using a shared pool.  A mutex is chosen  * from the pool based on the supplied pointer (which may or may not be  * valid).  *  * Advantages:  *	- no structural overhead.  Mutexes can be associated with structures  *	  without adding bloat to the structures.  *	- mutexes can be obtained for invalid pointers, useful when uses  *	  mutexes to interlock destructor ops.  *	- no initialization/destructor overhead  *	- can be used with msleep.  *  * Disadvantages:  *	- should generally only be used as leaf mutexes  *	- pool/pool dependancy ordering cannot be depended on.  *	- possible L1 cache mastersip contention between cpus  */
+comment|/*-  * Copyright (c) 2001 Matthew Dillon.  All Rights Reserved.  Copyright  * terms are as specified in the COPYRIGHT file at the base of the source  * tree.  *  * Mutex pool routines.  These routines are designed to be used as short  * term leaf mutexes (e.g. the last mutex you might aquire other then  * calling msleep()).  They operate using a shared pool.  A mutex is chosen  * from the pool based on the supplied pointer (which may or may not be  * valid).  *  * Advantages:  *	- no structural overhead.  Mutexes can be associated with structures  *	  without adding bloat to the structures.  *	- mutexes can be obtained for invalid pointers, useful when uses  *	  mutexes to interlock destructor ops.  *	- no initialization/destructor overhead.  *	- can be used with msleep.  *  * Disadvantages:  *	- should generally only be used as leaf mutexes.  *	- pool/pool dependancy ordering cannot be depended on.  *	- possible L1 cache mastersip contention between cpus.  */
 end_comment
 
 begin_include
@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|MTX_POOL_MASK
-value|(MTX_POOL_SIZE-1)
+value|(MTX_POOL_SIZE - 1)
 end_define
 
 begin_decl_stmt
@@ -318,20 +318,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|mtxpooli
+name|mtxpooli
 argument_list|,
-argument|SI_SUB_MTX_POOL
+name|SI_SUB_MTX_POOL
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|mtx_pool_setup
+name|mtx_pool_setup
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
