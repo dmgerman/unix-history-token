@@ -34,6 +34,8 @@ block|,
 name|Signal
 block|,
 name|Sockaddr
+block|,
+name|StringArray
 block|}
 enum|;
 end_enum

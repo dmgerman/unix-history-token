@@ -136,9 +136,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-fdDS] [-o file] -p pid"
+literal|"usage: truss [-faedDS] [-o file] -p pid"
 argument_list|,
-literal|"       truss [-fdDS] [-o file] command [args]"
+literal|"       truss [-faedDS] [-o file] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -532,7 +532,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:fdDS"
+literal|"p:o:faedDS"
 argument_list|)
 operator|)
 operator|!=
@@ -568,6 +568,28 @@ operator|->
 name|flags
 operator||=
 name|FOLLOWFORKS
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* Print execve() argument strings. */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|EXECVEARGS
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* Print execve() environment strings. */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|EXECVEENVS
 expr_stmt|;
 break|break;
 case|case

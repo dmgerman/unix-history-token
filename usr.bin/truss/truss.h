@@ -31,6 +31,20 @@ name|NOSIGS
 value|0x00000008
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXECVEARGS
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXECVEENVS
+value|0x00000020
+end_define
+
 begin_struct
 struct|struct
 name|trussinfo
