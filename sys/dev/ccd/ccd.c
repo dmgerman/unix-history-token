@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.26 1997/10/24 14:24:55 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.27 1997/11/18 14:39:04 phk Exp $ */
 end_comment
 
 begin_comment
@@ -50,27 +50,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#
