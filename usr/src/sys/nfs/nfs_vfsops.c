@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3144,24 +3144,28 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|nfs_fhtovp
 argument_list|(
-argument|mp
-argument_list|,
-argument|fhp
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mount
-modifier|*
 name|mp
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|fhp
+argument_list|,
+name|nam
+argument_list|,
+name|vpp
+argument_list|,
+name|exflagsp
+argument_list|,
+name|credanonp
+argument_list|)
+specifier|register
+expr|struct
+name|mount
+operator|*
+name|mp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -3173,10 +3177,34 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|mbuf
+modifier|*
+name|nam
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|exflagsp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+modifier|*
+name|credanonp
 decl_stmt|;
 end_decl_stmt
 
