@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.11	84/09/10	*/
+comment|/*	tty.c	6.12	84/12/20	*/
 end_comment
 
 begin_include
@@ -1090,7 +1090,7 @@ specifier|register
 name|int
 name|s
 init|=
-name|spl5
+name|spltty
 argument_list|()
 decl_stmt|;
 while|while
@@ -1185,7 +1185,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -1527,7 +1527,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -1624,7 +1624,7 @@ specifier|register
 name|int
 name|newflags
 decl_stmt|;
-comment|/* 	 * If the ioctl involves modification, 	 * insist on being able to write the device, 	 * and hang if in the background. 	 */
+comment|/* 	 * If the ioctl involves modification, 	 * hang if in the background. 	 */
 switch|switch
 condition|(
 name|com
@@ -1822,7 +1822,7 @@ operator|)
 return|;
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -1879,7 +1879,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -2042,7 +2042,7 @@ name|TIOCSTOP
 case|:
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -2096,7 +2096,7 @@ name|TIOCSTART
 case|:
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -2279,7 +2279,7 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -2719,22 +2719,70 @@ operator|>>
 literal|16
 expr_stmt|;
 break|break;
-comment|/* should allow SPGRP and GPGRP only if tty open for reading */
+comment|/* 	 * Allow SPGRP only if tty is ours and is open for reading. 	 */
 case|case
 name|TIOCSPGRP
 case|:
-name|tp
-operator|->
-name|t_pgrp
-operator|=
+block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|pgrp
+init|=
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
+decl_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_uid
+operator|&&
+operator|(
+name|flag
+operator|&
+name|FREAD
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_uid
+operator|&&
+name|u
+operator|.
+name|u_ttyp
+operator|!=
+name|tp
+condition|)
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
+name|tp
+operator|->
+name|t_pgrp
+operator|=
+name|pgrp
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|TIOCGPGRP
 case|:
@@ -2889,7 +2937,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|spl5
+name|spltty
 argument_list|()
 decl_stmt|;
 switch|switch
@@ -3130,6 +3178,19 @@ operator|&=
 operator|~
 name|TS_WOPEN
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|tp
 operator|->
 name|t_state
@@ -3149,6 +3210,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3217,7 +3279,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * reinput pending characters after state switch  * call at spl5().  */
+comment|/*  * reinput pending characters after state switch  * call at spltty().  */
 end_comment
 
 begin_expr_stmt
@@ -4643,7 +4705,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 comment|/* don't interrupt tabs */
@@ -5289,7 +5351,7 @@ label|:
 comment|/* 	 * Take any pending input first. 	 */
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -5421,7 +5483,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -5548,7 +5610,7 @@ expr_stmt|;
 comment|/* 	 * No input, sleep on rawq awaiting hardware 	 * receipt and notification. 	 */
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -6530,7 +6592,7 @@ name|ovhiwat
 label|:
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -6604,6 +6666,11 @@ operator|&
 name|TS_NBIO
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -6873,7 +6940,7 @@ return|return;
 block|}
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 name|savecol
@@ -7190,7 +7257,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|spl5
+name|spltty
 argument_list|()
 expr_stmt|;
 for|for
