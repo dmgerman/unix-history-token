@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* This is a generated file */
 end_comment
 
@@ -15,15 +19,46 @@ directive|define
 name|__krb5_private_h__
 end_define
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_function_decl
+name|void
+name|_krb5_aes_cts_encrypt
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+comment|/*in*/
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+comment|/*out*/
+parameter_list|,
+name|size_t
+comment|/*len*/
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+comment|/*aes_key*/
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+comment|/*ivec*/
+parameter_list|,
+specifier|const
+name|int
+comment|/*enc*/
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -114,6 +149,32 @@ comment|/*value*/
 parameter_list|,
 name|size_t
 comment|/*size*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|time_t
+name|_krb5_krb_life_to_time
+parameter_list|(
+name|int
+comment|/*start*/
+parameter_list|,
+name|int
+comment|/*life_*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_krb5_krb_time_to_life
+parameter_list|(
+name|time_t
+comment|/*start*/
+parameter_list|,
+name|time_t
+comment|/*end*/
 parameter_list|)
 function_decl|;
 end_function_decl

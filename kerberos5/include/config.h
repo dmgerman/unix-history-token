@@ -1127,9 +1127,25 @@ begin_comment
 comment|/* Define to 1 if you have the `getpwnam_r' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETPWNAM_R */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500112
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPWNAM_R
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `getrlimit' function. */
@@ -1217,9 +1233,25 @@ begin_comment
 comment|/* Define to 1 if you have the `grantpt' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GRANTPT */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500100
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_GRANTPT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<grp.h> header file. */
@@ -1447,56 +1479,41 @@ begin_comment
 comment|/* Define to 1 if you have the `krb_disable_debug' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB_DISABLE_DEBUG
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB_DISABLE_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb_enable_debug' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB_ENABLE_DEBUG
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB_ENABLE_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb_get_kdc_time_diff' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB_GET_KDC_TIME_DIFF
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB_GET_KDC_TIME_DIFF */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb_get_our_ip_for_realm' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB_GET_OUR_IP_FOR_REALM
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB_GET_OUR_IP_FOR_REALM */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb_kdctimeofday' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB_KDCTIMEOFDAY
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB_KDCTIMEOFDAY */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<libutil.h> header file. */
@@ -1928,9 +1945,25 @@ begin_comment
 comment|/* Define to 1 if you have the `ptsname' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTSNAME */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500100
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTSNAME
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<pty.h> header file. */
@@ -3486,9 +3519,25 @@ begin_comment
 comment|/* Define to 1 if you have the `unlockpt' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UNLOCKPT */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500100
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNLOCKPT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you have the function `unsetenv'. */
@@ -4197,7 +4246,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Heimdal 0.5.1"
+value|"Heimdal 0.6 (FreeBSD)"
 end_define
 
 begin_comment
@@ -4219,7 +4268,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.5.1"
+value|"0.6"
 end_define
 
 begin_comment
@@ -4311,7 +4360,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.4f"
+value|"0.6"
 end_define
 
 begin_comment
