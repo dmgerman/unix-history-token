@@ -53,12 +53,25 @@ begin_comment
 comment|/* For int64_t, etc. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|4
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_POSIX_ACL
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
