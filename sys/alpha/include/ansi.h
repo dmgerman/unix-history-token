@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ansi.h,v 1.1 1998/01/10 10:13:13 jb Exp $ */
+comment|/* $Id: ansi.h,v 1.2 1998/03/09 05:53:07 jb Exp $ */
 end_comment
 
 begin_comment
@@ -154,6 +154,39 @@ end_define
 
 begin_comment
 comment|/* useconds_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_UINT8_T_
+value|unsigned char
+end_define
+
+begin_comment
+comment|/* uint8_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_UINT16_T_
+value|unsigned short
+end_define
+
+begin_comment
+comment|/* uint16_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_UINT32_T_
+value|unsigned int
+end_define
+
+begin_comment
+comment|/* uint32_t */
 end_comment
 
 begin_comment
