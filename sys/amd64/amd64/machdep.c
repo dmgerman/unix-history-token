@@ -3181,6 +3181,7 @@ index|]
 operator|=
 name|_ucodesel
 expr_stmt|;
+comment|/* 	 * Initialize the math emulator (if any) for the current process. 	 * Actually, just clear the bit that says that the emulator has 	 * been initialized.  Initialization is delayed until the process 	 * traps to the emulator (if it is done at all) mainly because 	 * emulators don't provide an entry point for initialization. 	 */
 name|p
 operator|->
 name|p_addr
@@ -3188,24 +3189,27 @@ operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|FP_SOFTFP
 expr_stmt|;
-comment|/* no fp at all */
+comment|/* 	 * Arrange to trap the next npx or `fwait' instruction (see npx.c 	 * for why fwait must be trapped at least if there is an npx or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the npx routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `npx_exists' for testing the emulator on 	 * systems with an npx. 	 */
 name|load_cr0
 argument_list|(
 name|rcr0
 argument_list|()
 operator||
+name|CR0_MP
+operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
-comment|/* start emulating */
 if|#
 directive|if
 name|NNPX
 operator|>
 literal|0
+comment|/* Initialize the npx (if any) for the current process. */
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
@@ -3213,7 +3217,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NNPX> 0 */
 block|}
 specifier|static
 name|int
@@ -5205,6 +5208,11 @@ literal|4
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|NNPX
+operator|>
+literal|0
 name|idp
 operator|=
 name|find_isadev
@@ -5237,6 +5245,8 @@ name|id_msize
 operator|/
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* call pmap initialization to make new kernel address space */
 name|pmap_bootstrap
 argument_list|(
