@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.16 (Berkeley) %G%"
+literal|"@(#)inode.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,14 @@ name|struct
 name|dinode
 name|dino
 decl_stmt|;
+if|if
+condition|(
+name|idesc
+operator|->
+name|id_fix
+operator|!=
+name|IGNORE
+condition|)
 name|idesc
 operator|->
 name|id_fix
