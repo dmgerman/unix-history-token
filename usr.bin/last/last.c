@@ -240,7 +240,7 @@ begin_struct
 struct|struct
 name|ttytab
 block|{
-name|long
+name|time_t
 name|logout
 decl_stmt|;
 comment|/* log out time */
@@ -698,7 +698,8 @@ decl_stmt|;
 comment|/* stat of file for size */
 name|long
 name|bl
-decl_stmt|,
+decl_stmt|;
+name|time_t
 name|delta
 decl_stmt|;
 comment|/* time difference */
