@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id: libutil.h,v 1.1 1996/01/01 08:27:37 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -138,6 +138,34 @@ operator|,
 name|int
 operator|*
 name|aslave
+operator|,
+name|char
+operator|*
+name|name
+operator|,
+expr|struct
+name|termios
+operator|*
+name|termp
+operator|,
+expr|struct
+name|winsize
+operator|*
+name|winp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|forkpty
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+name|amaster
 operator|,
 name|char
 operator|*
