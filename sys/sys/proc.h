@@ -1866,6 +1866,10 @@ name|p_profthreads
 decl_stmt|;
 comment|/* (c) Num threads in addupc_task */
 name|int
+name|p_maxthrwaits
+decl_stmt|;
+comment|/* (c) Max threads num waiters */
+name|int
 name|p_traceflag
 decl_stmt|;
 comment|/* (o) Kernel trace points. */
