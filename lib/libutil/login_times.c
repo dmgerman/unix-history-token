@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Login period parsing and comparison functions.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1996 by  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Login period parsing and comparison functions.  *  *	$Id: login_times.c,v 1.4 1997/02/22 15:08:27 peter Exp $  */
 end_comment
 
 begin_include
@@ -320,7 +320,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* Make local copy and force lowercase to simplify parsing      */
+comment|/* Make local copy and force lowercase to simplify parsing */
 name|p
 operator|=
 name|strncpy
@@ -382,12 +382,12 @@ name|p
 argument_list|)
 condition|)
 block|{
-for|for
-control|(
 name|i
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|dws
 index|[
 name|i
@@ -415,11 +415,10 @@ name|cn
 argument_list|)
 operator|!=
 literal|0
-condition|;
+condition|)
 name|i
 operator|++
-control|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dws
@@ -564,7 +563,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* First, examine the day of the week      */
+comment|/* First, examine the day of the week */
 if|if
 condition|(
 call|(
@@ -583,7 +582,7 @@ operator|->
 name|lt_dow
 condition|)
 block|{
-comment|/* Convert `current' time to minute of the day        */
+comment|/* Convert `current' time to minute of the day */
 name|u_short
 name|now
 init|=
@@ -641,7 +640,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* If requested, return ending time for this period 	   */
+comment|/* If requested, return ending time for this period */
 name|tt
 operator|->
 name|tm_hour

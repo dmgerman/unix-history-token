@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Support allow/deny lists in login class capabilities  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1996 by  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Support allow/deny lists in login class capabilities  *  *	$Id: login_ok.c,v 1.3 1997/02/22 15:08:25 peter Exp $  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ comment|/* -- support functions -- */
 end_comment
 
 begin_comment
-comment|/* login_strinlist()  * This function is intentionally public - reused by TAS.  * Returns TRUE (non-zero) if a string matches a pattern  * in a given array of patterns. 'flags' is passed directly  * to fnmatch(3).  */
+comment|/*  * login_strinlist()  * This function is intentionally public - reused by TAS.  * Returns TRUE (non-zero) if a string matches a pattern  * in a given array of patterns. 'flags' is passed directly  * to fnmatch(3).  */
 end_comment
 
 begin_function
@@ -160,7 +160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* login_str2inlist()  * Locate either or two strings in a given list  */
+comment|/*  * login_str2inlist()  * Locate either or two strings in a given list  */
 end_comment
 
 begin_function
@@ -229,7 +229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* login_timelist()  * This function is intentinoally public - reused by TAS.  * Returns an allocated list of time periods given an array  * of time periods in ascii form.  */
+comment|/*  * login_timelist()  * This function is intentinoally public - reused by TAS.  * Returns an allocated list of time periods given an array  * of time periods in ascii form.  */
 end_comment
 
 begin_function
@@ -272,7 +272,12 @@ name|char
 modifier|*
 modifier|*
 name|tl
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|tl
+operator|=
 name|login_getcaplist
 argument_list|(
 name|lc
@@ -281,10 +286,9 @@ name|cap
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|tl
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 while|while
@@ -351,16 +355,18 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+for|for
+control|(
 operator|--
 name|j
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|i
 operator|<
 name|j
-condition|)
-block|{
+condition|;
+name|i
+operator|++
+control|)
 name|lt
 index|[
 name|i
@@ -374,10 +380,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-operator|++
-name|i
-expr_stmt|;
-block|}
 name|lt
 index|[
 name|i
@@ -396,7 +398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* login_ttyok()  * This function is a variation of auth_ttyok(), but it checks two  * arbitrary capability lists not necessarily related to access.  * This hook is provided for the accounted/exclude accounting lists.  */
+comment|/*  * login_ttyok()  * This function is a variation of auth_ttyok(), but it checks two  * arbitrary capability lists not necessarily related to access.  * This hook is provided for the accounted/exclude accounting lists.  */
 end_comment
 
 begin_function
@@ -448,17 +450,26 @@ name|struct
 name|ttyent
 modifier|*
 name|te
-init|=
+decl_stmt|;
+name|char
+modifier|*
+name|grp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|ttl
+decl_stmt|;
+name|te
+operator|=
 name|getttynam
 argument_list|(
 name|tty
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* Need group name */
-name|char
-modifier|*
 name|grp
-init|=
+operator|=
 name|te
 condition|?
 name|te
@@ -466,12 +477,9 @@ operator|->
 name|ty_group
 else|:
 name|NULL
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
+expr_stmt|;
 name|ttl
-init|=
+operator|=
 name|login_getcaplist
 argument_list|(
 name|lc
@@ -480,7 +488,7 @@ name|allowcap
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ttl
@@ -548,7 +556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* auth_ttyok()  * Determine whether or not login on a tty is accessible for  * a login class  */
+comment|/*  * auth_ttyok()  * Determine whether or not login on a tty is accessible for  * a login class  */
 end_comment
 
 begin_function
@@ -581,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* login_hostok()  * This function is a variation of auth_hostok(), but it checks two  * arbitrary capability lists not necessarily related to access.  * This hook is provided for the accounted/exclude accounting lists.  */
+comment|/*  * login_hostok()  * This function is a variation of auth_hostok(), but it checks two  * arbitrary capability lists not necessarily related to access.  * This hook is provided for the accounted/exclude accounting lists.  */
 end_comment
 
 begin_function
@@ -654,7 +662,9 @@ name|char
 modifier|*
 modifier|*
 name|hl
-init|=
+decl_stmt|;
+name|hl
+operator|=
 name|login_getcaplist
 argument_list|(
 name|lc
@@ -663,7 +673,7 @@ name|allowcap
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|hl
@@ -731,7 +741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* auth_hostok()  * Determine whether or not login from a host is ok  */
+comment|/*  * auth_hostok()  * Determine whether or not login from a host is ok  */
 end_comment
 
 begin_function
@@ -771,7 +781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* auth_timeok()  * Determine whether or not login is ok at a given time  */
+comment|/*  * auth_timeok()  * Determine whether or not login is ok at a given time  */
 end_comment
 
 begin_function
@@ -818,12 +828,6 @@ name|struct
 name|tm
 modifier|*
 name|tptr
-init|=
-name|localtime
-argument_list|(
-operator|&
-name|t
-argument_list|)
 decl_stmt|;
 specifier|static
 name|int
@@ -841,7 +845,15 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|tptr
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -850,7 +862,9 @@ name|struct
 name|login_time
 modifier|*
 name|lt
-init|=
+decl_stmt|;
+name|lt
+operator|=
 name|login_timelist
 argument_list|(
 name|lc
@@ -863,7 +877,7 @@ argument_list|,
 operator|&
 name|ltimes
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|lt

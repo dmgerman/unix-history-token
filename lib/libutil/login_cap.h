@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	Was login_cap.h,v 1.9 1997/05/07 20:00:01 eivind Exp  *	$Id$  */
+comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	Was login_cap.h,v 1.9 1997/05/07 20:00:01 eivind Exp  *	$Id: login_cap.h,v 1.1 1997/05/10 12:49:30 davidn Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,20 @@ define|#
 directive|define
 name|LOGIN_DEFCLASS
 value|"default"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOGIN_DEFROOTCLASS
+value|"root"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOGIN_MECLASS
+value|"me"
 end_define
 
 begin_define
@@ -177,12 +191,9 @@ name|BI_AUTH
 value|"authorize"
 end_define
 
-begin_define
-define|#
-directive|define
-name|BI_AUTH2
-value|"authorise"
-end_define
+begin_comment
+comment|/* accepted authentication */
+end_comment
 
 begin_define
 define|#
@@ -191,6 +202,32 @@ name|BI_REJECT
 value|"reject"
 end_define
 
+begin_comment
+comment|/* rejected authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BI_CHALLENG
+value|"reject challenge"
+end_define
+
+begin_comment
+comment|/* reject with a challenge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BI_SILENT
+value|"reject silent"
+end_define
+
+begin_comment
+comment|/* reject silently */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -198,19 +235,31 @@ name|BI_REMOVE
 value|"remove"
 end_define
 
+begin_comment
+comment|/* remove file on error */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BI_ROOTOKAY
-value|"root"
+value|"authorize root"
 end_define
+
+begin_comment
+comment|/* root authenticated */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|BI_SECURE
-value|"secure"
+value|"authorize secure"
 end_define
+
+begin_comment
+comment|/* okay on non-secure line */
+end_comment
 
 begin_define
 define|#
@@ -219,27 +268,20 @@ name|BI_SETENV
 value|"setenv"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AUTH_NONE
-end_ifndef
-
 begin_comment
-comment|/* Protect against<rpc/auth.h> */
+comment|/* set environment variable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AUTH_NONE
-value|0x00
+name|BI_VALUE
+value|"value"
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* set local variable */
+end_comment
 
 begin_define
 define|#
@@ -247,6 +289,10 @@ directive|define
 name|AUTH_OKAY
 value|0x01
 end_define
+
+begin_comment
+comment|/* user authenticated */
+end_comment
 
 begin_define
 define|#
@@ -269,6 +315,35 @@ end_define
 begin_comment
 comment|/* secure login */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_SILENT
+value|0x08
+end_define
+
+begin_comment
+comment|/* silent rejection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_CHALLENGE
+value|0x10
+end_define
+
+begin_comment
+comment|/* a chellenge was given */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_ALLOW
+value|(AUTH_OKAY | AUTH_ROOTOKAY | AUTH_SECURE)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -406,9 +481,9 @@ name|char
 operator|*
 operator|,
 specifier|const
-name|char
+expr|struct
+name|passwd
 operator|*
-name|homedir
 operator|)
 argument_list|)
 decl_stmt|;
@@ -418,6 +493,21 @@ begin_decl_stmt
 name|login_cap_t
 modifier|*
 name|login_getclass
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|login_cap_t
+modifier|*
+name|login_getpwclass
 name|__P
 argument_list|(
 operator|(
@@ -690,9 +780,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Most of these functions are deprecated */
+end_comment
+
 begin_decl_stmt
 name|int
-name|authenticate
+name|auth_approve
+name|__P
+argument_list|(
+operator|(
+name|login_cap_t
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_check
 name|__P
 argument_list|(
 operator|(
@@ -711,30 +826,82 @@ operator|,
 specifier|const
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|auth_script
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
 operator|,
-operator|...
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|auth_env
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|auth_mkvalue
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|n
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_response
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|auth_rmfiles
 name|__P
 argument_list|(
 operator|(
@@ -758,7 +925,78 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|auth_rmfiles
+name|auth_script
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_script_data
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|auth_valud
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_setopt
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|auth_clropts
 name|__P
 argument_list|(
 operator|(
@@ -911,7 +1149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* auxiliary functions */
+comment|/* helper functions */
 end_comment
 
 begin_decl_stmt
