@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -3673,7 +3679,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"ENOIOCTL leaked through"
 argument_list|)

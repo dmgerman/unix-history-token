@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -15922,7 +15928,7 @@ if|if
 condition|(
 name|vfs_badlock_ddb
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"lock violation"
 argument_list|)
@@ -16308,7 +16314,7 @@ if|if
 condition|(
 name|vfs_badlock_ddb
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"lock violation"
 argument_list|)

@@ -347,6 +347,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -636,7 +642,7 @@ name|assert
 parameter_list|(
 name|expression
 parameter_list|)
-value|{					\ 	if (!(expression)) {					\ 		(void)printf("assertion \"%s\" failed: "	\ 			     "file \"%s\", line %d\n",		\ 			     #expression, __FILE__, __LINE__);	\ 	     Debugger("");					\ 	}							\ }
+value|{					\ 	if (!(expression)) {					\ 		(void)printf("assertion \"%s\" failed: "	\ 			     "file \"%s\", line %d\n",		\ 			     #expression, __FILE__, __LINE__);	\ 	     kdb_enter("");					\ 	}							\ }
 end_define
 
 begin_else
