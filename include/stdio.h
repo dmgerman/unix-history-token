@@ -319,14 +319,6 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
 name|FILE
-name|__sF
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
 modifier|*
 name|__stdinp
 decl_stmt|;
@@ -517,39 +509,6 @@ value|2
 comment|/* set file offset to EOF plus offset */
 endif|#
 directive|endif
-comment|/* To be removed by 5.0-RELEASE */
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|_OLD_STDIO
-argument_list|)
-define|#
-directive|define
-name|stdin
-value|(&__sF[0])
-define|#
-directive|define
-name|stdout
-value|(&__sF[1])
-define|#
-directive|define
-name|stderr
-value|(&__sF[2])
-else|#
-directive|else
 define|#
 directive|define
 name|stdin
@@ -562,8 +521,6 @@ define|#
 directive|define
 name|stderr
 value|__stderrp
-endif|#
-directive|endif
 name|__BEGIN_DECLS
 comment|/*  * Functions defined in ANSI C standard.  *  * XXX fgetpos(), fgets(), fopen(), fputs(), fread(), freopen(), fscanf(),  * fwrite(), scanf(), sscanf(), vscanf(), and vsscanf() are missing the  * restrict type-qualifier.  */
 name|void

@@ -207,18 +207,8 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LIBC_MAJOR
-operator|>=
-literal|6
-end_if
-
 begin_decl_stmt
 specifier|static
-endif|#
-directive|endif
 name|FILE
 name|__sF
 index|[
