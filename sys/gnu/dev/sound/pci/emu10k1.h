@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  **********************************************************************  *     emu10k1.h, derived from 8010.h  *     Copyright 1999, 2000 Creative Labs, Inc.  *  **********************************************************************  *  *     Date		    Author	    Summary of changes  *     ----		    ------	    ------------------  *     October 20, 1999     Bertrand Lee    base code release  *     November 2, 1999     Alan Cox	    Cleaned of 8bit chars, DOS  *					    line endings  *     December 8, 1999     Jon Taylor	    Added lots of new register info  *  **********************************************************************  *  *     This program is free software; you can redistribute it and/or  *     modify it under the terms of the GNU General Public License as  *     published by the Free Software Foundation; either version 2 of  *     the License, or (at your option) any later version.  *  *     This program is distributed in the hope that it will be useful,  *     but WITHOUT ANY WARRANTY; without even the implied warranty of  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *     GNU General Public License for more details.  *  *     You should have received a copy of the GNU General Public  *     License along with this program; if not, write to the Free  *     Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,  *     USA.  *  *  **********************************************************************  * $FreeBSD$  */
+comment|/*  **********************************************************************  *     8010.h  *     Copyright 1999, 2000 Creative Labs, Inc.  *  **********************************************************************  *  *     Date		    Author	    Summary of changes  *     ----		    ------	    ------------------  *     October 20, 1999     Bertrand Lee    base code release  *     November 2, 1999     Alan Cox	    Cleaned of 8bit chars, DOS  *					    line endings  *     December 8, 1999     Jon Taylor	    Added lots of new register info  *  **********************************************************************  *  *     This program is free software; you can redistribute it and/or  *     modify it under the terms of the GNU General Public License as  *     published by the Free Software Foundation; either version 2 of  *     the License, or (at your option) any later version.  *  *     This program is distributed in the hope that it will be useful,  *     but WITHOUT ANY WARRANTY; without even the implied warranty of  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *     GNU General Public License for more details.  *  *     You should have received a copy of the GNU General Public  *     License along with this program; if not, write to the Free  *     Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,  *     USA.  *  *  **********************************************************************  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,12 @@ directive|define
 name|_8010_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
 begin_comment
 comment|/* ------------------- DEFINES -------------------- */
 end_comment
@@ -22,87 +28,75 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EMUPAGESIZE
-value|4096
-end_define
-
-begin_comment
-comment|/* don't change */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXREQVOICES
-value|8
+name|CMD_WRITEFN0
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXPAGES
-value|(32768 * 64 / EMUPAGESIZE)
-end_define
-
-begin_comment
-comment|/* WAVEOUT_MAXBUFSIZE * NUM_G / EMUPAGESIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RESERVED
-value|0
+name|CMD_READFN0
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUM_MIDI
-value|16
+name|CMD_WRITEPTR
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUM_G
-value|64
-end_define
-
-begin_comment
-comment|/* use all channels */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NUM_FXSENDS
-value|4
+name|CMD_READPTR
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TMEMSIZE
-value|256*1024
+name|CMD_SETRECSRC
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TMEMSIZEREG
-value|4
+name|CMD_GETRECSRC
+value|0x5
 end_define
 
 begin_define
 define|#
 directive|define
-name|IP_TO_CP
-parameter_list|(
-name|ip
-parameter_list|)
-value|((ip == 0) ? 0 : (((0x00001000uL | (ip& 0x00000FFFL))<< (((ip>> 12)& 0x000FL) + 4))& 0xFFFF0000uL))
+name|CMD_GETVOICEPARAM
+value|0x6
 end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_SETVOICEPARAM
+value|0x7
+end_define
+
+begin_struct
+struct|struct
+name|mixer_private_ioctl
+block|{
+name|u32
+name|cmd
+decl_stmt|;
+name|u32
+name|val
+index|[
+literal|10
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/************************************************************************************************/
@@ -1176,6 +1170,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HCFG_AC3ENABLE_GPSPDIF
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Channels 0 and 1 replace GPSPDIF             */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HCFG_AUTOMUTE
 value|0x00000010
 end_define
@@ -1214,7 +1219,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HCFG_LOCKTANKCACHE
+name|HCFG_LOCKTANKCACHE_MASK
 value|0x00000004
 end_define
 
@@ -1225,6 +1230,13 @@ end_comment
 begin_comment
 comment|/* NOTE: This should generally never be used.  	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HCFG_LOCKTANKCACHE
+value|0x01020014
+end_define
 
 begin_define
 define|#
@@ -1719,7 +1731,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AC97_GENERALPUPOSE
+name|AC97_GENERALPURPOSE
 value|0x20
 end_define
 
@@ -2292,6 +2304,13 @@ begin_define
 define|#
 directive|define
 name|CCR_CACHEINVALIDSIZE
+value|0x07190009
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCR_CACHEINVALIDSIZE_MASK
 value|0xfe000000
 end_define
 
@@ -2331,6 +2350,13 @@ end_define
 begin_comment
 comment|/* 1 = A cache service will fetch word sized samples	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CCR_READADDRESS
+value|0x06100009
+end_define
 
 begin_define
 define|#
