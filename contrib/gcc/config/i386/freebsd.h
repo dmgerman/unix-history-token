@@ -492,6 +492,23 @@ begin_comment
 comment|/************************[  Assembler stuff  ]********************************/
 end_comment
 
+begin_comment
+comment|/* Override the default comment-starter of "/" from unix.h.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|"#"
+end_define
+
 begin_undef
 undef|#
 directive|undef
