@@ -24,12 +24,26 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
 begin_comment
 comment|/* bytes for +Infinity on an ia64 (IEEE double format) */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_LITTLE_ENDIAN
+end_if
 
 begin_decl_stmt
 specifier|const
@@ -59,9 +73,59 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _BIG_ENDIAN */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|union
+name|__infinity_un
+name|__infinity
+init|=
+block|{
+block|{
+literal|0x7f
+block|,
+literal|0xf0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* bytes for NaN */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_LITTLE_ENDIAN
+end_if
 
 begin_decl_stmt
 specifier|const
@@ -82,6 +146,40 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _BIG_ENDIAN */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|union
+name|__nan_un
+name|__nan
+init|=
+block|{
+block|{
+literal|0xff
+block|,
+literal|0xc0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
