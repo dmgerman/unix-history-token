@@ -1221,12 +1221,6 @@ operator|->
 name|alignment
 operator|>
 literal|1
-operator|||
-name|newtag
-operator|->
-name|boundary
-operator|>
-literal|0
 condition|)
 name|newtag
 operator|->
