@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	6.1	83/07/29	*/
+comment|/*	vmparam.h	6.2	84/08/12	*/
 end_comment
 
 begin_comment
@@ -9,10 +9,6 @@ end_comment
 
 begin_comment
 comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  LOWPAGES and HIGHPAGES are  * the number of pages from the beginning of the P0 region to the  * beginning of the text and from the beginning of the P1 region to the  * beginning of the stack respectively.  */
-end_comment
-
-begin_comment
-comment|/* number of ptes per page */
 end_comment
 
 begin_define
@@ -31,6 +27,21 @@ end_define
 
 begin_comment
 comment|/* Start of user stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPUSRSTACK
+value|(0x400000 - UPAGES)
+end_define
+
+begin_comment
+comment|/* btop(USRSTACK) */
+end_comment
+
+begin_comment
+comment|/* number of ptes per page */
 end_comment
 
 begin_define
