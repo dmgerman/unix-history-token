@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.64 (Berkeley) %G%"
+literal|"@(#)conf.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5708,6 +5708,11 @@ name|defined
 argument_list|(
 name|IRIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|apollo
+argument_list|)
 define|#
 directive|define
 name|f_bavail
@@ -7308,6 +7313,8 @@ block|{
 name|char
 modifier|*
 name|propval
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|i
