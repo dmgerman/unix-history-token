@@ -6938,9 +6938,13 @@ expr_stmt|;
 comment|/* barrier to ensure completion of previous write before we write the flag */
 name|bus_space_barrier
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|mly_btag
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|mly_bhandle
 argument_list|,
 literal|0
 argument_list|,
@@ -6949,7 +6953,6 @@ argument_list|,
 name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* tag/handle? */
 comment|/* copy flag last */
 name|pkt
 operator|->
@@ -6968,9 +6971,13 @@ expr_stmt|;
 comment|/* barrier to ensure completion of previous write before we notify the controller */
 name|bus_space_barrier
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|mly_btag
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|mly_bhandle
 argument_list|,
 literal|0
 argument_list|,
@@ -6979,7 +6986,6 @@ argument_list|,
 name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* tag/handle */
 comment|/* signal controller, update index */
 name|MLY_SET_REG
 argument_list|(
