@@ -4153,7 +4153,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_test_dirty
+name|pmap_remove_all
 argument_list|(
 name|m
 argument_list|)
@@ -4170,11 +4170,6 @@ literal|0
 operator|)
 return|;
 name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|pmap_remove_all
 argument_list|(
 name|m
 argument_list|)
@@ -4409,8 +4404,13 @@ operator|->
 name|dirty
 operator|==
 literal|0
+operator|&&
+name|pmap_is_modified
+argument_list|(
+name|m
+argument_list|)
 condition|)
-name|vm_page_test_dirty
+name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
