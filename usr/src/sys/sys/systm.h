@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.8	%G%	*/
+comment|/*	systm.h	4.9	%G%	*/
 end_comment
 
 begin_comment
@@ -212,11 +212,10 @@ comment|/* block to be read ahead */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|intstack
-index|[
-literal|512
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
