@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nameser.h	4.2	85/03/18	*/
+comment|/*	nameser.h	4.3	85/03/27	*/
 end_comment
 
 begin_comment
@@ -732,6 +732,22 @@ comment|/* pointer to data */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+specifier|extern
+name|u_short
+name|getshort
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u_long
+name|getlong
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 
