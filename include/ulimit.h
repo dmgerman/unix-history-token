@@ -15,21 +15,28 @@ directive|define
 name|_ULIMIT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|UL_GETSIZE
+name|UL_GETFSIZE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UL_SETSIZE
+name|UL_SETFSIZE
 value|2
 end_define
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|long
 name|ulimit
 parameter_list|(
@@ -39,6 +46,10 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
