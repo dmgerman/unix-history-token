@@ -3487,8 +3487,7 @@ modifier|*
 name|symp
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|Elf_Hashelt
 name|symnum
 decl_stmt|;
 name|Elf_Sym
