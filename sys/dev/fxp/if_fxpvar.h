@@ -311,6 +311,9 @@ name|suspended
 decl_stmt|;
 comment|/* 0 = normal  1 = suspended (APM) */
 name|int
+name|cu_resume_bug
+decl_stmt|;
+name|int
 name|chip
 decl_stmt|;
 name|int
@@ -425,6 +428,17 @@ end_define
 
 begin_comment
 comment|/* accept all multicast frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_CU_RESUME_BUG
+value|0x0080
+end_define
+
+begin_comment
+comment|/* requires workaround for CU_RESUME */
 end_comment
 
 begin_comment
