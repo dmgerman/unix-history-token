@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.42	81/11/18	*/
+comment|/*	hp.c	4.43	82/01/17	*/
 end_comment
 
 begin_ifdef
@@ -901,6 +901,9 @@ argument_list|)
 operator|&
 literal|07
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|sz
 operator|=
 name|bp
@@ -1015,9 +1018,8 @@ index|]
 operator|.
 name|cyloff
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1046,11 +1048,10 @@ argument_list|(
 name|mi
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return;
 name|bad

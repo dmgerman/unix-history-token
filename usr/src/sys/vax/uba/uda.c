@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.1	81/11/04	*/
+comment|/*	uda.c	4.2	82/01/17	*/
 end_comment
 
 begin_include
@@ -800,6 +800,9 @@ name|uda_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|unit
 operator|=
 name|minor
@@ -851,9 +854,8 @@ operator|->
 name|ui_ctlr
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -909,11 +911,10 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* SHOULD PROBABLY FORCE AN ONLINE ATTEMPT 	   TO SEE IF DISK IS REALLY THERE */
 block|}
@@ -1178,6 +1179,9 @@ name|sz
 decl_stmt|,
 name|maxsz
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|sz
 operator|=
 operator|(
@@ -1294,9 +1298,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1477,11 +1480,10 @@ name|um
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return;
 name|bad
