@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)dmesg.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	8.1 (Berkeley) 6/5/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -123,12 +143,6 @@ begin_include
 include|#
 directive|include
 file|<vis.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
 end_include
 
 begin_decl_stmt
@@ -467,7 +481,7 @@ name|msg_bufx
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * The message buffer is circular; start at the read pointer, and 	 * go to the write pointer - 1. 	 */
+comment|/* 	 * The message buffer is circular.  If the buffer has wrapped, the 	 * write pointer points to the oldest data.  Otherwise, the write 	 * pointer points to \0's following the data.  Read the entire 	 * buffer starting at the write pointer and ignore nulls so that 	 * we effectively start at the oldest data. 	 */
 name|p
 operator|=
 name|cur
@@ -480,31 +494,29 @@ name|msg_bufx
 expr_stmt|;
 name|ep
 operator|=
+operator|(
+name|cur
+operator|.
+name|msg_bufx
+operator|==
+literal|0
+condition|?
 name|cur
 operator|.
 name|msg_bufc
 operator|+
-name|cur
-operator|.
-name|msg_bufx
-operator|-
-literal|1
+name|MSG_BSIZE
+else|:
+name|p
+operator|)
 expr_stmt|;
-for|for
-control|(
 name|newl
 operator|=
 name|skip
 operator|=
 literal|0
-init|;
-name|p
-operator|!=
-name|ep
-condition|;
-operator|++
-name|p
-control|)
+expr_stmt|;
+do|do
 block|{
 if|if
 condition|(
@@ -621,6 +633,14 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+do|while
+condition|(
+operator|++
+name|p
+operator|!=
+name|ep
+condition|)
+do|;
 if|if
 condition|(
 operator|!
