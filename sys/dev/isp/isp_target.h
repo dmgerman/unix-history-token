@@ -1062,15 +1062,12 @@ decl_stmt|;
 comment|/* SCC Lun or reserved */
 name|u_int16_t
 name|at_reserved2
+index|[
+literal|10
+index|]
 decl_stmt|;
 name|u_int16_t
-name|at_scsi_status
-decl_stmt|;
-name|u_int8_t
-name|at_sense
-index|[
-name|QLTM_SENSELEN
-index|]
+name|at_oxid
 decl_stmt|;
 block|}
 name|at2_entry_t
