@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.5 1996/10/15 19:22:40 bde Exp $  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.5.2.1 1996/12/21 01:56:48 se Exp $  */
 end_comment
 
 begin_include
@@ -59,26 +59,55 @@ directive|include
 file|"ed.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_RealTek_8029
-value|0x802910ec
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_ProLAN_NE2000
-value|0x09401050
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_Compex_NE2000
-value|0x140111f6
-end_define
+begin_struct
+specifier|static
+struct|struct
+name|_pcsid
+block|{
+name|pcidi_t
+name|type
+decl_stmt|;
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+block|}
+name|pci_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x802910ec
+block|,
+literal|"NE2000 PCI Ethernet (RealTek 8029)"
+block|}
+block|,
+block|{
+literal|0x09401050
+block|,
+literal|"NE2000 PCI Ethernet (ProLAN)"
+block|}
+block|,
+block|{
+literal|0x140111f6
+block|,
+literal|"NE2000 PCI Ethernet (Compex)"
+block|}
+block|,
+block|{
+literal|0x30008e2e
+block|,
+literal|"NE2000 PCI Ethernet (KTI)"
+block|}
+block|,
+block|{
+literal|0x00000000
+block|,
+name|NULL
+block|}
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -184,39 +213,33 @@ name|pcidi_t
 name|type
 parameter_list|)
 block|{
-switch|switch
+name|struct
+name|_pcsid
+modifier|*
+name|ep
+init|=
+name|pci_ids
+decl_stmt|;
+while|while
 condition|(
+name|ep
+operator|->
+name|type
+operator|&&
+name|ep
+operator|->
+name|type
+operator|!=
 name|type
 condition|)
-block|{
-case|case
-name|PCI_DEVICE_ID_RealTek_8029
-case|:
+operator|++
+name|ep
+expr_stmt|;
 return|return
 operator|(
-literal|"NE2000 PCI Ethernet (RealTek 8029)"
-operator|)
-return|;
-case|case
-name|PCI_DEVICE_ID_ProLAN_NE2000
-case|:
-return|return
-operator|(
-literal|"NE2000 PCI Ethernet (ProLAN)"
-operator|)
-return|;
-case|case
-name|PCI_DEVICE_ID_Compex_NE2000
-case|:
-return|return
-operator|(
-literal|"NE2000 PCI Ethernet (Compex)"
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
+name|ep
+operator|->
+name|desc
 operator|)
 return|;
 block|}
