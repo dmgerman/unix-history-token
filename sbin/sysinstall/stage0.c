@@ -103,9 +103,9 @@ literal|15
 argument_list|,
 literal|75
 argument_list|,
-literal|6
+literal|7
 argument_list|,
-literal|6
+literal|7
 argument_list|,
 name|welcome
 argument_list|,
@@ -209,7 +209,7 @@ name|evil_goto
 goto|;
 break|break;
 case|case
-literal|6
+literal|7
 case|:
 comment|/* Be neat.. */
 name|ExitSysinstall
