@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.27 1997/03/31 22:50:10 brian Exp $"
+literal|"$Id: slattach.c,v 1.28 1997/06/19 14:33:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,12 +56,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -90,13 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<libutil.h>
 end_include
 
 begin_include
@@ -150,43 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/slip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_slvar.h>
 end_include
 
 begin_define
