@@ -1587,7 +1587,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gcore [-s] [-c core] executable pid\n"
+literal|"usage: gcore [-s] [-c core] [executable] pid\n"
 argument_list|)
 expr_stmt|;
 name|exit
