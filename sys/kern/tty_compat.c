@@ -735,8 +735,10 @@ name|tc
 operator|->
 name|t_brkc
 operator|==
-operator|-
-literal|1
+operator|(
+name|char
+operator|)
+name|_POSIX_VDISABLE
 condition|)
 name|cc
 index|[
