@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -25,7 +31,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * "3;3;-1" -> "\003\003\177"  * NOTE: one digit numbers assumed!  */
+comment|/*  * "3;3;-1" -> "\003\003\177"  */
 end_comment
 
 begin_function
@@ -46,6 +52,9 @@ name|src
 decl_stmt|,
 modifier|*
 name|dst
+decl_stmt|;
+name|char
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -128,6 +137,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|src
 argument_list|)
@@ -138,14 +151,43 @@ return|return
 name|nogrouping
 return|;
 block|}
-operator|*
-name|dst
-operator|++
+for|for
+control|(
+name|n
 operator|=
+literal|0
+init|;
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|src
+argument_list|)
+condition|;
+name|src
+operator|++
+control|)
+block|{
+name|n
+operator|*=
+literal|10
+expr_stmt|;
+name|n
+operator|+=
 operator|*
 name|src
 operator|-
 literal|'0'
+expr_stmt|;
+block|}
+operator|*
+name|dst
+operator|++
+operator|=
+name|n
 expr_stmt|;
 block|}
 operator|*
