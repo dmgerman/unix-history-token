@@ -275,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|NMBCLUSTERS
-value|(1024 + MAXUSERS * 16)
+value|(1024 + MAXUSERS * 64)
 end_define
 
 begin_endif
