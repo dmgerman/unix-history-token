@@ -1713,6 +1713,9 @@ case|:
 operator|*
 name|result
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|dinfo
 operator|->
 name|mdi_regs
