@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)flcopy.c	4.3 (Berkeley) %G%"
+literal|"@(#)flcopy.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"failed to open floppy image, for reading\n"
+literal|"can't open \"floppy\"\n"
 argument_list|)
 operator|,
 name|exit
@@ -224,16 +224,18 @@ name|dsize
 operator|>
 literal|77
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Bad number of tracks\n"
 argument_list|)
-operator|,
+expr_stmt|;
 name|exit
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|dsize
 operator|*=
 literal|26
@@ -284,16 +286,18 @@ name|file
 operator|<
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"failed to open floppy image"
+literal|"can't open \"floppy\"\n"
 argument_list|)
-operator|,
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|count
@@ -494,6 +498,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Logical to physical adress translation  */
+end_comment
+
 begin_function
 name|long
 name|trans
@@ -505,7 +513,6 @@ name|int
 name|logical
 decl_stmt|;
 block|{
-comment|/*  Logical to physical adress translation */
 specifier|register
 name|int
 name|sector
