@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.2 1994/09/24 02:58:06 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.3 1996/09/01 10:21:23 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,16 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* quad_t */
+end_comment
 
 begin_include
 include|#
@@ -1330,7 +1340,7 @@ comment|/* __STDC__ */
 end_comment
 
 begin_comment
-comment|/*  * Formatted output.  This routine handles a subset of the printf formats:  * - Formats supported: d, u, o, X, s, and c.  * - The x format is also accepted but is treated like X.  * - The l modifier is accepted.  * - The - and # flags are accepted; # only works with the o format.  * - Width and precision may be specified with any format except c.  * - An * may be given for the width or precision.  * - The obsolete practice of preceding the width with a zero to get  *   zero padding is not supported; use the precision field.  * - A % may be printed by writing %% in the format string.  */
+comment|/*  * Formatted output.  This routine handles a subset of the printf formats:  * - Formats supported: d, u, o, X, s, and c.  * - The x format is also accepted but is treated like X.  * - The l and q modifiers is accepted.  * - The - and # flags are accepted; # only works with the o format.  * - Width and precision may be specified with any format except c.  * - An * may be given for the width or precision.  * - The obsolete practice of preceding the width with a zero to get  *   zero padding is not supported; use the precision field.  * - A % may be printed by writing %% in the format string.  */
 end_comment
 
 begin_define
@@ -1351,9 +1361,7 @@ specifier|static
 specifier|const
 name|char
 name|digit
-index|[
-literal|16
-index|]
+index|[]
 init|=
 literal|"0123456789ABCDEF"
 decl_stmt|;
@@ -1433,6 +1441,9 @@ decl_stmt|;
 name|int
 name|islong
 decl_stmt|;
+name|int
+name|isquad
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -1440,11 +1451,10 @@ decl_stmt|;
 name|int
 name|sign
 decl_stmt|;
-name|long
+name|quad_t
 name|l
 decl_stmt|;
-name|unsigned
-name|long
+name|u_quad_t
 name|num
 decl_stmt|;
 name|unsigned
@@ -1506,6 +1516,10 @@ operator|-
 literal|1
 expr_stmt|;
 name|islong
+operator|=
+literal|0
+expr_stmt|;
+name|isquad
 operator|=
 literal|0
 expr_stmt|;
@@ -1665,6 +1679,22 @@ name|f
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|f
+operator|==
+literal|'q'
+condition|)
+block|{
+name|isquad
+operator|++
+expr_stmt|;
+name|f
+operator|++
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 operator|*
@@ -1685,6 +1715,20 @@ argument_list|(
 name|ap
 argument_list|,
 name|long
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isquad
+condition|)
+name|l
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|quad_t
 argument_list|)
 expr_stmt|;
 else|else
@@ -1778,6 +1822,20 @@ argument_list|(
 argument|ap
 argument_list|,
 argument|unsigned long
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isquad
+condition|)
+name|num
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|u_quad_t
 argument_list|)
 expr_stmt|;
 else|else
