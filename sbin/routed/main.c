@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.1 $"
+empty|#ident "$Revision: 1.2 $"
 end_empty
 
 begin_include
@@ -921,8 +921,8 @@ name|logbad
 argument_list|(
 literal|0
 argument_list|,
-literal|"usage: routed [-sqdghmpAt] [-T /tracefile]"
-literal|" [-F net[,metric]] [-P parms]"
+literal|"usage: routed [-sqdghmAt] [-T /tracefile]"
+literal|" [-F net[/mask[,metric]]] [-P parms]"
 argument_list|)
 expr_stmt|;
 block|}
