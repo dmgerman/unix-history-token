@@ -662,6 +662,16 @@ condition|)
 return|return;
 if|if
 condition|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTPRF_OURS
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
 operator|(
 name|rt
 operator|->
@@ -670,11 +680,9 @@ operator|&
 operator|(
 name|RTF_WASCLONED
 operator||
-name|RTPRF_OURS
+name|RTF_DYNAMIC
 operator|)
 operator|)
-operator|!=
-name|RTF_WASCLONED
 condition|)
 return|return;
 comment|/* 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
