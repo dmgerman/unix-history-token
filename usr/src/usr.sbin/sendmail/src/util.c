@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.21 (Berkeley) %G%"
+literal|"@(#)util.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1381,7 +1381,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SAFEFILE -- return true if a file exists and is safe for a user. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		uname -- user name to compare against (used for group **			sets). **		flags -- modifiers: **			SF_MUSTOWN -- "uid" must own this file. **			SF_NOSLINK -- file cannot be a symbolic link. **		mode -- mode bits that must match. ** **	Returns: **		0 if fn exists, is owned by uid, and matches mode. **		An errno otherwise.  The actual errno is cleared. ** **	Side Effects: **		none. */
+comment|/* **  SAFEFILE -- return true if a file exists and is safe for a user. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		uname -- user name to compare against (used for group **			sets). **		flags -- modifiers: **			SFF_MUSTOWN -- "uid" must own this file. **			SFF_NOSLINK -- file cannot be a symbolic link. **		mode -- mode bits that must match. ** **	Returns: **		0 if fn exists, is owned by uid, and matches mode. **		An errno otherwise.  The actual errno is cleared. ** **	Side Effects: **		none. */
 end_comment
 
 begin_include
@@ -1774,7 +1774,7 @@ condition|(
 operator|(
 name|bitset
 argument_list|(
-name|SF_NOSLINK
+name|SFF_NOSLINK
 argument_list|,
 name|flags
 argument_list|)
@@ -1854,7 +1854,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|SF_NOSLINK
+name|SFF_NOSLINK
 argument_list|,
 name|flags
 argument_list|)
@@ -2057,7 +2057,7 @@ operator|||
 operator|!
 name|bitset
 argument_list|(
-name|SF_MUSTOWN
+name|SFF_MUSTOWN
 argument_list|,
 name|flags
 argument_list|)

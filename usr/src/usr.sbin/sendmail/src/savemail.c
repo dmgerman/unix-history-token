@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.21 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1139,6 +1139,8 @@ operator|!
 name|writable
 argument_list|(
 name|buf
+argument_list|,
+name|SFF_NOSLINK
 argument_list|)
 condition|)
 block|{

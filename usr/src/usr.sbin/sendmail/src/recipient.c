@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.26 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1332,6 +1332,8 @@ operator|!
 name|writable
 argument_list|(
 name|buf
+argument_list|,
+name|SFF_ANYFILE
 argument_list|)
 condition|)
 block|{
@@ -2317,7 +2319,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  WRITABLE -- predicate returning if the file is writable. ** **	This routine must duplicate the algorithm in sys/fio.c. **	Unfortunately, we cannot use the access call since we **	won't necessarily be the real uid when we try to **	actually open the file. ** **	Notice that ANY file with ANY execute bit is automatically **	not writable.  This is also enforced by mailfile. ** **	Parameters: **		s -- pointer to a stat struct for the file. ** **	Returns: **		TRUE -- if we will be able to write this file. **		FALSE -- if we cannot write this file. ** **	Side Effects: **		none. */
+comment|/* **  WRITABLE -- predicate returning if the file is writable. ** **	This routine must duplicate the algorithm in sys/fio.c. **	Unfortunately, we cannot use the access call since we **	won't necessarily be the real uid when we try to **	actually open the file. ** **	Notice that ANY file with ANY execute bit is automatically **	not writable.  This is also enforced by mailfile. ** **	Parameters: **		filename -- the file name to check. **		flags -- SFF_* flags to control the function. ** **	Returns: **		TRUE -- if we will be able to write this file. **		FALSE -- if we cannot write this file. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -2325,10 +2327,15 @@ name|bool
 name|writable
 parameter_list|(
 name|filename
+parameter_list|,
+name|flags
 parameter_list|)
 name|char
 modifier|*
 name|filename
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|uid_t
@@ -2369,9 +2376,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"writable(%s)\n"
+literal|"writable(%s, %x)\n"
 argument_list|,
 name|filename
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2379,6 +2388,14 @@ directive|ifdef
 name|HASLSTAT
 if|if
 condition|(
+operator|(
+name|bitset
+argument_list|(
+name|SFF_NOSLINK
+argument_list|,
+name|flags
+argument_list|)
+condition|?
 name|lstat
 argument_list|(
 name|filename
@@ -2386,6 +2403,15 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+else|:
+name|stat
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -2442,7 +2468,7 @@ name|RealGid
 argument_list|,
 name|RealUserName
 argument_list|,
-name|SF_MUSTOWN
+name|SFF_MUSTOWN
 argument_list|,
 name|S_IWRITE
 operator||
@@ -2631,7 +2657,7 @@ name|egid
 argument_list|,
 name|uname
 argument_list|,
-name|SF_NOSLINK
+name|flags
 argument_list|,
 name|S_IWRITE
 argument_list|)
@@ -2763,9 +2789,9 @@ name|sfflags
 init|=
 name|forwarding
 condition|?
-name|SF_MUSTOWN
+name|SFF_MUSTOWN
 else|:
-literal|0
+name|SFF_ANYFILE
 decl_stmt|;
 name|char
 name|buf
