@@ -1788,6 +1788,16 @@ name|vnode
 modifier|*
 name|im_devvp
 decl_stmt|;
+name|struct
+name|g_consumer
+modifier|*
+name|im_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|im_bo
+decl_stmt|;
 name|int
 name|logical_block_size
 decl_stmt|;

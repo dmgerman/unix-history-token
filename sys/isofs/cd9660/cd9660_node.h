@@ -78,12 +78,6 @@ modifier|*
 name|i_vnode
 decl_stmt|;
 comment|/* vnode associated with this inode */
-name|struct
-name|vnode
-modifier|*
-name|i_devvp
-decl_stmt|;
-comment|/* vnode for block I/O */
 name|u_long
 name|i_flag
 decl_stmt|;

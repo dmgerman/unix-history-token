@@ -108,7 +108,9 @@ name|a_vpp
 operator|=
 name|ip
 operator|->
-name|i_devvp
+name|i_mnt
+operator|->
+name|im_devvp
 expr_stmt|;
 if|if
 condition|(
