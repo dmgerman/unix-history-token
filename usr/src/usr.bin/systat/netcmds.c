@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netcmds.c	5.2 (Berkeley) %G%"
+literal|"@(#)netcmds.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,7 +475,7 @@ name|selectport
 argument_list|(
 name|sp
 operator|->
-name|s_name
+name|s_port
 argument_list|,
 name|onoff
 argument_list|)
