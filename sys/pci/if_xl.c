@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.5.2.5 1998/09/04 16:24:10 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.41 1998/09/08 23:30:39 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -207,6 +207,14 @@ directive|define
 name|XL_USEIOSPACE
 end_define
 
+begin_comment
+comment|/*  * This #define controls the behavior of autonegotiation during the  * bootstrap phase. It's possible to have the driver initiate an  * autonegotiation session and then set a timeout which will cause the  * autoneg results to be polled later, usually once the kernel has  * finished booting. This is clever and all, but it can have bad side  * effects in some cases, particularly where NFS is involved. For  * example, if we're booting diskless with an NFS rootfs, the network  * interface has to be up and running before we hit the mountroot()  * code, otherwise mounting the rootfs will fail and we'll probably  * panic.  *  * Consequently, the 'backgrounded' autoneg behavior is turned off  * by default and we actually sit and wait 5 seconds for autonegotiation  * to complete before proceeding with the other device probes. If you  * choose to use the other behavior, you can uncomment this #define and  * recompile.  */
+end_comment
+
+begin_comment
+comment|/* #define XL_BACKGROUND_AUTONEG */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -225,7 +233,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.5.2.5 1998/09/04 16:24:10 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.41 1998/09/08 23:30:39 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3043,7 +3051,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|3000000
+literal|5000000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3983,6 +3991,75 @@ decl_stmt|;
 name|u_int32_t
 name|icfg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
+comment|/* 	 * If an autoneg session is in progress, stop it. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_autoneg
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"xl%d: canceling autoneg session\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_timer
+operator|=
+name|sc
+operator|->
+name|xl_autoneg
+operator|=
+name|sc
+operator|->
+name|xl_want_auto
+operator|=
+literal|0
+expr_stmt|;
+name|bmcr
+operator|=
+name|xl_phy_readreg
+argument_list|(
+name|sc
+argument_list|,
+name|PHY_BMCR
+argument_list|)
+expr_stmt|;
+name|bmcr
+operator|&=
+operator|~
+name|PHY_BMCR_AUTONEGENBL
+expr_stmt|;
+name|xl_phy_writereg
+argument_list|(
+name|sc
+argument_list|,
+name|PHY_BMCR
+argument_list|,
+name|bmcr
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"xl%d: selecting MII, "
@@ -6754,6 +6831,9 @@ name|IFM_ETHER
 operator||
 name|IFM_AUTO
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XL_BACKGROUND_AUTONEG
 name|xl_autoneg_mii
 argument_list|(
 name|sc
@@ -6763,6 +6843,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|xl_autoneg_mii
+argument_list|(
+name|sc
+argument_list|,
+name|XL_FLAG_FORCEDELAY
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|XL_XCVR_100BTX
@@ -6778,6 +6871,9 @@ name|ifmedia
 operator|.
 name|ifm_media
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XL_BACKGROUND_AUTONEG
 name|xl_autoneg_mii
 argument_list|(
 name|sc
@@ -6787,6 +6883,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|xl_autoneg_mii
+argument_list|(
+name|sc
+argument_list|,
+name|XL_FLAG_FORCEDELAY
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|XL_XCVR_100BFX
@@ -6811,6 +6920,13 @@ name|sc
 operator|->
 name|xl_xcvr
 argument_list|)
+expr_stmt|;
+comment|/* 		 * This will probably be wrong, but it prevents 	 	 * the ifmedia code from panicking. 		 */
+name|media
+operator|=
+name|IFM_ETHER
+operator||
+name|IFM_10_T
 expr_stmt|;
 break|break;
 block|}
@@ -8012,6 +8128,14 @@ name|XL_DMACTL
 argument_list|)
 operator|&
 name|XL_DMACTL_DOWN_STALLED
+operator|||
+operator|!
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|XL_DOWNLIST_PTR
+argument_list|)
 condition|)
 block|{
 name|CSR_WRITE_4
@@ -9091,6 +9215,36 @@ name|xl_tx_pend
 operator|=
 literal|1
 expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If the OACTIVE flag is set, make sure the transmitter 	 * isn't wedged. Call the txeoc handler to make sure the 	 * transmitter is enabled and then call the txeof handler 	 * to see if any descriptors can be reclaimed and reload 	 * the downlist pointer register if necessary. If after 	 * that the OACTIVE flag is still set, return, otherwise  	 * proceed and queue up some more frames. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_OACTIVE
+condition|)
+block|{
+name|xl_txeoc
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|xl_txeof
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_OACTIVE
+condition|)
 return|return;
 block|}
 comment|/* 	 * Check for an available queue slot. If there are none, 	 * punt. 	 */
