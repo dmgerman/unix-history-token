@@ -3068,6 +3068,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
+name|RL_NO_COMPAT
+argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|savestring
 argument_list|)
 define|#
@@ -3087,6 +3094,8 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/* XXX backwards compatibility */
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
