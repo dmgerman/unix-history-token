@@ -172,6 +172,21 @@ value|(read_eflags()& PSL_I)
 end_define
 
 begin_comment
+comment|/* Actually release mtx_lock quickly assuming that we own it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_release_lock_quick
+parameter_list|(
+name|mp
+parameter_list|)
+define|\
+value|atomic_cmpset_rel_int(&(mp)->mtx_lock, (mp)->mtx_lock, MTX_UNOWNED)
+end_define
+
+begin_comment
 comment|/*  * Assembly macros (for internal use only)  *------------------------------------------------------------------------------  */
 end_comment
 
