@@ -2691,7 +2691,9 @@ name|struct
 name|slabhead
 name|freeslabs
 init|=
-block|{}
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|uma_keg_t
 name|keg
