@@ -1023,6 +1023,12 @@ operator|->
 name|cn_nameiop
 operator|!=
 name|CREATE
+operator|&&
+name|cnp
+operator|->
+name|cn_nameiop
+operator|!=
+name|LOOKUP
 operator|)
 condition|)
 name|docache
