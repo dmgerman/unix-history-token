@@ -1169,7 +1169,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Callback if something changed. Note that we need to poke 	 * the DSP on the Broadcom PHYs if the media changes. 	 * 	 */
+comment|/* 	 * Callback if something changed. Note that we need to poke 	 * the DSP on the RealTek PHYs if the media changes. 	 * 	 */
 if|if
 condition|(
 name|sc
@@ -1240,7 +1240,6 @@ name|int
 name|bmsr
 decl_stmt|,
 name|bmcr
-comment|/*, anlpar*/
 decl_stmt|;
 name|mii
 operator|->
@@ -1332,7 +1331,6 @@ name|IFM_NONE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		anlpar = PHY_READ(sc, RL_GMEDIASTAT); 		if (anlpar& RL_GMEDIASTAT_10MBPS) 			mii->mii_media_active |= IFM_10_T; 		if (anlpar& RL_GMEDIASTAT_100MBPS) 			mii->mii_media_active |= IFM_100_TX; 		if (anlpar& RL_GMEDIASTAT_1000MBPS) 			mii->mii_media_active |= IFM_1000_T; 		if (anlpar& RL_GMEDIASTAT_FDX) 			mii->mii_media_active |= IFM_FDX; 		return; */
 block|}
 name|bmsr
 operator|=
@@ -1589,7 +1587,7 @@ value|PHY_WRITE(x, y, (PHY_READ(x, y)& ~(z)))
 end_define
 
 begin_comment
-comment|/* Initialize RealTek PHY per datasheet */
+comment|/*  * Initialize RealTek PHY per the datasheet. The DSP in the PHYs of  * existing revisions of the 8169S/8110S chips need to be tuned in  * order to reliably negotiate a 1000Mbps link. Later revs of the  * chips may not require this software tuning.  */
 end_comment
 
 begin_function
