@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.104 1995/11/04 13:23:09 bde Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.105 1995/11/06 00:35:44 bde Exp $  */
 end_comment
 
 begin_include
@@ -184,17 +184,10 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
 name|NWD
-operator|>
+operator|==
 literal|0
-operator|)
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -253,14 +246,9 @@ begin_if
 if|#
 directive|if
 name|NWORM
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -319,14 +307,9 @@ begin_if
 if|#
 directive|if
 name|NSCTARG
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -385,14 +368,9 @@ begin_if
 if|#
 directive|if
 name|NPT
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -451,14 +429,9 @@ begin_if
 if|#
 directive|if
 name|NSD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -517,32 +490,9 @@ begin_if
 if|#
 directive|if
 name|NST
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_comment
-comment|/*int	stdump(),stsize();*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|stdump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
-name|stsize
-value|zerosize
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -572,20 +522,6 @@ name|stioctl
 value|nxioctl
 end_define
 
-begin_define
-define|#
-directive|define
-name|stdump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
-name|stsize
-value|zerosize
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -601,21 +537,9 @@ begin_if
 if|#
 directive|if
 name|NOD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|oddump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -648,13 +572,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|oddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
 name|odsize
 value|zerosize
 end_define
@@ -674,21 +591,9 @@ begin_if
 if|#
 directive|if
 name|NCD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|cddump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -721,13 +626,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
 name|cdsize
 value|zerosize
 end_define
@@ -747,21 +645,9 @@ begin_if
 if|#
 directive|if
 name|NMCD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|mcddump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -794,13 +680,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|mcddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
 name|mcdsize
 value|zerosize
 end_define
@@ -820,21 +699,9 @@ begin_if
 if|#
 directive|if
 name|NSCD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|scddump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -867,13 +734,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|scddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
 name|scdsize
 value|zerosize
 end_define
@@ -893,21 +753,9 @@ begin_if
 if|#
 directive|if
 name|NMATCD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|matcddump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -940,15 +788,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|matcddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
 name|matcdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -965,24 +806,10 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
 name|NATA
-operator|>
+operator|==
 literal|0
-operator|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|atadump
-value|nxdump
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1019,13 +846,6 @@ name|atasize
 value|zerosize
 end_define
 
-begin_define
-define|#
-directive|define
-name|atadump
-value|nxdump
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1041,14 +861,9 @@ begin_if
 if|#
 directive|if
 name|NWCD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1107,14 +922,9 @@ begin_if
 if|#
 directive|if
 name|NCH
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1152,14 +962,9 @@ begin_if
 if|#
 directive|if
 name|NWT
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1218,28 +1023,9 @@ begin_if
 if|#
 directive|if
 name|NFD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|fddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdsize
-value|zerosize
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1269,20 +1055,6 @@ name|fdioctl
 value|nxioctl
 end_define
 
-begin_define
-define|#
-directive|define
-name|fddump
-value|nxdump
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdsize
-value|zerosize
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1298,14 +1070,9 @@ begin_if
 if|#
 directive|if
 name|NVN
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1354,10 +1121,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Matrox Meteor capture card */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1368,14 +1131,9 @@ begin_if
 if|#
 directive|if
 name|NMETEOR
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1424,41 +1182,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|swopen
-value|noopen
-end_define
-
-begin_define
-define|#
-directive|define
-name|swclose
-value|noclose
-end_define
-
-begin_define
-define|#
-directive|define
-name|swioctl
-value|noioc
-end_define
-
-begin_define
-define|#
-directive|define
-name|swdump
-value|nodump
-end_define
-
-begin_define
-define|#
-directive|define
-name|swsize
-value|zerosize
-end_define
-
 begin_decl_stmt
 name|struct
 name|bdevsw
@@ -1484,18 +1207,18 @@ literal|0
 block|}
 block|,
 block|{
-name|swopen
+name|noopen
 block|,
-name|swclose
+name|noclose
 block|,
 name|swstrategy
 block|,
-name|swioctl
+name|noioc
 block|,
 comment|/*1*/
-name|swdump
+name|nodump
 block|,
-name|swsize
+name|zerosize
 block|,
 literal|0
 block|}
@@ -1510,9 +1233,9 @@ block|,
 name|fdioctl
 block|,
 comment|/*2*/
-name|fddump
+name|nxdump
 block|,
-name|fdsize
+name|zerosize
 block|,
 literal|0
 block|}
@@ -1561,9 +1284,9 @@ block|,
 name|stioctl
 block|,
 comment|/*5*/
-name|stdump
+name|nxdump
 block|,
-name|stsize
+name|zerosize
 block|,
 literal|0
 block|}
@@ -1578,7 +1301,7 @@ block|,
 name|cdioctl
 block|,
 comment|/*6*/
-name|cddump
+name|nxdump
 block|,
 name|cdsize
 block|,
@@ -1595,7 +1318,7 @@ block|,
 name|mcdioctl
 block|,
 comment|/*7*/
-name|mcddump
+name|nxdump
 block|,
 name|mcdsize
 block|,
@@ -1749,7 +1472,7 @@ block|,
 name|scdioctl
 block|,
 comment|/*16*/
-name|scddump
+name|nxdump
 block|,
 name|scdsize
 block|,
@@ -1766,7 +1489,7 @@ block|,
 name|matcdioctl
 block|,
 comment|/*17*/
-name|matcddump
+name|nxdump
 block|,
 name|matcdsize
 block|,
@@ -1783,7 +1506,7 @@ block|,
 name|ataioctl
 block|,
 comment|/*18*/
-name|atadump
+name|nxdump
 block|,
 name|atasize
 block|,
@@ -1817,7 +1540,7 @@ block|,
 name|odioctl
 block|,
 comment|/*20*/
-name|oddump
+name|nxdump
 block|,
 name|odsize
 block|,
@@ -1858,17 +1581,6 @@ directive|include
 file|"machine/cons.h"
 end_include
 
-begin_comment
-comment|/* /dev/mem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mmselect
-value|seltrue
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1879,14 +1591,9 @@ begin_if
 if|#
 directive|if
 name|NPTY
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1987,14 +1694,9 @@ begin_if
 if|#
 directive|if
 name|NSNP
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2043,10 +1745,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* /dev/klog */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2057,14 +1755,9 @@ begin_if
 if|#
 directive|if
 name|NBQU
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2123,14 +1816,9 @@ begin_if
 if|#
 directive|if
 name|NLPT
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2175,14 +1863,9 @@ begin_if
 if|#
 directive|if
 name|NTW
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2241,14 +1924,9 @@ begin_if
 if|#
 directive|if
 name|NPSM
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2296,22 +1974,13 @@ directive|include
 file|"snd.h"
 end_include
 
-begin_comment
-comment|/* General Sound Driver */
-end_comment
-
 begin_if
 if|#
 directive|if
 name|NSND
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2360,10 +2029,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* /dev/fd/NNN */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2374,14 +2039,9 @@ begin_if
 if|#
 directive|if
 name|NBPFILTER
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2440,14 +2100,9 @@ begin_if
 if|#
 directive|if
 name|NSPEAKER
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2492,14 +2147,9 @@ begin_if
 if|#
 directive|if
 name|NPCA
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2551,14 +2201,9 @@ begin_if
 if|#
 directive|if
 name|NMSE
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2603,21 +2248,9 @@ begin_if
 if|#
 directive|if
 name|NSIO
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|sioreset
-value|nxreset
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2664,13 +2297,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|sioreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
 name|siodevtotty
 value|nxdevtotty
 end_define
@@ -2690,21 +2316,9 @@ begin_if
 if|#
 directive|if
 name|NSU
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|summap
-value|nxmmap
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2751,13 +2365,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|summap
-value|nxmmap
-end_define
-
-begin_define
-define|#
-directive|define
 name|sustrategy
 value|nxstrategy
 end_define
@@ -2777,14 +2384,9 @@ begin_if
 if|#
 directive|if
 name|NSCBUS
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2822,14 +2424,9 @@ begin_if
 if|#
 directive|if
 name|NAPM
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2867,14 +2464,9 @@ begin_if
 if|#
 directive|if
 name|NCTX
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2926,21 +2518,9 @@ begin_if
 if|#
 directive|if
 name|NSSC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|sscmmap
-value|nxmmap
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2987,13 +2567,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|sscmmap
-value|nxmmap
-end_define
-
-begin_define
-define|#
-directive|define
 name|sscstrategy
 value|nxstrategy
 end_define
@@ -3013,14 +2586,9 @@ begin_if
 if|#
 directive|if
 name|NCX
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3093,14 +2661,9 @@ begin_if
 if|#
 directive|if
 name|NGP
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3145,14 +2708,9 @@ begin_if
 if|#
 directive|if
 name|NGSC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3197,14 +2755,9 @@ begin_if
 if|#
 directive|if
 name|NCRD
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3263,14 +2816,9 @@ begin_if
 if|#
 directive|if
 name|NJOY
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3315,14 +2863,9 @@ begin_if
 if|#
 directive|if
 name|NASC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3374,14 +2917,9 @@ begin_if
 if|#
 directive|if
 name|NTUN
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3440,14 +2978,9 @@ begin_if
 if|#
 directive|if
 name|NSPIGOT
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3503,10 +3036,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Cyclades serial driver */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -3517,35 +3046,9 @@ begin_if
 if|#
 directive|if
 name|NCY
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|cyreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
-name|cymmap
-value|nxmmap
-end_define
-
-begin_define
-define|#
-directive|define
-name|cystrategy
-value|nxstrategy
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3592,27 +3095,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cyreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
-name|cymmap
-value|nxmmap
-end_define
-
-begin_define
-define|#
-directive|define
-name|cystrategy
-value|nxstrategy
-end_define
-
-begin_define
-define|#
-directive|define
 name|cydevtotty
 value|nxdevtotty
 end_define
@@ -3632,21 +3114,9 @@ begin_if
 if|#
 directive|if
 name|NDGB
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|dgbreset
-value|nxreset
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3693,13 +3163,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|dgbreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
 name|dgbdevtotty
 value|nxdevtotty
 end_define
@@ -3708,10 +3171,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Specialix serial driver */
-end_comment
 
 begin_include
 include|#
@@ -3723,21 +3182,9 @@ begin_if
 if|#
 directive|if
 name|NSI
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|sireset
-value|nxreset
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3784,13 +3231,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|sireset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
 name|sidevtotty
 value|nxdevtotty
 end_define
@@ -3810,21 +3250,9 @@ begin_if
 if|#
 directive|if
 name|NITY
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|ityreset
-value|nxreset
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3864,13 +3292,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ityreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
 name|itydevtotty
 value|nxdevtotty
 end_define
@@ -3890,14 +3311,9 @@ begin_if
 if|#
 directive|if
 name|NNIC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3935,14 +3351,9 @@ begin_if
 if|#
 directive|if
 name|NNNIC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -3980,14 +3391,9 @@ begin_if
 if|#
 directive|if
 name|NISDN
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -4032,14 +3438,9 @@ begin_if
 if|#
 directive|if
 name|NITEL
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -4091,14 +3492,9 @@ begin_if
 if|#
 directive|if
 name|NISPY
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -4150,21 +3546,9 @@ begin_if
 if|#
 directive|if
 name|NRC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|rcreset
-value|nxreset
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -4211,13 +3595,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|rcreset
-value|nxreset
-end_define
-
-begin_define
-define|#
-directive|define
 name|rcdevtotty
 value|nxdevtotty
 end_define
@@ -4237,14 +3614,9 @@ begin_if
 if|#
 directive|if
 name|NLABPC
-operator|>
+operator|==
 literal|0
 end_if
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -4361,7 +3733,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* memory */
-name|mmselect
+name|seltrue
 block|,
 name|memmmap
 block|,
@@ -4779,7 +4151,7 @@ block|,
 comment|/* scsi */
 name|suselect
 block|,
-name|summap
+name|nxmmap
 block|,
 name|sustrategy
 block|}
@@ -5035,7 +4407,7 @@ name|sioioctl
 block|,
 name|siostop
 block|,
-name|sioreset
+name|nxreset
 block|,
 name|siodevtotty
 block|,
@@ -5371,7 +4743,7 @@ name|nullreset
 block|,
 name|nxdevtotty
 block|,
-comment|/* socksys */
+comment|/* was socksys */
 name|seltrue
 block|,
 name|nommap
@@ -5549,16 +4921,16 @@ name|cyioctl
 block|,
 name|cystop
 block|,
-name|cyreset
+name|nxreset
 block|,
 name|cydevtotty
 block|,
 comment|/*cyclades*/
 name|ttselect
 block|,
-name|cymmap
+name|nxmmap
 block|,
-name|cystrategy
+name|NULL
 block|}
 block|,
 block|{
@@ -5582,7 +4954,7 @@ block|,
 comment|/* scsi super */
 name|sscselect
 block|,
-name|sscmmap
+name|nxmmap
 block|,
 name|sscstrategy
 block|}
@@ -5757,7 +5129,7 @@ name|ityioctl
 block|,
 name|nostop
 block|,
-name|ityreset
+name|nxreset
 block|,
 name|itydevtotty
 block|,
@@ -5809,7 +5181,7 @@ name|dgbioctl
 block|,
 name|dgbstop
 block|,
-name|dgbreset
+name|nxreset
 block|,
 name|dgbdevtotty
 block|,
@@ -5939,7 +5311,7 @@ name|rcioctl
 block|,
 name|rcstop
 block|,
-name|rcreset
+name|nxreset
 block|,
 name|rcdevtotty
 block|,
@@ -6069,7 +5441,7 @@ name|siioctl
 block|,
 name|sistop
 block|,
-name|sireset
+name|nxreset
 block|,
 name|sidevtotty
 block|,
