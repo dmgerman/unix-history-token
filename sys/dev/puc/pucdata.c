@@ -4360,8 +4360,7 @@ block|}
 block|, 		}
 block|, 	}
 block|,
-comment|/* Oxford Semiconductor OX9160/OX16PCI954 PCI UARTS */
-comment|/* second chip on Exsys EX-41098 8x cards */
+comment|/* 	 * Oxford Semiconductor OX9160/OX16PCI954 PCI UARTS 	 * Second chip on Exsys EX-41098 8x cards 	 */
 block|{
 literal|"Oxford Semiconductor OX9160/OX16PCI954 UARTs (function 1)"
 block|,
@@ -4427,7 +4426,7 @@ literal|0x18
 block|,
 name|COM_FREQ
 block|}
-block|, 		}
+block|, 	    }
 block|, 	}
 block|,
 comment|/* NetMos 2S1P PCI 16C650 : 2S, 1P */
