@@ -4,6 +4,10 @@ comment|/* i386.c -- Assemble code for the Intel 80386    Copyright (C) 1989, 91
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*   Intel 80386 machine specific gas.   Written by Eliot Dresselhaus (eliot@mgm.mit.edu).   Bugs& suggestions are completely welcome.  This is free software.   Please help us make it better.   */
 end_comment
 
@@ -9867,16 +9871,13 @@ name|input_line_pointer
 operator|!=
 literal|'\0'
 condition|)
-block|{
-comment|/* This should be as_bad, but some versions of gcc, up to              about 2.8 and egcs 1.01, generate a bogus @GOTOFF(%ebx)              in certain cases.  Oddly, the code in question turns out              to work correctly anyhow, so we make this just a warning              until those versions of gcc are obsolete.  */
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"warning: unrecognized characters `%s' in expression"
 argument_list|,
 name|input_line_pointer
 argument_list|)
 expr_stmt|;
-block|}
 name|input_line_pointer
 operator|=
 name|save_input_line_pointer
