@@ -161,6 +161,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|struct
+name|netcred
+modifier|*
+name|vfs_export_lookup
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Network address lookup element  */
 end_comment
@@ -1590,26 +1608,22 @@ comment|/*  * Used by the filesystems to determine if a given network address  *
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|netcred
 modifier|*
 name|vfs_export_lookup
 parameter_list|(
-name|mp
-parameter_list|,
-name|nam
-parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|nam
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netexport

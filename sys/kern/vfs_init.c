@@ -71,6 +71,30 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|vfs_register
+parameter_list|(
+name|struct
+name|vfsconf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vfs_unregister
+parameter_list|(
+name|struct
+name|vfsconf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -378,6 +402,7 @@ comment|/* Register a new filesystem type in the global table */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|vfs_register
 parameter_list|(
@@ -800,6 +825,7 @@ comment|/* Remove registration of a filesystem type */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|vfs_unregister
 parameter_list|(

@@ -305,6 +305,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|free_mntarg
+parameter_list|(
+name|struct
+name|mntarg
+modifier|*
+name|ma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vfs_mount_destroy
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -513,6 +542,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1967,6 +1997,7 @@ comment|/*  * Destroy the mount struct previously allocated by vfs_mount_alloc()
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vfs_mount_destroy
 parameter_list|(
@@ -7747,6 +7778,7 @@ comment|/*  * Free a mntarg structure  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_mntarg
 parameter_list|(
