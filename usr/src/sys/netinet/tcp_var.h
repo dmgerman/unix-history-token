@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,12 +47,6 @@ modifier|*
 name|t_tcpopt
 decl_stmt|;
 comment|/* tcp options */
-name|struct
-name|mbuf
-modifier|*
-name|t_ipopt
-decl_stmt|;
-comment|/* ip options */
 name|short
 name|t_maxseg
 decl_stmt|;
@@ -168,6 +162,10 @@ name|short
 name|t_rtt
 decl_stmt|;
 comment|/* round trip time */
+name|u_short
+name|max_rcvd
+decl_stmt|;
+comment|/* most peer has sent into window */
 name|tcp_seq
 name|t_rtseq
 decl_stmt|;
@@ -189,6 +187,10 @@ define|#
 directive|define
 name|TCPOOB_HAVEDATA
 value|0x01
+define|#
+directive|define
+name|TCPOOB_HADDATA
+value|0x02
 block|}
 struct|;
 end_struct
