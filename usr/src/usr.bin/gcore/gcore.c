@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	5.7 (Berkeley) %G%"
+literal|"@(#)gcore.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,11 @@ name|coref
 argument_list|)
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
