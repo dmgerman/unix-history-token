@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SUCC.c 1.2 %G%"
+literal|"@(#)SUCC.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,20 @@ name|long
 name|upper
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|value
+operator|==
+name|upper
+condition|)
+block|{
+name|ERROR
+argument_list|(
+literal|"Cannot take succ of last element of a range\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|value
 operator|++
 expr_stmt|;
@@ -55,7 +69,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ERANGE
+literal|"Value of %D is out of range\n"
 argument_list|,
 name|value
 argument_list|)

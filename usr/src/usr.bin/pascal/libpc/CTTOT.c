@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CTTOT.c 1.2 %G%"
+literal|"@(#)CTTOT.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,7 +360,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECTUPR
+literal|"Range upper bound of %D out of set bounds\n"
 argument_list|,
 operator|*
 operator|--
@@ -390,7 +390,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECTLWR
+literal|"Range lower bound of %D out of set bounds\n"
 argument_list|,
 operator|*
 operator|--
@@ -566,7 +566,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECTSNG
+literal|"Value of %D out of set bounds\n"
 argument_list|,
 operator|*
 operator|--
