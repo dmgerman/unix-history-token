@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.16 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -868,6 +868,46 @@ literal|1
 control|)
 comment|/* void */
 empty_stmt|;
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_cpc
+operator|>
+name|MAXCPG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maximum block size with nsect %d and ntrak %d is %d\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_nsect
+argument_list|,
+name|sblock
+operator|.
+name|fs_ntrak
+argument_list|,
+name|sblock
+operator|.
+name|fs_bsize
+operator|/
+operator|(
+name|sblock
+operator|.
+name|fs_cpc
+operator|/
+name|MAXCPG
+operator|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*  	 * collect and verify the number of cylinders per group 	 */
 if|if
 condition|(
@@ -959,12 +999,23 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|)
-condition|)
-block|{
-operator|--
+operator|&&
 name|sblock
 operator|.
 name|fs_cpg
+operator|>
+name|sblock
+operator|.
+name|fs_cpc
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_cpg
+operator|-=
+name|sblock
+operator|.
+name|fs_cpc
 expr_stmt|;
 name|sblock
 operator|.
