@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|swstrategy
 name|__P
 argument_list|(
@@ -146,7 +146,7 @@ name|dev_type_strategy
 parameter_list|(
 name|n
 parameter_list|)
-value|int n __P((struct buf *))
+value|void n __P((struct buf *))
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|int n __P((dev_t, int, caddr_t, int, struct proc *))
+value|int n __P((dev_t, u_long, caddr_t, int, struct proc *))
 end_define
 
 begin_comment
