@@ -9697,6 +9697,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
@@ -9706,6 +9709,9 @@ name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|bp
 operator|->
@@ -9796,6 +9802,9 @@ name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|m
@@ -9807,6 +9816,9 @@ name|vm_page_wire
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|bp
 operator|->
@@ -12389,6 +12401,9 @@ goto|goto
 name|tryagain
 goto|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|p
@@ -12406,6 +12421,9 @@ name|p
 argument_list|,
 name|PG_ZERO
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_qenter
 argument_list|(
