@@ -1080,7 +1080,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  ***************************************************************************  ****  **** The two following SYSINT's are proc0 specific glue code.  I am not  **** convinced that they can not be safely combined, but their order of  **** operation has been maintained as the same as the original init_main.c  **** for right now.  ****  **** These probably belong in init_proc.c or kern_proc.c, since they  **** deal with proc0 (the fork template process).  ****  ***************************************************************************  */
+comment|/*  ***************************************************************************  ****  **** The two following SYSINIT's are proc0 specific glue code.  I am not  **** convinced that they can not be safely combined, but their order of  **** operation has been maintained as the same as the original init_main.c  **** for right now.  ****  **** These probably belong in init_proc.c or kern_proc.c, since they  **** deal with proc0 (the fork template process).  ****  ***************************************************************************  */
 end_comment
 
 begin_comment
