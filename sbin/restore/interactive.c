@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -1746,8 +1752,6 @@ operator|=
 operator|*
 name|cp
 operator|++
-operator||
-literal|0200
 expr_stmt|;
 if|if
 condition|(
@@ -2723,17 +2727,16 @@ condition|(
 operator|!
 name|vflag
 operator|&&
+operator|!
+name|isprint
+argument_list|(
 operator|(
-operator|*
-name|cp
-operator|<
-literal|' '
-operator|||
-operator|*
-name|cp
-operator|>=
-literal|0177
+name|unsigned
+name|char
 operator|)
+operator|*
+name|cp
+argument_list|)
 condition|)
 operator|*
 name|cp
@@ -3564,7 +3567,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|strcmp
+name|strcoll
 argument_list|(
 operator|(
 operator|(
