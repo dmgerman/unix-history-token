@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -730,7 +736,7 @@ name|log_Printf
 argument_list|(
 name|level
 argument_list|,
-literal|"%s%s: %llu packets in, %llu packets out\n"
+literal|"%s%s%llu packets in, %llu packets out\n"
 argument_list|,
 name|title
 argument_list|,

@@ -13,23 +13,20 @@ begin_struct
 struct|struct
 name|iface_addr
 block|{
+name|unsigned
+name|system
+range|:
+literal|1
+decl_stmt|;
+comment|/* System alias ? */
 name|struct
-name|in_addr
+name|ncprange
 name|ifa
 decl_stmt|;
-comment|/* local address */
+comment|/* local address/mask */
 name|struct
-name|in_addr
-name|mask
-decl_stmt|;
-comment|/* netmask */
-name|int
-name|bits
-decl_stmt|;
-comment|/* netmask bits - -1 if not contiguous */
-name|struct
-name|in_addr
-name|brd
+name|ncpaddr
+name|peer
 decl_stmt|;
 comment|/* peer address */
 block|}
@@ -58,13 +55,13 @@ name|mtu
 decl_stmt|;
 comment|/* struct tuninfo MTU */
 name|int
-name|in_addrs
+name|addrs
 decl_stmt|;
 comment|/* How many in_addr's */
 name|struct
 name|iface_addr
 modifier|*
-name|in_addr
+name|addr
 decl_stmt|;
 comment|/* Array of addresses (malloc'd) */
 block|}
@@ -90,7 +87,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Leave the IPCP address */
+comment|/* Leave the NCP address */
 end_comment
 
 begin_define
@@ -129,12 +126,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|iface_Clear
-value|iface_inClear
+name|IFACE_SYSTEM
+value|4
 end_define
 
 begin_comment
-comment|/* Same for now */
+comment|/* Set/clear SYSTEM entries */
 end_comment
 
 begin_function_decl
@@ -155,10 +152,44 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|iface_inClear
+name|iface_Clear
 parameter_list|(
 name|struct
 name|iface
+modifier|*
+parameter_list|,
+name|struct
+name|ncp
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|iface_Add
+parameter_list|(
+name|struct
+name|iface
+modifier|*
+parameter_list|,
+name|struct
+name|ncp
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ncprange
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ncpaddr
 modifier|*
 parameter_list|,
 name|int
@@ -169,37 +200,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|iface_inAdd
+name|iface_Delete
 parameter_list|(
 name|struct
 name|iface
 modifier|*
 parameter_list|,
 name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|iface_inDelete
-parameter_list|(
-name|struct
-name|iface
+name|ncp
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
-name|in_addr
+name|ncpaddr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

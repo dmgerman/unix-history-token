@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -144,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -193,6 +211,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#
@@ -652,7 +682,7 @@ name|ip_hl
 index|]
 condition|)
 block|{
-comment|/*      * Wasn't the first -- search for it.      *       * States are kept in a circularly linked list with last_cs pointing to the      * end of the list.  The list is kept in lru order by moving a state to      * the head of the list whenever it is referenced.  Since the list is      * short and, empirically, the connection we want is almost always near      * the front, we locate states via linear search.  If we don't find a      * state for the datagram, the oldest state is (re-)used.      */
+comment|/*      * Wasn't the first -- search for it.      *      * States are kept in a circularly linked list with last_cs pointing to the      * end of the list.  The list is kept in lru order by moving a state to      * the head of the list whenever it is referenced.  Since the list is      * short and, empirically, the connection we want is almost always near      * the front, we locate states via linear search.  If we don't find a      * state for the datagram, the oldest state is (re-)used.      */
 specifier|register
 name|struct
 name|cstate
@@ -1238,7 +1268,7 @@ operator|==
 name|hlen
 condition|)
 break|break;
-comment|/* (fall through) */
+comment|/* FALLTHROUGH */
 case|case
 name|SPECIAL_I
 case|:

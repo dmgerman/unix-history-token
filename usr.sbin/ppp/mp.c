@@ -66,13 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -203,6 +209,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -310,13 +322,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bundle.h"
+file|"ipv6cp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|"ncp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bundle.h"
 end_include
 
 begin_include
@@ -1249,6 +1267,14 @@ literal|0
 expr_stmt|;
 name|mp
 operator|->
+name|out
+operator|.
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+name|mp
+operator|->
 name|seq
 operator|.
 name|min_in
@@ -2038,6 +2064,14 @@ literal|0
 expr_stmt|;
 name|mp
 operator|->
+name|out
+operator|.
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+name|mp
+operator|->
 name|seq
 operator|.
 name|min_in
@@ -2136,8 +2170,8 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Re-point our IPCP layer at our MP link */
-name|ipcp_SetLink
+comment|/* Re-point our NCP layers at our MP link */
+name|ncp_SetLink
 argument_list|(
 operator|&
 name|mp
@@ -2145,8 +2179,6 @@ operator|->
 name|bundle
 operator|->
 name|ncp
-operator|.
-name|ipcp
 argument_list|,
 operator|&
 name|mp
@@ -3655,7 +3687,7 @@ end_function
 
 begin_function
 name|int
-name|mp_FillQueues
+name|mp_FillPhysicalQueues
 parameter_list|(
 name|struct
 name|bundle
@@ -3902,19 +3934,16 @@ block|}
 if|if
 condition|(
 operator|!
-name|link_QueueLen
+name|mp_QueueLen
 argument_list|(
-operator|&
 name|mp
-operator|->
-name|link
 argument_list|)
 condition|)
 block|{
 name|int
 name|mrutoosmall
 decl_stmt|;
-comment|/*        * If there's only a single open link in our bundle and we haven't got        * MP level link compression, queue outbound traffic directly via that        * link's protocol stack rather than using the MP link.  This results        * in the outbound traffic going out as PROTO_IP rather than PROTO_MP.        */
+comment|/*        * If there's only a single open link in our bundle and we haven't got        * MP level link compression, queue outbound traffic directly via that        * link's protocol stack rather than using the MP link.  This results        * in the outbound traffic going out as PROTO_IP or PROTO_IPV6 rather        * than PROTO_MP.        */
 name|mrutoosmall
 operator|=
 literal|0
@@ -3977,15 +4006,25 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ip_PushPacket
+name|ncp_PushPacket
 argument_list|(
-name|bestlink
-argument_list|,
+operator|&
 name|bundle
+operator|->
+name|ncp
+argument_list|,
+operator|&
+name|mp
+operator|->
+name|out
+operator|.
+name|af
+argument_list|,
+name|bestlink
 argument_list|)
 condition|)
-comment|/* Nothing else to send */
 break|break;
+comment|/* Nothing else to send */
 if|if
 condition|(
 name|mrutoosmall
@@ -5503,8 +5542,9 @@ name|s_addr
 operator|==
 name|INADDR_ANY
 condition|)
-name|addr
-operator|=
+name|ncprange_getip4addr
+argument_list|(
+operator|&
 name|arg
 operator|->
 name|bundle
@@ -5516,8 +5556,10 @@ operator|.
 name|cfg
 operator|.
 name|my_range
-operator|.
-name|ipaddr
+argument_list|,
+operator|&
+name|addr
+argument_list|)
 expr_stmt|;
 else|else
 name|addr
@@ -5627,8 +5669,9 @@ name|s_addr
 operator|==
 name|INADDR_ANY
 condition|)
-name|addr
-operator|=
+name|ncprange_getip4addr
+argument_list|(
+operator|&
 name|arg
 operator|->
 name|bundle
@@ -5640,8 +5683,10 @@ operator|.
 name|cfg
 operator|.
 name|my_range
-operator|.
-name|ipaddr
+argument_list|,
+operator|&
+name|addr
+argument_list|)
 expr_stmt|;
 else|else
 name|addr
@@ -5660,7 +5705,7 @@ name|s
 operator|=
 name|ID0socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -5692,7 +5737,7 @@ return|;
 block|}
 if|if
 condition|(
-name|get_ether_addr
+name|arp_EtherAddr
 argument_list|(
 name|s
 argument_list|,
@@ -5700,6 +5745,8 @@ name|addr
 argument_list|,
 operator|&
 name|hwaddr
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -6491,6 +6538,29 @@ operator|.
 name|class
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"mpserver: snprintf(): %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|MPSERVER_FAILED
+return|;
+block|}
 for|for
 control|(
 name|f
@@ -6974,8 +7044,8 @@ block|}
 end_function
 
 begin_function
-name|void
-name|mp_DeleteQueue
+name|size_t
+name|mp_QueueLen
 parameter_list|(
 name|struct
 name|mp
@@ -6983,14 +7053,15 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|link_DeleteQueue
+return|return
+name|link_QueueLen
 argument_list|(
 operator|&
 name|mp
 operator|->
 name|link
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

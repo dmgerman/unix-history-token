@@ -223,6 +223,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -288,6 +294,18 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bundle.h"
 end_include
 
@@ -321,7 +339,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -454,6 +472,8 @@ operator|=
 name|IFF_UP
 operator||
 name|IFF_POINTOPOINT
+operator||
+name|IFF_MULTICAST
 expr_stmt|;
 endif|#
 directive|endif

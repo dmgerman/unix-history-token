@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -130,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -185,6 +197,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#
@@ -565,7 +589,7 @@ return|return
 name|bp
 return|;
 block|}
-comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necesary space. 4)    * Copy unread data info there.    */
+comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necessary space. 4)    * Copy unread data info there.    */
 if|if
 condition|(
 name|len

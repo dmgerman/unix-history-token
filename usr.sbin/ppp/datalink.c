@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -174,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -205,6 +223,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#
@@ -1691,7 +1721,7 @@ argument_list|)
 expr_stmt|;
 else|else
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_OPENING
 case|:
@@ -2986,6 +3016,9 @@ case|:
 case|case
 name|DATALINK_LOGIN
 case|:
+if|if
+condition|(
+operator|(
 name|result
 operator|=
 name|descriptor_Write
@@ -3001,7 +3034,24 @@ name|bundle
 argument_list|,
 name|fdset
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|datalink_ComeDown
+argument_list|(
+name|dl
+argument_list|,
+name|CLOSE_NORMAL
+argument_list|)
 expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|DATALINK_READY
@@ -3032,8 +3082,8 @@ argument_list|,
 name|fdset
 argument_list|)
 condition|)
-name|result
-operator|+=
+switch|switch
+condition|(
 name|descriptor_Write
 argument_list|(
 operator|&
@@ -3047,7 +3097,27 @@ name|bundle
 argument_list|,
 name|fdset
 argument_list|)
+condition|)
+block|{
+case|case
+operator|-
+literal|1
+case|:
+name|datalink_ComeDown
+argument_list|(
+name|dl
+argument_list|,
+name|CLOSE_NORMAL
+argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|result
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|descriptor_IsSet
@@ -3062,8 +3132,8 @@ argument_list|,
 name|fdset
 argument_list|)
 condition|)
-name|result
-operator|+=
+switch|switch
+condition|(
 name|descriptor_Write
 argument_list|(
 operator|&
@@ -3077,7 +3147,27 @@ name|bundle
 argument_list|,
 name|fdset
 argument_list|)
+condition|)
+block|{
+case|case
+operator|-
+literal|1
+case|:
+name|datalink_ComeDown
+argument_list|(
+name|dl
+argument_list|,
+name|CLOSE_NORMAL
+argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|result
+operator|++
+expr_stmt|;
+block|}
 break|break;
 block|}
 return|return
@@ -3087,7 +3177,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|datalink_ComeDown
 parameter_list|(
@@ -3763,7 +3852,7 @@ operator|->
 name|bundle
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|MP_ADDED
 case|:
@@ -3885,7 +3974,7 @@ name|dl
 operator|->
 name|peer
 expr_stmt|;
-name|ipcp_SetLink
+name|ncp_SetLink
 argument_list|(
 operator|&
 name|dl
@@ -3893,8 +3982,6 @@ operator|->
 name|bundle
 operator|->
 name|ncp
-operator|.
-name|ipcp
 argument_list|,
 operator|&
 name|dl
@@ -4715,7 +4802,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* fall through (just in case) */
+comment|/* FALLTHROUGH (just in case) */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -4736,7 +4823,7 @@ operator|->
 name|cbcp
 argument_list|)
 expr_stmt|;
-comment|/* fall through (just in case) */
+comment|/* FALLTHROUGH (just in case) */
 case|case
 name|DATALINK_AUTH
 case|:
@@ -6222,7 +6309,7 @@ name|run
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_DIAL
 case|:
@@ -6329,7 +6416,7 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -6440,7 +6527,7 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -6474,7 +6561,7 @@ name|DATALINK_OPENING
 condition|)
 return|return;
 comment|/* we're doing a callback... */
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|datalink_ComeDown
 argument_list|(

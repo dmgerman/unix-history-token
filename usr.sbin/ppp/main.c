@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -243,6 +249,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -286,6 +298,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#
@@ -462,6 +486,10 @@ name|int
 name|excode
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SignalBundle
+condition|)
 name|server_Close
 argument_list|(
 name|SignalBundle
@@ -479,6 +507,11 @@ name|excode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SignalBundle
+condition|)
+block|{
 name|bundle_Close
 argument_list|(
 name|SignalBundle
@@ -493,6 +526,7 @@ argument_list|(
 name|SignalBundle
 argument_list|)
 expr_stmt|;
+block|}
 name|log_Close
 argument_list|()
 expr_stmt|;
@@ -727,7 +761,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -foreground | -background | -direct |"
+literal|"usage: ppp [-auto | -foreground | -background | -direct |"
 literal|" -dedicated | -ddial | -interactive]"
 ifndef|#
 directive|ifndef
@@ -1322,6 +1356,9 @@ name|struct
 name|switches
 name|sw
 decl_stmt|;
+name|probe_Init
+argument_list|()
+expr_stmt|;
 comment|/*    * We open 3 descriptors to ensure that STDIN_FILENO, STDOUT_FILENO and    * STDERR_FILENO are always open.  These are closed before DoLoop(),    * but *after* we've avoided the possibility of erroneously closing    * an important descriptor with close(STD{IN,OUT,ERR}_FILENO).    */
 if|if
 condition|(
@@ -1926,6 +1963,9 @@ name|mode
 operator|==
 name|PHYS_AUTO
 operator|&&
+name|ncprange_family
+argument_list|(
+operator|&
 name|bundle
 operator|->
 name|ncp
@@ -1935,12 +1975,9 @@ operator|.
 name|cfg
 operator|.
 name|peer_range
-operator|.
-name|ipaddr
-operator|.
-name|s_addr
+argument_list|)
 operator|==
-name|INADDR_ANY
+name|AF_UNSPEC
 condition|)
 block|{
 name|prompt_Printf
@@ -2483,16 +2520,6 @@ name|nfds
 decl_stmt|,
 name|nothing_done
 decl_stmt|;
-name|struct
-name|probe
-name|probe
-decl_stmt|;
-name|probe_Init
-argument_list|(
-operator|&
-name|probe
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3086,7 +3113,6 @@ argument_list|)
 condition|)
 if|if
 condition|(
-operator|!
 name|descriptor_Write
 argument_list|(
 operator|&
@@ -3098,11 +3124,13 @@ name|bundle
 argument_list|,
 name|wfds
 argument_list|)
+operator|<=
+literal|0
 operator|&&
 name|nothing_done
 condition|)
 block|{
-comment|/*          * This is disasterous.  The OS has told us that something is          * writable, and all our write()s have failed.  Rather than          * going back immediately to do our UpdateSet()s and select(),          * we sleep for a bit to avoid gobbling up all cpu time.          */
+comment|/*          * This is disastrous.  The OS has told us that something is          * writable, and all our write()s have failed.  Rather than          * going back immediately to do our UpdateSet()s and select(),          * we sleep for a bit to avoid gobbling up all cpu time.          */
 name|struct
 name|timeval
 name|t

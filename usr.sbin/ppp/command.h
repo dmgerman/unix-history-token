@@ -204,6 +204,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|command_Free
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|command_Expand_Interpret
 parameter_list|(

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -286,6 +292,10 @@ literal|"ip in"
 block|,
 literal|"ip out"
 block|,
+literal|"ipv6 in"
+block|,
+literal|"ipv6 out"
+block|,
 literal|"nat in"
 block|,
 literal|"nat out"
@@ -353,6 +363,10 @@ block|,
 literal|"ipcp in"
 block|,
 literal|"ipcp out"
+block|,
+literal|"ipv6cp in"
+block|,
+literal|"ipv6cp out"
 block|,
 literal|"lcp in"
 block|,

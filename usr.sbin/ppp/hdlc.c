@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1385,6 +1391,14 @@ literal|"Individual Link Encryption"
 block|}
 block|,
 block|{
+literal|0x0057
+block|,
+literal|0x0057
+block|,
+literal|"Internet Protocol V6"
+block|}
+block|,
+block|{
 literal|0x006f
 block|,
 literal|0x006f
@@ -1782,6 +1796,14 @@ block|,
 literal|0x8055
 block|,
 literal|"Individual Link Encryption Control Protocol"
+block|}
+block|,
+block|{
+literal|0x8057
+block|,
+literal|0x8057
+block|,
+literal|"Internet Protocol V6 Control Protocol"
 block|}
 block|,
 block|{

@@ -297,9 +297,9 @@ range|:
 literal|2
 decl_stmt|;
 comment|/* Challenge Handshake Authentication proto */
-ifdef|#
-directive|ifdef
-name|HAVE_DES
+ifndef|#
+directive|ifndef
+name|NODES
 name|unsigned
 name|chap80nt
 range|:
@@ -532,50 +532,6 @@ end_define
 begin_comment
 comment|/* Endpoint discriminator */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_LCP_OPT_LEN
-value|20
-end_define
-
-begin_struct
-struct|struct
-name|lcp_opt
-block|{
-name|u_char
-name|id
-decl_stmt|;
-name|u_char
-name|len
-decl_stmt|;
-name|u_char
-name|data
-index|[
-name|MAX_LCP_OPT_LEN
-operator|-
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|INC_LCP_OPT
-parameter_list|(
-name|ty
-parameter_list|,
-name|length
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|do {                                                \     (o)->id = (ty);                                   \     (o)->len = (length);                              \     (o) = (struct lcp_opt *)((char *)(o) + (length)); \   } while (0)
-end_define
 
 begin_struct_decl
 struct_decl|struct

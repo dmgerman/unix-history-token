@@ -100,260 +100,288 @@ end_define
 begin_define
 define|#
 directive|define
-name|MB_NATIN
+name|MB_IPV6IN
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_NATOUT
+name|MB_IPV6OUT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_MPIN
+name|MB_NATIN
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_MPOUT
+name|MB_NATOUT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_VJIN
+name|MB_MPIN
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_VJOUT
+name|MB_MPOUT
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ICOMPDIN
+name|MB_VJIN
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ICOMPDOUT
+name|MB_VJOUT
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_COMPDIN
+name|MB_ICOMPDIN
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_COMPDOUT
+name|MB_ICOMPDOUT
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LQRIN
+name|MB_COMPDIN
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LQROUT
+name|MB_COMPDOUT
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ECHOIN
+name|MB_LQRIN
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ECHOOUT
+name|MB_LQROUT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_PROTOIN
+name|MB_ECHOIN
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_PROTOOUT
+name|MB_ECHOOUT
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ACFIN
+name|MB_PROTOIN
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ACFOUT
+name|MB_PROTOOUT
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_SYNCIN
+name|MB_ACFIN
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_SYNCOUT
+name|MB_ACFOUT
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_HDLCIN
+name|MB_SYNCIN
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_HDLCOUT
+name|MB_SYNCOUT
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ASYNCIN
+name|MB_HDLCIN
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ASYNCOUT
+name|MB_HDLCOUT
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CBCPIN
+name|MB_ASYNCIN
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CBCPOUT
+name|MB_ASYNCOUT
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CHAPIN
+name|MB_CBCPIN
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CHAPOUT
+name|MB_CBCPOUT
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_PAPIN
+name|MB_CHAPIN
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_PAPOUT
+name|MB_CHAPOUT
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CCPIN
+name|MB_PAPIN
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_CCPOUT
+name|MB_PAPOUT
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_IPCPIN
+name|MB_CCPIN
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_IPCPOUT
+name|MB_CCPOUT
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LCPIN
+name|MB_IPCPIN
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LCPOUT
+name|MB_IPCPOUT
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_UNKNOWN
+name|MB_IPV6CPIN
 value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_IPV6CPOUT
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_LCPIN
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_LCPOUT
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_UNKNOWN
+value|42
 end_define
 
 begin_define

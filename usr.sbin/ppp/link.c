@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -174,13 +186,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipcp.h"
+file|"ncpaddr.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
 end_include
 
 begin_include
@@ -1543,9 +1567,20 @@ block|{
 block|{
 name|PROTO_IP
 block|,
-name|ip_Input
+name|ipv4_Input
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NOINET6
+block|{
+name|PROTO_IPV6
+block|,
+name|ipv6_Input
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|PROTO_MP
 block|,
@@ -1564,6 +1599,17 @@ block|,
 name|ipcp_Input
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NOINET6
+block|{
+name|PROTO_IPV6CP
+block|,
+name|ipv6cp_Input
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|PROTO_PAP
 block|,
