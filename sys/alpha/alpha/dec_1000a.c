@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sc.h"
+file|"opt_dev_sc.h"
 end_include
 
 begin_ifndef
@@ -617,11 +617,9 @@ literal|3
 case|:
 comment|/* display console ... */
 comment|/* XXX */
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SC
 name|sccnattach
 argument_list|()
 expr_stmt|;
