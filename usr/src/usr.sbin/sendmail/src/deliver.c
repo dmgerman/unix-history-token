@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.117 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.118 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +291,15 @@ block|{
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|queueup
+argument_list|(
+name|e
+argument_list|,
+name|TRUE
+argument_list|,
+name|announcequeueup
+argument_list|)
 expr_stmt|;
 name|e
 operator|->
