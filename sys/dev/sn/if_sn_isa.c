@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -54,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -72,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -85,18 +67,6 @@ begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/pnpvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/sn/if_snreg.h>
 end_include
 
 begin_include
