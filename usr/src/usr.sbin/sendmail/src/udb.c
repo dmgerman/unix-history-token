@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.20 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.21 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.20 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.21 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,13 +380,13 @@ decl_stmt|;
 name|char
 name|keybuf
 index|[
-literal|128
+name|MAXKEY
 index|]
 decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|BUFSIZ
 index|]
 decl_stmt|;
 if|if
@@ -966,7 +966,7 @@ decl_stmt|;
 name|char
 name|keybuf
 index|[
-literal|128
+name|MAXKEY
 index|]
 decl_stmt|;
 if|if
@@ -1575,7 +1575,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|BUFSIZ
 index|]
 decl_stmt|;
 if|if

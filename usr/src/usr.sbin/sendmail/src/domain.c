@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.38 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.39 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.38 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.39 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,6 @@ ifdef|#
 directive|ifdef
 name|NAMED_BIND
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#

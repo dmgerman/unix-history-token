@@ -107,7 +107,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	5.42 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.43 (Berkeley) %G% (with NEWDB)"
 expr_stmt|;
 end_expr_stmt
 
@@ -128,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.42 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	5.43 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.42 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	5.43 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2934,7 +2934,9 @@ block|{
 name|char
 name|buf
 index|[
-literal|256
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|ep

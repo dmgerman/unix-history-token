@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/* **  CONF.H -- All user-configurable parameters for sendmail */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_comment
 comment|/* **  Table sizes, etc.... **	There shouldn't be much need to change these.... */
@@ -130,6 +136,28 @@ end_define
 
 begin_comment
 comment|/* maximum SMTP line length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXKEY
+value|128
+end_define
+
+begin_comment
+comment|/* maximum size of a database key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMCHUNKSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* chunk size for memory allocation */
 end_comment
 
 begin_ifndef

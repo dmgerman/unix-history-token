@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.34 (Berkeley) %G%"
+literal|"@(#)util.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2276,7 +2276,7 @@ if|if
 condition|(
 name|nn
 operator|<
-literal|1024
+name|MEMCHUNKSIZE
 condition|)
 name|nn
 operator|*=
@@ -2285,7 +2285,7 @@ expr_stmt|;
 else|else
 name|nn
 operator|+=
-literal|1024
+name|MEMCHUNKSIZE
 expr_stmt|;
 name|nbp
 operator|=

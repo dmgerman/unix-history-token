@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.29 (Berkeley) %G%"
+literal|"@(#)headers.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -1587,7 +1581,7 @@ block|{
 name|char
 name|hbuf
 index|[
-literal|100
+name|MAXNAME
 index|]
 decl_stmt|;
 name|char

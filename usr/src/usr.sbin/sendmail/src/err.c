@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.16 (Berkeley) %G%"
+literal|"@(#)err.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1042,7 +1042,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|100
+name|MAXLINE
 index|]
 decl_stmt|;
 ifdef|#
