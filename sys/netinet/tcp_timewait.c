@@ -3770,6 +3770,12 @@ name|inp_ppcb
 operator|=
 name|NULL
 expr_stmt|;
+name|tp
+operator|->
+name|t_inpcb
+operator|=
+name|NULL
+expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
@@ -6976,7 +6982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look-up the routing entry to the peer of this inpcb.  If no route  * is found and it cannot be allocated the return NULL.  This routine  * is called by TCP routines that access the rmx structure and by tcp_mss  * to get the interface MTU.  */
+comment|/*  * Look-up the routing entry to the peer of this inpcb.  If no route  * is found and it cannot be allocated, then return NULL.  This routine  * is called by TCP routines that access the rmx structure and by tcp_mss  * to get the interface MTU.  */
 end_comment
 
 begin_function
