@@ -1039,6 +1039,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|mlxd_dev
+operator|=
+name|dev
+expr_stmt|;
 switch|switch
 condition|(
 name|sc

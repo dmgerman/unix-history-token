@@ -7007,7 +7007,7 @@ comment|/* xfer length low byte */
 operator|(
 name|driveno
 operator|<<
-literal|4
+literal|3
 operator|)
 operator||
 operator|(
@@ -7017,10 +7017,10 @@ operator|>>
 literal|8
 operator|)
 operator|&
-literal|0x0f
+literal|0x07
 operator|)
 argument_list|,
-comment|/* target and length high nybble */
+comment|/* target and length high 3 bits */
 name|bp
 operator|->
 name|b_blkno
@@ -7159,15 +7159,6 @@ argument_list|(
 name|mlxd
 operator|->
 name|mlxd_dev
-argument_list|,
-literal|"drive offline\n"
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mlx_dev
 argument_list|,
 literal|"drive offline\n"
 argument_list|)
