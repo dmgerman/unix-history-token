@@ -90,6 +90,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_TEE_HOOKSTAT_INFO
+value|{				\ 	{							\ 	  { "inOctets",&ng_parse_int64_type	},	\ 	  { "inFrames",&ng_parse_int64_type	},	\ 	  { "outOctets",&ng_parse_int64_type	},	\ 	  { "outFrames",&ng_parse_int64_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Statistics structure returned by NGM_TEE_GET_STATS */
 end_comment
 
@@ -116,6 +127,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_TEE_STATS_INFO
+parameter_list|(
+name|hstype
+parameter_list|)
+value|{			\ 	{							\ 	  { "right",		(hstype)		},	\ 	  { "left",		(hstype)		},	\ 	  { "right2left",	(hstype)		},	\ 	  { "left2right",	(hstype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
 
 begin_comment
 comment|/* Netgraph commands */
