@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	1.3 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	1.4 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|/*  * pxp - Pascal execution profiler  *  * Bill Joy  * University of Ca
 end_comment
 
 begin_comment
-comment|/*  * Option flags  *  * The following options are recognized on the command line by pxp.  * Only the u, w, and z options here have effect in comments in the  * program; the others are command line only, and unrelated  * to the options with the same designations in comments.  *  *	a	Print all routines in a profile; normally, routines  *		which have never been executed have their bodies suppressed.  *  *	c	Extract profile data from the file core, or the file  *		named after the last argument rather than the file 'pmon.out'.  *		Must be used with z to have an effect.  *  *	d	Suppress declarations  *  *	f	Fully parenthesize expressions.  *  *	j	Left justify all procedures and functions rather than  *		indenting them.  *  *	n	Eject a new page in the listing as each 'include' file  *		is incorporated into the profile.  *  *	o	Put output prettyprint in first argument file  *  *	p	Pretty print a main program without processing  *		the include statements.  *  *	t	Print a table summarizing procedure and function call counts.  *  *	u	Card image mode; only the first 72 chars on a line count.  *  *	w	Suppress certain warning diagnostics.  *  *	z	Generate an execution profile of the program.  *		May also be followed by a list of procedure and function  *		names mixed, if desired, with include file names.  *		Only these procedures and functions, and the contents  *		of the specified include files will then be profiled.  *  *  [23456789]	Use the specified number of spaces for the basic  *		indenting unit in the program.  *  *	_	Underline keywords in the output.  */
+comment|/*  * Option flags  *  * The following options are recognized on the command line by pxp.  * Only the u, w, and z options here have effect in comments in the  * program; the others are command line only, and unrelated  * to the options with the same designations in comments.  *  *	a	Print all routines in a profile; normally, routines  *		which have never been executed have their bodies suppressed.  *  *	c	Extract profile data from the file core, or the file  *		named after the last argument rather than the file 'pmon.out'.  *		Must be used with z to have an effect.  *  *	d	Suppress declarations  *  *	f	Fully parenthesize expressions.  *  *	j	Left justify all procedures and functions rather than  *		indenting them.  *  *	n	Eject a new page in the listing as each 'include' file  *		is incorporated into the profile.  *  *	o	Put output prettyprint in first argument file  *  *	p	Pretty print a main program without processing  *		the include statements.  *  *	t	Print a table summarizing procedure and function call counts.  *  *	u	Card image mode; only the first 72 chars on a line count.  *  *	w	Suppress certain warning diagnostics.  *  *	z	Generate an execution profile of the program.  *		May also be followed by a list of procedure and function  *		names mixed, if desired, with include file names.  *		Only these procedures and functions, and the contents  *		of the specified include files will then be profiled.  *  *  [23456789]	Use the specified number of spaces for the basic  *		indenting unit in the program.  *  *	_	Underline keywords in the output.  *  *	O	remove `others'.  if an `others' label is found in a  *		case statement the case statement (minus the others case)  *		is printed as a guarded case statement, and the others case  *		is the else branch of the guard.  this transformation  *		causes the case selector to be evaluated twice, a lose  *		if the selector has side-effects.  this option is only  *		available if pxp is compiled with RMOTHERS defined.  */
 end_comment
 
 begin_decl_stmt
@@ -60,6 +60,24 @@ decl_stmt|,
 name|onefile
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RMOTHERS
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|rmothers
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|RMOTHERS
+end_endif
 
 begin_decl_stmt
 name|char
