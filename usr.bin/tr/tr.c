@@ -1193,6 +1193,12 @@ argument_list|,
 literal|"empty string2"
 argument_list|)
 expr_stmt|;
+name|ch
+operator|=
+name|s2
+operator|.
+name|lastch
+expr_stmt|;
 comment|/* If string2 runs out of characters, use the last one specified. */
 if|if
 condition|(
