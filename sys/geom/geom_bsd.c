@@ -1174,6 +1174,8 @@ argument_list|(
 name|dl
 argument_list|,
 name|buf
+operator|+
+literal|64
 argument_list|)
 operator|==
 literal|0
