@@ -125,6 +125,12 @@ directive|include
 file|<machine/sapicvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -180,6 +186,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mp_ipi_vector
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mp_ipi_test
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
@@ -365,8 +390,22 @@ name|framep
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|vector
+operator|==
+name|mp_ipi_vector
+index|[
+name|IPI_TEST
+index|]
+condition|)
 block|{
+name|mp_ipi_test
+operator|++
+expr_stmt|;
+block|}
+else|else
 name|ia64_dispatch_intr
 argument_list|(
 name|framep
@@ -374,7 +413,6 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 name|atomic_subtract_int
