@@ -469,7 +469,7 @@ name|meta_p
 name|meta
 decl_stmt|;
 comment|/* Fragment meta */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|ng_ppp_frag
 argument_list|)
@@ -702,7 +702,7 @@ name|HOOK_INDEX_MAX
 index|]
 decl_stmt|;
 comment|/* non-link hooks */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|ng_ppp_fraglist
 argument_list|,
@@ -1657,7 +1657,7 @@ operator|=
 name|priv
 expr_stmt|;
 comment|/* Initialize state */
-name|CIRCLEQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|priv
@@ -5249,11 +5249,13 @@ name|inserted
 operator|=
 literal|0
 expr_stmt|;
-name|CIRCLEQ_FOREACH_REVERSE
+name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|qent
 argument_list|,
 argument|&priv->frags
+argument_list|,
+argument|ng_ppp_fraglist
 argument_list|,
 argument|f_qent
 argument_list|)
@@ -5280,7 +5282,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|CIRCLEQ_INSERT_AFTER
+name|TAILQ_INSERT_AFTER
 argument_list|(
 operator|&
 name|priv
@@ -5346,7 +5348,7 @@ condition|(
 operator|!
 name|inserted
 condition|)
-name|CIRCLEQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|priv
@@ -5405,7 +5407,7 @@ decl_stmt|;
 comment|/* Check for empty queue */
 if|if
 condition|(
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -5421,7 +5423,7 @@ return|;
 comment|/* Check first fragment is the start of a deliverable packet */
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -5467,7 +5469,7 @@ condition|)
 block|{
 name|qnext
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|qent
 argument_list|,
@@ -5478,14 +5480,7 @@ if|if
 condition|(
 name|qnext
 operator|==
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|priv
-operator|->
-name|frags
+name|NULL
 condition|)
 comment|/* end of queue */
 return|return
@@ -5578,7 +5573,7 @@ name|tail
 decl_stmt|;
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -5589,7 +5584,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -5625,7 +5620,7 @@ control|)
 block|{
 name|qnext
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|qent
 argument_list|,
@@ -5635,7 +5630,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -5650,7 +5645,7 @@ name|__FUNCTION__
 operator|)
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|priv
@@ -5814,7 +5809,7 @@ decl_stmt|;
 comment|/* If queue is empty, we're done */
 if|if
 condition|(
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -5824,7 +5819,7 @@ argument_list|)
 condition|)
 break|break;
 comment|/* Determine whether first fragment can ever be completed */
-name|CIRCLEQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|qent
 argument_list|,
@@ -5853,7 +5848,7 @@ condition|)
 break|break;
 name|qnext
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|qent
 argument_list|,
@@ -5864,14 +5859,7 @@ name|KASSERT
 argument_list|(
 name|qnext
 operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|priv
-operator|->
-name|frags
+name|NULL
 argument_list|,
 operator|(
 literal|"%s: last frag< MSEQ?"
@@ -5923,7 +5911,7 @@ condition|(
 operator|(
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -5938,7 +5926,7 @@ block|{
 name|KASSERT
 argument_list|(
 operator|!
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -5960,7 +5948,7 @@ operator|.
 name|dropFragments
 operator|++
 expr_stmt|;
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|priv
@@ -6143,7 +6131,7 @@ comment|/* Get oldest fragment */
 name|KASSERT
 argument_list|(
 operator|!
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -6160,7 +6148,7 @@ argument_list|)
 expr_stmt|;
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -6265,7 +6253,7 @@ operator|.
 name|dropFragments
 operator|++
 expr_stmt|;
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|priv
@@ -6383,7 +6371,7 @@ block|{
 comment|/* If queue is empty, we're done */
 if|if
 condition|(
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -6401,7 +6389,7 @@ name|NULL
 expr_stmt|;
 name|seq
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -6411,7 +6399,7 @@ argument_list|)
 operator|->
 name|seq
 expr_stmt|;
-name|CIRCLEQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|qent
 argument_list|,
@@ -6529,7 +6517,7 @@ condition|(
 operator|(
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -6544,7 +6532,7 @@ block|{
 name|KASSERT
 argument_list|(
 operator|!
-name|CIRCLEQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|priv
@@ -6566,7 +6554,7 @@ operator|.
 name|dropFragments
 operator|++
 expr_stmt|;
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|priv
@@ -9336,7 +9324,7 @@ for|for
 control|(
 name|qent
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|priv
@@ -9345,15 +9333,6 @@ name|frags
 argument_list|)
 init|;
 name|qent
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|priv
-operator|->
-name|frags
 condition|;
 name|qent
 operator|=
@@ -9362,7 +9341,7 @@ control|)
 block|{
 name|qnext
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|qent
 argument_list|,
@@ -9388,7 +9367,7 @@ name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 block|}
-name|CIRCLEQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|priv
