@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_put.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +193,12 @@ operator|=
 name|dbp
 operator|->
 name|internal
+expr_stmt|;
+comment|/* Clear any stack. */
+name|BT_CLR
+argument_list|(
+name|t
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -647,11 +653,6 @@ goto|goto
 name|delete
 goto|;
 block|}
-name|BT_CLR
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
 name|mpool_put
 argument_list|(
 name|t
@@ -699,11 +700,6 @@ operator|==
 name|RET_ERROR
 condition|)
 block|{
-name|BT_CLR
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
 name|mpool_put
 argument_list|(
 name|t
@@ -982,11 +978,6 @@ argument_list|,
 name|h
 argument_list|,
 name|MPOOL_DIRTY
-argument_list|)
-expr_stmt|;
-name|BT_CLR
-argument_list|(
-name|t
 argument_list|)
 expr_stmt|;
 name|success
