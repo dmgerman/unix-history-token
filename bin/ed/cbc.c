@@ -171,6 +171,12 @@ name|MODE_ENCRYPT
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DES
+end_ifdef
+
 begin_decl_stmt
 name|DES_cblock
 name|ivec
@@ -190,6 +196,11 @@ end_decl_stmt
 begin_comment
 comment|/* padding vector */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -227,6 +238,12 @@ begin_comment
 comment|/* 1 to preserve parity bits */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DES
+end_ifdef
+
 begin_decl_stmt
 name|DES_key_schedule
 name|schedule
@@ -236,6 +253,11 @@ end_decl_stmt
 begin_comment
 comment|/* expanded DES key */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|unsigned
