@@ -1295,7 +1295,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr0,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr0,%0" : "=r" (data));
 return|return
 operator|(
 name|data
@@ -1316,7 +1316,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr1,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr1,%0" : "=r" (data));
 return|return
 operator|(
 name|data
@@ -1337,7 +1337,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr2,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr2,%0" : "=r" (data));
 return|return
 operator|(
 name|data
@@ -1358,7 +1358,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr3,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr3,%0" : "=r" (data));
 return|return
 operator|(
 name|data
@@ -1379,7 +1379,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr6,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr6,%0" : "=r" (data));
 return|return
 operator|(
 name|data
@@ -1400,7 +1400,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("movl %%dr7,%0" : "=rm" (data));
+asm|__asm __volatile("movl %%dr7,%0" : "=r" (data));
 return|return
 operator|(
 name|data
