@@ -57,6 +57,12 @@ parameter_list|)
 value|ptrace_clear_single_step(p)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|int
 name|ptrace_clear_single_step
@@ -68,6 +74,11 @@ name|_p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
