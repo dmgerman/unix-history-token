@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ulockf.c	5.5 (Berkeley) %G%"
+literal|"@(#)ulockf.c	5.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,13 +343,15 @@ block|}
 endif|#
 directive|endif
 endif|BSD4_2 || USG
-name|assert
+name|syslog
 argument_list|(
-literal|"DEAD LOCK"
+name|LOG_WARNING
+argument_list|,
+literal|"%s: dead lock %s"
+argument_list|,
+name|Rmtname
 argument_list|,
 name|file
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 name|logent
@@ -373,20 +375,31 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|/* avoid a possible race */
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|i
 operator|++
-operator|<
+operator|>=
 literal|5
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"CAN'T GET LOCKFILE"
+literal|"%s: can't get lockfile %s: %m"
+argument_list|,
+name|Rmtname
 argument_list|,
 name|tempfile
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 for|for
 control|(
@@ -413,19 +426,26 @@ name|NULL
 condition|)
 break|break;
 block|}
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|i
-operator|<
+operator|>=
 name|MAXLOCKS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"TOO MANY LOCKS"
-argument_list|,
-name|CNULL
-argument_list|,
-name|i
+literal|"Too many locks"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -454,19 +474,26 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"CAN NOT ALLOCATE FOR"
-argument_list|,
-name|file
-argument_list|,
-literal|0
+literal|"malloc failed: %m"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|p
