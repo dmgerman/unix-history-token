@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	5.2 (Berkeley) %G%"
+literal|"@(#)db.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,7 +239,6 @@ name|DB
 operator|*
 name|dbp
 operator|,
-specifier|const
 name|DBT
 operator|*
 operator|,
@@ -430,23 +429,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
-specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|uflags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -454,7 +448,7 @@ name|RET_ERROR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
