@@ -25,7 +25,7 @@ comment|/*  * Command keywords that vinum knows.  These include both user-level 
 end_comment
 
 begin_comment
-comment|/*  * Our complete vocabulary.  The names of the commands are  * the same as the identifier without the kw_ at the beginning  * (i.e. kw_create defines the "create" keyword).  Preprocessor  * magic in parser.c does the rest.   */
+comment|/*  * Our complete vocabulary.  The names of the commands are  * the same as the identifier without the kw_ at the beginning  * (i.e. kw_create defines the "create" keyword).  Preprocessor  * magic in parser.c does the rest.  *  * To add a new word: put it in the table below and one of the  * lists in vinumparser.c (probably keywords).  */
 end_comment
 
 begin_enum
@@ -113,6 +113,10 @@ name|kw_length
 init|=
 name|kw_len
 block|,
+name|kw_size
+init|=
+name|kw_len
+block|,
 name|kw_state
 block|,
 name|kw_setupstate
@@ -158,6 +162,8 @@ name|kw_rename
 block|,
 name|kw_printconfig
 block|,
+name|kw_saveconfig
+block|,
 name|kw_replace
 block|,
 name|kw_detached
@@ -173,6 +179,8 @@ directive|endif
 name|kw_info
 block|,
 name|kw_quit
+block|,
+name|kw_max
 block|,
 name|kw_invalid_keyword
 init|=
