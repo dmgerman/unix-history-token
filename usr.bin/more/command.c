@@ -268,42 +268,31 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read a line of input from the terminal.  Reads at most bufsiz - 1 characters  * and places them in buffer buf.  They are NUL-terminated.  Prints the  * temporary prompt prompt.  */
+comment|/*  * Read a line of input from the terminal.  Reads at most bufsiz - 1 characters  * and places them in buffer buf.  They are NUL-terminated.  Prints the  * temporary prompt prompt.  Returns true if the user aborted the input and  * returns false otherwise.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getinput
-argument_list|(
-argument|prompt
-argument_list|,
-argument|buf
-argument_list|,
-argument|bufsiz
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|prompt
+parameter_list|,
+name|buf
+parameter_list|,
+name|bufsiz
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|prompt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|bufsiz
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 extern|extern bo_width
 operator|,
@@ -347,7 +336,9 @@ name|bufcur
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -382,7 +373,9 @@ name|buf
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -398,11 +391,13 @@ name|bufcur
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a single character of a multi-character input, such as  * a number, or the pattern of a search command.  Returns true if the user  * has cancelled the multi-character input, false otherwise and attempts  * to add it to buf (not exceeding bufsize).  Prints the character on the  * terminal output.  The bufcur should initially equal bufbeg.  After that  * it does not need to be touched or modified by the user, but may be expected  * to point at the future position of the next character.  */

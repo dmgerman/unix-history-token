@@ -3720,6 +3720,8 @@ decl_stmt|;
 comment|/* XXX should avoid static buffer... */
 name|ENDPARSE
 expr_stmt|;
+if|if
+condition|(
 name|getinput
 argument_list|(
 literal|"Command: "
@@ -3731,7 +3733,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|args
+return|;
+comment|/* abort the command */
 if|if
 condition|(
 name|command
@@ -4490,6 +4496,8 @@ index|]
 decl_stmt|;
 name|ENDPARSE
 expr_stmt|;
+if|if
+condition|(
 name|getinput
 argument_list|(
 literal|"Examine: "
@@ -4501,7 +4509,12 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|args
+return|;
+comment|/* abort */
+comment|/* Abort is different from a "" answer in that "" causes the current 	 * file to be re-opened. */
 comment|/* XXX should modify this() or edit() to handle lists of file, ie. 	 * the type of lists that I get if I try to glob("*") */
 operator|(
 name|void
@@ -4809,6 +4822,9 @@ enum|;
 name|long
 name|N
 decl_stmt|;
+name|int
+name|abrt
+decl_stmt|;
 name|ARGTOG
 argument_list|(
 name|direction
@@ -4882,6 +4898,8 @@ name|direction
 operator|==
 name|FORW
 condition|)
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: /"
@@ -4892,6 +4910,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 else|else
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: ?"
@@ -4917,6 +4937,8 @@ name|direction
 operator|==
 name|FORW
 condition|)
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: !/"
@@ -4930,6 +4952,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: !?"
@@ -4961,6 +4985,8 @@ name|direction
 operator|==
 name|FORW
 condition|)
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: /"
@@ -4974,6 +5000,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+name|abrt
+operator|=
 name|getinput
 argument_list|(
 literal|"Search: ?"
@@ -5013,6 +5041,13 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|abrt
+condition|)
+return|return
+name|args
+return|;
 if|if
 condition|(
 name|cident
