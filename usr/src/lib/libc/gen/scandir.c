@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	4.2 (Berkeley) %G%"
+literal|"@(#)scandir.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,35 @@ operator|>=
 name|arraysz
 condition|)
 block|{
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|dirp
+operator|->
+name|dd_fd
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* just might have grown */
+name|arraysz
+operator|=
+name|stb
+operator|.
+name|st_size
+operator|/
+literal|12
+expr_stmt|;
 name|names
 operator|=
 operator|(
@@ -346,13 +375,7 @@ operator|*
 operator|)
 name|names
 argument_list|,
-operator|(
-name|stb
-operator|.
-name|st_size
-operator|/
-literal|12
-operator|)
+name|arraysz
 operator|*
 sizeof|sizeof
 argument_list|(
