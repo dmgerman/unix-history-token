@@ -2942,17 +2942,32 @@ block|{
 case|case
 name|drive_object
 case|:
+if|if
+condition|(
+name|drive
+operator|.
+name|state
+operator|==
+name|drive_up
+condition|)
+comment|/* already up */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't start a drive: %s\n"
+literal|"%s is already up\n"
 argument_list|,
-name|argv
-index|[
-name|index
-index|]
+name|drive
+operator|.
+name|label
+operator|.
+name|name
 argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
