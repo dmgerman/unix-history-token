@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.103 1997/03/23 06:33:52 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.104 1997/03/24 11:25:02 bde Exp $  */
 end_comment
 
 begin_include
@@ -1387,16 +1387,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load the physical device parameters 	 */
-if|#
-directive|if
-literal|0
-block|sd_get_parms(unit, 0);
-comment|/* sets SDEV_MEDIA_LOADED */
-block|if (sd->params.secsiz != SECSIZE) {
-comment|/* XXX One day... */
-block|printf("sd%ld: Can't deal with %d bytes logical blocks\n", 		    unit, sd->params.secsiz); 		Debugger("sd"); 		errcode = ENXIO; 		goto bad; 	}
-else|#
-directive|else
 if|if
 condition|(
 name|errcode
@@ -1422,9 +1412,8 @@ name|secsiz
 condition|)
 block|{
 case|case
-name|SECSIZE
+literal|512
 case|:
-comment|/* 512 */
 case|case
 literal|1024
 case|:
@@ -1459,8 +1448,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -1869,16 +1856,6 @@ operator|&
 name|sd_switch
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Odd number of bytes or negative offset 	 */
-block|if (bp->b_blkno< 0 || bp->b_bcount % DEV_BSIZE != 0) { 		bp->b_error = EINVAL; 		goto bad; 	}
-comment|/* 	 * Do bounds checking, adjust transfer, and set b_pblkno. 	 */
-block|if (dscheck(bp, sd->dk_slices)<= 0) 		goto done;
-comment|/* XXX check b_resid */
-else|#
-directive|else
 comment|/* 	 * Odd number of bytes or negative offset 	 */
 if|if
 condition|(
@@ -2074,8 +2051,6 @@ name|done
 goto|;
 comment|/* XXX check b_resid */
 block|}
-endif|#
-directive|endif
 name|opri
 operator|=
 name|SPLSD
