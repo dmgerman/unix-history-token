@@ -76,9 +76,39 @@ value|0x08
 comment|/* bss segment */
 define|#
 directive|define
+name|N_INDR
+value|0x0a
+comment|/* indirect reference */
+define|#
+directive|define
 name|N_COMM
 value|0x12
 comment|/* common reference */
+define|#
+directive|define
+name|N_SETA
+value|0x14
+comment|/* absolute set element symbol */
+define|#
+directive|define
+name|N_SETT
+value|0x16
+comment|/* text set element symbol */
+define|#
+directive|define
+name|N_SETD
+value|0x18
+comment|/* data set element symbol */
+define|#
+directive|define
+name|N_SETB
+value|0x1a
+comment|/* bss set element symbol */
+define|#
+directive|define
+name|N_SETV
+value|0x1c
+comment|/* pointer to set vector in data area */
 define|#
 directive|define
 name|N_FN
