@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.35 (Berkeley) %G%"
+literal|"@(#)main.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3304,20 +3304,6 @@ end_escape
 begin_comment
 comment|/* **  INITMACROS -- initialize the macro system ** **	This just involves defining some macros that are actually **	used internally as metasymbols to be themselves. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		initializes several macros to be themselves. */
 end_comment
-
-begin_struct
-struct|struct
-name|metamac
-block|{
-name|char
-name|metaname
-decl_stmt|;
-name|char
-name|metaval
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 name|struct

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.22 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2237,6 +2237,13 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
 condition|)
 continue|continue;
 name|CurEnv
