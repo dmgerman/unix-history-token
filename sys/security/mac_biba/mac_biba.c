@@ -11689,6 +11689,11 @@ operator|=
 name|mac_biba_copy_label
 block|,
 operator|.
+name|mpo_copy_socket_label
+operator|=
+name|mac_biba_copy_label
+block|,
+operator|.
 name|mpo_copy_vnode_label
 operator|=
 name|mac_biba_copy_label

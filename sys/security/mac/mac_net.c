@@ -363,19 +363,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|static
-name|void
-name|mac_socket_label_free
-parameter_list|(
-name|struct
-name|label
-modifier|*
-name|label
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|struct
@@ -875,7 +862,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|label
 modifier|*
@@ -1344,7 +1330,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mac_socket_label_free
 parameter_list|(
@@ -1509,6 +1494,33 @@ block|}
 end_function
 
 begin_function
+name|void
+name|mac_copy_socket_label
+parameter_list|(
+name|struct
+name|label
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|dest
+parameter_list|)
+block|{
+name|MAC_PERFORM
+argument_list|(
+name|copy_socket_label
+argument_list|,
+name|src
+argument_list|,
+name|dest
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|mac_externalize_ifnet_label
@@ -1555,7 +1567,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mac_externalize_socket_label
 parameter_list|(
@@ -1682,7 +1693,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mac_internalize_socket_label
 parameter_list|(

@@ -3901,6 +3901,11 @@ operator|=
 name|stub_copy_label
 block|,
 operator|.
+name|mpo_copy_socket_label
+operator|=
+name|stub_copy_label
+block|,
+operator|.
 name|mpo_copy_vnode_label
 operator|=
 name|stub_copy_label
