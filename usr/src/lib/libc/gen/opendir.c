@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.8 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,10 +93,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|fd
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
