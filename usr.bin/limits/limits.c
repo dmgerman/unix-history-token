@@ -287,6 +287,14 @@ literal|" bytes\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"  vmemoryuse%-4s   %8s"
+block|,
+literal|" kb\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -382,6 +390,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -v %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -479,6 +495,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s vmemoryuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -574,6 +598,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -v %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -671,6 +703,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s vmemoryuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -766,6 +806,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -v %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -863,6 +911,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"ulimit%s -v %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -958,6 +1014,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"limit%s vmemoryuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -1062,6 +1126,12 @@ literal|"sbsize"
 block|,
 name|login_getcapnum
 block|}
+block|,
+block|{
+literal|"vmemoryuse"
+block|,
+name|login_getcapsize
+block|}
 block|}
 struct|;
 end_struct
@@ -1074,7 +1144,7 @@ begin_define
 define|#
 directive|define
 name|RCS_STRING
-value|"tfdscmlunb"
+value|"tfdscmlunbv"
 end_define
 
 begin_function_decl
@@ -1356,7 +1426,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHabc:d:f:l:m:n:s:t:u:"
+literal|":EeC:U:BSHabc:d:f:l:m:n:s:t:u:v:"
 argument_list|)
 operator|)
 operator|!=
@@ -2601,7 +2671,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: limits [-C class|-U user] [-eaSHBE] [-bcdflmnstu [val]] [[name=val ...] cmd]\n"
+literal|"usage: limits [-C class|-U user] [-eaSHBE] [-bcdflmnstuv [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2969,6 +3039,9 @@ name|RLIMIT_RSS
 case|:
 case|case
 name|RLIMIT_MEMLOCK
+case|:
+case|case
+name|RLIMIT_VMEM
 case|:
 name|errno
 operator|=

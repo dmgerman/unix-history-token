@@ -271,8 +271,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_VMEM
 value|10
+end_define
+
+begin_comment
+comment|/* maximum size of all socket buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|11
 end_define
 
 begin_comment
@@ -323,6 +334,8 @@ block|,
 literal|"nofile"
 block|,
 literal|"sbsize"
+block|,
+literal|"vmem"
 block|, }
 decl_stmt|;
 end_decl_stmt
