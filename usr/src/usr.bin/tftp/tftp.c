@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftp.c	5.3 (Berkeley) %G%"
+literal|"@(#)tftp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1899,6 +1899,13 @@ argument_list|,
 argument|n
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,8 +629,6 @@ argument_list|(
 name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -2302,6 +2300,13 @@ argument_list|(
 argument|s
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
