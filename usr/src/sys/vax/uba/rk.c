@@ -1,6 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|RKDEBUG
+end_define
+
 begin_comment
-comment|/*	rk.c	4.41	82/05/19	*/
+comment|/*	rk.c	4.40	82/06/05	*/
 end_comment
 
 begin_include
@@ -2213,7 +2219,8 @@ operator|->
 name|um_tab
 operator|.
 name|b_active
-operator|++
+operator|=
+literal|2
 expr_stmt|;
 comment|/* should now be 2 */
 name|rkaddr
@@ -2366,6 +2373,14 @@ operator|->
 name|sc_recal
 condition|)
 block|{
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|1
+expr_stmt|;
 name|dp
 operator|=
 name|um
@@ -3533,15 +3548,6 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_active
-operator|=
-literal|2
-expr_stmt|;
-comment|/* Either complete or continuing... */
 switch|switch
 condition|(
 name|flag
@@ -4077,6 +4083,15 @@ name|rkcs1
 operator|=
 name|cmd
 expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|2
+expr_stmt|;
+comment|/* continuing */
 name|um
 operator|->
 name|um_tab
