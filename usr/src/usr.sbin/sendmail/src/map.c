@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.75 (Berkeley) %G%"
+literal|"@(#)map.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2332,8 +2332,6 @@ name|i
 operator|=
 literal|1
 init|;
-operator|!
-name|found
 condition|;
 name|i
 operator|++
