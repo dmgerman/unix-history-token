@@ -15,6 +15,12 @@ directive|define
 name|_SYS_GPT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/uuid.h>
+end_include
+
 begin_struct
 struct|struct
 name|gpt_hdr
@@ -112,7 +118,7 @@ index|[
 literal|36
 index|]
 decl_stmt|;
-comment|/* UNICODE!!! */
+comment|/* UNICODE-16. */
 block|}
 struct|;
 end_struct
