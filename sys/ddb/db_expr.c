@@ -433,7 +433,8 @@ name|valuep
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|void
+operator|*
 argument_list|)
 argument_list|,
 name|FALSE

@@ -233,10 +233,6 @@ name|size
 operator|=
 literal|4
 expr_stmt|;
-name|width
-operator|=
-literal|16
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -262,10 +258,6 @@ name|size
 operator|=
 literal|1
 expr_stmt|;
-name|width
-operator|=
-literal|4
-expr_stmt|;
 break|break;
 case|case
 literal|'h'
@@ -273,10 +265,6 @@ case|:
 name|size
 operator|=
 literal|2
-expr_stmt|;
-name|width
-operator|=
-literal|8
 expr_stmt|;
 break|break;
 case|case
@@ -286,10 +274,6 @@ name|size
 operator|=
 literal|4
 expr_stmt|;
-name|width
-operator|=
-literal|16
-expr_stmt|;
 break|break;
 case|case
 literal|'g'
@@ -298,15 +282,19 @@ name|size
 operator|=
 literal|8
 expr_stmt|;
-name|width
-operator|=
-literal|32
-expr_stmt|;
 break|break;
 case|case
 literal|'a'
 case|:
 comment|/* address */
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* always forces a new line */
 if|if
 condition|(
@@ -364,6 +352,12 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
+name|width
+operator|=
+name|size
+operator|*
+literal|4
+expr_stmt|;
 switch|switch
 condition|(
 name|c
