@@ -469,12 +469,7 @@ name|if_timer
 operator|=
 literal|1
 expr_stmt|;
-call|(
-modifier|*
-name|ifp
-operator|->
 name|if_start
-call|)
 argument_list|(
 name|ifp
 argument_list|)

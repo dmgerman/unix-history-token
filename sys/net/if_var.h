@@ -137,6 +137,12 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -525,6 +531,11 @@ name|struct
 name|mtx
 name|if_afdata_mtx
 decl_stmt|;
+name|struct
+name|task
+name|if_starttask
+decl_stmt|;
+comment|/* task for IFF_NEEDSGIANT */
 block|}
 struct|;
 end_struct
@@ -1096,6 +1107,17 @@ define|\
 value|if_handoff((struct ifqueue *)ifq, m, ifp, adj)
 end_define
 
+begin_function_decl
+name|void
+name|if_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|__inline
@@ -1226,12 +1248,7 @@ operator|&&
 operator|!
 name|active
 condition|)
-call|(
-modifier|*
-name|ifp
-operator|->
 name|if_start
-call|)
 argument_list|(
 name|ifp
 argument_list|)
@@ -1564,7 +1581,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_flags& IFF_OACTIVE) == 0)		\ 			(*(ifp)->if_start)(ifp);			\ 	}								\ } while (0)
+value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_flags& IFF_OACTIVE) == 0)		\ 			if_start(ifp);					\ 	}								\ } while (0)
 end_define
 
 begin_define

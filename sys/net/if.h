@@ -489,6 +489,17 @@ begin_comment
 comment|/* static ARP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_NEEDSGIANT
+value|0x100000
+end_define
+
+begin_comment
+comment|/* hold Giant over if_start calls */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
