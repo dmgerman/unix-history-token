@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.9 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,9 +152,14 @@ decl_stmt|;
 specifier|register
 name|int
 name|count
+decl_stmt|,
+name|hicount
 decl_stmt|;
+comment|/* 	 * After this loop, "count" will be the actual number of units, 	 * and "hicount" will be the highest unit declared.  do_header() 	 * must use this higher of these values. 	 */
 for|for
 control|(
+name|hicount
+operator|=
 name|count
 operator|=
 literal|0
@@ -229,9 +234,9 @@ name|d_unit
 operator|+
 literal|1
 operator|>
-name|count
+name|hicount
 condition|)
-name|count
+name|hicount
 operator|=
 name|dp
 operator|->
@@ -298,6 +303,12 @@ argument_list|,
 name|hname
 argument_list|,
 name|count
+operator|>
+name|hicount
+condition|?
+name|count
+else|:
+name|hicount
 argument_list|)
 expr_stmt|;
 block|}
