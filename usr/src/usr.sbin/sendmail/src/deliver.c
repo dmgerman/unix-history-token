@@ -3650,7 +3650,7 @@ argument_list|)
 expr_stmt|;
 name|rcode
 operator|=
-name|EX_OSERR
+name|EX_CONFIG
 expr_stmt|;
 goto|goto
 name|give_up
