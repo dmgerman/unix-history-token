@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.2 (Berkeley) %G%"
+literal|"@(#)last.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1053,6 +1053,11 @@ argument_list|,
 name|ct
 operator|+
 literal|11
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 if|if
