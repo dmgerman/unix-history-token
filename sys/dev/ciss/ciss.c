@@ -13053,8 +13053,6 @@ name|CISS_IS_PHYSICAL
 argument_list|(
 name|bus
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
