@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.20 (Berkeley) %G%"
+literal|"@(#)main.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,9 +858,6 @@ name|struct
 name|sgttyb
 name|tbuf
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCGWINSZ
 name|struct
 name|winsize
 name|ws
@@ -883,8 +880,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 name|ws
 operator|.
 name|ws_col
