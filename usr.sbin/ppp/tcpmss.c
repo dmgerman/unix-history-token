@@ -223,7 +223,7 @@ name|MAXMSS
 parameter_list|(
 name|mtu
 parameter_list|)
-value|(mtu - sizeof(struct ip) - sizeof(struct tcphdr))
+value|((mtu) - sizeof(struct ip) - sizeof(struct tcphdr) - 12)
 end_define
 
 begin_comment
