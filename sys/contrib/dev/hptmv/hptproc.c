@@ -1486,6 +1486,9 @@ name|piop
 operator|->
 name|lpOutBuffer
 operator|,
+operator|(
+name|u_long
+operator|)
 name|piop
 operator|->
 name|nOutBufferSize

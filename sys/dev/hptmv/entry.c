@@ -1276,8 +1276,11 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"requestQueue addr is 0x%X"
+literal|"requestQueue addr is 0x%lX"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|req_dma_addr
 operator|)
 argument_list|)
@@ -4764,7 +4767,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"pAdapter->pFreePRDLink:%lx\n"
+literal|"pAdapter->pFreePRDLink:%p\n"
 operator|,
 name|pAdapter
 operator|->
@@ -6183,7 +6186,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"pCommandBlocks:%x\n"
+literal|"pCommandBlocks:%p\n"
 operator|,
 name|pAdapter
 operator|->
@@ -6440,7 +6443,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"prdTableAddr:%x\n"
+literal|"prdTableAddr:%p\n"
 operator|,
 name|pAdapter
 operator|->
@@ -7542,7 +7545,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"fMvResetBus(%x)"
+literal|"fMvResetBus(%p)"
 operator|,
 name|_vbus_p
 operator|)
@@ -8688,7 +8691,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"pPRDTable:%lx\n"
+literal|"pPRDTable:%p\n"
 operator|,
 name|pPRDTable
 operator|)
@@ -10414,7 +10417,7 @@ decl_stmt|;
 name|KdPrintI
 argument_list|(
 operator|(
-literal|"ccb_done: ccb %x status %x"
+literal|"ccb_done: ccb %p status %x"
 operator|,
 name|ccb
 operator|,
@@ -10510,7 +10513,7 @@ argument_list|(
 name|ccb
 operator|->
 name|ccb_h
-operator|->
+operator|.
 name|path
 argument_list|,
 name|CAM_DEBUG_TRACE
@@ -12896,7 +12899,7 @@ expr_stmt|;
 name|KdPrintI
 argument_list|(
 operator|(
-literal|"OsSendCommand: ccb %x cdb %x-%x-%x\n"
+literal|"OsSendCommand: ccb %p cdb %x-%x-%x\n"
 operator|,
 name|ccb
 operator|,
